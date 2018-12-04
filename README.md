@@ -1,3 +1,5 @@
+[Clean Architecture: Patterns, Practices, and Principles | Pluralsight](https://app.pluralsight.com/library/courses/clean-architecture-patterns-practices-principles/table-of-contents)
+
 # Database Centric vs Domain Centric Architecture
 ![alt text](https://github.com/phongnguyend/Practical.CleanArchitecture/blob/master/docs/imgs/database-centrics-vs-domain-centric-architecture.png)
 
