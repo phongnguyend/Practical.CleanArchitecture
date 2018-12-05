@@ -11,3 +11,18 @@
 
 # The Clean Architecture
 ![alt text](https://github.com/phongnguyend/Practical.CleanArchitecture/blob/master/docs/imgs/the-clean-architecture.png)
+
+
+# Classic Three-layer Architecture
+![alt text](https://github.com/phongnguyend/Practical.CleanArchitecture/blob/master/docs/imgs/Classic-Three-layer-Architecture.png)
+
+
+# Modern Four-layer Architecture
+![alt text](https://github.com/phongnguyend/Practical.CleanArchitecture/blob/master/docs/imgs/Modern-Four-layer-Architecture.png)
+
+
+# Layer Dependencies
+![alt text](https://github.com/phongnguyend/Practical.CleanArchitecture/blob/master/docs/imgs/Layer-Dependencies.png)
+
+# Layer Examples
+![alt text](https://github.com/phongnguyend/Practical.CleanArchitecture/blob/master/docs/imgs/Layer-Examples.png)
