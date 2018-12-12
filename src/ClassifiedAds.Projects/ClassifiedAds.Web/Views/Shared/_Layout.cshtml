@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-react-helmet="true">Rao Bậy - Mua bán rao vặt đơn giản &amp; miễn phí - @ViewData["Title"]</title>
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/normalize-css/normalize.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/main.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+    <link rel="shortcut icon" href="/favicon.ico" />
+</head>
+<body>
+
+    <div id="content">
+        <div id="rv-main-container">
+            <div class="site-header">
+                <nav class="navbar-fixed-top navbar navbar-default" style="padding:0;">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <a asp-controller="Home" asp-action="Index" class="navbar-brand"><span class="rv_logo_main_large img-responsive" alt="raovat-logo"></span></a>
+                        </div>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a title="Tìm rao vặt" href="#"><span class=""><span class="rv_icon  rv_searchIcon "></span></span><span title="Tìm rao vặt" class="rv_icon_text hidden-xs hidden-sm">Tìm rao vặt</span></a></li>
+                            <li class="hidden-xs hidden-sm"><a title="Chat" href="#"><span class=""><span class="rv_icon  rv_chatIcon "></span></span><span title="Chat" class="rv_icon_text ">Chat</span></a></li>
+                            <li><a title="Đăng nhập" asp-controller="Account" asp-action="Login"><span class=""><span class="rv_icon  rv_logIcon "></span></span><span title="Đăng nhập/ Đăng ký" class="rv_icon_text hidden-xs hidden-sm">Đăng nhập/ Đăng ký</span></a></li>
+                            <li class="nav-no-hover-bg-color"><a href="#"><span title="ĐĂNG TIN" class="rv_icon_text btn btn-primary">ĐĂNG TIN</span></a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            <div>
+                @RenderBody()
+            </div>
+        </div>
+        <footer class="site-footer">
+            <div class="small-screen">
+                <section><a target="_blank" asp-action="Index" asp-controller="Help">Trợ giúp</a><a target="_blank" href="#">Đăng tin</a></section>
+                <section><span class="apps-section">Xem trên phiên bản:</span></section><section><a target="_blank" href="#">Ứng dụng iOS</a><a target="_blank" href="#">Ứng dụng Android</a></section>
+            </div>
+            <div class="normal-screen container">
+                <div class="sections">
+                    <section class="social-network-section">
+                        <h2 class="about text-left">Liên kết</h2><a target="_blank" href="#" class="social-network-facebook"><div class="no-repeat"></div><span>Facebook</span></a><a target="_blank" href="#" class="social-network-google"><div class="no-repeat"></div><span>Google+</span></a><a target="_blank" href="#" class="social-network-youtube"><div class="no-repeat"></div><span>Youtube</span></a>
+                    </section>
+                    <section class="apps-section">
+                        <h2 class="about text-left">Bản di động</h2>
+                        <a target="_blank" href="#" class="no-repeat app-store"></a>
+                        <a target="_blank" href="#" class="no-repeat google-play"></a>
+                    </section>
+                    <section>
+                        <h2 class="about text-left">Hỗ trợ khách hàng</h2><a target="_blank" href="#">Trung tâm trợ giúp</a><a target="_blank" href="#">An toàn mua bán</a><a target="_blank" href="#">Quy định cần biết</a><a target="_blank" href="#">Liên hệ hỗ trợ</a>
+                    </section>
+                    <section>
+                        <h2 class="about text-left">Về raobay.com</h2><a target="_blank" href="#">Giới thiệu</a><a target="_blank" href="#">Tuyển dụng</a><a target="_blank" href="#">Truyền thông</a><a target="_blank" href="#">Blog</a>
+                    </section>
+                    <section class="certifing-section">
+                        <h2 class="about text-left">Chứng nhận</h2><a class="certifing-link" target="_blank" href="#"></a>
+                    </section>
+                </div>
+                <address class="address">Etown<br />Email: ... - Đường dây nóng: ... </address>
+            </div>
+        </footer>
+    </div>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
