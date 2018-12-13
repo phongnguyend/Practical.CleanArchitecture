@@ -1,8 +1,7 @@
 ﻿using System.Linq;
 using ClassifiedAds.DomainServices;
-using ClassifiedAds.Persistance;
 
-namespace ClassifiedAds.Repositories.Implementations
+namespace ClassifiedAds.Persistance.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {

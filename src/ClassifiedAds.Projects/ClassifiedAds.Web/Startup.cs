@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using ClassifiedAds.Repositories.Implementations;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
+﻿using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.DomainServices;
 using ClassifiedAds.Persistance;
-using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Persistance.Repositories;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ClassifiedAds.Web
 {
