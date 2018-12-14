@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClassifiedAds.ApplicationServices.Queries
+namespace ClassifiedAds.DomainServices.Queries
 {
     public interface IQuery<TResult>
     {

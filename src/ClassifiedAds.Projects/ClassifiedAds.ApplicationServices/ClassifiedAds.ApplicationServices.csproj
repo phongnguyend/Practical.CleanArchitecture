@@ -5,13 +5,4 @@
     <RootNamespace>ClassifiedAds.ApplicationServices</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Commands\" />
-    <Folder Include="Queries\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
-  </ItemGroup>
-
 </Project>
