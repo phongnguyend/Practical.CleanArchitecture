@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ClassifiedAds.Domain.Entities
 {
-    public class User : IdentityUser, Entity<string>
+    public interface Entity<T>
     {
-
+        T Id { get; set; }
     }
 }
