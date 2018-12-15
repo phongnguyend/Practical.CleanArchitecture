@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Infrastructur
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.ApplicationServices", "ClassifiedAds.ApplicationServices\ClassifiedAds.ApplicationServices.csproj", "{425B86E1-6DC3-47A1-B676-8A20897C7430}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.UnitTest", "ClassifiedAds.UnitTest\ClassifiedAds.UnitTest.csproj", "{AF0521C5-357B-420E-846B-B6E84C9700C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.UnitTests", "ClassifiedAds.UnitTests\ClassifiedAds.UnitTests.csproj", "{AF0521C5-357B-420E-846B-B6E84C9700C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.CrossCuttingConcerns", "ClassifiedAds.CrossCuttingConcerns\ClassifiedAds.CrossCuttingConcerns.csproj", "{6ABD715C-9A22-4BCA-AA78-7D2563410923}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.CrossCuttingConcerns", "ClassifiedAds.CrossCuttingConcerns\ClassifiedAds.CrossCuttingConcerns.csproj", "{6ABD715C-9A22-4BCA-AA78-7D2563410923}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

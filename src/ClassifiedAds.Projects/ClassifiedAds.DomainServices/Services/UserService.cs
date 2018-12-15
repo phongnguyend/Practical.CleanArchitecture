@@ -1,4 +1,7 @@
-﻿using ClassifiedAds.Domain.Entities;
+﻿using System;
+using ClassifiedAds.Domain.Entities;
+using System.Linq;
+using ClassifiedAds.CrossCuttingConcerns.Exceptions;
 
 namespace ClassifiedAds.DomainServices
 {
@@ -9,6 +12,14 @@ namespace ClassifiedAds.DomainServices
         public UserService(IRepository<User> userRepository)
         {
             _userRepository = userRepository;
+        }
+
+        public User GetUserById(Guid Id)
+        {
+            ValidationException.Requires(Id != Guid.Empty, "Invalid Id");
+
+            var IdAsString = Id.ToString();
+            return _userRepository.GetAll().Where(x => x.Id == IdAsString).FirstOrDefault();
         }
     }
 }

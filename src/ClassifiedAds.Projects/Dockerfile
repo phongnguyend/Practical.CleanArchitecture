@@ -9,7 +9,6 @@ COPY ./ClassifiedAds.DomainServices/*.csproj ./ClassifiedAds.DomainServices/
 COPY ./ClassifiedAds.Infrastructure/*.csproj ./ClassifiedAds.Infrastructure/
 COPY ./ClassifiedAds.Persistance/*.csproj ./ClassifiedAds.Persistance/
 COPY ./ClassifiedAds.Web/*.csproj ./ClassifiedAds.Web/
-COPY ./ClassifiedAds.UnitTest/*.csproj ./ClassifiedAds.UnitTest/
 COPY ./ClassifiedAds.Projects.sln .
 RUN dotnet restore
 
