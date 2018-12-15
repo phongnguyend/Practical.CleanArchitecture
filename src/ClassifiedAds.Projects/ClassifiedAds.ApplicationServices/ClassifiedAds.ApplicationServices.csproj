@@ -5,4 +5,12 @@
     <RootNamespace>ClassifiedAds.ApplicationServices</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Decorators\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ClassifiedAds.DomainServices\ClassifiedAds.DomainServices.csproj" />
+  </ItemGroup>
+
 </Project>
