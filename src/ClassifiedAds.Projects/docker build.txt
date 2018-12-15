@@ -1,0 +1,3 @@
+docker build -t classifiedads.web .
+docker build -t classifiedads.web:1.0.0 .
+docker run -d -p 8080:80 --name classifiedads.web classifiedads.web
