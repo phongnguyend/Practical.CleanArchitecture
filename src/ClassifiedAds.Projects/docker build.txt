@@ -1,3 +1,22 @@
 docker build -t classifiedads.web .
 docker build -t classifiedads.web:1.0.0 .
 docker run -d -p 8080:80 --name classifiedads.web classifiedads.web
+
+
+docker --version
+docker version
+
+docker images
+docker image ls
+docker rmi -f xxx
+
+docker ps
+docker ps -a
+docker start
+docker stop
+docker rm xxx
+
+docker tag classifiedads.web acr.azurecr.io/classifiedads.web
+docker push acr.azurecr.io/classifiedads.web
+
+
