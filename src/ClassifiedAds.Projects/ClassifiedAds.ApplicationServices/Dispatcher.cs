@@ -1,8 +1,8 @@
-﻿using ClassifiedAds.DomainServices.Commands;
-using ClassifiedAds.DomainServices.Queries;
+﻿using ClassifiedAds.ApplicationServices.Commands;
+using ClassifiedAds.ApplicationServices.Queries;
 using System;
 
-namespace ClassifiedAds.DomainServices
+namespace ClassifiedAds.ApplicationServices
 {
     public class Dispatcher
     {

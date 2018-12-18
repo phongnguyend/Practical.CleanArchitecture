@@ -1,5 +1,5 @@
-﻿using ClassifiedAds.DomainServices.Commands;
-using ClassifiedAds.DomainServices.Queries;
+﻿using ClassifiedAds.ApplicationServices.Commands;
+using ClassifiedAds.ApplicationServices.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

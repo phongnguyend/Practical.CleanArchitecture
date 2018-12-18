@@ -1,6 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
-using ClassifiedAds.DomainServices.Commands;
+using ClassifiedAds.ApplicationServices.Commands;
 
 namespace ClassifiedAds.ApplicationServices.Decorators
 {

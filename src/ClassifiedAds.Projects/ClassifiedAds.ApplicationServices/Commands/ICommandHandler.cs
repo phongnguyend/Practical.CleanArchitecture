@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ClassifiedAds.DomainServices.Commands
+namespace ClassifiedAds.ApplicationServices.Commands
 {
     public interface ICommandHandler<TCommand>
         where TCommand : ICommand
