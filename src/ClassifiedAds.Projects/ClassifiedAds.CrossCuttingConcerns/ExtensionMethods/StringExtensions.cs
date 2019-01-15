@@ -57,5 +57,11 @@ namespace ClassifiedAds.CrossCuttingConcerns.ExtensionMethods
             byte[] b = Convert.FromBase64String(src);
             return encoding.GetString(b);
         }
+
+        public static string Remove(this string source, params string[] removedValues)
+        {
+            removedValues.ToList().ForEach(x => source = source.Replace(x, ""));
+            return source;
+        }
     }
 }
