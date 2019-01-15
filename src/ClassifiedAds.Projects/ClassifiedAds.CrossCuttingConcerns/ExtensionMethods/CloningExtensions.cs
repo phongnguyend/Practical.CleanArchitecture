@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Reflection;
 
 namespace ClassifiedAds.CrossCuttingConcerns.ExtensionMethods
 {
@@ -7,6 +8,12 @@ namespace ClassifiedAds.CrossCuttingConcerns.ExtensionMethods
     /// </summary>
     public static class CloningExtensions
     {
+        public static T ShallowClone<T>(this T source)
+        {
+            var methodInfo = typeof(T).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
+            return (T)methodInfo.Invoke(source, null);
+        }
+
         /// <summary>
         /// Perform a deep Copy of the object, using Json as a serialisation method. NOTE: Private members are not cloned using this method.
         /// </summary>
