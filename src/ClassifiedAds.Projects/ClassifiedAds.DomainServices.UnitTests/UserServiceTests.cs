@@ -7,15 +7,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassifiedAds.UnitTest
+namespace ClassifiedAds.DomainServices.UnitTests
 {
     [TestClass]
-    public class UserServiceTest
+    public class UserServiceTests
     {
         private Mock<IRepository<User>> _userRepository;
         private UserService _userService;
 
-        public UserServiceTest()
+        public UserServiceTests()
         {
             _userRepository = new Mock<IRepository<User>>();
             _userService = new UserService(_userRepository.Object);

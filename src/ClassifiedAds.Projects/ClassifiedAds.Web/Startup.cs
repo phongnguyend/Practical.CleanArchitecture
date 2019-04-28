@@ -1,11 +1,8 @@
 ﻿using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.DomainServices;
 using ClassifiedAds.Persistance;
-using ClassifiedAds.Persistance.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,12 +21,10 @@ namespace ClassifiedAds.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddDbContext<AdsDbContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("ClassifiedAds")));
             services.AddIdentity<User, IdentityRole>()
                     .AddEntityFrameworkStores<AdsDbContext>();
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped<IUserService, UserService>();
+            services.AddPersistance(Configuration.GetConnectionString("ClassifiedAds"))
+                    .AddDomainServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

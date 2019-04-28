@@ -20,6 +20,7 @@ namespace ClassifiedAds.Web.Controllers
 
         public IActionResult Index()
         {
+            var users = _userService.GetUserById(Guid.NewGuid());
             return View();
         }
 
