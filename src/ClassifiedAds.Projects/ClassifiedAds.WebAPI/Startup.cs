@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace ClassifiedAds.WebAPI
 {
@@ -59,6 +61,29 @@ namespace ClassifiedAds.WebAPI
                 options.Authority = Configuration["OAuth:Authority"];
                 options.Audience = Configuration["OAuth:Audience"];
             });
+
+            services.AddSwaggerGen(setupAction =>
+            {
+                setupAction.SwaggerDoc(
+                    $"ClassifiedAds",
+                    new OpenApiInfo()
+                    {
+                        Title = "ClassifiedAds API",
+                        Version = "1",
+                        Description = "ClassifiedAds API Specification.",
+                        Contact = new OpenApiContact()
+                        {
+                            Email = "abc.xyz@gmail.com",
+                            Name = "Phong Nguyen",
+                            Url = new Uri("https://github.com/phongnguyend")
+                        },
+                        License = new OpenApiLicense()
+                        {
+                            Name = "MIT License",
+                            Url = new Uri("https://opensource.org/licenses/MIT")
+                        }
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,6 +100,24 @@ namespace ClassifiedAds.WebAPI
             }
 
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(setupAction =>
+            {
+                setupAction.SwaggerEndpoint(
+                    "/swagger/ClassifiedAds/swagger.json",
+                    "ClassifiedAds API");
+
+                setupAction.RoutePrefix = "";
+
+                setupAction.DefaultModelExpandDepth(2);
+                setupAction.DefaultModelRendering(ModelRendering.Model);
+                setupAction.DocExpansion(DocExpansion.None);
+                setupAction.EnableDeepLinking();
+                setupAction.DisplayOperationId();
+            });
+
             app.UseAuthentication();
 
             app.UseCors(
