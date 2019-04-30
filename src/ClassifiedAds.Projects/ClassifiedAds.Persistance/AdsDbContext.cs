@@ -17,6 +17,7 @@ namespace ClassifiedAds.Persistance
         {
             base.OnModelCreating(builder);
             builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new ProductConfiguration());
         }
     }
 }

@@ -7,8 +7,10 @@ namespace ClassifiedAds.DomainServices
 {
     public interface IRepository<T> where T : class
     {
-        IQueryable<T> DbSet { get; }
-
         IQueryable<T> GetAll();
+
+        void Add(T entity);
+
+        void Delete(T entity);
     }
 }

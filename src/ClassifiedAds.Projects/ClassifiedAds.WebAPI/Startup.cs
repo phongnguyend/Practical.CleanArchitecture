@@ -30,6 +30,9 @@ namespace ClassifiedAds.WebAPI
 
             services.AddCors();
 
+            services.AddPersistance(Configuration.GetConnectionString("ClassifiedAds"))
+                    .AddDomainServices();
+
             /// https://auth0.com/blog/securing-asp-dot-net-core-2-applications-with-jwts/
             //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             //.AddJwtBearer(options =>
