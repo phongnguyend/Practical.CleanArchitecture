@@ -83,6 +83,28 @@ namespace ClassifiedAds.WebAPI
                             Url = new Uri("https://opensource.org/licenses/MIT")
                         }
                     });
+
+                setupAction.AddSecurityDefinition("bearer", new OpenApiSecurityScheme()
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    Description = "Input your Bearer token to access this API"
+                });
+
+                setupAction.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "bearer"
+                            }
+                        }, new List<string>()
+                    }
+                });
             });
         }
 
