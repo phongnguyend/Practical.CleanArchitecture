@@ -45,6 +45,12 @@ namespace ClassifiedAds.WebMVC.Controllers
             return Json(new { User.Identity, identityToken, User.Claims });
         }
 
+        [Authorize]
+        public IActionResult Login()
+        {
+            return RedirectToAction(nameof(Index));
+        }
+
         public async Task Logout()
         {
             await HttpContext.SignOutAsync("Cookies");
