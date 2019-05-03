@@ -106,6 +106,14 @@ namespace ClassifiedAds.WebAPI
                     }
                 });
             });
+
+            services.AddMiniProfiler(options =>
+            {
+                options.RouteBasePath = "/profiler";// access /profiler/results to see last profile check
+                options.PopupRenderPosition = StackExchange.Profiling.RenderPosition.BottomLeft;
+                options.PopupShowTimeWithChildren = true;
+            })
+            .AddEntityFramework();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -148,6 +156,8 @@ namespace ClassifiedAds.WebAPI
                 .AllowAnyHeader()
                 .AllowAnyMethod()
             );
+
+            app.UseMiniProfiler();
 
             app.UseMvc();
         }

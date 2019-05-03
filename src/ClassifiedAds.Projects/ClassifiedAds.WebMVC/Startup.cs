@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using ClassifiedAds.WebMVC.HttpHandlers;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,10 @@ namespace ClassifiedAds.WebMVC
                 options.DefaultScheme = "Cookies";
                 options.DefaultChallengeScheme = "oidc";
             })
-            .AddCookie("Cookies")
+            .AddCookie("Cookies", options =>
+            {
+                options.AccessDeniedPath = "/Authorization/AccessDenied";
+            })
             .AddOpenIdConnect("oidc", options =>
             {
                 options.SignInScheme = "Cookies";
@@ -51,6 +55,17 @@ namespace ClassifiedAds.WebMVC
                 options.GetClaimsFromUserInfoEndpoint = true;
             });
 
+            services.AddTransient<ProfilingHttpHandler>();
+            services.AddHttpClient("")
+                    .AddHttpMessageHandler<ProfilingHttpHandler>();
+
+            services.AddMiniProfiler(options =>
+            {
+                options.RouteBasePath = "/profiler";// access /profiler/results to see last profile check
+                options.PopupRenderPosition = StackExchange.Profiling.RenderPosition.BottomLeft;
+                options.PopupShowTimeWithChildren = true;
+            })
+            .AddEntityFramework();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,6 +86,8 @@ namespace ClassifiedAds.WebMVC
             app.UseAuthentication();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseMiniProfiler();
 
             app.UseMvc(routes =>
             {

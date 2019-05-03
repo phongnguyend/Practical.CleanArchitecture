@@ -35,7 +35,6 @@
                     </span>
                 </a>
             </div>
-
             @if (!string.IsNullOrWhiteSpace(name))
             {
                 <ul class="nav navbar-nav">
@@ -49,11 +48,10 @@
             }
         </div>
     </div>
-
     <div class="container body-content">
         @RenderBody()
     </div>
-
+    <mini-profiler />
     <script src="~/lib/jquery/jquery.js"></script>
     <script src="~/lib/bootstrap/js/bootstrap.js"></script>
     @RenderSection("scripts", required: false)
