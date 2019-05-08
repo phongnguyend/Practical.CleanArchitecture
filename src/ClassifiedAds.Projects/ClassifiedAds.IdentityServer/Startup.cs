@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using IdentityModel;
+﻿using System.Collections.Generic;
 using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Quickstart.UI;
-using IdentityServer4.Test;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 
 namespace ClassifiedAds.IdentityServer
 {
@@ -31,24 +25,29 @@ namespace ClassifiedAds.IdentityServer
                     new IdentityResources.OpenId(),
                     new IdentityResources.Profile(),
                 })
+                .AddInMemoryApiResources(new List<ApiResource> {
+                    new ApiResource("ClassifiedAds.WebAPI", "ClassifiedAds Web API",
+                    new List<string>() {"role" } )
+                })
                 .AddInMemoryClients(new List<Client> {
                     new Client
                     {
                         ClientId = "ClassifiedAds.WebMVC",
                         ClientName ="ClassifiedAds Web MVC",
-                        AllowedGrantTypes = GrantTypes.Hybrid,
+                        AllowedGrantTypes = GrantTypes.Hybrid.Combines(GrantTypes.ResourceOwnerPassword),
                         RedirectUris =
                         {
                             "https://localhost:44364/signin-oidc"
                         },
-                        PostLogoutRedirectUris = 
+                        PostLogoutRedirectUris =
                         {
                             "https://localhost:44364/signout-callback-oidc"
                         },
                         AllowedScopes =
                         {
                             IdentityServerConstants.StandardScopes.OpenId,
-                            IdentityServerConstants.StandardScopes.Profile
+                            IdentityServerConstants.StandardScopes.Profile,
+                            "ClassifiedAds.WebAPI"
                         },
                         ClientSecrets =
                         {

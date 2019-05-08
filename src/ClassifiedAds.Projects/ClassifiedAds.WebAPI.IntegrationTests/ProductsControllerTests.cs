@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Xunit;
+using IdentityModel.Client;
 
 namespace ClassifiedAds.WebAPI.IntegrationTests
 {
@@ -75,6 +76,20 @@ namespace ClassifiedAds.WebAPI.IntegrationTests
         [Fact]
         public async Task AllInOne()
         {
+            var metaDataResponse = await _httpClient.GetDiscoveryDocumentAsync("https://localhost:44367/");
+            var tokenResponse = await _httpClient.RequestPasswordTokenAsync(new PasswordTokenRequest
+            {
+                Address = metaDataResponse.TokenEndpoint,
+                ClientId = "ClassifiedAds.WebMVC",
+                ClientSecret = "secret",
+                UserName = "bob",
+                Password = "bob",
+                Scope = "ClassifiedAds.WebAPI"
+            });
+
+            var token = tokenResponse.AccessToken;
+            _httpClient.UseBearerToken(token);
+
             // POST
             var product = new Product
             {

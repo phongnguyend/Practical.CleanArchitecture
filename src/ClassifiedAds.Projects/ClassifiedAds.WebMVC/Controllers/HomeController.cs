@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authentication;
 using ClassifiedAds.DomainServices;
 using IdentityModel.Client;
 using System.Net.Http;
+using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 
 namespace ClassifiedAds.WebMVC.Controllers
 {
@@ -38,6 +40,10 @@ namespace ClassifiedAds.WebMVC.Controllers
             var response = await httpClient.GetUserInfoAsync(new UserInfoRequest { Address = metaDataResponse.UserInfoEndpoint, Token = accessToken });
 
             var products = _productService.GetProducts().ToList();
+
+            httpClient.SetBearerToken(accessToken);
+            var response2 = await httpClient.GetAsync("https://localhost:44312/api/products");
+            var products2 = await response2.Content.ReadAs<List<Product>>();
 
             return View();
         }

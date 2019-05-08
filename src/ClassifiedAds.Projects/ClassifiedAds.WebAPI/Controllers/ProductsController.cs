@@ -5,9 +5,11 @@ using ClassifiedAds.DomainServices.Repositories;
 using ClassifiedAds.DomainServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClassifiedAds.WebAPI.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]

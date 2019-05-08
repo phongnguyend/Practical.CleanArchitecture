@@ -7,5 +7,9 @@ namespace ClassifiedAds.DomainServices.Repositories
     public interface IUnitOfWork
     {
         void SaveChanges();
+
+        void BeginTransaction();
+
+        void CommitTransaction();
     }
 }

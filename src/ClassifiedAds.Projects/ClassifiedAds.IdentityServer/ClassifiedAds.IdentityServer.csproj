@@ -13,4 +13,8 @@
     <PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.0.165" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ClassifiedAds.CrossCuttingConcerns\ClassifiedAds.CrossCuttingConcerns.csproj" />
+  </ItemGroup>
+
 </Project>
