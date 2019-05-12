@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.WebMVC.HttpHandlers;
+﻿using ClassifiedAds.WebMVC.Filters;
+using ClassifiedAds.WebMVC.HttpHandlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -28,7 +29,14 @@ namespace ClassifiedAds.WebMVC
             });
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(setupAction =>
+            {
+                setupAction.Filters.Add(typeof(CustomActionFilter));
+                setupAction.Filters.Add(typeof(CustomResultFilter));
+                setupAction.Filters.Add(typeof(CustomAuthorizationFilter));
+                setupAction.Filters.Add(typeof(CustomExceptionFilter));
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddPersistance(Configuration.GetConnectionString("ClassifiedAds"))
                     .AddDomainServices();

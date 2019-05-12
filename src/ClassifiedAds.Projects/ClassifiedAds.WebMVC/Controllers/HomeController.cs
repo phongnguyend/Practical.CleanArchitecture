@@ -89,5 +89,10 @@ namespace ClassifiedAds.WebMVC.Controllers
 
             return Json(response.Claims);
         }
+
+        public IActionResult TestException()
+        {
+            throw new Exception("Test Exception Filter");
+        }
     }
 }
