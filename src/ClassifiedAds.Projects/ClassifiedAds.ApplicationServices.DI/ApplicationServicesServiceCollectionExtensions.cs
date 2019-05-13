@@ -1,17 +1,20 @@
-﻿using ClassifiedAds.ApplicationServices.Commands;
+﻿using ClassifiedAds.ApplicationServices;
+using ClassifiedAds.ApplicationServices.Commands;
+using ClassifiedAds.ApplicationServices.Decorators;
 using ClassifiedAds.ApplicationServices.Queries;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace ClassifiedAds.ApplicationServices.Decorators
+namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class HandlerRegistration
+    public static class ApplicationServicesServiceCollectionExtensions
     {
-        public static void AddHandlers(this IServiceCollection services)
+        public static void AddMessageHandlers(this IServiceCollection services)
         {
+            services.AddScoped<Dispatcher>();
+
             List<Type> handlerTypes = typeof(ICommand).Assembly.GetTypes()
                 .Where(x => x.GetInterfaces().Any(y => IsHandlerInterface(y)))
                 .Where(x => x.Name.EndsWith("Handler"))

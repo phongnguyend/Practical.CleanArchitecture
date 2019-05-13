@@ -25,11 +25,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.DomainService
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.WebAPI.IntegrationTests", "ClassifiedAds.WebAPI.IntegrationTests\ClassifiedAds.WebAPI.IntegrationTests.csproj", "{3BB84036-C9F0-4E49-B33E-051B81064CC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.IdentityServer", "ClassifiedAds.IdentityServer\ClassifiedAds.IdentityServer.csproj", "{0A58317B-5526-41D6-9FF6-BE50314C7C85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.IdentityServer", "ClassifiedAds.IdentityServer\ClassifiedAds.IdentityServer.csproj", "{0A58317B-5526-41D6-9FF6-BE50314C7C85}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.WebMVC", "ClassifiedAds.WebMVC\ClassifiedAds.WebMVC.csproj", "{CFDF9CC8-0B83-4FF0-AC76-36AA6E8DB565}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.WebMVC", "ClassifiedAds.WebMVC\ClassifiedAds.WebMVC.csproj", "{CFDF9CC8-0B83-4FF0-AC76-36AA6E8DB565}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.WebMVC.AutomationTests", "ClassifiedAds.WebMVC.AutomationTests\ClassifiedAds.WebMVC.AutomationTests.csproj", "{3B4CC496-3DD8-4FAC-8CBD-7D3823836410}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.WebMVC.AutomationTests", "ClassifiedAds.WebMVC.AutomationTests\ClassifiedAds.WebMVC.AutomationTests.csproj", "{3B4CC496-3DD8-4FAC-8CBD-7D3823836410}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.ApplicationServices.DI", "ClassifiedAds.ApplicationServices.DI\ClassifiedAds.ApplicationServices.DI.csproj", "{F45290FD-9B02-4434-A048-00D6377643D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +95,10 @@ Global
 		{3B4CC496-3DD8-4FAC-8CBD-7D3823836410}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B4CC496-3DD8-4FAC-8CBD-7D3823836410}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B4CC496-3DD8-4FAC-8CBD-7D3823836410}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F45290FD-9B02-4434-A048-00D6377643D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F45290FD-9B02-4434-A048-00D6377643D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F45290FD-9B02-4434-A048-00D6377643D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F45290FD-9B02-4434-A048-00D6377643D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -13,6 +13,8 @@ namespace ClassifiedAds.DomainServices
 
         Product Create(Product product);
 
+        Product Update(Product product);
+
         void Delete(Product product);
     }
 }

@@ -13,6 +13,8 @@ using IdentityModel.Client;
 using System.Net.Http;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
+using ClassifiedAds.ApplicationServices;
+using ClassifiedAds.ApplicationServices.Queries.Products;
 
 namespace ClassifiedAds.WebMVC.Controllers
 {
@@ -20,15 +22,18 @@ namespace ClassifiedAds.WebMVC.Controllers
     {
         private readonly IProductService _productService;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly Dispatcher _dispatcher;
 
-        public HomeController(IProductService productService, IHttpClientFactory httpClientFactory)
+        public HomeController(IProductService productService, IHttpClientFactory httpClientFactory, Dispatcher dispatcher)
         {
             _productService = productService;
             _httpClientFactory = httpClientFactory;
+            _dispatcher = dispatcher;
         }
 
         public IActionResult Index()
         {
+            var products = _dispatcher.Dispatch(new GetProductsQuery());
             return View();
         }
 

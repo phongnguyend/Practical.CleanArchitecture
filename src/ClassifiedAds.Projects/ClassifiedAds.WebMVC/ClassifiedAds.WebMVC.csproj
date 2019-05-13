@@ -17,6 +17,7 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\ClassifiedAds.ApplicationServices.DI\ClassifiedAds.ApplicationServices.DI.csproj" />
     <ProjectReference Include="..\ClassifiedAds.ApplicationServices\ClassifiedAds.ApplicationServices.csproj" />
     <ProjectReference Include="..\ClassifiedAds.CrossCuttingConcerns\ClassifiedAds.CrossCuttingConcerns.csproj" />
     <ProjectReference Include="..\ClassifiedAds.DomainServices.DI\ClassifiedAds.DomainServices.DI.csproj" />
