@@ -6,14 +6,26 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using System;
+using System.IO;
 
 namespace ClassifiedAds.WebMVC
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+
+            Directory.CreateDirectory(Path.Combine(env.ContentRootPath, "logs"));
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File(Path.Combine(env.ContentRootPath, "logs", "log.txt"),
+                    fileSizeLimitBytes: 10 * 1024,
+                    rollOnFileSizeLimit: true,
+                    shared: true,
+                    flushToDiskInterval: TimeSpan.FromSeconds(1))
+                .CreateLogger();
         }
 
         public IConfiguration Configuration { get; }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using ClassifiedAds.ApplicationServices;
 using ClassifiedAds.ApplicationServices.Queries.Products;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 
 namespace ClassifiedAds.WebAPI.Controllers
 {
@@ -18,16 +19,19 @@ namespace ClassifiedAds.WebAPI.Controllers
     {
         private readonly IProductService _productService;
         private readonly Dispatcher _dispatcher;
+        private readonly ILogger _logger;
 
-        public ProductsController(IProductService productService, Dispatcher dispatcher)
+        public ProductsController(IProductService productService, Dispatcher dispatcher, ILogger<ProductsController> logger)
         {
             _productService = productService;
             _dispatcher = dispatcher;
+            _logger = logger;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Product>> Get()
         {
+            _logger.LogInformation("Getting all products");
             var products = _dispatcher.Dispatch(new GetProductsQuery());
             return Ok(products);
         }

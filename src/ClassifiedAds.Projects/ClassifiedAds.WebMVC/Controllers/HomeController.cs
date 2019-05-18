@@ -15,6 +15,7 @@ using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.ApplicationServices;
 using ClassifiedAds.ApplicationServices.Queries.Products;
+using Microsoft.Extensions.Logging;
 
 namespace ClassifiedAds.WebMVC.Controllers
 {
@@ -23,16 +24,19 @@ namespace ClassifiedAds.WebMVC.Controllers
         private readonly IProductService _productService;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly Dispatcher _dispatcher;
+        private readonly ILogger _logger;
 
-        public HomeController(IProductService productService, IHttpClientFactory httpClientFactory, Dispatcher dispatcher)
+        public HomeController(IProductService productService, IHttpClientFactory httpClientFactory, Dispatcher dispatcher, ILogger<HomeController> logger)
         {
             _productService = productService;
             _httpClientFactory = httpClientFactory;
             _dispatcher = dispatcher;
+            _logger = logger;
         }
 
         public IActionResult Index()
         {
+            _logger.LogInformation("Getting all products");
             var products = _dispatcher.Dispatch(new GetProductsQuery());
             return View();
         }
