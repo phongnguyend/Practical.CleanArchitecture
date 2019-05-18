@@ -1,8 +1,5 @@
-﻿using ClassifiedAds.DomainServices;
-using System;
-using System.Collections.Generic;
+﻿using ClassifiedAds.DomainServices.Infrastructure;
 using System.IO;
-using System.Text;
 
 namespace ClassifiedAds.Infrastructure
 {

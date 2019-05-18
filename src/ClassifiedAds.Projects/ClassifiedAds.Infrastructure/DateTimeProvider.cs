@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.DomainServices;
+﻿using ClassifiedAds.DomainServices.Infrastructure;
 using System;
 
 namespace ClassifiedAds.Infrastructure

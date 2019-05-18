@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ClassifiedAds.DomainServices
+﻿namespace ClassifiedAds.DomainServices.Infrastructure
 {
     public interface IMessageQueueSender<T>
     {
