@@ -83,6 +83,7 @@ namespace ClassifiedAds.WebMVC
         {
             if (env.IsDevelopment())
             {
+                //app.MigrateDb();
                 app.UseDeveloperExceptionPage();
             }
             else

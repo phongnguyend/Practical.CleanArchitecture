@@ -2,6 +2,7 @@
 using ClassifiedAds.DomainServices.Repositories;
 using ClassifiedAds.Persistance;
 using ClassifiedAds.Persistance.Repositories;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -14,6 +15,14 @@ namespace Microsoft.Extensions.DependencyInjection
                     .AddScoped<IUnitOfWork, UnitOfWork>()
                     .AddScoped(typeof(IRepository<>), typeof(Repository<>));
             return services;
+        }
+
+        public static void MigrateDb(this IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                serviceScope.ServiceProvider.GetRequiredService<AdsDbContext>().Database.Migrate();
+            }
         }
     }
 }
