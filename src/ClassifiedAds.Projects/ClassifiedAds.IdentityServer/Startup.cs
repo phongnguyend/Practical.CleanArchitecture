@@ -3,14 +3,26 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using System.IO;
+using Serilog;
+using System;
 
 namespace ClassifiedAds.IdentityServer
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+
+            Directory.CreateDirectory(Path.Combine(env.ContentRootPath, "logs"));
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File(Path.Combine(env.ContentRootPath, "logs", "log.txt"),
+                    fileSizeLimitBytes: 10 * 1024 * 1024,
+                    rollOnFileSizeLimit: true,
+                    shared: true,
+                    flushToDiskInterval: TimeSpan.FromSeconds(1))
+                .CreateLogger();
         }
 
         public IConfiguration Configuration { get; }

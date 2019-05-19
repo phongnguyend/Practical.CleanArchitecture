@@ -21,7 +21,7 @@ namespace ClassifiedAds.WebMVC
             Directory.CreateDirectory(Path.Combine(env.ContentRootPath, "logs"));
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.File(Path.Combine(env.ContentRootPath, "logs", "log.txt"),
-                    fileSizeLimitBytes: 10 * 1024,
+                    fileSizeLimitBytes: 10 * 1024 * 1024,
                     rollOnFileSizeLimit: true,
                     shared: true,
                     flushToDiskInterval: TimeSpan.FromSeconds(1))

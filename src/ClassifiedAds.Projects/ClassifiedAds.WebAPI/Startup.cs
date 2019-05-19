@@ -8,14 +8,25 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using IdentityServer4.AccessTokenValidation;
+using System.IO;
+using Serilog;
 
 namespace ClassifiedAds.WebAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+
+            Directory.CreateDirectory(Path.Combine(env.ContentRootPath, "logs"));
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File(Path.Combine(env.ContentRootPath, "logs", "log.txt"),
+                    fileSizeLimitBytes: 10 * 1024 * 1024,
+                    rollOnFileSizeLimit: true,
+                    shared: true,
+                    flushToDiskInterval: TimeSpan.FromSeconds(1))
+                .CreateLogger();
         }
 
         public IConfiguration Configuration { get; }

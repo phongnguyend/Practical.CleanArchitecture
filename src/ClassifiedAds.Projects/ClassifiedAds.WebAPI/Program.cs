@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.EventLog;
+using Serilog;
 
 namespace ClassifiedAds.WebAPI
 {
@@ -23,6 +24,7 @@ namespace ClassifiedAds.WebAPI
                     //    SourceName = "WebAPI",
                     //    Filter = (a, b) => b >= LogLevel.Information
                     //});
-                });
+                })
+                .UseSerilog();
     }
 }
