@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Domain", "Cla
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.DomainServices", "ClassifiedAds.DomainServices\ClassifiedAds.DomainServices.csproj", "{2855A447-A0CC-485A-91D5-41A5E6F3F9A7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Persistance", "ClassifiedAds.Persistance\ClassifiedAds.Persistance.csproj", "{BA1D8E3E-555F-4C20-B6A0-55C146BFBCC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Persistence", "ClassifiedAds.Persistence\ClassifiedAds.Persistence.csproj", "{BA1D8E3E-555F-4C20-B6A0-55C146BFBCC7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Infrastructure", "ClassifiedAds.Infrastructure\ClassifiedAds.Infrastructure.csproj", "{FC4133A1-7A82-4AFB-9962-BA84A96B89BC}"
 EndProject
@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.WebAPI", "Cla
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.DomainServices.DI", "ClassifiedAds.DomainServices.DI\ClassifiedAds.DomainServices.DI.csproj", "{9CC74E1C-0ABE-4D12-B09A-0637091F2553}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Persistance.DI", "ClassifiedAds.Persistance.DI\ClassifiedAds.Persistance.DI.csproj", "{17427931-21EC-48F6-9D55-77D34DA72E26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Persistence.DI", "ClassifiedAds.Persistence.DI\ClassifiedAds.Persistence.DI.csproj", "{17427931-21EC-48F6-9D55-77D34DA72E26}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.DomainServices.UnitTests", "ClassifiedAds.DomainServices.UnitTests\ClassifiedAds.DomainServices.UnitTests.csproj", "{BF3DFCEE-9C42-437B-B3EC-D69F2D33AA1E}"
 EndProject

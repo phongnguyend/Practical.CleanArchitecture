@@ -2,7 +2,7 @@
 using ClassifiedAds.DomainServices;
 using Microsoft.EntityFrameworkCore;
 
-namespace ClassifiedAds.Persistance.Repositories
+namespace ClassifiedAds.Persistence.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {

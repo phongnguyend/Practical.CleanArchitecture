@@ -27,8 +27,7 @@
     <ProjectReference Include="..\ClassifiedAds.DomainServices\ClassifiedAds.DomainServices.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Domain\ClassifiedAds.Domain.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Infrastructure\ClassifiedAds.Infrastructure.csproj" />
-    <ProjectReference Include="..\ClassifiedAds.Persistance.DI\ClassifiedAds.Persistance.DI.csproj" />
-    <ProjectReference Include="..\ClassifiedAds.Persistance\ClassifiedAds.Persistance.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.Persistence.DI\ClassifiedAds.Persistence.DI.csproj" />
   </ItemGroup>
 
 </Project>

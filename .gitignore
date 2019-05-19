@@ -2,5 +2,5 @@ src/ClassifiedAds.Projects/*/bin/
 src/ClassifiedAds.Projects/*/obj/
 src/ClassifiedAds.Projects/*/logs/
 src/ClassifiedAds.Projects/.vs/
-src/ClassifiedAds.Projects/ClassifiedAds.Persistance/Migrations/
+src/ClassifiedAds.Projects/ClassifiedAds.Persistence/Migrations/
 src/ClassifiedAds.Projects/packages/

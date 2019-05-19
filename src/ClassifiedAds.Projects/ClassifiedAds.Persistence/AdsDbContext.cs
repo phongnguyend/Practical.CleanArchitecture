@@ -1,9 +1,9 @@
 ﻿using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Persistance.MappingConfigurations;
+using ClassifiedAds.Persistence.MappingConfigurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace ClassifiedAds.Persistance
+namespace ClassifiedAds.Persistence
 {
     public class AdsDbContext : IdentityDbContext<User>
     {

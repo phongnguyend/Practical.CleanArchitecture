@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ClassifiedAds.Persistance.MappingConfigurations
+namespace ClassifiedAds.Persistence.MappingConfigurations
 {
     public class ProductConfiguration : IEntityTypeConfiguration<Product>
     {

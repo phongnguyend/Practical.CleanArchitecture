@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
-namespace ClassifiedAds.Persistance.Repositories
+namespace ClassifiedAds.Persistence.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {

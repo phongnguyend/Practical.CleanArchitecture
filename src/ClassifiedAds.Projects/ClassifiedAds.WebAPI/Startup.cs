@@ -38,7 +38,7 @@ namespace ClassifiedAds.WebAPI
 
             services.AddCors();
 
-            services.AddPersistance(Configuration.GetConnectionString("ClassifiedAds"))
+            services.AddPersistence(Configuration.GetConnectionString("ClassifiedAds"))
                     .AddDomainServices()
                     .AddMessageHandlers();
 

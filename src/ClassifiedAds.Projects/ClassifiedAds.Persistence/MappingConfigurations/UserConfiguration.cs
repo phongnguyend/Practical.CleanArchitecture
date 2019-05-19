@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ClassifiedAds.Persistance.MappingConfigurations
+namespace ClassifiedAds.Persistence.MappingConfigurations
 {
     public class UserConfiguration: IEntityTypeConfiguration<User>
     {

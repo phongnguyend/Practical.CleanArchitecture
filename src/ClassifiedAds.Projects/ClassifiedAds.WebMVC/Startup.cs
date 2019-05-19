@@ -50,7 +50,7 @@ namespace ClassifiedAds.WebMVC
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddPersistance(Configuration.GetConnectionString("ClassifiedAds"))
+            services.AddPersistence(Configuration.GetConnectionString("ClassifiedAds"))
                     .AddDomainServices()
                     .AddMessageHandlers();
 
