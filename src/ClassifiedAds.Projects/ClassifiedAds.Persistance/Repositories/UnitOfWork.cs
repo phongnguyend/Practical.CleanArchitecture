@@ -1,5 +1,7 @@
 ﻿using ClassifiedAds.DomainServices.Repositories;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace ClassifiedAds.Persistance.Repositories
 {
@@ -13,9 +15,9 @@ namespace ClassifiedAds.Persistance.Repositories
             _dbContext = dbContext;
         }
 
-        public void BeginTransaction()
+        public void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
-            _dbContextTransaction = _dbContext.Database.BeginTransaction();
+            _dbContextTransaction = _dbContext.Database.BeginTransaction(isolationLevel);
         }
 
         public void CommitTransaction()

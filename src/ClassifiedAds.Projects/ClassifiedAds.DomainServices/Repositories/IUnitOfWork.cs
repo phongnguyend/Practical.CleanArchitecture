@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Data;
 
 namespace ClassifiedAds.DomainServices.Repositories
 {
@@ -8,7 +6,7 @@ namespace ClassifiedAds.DomainServices.Repositories
     {
         void SaveChanges();
 
-        void BeginTransaction();
+        void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
 
         void CommitTransaction();
     }
