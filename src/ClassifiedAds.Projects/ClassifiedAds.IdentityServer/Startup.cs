@@ -1,5 +1,4 @@
-﻿using IdentityServer4.Quickstart.UI;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -33,10 +32,12 @@ namespace ClassifiedAds.IdentityServer
         {
             services.AddMvc();
 
+            services.AddPersistence(Configuration.GetConnectionString("ClassifiedAds"))
+                    .AddIdentity();
+
             services.AddIdentityServer()
-                .AddDeveloperSigningCredential()
-                .AddPersistence(Configuration.GetConnectionString("ClassifiedAds"))
-                .AddTestUsers(TestUsers.Users);
+                    .AddDeveloperSigningCredential()
+                    .AddPersistence(Configuration.GetConnectionString("ClassifiedAds"));
 
             services.AddMiniProfiler(options =>
             {
@@ -52,7 +53,7 @@ namespace ClassifiedAds.IdentityServer
         {
             if (env.IsDevelopment())
             {
-                app.MigrateDb();
+                app.MigrateIdServerDb();
                 app.UseDeveloperExceptionPage();
             }
 

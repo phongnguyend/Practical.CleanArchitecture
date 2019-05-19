@@ -47,6 +47,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persistence", "Persistence"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{BBD032E9-D75E-4CD8-A23A-7234480435BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Identity", "ClassifiedAds.Identity\ClassifiedAds.Identity.csproj", "{1B8755A0-BE0D-46C2-8475-8641E0B8726E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +119,10 @@ Global
 		{51E497D7-DA8A-49E1-9559-E37768830252}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51E497D7-DA8A-49E1-9559-E37768830252}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51E497D7-DA8A-49E1-9559-E37768830252}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B8755A0-BE0D-46C2-8475-8641E0B8726E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B8755A0-BE0D-46C2-8475-8641E0B8726E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B8755A0-BE0D-46C2-8475-8641E0B8726E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B8755A0-BE0D-46C2-8475-8641E0B8726E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -138,6 +144,7 @@ Global
 		{3B4CC496-3DD8-4FAC-8CBD-7D3823836410} = {C6061573-0203-4860-AD42-4C6C2CF55110}
 		{F45290FD-9B02-4434-A048-00D6377643D3} = {BBD032E9-D75E-4CD8-A23A-7234480435BE}
 		{51E497D7-DA8A-49E1-9559-E37768830252} = {9D2F0EDA-74AB-49E2-9F1F-50D961A23CE4}
+		{1B8755A0-BE0D-46C2-8475-8641E0B8726E} = {BBD032E9-D75E-4CD8-A23A-7234480435BE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2C23354-4AAD-41AC-9E06-0A6F210ACEEF}

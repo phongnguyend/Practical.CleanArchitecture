@@ -82,8 +82,8 @@ namespace ClassifiedAds.WebAPI.IntegrationTests
                 Address = metaDataResponse.TokenEndpoint,
                 ClientId = "ClassifiedAds.WebMVC",
                 ClientSecret = "secret",
-                UserName = "bob",
-                Password = "bob",
+                UserName = "phong@gmail.com",
+                Password = "v*7Un8b4rcN@<-RN",
                 Scope = "ClassifiedAds.WebAPI"
             });
 

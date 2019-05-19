@@ -2,6 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.IdentityServer.Models;
 using IdentityModel;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
@@ -12,7 +14,9 @@ using IdentityServer4.Test;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,23 +32,25 @@ namespace IdentityServer4.Quickstart.UI
     [AllowAnonymous]
     public class AccountController : Controller
     {
-        private readonly TestUserStore _users;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IClientStore _clientStore;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IEventService _events;
 
+        private readonly ILogger _logger;
+        private readonly UserManager<User> _userManager;
+
         public AccountController(
+            ILogger<AccountController> logger,
+            UserManager<User> userManager,
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
             IEventService events,
             TestUserStore users = null)
         {
-            // if the TestUserStore is not in DI, then we'll just use the global users collection
-            // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
-            _users = users ?? new TestUserStore(TestUsers.Users);
-
+            _logger = logger;
+            _userManager = userManager;
             _interaction = interaction;
             _clientStore = clientStore;
             _schemeProvider = schemeProvider;
@@ -108,11 +114,11 @@ namespace IdentityServer4.Quickstart.UI
 
             if (ModelState.IsValid)
             {
-                // validate username/password against in-memory store
-                if (_users.ValidateCredentials(model.Username, model.Password))
+                var user = await _userManager.FindByNameAsync(model.Username);
+
+                if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
                 {
-                    var user = _users.FindByUsername(model.Username);
-                    await _events.RaiseAsync(new UserLoginSuccessEvent(user.Username, user.SubjectId, user.Username));
+                    await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName));
 
                     // only set explicit expiration here if user chooses "remember me". 
                     // otherwise we rely upon expiration configured in cookie middleware.
@@ -127,7 +133,7 @@ namespace IdentityServer4.Quickstart.UI
                     };
 
                     // issue authentication cookie with subject ID and username
-                    await HttpContext.SignInAsync(user.SubjectId, user.Username, props);
+                    await HttpContext.SignInAsync(user.Id, user.UserName, props);
 
                     if (context != null)
                     {
@@ -167,7 +173,7 @@ namespace IdentityServer4.Quickstart.UI
             return View(vm);
         }
 
-        
+
         /// <summary>
         /// Show logout page
         /// </summary>
@@ -200,7 +206,7 @@ namespace IdentityServer4.Quickstart.UI
             if (User?.Identity.IsAuthenticated == true)
             {
                 // delete local authentication cookie
-                await HttpContext.SignOutAsync();
+                await HttpContext.SignOutAsync("Identity.Application");
 
                 // raise the logout event
                 await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
@@ -354,6 +360,128 @@ namespace IdentityServer4.Quickstart.UI
             }
 
             return vm;
+        }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByNameAsync(model.UserName);
+
+                if (user == null)
+                {
+                    user = new User
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        UserName = model.UserName,
+                        Email = model.UserName
+                    };
+
+                    var result = await _userManager.CreateAsync(user, model.Password);
+
+                    if (result.Succeeded)
+                    {
+                        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        var confirmationEmail = Url.Action("ConfirmEmailAddress", "Account",
+                            new { token = token, email = user.Email }, Request.Scheme);
+
+                        _logger.LogInformation("Confirmation Email: {0}", confirmationEmail);
+                    }
+                }
+
+                return View("Success");
+            }
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmailAddress(string token, string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user != null)
+            {
+                var result = await _userManager.ConfirmEmailAsync(user, token);
+
+                if (result.Succeeded)
+                {
+                    return View("Success");
+                }
+            }
+
+            return View("Error");
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                if (user != null)
+                {
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var resetUrl = Url.Action("ResetPassword", "Account",
+                        new { token = token, email = user.Email }, Request.Scheme);
+
+                    _logger.LogInformation("Reset Url: {0}", resetUrl);
+                }
+                else
+                {
+                    // email user and inform them that they do not have an account
+                }
+
+                return View("Success");
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            return View(new ResetPasswordModel { Token = token, Email = email });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                if (user != null)
+                {
+                    var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+
+                    if (!result.Succeeded)
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError("", error.Description);
+                        }
+                        return View();
+                    }
+                    return View("Success");
+                }
+                ModelState.AddModelError("", "Invalid Request");
+            }
+            return View();
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
+using ClassifiedAds.Domain.Entities;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -32,11 +33,12 @@ namespace Microsoft.Extensions.DependencyInjection
                     // this enables automatic token cleanup. this is optional.
                     options.EnableTokenCleanup = true;
                     options.TokenCleanupInterval = 30; // interval in seconds
-                });
+                })
+                .AddAspNetIdentity<User>();
             return services;
         }
 
-        public static void MigrateDb(this IApplicationBuilder app)
+        public static void MigrateIdServerDb(this IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {

@@ -8,7 +8,7 @@ namespace ClassifiedAds.Persistence
     public class AdsDbContext : IdentityDbContext<User>
     {
 
-        public AdsDbContext(DbContextOptions options) : base(options)
+        public AdsDbContext(DbContextOptions<AdsDbContext> options) : base(options)
         {
 
         }

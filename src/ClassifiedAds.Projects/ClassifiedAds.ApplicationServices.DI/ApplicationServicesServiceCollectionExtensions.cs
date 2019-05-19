@@ -11,7 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ApplicationServicesServiceCollectionExtensions
     {
-        public static void AddMessageHandlers(this IServiceCollection services)
+        public static IServiceCollection AddMessageHandlers(this IServiceCollection services)
         {
             services.AddScoped<Dispatcher>();
 
@@ -24,6 +24,8 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 AddHandler(services, type);
             }
+
+            return services;
         }
 
         private static void AddHandler(IServiceCollection services, Type type)
