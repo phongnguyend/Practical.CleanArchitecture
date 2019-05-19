@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ClassifiedAds.Domain.Entities
 {
-    public interface Entity<T>
+    public class Entity<TId> : IHasKey<TId>, ITrackable
     {
-        T Id { get; set; }
+        public TId Id { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }

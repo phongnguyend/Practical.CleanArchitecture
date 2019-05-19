@@ -6,8 +6,6 @@ namespace ClassifiedAds.Domain.Entities
 {
     public class Product : Entity<Guid>
     {
-        public Guid Id { get; set; }
-
         public string Code { get; set; }
 
         public string Name { get; set; }

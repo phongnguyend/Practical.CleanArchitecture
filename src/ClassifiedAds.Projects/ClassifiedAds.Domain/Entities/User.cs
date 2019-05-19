@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClassifiedAds.Domain.Entities
 {
-    public class User : IdentityUser, Entity<string>
+    public class User : IdentityUser, IHasKey<string>, ITrackable
     {
-
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }
