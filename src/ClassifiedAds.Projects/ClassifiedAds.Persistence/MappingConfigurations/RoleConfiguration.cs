@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ClassifiedAds.Persistence.MappingConfigurations
 {
-    public class UserConfiguration: IEntityTypeConfiguration<User>
+    public class RoleConfiguration : IEntityTypeConfiguration<Role>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<Role> builder)
         {
-            builder.ToTable("Users");
+            builder.ToTable("Roles");
             builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
         }
     }

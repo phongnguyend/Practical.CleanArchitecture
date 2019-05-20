@@ -105,6 +105,8 @@ namespace ClassifiedAds.WebMVC
                 app.UseHsts();
             }
 
+            app.UseIPFiltering();
+
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseStaticFiles();

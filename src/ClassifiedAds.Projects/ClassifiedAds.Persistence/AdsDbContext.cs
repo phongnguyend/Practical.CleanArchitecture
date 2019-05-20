@@ -1,11 +1,9 @@
-﻿using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Persistence.MappingConfigurations;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using ClassifiedAds.Persistence.MappingConfigurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassifiedAds.Persistence
 {
-    public class AdsDbContext : IdentityDbContext<User>
+    public class AdsDbContext : DbContext
     {
 
         public AdsDbContext(DbContextOptions<AdsDbContext> options) : base(options)
@@ -17,6 +15,7 @@ namespace ClassifiedAds.Persistence
         {
             base.OnModelCreating(builder);
             builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new RoleConfiguration());
             builder.ApplyConfiguration(new ProductConfiguration());
         }
     }

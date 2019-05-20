@@ -50,7 +50,7 @@ namespace ClassifiedAds.DomainServices.UnitTests
         {
             //Arrange
             var userId = Guid.NewGuid();
-            var users = new List<User> { new User { Id = userId.ToString(), UserName = "XXX" } };
+            var users = new List<User> { new User { Id = userId, UserName = "XXX" } };
             _userRepository.Setup(x => x.GetAll()).Returns(users.AsQueryable());
 
             //Act

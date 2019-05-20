@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>ClassifiedAds.Persistance</RootNamespace>
+    <RootNamespace>ClassifiedAds.Persistence</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

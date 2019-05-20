@@ -18,8 +18,7 @@ namespace ClassifiedAds.DomainServices
         {
             ValidationException.Requires(Id != Guid.Empty, "Invalid Id");
 
-            var IdAsString = Id.ToString();
-            return _userRepository.GetAll().Where(x => x.Id == IdAsString).FirstOrDefault();
+            return _userRepository.GetAll().Where(x => x.Id == Id).FirstOrDefault();
         }
     }
 }

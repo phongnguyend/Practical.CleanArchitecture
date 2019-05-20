@@ -118,7 +118,7 @@ namespace IdentityServer4.Quickstart.UI
 
                 if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
                 {
-                    await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName));
+                    await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id.ToString(), user.UserName));
 
                     // only set explicit expiration here if user chooses "remember me". 
                     // otherwise we rely upon expiration configured in cookie middleware.
@@ -133,7 +133,7 @@ namespace IdentityServer4.Quickstart.UI
                     };
 
                     // issue authentication cookie with subject ID and username
-                    await HttpContext.SignInAsync(user.Id, user.UserName, props);
+                    await HttpContext.SignInAsync(user.Id.ToString(), user.UserName, props);
 
                     if (context != null)
                     {
@@ -380,7 +380,6 @@ namespace IdentityServer4.Quickstart.UI
                 {
                     user = new User
                     {
-                        Id = Guid.NewGuid().ToString(),
                         UserName = model.UserName,
                         Email = model.UserName
                     };
