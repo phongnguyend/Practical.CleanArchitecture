@@ -15,8 +15,11 @@ namespace ClassifiedAds.Persistence
         {
             base.OnModelCreating(builder);
             builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new UserTokenConfiguration());
             builder.ApplyConfiguration(new RoleConfiguration());
             builder.ApplyConfiguration(new ProductConfiguration());
+            builder.ApplyConfiguration(new SmsMessageConfiguration());
+            builder.ApplyConfiguration(new EmailMessageConfiguration());
         }
     }
 }

@@ -3,6 +3,7 @@ using ClassifiedAds.DomainServices;
 using ClassifiedAds.DomainServices.Repositories;
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,15 +16,20 @@ namespace ClassifiedAds.Identity
                              IUserEmailStore<User>,
                              IUserPhoneNumberStore<User>,
                              IUserTwoFactorStore<User>,
-                             IUserLockoutStore<User>
+                             IUserLockoutStore<User>,
+                             IUserAuthenticationTokenStore<User>,
+                             IUserAuthenticatorKeyStore<User>,
+                             IUserTwoFactorRecoveryCodeStore<User>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<User> _userRepository;
+        private readonly IRepository<UserToken> _userTokenRepository;
 
-        public UserStore(IUnitOfWork unitOfWork, IRepository<User> userRepository)
+        public UserStore(IUnitOfWork unitOfWork, IRepository<User> userRepository, IRepository<UserToken> userTokenRepository)
         {
             _unitOfWork = unitOfWork;
             _userRepository = userRepository;
+            _userTokenRepository = userTokenRepository;
         }
 
         public void Dispose()
@@ -222,6 +228,100 @@ namespace ClassifiedAds.Identity
         {
             _unitOfWork.SaveChanges();
             return Task.FromResult(IdentityResult.Success);
+        }
+
+        private const string AuthenticatorStoreLoginProvider = "[AuthenticatorStore]";
+        private const string AuthenticatorKeyTokenName = "AuthenticatorKey";
+        private const string RecoveryCodeTokenName = "RecoveryCodes";
+
+        public Task<string> GetTokenAsync(User user, string loginProvider, string name, CancellationToken cancellationToken)
+        {
+            var tokenEntity =
+                _userTokenRepository.GetAll().SingleOrDefault(
+                    l =>
+                        l.TokenName == name && l.LoginProvider == loginProvider &&
+                        l.UserId == user.Id);
+            return Task.FromResult(tokenEntity?.TokenValue);
+        }
+
+        public Task SetTokenAsync(User user, string loginProvider, string name, string value, CancellationToken cancellationToken)
+        {
+            var tokenEntity =
+                _userTokenRepository.GetAll().SingleOrDefault(
+                    l =>
+                        l.TokenName == name && l.LoginProvider == loginProvider &&
+                        l.UserId == user.Id);
+            if (tokenEntity != null)
+            {
+                tokenEntity.TokenValue = value;
+            }
+            else
+            {
+                _userTokenRepository.Add(new UserToken
+                {
+                    UserId = user.Id,
+                    LoginProvider = loginProvider,
+                    TokenName = name,
+                    TokenValue = value
+                });
+            }
+
+            _unitOfWork.SaveChanges();
+
+            return Task.FromResult(0);
+        }
+
+        public Task RemoveTokenAsync(User user, string loginProvider, string name, CancellationToken cancellationToken)
+        {
+            var tokenEntity =
+                _userTokenRepository.GetAll().SingleOrDefault(
+                    l =>
+                        l.TokenName == name && l.LoginProvider == loginProvider &&
+                        l.UserId == user.Id);
+            if (tokenEntity != null)
+            {
+                _userTokenRepository.Delete(tokenEntity);
+            }
+            return Task.FromResult(0);
+        }
+
+        public Task SetAuthenticatorKeyAsync(User user, string key, CancellationToken cancellationToken)
+        {
+            return SetTokenAsync(user, AuthenticatorStoreLoginProvider, AuthenticatorKeyTokenName, key, cancellationToken);
+        }
+
+        public Task<string> GetAuthenticatorKeyAsync(User user, CancellationToken cancellationToken)
+        {
+            return GetTokenAsync(user, AuthenticatorStoreLoginProvider, AuthenticatorKeyTokenName, cancellationToken);
+        }
+
+        public Task ReplaceCodesAsync(User user, IEnumerable<string> recoveryCodes, CancellationToken cancellationToken)
+        {
+            var mergedCodes = string.Join(";", recoveryCodes);
+            return SetTokenAsync(user, AuthenticatorStoreLoginProvider, RecoveryCodeTokenName, mergedCodes, cancellationToken);
+        }
+
+        public async Task<bool> RedeemCodeAsync(User user, string code, CancellationToken cancellationToken)
+        {
+            var mergedCodes = await GetTokenAsync(user, AuthenticatorStoreLoginProvider, RecoveryCodeTokenName, cancellationToken) ?? "";
+            var splitCodes = mergedCodes.Split(';');
+            if (splitCodes.Contains(code))
+            {
+                var updatedCodes = new List<string>(splitCodes.Where(s => s != code));
+                await ReplaceCodesAsync(user, updatedCodes, cancellationToken);
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<int> CountCodesAsync(User user, CancellationToken cancellationToken)
+        {
+            var mergedCodes = await GetTokenAsync(user, AuthenticatorStoreLoginProvider, RecoveryCodeTokenName, cancellationToken) ?? "";
+            if (mergedCodes.Length > 0)
+            {
+                return mergedCodes.Split(';').Length;
+            }
+            return 0;
         }
     }
 }

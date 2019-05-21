@@ -33,6 +33,7 @@ namespace ClassifiedAds.IdentityServer
             services.AddMvc();
 
             services.AddPersistence(Configuration.GetConnectionString("ClassifiedAds"))
+                    .AddDomainServices()
                     .AddIdentity();
 
             services.AddIdentityServer()

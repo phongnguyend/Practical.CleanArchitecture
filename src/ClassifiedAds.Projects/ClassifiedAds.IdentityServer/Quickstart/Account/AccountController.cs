@@ -3,6 +3,7 @@
 
 
 using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.DomainServices.Services;
 using ClassifiedAds.IdentityServer.Models;
 using IdentityModel;
 using IdentityServer4.Events;
@@ -39,10 +40,12 @@ namespace IdentityServer4.Quickstart.UI
 
         private readonly ILogger _logger;
         private readonly UserManager<User> _userManager;
+        private readonly IEmailMessageService _emailMessageService;
 
         public AccountController(
             ILogger<AccountController> logger,
             UserManager<User> userManager,
+            IEmailMessageService emailMessageService,
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
@@ -51,6 +54,7 @@ namespace IdentityServer4.Quickstart.UI
         {
             _logger = logger;
             _userManager = userManager;
+            _emailMessageService = emailMessageService;
             _interaction = interaction;
             _clientStore = clientStore;
             _schemeProvider = schemeProvider;
@@ -392,7 +396,13 @@ namespace IdentityServer4.Quickstart.UI
                         var confirmationEmail = Url.Action("ConfirmEmailAddress", "Account",
                             new { token = token, email = user.Email }, Request.Scheme);
 
-                        _logger.LogInformation("Confirmation Email: {0}", confirmationEmail);
+                        _emailMessageService.Add(new EmailMessage
+                        {
+                            From = "",
+                            To = user.Email,
+                            Subject = "Confirmation Email",
+                            Body = string.Format("Confirmation Email: {0}", confirmationEmail)
+                        });
                     }
                 }
 
@@ -439,7 +449,13 @@ namespace IdentityServer4.Quickstart.UI
                     var resetUrl = Url.Action("ResetPassword", "Account",
                         new { token = token, email = user.Email }, Request.Scheme);
 
-                    _logger.LogInformation("Reset Url: {0}", resetUrl);
+                    _emailMessageService.Add(new EmailMessage
+                    {
+                        From = "",
+                        To = user.Email,
+                        Subject = "Forgot Password",
+                        Body = string.Format("Reset Url: {0}", resetUrl)
+                    });
                 }
                 else
                 {

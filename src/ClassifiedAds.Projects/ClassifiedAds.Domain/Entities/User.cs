@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ClassifiedAds.Domain.Entities
 {
@@ -31,5 +32,7 @@ namespace ClassifiedAds.Domain.Entities
         public DateTimeOffset? LockoutEnd { get; set; }
 
         public int AccessFailedCount { get; set; }
+
+        public IList<UserToken> Tokens { get; set; }
     }
 }
