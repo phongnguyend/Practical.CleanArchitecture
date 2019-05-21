@@ -3,21 +3,12 @@ using ClassifiedAds.DomainServices.Repositories;
 
 namespace ClassifiedAds.DomainServices.Services
 {
-    public class EmailMessageService : IEmailMessageService
+    public class EmailMessageService : GenericService<EmailMessage>, IEmailMessageService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<EmailMessage> _repository;
-
         public EmailMessageService(IUnitOfWork unitOfWork, IRepository<EmailMessage> repository)
+            : base(unitOfWork, repository)
         {
-            _unitOfWork = unitOfWork;
-            _repository = repository;
-        }
 
-        public void Add(EmailMessage email)
-        {
-            _repository.Add(email);
-            _unitOfWork.SaveChanges();
         }
     }
 }

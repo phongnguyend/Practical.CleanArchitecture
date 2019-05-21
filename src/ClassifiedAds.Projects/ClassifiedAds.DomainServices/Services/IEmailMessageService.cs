@@ -2,8 +2,8 @@
 
 namespace ClassifiedAds.DomainServices.Services
 {
-    public interface IEmailMessageService
+    public interface IEmailMessageService : IGenericService<EmailMessage>
     {
-        void Add(EmailMessage email);
+
     }
 }

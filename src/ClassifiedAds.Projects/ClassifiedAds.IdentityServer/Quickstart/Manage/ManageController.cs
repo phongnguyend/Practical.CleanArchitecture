@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -100,7 +99,11 @@ namespace ClassifiedAds.IdentityServer.Quickstart.Manage
             // Generate the token and send it
             var user = await GetCurrentUserAsync();
             var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, model.PhoneNumber);
-            _smsMessageService.SendSms(model.PhoneNumber, "Your security code is: " + code);
+            _smsMessageService.Add(new SmsMessage
+            {
+                PhoneNumber = model.PhoneNumber,
+                Message = "Your security code is: " + code
+            });
             return RedirectToAction(nameof(VerifyPhoneNumber), new { PhoneNumber = model.PhoneNumber });
         }
 

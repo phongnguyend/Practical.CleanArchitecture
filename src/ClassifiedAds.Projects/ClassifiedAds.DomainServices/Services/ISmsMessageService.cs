@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ClassifiedAds.Domain.Entities;
 
 namespace ClassifiedAds.DomainServices.Services
 {
-    public interface ISmsMessageService
+    public interface ISmsMessageService : IGenericService<SmsMessage>
     {
-        void SendSms(string message, string phoneNumber);
+
     }
 }
