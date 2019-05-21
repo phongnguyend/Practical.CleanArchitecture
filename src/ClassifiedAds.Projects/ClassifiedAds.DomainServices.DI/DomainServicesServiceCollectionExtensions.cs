@@ -7,10 +7,9 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddDomainServices(this IServiceCollection services)
         {
-            services.AddScoped<IUserService, UserService>()
-                    .AddScoped<IProductService, ProductService>()
-                    .AddScoped<ISmsMessageService, SmsMessageService>()
-                    .AddScoped<IEmailMessageService, EmailMessageService>();
+            services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>))
+                    .AddScoped<IUserService, UserService>()
+                    .AddScoped<IProductService, ProductService>();
             return services;
         }
     }

@@ -17,13 +17,13 @@ namespace ClassifiedAds.IdentityServer.Quickstart.Manage
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger _logger;
-        private readonly ISmsMessageService _smsMessageService;
+        private readonly IGenericService<SmsMessage> _smsMessageService;
 
         public ManageController(
         UserManager<User> userManager,
         SignInManager<User> signInManager,
         ILoggerFactory loggerFactory,
-        ISmsMessageService smsMessageService)
+        IGenericService<SmsMessage> smsMessageService)
         {
             _userManager = userManager;
             _signInManager = signInManager;

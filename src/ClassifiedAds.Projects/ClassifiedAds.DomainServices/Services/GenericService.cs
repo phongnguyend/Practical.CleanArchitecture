@@ -2,7 +2,7 @@
 
 namespace ClassifiedAds.DomainServices.Services
 {
-    public class GenericService<T> where T : class
+    public class GenericService<T> : IGenericService<T> where T : class
     {
         protected readonly IUnitOfWork _unitOfWork;
         protected readonly IRepository<T> _repository;
