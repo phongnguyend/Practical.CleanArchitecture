@@ -103,5 +103,11 @@ namespace ClassifiedAds.WebMVC.Controllers
         {
             throw new Exception("Test Exception Filter");
         }
+
+        [Authorize(Policy = "CustomPolicy")]
+        public IActionResult CustomRequirement()
+        {
+            return Content("Inside Custom Requirement Action");
+        }
     }
 }

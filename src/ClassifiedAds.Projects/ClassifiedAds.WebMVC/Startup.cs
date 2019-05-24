@@ -1,7 +1,9 @@
-﻿using ClassifiedAds.WebMVC.ClaimsTransformations;
+﻿using ClassifiedAds.WebMVC.Authorization;
+using ClassifiedAds.WebMVC.ClaimsTransformations;
 using ClassifiedAds.WebMVC.Filters;
 using ClassifiedAds.WebMVC.HttpHandlers;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -79,6 +81,16 @@ namespace ClassifiedAds.WebMVC
                 options.GetClaimsFromUserInfoEndpoint = true;
             });
             services.AddSingleton<IClaimsTransformation, CustomClaimsTransformation>();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("CustomPolicy", policy =>
+                {
+                    policy.AddRequirements(new CustomRequirement());
+                });
+            })
+            .AddSingleton<IAuthorizationHandler, CustomRequirementHandler>();
+
 
             services.AddTransient<ProfilingHttpHandler>();
             services.AddHttpClient("")
