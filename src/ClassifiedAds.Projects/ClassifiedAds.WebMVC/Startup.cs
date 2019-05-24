@@ -1,5 +1,7 @@
-﻿using ClassifiedAds.WebMVC.Filters;
+﻿using ClassifiedAds.WebMVC.ClaimsTransformations;
+using ClassifiedAds.WebMVC.Filters;
 using ClassifiedAds.WebMVC.HttpHandlers;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -76,6 +78,7 @@ namespace ClassifiedAds.WebMVC
                 options.ClientSecret = "secret";
                 options.GetClaimsFromUserInfoEndpoint = true;
             });
+            services.AddSingleton<IClaimsTransformation, CustomClaimsTransformation>();
 
             services.AddTransient<ProfilingHttpHandler>();
             services.AddHttpClient("")
