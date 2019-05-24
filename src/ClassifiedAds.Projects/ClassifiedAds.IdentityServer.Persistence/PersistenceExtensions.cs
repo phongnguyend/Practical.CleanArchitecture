@@ -71,7 +71,8 @@ namespace Microsoft.Extensions.DependencyInjection
                         ClientSecrets =
                         {
                             new Secret("secret".Sha256())
-                        }
+                        },
+                        AllowOfflineAccess = true
                     }
                 };
 

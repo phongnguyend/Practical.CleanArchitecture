@@ -76,6 +76,7 @@ namespace ClassifiedAds.WebMVC
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
                 options.Scope.Add("ClassifiedAds.WebAPI");
+                options.Scope.Add("offline_access");
                 options.SaveTokens = true;
                 options.ClientSecret = "secret";
                 options.GetClaimsFromUserInfoEndpoint = true;

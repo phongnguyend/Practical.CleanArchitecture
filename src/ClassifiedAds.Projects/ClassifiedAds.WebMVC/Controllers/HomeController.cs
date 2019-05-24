@@ -16,6 +16,8 @@ using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.ApplicationServices;
 using ClassifiedAds.ApplicationServices.Queries.Products;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Globalization;
 
 namespace ClassifiedAds.WebMVC.Controllers
 {
@@ -97,6 +99,35 @@ namespace ClassifiedAds.WebMVC.Controllers
             }
 
             return Json(response.Claims);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> RefreshToken()
+        {
+            var httpClient = _httpClientFactory.CreateClient();
+            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync("https://localhost:44367/");
+            var refreshToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
+            var response = await httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
+            {
+                Address = metaDataResponse.TokenEndpoint,
+                ClientId = "ClassifiedAds.WebMVC",
+                ClientSecret = "secret",
+                RefreshToken = refreshToken
+            });
+
+            if (response.IsError)
+            {
+                return Json(response);
+            }
+
+            var auth = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            auth.Properties.UpdateTokenValue(OpenIdConnectParameterNames.AccessToken, response.AccessToken);
+            auth.Properties.UpdateTokenValue(OpenIdConnectParameterNames.RefreshToken, response.RefreshToken);
+            var expiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(response.ExpiresIn);
+            auth.Properties.UpdateTokenValue("expires_at", expiresAt.ToString("o", CultureInfo.InvariantCulture));
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, auth.Principal, auth.Properties);
+
+            return Json(response);
         }
 
         public IActionResult TestException()
