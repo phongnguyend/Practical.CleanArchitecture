@@ -20,6 +20,9 @@ namespace ClassifiedAds.Persistence
             builder.ApplyConfiguration(new ProductConfiguration());
             builder.ApplyConfiguration(new SmsMessageConfiguration());
             builder.ApplyConfiguration(new EmailMessageConfiguration());
+            builder.ApplyConfiguration(new EventConfiguration());
+            builder.ApplyConfiguration(new SessionConfiguration());
+            builder.ApplyConfiguration(new VoterConfiguration());
         }
     }
 }

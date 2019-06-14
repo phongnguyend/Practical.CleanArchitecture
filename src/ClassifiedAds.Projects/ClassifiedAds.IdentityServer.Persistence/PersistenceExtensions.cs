@@ -73,6 +73,36 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256())
                         },
                         AllowOfflineAccess = true
+                    },
+                    new Client
+                    {
+                        ClientId = "spa-client",
+                        ClientName ="SPA Client",
+                        AllowedGrantTypes = GrantTypes.Implicit,
+                        AllowAccessTokensViaBrowser = true,
+                        RedirectUris =
+                        {
+                            "http://localhost:4200/assets/oidc-login-redirect.html"
+                        },
+                        PostLogoutRedirectUris =
+                        {
+                            "http://localhost:4200/?postLogout=true"
+                        },
+                        AllowedCorsOrigins =
+                        {
+                            "http://localhost:4200/"
+                        },
+                        AllowedScopes =
+                        {
+                            IdentityServerConstants.StandardScopes.OpenId,
+                            IdentityServerConstants.StandardScopes.Profile,
+                            "ClassifiedAds.WebAPI"
+                        },
+                        ClientSecrets =
+                        {
+                            new Secret("secret".Sha256())
+                        },
+                        AllowOfflineAccess = true
                     }
                 };
 

@@ -32,6 +32,8 @@ namespace ClassifiedAds.IdentityServer
         {
             services.AddMvc();
 
+            services.AddCors();
+
             services.AddPersistence(Configuration.GetConnectionString("ClassifiedAds"))
                     .AddDomainServices()
                     .AddIdentity();
@@ -57,6 +59,13 @@ namespace ClassifiedAds.IdentityServer
                 app.MigrateIdServerDb();
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(
+                builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+            );
 
             app.UseMiniProfiler();
             app.UseIdentityServer();
