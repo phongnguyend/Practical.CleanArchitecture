@@ -1,6 +1,10 @@
-docker build -t classifiedads.web .
-docker build -t classifiedads.web:1.0.0 .
-docker run -d -p 8080:80 --name classifiedads.web classifiedads.web
+docker build -t classifiedads.webmvc .
+docker build -t classifiedads.webmvc:1.0.0 .
+docker run -d -p 8080:80 --name classifiedads.webmvc classifiedads.webmvc
+
+docker build -f "Dockerfile-WebMVC" -t classifiedads.webmvc .
+docker build -f "Dockerfile-WebAPI" -t classifiedads.webapi .
+docker build -f "Dockerfile-IdentityServer" -t classifiedads.identityserver .
 
 
 docker --version

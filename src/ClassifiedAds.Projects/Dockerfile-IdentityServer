@@ -24,11 +24,11 @@ RUN dotnet restore
 
 # Copy everything else and build
 COPY . ./
-RUN dotnet publish ./ClassifiedAds.WebMVC/ClassifiedAds.WebMVC.csproj -c Release -o out
+RUN dotnet publish ./ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj -c Release -o out
 
 # Build runtime image
 FROM microsoft/dotnet:2.2-aspnetcore-runtime
-WORKDIR /ClassifiedAds.WebMVC
-COPY --from=build-env /ClassifiedAds.Projects/ClassifiedAds.WebMVC/out .
+WORKDIR /ClassifiedAds.IdentityServer
+COPY --from=build-env /ClassifiedAds.Projects/ClassifiedAds.IdentityServer/out .
 
-ENTRYPOINT ["dotnet", "ClassifiedAds.WebMVC.dll"]
+ENTRYPOINT ["dotnet", "ClassifiedAds.IdentityServer.dll"]
