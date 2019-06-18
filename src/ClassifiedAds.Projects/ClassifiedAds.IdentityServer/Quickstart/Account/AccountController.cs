@@ -21,6 +21,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using IEventService = IdentityServer4.Services.IEventService;
 
 namespace IdentityServer4.Quickstart.UI
 {
