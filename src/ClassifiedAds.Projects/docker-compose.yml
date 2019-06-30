@@ -1,0 +1,34 @@
+version: "3.6"
+services:
+    identityserver:
+        build:
+          context: .
+          dockerfile: Dockerfile-IdentityServer
+        ports:
+            - "44367:80"
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+    webapi:
+        build:
+          context: .
+          dockerfile: Dockerfile-WebAPI
+        ports:
+            - "44312:80"
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          IdentityServerAuthentication__Authority: "http://172.18.246.161:44367"
+          IdentityServerAuthentication__RequireHttpsMetadata: "false"
+    webmvc:
+        build:
+          context: .
+          dockerfile: Dockerfile-WebMVC
+        ports:
+            - "44364:80"
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          OpenIdConnect__Authority: "http://172.18.246.161:44367"
+          OpenIdConnect__RequireHttpsMetadata: "false"
+          ResourceServer__Endpoint: "http://172.18.246.161:44312"

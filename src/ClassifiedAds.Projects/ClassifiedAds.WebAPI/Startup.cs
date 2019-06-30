@@ -45,8 +45,9 @@ namespace ClassifiedAds.WebAPI
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = "https://localhost:44367";
-                    options.ApiName = "ClassifiedAds.WebAPI";
+                    options.Authority = Configuration["IdentityServerAuthentication:Authority"];
+                    options.ApiName = Configuration["IdentityServerAuthentication:ApiName"];
+                    options.RequireHttpsMetadata = bool.Parse(Configuration["IdentityServerAuthentication:RequireHttpsMetadata"]);
                 });
 
             services.AddSwaggerGen(setupAction =>

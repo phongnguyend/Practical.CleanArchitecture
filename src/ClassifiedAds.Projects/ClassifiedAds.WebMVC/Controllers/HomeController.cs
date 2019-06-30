@@ -18,6 +18,7 @@ using ClassifiedAds.ApplicationServices.Queries.Products;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Globalization;
+using Microsoft.Extensions.Configuration;
 
 namespace ClassifiedAds.WebMVC.Controllers
 {
@@ -27,13 +28,15 @@ namespace ClassifiedAds.WebMVC.Controllers
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly Dispatcher _dispatcher;
         private readonly ILogger _logger;
+        private readonly IConfiguration _configuration;
 
-        public HomeController(IProductService productService, IHttpClientFactory httpClientFactory, Dispatcher dispatcher, ILogger<HomeController> logger)
+        public HomeController(IProductService productService, IHttpClientFactory httpClientFactory, Dispatcher dispatcher, ILogger<HomeController> logger, IConfiguration configuration)
         {
             _productService = productService;
             _httpClientFactory = httpClientFactory;
             _dispatcher = dispatcher;
             _logger = logger;
+            _configuration = configuration;
         }
 
         public IActionResult Index()
@@ -46,14 +49,14 @@ namespace ClassifiedAds.WebMVC.Controllers
         public async Task<IActionResult> Privacy()
         {
             var httpClient = _httpClientFactory.CreateClient();
-            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync("https://localhost:44367/");
+            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(_configuration["OpenIdConnect:Authority"]);
             var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
             var response = await httpClient.GetUserInfoAsync(new UserInfoRequest { Address = metaDataResponse.UserInfoEndpoint, Token = accessToken });
 
             var products = _productService.GetProducts().ToList();
 
             httpClient.SetBearerToken(accessToken);
-            var response2 = await httpClient.GetAsync("https://localhost:44312/api/products");
+            var response2 = await httpClient.GetAsync($"{_configuration["ResourceServer:Endpoint"]}/api/products");
             var products2 = await response2.Content.ReadAs<List<Product>>();
 
             return View();
@@ -89,7 +92,7 @@ namespace ClassifiedAds.WebMVC.Controllers
         public async Task<IActionResult> UserInfoClient()
         {
             var httpClient = _httpClientFactory.CreateClient();
-            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync("https://localhost:44367/");
+            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(_configuration["OpenIdConnect:Authority"]);
             var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
             var response = await httpClient.GetUserInfoAsync(new UserInfoRequest { Address = metaDataResponse.UserInfoEndpoint, Token = accessToken });
 
@@ -105,7 +108,7 @@ namespace ClassifiedAds.WebMVC.Controllers
         public async Task<IActionResult> RefreshToken()
         {
             var httpClient = _httpClientFactory.CreateClient();
-            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync("https://localhost:44367/");
+            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(_configuration["OpenIdConnect:Authority"]);
             var refreshToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
             var response = await httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
             {

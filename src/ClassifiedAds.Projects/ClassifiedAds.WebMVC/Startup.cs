@@ -70,8 +70,8 @@ namespace ClassifiedAds.WebMVC
             .AddOpenIdConnect("oidc", options =>
             {
                 options.SignInScheme = "Cookies";
-                options.Authority = "https://localhost:44367";
-                options.ClientId = "ClassifiedAds.WebMVC";
+                options.Authority = Configuration["OpenIdConnect:Authority"];
+                options.ClientId = Configuration["OpenIdConnect:ClientId"];
                 options.ResponseType = "code id_token";
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
@@ -80,6 +80,7 @@ namespace ClassifiedAds.WebMVC
                 options.SaveTokens = true;
                 options.ClientSecret = "secret";
                 options.GetClaimsFromUserInfoEndpoint = true;
+                options.RequireHttpsMetadata = bool.Parse(Configuration["OpenIdConnect:RequireHttpsMetadata"]);
             });
             services.AddSingleton<IClaimsTransformation, CustomClaimsTransformation>();
 
