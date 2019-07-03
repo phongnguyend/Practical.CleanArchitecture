@@ -57,7 +57,7 @@ namespace ClassifiedAds.DomainServices.UnitTests
             var user = _userService.GetUserById(userId);
 
             //Assert
-            Assert.AreEqual(userId.ToString(), user.Id);
+            Assert.AreEqual(userId, user.Id);
             Assert.AreEqual("XXX", user.UserName);
         }
     }
