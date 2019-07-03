@@ -8,6 +8,6 @@
         <description>ClassifiedAds WebAPI</description>
     </metadata>
     <files>
-        <file src="ClassifiedAds.WebAPI\publish\**\*.*" />
+        <file src="ClassifiedAds.WebAPI\bin\publish\**\*.*" />
     </files>
 </package>

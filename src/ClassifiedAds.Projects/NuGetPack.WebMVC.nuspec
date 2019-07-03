@@ -8,6 +8,6 @@
         <description>ClassifiedAds WebMVC</description>
     </metadata>
     <files>
-        <file src="ClassifiedAds.WebMVC\publish\**\*.*" />
+        <file src="ClassifiedAds.WebMVC\bin\publish\**\*.*" />
     </files>
 </package>

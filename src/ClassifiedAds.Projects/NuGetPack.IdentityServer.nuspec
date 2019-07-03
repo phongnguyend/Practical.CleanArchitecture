@@ -8,6 +8,6 @@
         <description>ClassifiedAds IdentityServer</description>
     </metadata>
     <files>
-        <file src="ClassifiedAds.IdentityServer\publish\**\*.*" />
+        <file src="ClassifiedAds.IdentityServer\bin\publish\**\*.*" />
     </files>
 </package>
