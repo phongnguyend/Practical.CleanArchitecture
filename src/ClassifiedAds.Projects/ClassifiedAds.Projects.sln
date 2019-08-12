@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28729.10
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.489
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Domain", "ClassifiedAds.Domain\ClassifiedAds.Domain.csproj", "{31A143EB-6393-4DC5-9E70-061D463D7E03}"
 EndProject
@@ -47,7 +47,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persistence", "Persistence"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{BBD032E9-D75E-4CD8-A23A-7234480435BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Identity", "ClassifiedAds.Identity\ClassifiedAds.Identity.csproj", "{1B8755A0-BE0D-46C2-8475-8641E0B8726E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Identity", "ClassifiedAds.Identity\ClassifiedAds.Identity.csproj", "{1B8755A0-BE0D-46C2-8475-8641E0B8726E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.BackgroundServices", "ClassifiedAds.BackgroundServices\ClassifiedAds.BackgroundServices.csproj", "{D579E4B4-FE95-41F7-A67A-2D46BB29396E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -123,6 +125,10 @@ Global
 		{1B8755A0-BE0D-46C2-8475-8641E0B8726E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B8755A0-BE0D-46C2-8475-8641E0B8726E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B8755A0-BE0D-46C2-8475-8641E0B8726E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D579E4B4-FE95-41F7-A67A-2D46BB29396E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D579E4B4-FE95-41F7-A67A-2D46BB29396E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D579E4B4-FE95-41F7-A67A-2D46BB29396E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D579E4B4-FE95-41F7-A67A-2D46BB29396E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,6 +151,7 @@ Global
 		{F45290FD-9B02-4434-A048-00D6377643D3} = {BBD032E9-D75E-4CD8-A23A-7234480435BE}
 		{51E497D7-DA8A-49E1-9559-E37768830252} = {9D2F0EDA-74AB-49E2-9F1F-50D961A23CE4}
 		{1B8755A0-BE0D-46C2-8475-8641E0B8726E} = {BBD032E9-D75E-4CD8-A23A-7234480435BE}
+		{D579E4B4-FE95-41F7-A67A-2D46BB29396E} = {C6061573-0203-4860-AD42-4C6C2CF55110}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2C23354-4AAD-41AC-9E06-0A6F210ACEEF}
