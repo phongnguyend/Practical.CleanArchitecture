@@ -6,3 +6,9 @@
 > Command handlers are part of the application services layer.
 
 [Domain services vs Application services](https://enterprisecraftsmanship.com/2016/09/08/domain-services-vs-application-services/)
+
+[Command and Query Responsibility Segregation (CQRS) pattern](https://docs.microsoft.com/en-us/azure/architecture/patterns/cqrs)
+
+[Introduction to CQRS | CodeProject](https://www.codeproject.com/Articles/555855/Introduction-to-CQRS)
+
+[CQRS in Practice | Pluralsight](https://app.pluralsight.com/library/courses/cqrs-in-practice/table-of-contents)
