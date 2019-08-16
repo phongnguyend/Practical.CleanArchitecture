@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System.Text;
 
-namespace ClassifiedAds.Infrastructure
+namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
 {
     public class MessageQueueSender<T> : IMessageQueueSender<T>
     {

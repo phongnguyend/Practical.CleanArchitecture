@@ -5,7 +5,7 @@ using RabbitMQ.Client.Events;
 using System;
 using System.Text;
 
-namespace ClassifiedAds.Infrastructure
+namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
 {
     public class MessageQueueReceiver<T> : IMessageQueueReceiver<T>
     {

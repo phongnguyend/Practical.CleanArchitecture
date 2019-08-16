@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.489
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Domain", "ClassifiedAds.Domain\ClassifiedAds.Domain.csproj", "{31A143EB-6393-4DC5-9E70-061D463D7E03}"
 EndProject
@@ -49,7 +49,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{BB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Identity", "ClassifiedAds.Identity\ClassifiedAds.Identity.csproj", "{1B8755A0-BE0D-46C2-8475-8641E0B8726E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.BackgroundServices", "ClassifiedAds.BackgroundServices\ClassifiedAds.BackgroundServices.csproj", "{D579E4B4-FE95-41F7-A67A-2D46BB29396E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.BackgroundServices", "ClassifiedAds.BackgroundServices\ClassifiedAds.BackgroundServices.csproj", "{D579E4B4-FE95-41F7-A67A-2D46BB29396E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Infrastructure.MessageBrokers", "ClassifiedAds.Infrastructure.MessageBrokers\ClassifiedAds.Infrastructure.MessageBrokers.csproj", "{54255018-85DF-4BA9-AE76-3782F46C64C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Infrastructure.Storages", "ClassifiedAds.Infrastructure.Storages\ClassifiedAds.Infrastructure.Storages.csproj", "{E70D13A2-7552-4D06-9A21-CE0472A1B1ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Infrastructure.Caching", "ClassifiedAds.Infrastructure.Caching\ClassifiedAds.Infrastructure.Caching.csproj", "{02B5A4BA-0F89-4CFC-8189-E6FC80F8809E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -129,6 +135,18 @@ Global
 		{D579E4B4-FE95-41F7-A67A-2D46BB29396E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D579E4B4-FE95-41F7-A67A-2D46BB29396E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D579E4B4-FE95-41F7-A67A-2D46BB29396E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54255018-85DF-4BA9-AE76-3782F46C64C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54255018-85DF-4BA9-AE76-3782F46C64C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54255018-85DF-4BA9-AE76-3782F46C64C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54255018-85DF-4BA9-AE76-3782F46C64C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E70D13A2-7552-4D06-9A21-CE0472A1B1ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E70D13A2-7552-4D06-9A21-CE0472A1B1ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E70D13A2-7552-4D06-9A21-CE0472A1B1ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E70D13A2-7552-4D06-9A21-CE0472A1B1ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02B5A4BA-0F89-4CFC-8189-E6FC80F8809E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02B5A4BA-0F89-4CFC-8189-E6FC80F8809E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02B5A4BA-0F89-4CFC-8189-E6FC80F8809E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02B5A4BA-0F89-4CFC-8189-E6FC80F8809E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -152,6 +170,9 @@ Global
 		{51E497D7-DA8A-49E1-9559-E37768830252} = {9D2F0EDA-74AB-49E2-9F1F-50D961A23CE4}
 		{1B8755A0-BE0D-46C2-8475-8641E0B8726E} = {BBD032E9-D75E-4CD8-A23A-7234480435BE}
 		{D579E4B4-FE95-41F7-A67A-2D46BB29396E} = {C6061573-0203-4860-AD42-4C6C2CF55110}
+		{54255018-85DF-4BA9-AE76-3782F46C64C3} = {03D8062A-ED63-4568-AFEC-0B31A9F14EF7}
+		{E70D13A2-7552-4D06-9A21-CE0472A1B1ED} = {03D8062A-ED63-4568-AFEC-0B31A9F14EF7}
+		{02B5A4BA-0F89-4CFC-8189-E6FC80F8809E} = {03D8062A-ED63-4568-AFEC-0B31A9F14EF7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2C23354-4AAD-41AC-9E06-0A6F210ACEEF}
