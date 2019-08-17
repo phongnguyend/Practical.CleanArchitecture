@@ -3,18 +3,21 @@ WORKDIR /ClassifiedAds.Projects
 
 # Copy csproj and restore as distinct layers
 COPY ./ClassifiedAds.ApplicationServices/*.csproj ./ClassifiedAds.ApplicationServices/
-COPY ./ClassifiedAds.ApplicationServices.DI/*.csproj ./ClassifiedAds.ApplicationServices.DI/
+COPY ./ClassifiedAds.BackgroundServices/*.csproj ./ClassifiedAds.BackgroundServices/
 COPY ./ClassifiedAds.CrossCuttingConcerns/*.csproj ./ClassifiedAds.CrossCuttingConcerns/
 COPY ./ClassifiedAds.Domain/*.csproj ./ClassifiedAds.Domain/
 COPY ./ClassifiedAds.DomainServices/*.csproj ./ClassifiedAds.DomainServices/
-COPY ./ClassifiedAds.DomainServices.DI/*.csproj ./ClassifiedAds.DomainServices.DI/
 COPY ./ClassifiedAds.DomainServices.UnitTests/*.csproj ./ClassifiedAds.DomainServices.UnitTests/
 COPY ./ClassifiedAds.Identity/*.csproj ./ClassifiedAds.Identity/
 COPY ./ClassifiedAds.IdentityServer/*.csproj ./ClassifiedAds.IdentityServer/
 COPY ./ClassifiedAds.IdentityServer.Persistence/*.csproj ./ClassifiedAds.IdentityServer.Persistence/
 COPY ./ClassifiedAds.Infrastructure/*.csproj ./ClassifiedAds.Infrastructure/
+COPY ./ClassifiedAds.Infrastructure.Caching/*.csproj ./ClassifiedAds.Infrastructure.Caching/
+COPY ./ClassifiedAds.Infrastructure.MessageBrokers/*.csproj ./ClassifiedAds.Infrastructure.MessageBrokers/
+COPY ./ClassifiedAds.Infrastructure.Storages/*.csproj ./ClassifiedAds.Infrastructure.Storages/
+COPY ./ClassifiedAds.NotificationServer/*.csproj ./ClassifiedAds.NotificationServer/
+COPY ./ClassifiedAds.NotificationTestClient/*.csproj ./ClassifiedAds.NotificationTestClient/
 COPY ./ClassifiedAds.Persistence/*.csproj ./ClassifiedAds.Persistence/
-COPY ./ClassifiedAds.Persistence.DI/*.csproj ./ClassifiedAds.Persistence.DI/
 COPY ./ClassifiedAds.WebAPI/*.csproj ./ClassifiedAds.WebAPI/
 COPY ./ClassifiedAds.WebAPI.IntegrationTests/*.csproj ./ClassifiedAds.WebAPI.IntegrationTests/
 COPY ./ClassifiedAds.WebMVC/*.csproj ./ClassifiedAds.WebMVC/

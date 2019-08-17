@@ -21,12 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ClassifiedAds.ApplicationServices.DI\ClassifiedAds.ApplicationServices.DI.csproj" />
     <ProjectReference Include="..\ClassifiedAds.ApplicationServices\ClassifiedAds.ApplicationServices.csproj" />
-    <ProjectReference Include="..\ClassifiedAds.DomainServices.DI\ClassifiedAds.DomainServices.DI.csproj" />
     <ProjectReference Include="..\ClassifiedAds.DomainServices\ClassifiedAds.DomainServices.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Domain\ClassifiedAds.Domain.csproj" />
-    <ProjectReference Include="..\ClassifiedAds.Persistence.DI\ClassifiedAds.Persistence.DI.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.Persistence\ClassifiedAds.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
