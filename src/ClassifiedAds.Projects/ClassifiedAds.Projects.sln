@@ -51,11 +51,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Identity", "C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.BackgroundServices", "ClassifiedAds.BackgroundServices\ClassifiedAds.BackgroundServices.csproj", "{D579E4B4-FE95-41F7-A67A-2D46BB29396E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Infrastructure.MessageBrokers", "ClassifiedAds.Infrastructure.MessageBrokers\ClassifiedAds.Infrastructure.MessageBrokers.csproj", "{54255018-85DF-4BA9-AE76-3782F46C64C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Infrastructure.MessageBrokers", "ClassifiedAds.Infrastructure.MessageBrokers\ClassifiedAds.Infrastructure.MessageBrokers.csproj", "{54255018-85DF-4BA9-AE76-3782F46C64C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Infrastructure.Storages", "ClassifiedAds.Infrastructure.Storages\ClassifiedAds.Infrastructure.Storages.csproj", "{E70D13A2-7552-4D06-9A21-CE0472A1B1ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Infrastructure.Storages", "ClassifiedAds.Infrastructure.Storages\ClassifiedAds.Infrastructure.Storages.csproj", "{E70D13A2-7552-4D06-9A21-CE0472A1B1ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Infrastructure.Caching", "ClassifiedAds.Infrastructure.Caching\ClassifiedAds.Infrastructure.Caching.csproj", "{02B5A4BA-0F89-4CFC-8189-E6FC80F8809E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Infrastructure.Caching", "ClassifiedAds.Infrastructure.Caching\ClassifiedAds.Infrastructure.Caching.csproj", "{02B5A4BA-0F89-4CFC-8189-E6FC80F8809E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.NotificationServer", "ClassifiedAds.NotificationServer\ClassifiedAds.NotificationServer.csproj", "{53FE6014-FBEC-447A-90AA-F579B13C4B8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.NotificationTestClient", "ClassifiedAds.NotificationTestClient\ClassifiedAds.NotificationTestClient.csproj", "{118A3740-319B-4A92-9AD2-974002299A0B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -147,6 +151,14 @@ Global
 		{02B5A4BA-0F89-4CFC-8189-E6FC80F8809E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02B5A4BA-0F89-4CFC-8189-E6FC80F8809E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02B5A4BA-0F89-4CFC-8189-E6FC80F8809E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53FE6014-FBEC-447A-90AA-F579B13C4B8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53FE6014-FBEC-447A-90AA-F579B13C4B8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53FE6014-FBEC-447A-90AA-F579B13C4B8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53FE6014-FBEC-447A-90AA-F579B13C4B8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{118A3740-319B-4A92-9AD2-974002299A0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{118A3740-319B-4A92-9AD2-974002299A0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{118A3740-319B-4A92-9AD2-974002299A0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{118A3740-319B-4A92-9AD2-974002299A0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -173,6 +185,8 @@ Global
 		{54255018-85DF-4BA9-AE76-3782F46C64C3} = {03D8062A-ED63-4568-AFEC-0B31A9F14EF7}
 		{E70D13A2-7552-4D06-9A21-CE0472A1B1ED} = {03D8062A-ED63-4568-AFEC-0B31A9F14EF7}
 		{02B5A4BA-0F89-4CFC-8189-E6FC80F8809E} = {03D8062A-ED63-4568-AFEC-0B31A9F14EF7}
+		{53FE6014-FBEC-447A-90AA-F579B13C4B8E} = {C6061573-0203-4860-AD42-4C6C2CF55110}
+		{118A3740-319B-4A92-9AD2-974002299A0B} = {C6061573-0203-4860-AD42-4C6C2CF55110}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2C23354-4AAD-41AC-9E06-0A6F210ACEEF}

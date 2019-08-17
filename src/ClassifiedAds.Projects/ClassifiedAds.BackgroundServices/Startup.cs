@@ -59,6 +59,7 @@ namespace ClassifiedAds.BackgroundServices
 
             RecurringJob.AddOrUpdate<SendEmail>(job => job.Run(), Cron.Minutely);
             RecurringJob.AddOrUpdate<SendSms>(job => job.Run(), Cron.Minutely);
+            RecurringJob.AddOrUpdate<SimulatedLongRunningJob>(job => job.Run(), Cron.Minutely);
 
             app.Run(async (context) =>
             {
