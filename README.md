@@ -26,3 +26,6 @@
 
 # Layer Examples
 ![alt text](/docs/imgs/Layer-Examples.png)
+
+# Solution Structure
+![alt text](/docs/imgs/code-solution-structure.png)
