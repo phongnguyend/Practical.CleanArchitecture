@@ -6,6 +6,7 @@ docker build -f "Dockerfile-WebMVC" -t classifiedads.webmvc .
 docker build -f "Dockerfile-WebAPI" -t classifiedads.webapi .
 docker build -f "Dockerfile-IdentityServer" -t classifiedads.identityserver .
 
+docker-compose build
 
 docker --version
 docker version
