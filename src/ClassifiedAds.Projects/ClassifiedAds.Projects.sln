@@ -53,6 +53,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.NotificationS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.NotificationTestClient", "ClassifiedAds.NotificationTestClient\ClassifiedAds.NotificationTestClient.csproj", "{118A3740-319B-4A92-9AD2-974002299A0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Migrator", "ClassifiedAds.Migrator\ClassifiedAds.Migrator.csproj", "{95943383-5C81-45B6-8876-4789C00A9255}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,6 +141,10 @@ Global
 		{118A3740-319B-4A92-9AD2-974002299A0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{118A3740-319B-4A92-9AD2-974002299A0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{118A3740-319B-4A92-9AD2-974002299A0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95943383-5C81-45B6-8876-4789C00A9255}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95943383-5C81-45B6-8876-4789C00A9255}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95943383-5C81-45B6-8876-4789C00A9255}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95943383-5C81-45B6-8876-4789C00A9255}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -164,6 +170,7 @@ Global
 		{02B5A4BA-0F89-4CFC-8189-E6FC80F8809E} = {03D8062A-ED63-4568-AFEC-0B31A9F14EF7}
 		{53FE6014-FBEC-447A-90AA-F579B13C4B8E} = {C6061573-0203-4860-AD42-4C6C2CF55110}
 		{118A3740-319B-4A92-9AD2-974002299A0B} = {C6061573-0203-4860-AD42-4C6C2CF55110}
+		{95943383-5C81-45B6-8876-4789C00A9255} = {C6061573-0203-4860-AD42-4C6C2CF55110}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2C23354-4AAD-41AC-9E06-0A6F210ACEEF}

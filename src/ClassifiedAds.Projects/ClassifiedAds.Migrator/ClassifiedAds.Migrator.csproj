@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Scripts\Functions\" />
+    <Folder Include="Scripts\Indexes\" />
+    <Folder Include="Scripts\Types\" />
+    <Folder Include="Scripts\Stored Procedures\" />
+    <Folder Include="Scripts\Views\" />
+  </ItemGroup>
+
+</Project>
