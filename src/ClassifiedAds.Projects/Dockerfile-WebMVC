@@ -15,6 +15,7 @@ COPY ./ClassifiedAds.Infrastructure/*.csproj ./ClassifiedAds.Infrastructure/
 COPY ./ClassifiedAds.Infrastructure.Caching/*.csproj ./ClassifiedAds.Infrastructure.Caching/
 COPY ./ClassifiedAds.Infrastructure.MessageBrokers/*.csproj ./ClassifiedAds.Infrastructure.MessageBrokers/
 COPY ./ClassifiedAds.Infrastructure.Storages/*.csproj ./ClassifiedAds.Infrastructure.Storages/
+COPY ./ClassifiedAds.Migrator/*.csproj ./ClassifiedAds.Migrator/
 COPY ./ClassifiedAds.NotificationServer/*.csproj ./ClassifiedAds.NotificationServer/
 COPY ./ClassifiedAds.NotificationTestClient/*.csproj ./ClassifiedAds.NotificationTestClient/
 COPY ./ClassifiedAds.Persistence/*.csproj ./ClassifiedAds.Persistence/
