@@ -1,7 +1,8 @@
 ## Browser Security Headers
 
-SecurityHeadersMiddleware class:
+### Use handcrafted class:
 
+SecurityHeadersMiddleware.cs
 ```cs
 public static class IApplicationBuilderExtensions
 {
@@ -69,3 +70,8 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     });
 }
 ```
+
+### Use Community Libraries:
+- [NWebsec](https://github.com/NWebsec/NWebsec)
+- [aspnetcore-security-headers](https://github.com/juunas11/aspnetcore-security-headers)
+- [NetEscapades.AspNetCore.SecurityHeaders](https://github.com/andrewlock/NetEscapades.AspNetCore.SecurityHeaders)
