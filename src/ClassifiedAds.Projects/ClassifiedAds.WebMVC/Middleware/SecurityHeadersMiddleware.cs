@@ -6,8 +6,7 @@ namespace ClassifiedAds.WebMVC.Middleware
 {
     public static class IApplicationBuilderExtensions
     {
-        public static void UseSecurityHeaders(
-            this IApplicationBuilder app)
+        public static void UseSecurityHeaders(this IApplicationBuilder app)
         {
             app.UseMiddleware<SecurityHeadersMiddleware>();
         }
@@ -24,7 +23,7 @@ namespace ClassifiedAds.WebMVC.Middleware
 
         public async Task Invoke(HttpContext context)
         {
-            //// recommended security headers
+            //// recommended security headers, adjust/add/remove them based on your requirements
 
             context.Response.Headers.Add("Content-Security-Policy", "form-action 'self'; frame-ancestors 'none'");
             context.Response.Headers.Add("Feature-Policy", "camera 'none'");
