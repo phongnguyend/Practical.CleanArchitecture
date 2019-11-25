@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.DomainServices.Identity;
 using ClassifiedAds.DomainServices.Repositories;
 
 namespace ClassifiedAds.DomainServices
@@ -12,7 +12,7 @@ namespace ClassifiedAds.DomainServices
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Product> _productRepository;
 
-        public ProductService(IUnitOfWork unitOfWork, IRepository<Product> productRepository)
+        public ProductService(IUnitOfWork unitOfWork, IRepository<Product> productRepository, ICurrentUser currentUser)
         {
             _unitOfWork = unitOfWork;
             _productRepository = productRepository;

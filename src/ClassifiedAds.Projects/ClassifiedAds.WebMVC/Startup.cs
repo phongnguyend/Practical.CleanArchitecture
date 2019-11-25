@@ -1,7 +1,9 @@
-﻿using ClassifiedAds.WebMVC.Authorization;
+﻿using ClassifiedAds.DomainServices.Identity;
+using ClassifiedAds.WebMVC.Authorization;
 using ClassifiedAds.WebMVC.ClaimsTransformations;
 using ClassifiedAds.WebMVC.Filters;
 using ClassifiedAds.WebMVC.HttpHandlers;
+using ClassifiedAds.WebMVC.Identity;
 using ClassifiedAds.WebMVC.Middleware;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -106,6 +108,9 @@ namespace ClassifiedAds.WebMVC
                 options.PopupShowTimeWithChildren = true;
             })
             .AddEntityFramework();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<ICurrentUser, CurrentUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

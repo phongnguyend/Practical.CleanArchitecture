@@ -10,6 +10,9 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 using IdentityServer4.AccessTokenValidation;
 using System.IO;
 using Serilog;
+using Microsoft.AspNetCore.Http;
+using ClassifiedAds.DomainServices.Identity;
+using ClassifiedAds.WebAPI.Identity;
 
 namespace ClassifiedAds.WebAPI
 {
@@ -102,6 +105,9 @@ namespace ClassifiedAds.WebAPI
                 options.PopupShowTimeWithChildren = true;
             })
             .AddEntityFramework();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<ICurrentUser, CurrentUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
