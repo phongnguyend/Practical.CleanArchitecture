@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.DomainServices.Identity;
 using ClassifiedAds.WebMVC.Authorization;
 using ClassifiedAds.WebMVC.ClaimsTransformations;
+using ClassifiedAds.WebMVC.ConfigurationOptions;
 using ClassifiedAds.WebMVC.Filters;
 using ClassifiedAds.WebMVC.HttpHandlers;
 using ClassifiedAds.WebMVC.Identity;
@@ -40,6 +41,11 @@ namespace ClassifiedAds.WebMVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var appSettings = new AppSettings();
+            Configuration.Bind(appSettings);
+
+            services.Configure<AppSettings>(Configuration);
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -57,7 +63,7 @@ namespace ClassifiedAds.WebMVC
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddPersistence(Configuration.GetConnectionString("ClassifiedAds"))
+            services.AddPersistence(appSettings.ConnectionStrings.ClassifiedAds)
                     .AddDomainServices()
                     .AddMessageHandlers();
 
@@ -73,8 +79,8 @@ namespace ClassifiedAds.WebMVC
             .AddOpenIdConnect("oidc", options =>
             {
                 options.SignInScheme = "Cookies";
-                options.Authority = Configuration["OpenIdConnect:Authority"];
-                options.ClientId = Configuration["OpenIdConnect:ClientId"];
+                options.Authority = appSettings.OpenIdConnect.Authority;
+                options.ClientId = appSettings.OpenIdConnect.ClientId;
                 options.ResponseType = "code id_token";
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
@@ -83,7 +89,7 @@ namespace ClassifiedAds.WebMVC
                 options.SaveTokens = true;
                 options.ClientSecret = "secret";
                 options.GetClaimsFromUserInfoEndpoint = true;
-                options.RequireHttpsMetadata = bool.Parse(Configuration["OpenIdConnect:RequireHttpsMetadata"]);
+                options.RequireHttpsMetadata = appSettings.OpenIdConnect.RequireHttpsMetadata;
             });
             services.AddSingleton<IClaimsTransformation, CustomClaimsTransformation>();
 

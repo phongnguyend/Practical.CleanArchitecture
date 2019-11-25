@@ -13,6 +13,7 @@ using Serilog;
 using Microsoft.AspNetCore.Http;
 using ClassifiedAds.DomainServices.Identity;
 using ClassifiedAds.WebAPI.Identity;
+using ClassifiedAds.WebAPI.ConfigurationOptions;
 
 namespace ClassifiedAds.WebAPI
 {
@@ -37,20 +38,25 @@ namespace ClassifiedAds.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var appSettings = new AppSettings();
+            Configuration.Bind(appSettings);
+
+            services.Configure<AppSettings>(Configuration);
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddCors();
 
-            services.AddPersistence(Configuration.GetConnectionString("ClassifiedAds"))
+            services.AddPersistence(appSettings.ConnectionStrings.ClassifiedAds)
                     .AddDomainServices()
                     .AddMessageHandlers();
 
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = Configuration["IdentityServerAuthentication:Authority"];
-                    options.ApiName = Configuration["IdentityServerAuthentication:ApiName"];
-                    options.RequireHttpsMetadata = bool.Parse(Configuration["IdentityServerAuthentication:RequireHttpsMetadata"]);
+                    options.Authority = appSettings.IdentityServerAuthentication.Authority;
+                    options.ApiName = appSettings.IdentityServerAuthentication.ApiName;
+                    options.RequireHttpsMetadata = appSettings.IdentityServerAuthentication.RequireHttpsMetadata;
                 });
 
             services.AddSwaggerGen(setupAction =>
