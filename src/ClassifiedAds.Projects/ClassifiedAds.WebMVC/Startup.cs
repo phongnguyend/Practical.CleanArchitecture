@@ -175,7 +175,13 @@ namespace ClassifiedAds.WebMVC
             app.UseHealthChecks("/healthcheck", new HealthCheckOptions
             {
                 Predicate = _ => true,
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+                ResultStatusCodes = 
+                {
+                    [HealthStatus.Healthy] = StatusCodes.Status200OK,
+                    [HealthStatus.Degraded] = StatusCodes.Status500InternalServerError,
+                    [HealthStatus.Unhealthy] =StatusCodes.Status503ServiceUnavailable
+                }
             });
             app.UseHealthChecksUI(); // /healthchecks-ui#/healthchecks
         }
