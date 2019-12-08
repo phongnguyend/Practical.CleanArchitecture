@@ -6,14 +6,17 @@ using ClassifiedAds.WebMVC.Filters;
 using ClassifiedAds.WebMVC.HttpHandlers;
 using ClassifiedAds.WebMVC.Identity;
 using ClassifiedAds.WebMVC.Middleware;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using System;
 using System.IO;
@@ -115,6 +118,23 @@ namespace ClassifiedAds.WebMVC
             })
             .AddEntityFramework();
 
+            services.AddHealthChecks()
+                .AddSqlServer(connectionString: appSettings.ConnectionStrings.ClassifiedAds,
+                    healthQuery: "SELECT 1;",
+                    name: "Sql Server",
+                    failureStatus: HealthStatus.Degraded)
+                .AddUrlGroup(new Uri(appSettings.OpenIdConnect.Authority),
+                    name: "Identity Server",
+                    failureStatus: HealthStatus.Degraded)
+                .AddUrlGroup(new Uri(appSettings.ResourceServer.Endpoint),
+                    name: "Resource (Web API) Server",
+                    failureStatus: HealthStatus.Degraded);
+
+            services.AddHealthChecksUI(setupSettings: setup =>
+            {
+                setup.AddHealthCheckEndpoint("Basic Health Check", "https://localhost:44364/healthcheck");
+            });
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentUser>();
         }
@@ -151,6 +171,13 @@ namespace ClassifiedAds.WebMVC
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.UseHealthChecks("/healthcheck", new HealthCheckOptions
+            {
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
+            app.UseHealthChecksUI(); // /healthchecks-ui#/healthchecks
         }
     }
 }

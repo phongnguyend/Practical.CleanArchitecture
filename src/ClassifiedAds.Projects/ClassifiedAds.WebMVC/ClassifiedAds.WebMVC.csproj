@@ -7,6 +7,9 @@
 
 
   <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="2.2.1" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="2.2.35" />
+    <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="2.2.3" />
     <PackageReference Include="IdentityModel" Version="3.10.10" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
