@@ -1,5 +1,5 @@
 ﻿using System;
-using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.DomainServices.Entities;
 using System.Linq;
 using ClassifiedAds.CrossCuttingConcerns.Exceptions;
 

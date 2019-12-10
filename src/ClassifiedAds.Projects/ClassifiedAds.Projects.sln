@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Domain", "ClassifiedAds.Domain\ClassifiedAds.Domain.csproj", "{31A143EB-6393-4DC5-9E70-061D463D7E03}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.DomainServices", "ClassifiedAds.DomainServices\ClassifiedAds.DomainServices.csproj", "{2855A447-A0CC-485A-91D5-41A5E6F3F9A7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Persistence", "ClassifiedAds.Persistence\ClassifiedAds.Persistence.csproj", "{BA1D8E3E-555F-4C20-B6A0-55C146BFBCC7}"
@@ -63,10 +61,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{31A143EB-6393-4DC5-9E70-061D463D7E03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{31A143EB-6393-4DC5-9E70-061D463D7E03}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{31A143EB-6393-4DC5-9E70-061D463D7E03}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{31A143EB-6393-4DC5-9E70-061D463D7E03}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2855A447-A0CC-485A-91D5-41A5E6F3F9A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2855A447-A0CC-485A-91D5-41A5E6F3F9A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2855A447-A0CC-485A-91D5-41A5E6F3F9A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -152,7 +146,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{31A143EB-6393-4DC5-9E70-061D463D7E03} = {BBD032E9-D75E-4CD8-A23A-7234480435BE}
 		{2855A447-A0CC-485A-91D5-41A5E6F3F9A7} = {BBD032E9-D75E-4CD8-A23A-7234480435BE}
 		{BA1D8E3E-555F-4C20-B6A0-55C146BFBCC7} = {1FB7D402-B430-4487-AAD3-CB96EA00ACB1}
 		{FC4133A1-7A82-4AFB-9962-BA84A96B89BC} = {03D8062A-ED63-4568-AFEC-0B31A9F14EF7}

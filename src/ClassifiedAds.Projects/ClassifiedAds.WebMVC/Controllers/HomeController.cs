@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authentication;
 using ClassifiedAds.DomainServices;
 using IdentityModel.Client;
 using System.Net.Http;
-using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.DomainServices.Entities;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.ApplicationServices;
 using ClassifiedAds.ApplicationServices.Queries.Products;

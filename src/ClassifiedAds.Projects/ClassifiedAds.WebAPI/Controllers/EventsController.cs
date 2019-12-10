@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.DomainServices.Entities;
 using ClassifiedAds.DomainServices;
 using ClassifiedAds.DomainServices.Services;
 using Microsoft.AspNetCore.Http;

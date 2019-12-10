@@ -5,7 +5,6 @@ WORKDIR /ClassifiedAds.Projects
 COPY ./ClassifiedAds.ApplicationServices/*.csproj ./ClassifiedAds.ApplicationServices/
 COPY ./ClassifiedAds.BackgroundServices/*.csproj ./ClassifiedAds.BackgroundServices/
 COPY ./ClassifiedAds.CrossCuttingConcerns/*.csproj ./ClassifiedAds.CrossCuttingConcerns/
-COPY ./ClassifiedAds.Domain/*.csproj ./ClassifiedAds.Domain/
 COPY ./ClassifiedAds.DomainServices/*.csproj ./ClassifiedAds.DomainServices/
 COPY ./ClassifiedAds.DomainServices.UnitTests/*.csproj ./ClassifiedAds.DomainServices.UnitTests/
 COPY ./ClassifiedAds.Identity/*.csproj ./ClassifiedAds.Identity/

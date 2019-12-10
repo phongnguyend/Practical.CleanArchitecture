@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
+﻿using ClassifiedAds.DomainServices.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;

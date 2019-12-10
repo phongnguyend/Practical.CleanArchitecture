@@ -4,3 +4,4 @@ src/ClassifiedAds.Projects/*/logs/
 src/ClassifiedAds.Projects/.vs/
 src/ClassifiedAds.Projects/ClassifiedAds.Persistence/Migrations/
 src/ClassifiedAds.Projects/packages/
+/src/ClassifiedAds.Projects/ClassifiedAds.WebMVC/healthchecksdb

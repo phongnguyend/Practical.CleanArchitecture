@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ClassifiedAds.Domain.Entities
+namespace ClassifiedAds.DomainServices.Entities
 {
     public class User : Entity<Guid>
     {

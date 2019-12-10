@@ -10,7 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ClassifiedAds.Domain\ClassifiedAds.Domain.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Persistence\ClassifiedAds.Persistence.csproj" />
   </ItemGroup>
 

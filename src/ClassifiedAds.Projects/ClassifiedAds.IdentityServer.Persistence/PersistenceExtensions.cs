@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
-using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.DomainServices.Entities;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

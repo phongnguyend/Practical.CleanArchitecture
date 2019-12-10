@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ClassifiedAds.Domain.ValueObjects
+namespace ClassifiedAds.DomainServices.ValueObjects
 {
     public abstract class ValueObject
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ClassifiedAds.Domain.Entities
+namespace ClassifiedAds.DomainServices.Entities
 {
     public class Session : Entity<Guid>
     {

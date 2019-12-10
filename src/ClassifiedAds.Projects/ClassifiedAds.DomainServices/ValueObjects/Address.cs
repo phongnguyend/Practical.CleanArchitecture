@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ClassifiedAds.Domain.ValueObjects
+namespace ClassifiedAds.DomainServices.ValueObjects
 {
     public class Address : ValueObject
     {

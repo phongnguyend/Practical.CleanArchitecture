@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.DomainServices.Entities;
 using ClassifiedAds.DomainServices.Repositories;
 
 namespace ClassifiedAds.DomainServices.Services

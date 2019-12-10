@@ -1,4 +1,4 @@
-﻿namespace ClassifiedAds.Domain.Entities
+﻿namespace ClassifiedAds.DomainServices.Entities
 {
     public interface IHasKey<T>
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClassifiedAds.Domain.Entities
+namespace ClassifiedAds.DomainServices.Entities
 {
     public class EmailMessage : Entity<Guid>
     {

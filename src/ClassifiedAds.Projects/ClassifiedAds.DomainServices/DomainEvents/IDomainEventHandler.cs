@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ClassifiedAds.Domain.DomainEvents
+namespace ClassifiedAds.DomainServices.DomainEvents
 {
     public interface IDomainEventHandler<T>
            where T : IDomainEvent

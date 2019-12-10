@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ClassifiedAds.Domain.Entities
+namespace ClassifiedAds.DomainServices.Entities
 {
     public class Entity<TId> : IHasKey<TId>, ITrackable
     {

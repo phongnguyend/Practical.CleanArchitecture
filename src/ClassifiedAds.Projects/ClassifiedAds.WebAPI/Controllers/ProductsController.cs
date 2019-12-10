@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.DomainServices.Entities;
 using ClassifiedAds.DomainServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -1,10 +1,7 @@
-﻿using ClassifiedAds.Domain.Entities;
+﻿using ClassifiedAds.DomainServices.Entities;
 using ClassifiedAds.DomainServices.Repositories;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ClassifiedAds.DomainServices.Services
 {
@@ -17,7 +14,9 @@ namespace ClassifiedAds.DomainServices.Services
 
         public Event GetEventIncludeSessions(Guid Id)
         {
-            return _repository.GetAll().Include(x => x.Sessions).ThenInclude(s => s.Voters).Where(x => x.Id == Id).FirstOrDefault();
+            return _repository.GetAll()
+                //.Include(x => x.Sessions).ThenInclude(s => s.Voters)
+                .Where(x => x.Id == Id).FirstOrDefault();
         }
     }
 }

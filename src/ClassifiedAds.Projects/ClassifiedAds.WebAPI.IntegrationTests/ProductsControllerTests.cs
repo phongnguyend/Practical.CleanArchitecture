@@ -1,4 +1,4 @@
-using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.DomainServices.Entities;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using Newtonsoft.Json;
 using System;

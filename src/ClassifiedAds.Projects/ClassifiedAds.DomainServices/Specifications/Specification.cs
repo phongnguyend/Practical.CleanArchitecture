@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace ClassifiedAds.Domain.Specifications
+namespace ClassifiedAds.DomainServices.Specifications
 {
     internal sealed class IdentitySpecification<T> : Specification<T>
     {

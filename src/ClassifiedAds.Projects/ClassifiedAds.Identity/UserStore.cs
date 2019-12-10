@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
+﻿using ClassifiedAds.DomainServices.Entities;
 using ClassifiedAds.DomainServices;
 using ClassifiedAds.DomainServices.Repositories;
 using Microsoft.AspNetCore.Identity;

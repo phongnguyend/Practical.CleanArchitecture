@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace ClassifiedAds.Domain.DomainEvents
+namespace ClassifiedAds.DomainServices.DomainEvents
 {
     public static class DomainEvents
     {
