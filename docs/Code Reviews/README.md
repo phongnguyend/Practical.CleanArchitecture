@@ -27,5 +27,5 @@ There are patterns to reviewing code and there are anti-patterns too.
 - Don't get emotional. Remember the goal of a code review is to improve as an organization. So worrying about your code being reviewed or trying to put your stamp onto everyone else's code, both of them are going to be bad. So avoid emotionality when you're doing your code review.
 - Don't focus on blame. Don't find who wrote the code and try to find out what they're doing wrong or right.
 - Don't use the code review as an opputunity to figure out how to redesign the solution. That's not the job of the code review.
-- Don't juge based on how you would have coded it. This is a very common problem. So focusing on whether the code is good not on whether it's the way you would have done it.
+- Don't judge based on how you would have coded it. This is a very common problem. So focusing on whether the code is good not on whether it's the way you would have done it.
 - Don't include one-off problems. Trying to find patterns to fix, not single bugs.
