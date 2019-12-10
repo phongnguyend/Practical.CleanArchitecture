@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ClassifiedAds.IdentityServer.Persistence.Migrations
+namespace ClassifiedAds.Persistence.IdentityServer.Migrations
 {
     public partial class Init : Migration
     {

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace ClassifiedAds.IdentityServer.Persistence.Migrations.PersistedGrantDb
+namespace ClassifiedAds.Persistence.IdentityServer.Migrations.PersistedGrantDb
 {
     [DbContext(typeof(PersistedGrantDbContext))]
     [Migration("20190518013325_Init")]

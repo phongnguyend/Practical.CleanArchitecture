@@ -9,7 +9,6 @@ COPY ./ClassifiedAds.DomainServices/*.csproj ./ClassifiedAds.DomainServices/
 COPY ./ClassifiedAds.DomainServices.UnitTests/*.csproj ./ClassifiedAds.DomainServices.UnitTests/
 COPY ./ClassifiedAds.Identity/*.csproj ./ClassifiedAds.Identity/
 COPY ./ClassifiedAds.IdentityServer/*.csproj ./ClassifiedAds.IdentityServer/
-COPY ./ClassifiedAds.IdentityServer.Persistence/*.csproj ./ClassifiedAds.IdentityServer.Persistence/
 COPY ./ClassifiedAds.Infrastructure/*.csproj ./ClassifiedAds.Infrastructure/
 COPY ./ClassifiedAds.Infrastructure.Caching/*.csproj ./ClassifiedAds.Infrastructure.Caching/
 COPY ./ClassifiedAds.Infrastructure.MessageBrokers/*.csproj ./ClassifiedAds.Infrastructure.MessageBrokers/
@@ -18,6 +17,7 @@ COPY ./ClassifiedAds.Migrator/*.csproj ./ClassifiedAds.Migrator/
 COPY ./ClassifiedAds.NotificationServer/*.csproj ./ClassifiedAds.NotificationServer/
 COPY ./ClassifiedAds.NotificationTestClient/*.csproj ./ClassifiedAds.NotificationTestClient/
 COPY ./ClassifiedAds.Persistence/*.csproj ./ClassifiedAds.Persistence/
+COPY ./ClassifiedAds.Persistence.IdentityServer/*.csproj ./ClassifiedAds.Persistence.IdentityServer/
 COPY ./ClassifiedAds.WebAPI/*.csproj ./ClassifiedAds.WebAPI/
 COPY ./ClassifiedAds.WebAPI.IntegrationTests/*.csproj ./ClassifiedAds.WebAPI.IntegrationTests/
 COPY ./ClassifiedAds.WebMVC/*.csproj ./ClassifiedAds.WebMVC/

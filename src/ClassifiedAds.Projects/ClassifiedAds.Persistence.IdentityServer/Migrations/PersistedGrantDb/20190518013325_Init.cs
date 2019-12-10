@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ClassifiedAds.IdentityServer.Persistence.Migrations.PersistedGrantDb
+namespace ClassifiedAds.Persistence.IdentityServer.Migrations.PersistedGrantDb
 {
     public partial class Init : Migration
     {
