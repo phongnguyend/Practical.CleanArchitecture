@@ -18,7 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ClassifiedAds.CrossCuttingConcerns\ClassifiedAds.CrossCuttingConcerns.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Persistence.IdentityServer\ClassifiedAds.Persistence.IdentityServer.csproj" />
-    <ProjectReference Include="..\ClassifiedAds.Identity\ClassifiedAds.Identity.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.IdentityServices\ClassifiedAds.IdentityServices.csproj" />
   </ItemGroup>
 
 </Project>

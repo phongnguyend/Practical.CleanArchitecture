@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Identity
+namespace ClassifiedAds.IdentityServices
 {
     public class UserStore : IUserStore<User>,
                              IUserPasswordStore<User>,

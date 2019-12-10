@@ -7,7 +7,7 @@ COPY ./ClassifiedAds.BackgroundServices/*.csproj ./ClassifiedAds.BackgroundServi
 COPY ./ClassifiedAds.CrossCuttingConcerns/*.csproj ./ClassifiedAds.CrossCuttingConcerns/
 COPY ./ClassifiedAds.DomainServices/*.csproj ./ClassifiedAds.DomainServices/
 COPY ./ClassifiedAds.DomainServices.UnitTests/*.csproj ./ClassifiedAds.DomainServices.UnitTests/
-COPY ./ClassifiedAds.Identity/*.csproj ./ClassifiedAds.Identity/
+COPY ./ClassifiedAds.IdentityServices/*.csproj ./ClassifiedAds.IdentityServices/
 COPY ./ClassifiedAds.IdentityServer/*.csproj ./ClassifiedAds.IdentityServer/
 COPY ./ClassifiedAds.Infrastructure/*.csproj ./ClassifiedAds.Infrastructure/
 COPY ./ClassifiedAds.Infrastructure.Caching/*.csproj ./ClassifiedAds.Infrastructure.Caching/
