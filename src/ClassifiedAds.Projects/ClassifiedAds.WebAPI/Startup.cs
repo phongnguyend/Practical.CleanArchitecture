@@ -34,18 +34,36 @@ namespace ClassifiedAds.WebAPI
         }
 
         public IConfiguration Configuration { get; }
+        private AppSettings AppSettings { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             var appSettings = new AppSettings();
             Configuration.Bind(appSettings);
+            AppSettings = appSettings;
 
             services.Configure<AppSettings>(Configuration);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowedOrigins", builder => builder
+                    .WithOrigins(appSettings.CORS.AllowedOrigins)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+
+                options.AddPolicy("AllowAnyOrigin", builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+
+                options.AddPolicy("CustomPolicy", builder => builder
+                    .AllowAnyOrigin()
+                    .WithMethods("Get")
+                    .WithHeaders("Content-Type"));
+            });
 
             services.AddPersistence(appSettings.ConnectionStrings.ClassifiedAds)
                     .AddDomainServices()
@@ -130,6 +148,8 @@ namespace ClassifiedAds.WebAPI
                 app.UseHsts();
             }
 
+            app.UseCors(AppSettings.CORS.AllowAnyOrigin ? "AllowAnyOrigin" : "AllowedOrigins");
+
             app.UseHttpsRedirection();
 
             app.UseSwagger();
@@ -150,13 +170,6 @@ namespace ClassifiedAds.WebAPI
             });
 
             app.UseAuthentication();
-
-            app.UseCors(
-                builder => builder
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-            );
 
             app.UseMiniProfiler();
 
