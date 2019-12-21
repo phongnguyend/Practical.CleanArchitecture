@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore;
+﻿using ClassifiedAds.WebMVC.ConfigurationProviders;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.EventLog;
 using Serilog;
@@ -16,6 +19,22 @@ namespace ClassifiedAds.WebMVC
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .ConfigureAppConfiguration((ctx, builder) =>
+                {
+                    var config = builder.Build();
+
+                    builder.AddEFConfiguration(o =>
+                    {
+                        o.UseSqlServer(config.GetConnectionString("ClassifiedAds"));
+                    });
+
+                    if (ctx.HostingEnvironment.IsDevelopment())
+                    {
+                        return;
+                    }
+
+                    builder.AddAzureKeyVault($"https://{config["KeyVaultName"]}.vault.azure.net/");
+                })
                 .ConfigureLogging(logging =>
                 {
                     //logging.AddEventLog(new EventLogSettings

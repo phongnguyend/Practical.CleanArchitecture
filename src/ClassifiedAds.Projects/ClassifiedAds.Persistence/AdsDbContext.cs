@@ -14,6 +14,7 @@ namespace ClassifiedAds.Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.ApplyConfiguration(new ConfigurationEntryConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new UserTokenConfiguration());
             builder.ApplyConfiguration(new RoleConfiguration());

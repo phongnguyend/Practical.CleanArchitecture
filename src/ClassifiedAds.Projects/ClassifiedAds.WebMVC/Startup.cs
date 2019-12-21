@@ -16,7 +16,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
 using Serilog;
 using System;
 using System.IO;
@@ -44,8 +46,15 @@ namespace ClassifiedAds.WebMVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.TryAddEnumerable(ServiceDescriptor.Singleton<IValidateOptions<AppSettings>, AppSettingsValidation>());
+
             var appSettings = new AppSettings();
             Configuration.Bind(appSettings);
+            var validationResult = appSettings.Validate();
+            if (validationResult.Failed)
+            {
+                throw new Exception(validationResult.FailureMessage);
+            }
 
             services.Configure<AppSettings>(Configuration);
 
