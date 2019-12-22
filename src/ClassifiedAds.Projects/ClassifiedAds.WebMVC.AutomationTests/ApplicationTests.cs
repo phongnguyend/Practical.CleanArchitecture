@@ -1,6 +1,4 @@
 using ClassifiedAds.WebMVC.AutomationTests.Navigation;
-using ClassifiedAds.WebMVC.AutomationTests.Pages;
-using System;
 using System.Threading;
 using Xunit;
 
