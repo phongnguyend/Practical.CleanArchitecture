@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.2-sdk AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
 WORKDIR /ClassifiedAds.Projects
 
 # Copy csproj and restore as distinct layers
@@ -30,8 +30,8 @@ COPY . ./
 RUN dotnet publish ./ClassifiedAds.WebMVC/ClassifiedAds.WebMVC.csproj -c Release -o out
 
 # Build runtime image
-FROM microsoft/dotnet:2.2-aspnetcore-runtime
-WORKDIR /ClassifiedAds.WebMVC
-COPY --from=build-env /ClassifiedAds.Projects/ClassifiedAds.WebMVC/out .
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+WORKDIR /ClassifiedAds.Projects
+COPY --from=build-env /ClassifiedAds.Projects/out .
 
 ENTRYPOINT ["dotnet", "ClassifiedAds.WebMVC.dll"]

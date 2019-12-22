@@ -26,7 +26,7 @@ namespace ClassifiedAds.WebMVC.AutomationTests
         {
             get
             {
-                return "bob";
+                return "phong@gmail.com";
             }
         }
 
@@ -34,7 +34,7 @@ namespace ClassifiedAds.WebMVC.AutomationTests
         {
             get
             {
-                return "bob";
+                return "v*7Un8b4rcN@<-RN";
             }
         }
     }

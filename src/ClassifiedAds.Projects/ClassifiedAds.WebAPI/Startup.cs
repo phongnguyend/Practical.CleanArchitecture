@@ -14,12 +14,13 @@ using Microsoft.AspNetCore.Http;
 using ClassifiedAds.DomainServices.Identity;
 using ClassifiedAds.WebAPI.Identity;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
+using Microsoft.Extensions.Hosting;
 
 namespace ClassifiedAds.WebAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
 
@@ -45,7 +46,7 @@ namespace ClassifiedAds.WebAPI
 
             services.Configure<AppSettings>(Configuration);
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddControllers();
 
             services.AddCors(options =>
             {
@@ -122,7 +123,8 @@ namespace ClassifiedAds.WebAPI
                 });
             });
 
-            services.AddMiniProfiler(options =>
+            services.AddMemoryCache()
+            .AddMiniProfiler(options =>
             {
                 options.RouteBasePath = "/profiler";// access /profiler/results to see last profile check
                 options.PopupRenderPosition = StackExchange.Profiling.RenderPosition.BottomLeft;
@@ -135,7 +137,7 @@ namespace ClassifiedAds.WebAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -147,6 +149,8 @@ namespace ClassifiedAds.WebAPI
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseRouting();
 
             app.UseCors(AppSettings.CORS.AllowAnyOrigin ? "AllowAnyOrigin" : "AllowedOrigins");
 
@@ -170,10 +174,13 @@ namespace ClassifiedAds.WebAPI
             });
 
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseMiniProfiler();
 
-            app.UseMvc();
+            app.UseEndpoints(endpoints => {
+                endpoints.MapControllers();
+            });
         }
     }
 }

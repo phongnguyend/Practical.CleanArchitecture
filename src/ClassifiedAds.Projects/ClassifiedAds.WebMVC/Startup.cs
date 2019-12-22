@@ -18,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Serilog;
 using System;
@@ -27,7 +28,7 @@ namespace ClassifiedAds.WebMVC
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
 
@@ -66,14 +67,14 @@ namespace ClassifiedAds.WebMVC
             });
 
 
-            services.AddMvc(setupAction =>
+            services.AddControllersWithViews(setupAction =>
             {
                 setupAction.Filters.Add(typeof(CustomActionFilter));
                 setupAction.Filters.Add(typeof(CustomResultFilter));
                 setupAction.Filters.Add(typeof(CustomAuthorizationFilter));
                 setupAction.Filters.Add(typeof(CustomExceptionFilter));
             })
-            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            .AddNewtonsoftJson();
 
             services.AddPersistence(appSettings.ConnectionStrings.ClassifiedAds)
                     .AddDomainServices()
@@ -149,7 +150,7 @@ namespace ClassifiedAds.WebMVC
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -168,18 +169,15 @@ namespace ClassifiedAds.WebMVC
             app.UseIPFiltering();
 
             app.UseHttpsRedirection();
-            app.UseAuthentication();
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
             app.UseMiniProfiler();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseHealthChecks("/healthcheck", new HealthCheckOptions
             {
@@ -193,6 +191,10 @@ namespace ClassifiedAds.WebMVC
                 }
             });
             app.UseHealthChecksUI(); // /healthchecks-ui#/healthchecks
+
+            app.UseEndpoints(endpoints => {
+                endpoints.MapDefaultControllerRoute();
+            });
         }
     }
 }

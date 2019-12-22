@@ -5,12 +5,13 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using Serilog;
 using System;
+using Microsoft.Extensions.Hosting;
 
 namespace ClassifiedAds.IdentityServer
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
 
@@ -30,7 +31,7 @@ namespace ClassifiedAds.IdentityServer
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddControllersWithViews();
 
             services.AddCors();
 
@@ -52,13 +53,17 @@ namespace ClassifiedAds.IdentityServer
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.MigrateIdServerDb();
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseStaticFiles();
+
+            app.UseRouting();
 
             app.UseCors(
                 builder => builder
@@ -69,8 +74,11 @@ namespace ClassifiedAds.IdentityServer
 
             app.UseMiniProfiler();
             app.UseIdentityServer();
-            app.UseStaticFiles();
-            app.UseMvcWithDefaultRoute();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints => {
+                endpoints.MapDefaultControllerRoute();
+            });
         }
     }
 }
