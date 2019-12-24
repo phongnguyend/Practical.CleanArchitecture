@@ -59,7 +59,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.GraphQL", "Cl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Proxies", "Proxies", "{B7638821-9A76-4994-90DD-8F9C71478E7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.GraphQL.IntegrationTests", "ClassifiedAds.GraphQL.IntegrationTests\ClassifiedAds.GraphQL.IntegrationTests.csproj", "{8BA96FA5-059D-4BBC-B124-39A262BC4BE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.GraphQL.IntegrationTests", "ClassifiedAds.GraphQL.IntegrationTests\ClassifiedAds.GraphQL.IntegrationTests.csproj", "{8BA96FA5-059D-4BBC-B124-39A262BC4BE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Ocelot", "ClassifiedAds.Ocelot\ClassifiedAds.Ocelot.csproj", "{5916EA70-2109-4349-B976-89CD777FE5A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Ocelot.IntegrationTests", "ClassifiedAds.Ocelot.IntegrationTests\ClassifiedAds.Ocelot.IntegrationTests.csproj", "{7EA035EF-0BB5-4E35-B8B1-0937FD3BE5E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -155,6 +159,14 @@ Global
 		{8BA96FA5-059D-4BBC-B124-39A262BC4BE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BA96FA5-059D-4BBC-B124-39A262BC4BE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BA96FA5-059D-4BBC-B124-39A262BC4BE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5916EA70-2109-4349-B976-89CD777FE5A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5916EA70-2109-4349-B976-89CD777FE5A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5916EA70-2109-4349-B976-89CD777FE5A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5916EA70-2109-4349-B976-89CD777FE5A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EA035EF-0BB5-4E35-B8B1-0937FD3BE5E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EA035EF-0BB5-4E35-B8B1-0937FD3BE5E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EA035EF-0BB5-4E35-B8B1-0937FD3BE5E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EA035EF-0BB5-4E35-B8B1-0937FD3BE5E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -182,6 +194,8 @@ Global
 		{81C6F71E-9C8D-47FD-BEAC-9A135107AFB4} = {BBD032E9-D75E-4CD8-A23A-7234480435BE}
 		{FDBA0506-A4E7-405B-918D-66A195F16C95} = {B7638821-9A76-4994-90DD-8F9C71478E7B}
 		{8BA96FA5-059D-4BBC-B124-39A262BC4BE9} = {60BC7A82-187C-43E2-8C37-DE610700A7FA}
+		{5916EA70-2109-4349-B976-89CD777FE5A9} = {B7638821-9A76-4994-90DD-8F9C71478E7B}
+		{7EA035EF-0BB5-4E35-B8B1-0937FD3BE5E4} = {60BC7A82-187C-43E2-8C37-DE610700A7FA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2C23354-4AAD-41AC-9E06-0A6F210ACEEF}
