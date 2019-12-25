@@ -9,6 +9,8 @@ COPY ./ClassifiedAds.DomainServices/*.csproj ./ClassifiedAds.DomainServices/
 COPY ./ClassifiedAds.DomainServices.UnitTests/*.csproj ./ClassifiedAds.DomainServices.UnitTests/
 COPY ./ClassifiedAds.GraphQL/*.csproj ./ClassifiedAds.GraphQL/
 COPY ./ClassifiedAds.GraphQL.IntegrationTests/*.csproj ./ClassifiedAds.GraphQL.IntegrationTests/
+COPY ./ClassifiedAds.GRPC/*.csproj ./ClassifiedAds.GRPC/
+COPY ./ClassifiedAds.GRPC.IntegrationTests/*.csproj ./ClassifiedAds.GRPC.IntegrationTests/
 COPY ./ClassifiedAds.IdentityServices/*.csproj ./ClassifiedAds.IdentityServices/
 COPY ./ClassifiedAds.IdentityServer/*.csproj ./ClassifiedAds.IdentityServer/
 COPY ./ClassifiedAds.Infrastructure/*.csproj ./ClassifiedAds.Infrastructure/

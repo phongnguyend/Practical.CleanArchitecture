@@ -61,9 +61,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Proxies", "Proxies", "{B763
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.GraphQL.IntegrationTests", "ClassifiedAds.GraphQL.IntegrationTests\ClassifiedAds.GraphQL.IntegrationTests.csproj", "{8BA96FA5-059D-4BBC-B124-39A262BC4BE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Ocelot", "ClassifiedAds.Ocelot\ClassifiedAds.Ocelot.csproj", "{5916EA70-2109-4349-B976-89CD777FE5A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Ocelot", "ClassifiedAds.Ocelot\ClassifiedAds.Ocelot.csproj", "{5916EA70-2109-4349-B976-89CD777FE5A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Ocelot.IntegrationTests", "ClassifiedAds.Ocelot.IntegrationTests\ClassifiedAds.Ocelot.IntegrationTests.csproj", "{7EA035EF-0BB5-4E35-B8B1-0937FD3BE5E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Ocelot.IntegrationTests", "ClassifiedAds.Ocelot.IntegrationTests\ClassifiedAds.Ocelot.IntegrationTests.csproj", "{7EA035EF-0BB5-4E35-B8B1-0937FD3BE5E4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.GRPC", "ClassifiedAds.GRPC\ClassifiedAds.GRPC.csproj", "{3EF8D405-42D0-4BC5-8C37-CDF030477646}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.GRPC.IntegrationTests", "ClassifiedAds.GRPC.IntegrationTests\ClassifiedAds.GRPC.IntegrationTests.csproj", "{9AF360EF-07B2-4584-A7C7-7CE3CC782887}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -167,6 +171,14 @@ Global
 		{7EA035EF-0BB5-4E35-B8B1-0937FD3BE5E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EA035EF-0BB5-4E35-B8B1-0937FD3BE5E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EA035EF-0BB5-4E35-B8B1-0937FD3BE5E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EF8D405-42D0-4BC5-8C37-CDF030477646}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EF8D405-42D0-4BC5-8C37-CDF030477646}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EF8D405-42D0-4BC5-8C37-CDF030477646}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EF8D405-42D0-4BC5-8C37-CDF030477646}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AF360EF-07B2-4584-A7C7-7CE3CC782887}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AF360EF-07B2-4584-A7C7-7CE3CC782887}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AF360EF-07B2-4584-A7C7-7CE3CC782887}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AF360EF-07B2-4584-A7C7-7CE3CC782887}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -196,6 +208,8 @@ Global
 		{8BA96FA5-059D-4BBC-B124-39A262BC4BE9} = {60BC7A82-187C-43E2-8C37-DE610700A7FA}
 		{5916EA70-2109-4349-B976-89CD777FE5A9} = {B7638821-9A76-4994-90DD-8F9C71478E7B}
 		{7EA035EF-0BB5-4E35-B8B1-0937FD3BE5E4} = {60BC7A82-187C-43E2-8C37-DE610700A7FA}
+		{3EF8D405-42D0-4BC5-8C37-CDF030477646} = {C6061573-0203-4860-AD42-4C6C2CF55110}
+		{9AF360EF-07B2-4584-A7C7-7CE3CC782887} = {60BC7A82-187C-43E2-8C37-DE610700A7FA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2C23354-4AAD-41AC-9E06-0A6F210ACEEF}

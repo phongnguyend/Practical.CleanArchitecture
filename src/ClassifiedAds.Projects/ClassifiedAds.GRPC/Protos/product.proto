@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "ClassifiedAds.GRPC";
+
+package product;
+
+service Product {
+  rpc GetProducts (GetProductsRequest) returns (GetProductsResponse);
+}
+
+message GetProductsRequest {
+
+}
+
+message GetProductsResponse {
+  repeated ProductMessage products = 1;
+}
+
+message ProductMessage {
+  string id = 1;
+  string code = 2;
+  string name = 3;
+  string description = 4;
+}
