@@ -80,5 +80,5 @@ services:
         ports:
             - "9007:80"
         environment:
-          ASPNETCORE_ENVIRONMENT: "Development"
+          ASPNETCORE_ENVIRONMENT: "Docker"
           ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"

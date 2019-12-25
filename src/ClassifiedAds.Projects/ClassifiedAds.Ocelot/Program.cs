@@ -15,7 +15,8 @@ namespace ClassifiedAds.Ocelot
             Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((host, config) =>
                 {
-                    config.AddJsonFile("ocelot.json");
+                    config.AddJsonFile("ocelot.json", false, true)
+                    .AddJsonFile($"ocelot.{host.HostingEnvironment.EnvironmentName}.json", true, true);
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
