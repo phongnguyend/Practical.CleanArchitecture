@@ -53,8 +53,13 @@ namespace ClassifiedAds.WebMVC.Controllers
 
             var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
 
-            // var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(_appSettings.OpenIdConnect.Authority);
-            // var response = await httpClient.GetUserInfoAsync(new UserInfoRequest { Address = metaDataResponse.UserInfoEndpoint, Token = accessToken });
+            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
+            {
+                Address = _appSettings.OpenIdConnect.Authority,
+                Policy = { RequireHttps = _appSettings.OpenIdConnect.RequireHttpsMetadata },
+            });
+
+            var response = await httpClient.GetUserInfoAsync(new UserInfoRequest { Address = metaDataResponse.UserInfoEndpoint, Token = accessToken });
 
             var products = _productService.GetProducts().ToList();
 
@@ -111,7 +116,12 @@ namespace ClassifiedAds.WebMVC.Controllers
         public async Task<IActionResult> RefreshToken()
         {
             var httpClient = _httpClientFactory.CreateClient();
-            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(_appSettings.OpenIdConnect.Authority);
+            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
+            {
+                Address = _appSettings.OpenIdConnect.Authority,
+                Policy = { RequireHttps = _appSettings.OpenIdConnect.RequireHttpsMetadata },
+            });
+
             var refreshToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
             var response = await httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
             {

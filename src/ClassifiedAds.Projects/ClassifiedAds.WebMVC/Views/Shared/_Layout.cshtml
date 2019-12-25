@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.Extensions.Options;
+@using ClassifiedAds.WebMVC.ConfigurationOptions;
+@inject IOptionsSnapshot<AppSettings> appSettings
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -13,7 +17,7 @@
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
               crossorigin="anonymous"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"/>
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
@@ -59,7 +63,7 @@
                             <a class="nav-link text-dark" href="https://localhost:44318/hangfire/">Hangfire Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="https://localhost:44312/profiler/results">API</a>
+                            <a class="nav-link text-dark" href="@appSettings.Value.ResourceServer.Endpoint/profiler/results">API</a>
                         </li>
                     </ul>
                 </div>
