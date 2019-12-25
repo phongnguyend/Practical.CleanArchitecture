@@ -12,6 +12,8 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
 
         public string AllowedHosts { get; set; }
 
+        public string CurrentUrl { get; set; }
+
         public ValidateOptionsResult Validate()
         {
             var validationRs = OpenIdConnect.Validate();

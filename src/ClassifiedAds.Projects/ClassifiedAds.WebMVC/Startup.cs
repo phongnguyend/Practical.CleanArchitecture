@@ -142,7 +142,7 @@ namespace ClassifiedAds.WebMVC
 
             services.AddHealthChecksUI(setupSettings: setup =>
             {
-                setup.AddHealthCheckEndpoint("Basic Health Check", "https://localhost:44364/healthcheck");
+                setup.AddHealthCheckEndpoint("Basic Health Check", $"{appSettings.CurrentUrl}/healthcheck");
             });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -183,7 +183,7 @@ namespace ClassifiedAds.WebMVC
             {
                 Predicate = _ => true,
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
-                ResultStatusCodes = 
+                ResultStatusCodes =
                 {
                     [HealthStatus.Healthy] = StatusCodes.Status200OK,
                     [HealthStatus.Degraded] = StatusCodes.Status500InternalServerError,
@@ -192,7 +192,8 @@ namespace ClassifiedAds.WebMVC
             });
             app.UseHealthChecksUI(); // /healthchecks-ui#/healthchecks
 
-            app.UseEndpoints(endpoints => {
+            app.UseEndpoints(endpoints =>
+            {
                 endpoints.MapDefaultControllerRoute();
             });
         }

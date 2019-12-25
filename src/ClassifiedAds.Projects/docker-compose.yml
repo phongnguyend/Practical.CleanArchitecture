@@ -40,7 +40,8 @@ services:
           ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
           OpenIdConnect__Authority: "http://host.docker.internal:9000"
           OpenIdConnect__RequireHttpsMetadata: "false"
-          ResourceServer__Endpoint: "http://host.docker.internal:9002"
+          ResourceServer__Endpoint: "http://webapi"
+          CurrentUrl: "http://localhost:80"
     backgroundservices:
         build:
           context: .
