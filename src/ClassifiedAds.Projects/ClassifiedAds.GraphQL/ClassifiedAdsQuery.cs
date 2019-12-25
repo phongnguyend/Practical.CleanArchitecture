@@ -3,6 +3,7 @@ using ClassifiedAds.GraphQL.Types;
 using ClassifiedAds.GRPC;
 using GraphQL.Types;
 using Grpc.Net.Client;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 
@@ -10,7 +11,7 @@ namespace ClassifiedAds.GraphQL
 {
     public class ClassifiedAdsQuery : ObjectGraphType<object>
     {
-        public ClassifiedAdsQuery(IProductService productService)
+        public ClassifiedAdsQuery(IProductService productService, IConfiguration configuration)
         {
             Name = "Query";
 
@@ -18,7 +19,7 @@ namespace ClassifiedAds.GraphQL
                 "products",
                 resolve: context =>
                 {
-                    var channel = GrpcChannel.ForAddress("https://localhost:5001");
+                    var channel = GrpcChannel.ForAddress(configuration["GrpcEnpoint"]);
                     var client = new Product.ProductClient(channel);
                     var productsResponse = client.GetProducts(new GetProductsRequest());
 

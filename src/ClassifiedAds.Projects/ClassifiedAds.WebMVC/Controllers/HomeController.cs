@@ -50,9 +50,11 @@ namespace ClassifiedAds.WebMVC.Controllers
         public async Task<IActionResult> Privacy()
         {
             var httpClient = _httpClientFactory.CreateClient();
-            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(_appSettings.OpenIdConnect.Authority);
+
             var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
-            var response = await httpClient.GetUserInfoAsync(new UserInfoRequest { Address = metaDataResponse.UserInfoEndpoint, Token = accessToken });
+
+            // var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(_appSettings.OpenIdConnect.Authority);
+            // var response = await httpClient.GetUserInfoAsync(new UserInfoRequest { Address = metaDataResponse.UserInfoEndpoint, Token = accessToken });
 
             var products = _productService.GetProducts().ToList();
 

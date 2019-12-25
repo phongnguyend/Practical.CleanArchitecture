@@ -56,11 +56,13 @@ namespace Microsoft.Extensions.DependencyInjection
                         AllowedGrantTypes = GrantTypes.Hybrid.Combines(GrantTypes.ResourceOwnerPassword),
                         RedirectUris =
                         {
-                            "https://localhost:44364/signin-oidc"
+                            "https://localhost:44364/signin-oidc",
+                            "http://localhost:9003/signin-oidc",
                         },
                         PostLogoutRedirectUris =
                         {
-                            "https://localhost:44364/signout-callback-oidc"
+                            "https://localhost:44364/signout-callback-oidc",
+                            "http://localhost:9003/signout-callback-oidc",
                         },
                         AllowedScopes =
                         {

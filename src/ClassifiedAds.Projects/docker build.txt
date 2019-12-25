@@ -4,11 +4,17 @@ docker run -d -p 8080:80 --name classifiedads.webmvc classifiedads.webmvc
 docker run -d -p 8081:80 --name classifiedads.webapi classifiedads.webapi
 docker run -d -p 8082:80 --name classifiedads.identityserver classifiedads.identityserver
 
-docker build -f "Dockerfile-WebMVC" -t classifiedads.webmvc .
-docker build -f "Dockerfile-WebAPI" -t classifiedads.webapi .
-docker build -f "Dockerfile-IdentityServer" -t classifiedads.identityserver .
+docker build -f "ClassifiedAds.BackgroundServices\Dockerfile" -t classifiedads.backgroundservices .
+docker build -f "ClassifiedAds.GRPC\Dockerfile" -t classifiedads.grpc .
+docker build -f "ClassifiedAds.IdentityServer\Dockerfile" -t classifiedads.identityserver .
+docker build -f "ClassifiedAds.NotificationServer\Dockerfile" -t classifiedads.notificationserver .
+docker build -f "ClassifiedAds.WebMVC\Dockerfile" -t classifiedads.webmvc .
+docker build -f "ClassifiedAds.WebAPI\Dockerfile" -t classifiedads.webapi .
+docker build -f "ClassifiedAds.GraphQL\Dockerfile" -t classifiedads.graphql .
+docker build -f "ClassifiedAds.Ocelot\Dockerfile" -t classifiedads.ocelot .
 
 docker-compose build
+docker-compose up
 
 docker --version
 docker version
@@ -26,4 +32,5 @@ docker rm xxx
 docker tag classifiedads.web acr.azurecr.io/classifiedads.web
 docker push acr.azurecr.io/classifiedads.web
 
-
+dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p crypticpassword
+dotnet dev-certs https --trust

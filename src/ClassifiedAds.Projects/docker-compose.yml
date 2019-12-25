@@ -3,32 +3,81 @@ services:
     identityserver:
         build:
           context: .
-          dockerfile: Dockerfile-IdentityServer
+          dockerfile: ./ClassifiedAds.IdentityServer/Dockerfile
         ports:
-            - "44367:80"
+            - "9000:80"
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+    notificationserver:
+        build:
+          context: .
+          dockerfile: ./ClassifiedAds.NotificationServer/Dockerfile
+        ports:
+            - "9001:80"
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
     webapi:
         build:
           context: .
-          dockerfile: Dockerfile-WebAPI
+          dockerfile: ./ClassifiedAds.WebAPI/Dockerfile
         ports:
-            - "44312:80"
+            - "9002:80"
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
-          IdentityServerAuthentication__Authority: "http://172.18.246.161:44367"
+          IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
           IdentityServerAuthentication__RequireHttpsMetadata: "false"
     webmvc:
         build:
           context: .
-          dockerfile: Dockerfile-WebMVC
+          dockerfile: ./ClassifiedAds.WebMVC/Dockerfile
         ports:
-            - "44364:80"
+            - "9003:80"
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
-          OpenIdConnect__Authority: "http://172.18.246.161:44367"
+          OpenIdConnect__Authority: "http://host.docker.internal:9000"
           OpenIdConnect__RequireHttpsMetadata: "false"
-          ResourceServer__Endpoint: "http://172.18.246.161:44312"
+          ResourceServer__Endpoint: "http://host.docker.internal:9002"
+    backgroundservices:
+        build:
+          context: .
+          dockerfile: ./ClassifiedAds.BackgroundServices/Dockerfile
+        ports:
+            - "9004:80"
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+    grpc:
+        stdin_open: true
+        tty: true
+        build:
+          context: .
+          dockerfile: ./ClassifiedAds.GRPC/Dockerfile
+        ports:
+            - "9005:80"
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          NO_PROXY: "localhost"
+    graphql:
+        build:
+          context: .
+          dockerfile: ./ClassifiedAds.GraphQL/Dockerfile
+        ports:
+            - "9006:80"
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          GrpcEnpoint: "http://grpc"
+    ocelot:
+        build:
+          context: .
+          dockerfile: ./ClassifiedAds.Ocelot/Dockerfile
+        ports:
+            - "9007:80"
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
