@@ -1,0 +1,3 @@
+﻿Add-Migration -Context AdsDbContext Init
+Remove-Migration -Context AdsDbContext
+Remove-Migration -Context AdsDbContext -Force
