@@ -1,3 +1,7 @@
 ﻿Add-Migration -Context AdsDbContext Init
 Remove-Migration -Context AdsDbContext
 Remove-Migration -Context AdsDbContext -Force
+
+Update-Database -Context AdsDbContext
+Update-Database -Context ConfigurationDbContext
+Update-Database -Context PersistedGrantDbContext
