@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.WebMVC.ConfigurationProviders;
+﻿using ClassifiedAds.Infrastructure.Configuration;
+using ClassifiedAds.Persistence;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -24,10 +25,14 @@ namespace ClassifiedAds.WebMVC
                 {
                     var config = builder.Build();
 
-                    builder.AddEFConfiguration(o =>
+                    builder.AddEFConfiguration(() =>
                     {
-                        o.UseSqlServer(config.GetConnectionString("ClassifiedAds"));
+                        var dbContextOptionsBuilder = new DbContextOptionsBuilder<AdsDbContext>();
+                        dbContextOptionsBuilder.UseSqlServer(config.GetConnectionString("ClassifiedAds"));
+                        return new AdsDbContext(dbContextOptionsBuilder.Options);
                     });
+
+                    //builder.AddSqlConfigurationVariables(config.GetConnectionString("ClassifiedAds"));
 
                     if (ctx.HostingEnvironment.IsDevelopment())
                     {

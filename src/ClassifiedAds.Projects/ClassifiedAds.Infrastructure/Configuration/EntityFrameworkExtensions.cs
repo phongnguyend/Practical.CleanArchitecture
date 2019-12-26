@@ -2,14 +2,14 @@
 using Microsoft.Extensions.Configuration;
 using System;
 
-namespace ClassifiedAds.WebMVC.ConfigurationProviders
+namespace ClassifiedAds.Infrastructure.Configuration
 {
     public static class EntityFrameworkExtensions
     {
         public static IConfigurationBuilder AddEFConfiguration(this IConfigurationBuilder builder,
-            Action<DbContextOptionsBuilder> optionsAction)
+            Func<DbContext> dbContextResolver)
         {
-            return builder.Add(new EntityFrameworkConfigurationSource(optionsAction));
+            return builder.Add(new EntityFrameworkConfigurationSource(dbContextResolver));
         }
     }
 }
