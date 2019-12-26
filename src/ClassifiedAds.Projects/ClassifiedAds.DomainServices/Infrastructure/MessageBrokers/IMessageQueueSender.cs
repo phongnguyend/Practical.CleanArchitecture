@@ -1,4 +1,4 @@
-﻿namespace ClassifiedAds.DomainServices.Infrastructure
+﻿namespace ClassifiedAds.DomainServices.Infrastructure.MessageBrokers
 {
     public interface IMessageQueueSender<T>
     {

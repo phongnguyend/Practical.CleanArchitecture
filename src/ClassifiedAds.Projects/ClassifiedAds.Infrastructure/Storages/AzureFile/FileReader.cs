@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.DomainServices.Infrastructure;
+﻿using ClassifiedAds.DomainServices.Infrastructure.Storages;
 
 namespace ClassifiedAds.Infrastructure.Storages.AzureFile
 {

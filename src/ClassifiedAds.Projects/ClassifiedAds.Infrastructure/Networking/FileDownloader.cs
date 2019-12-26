@@ -1,7 +1,7 @@
-﻿using ClassifiedAds.DomainServices.Infrastructure;
+﻿using ClassifiedAds.DomainServices.Infrastructure.Networking;
 using System.Net;
 
-namespace ClassifiedAds.Infrastructure
+namespace ClassifiedAds.Infrastructure.Networking
 {
     public class FileDownloader : IFileDownloader
     {

@@ -1,7 +1,7 @@
-﻿using ClassifiedAds.DomainServices.Infrastructure;
+﻿using ClassifiedAds.DomainServices.Infrastructure.OS;
 using System;
 
-namespace ClassifiedAds.Infrastructure
+namespace ClassifiedAds.Infrastructure.OS
 {
     public class DateTimeProvider : IDateTimeProvider
     {

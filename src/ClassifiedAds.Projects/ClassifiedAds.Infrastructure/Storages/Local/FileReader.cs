@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.DomainServices.Infrastructure;
+﻿using ClassifiedAds.DomainServices.Infrastructure.Storages;
 using System.IO;
 
 namespace ClassifiedAds.Infrastructure.Storages.Local

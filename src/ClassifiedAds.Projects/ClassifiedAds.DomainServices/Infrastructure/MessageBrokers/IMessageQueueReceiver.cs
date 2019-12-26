@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClassifiedAds.DomainServices.Infrastructure
+namespace ClassifiedAds.DomainServices.Infrastructure.MessageBrokers
 {
     public interface IMessageQueueReceiver<T>
     {

@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.DomainServices.Infrastructure;
+﻿using ClassifiedAds.DomainServices.Infrastructure.MessageBrokers;
 using System;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.Kafka

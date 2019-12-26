@@ -1,4 +1,4 @@
-﻿namespace ClassifiedAds.DomainServices.Infrastructure
+﻿namespace ClassifiedAds.DomainServices.Infrastructure.Networking
 {
     public interface IFileDownloader
     {
