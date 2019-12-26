@@ -19,12 +19,16 @@ namespace ClassifiedAds.Migrator
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddPersistence(Configuration["ConnectionStrings:ClassifiedAds"]);
+
+            services.AddIdentityServer()
+                .AddPersistence(Configuration.GetConnectionString("ClassifiedAds"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.MigrateDb();
+            app.MigrateIdServerDb();
         }
     }
 }

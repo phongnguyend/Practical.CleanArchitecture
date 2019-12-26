@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
+﻿using System;
 using System.IO;
-using Serilog;
-using System;
+using ClassifiedAds.DomainServices.Entities;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace ClassifiedAds.IdentityServer
 {
@@ -41,11 +42,12 @@ namespace ClassifiedAds.IdentityServer
 
             services.AddIdentityServer()
                     .AddDeveloperSigningCredential()
+                    .AddAspNetIdentity<User>()
                     .AddPersistence(Configuration.GetConnectionString("ClassifiedAds"));
 
             services.AddMiniProfiler(options =>
             {
-                options.RouteBasePath = "/profiler";// access /profiler/results to see last profile check
+                options.RouteBasePath = "/profiler"; // access /profiler/results to see last profile check
                 options.PopupRenderPosition = StackExchange.Profiling.RenderPosition.BottomLeft;
                 options.PopupShowTimeWithChildren = true;
             })

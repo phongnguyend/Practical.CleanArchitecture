@@ -1,14 +1,13 @@
-﻿using IdentityServer4;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
+using IdentityServer4;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
-using ClassifiedAds.DomainServices.Entities;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -33,8 +32,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     // this enables automatic token cleanup. this is optional.
                     options.EnableTokenCleanup = true;
                     options.TokenCleanupInterval = 30; // interval in seconds
-                })
-                .AddAspNetIdentity<User>();
+                });
             return services;
         }
 
