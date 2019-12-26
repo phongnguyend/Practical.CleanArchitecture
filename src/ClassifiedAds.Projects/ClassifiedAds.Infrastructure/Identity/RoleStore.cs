@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.IdentityServices
+namespace ClassifiedAds.Infrastructure.Identity
 {
     public class RoleStore : IRoleStore<Role>
     {

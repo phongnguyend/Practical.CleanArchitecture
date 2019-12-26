@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Security.Claims;
 
-namespace ClassifiedAds.WebMVC.Identity
+namespace ClassifiedAds.Infrastructure.Identity
 {
-    public class CurrentUser : ICurrentUser
+    public class CurrentWebUser : ICurrentUser
     {
         private readonly IHttpContextAccessor _context;
 
-        public CurrentUser(IHttpContextAccessor context)
+        public CurrentWebUser(IHttpContextAccessor context)
         {
             _context = context;
         }

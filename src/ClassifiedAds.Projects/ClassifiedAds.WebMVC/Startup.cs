@@ -1,10 +1,10 @@
 ﻿using ClassifiedAds.DomainServices.Identity;
+using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.WebMVC.Authorization;
 using ClassifiedAds.WebMVC.ClaimsTransformations;
 using ClassifiedAds.WebMVC.ConfigurationOptions;
 using ClassifiedAds.WebMVC.Filters;
 using ClassifiedAds.WebMVC.HttpHandlers;
-using ClassifiedAds.WebMVC.Identity;
 using ClassifiedAds.WebMVC.Middleware;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication;
@@ -146,7 +146,7 @@ namespace ClassifiedAds.WebMVC
             });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<ICurrentUser, CurrentUser>();
+            services.AddScoped<ICurrentUser, CurrentWebUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,5 +1,6 @@
 using ClassifiedAds.DomainServices.Identity;
 using ClassifiedAds.GraphQL.Types;
+using ClassifiedAds.Infrastructure.Identity;
 using GraphQL.Server;
 using GraphQL.Types;
 using Microsoft.AspNetCore.Builder;
@@ -55,7 +56,7 @@ namespace ClassifiedAds.GraphQL
                 _.ExposeExceptions = true;
             })
             .AddUserContextBuilder(httpContext => new GraphQLUserContext { User = httpContext.User });
-            services.AddScoped<ICurrentUser, CurrentUser>();
+            services.AddScoped<ICurrentUser, CurrentWebUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

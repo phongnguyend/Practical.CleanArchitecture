@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace ClassifiedAds.IdentityServices
+namespace ClassifiedAds.Infrastructure.Identity
 {
     public class EmailConfirmationTokenProvider<TUser> : DataProtectorTokenProvider<TUser>
         where TUser : class

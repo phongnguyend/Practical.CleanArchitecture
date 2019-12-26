@@ -11,12 +11,8 @@ COPY ./ClassifiedAds.GraphQL/*.csproj ./ClassifiedAds.GraphQL/
 COPY ./ClassifiedAds.GraphQL.IntegrationTests/*.csproj ./ClassifiedAds.GraphQL.IntegrationTests/
 COPY ./ClassifiedAds.GRPC/*.csproj ./ClassifiedAds.GRPC/
 COPY ./ClassifiedAds.GRPC.IntegrationTests/*.csproj ./ClassifiedAds.GRPC.IntegrationTests/
-COPY ./ClassifiedAds.IdentityServices/*.csproj ./ClassifiedAds.IdentityServices/
 COPY ./ClassifiedAds.IdentityServer/*.csproj ./ClassifiedAds.IdentityServer/
 COPY ./ClassifiedAds.Infrastructure/*.csproj ./ClassifiedAds.Infrastructure/
-COPY ./ClassifiedAds.Infrastructure.Caching/*.csproj ./ClassifiedAds.Infrastructure.Caching/
-COPY ./ClassifiedAds.Infrastructure.MessageBrokers/*.csproj ./ClassifiedAds.Infrastructure.MessageBrokers/
-COPY ./ClassifiedAds.Infrastructure.Storages/*.csproj ./ClassifiedAds.Infrastructure.Storages/
 COPY ./ClassifiedAds.Migrator/*.csproj ./ClassifiedAds.Migrator/
 COPY ./ClassifiedAds.NotificationServer/*.csproj ./ClassifiedAds.NotificationServer/
 COPY ./ClassifiedAds.NotificationTestClient/*.csproj ./ClassifiedAds.NotificationTestClient/

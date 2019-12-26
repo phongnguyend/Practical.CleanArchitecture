@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using ClassifiedAds.DomainServices.Identity;
+using ClassifiedAds.Infrastructure.Identity;
+using ClassifiedAds.WebAPI.ConfigurationOptions;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerUI;
-using IdentityServer4.AccessTokenValidation;
-using System.IO;
-using Serilog;
-using Microsoft.AspNetCore.Http;
-using ClassifiedAds.DomainServices.Identity;
-using ClassifiedAds.WebAPI.Identity;
-using ClassifiedAds.WebAPI.ConfigurationOptions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using Serilog;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace ClassifiedAds.WebAPI
 {
@@ -133,7 +132,7 @@ namespace ClassifiedAds.WebAPI
             .AddEntityFramework();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<ICurrentUser, CurrentUser>();
+            services.AddScoped<ICurrentUser, CurrentWebUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

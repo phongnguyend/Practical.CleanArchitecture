@@ -1,6 +1,6 @@
 ﻿using System;
 using ClassifiedAds.DomainServices.Identity;
-using ClassifiedAds.GRPC.Identity;
+using ClassifiedAds.Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -30,7 +30,7 @@ namespace ClassifiedAds.GRPC
                 .AddMessageHandlers();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<ICurrentUser, CurrentUser>();
+            services.AddScoped<ICurrentUser, CurrentWebUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
