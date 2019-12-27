@@ -53,17 +53,15 @@ services:
           ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
           NotificationServer__Endpoint: "http://notificationserver"
     grpc:
-        stdin_open: true
-        tty: true
         build:
           context: .
           dockerfile: ./ClassifiedAds.GRPC/Dockerfile
         ports:
-            - "9005:80"
+            - "9005:443"
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
+          ASPNETCORE_URLS: "https://+"
           ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
-          NO_PROXY: "localhost"
     graphql:
         build:
           context: .
@@ -73,7 +71,7 @@ services:
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
-          GrpcService__Endpoint: "http://grpc"
+          GrpcService__Endpoint: "https://grpc"
     ocelot:
         build:
           context: .

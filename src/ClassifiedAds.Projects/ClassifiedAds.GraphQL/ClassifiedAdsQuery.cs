@@ -6,6 +6,7 @@ using Grpc.Net.Client;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 
 namespace ClassifiedAds.GraphQL
 {
@@ -19,8 +20,7 @@ namespace ClassifiedAds.GraphQL
                 "products",
                 resolve: context =>
                 {
-                    var channel = GrpcChannel.ForAddress(configuration["GrpcService:Endpoint"]);
-                    var client = new Product.ProductClient(channel);
+                    var client = GetGrpcClient(configuration);
                     var productsResponse = client.GetProducts(new GetProductsRequest());
 
                     var products = new List<DomainServices.Entities.Product>();
@@ -49,6 +49,25 @@ namespace ClassifiedAds.GraphQL
                     return productService.GetById(id);
                 }
             );
+        }
+
+        private static Product.ProductClient GetGrpcClient(IConfiguration configuration)
+        {
+            var channel = GrpcChannel.ForAddress(configuration["GrpcService:Endpoint"],
+                new GrpcChannelOptions
+                {
+                    HttpClient = new HttpClient(new HttpClientHandler
+                    {
+                        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
+                        {
+                            // TODO: verify the Certificate
+                            return true;
+                        }
+                    })
+                });
+
+            var client = new Product.ProductClient(channel);
+            return client;
         }
     }
 }

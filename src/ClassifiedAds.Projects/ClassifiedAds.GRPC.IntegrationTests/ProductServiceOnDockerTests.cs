@@ -5,13 +5,13 @@ using Xunit;
 
 namespace ClassifiedAds.GRPC.IntegrationTests
 {
-    public class ProductServiceTests
+    public class ProductServiceOnDockerTests
     {
         private readonly Product.ProductClient _client;
 
-        public ProductServiceTests()
+        public ProductServiceOnDockerTests()
         {
-            var channel = GrpcChannel.ForAddress("https://localhost:5001",
+            var channel = GrpcChannel.ForAddress("https://localhost:9005",
                 new GrpcChannelOptions
                 {
                     HttpClient = new HttpClient(new HttpClientHandler
