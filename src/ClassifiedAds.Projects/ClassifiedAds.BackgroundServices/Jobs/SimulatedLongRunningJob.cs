@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,10 +8,17 @@ namespace ClassifiedAds.BackgroundServices.Jobs
 {
     public class SimulatedLongRunningJob
     {
+        private readonly IConfiguration _configuration;
+
+        public SimulatedLongRunningJob(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public async Task Run()
         {
             var connection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:62710/SimulatedLongRunningTaskHub")
+                .WithUrl($"{_configuration["NotificationServer:Endpoint"]}/SimulatedLongRunningTaskHub")
                 .AddMessagePackProtocol()
                 .Build();
 

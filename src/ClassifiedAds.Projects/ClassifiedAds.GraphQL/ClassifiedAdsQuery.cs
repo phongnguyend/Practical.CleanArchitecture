@@ -19,7 +19,7 @@ namespace ClassifiedAds.GraphQL
                 "products",
                 resolve: context =>
                 {
-                    var channel = GrpcChannel.ForAddress(configuration["GrpcEnpoint"]);
+                    var channel = GrpcChannel.ForAddress(configuration["GrpcService:Endpoint"]);
                     var client = new Product.ProductClient(channel);
                     var productsResponse = client.GetProducts(new GetProductsRequest());
 

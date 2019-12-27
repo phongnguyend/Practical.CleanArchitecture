@@ -51,6 +51,7 @@ services:
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          NotificationServer__Endpoint: "http://notificationserver"
     grpc:
         stdin_open: true
         tty: true
@@ -72,7 +73,7 @@ services:
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
-          GrpcEnpoint: "http://grpc"
+          GrpcService__Endpoint: "http://grpc"
     ocelot:
         build:
           context: .
