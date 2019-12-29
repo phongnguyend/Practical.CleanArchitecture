@@ -2,9 +2,9 @@
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus
 {
-    public class MessageQueueSender<T> : IMessageQueueSender<T>
+    public class AzureServiceBusSender : IMessageSender
     {
-        public void Send(T message, string exchangeName, string routingKey)
+        public void Send<T>(T message)
         {
             throw new System.NotImplementedException();
         }

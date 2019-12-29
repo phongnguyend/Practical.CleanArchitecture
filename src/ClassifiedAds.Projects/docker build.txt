@@ -32,5 +32,4 @@ docker rm xxx
 docker tag classifiedads.web acr.azurecr.io/classifiedads.web
 docker push acr.azurecr.io/classifiedads.web
 
-dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p crypticpassword
-dotnet dev-certs https --trust
+docker run -d --name rabbitmq -p 5672:5672 -p 5673:5673 -p 15672:15672 rabbitmq:3-management

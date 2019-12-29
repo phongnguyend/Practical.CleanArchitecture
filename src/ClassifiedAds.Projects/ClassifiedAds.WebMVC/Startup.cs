@@ -1,6 +1,8 @@
 ﻿using ClassifiedAds.DomainServices.Identity;
+using ClassifiedAds.DomainServices.Infrastructure.MessageBrokers;
 using ClassifiedAds.DomainServices.Infrastructure.Storages;
 using ClassifiedAds.Infrastructure.Identity;
+using ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ;
 using ClassifiedAds.Infrastructure.Storages.Amazon;
 using ClassifiedAds.Infrastructure.Storages.Azure;
 using ClassifiedAds.Infrastructure.Storages.Local;
@@ -161,6 +163,15 @@ namespace ClassifiedAds.WebMVC
             {
                 services.AddSingleton<IFileStorageManager>(new LocalFileStorageManager(appSettings.Storage.Local.Path));
             }
+
+            services.AddSingleton<IMessageSender>(new RabbitMQSender(new RabbitMQSenderOptions
+            {
+                HostName = "localhost",
+                UserName = "guest",
+                Password = "guest",
+                ExchangeName = "amq.direct",
+                RoutingKey = "classifiedadds",
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

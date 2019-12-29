@@ -3,9 +3,9 @@ using System;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
 {
-    public class MessageQueueReceiver<T> : IMessageQueueReceiver<T>
+    public class AzureQueueReceiver : IMessageReceiver
     {
-        public void Receive(Action<T> action)
+        public void Receive<T>(Action<T> action)
         {
             throw new NotImplementedException();
         }

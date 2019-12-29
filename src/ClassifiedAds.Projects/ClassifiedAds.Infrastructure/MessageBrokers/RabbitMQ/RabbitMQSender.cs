@@ -5,21 +5,26 @@ using System.Text;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
 {
-    public class MessageQueueSender<T> : IMessageQueueSender<T>
+    public class RabbitMQSender : IMessageSender
     {
         private readonly IConnectionFactory _connectionFactory;
+        private readonly string _exchangeName;
+        private readonly string _routingKey;
 
-        public MessageQueueSender(string hostName, string userName, string password)
+        public RabbitMQSender(RabbitMQSenderOptions options)
         {
             _connectionFactory = new ConnectionFactory
             {
-                HostName = hostName,
-                UserName = userName,
-                Password = password
+                HostName = options.HostName,
+                UserName = options.UserName,
+                Password = options.Password,
             };
+
+            _exchangeName = options.ExchangeName;
+            _routingKey = options.RoutingKey;
         }
 
-        public void Send(T message, string exchangeName, string routingKey)
+        public void Send<T>(T message)
         {
             using (var connection = _connectionFactory.CreateConnection())
             using (var channel = connection.CreateModel())
@@ -28,8 +33,8 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
                 var properties = channel.CreateBasicProperties();
                 properties.Persistent = true;
 
-                channel.BasicPublish(exchange: exchangeName,
-                                     routingKey: routingKey,
+                channel.BasicPublish(exchange: _exchangeName,
+                                     routingKey: _routingKey,
                                      basicProperties: properties,
                                      body: body);
             }

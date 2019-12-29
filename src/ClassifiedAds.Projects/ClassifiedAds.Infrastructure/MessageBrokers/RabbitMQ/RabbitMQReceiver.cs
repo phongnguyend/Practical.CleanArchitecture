@@ -7,33 +7,33 @@ using System.Text;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
 {
-    public class MessageQueueReceiver<T> : IMessageQueueReceiver<T>
+    public class RabbitMQReceiver : IMessageReceiver
     {
         private IConnection _connection;
         private IModel _channel;
         private string _queueName;
 
-        public MessageQueueReceiver(string hostName, string userName, string password, string queueName)
+        public RabbitMQReceiver(RabbitMQReceiverOptions options)
         {
             _connection = new ConnectionFactory
             {
-                HostName = hostName,
-                UserName = userName,
-                Password = password,
-                AutomaticRecoveryEnabled = true
+                HostName = options.HostName,
+                UserName = options.UserName,
+                Password = options.Password,
+                AutomaticRecoveryEnabled = true,
             }.CreateConnection();
 
-            _queueName = queueName;
+            _queueName = options.QueueName;
 
-            _connection.ConnectionShutdown += connection_ConnectionShutdown;
+            _connection.ConnectionShutdown += Connection_ConnectionShutdown;
         }
 
-        private void connection_ConnectionShutdown(object sender, ShutdownEventArgs e)
+        private void Connection_ConnectionShutdown(object sender, ShutdownEventArgs e)
         {
-            //TODO: add log here
+            // TODO: add log here
         }
 
-        public void Receive(Action<T> action)
+        public void Receive<T>(Action<T> action)
         {
             _channel = _connection.CreateModel();
 

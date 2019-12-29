@@ -3,7 +3,9 @@ using System.IO;
 using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using ClassifiedAds.DomainServices.DomainEvents;
 using ClassifiedAds.DomainServices.Entities;
+using ClassifiedAds.DomainServices.Infrastructure.MessageBrokers;
 using ClassifiedAds.DomainServices.Infrastructure.Storages;
 using ClassifiedAds.DomainServices.Services;
 using ClassifiedAds.WebMVC.Models.File;
@@ -15,11 +17,13 @@ namespace ClassifiedAds.WebMVC.Controllers
     {
         private readonly IGenericService<FileEntry> _fileEntryService;
         private readonly IFileStorageManager _fileManager;
+        private readonly IMessageSender _messageQueueSender;
 
-        public FileController(IGenericService<FileEntry> fileEntryService, IFileStorageManager fileManager)
+        public FileController(IGenericService<FileEntry> fileEntryService, IFileStorageManager fileManager, IMessageSender messageQueueSender)
         {
             _fileEntryService = fileEntryService;
             _fileManager = fileManager;
+            _messageQueueSender = messageQueueSender;
         }
 
         public IActionResult Index()
@@ -55,6 +59,11 @@ namespace ClassifiedAds.WebMVC.Controllers
 
             _fileEntryService.Update(fileEntry);
 
+            _messageQueueSender.Send(new FileUploadedEvent
+            {
+                FileEntry = fileEntry,
+            });
+
             return View();
         }
 
@@ -79,6 +88,11 @@ namespace ClassifiedAds.WebMVC.Controllers
 
             _fileEntryService.Delete(fileEntry);
             _fileManager.Delete(fileEntry);
+
+            _messageQueueSender.Send(new FileDeletedEvent
+            {
+                FileEntry = fileEntry,
+            });
 
             return RedirectToAction(nameof(Index));
         }
