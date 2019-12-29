@@ -14,6 +14,8 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
 
         public string CurrentUrl { get; set; }
 
+        public StorageOptions Storage { get; set; }
+
         public ValidateOptionsResult Validate()
         {
             var validationRs = OpenIdConnect.Validate();

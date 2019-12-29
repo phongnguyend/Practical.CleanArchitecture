@@ -148,14 +148,13 @@ namespace ClassifiedAds.WebMVC
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentWebUser>();
 
-            var storageProvider = Configuration["Storage:Provider"];
-            if (storageProvider == "Azure")
+            if (appSettings.Storage.UsedAzure())
             {
-                services.AddSingleton<IFileStorageManager>(new AzureBlobStorageManager(Configuration["Storage:Azure:ConnectionString"], Configuration["Storage:Azure:Container"]));
+                services.AddSingleton<IFileStorageManager>(new AzureBlobStorageManager(appSettings.Storage.Azure.ConnectionString, appSettings.Storage.Azure.Container));
             }
             else
             {
-                services.AddSingleton<IFileStorageManager>(new LocalFileStorageManager(Configuration["Storage:Local:Path"]));
+                services.AddSingleton<IFileStorageManager>(new LocalFileStorageManager(appSettings.Storage.Local.Path));
             }
         }
 
