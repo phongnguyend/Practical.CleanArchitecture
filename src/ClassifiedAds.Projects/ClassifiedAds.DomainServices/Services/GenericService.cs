@@ -37,5 +37,11 @@ namespace ClassifiedAds.DomainServices.Services
         {
             return _repository.GetAll().FirstOrDefault(x => x.Id == Id);
         }
+
+        public void Delete(T entity)
+        {
+            _repository.Delete(entity);
+            _unitOfWork.SaveChanges();
+        }
     }
 }

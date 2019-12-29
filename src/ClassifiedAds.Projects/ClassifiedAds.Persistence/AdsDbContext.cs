@@ -1,29 +1,19 @@
-﻿using ClassifiedAds.Persistence.MappingConfigurations;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace ClassifiedAds.Persistence
 {
     public class AdsDbContext : DbContext
     {
-
-        public AdsDbContext(DbContextOptions<AdsDbContext> options) : base(options)
+        public AdsDbContext(DbContextOptions<AdsDbContext> options)
+            : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.ApplyConfiguration(new ConfigurationEntryConfiguration());
-            builder.ApplyConfiguration(new UserConfiguration());
-            builder.ApplyConfiguration(new UserTokenConfiguration());
-            builder.ApplyConfiguration(new RoleConfiguration());
-            builder.ApplyConfiguration(new ProductConfiguration());
-            builder.ApplyConfiguration(new SmsMessageConfiguration());
-            builder.ApplyConfiguration(new EmailMessageConfiguration());
-            builder.ApplyConfiguration(new EventConfiguration());
-            builder.ApplyConfiguration(new SessionConfiguration());
-            builder.ApplyConfiguration(new VoterConfiguration());
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }
