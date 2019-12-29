@@ -27,7 +27,7 @@ namespace ClassifiedAds.Infrastructure.Storages.Azure
         {
             _container.CreateIfNotExistsAsync().GetAwaiter().GetResult();
 
-            var name = Guid.NewGuid().ToString();
+            var name = fileEntry.Id.ToString();
             CloudBlockBlob blob = _container.GetBlockBlobReference(name);
             var bytes = stream.ToArray();
             blob.UploadFromByteArrayAsync(bytes, 0, bytes.Length).Wait();

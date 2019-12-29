@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.DomainServices.Identity;
 using ClassifiedAds.DomainServices.Infrastructure.Storages;
 using ClassifiedAds.Infrastructure.Identity;
+using ClassifiedAds.Infrastructure.Storages.Amazon;
 using ClassifiedAds.Infrastructure.Storages.Azure;
 using ClassifiedAds.Infrastructure.Storages.Local;
 using ClassifiedAds.WebMVC.Authorization;
@@ -151,6 +152,10 @@ namespace ClassifiedAds.WebMVC
             if (appSettings.Storage.UsedAzure())
             {
                 services.AddSingleton<IFileStorageManager>(new AzureBlobStorageManager(appSettings.Storage.Azure.ConnectionString, appSettings.Storage.Azure.Container));
+            }
+            else if (appSettings.Storage.UsedAmazon())
+            {
+                services.AddSingleton<IFileStorageManager>(new AmazonS3StorageManager(appSettings.Storage.Amazon.AccessKeyID, appSettings.Storage.Amazon.SecretAccessKey, appSettings.Storage.Amazon.BucketName, appSettings.Storage.Amazon.RegionEndpoint));
             }
             else
             {
