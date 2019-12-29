@@ -35,6 +35,8 @@ services:
           dockerfile: ./ClassifiedAds.WebMVC/Dockerfile
         ports:
             - "9003:80"
+        volumes:
+            - E:\\files:/files 
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
@@ -42,6 +44,7 @@ services:
           OpenIdConnect__RequireHttpsMetadata: "false"
           ResourceServer__Endpoint: "http://webapi"
           CurrentUrl: "http://localhost:80"
+          Storage__Local__Path: "/files"
     backgroundservices:
         build:
           context: .
