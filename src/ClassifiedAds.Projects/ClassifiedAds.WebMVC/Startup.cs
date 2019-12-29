@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.DomainServices.Identity;
 using ClassifiedAds.DomainServices.Infrastructure.Storages;
 using ClassifiedAds.Infrastructure.Identity;
+using ClassifiedAds.Infrastructure.Storages.Azure;
 using ClassifiedAds.Infrastructure.Storages.Local;
 using ClassifiedAds.WebMVC.Authorization;
 using ClassifiedAds.WebMVC.ClaimsTransformations;
@@ -147,7 +148,15 @@ namespace ClassifiedAds.WebMVC
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentWebUser>();
 
-            services.AddSingleton<IFileStorageManager>(new LocalFileStorageManager(Configuration["Storage:Local:Path"]));
+            var storageProvider = Configuration["Storage:Provider"];
+            if (storageProvider == "Azure")
+            {
+                services.AddSingleton<IFileStorageManager>(new AzureBlobStorageManager(Configuration["Storage:Azure:ConnectionString"], Configuration["Storage:Azure:Container"]));
+            }
+            else
+            {
+                services.AddSingleton<IFileStorageManager>(new LocalFileStorageManager(Configuration["Storage:Local:Path"]));
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

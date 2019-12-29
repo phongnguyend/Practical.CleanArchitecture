@@ -44,7 +44,10 @@ services:
           OpenIdConnect__RequireHttpsMetadata: "false"
           ResourceServer__Endpoint: "http://webapi"
           CurrentUrl: "http://localhost:80"
+          Storage__Provider: "Local"
           Storage__Local__Path: "/files"
+          Storage__Azure__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
+          Storage__Azure__Container: "classifiedadds"
     backgroundservices:
         build:
           context: .
