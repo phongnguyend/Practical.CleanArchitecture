@@ -1,4 +1,4 @@
-﻿namespace ClassifiedAds.WebMVC.ConfigurationOptions
+﻿namespace ClassifiedAds.WebMVC.ConfigurationOptions.Storage
 {
     public class AmazonOptions
     {

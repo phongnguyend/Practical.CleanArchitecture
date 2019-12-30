@@ -2,6 +2,8 @@
 using ClassifiedAds.DomainServices.Infrastructure.MessageBrokers;
 using ClassifiedAds.DomainServices.Infrastructure.Storages;
 using ClassifiedAds.Infrastructure.Identity;
+using ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
+using ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
 using ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ;
 using ClassifiedAds.Infrastructure.Storages.Amazon;
 using ClassifiedAds.Infrastructure.Storages.Azure;
@@ -164,14 +166,29 @@ namespace ClassifiedAds.WebMVC
                 services.AddSingleton<IFileStorageManager>(new LocalFileStorageManager(appSettings.Storage.Local.Path));
             }
 
-            services.AddSingleton<IMessageSender>(new RabbitMQSender(new RabbitMQSenderOptions
+            if (appSettings.MessageBroker.UsedRabbitMQ())
             {
-                HostName = "localhost",
-                UserName = "guest",
-                Password = "guest",
-                ExchangeName = "amq.direct",
-                RoutingKey = "classifiedadds",
-            }));
+                services.AddSingleton<IMessageSender>(new RabbitMQSender(new RabbitMQSenderOptions
+                {
+                    HostName = appSettings.MessageBroker.RabbitMQ.HostName,
+                    UserName = appSettings.MessageBroker.RabbitMQ.UserName,
+                    Password = appSettings.MessageBroker.RabbitMQ.Password,
+                    ExchangeName = appSettings.MessageBroker.RabbitMQ.ExchangeName,
+                    RoutingKey = appSettings.MessageBroker.RabbitMQ.RoutingKey,
+                }));
+            }
+            else if (appSettings.MessageBroker.UsedAzureQueue())
+            {
+                services.AddSingleton<IMessageSender>(new AzureQueueSender(
+                    connectionString: appSettings.MessageBroker.AzureQueue.ConnectionString,
+                    queueName: appSettings.MessageBroker.AzureQueue.QueueName));
+            }
+            else if (appSettings.MessageBroker.UsedAzureServiceBus())
+            {
+                services.AddSingleton<IMessageSender>(new AzureServiceBusSender(
+                    connectionString: appSettings.MessageBroker.AzureServiceBus.ConnectionString,
+                    queueName: appSettings.MessageBroker.AzureServiceBus.QueueName));
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

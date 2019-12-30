@@ -1,4 +1,4 @@
-﻿namespace ClassifiedAds.WebMVC.ConfigurationOptions
+﻿namespace ClassifiedAds.WebMVC.ConfigurationOptions.Storage
 {
     public class StorageOptions
     {
@@ -6,7 +6,7 @@
 
         public LocalOption Local { get; set; }
 
-        public AzureOption Azure { get; set; }
+        public AzureBlobOption Azure { get; set; }
 
         public AmazonOptions Amazon { get; set; }
 

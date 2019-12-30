@@ -1,12 +1,32 @@
 ﻿using ClassifiedAds.DomainServices.Infrastructure.MessageBrokers;
+using Microsoft.Azure.ServiceBus;
+using Newtonsoft.Json;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus
 {
     public class AzureServiceBusSender : IMessageSender
     {
+        private readonly string _connectionString;
+        private readonly string _queueName;
+
+        public AzureServiceBusSender(string connectionString, string queueName)
+        {
+            _connectionString = connectionString;
+            _queueName = queueName;
+        }
+
         public void Send<T>(T message)
         {
-            throw new System.NotImplementedException();
+            SendAsync(message).Wait();
+        }
+
+        private async Task SendAsync<T>(T message)
+        {
+            var queueClient = new QueueClient(_connectionString, _queueName);
+            var bytes = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)));
+            await queueClient.SendAsync(bytes);
         }
     }
 }

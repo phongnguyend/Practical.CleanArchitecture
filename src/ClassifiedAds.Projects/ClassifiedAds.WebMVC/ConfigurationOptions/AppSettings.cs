@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+﻿using ClassifiedAds.WebMVC.ConfigurationOptions.MessageBroker;
+using ClassifiedAds.WebMVC.ConfigurationOptions.Storage;
+using Microsoft.Extensions.Options;
 
 namespace ClassifiedAds.WebMVC.ConfigurationOptions
 {
@@ -15,6 +17,8 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
         public string CurrentUrl { get; set; }
 
         public StorageOptions Storage { get; set; }
+
+        public MessageBrokerOptions MessageBroker { get; set; }
 
         public ValidateOptionsResult Validate()
         {

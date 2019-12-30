@@ -1,6 +1,6 @@
-﻿namespace ClassifiedAds.WebMVC.ConfigurationOptions
+﻿namespace ClassifiedAds.WebMVC.ConfigurationOptions.Storage
 {
-    public class AzureOption
+    public class AzureBlobOption
     {
         public string ConnectionString { get; set; }
 
