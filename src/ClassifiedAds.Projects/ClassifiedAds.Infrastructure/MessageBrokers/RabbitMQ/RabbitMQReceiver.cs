@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
 {
-    public class RabbitMQReceiver : IMessageReceiver
+    public class RabbitMQReceiver : IMessageReceiver, IDisposable
     {
         private IConnection _connection;
         private IModel _channel;
@@ -54,6 +54,12 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
             _channel.BasicConsume(queue: _queueName,
                                  autoAck: false,
                                  consumer: consumer);
+        }
+
+        public void Dispose()
+        {
+            _channel.Dispose();
+            _connection.Dispose();
         }
     }
 }
