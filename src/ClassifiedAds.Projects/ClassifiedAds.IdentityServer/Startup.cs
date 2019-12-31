@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using ClassifiedAds.DomainServices.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -41,7 +42,7 @@ namespace ClassifiedAds.IdentityServer
                     .AddIdentity();
 
             services.AddIdentityServer()
-                    .AddDeveloperSigningCredential()
+                    .AddSigningCredential(new X509Certificate2(Configuration["Certificates:Default:Path"], Configuration["Certificates:Default:Password"]))
                     .AddAspNetIdentity<User>()
                     .AddPersistence(Configuration.GetConnectionString("ClassifiedAds"));
 
