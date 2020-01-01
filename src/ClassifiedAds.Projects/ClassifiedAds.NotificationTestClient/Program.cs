@@ -64,7 +64,7 @@ namespace ClassifiedAds.NotificationTestClient
                 Console.WriteLine("AzureServiceBus - File Uploaded:" + data.FileEntry.Id);
             });
 
-            var azureServiceBusFileDeletedEventReceiver = new AzureServiceBusReceiver<FileUploadedEvent>("Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=xxx;SharedAccessKey=xxx", "classifiedadds_filedeleted");
+            var azureServiceBusFileDeletedEventReceiver = new AzureServiceBusReceiver<FileDeletedEvent>("Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=xxx;SharedAccessKey=xxx", "classifiedadds_filedeleted");
             azureServiceBusFileDeletedEventReceiver.Receive(data =>
             {
                 Console.WriteLine("AzureServiceBus - File Deleted:" + data.FileEntry.Id);
