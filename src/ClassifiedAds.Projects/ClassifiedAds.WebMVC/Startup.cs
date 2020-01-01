@@ -5,6 +5,7 @@ using ClassifiedAds.DomainServices.Infrastructure.Storages;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
+using ClassifiedAds.Infrastructure.MessageBrokers.Kafka;
 using ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ;
 using ClassifiedAds.Infrastructure.Storages.Amazon;
 using ClassifiedAds.Infrastructure.Storages.Azure;
@@ -186,6 +187,16 @@ namespace ClassifiedAds.WebMVC
                     ExchangeName = appSettings.MessageBroker.RabbitMQ.ExchangeName,
                     RoutingKey = appSettings.MessageBroker.RabbitMQ.RoutingKey_FileDeleted,
                 }));
+            }
+            else if (appSettings.MessageBroker.UsedKafka())
+            {
+                services.AddSingleton<IMessageSender<FileUploadedEvent>>(new KafkaSender<FileUploadedEvent>(
+                    appSettings.MessageBroker.Kafka.BootstrapServers,
+                    appSettings.MessageBroker.Kafka.Topic_FileUploaded));
+
+                services.AddSingleton<IMessageSender<FileDeletedEvent>>(new KafkaSender<FileDeletedEvent>(
+                    appSettings.MessageBroker.Kafka.BootstrapServers,
+                    appSettings.MessageBroker.Kafka.Topic_FileDeleted));
             }
             else if (appSettings.MessageBroker.UsedAzureQueue())
             {

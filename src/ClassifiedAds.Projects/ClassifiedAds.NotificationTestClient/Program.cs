@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.DomainServices.DomainEvents;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
+using ClassifiedAds.Infrastructure.MessageBrokers.Kafka;
 using ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,6 +45,20 @@ namespace ClassifiedAds.NotificationTestClient
             rabbitMQFileDeletedEventReceiver.Receive(data =>
             {
                 Console.WriteLine("RabbitMQ - File Deleted: " + data.FileEntry.Id);
+            });
+
+            var kafkaFileUploadedEventReceiver = new KafkaReceiver<FileUploadedEvent>("localhost:9092", "classifiedadds_fileuploaded", "classified");
+
+            kafkaFileUploadedEventReceiver.Receive(data =>
+            {
+                Console.WriteLine("Kafka - File Uploaded: " + data.FileEntry.Id);
+            });
+
+            var kafkaFileDeletedEventReceiver = new KafkaReceiver<FileDeletedEvent>("localhost:9092", "classifiedadds_filedeleted", "classified");
+
+            kafkaFileDeletedEventReceiver.Receive(data =>
+            {
+                Console.WriteLine("Kafka - File Deleted: " + data.FileEntry.Id);
             });
 
             var azureQueueFileUploadedEventReceiver = new AzureQueueReceiver<FileUploadedEvent>("DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net", "classifiedadds-fileuploaded");

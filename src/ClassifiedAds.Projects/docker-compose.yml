@@ -1,10 +1,5 @@
 version: "3.6"
 services:
-    rabbitmq:
-        image: "rabbitmq:3-management"
-        ports:
-          - "5672:5672"
-          - "15672:15672"
     identityserver:
         build:
           context: .
@@ -58,12 +53,15 @@ services:
           Storage__Amazon__BucketName: "classifiedadds"
           Storage__Amazon__RegionEndpoint: "ap-southeast-1"
           MessageBroker__Provider: "RabbitMQ"
-          MessageBroker__RabbitMQ__HostName: "rabbitmq"
+          MessageBroker__RabbitMQ__HostName: "host.docker.internal"
           MessageBroker__RabbitMQ__UserName: "guest"
           MessageBroker__RabbitMQ__Password: "guest"
           MessageBroker__RabbitMQ__ExchangeName: "amq.direct"
           MessageBroker__RabbitMQ__RoutingKey_FileUploaded: "classifiedadds_fileuploaded"
           MessageBroker__RabbitMQ__RoutingKey_FileDeleted: "classifiedadds_filedeleted"
+          MessageBroker__Kafka__BootstrapServers: "host.docker.internal:9092"
+          MessageBroker__Kafka__Topic_FileUploaded: "classifiedadds_fileuploaded"
+          MessageBroker__Kafka__Topic_FileDeleted: "classifiedadds_filedeleted"
           MessageBroker__AzureQueue__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
           MessageBroker__AzureQueue__QueueName_FileUploaded: "classifiedadds-fileuploaded"
           MessageBroker__AzureQueue__QueueName_FileDeleted: "classifiedadds-filedeleted"
