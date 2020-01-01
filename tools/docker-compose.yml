@@ -23,3 +23,22 @@ services:
           KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
           KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
           KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ubuntu:
+        build:
+            context: .
+            dockerfile: ./ubuntu/Dockerfile
+        depends_on:
+            - rabbitmq
+        command: >
+            bash -c " 
+            while ! nc -z rabbitmq 15672;
+            do
+              echo rabbitmq is not ready, sleeping;
+              sleep 1;
+            done;
+            echo Connected!;
+            curl -i -u guest:guest -H \""content-type:application/json\"" -XPUT -d '{\""durable\"":true}' http://rabbitmq:15672/api/queues/%2f/classifiedadds_fileuploaded
+            && curl -i -u guest:guest -H \""content-type:application/json\"" -XPUT -d '{\""durable\"":true}' http://rabbitmq:15672/api/queues/%2f/classifiedadds_filedeleted
+            && curl -i -u guest:guest -H \""content-type:application/json\"" -XPOST -d '{\""routing_key\"": \""classifiedadds_fileuploaded\"", \""arguments\"": {}}' http://rabbitmq:15672/api/bindings/%2f/e/amq.direct/q/classifiedadds_fileuploaded
+            && curl -i -u guest:guest -H \""content-type:application/json\"" -XPOST -d '{\""routing_key\"": \""classifiedadds_filedeleted\"", \""arguments\"": {}}' http://rabbitmq:15672/api/bindings/%2f/e/amq.direct/q/classifiedadds_filedeleted
+            && echo finished setting up rabbitmq"
