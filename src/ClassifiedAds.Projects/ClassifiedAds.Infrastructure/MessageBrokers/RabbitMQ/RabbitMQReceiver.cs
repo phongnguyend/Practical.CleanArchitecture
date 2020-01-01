@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
 {
-    public class RabbitMQReceiver : IMessageReceiver, IDisposable
+    public class RabbitMQReceiver<T> : IMessageReceiver<T>, IDisposable
     {
         private IConnection _connection;
         private IModel _channel;
@@ -33,7 +33,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
             // TODO: add log here
         }
 
-        public void Receive<T>(Action<T> action)
+        public void Receive(Action<T> action)
         {
             _channel = _connection.CreateModel();
 

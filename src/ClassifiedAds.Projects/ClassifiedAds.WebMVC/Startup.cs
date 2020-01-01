@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.DomainServices.Identity;
+﻿using ClassifiedAds.DomainServices.DomainEvents;
+using ClassifiedAds.DomainServices.Identity;
 using ClassifiedAds.DomainServices.Infrastructure.MessageBrokers;
 using ClassifiedAds.DomainServices.Infrastructure.Storages;
 using ClassifiedAds.Infrastructure.Identity;
@@ -168,26 +169,43 @@ namespace ClassifiedAds.WebMVC
 
             if (appSettings.MessageBroker.UsedRabbitMQ())
             {
-                services.AddSingleton<IMessageSender>(new RabbitMQSender(new RabbitMQSenderOptions
+                services.AddSingleton<IMessageSender<FileUploadedEvent>>(new RabbitMQSender<FileUploadedEvent>(new RabbitMQSenderOptions
                 {
                     HostName = appSettings.MessageBroker.RabbitMQ.HostName,
                     UserName = appSettings.MessageBroker.RabbitMQ.UserName,
                     Password = appSettings.MessageBroker.RabbitMQ.Password,
                     ExchangeName = appSettings.MessageBroker.RabbitMQ.ExchangeName,
-                    RoutingKey = appSettings.MessageBroker.RabbitMQ.RoutingKey,
+                    RoutingKey = appSettings.MessageBroker.RabbitMQ.RoutingKey_FileUploaded,
+                }));
+
+                services.AddSingleton<IMessageSender<FileDeletedEvent>>(new RabbitMQSender<FileDeletedEvent>(new RabbitMQSenderOptions
+                {
+                    HostName = appSettings.MessageBroker.RabbitMQ.HostName,
+                    UserName = appSettings.MessageBroker.RabbitMQ.UserName,
+                    Password = appSettings.MessageBroker.RabbitMQ.Password,
+                    ExchangeName = appSettings.MessageBroker.RabbitMQ.ExchangeName,
+                    RoutingKey = appSettings.MessageBroker.RabbitMQ.RoutingKey_FileDeleted,
                 }));
             }
             else if (appSettings.MessageBroker.UsedAzureQueue())
             {
-                services.AddSingleton<IMessageSender>(new AzureQueueSender(
+                services.AddSingleton<IMessageSender<FileUploadedEvent>>(new AzureQueueSender<FileUploadedEvent>(
                     connectionString: appSettings.MessageBroker.AzureQueue.ConnectionString,
-                    queueName: appSettings.MessageBroker.AzureQueue.QueueName));
+                    queueName: appSettings.MessageBroker.AzureQueue.QueueName_FileUploaded));
+
+                services.AddSingleton<IMessageSender<FileDeletedEvent>>(new AzureQueueSender<FileDeletedEvent>(
+                    connectionString: appSettings.MessageBroker.AzureQueue.ConnectionString,
+                    queueName: appSettings.MessageBroker.AzureQueue.QueueName_FileDeleted));
             }
             else if (appSettings.MessageBroker.UsedAzureServiceBus())
             {
-                services.AddSingleton<IMessageSender>(new AzureServiceBusSender(
+                services.AddSingleton<IMessageSender<FileUploadedEvent>>(new AzureServiceBusSender<FileUploadedEvent>(
                     connectionString: appSettings.MessageBroker.AzureServiceBus.ConnectionString,
-                    queueName: appSettings.MessageBroker.AzureServiceBus.QueueName));
+                    queueName: appSettings.MessageBroker.AzureServiceBus.QueueName_FileUploaded));
+
+                services.AddSingleton<IMessageSender<FileDeletedEvent>>(new AzureServiceBusSender<FileDeletedEvent>(
+                    connectionString: appSettings.MessageBroker.AzureServiceBus.ConnectionString,
+                    queueName: appSettings.MessageBroker.AzureServiceBus.QueueName_FileDeleted));
             }
         }
 

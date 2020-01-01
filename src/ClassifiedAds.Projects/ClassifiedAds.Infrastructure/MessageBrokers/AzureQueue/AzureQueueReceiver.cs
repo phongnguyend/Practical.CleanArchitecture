@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
 {
-    public class AzureQueueReceiver : IMessageReceiver
+    public class AzureQueueReceiver<T> : IMessageReceiver<T>
     {
         private readonly string _connectionString;
         private readonly string _queueName;
@@ -18,12 +18,12 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
             _queueName = queueName;
         }
 
-        public void Receive<T>(Action<T> action)
+        public void Receive(Action<T> action)
         {
             Task.Factory.StartNew(() => ReceiveAsync(action));
         }
 
-        private async Task ReceiveAsync<T>(Action<T> action)
+        private async Task ReceiveAsync(Action<T> action)
         {
             var storageAccount = CloudStorageAccount.Parse(_connectionString);
             var queueClient = storageAccount.CreateCloudQueueClient();

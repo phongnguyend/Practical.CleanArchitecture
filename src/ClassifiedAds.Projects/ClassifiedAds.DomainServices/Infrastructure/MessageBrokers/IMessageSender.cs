@@ -1,7 +1,7 @@
 ﻿namespace ClassifiedAds.DomainServices.Infrastructure.MessageBrokers
 {
-    public interface IMessageSender
+    public interface IMessageSender<T>
     {
-        void Send<T>(T message);
+        void Send(T message);
     }
 }

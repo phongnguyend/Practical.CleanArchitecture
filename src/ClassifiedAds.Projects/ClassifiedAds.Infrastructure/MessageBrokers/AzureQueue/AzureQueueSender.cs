@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
 {
-    public class AzureQueueSender : IMessageSender
+    public class AzureQueueSender<T> : IMessageSender<T>
     {
         private readonly string _connectionString;
         private readonly string _queueName;
@@ -17,12 +17,12 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
             _queueName = queueName;
         }
 
-        public void Send<T>(T message)
+        public void Send(T message)
         {
             SendAsync(message).Wait();
         }
 
-        private async Task SendAsync<T>(T message)
+        private async Task SendAsync(T message)
         {
             var storageAccount = CloudStorageAccount.Parse(_connectionString);
             var queueClient = storageAccount.CreateCloudQueueClient();

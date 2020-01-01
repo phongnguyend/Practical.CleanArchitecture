@@ -3,9 +3,9 @@ using System;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.Kafka
 {
-    public class KafkaReceiver : IMessageReceiver
+    public class KafkaReceiver<T> : IMessageReceiver<T>
     {
-        public void Receive<T>(Action<T> action)
+        public void Receive(Action<T> action)
         {
             throw new NotImplementedException();
         }

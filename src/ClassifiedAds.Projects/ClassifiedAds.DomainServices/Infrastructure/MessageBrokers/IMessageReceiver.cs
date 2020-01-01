@@ -2,8 +2,8 @@
 
 namespace ClassifiedAds.DomainServices.Infrastructure.MessageBrokers
 {
-    public interface IMessageReceiver
+    public interface IMessageReceiver<T>
     {
-        void Receive<T>(Action<T> action);
+        void Receive(Action<T> action);
     }
 }

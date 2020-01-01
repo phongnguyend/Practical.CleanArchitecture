@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus
 {
-    public class AzureServiceBusReceiver : IMessageReceiver
+    public class AzureServiceBusReceiver<T> : IMessageReceiver<T>
     {
         private readonly string _connectionString;
         private readonly string _queueName;
@@ -21,7 +21,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus
             _queueClient = new QueueClient(_connectionString, _queueName);
         }
 
-        public void Receive<T>(Action<T> action)
+        public void Receive(Action<T> action)
         {
             var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
             {

@@ -20,35 +20,61 @@ namespace ClassifiedAds.NotificationTestClient
             connection.On<string>("ReceiveTaskStatus", (message) => { Console.WriteLine(message); });
             connection.StartAsync().GetAwaiter().GetResult();
 
-            RabbitMQReceiver rabbitMQReceiver = new RabbitMQReceiver(new RabbitMQReceiverOptions
+            var rabbitMQFileUploadedEventReceiver = new RabbitMQReceiver<FileUploadedEvent>(new RabbitMQReceiverOptions
             {
                 HostName = "localhost",
                 UserName = "guest",
                 Password = "guest",
-                QueueName = "classifiedadds",
+                QueueName = "classifiedadds_fileuploaded",
             });
 
-            rabbitMQReceiver.Receive<FileUploadedEvent>(data =>
+            rabbitMQFileUploadedEventReceiver.Receive(data =>
             {
-                Console.WriteLine(data.FileEntry.Id);
+                Console.WriteLine("File Uploaded: " + data.FileEntry.Id);
             });
 
-            AzureQueueReceiver azureQueueReceiver = new AzureQueueReceiver("DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net", "classifiedadds");
-            azureQueueReceiver.Receive<FileUploadedEvent>(data =>
+            var rabbitMQFileDeletedEventReceiver = new RabbitMQReceiver<FileDeletedEvent>(new RabbitMQReceiverOptions
             {
-                Console.WriteLine(data.FileEntry.Id);
+                HostName = "localhost",
+                UserName = "guest",
+                Password = "guest",
+                QueueName = "classifiedadds_filedeleted",
             });
 
-            AzureServiceBusReceiver azureServiceBusReceiver = new AzureServiceBusReceiver("Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=xxx;SharedAccessKey=xxx", "classifiedadds");
-            azureServiceBusReceiver.Receive<FileUploadedEvent>(data =>
+            rabbitMQFileDeletedEventReceiver.Receive(data =>
             {
-                Console.WriteLine(data.FileEntry.Id);
+                Console.WriteLine("File Deleted: " + data.FileEntry.Id);
+            });
+
+            var azureQueueFileUploadedEventReceiver = new AzureQueueReceiver<FileUploadedEvent>("DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net", "classifiedadds_fileuploaded");
+            azureQueueFileUploadedEventReceiver.Receive(data =>
+            {
+                Console.WriteLine("File Uploaded:" + data.FileEntry.Id);
+            });
+
+            var azureQueueFileDeletedEventReceiver = new AzureQueueReceiver<FileDeletedEvent>("DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net", "classifiedadds_filedeleted");
+            azureQueueFileDeletedEventReceiver.Receive(data =>
+            {
+                Console.WriteLine("File Deleted:" + data.FileEntry.Id);
+            });
+
+            var azureServiceBusFileUploadedEventReceiver = new AzureServiceBusReceiver<FileUploadedEvent>("Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=xxx;SharedAccessKey=xxx", "classifiedadds_fileuploaded");
+            azureServiceBusFileUploadedEventReceiver.Receive(data =>
+            {
+                Console.WriteLine("File Uploaded:" + data.FileEntry.Id);
+            });
+
+            var azureServiceBusFileDeletedEventReceiver = new AzureServiceBusReceiver<FileUploadedEvent>("Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=xxx;SharedAccessKey=xxx", "classifiedadds_filedeleted");
+            azureServiceBusFileDeletedEventReceiver.Receive(data =>
+            {
+                Console.WriteLine("File Deleted:" + data.FileEntry.Id);
             });
 
             Console.WriteLine("Listening...");
             Console.ReadLine();
 
-            rabbitMQReceiver.Dispose();
+            rabbitMQFileUploadedEventReceiver.Dispose();
+            rabbitMQFileDeletedEventReceiver.Dispose();
         }
     }
 }

@@ -17,13 +17,15 @@ namespace ClassifiedAds.WebMVC.Controllers
     {
         private readonly IGenericService<FileEntry> _fileEntryService;
         private readonly IFileStorageManager _fileManager;
-        private readonly IMessageSender _messageQueueSender;
+        private readonly IMessageSender<FileUploadedEvent> _fileUploadedEventSender;
+        private readonly IMessageSender<FileDeletedEvent> _fileDeletedEventSender;
 
-        public FileController(IGenericService<FileEntry> fileEntryService, IFileStorageManager fileManager, IMessageSender messageQueueSender)
+        public FileController(IGenericService<FileEntry> fileEntryService, IFileStorageManager fileManager, IMessageSender<FileUploadedEvent> fileUploadedEventSender, IMessageSender<FileDeletedEvent> fileDeletedEventSender)
         {
             _fileEntryService = fileEntryService;
             _fileManager = fileManager;
-            _messageQueueSender = messageQueueSender;
+            _fileUploadedEventSender = fileUploadedEventSender;
+            _fileDeletedEventSender = fileDeletedEventSender;
         }
 
         public IActionResult Index()
@@ -59,7 +61,7 @@ namespace ClassifiedAds.WebMVC.Controllers
 
             _fileEntryService.Update(fileEntry);
 
-            _messageQueueSender.Send(new FileUploadedEvent
+            _fileUploadedEventSender.Send(new FileUploadedEvent
             {
                 FileEntry = fileEntry,
             });
@@ -89,7 +91,7 @@ namespace ClassifiedAds.WebMVC.Controllers
             _fileEntryService.Delete(fileEntry);
             _fileManager.Delete(fileEntry);
 
-            _messageQueueSender.Send(new FileDeletedEvent
+            _fileDeletedEventSender.Send(new FileDeletedEvent
             {
                 FileEntry = fileEntry,
             });

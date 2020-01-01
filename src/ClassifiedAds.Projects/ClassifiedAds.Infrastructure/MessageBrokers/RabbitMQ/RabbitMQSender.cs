@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
 {
-    public class RabbitMQSender : IMessageSender
+    public class RabbitMQSender<T> : IMessageSender<T>
     {
         private readonly IConnectionFactory _connectionFactory;
         private readonly string _exchangeName;
@@ -24,7 +24,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
             _routingKey = options.RoutingKey;
         }
 
-        public void Send<T>(T message)
+        public void Send(T message)
         {
             using (var connection = _connectionFactory.CreateConnection())
             using (var channel = connection.CreateModel())

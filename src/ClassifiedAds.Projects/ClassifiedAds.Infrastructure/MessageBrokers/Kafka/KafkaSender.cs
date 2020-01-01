@@ -2,9 +2,9 @@
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.Kafka
 {
-    public class KafkaSender : IMessageSender
+    public class KafkaSender<T> : IMessageSender<T>
     {
-        public void Send<T>(T message)
+        public void Send(T message)
         {
             throw new System.NotImplementedException();
         }

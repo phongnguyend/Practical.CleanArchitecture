@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus
 {
-    public class AzureServiceBusSender : IMessageSender
+    public class AzureServiceBusSender<T> : IMessageSender<T>
     {
         private readonly string _connectionString;
         private readonly string _queueName;
@@ -17,12 +17,12 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus
             _queueName = queueName;
         }
 
-        public void Send<T>(T message)
+        public void Send(T message)
         {
             SendAsync(message).Wait();
         }
 
-        private async Task SendAsync<T>(T message)
+        private async Task SendAsync(T message)
         {
             var queueClient = new QueueClient(_connectionString, _queueName);
             var bytes = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)));
