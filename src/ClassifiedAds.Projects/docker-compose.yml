@@ -6,6 +6,8 @@ services:
           dockerfile: ./ClassifiedAds.IdentityServer/Dockerfile
         ports:
             - "9000:80"
+        volumes:
+            - E:\\ClassifiedAds.Projects\\Logs\\IdentityServer:/ClassifiedAds.Projects/logs
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
@@ -15,6 +17,8 @@ services:
           dockerfile: ./ClassifiedAds.NotificationServer/Dockerfile
         ports:
             - "9001:80"
+        volumes:
+            - E:\\ClassifiedAds.Projects\\Logs\\NotificationServer:/ClassifiedAds.Projects/logs
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
@@ -24,6 +28,8 @@ services:
           dockerfile: ./ClassifiedAds.WebAPI/Dockerfile
         ports:
             - "9002:80"
+        volumes:
+            - E:\\ClassifiedAds.Projects\\Logs\\WebAPI:/ClassifiedAds.Projects/logs
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
@@ -36,7 +42,8 @@ services:
         ports:
             - "9003:80"
         volumes:
-            - E:\\files:/files 
+            - E:\\ClassifiedAds.Projects\\Files:/files
+            - E:\\ClassifiedAds.Projects\\Logs\\WebMVC:/ClassifiedAds.Projects/logs
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
@@ -74,6 +81,8 @@ services:
           dockerfile: ./ClassifiedAds.BackgroundServices/Dockerfile
         ports:
             - "9004:80"
+        volumes:
+            - E:\\ClassifiedAds.Projects\\Logs\\BackgroundServices:/ClassifiedAds.Projects/logs
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
@@ -84,6 +93,8 @@ services:
           dockerfile: ./ClassifiedAds.GRPC/Dockerfile
         ports:
             - "9005:443"
+        volumes:
+            - E:\\ClassifiedAds.Projects\\Logs\\GRPC:/ClassifiedAds.Projects/logs
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ASPNETCORE_URLS: "https://+"
@@ -94,6 +105,8 @@ services:
           dockerfile: ./ClassifiedAds.GraphQL/Dockerfile
         ports:
             - "9006:80"
+        volumes:
+            - E:\\ClassifiedAds.Projects\\Logs\\GraphQL:/ClassifiedAds.Projects/logs
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
@@ -104,6 +117,8 @@ services:
           dockerfile: ./ClassifiedAds.Ocelot/Dockerfile
         ports:
             - "9007:80"
+        volumes:
+            - E:\\ClassifiedAds.Projects\\Logs\\Ocelot:/ClassifiedAds.Projects/logs
         environment:
           ASPNETCORE_ENVIRONMENT: "Docker"
           ConnectionStrings__ClassifiedAds: "Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
