@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace ClassifiedAds.Migrator
 {
@@ -18,7 +19,8 @@ namespace ClassifiedAds.Migrator
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddPersistence(Configuration["ConnectionStrings:ClassifiedAds"]);
+            services.AddPersistence(Configuration["ConnectionStrings:ClassifiedAds"],
+                typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
 
             services.AddIdentityServer()
                 .AddPersistence(Configuration.GetConnectionString("ClassifiedAds"));

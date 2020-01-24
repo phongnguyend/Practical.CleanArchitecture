@@ -9,9 +9,15 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class PersistanceServiceCollectionExtensions
     {
-        public static IServiceCollection AddPersistence(this IServiceCollection services, string connectionString)
+        public static IServiceCollection AddPersistence(this IServiceCollection services, string connectionString, string migrationsAssembly = "")
         {
-            services.AddDbContext<AdsDbContext>(options => options.UseSqlServer(connectionString))
+            services.AddDbContext<AdsDbContext>(options => options.UseSqlServer(connectionString, sql =>
+            {
+                if (!string.IsNullOrEmpty(migrationsAssembly))
+                {
+                    sql.MigrationsAssembly(migrationsAssembly);
+                }
+            }))
                     .AddScoped<IUnitOfWork, UnitOfWork>()
                     .AddScoped(typeof(IRepository<>), typeof(Repository<>));
             return services;
