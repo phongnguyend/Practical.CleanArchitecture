@@ -32,7 +32,7 @@
 
 # How to Run:
 
-### Configure Database
+## Configure Database
 
 - Update Connection Strings:
 
@@ -60,7 +60,7 @@ dotnet ef database update --context ConfigurationDbContext
 dotnet ef database update --context PersistedGrantDbContext
 ```
 
-### Configure Storage
+## Configure Storage
 
 - Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.WebMVC/appsettings.json) and jump to **Storage** section.
 ```js
@@ -103,7 +103,7 @@ dotnet ef database update --context PersistedGrantDbContext
 },
 ```
 
-### Configure Message Broker
+## Configure Message Broker
 
 - Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.WebMVC/appsettings.json) and jump to **MessageBroker** section.
 ```js
