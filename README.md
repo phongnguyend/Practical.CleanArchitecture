@@ -1,31 +1,31 @@
 [Clean Architecture: Patterns, Practices, and Principles | Matthew Renze | Pluralsight](https://app.pluralsight.com/library/courses/clean-architecture-patterns-practices-principles/table-of-contents)
 
-# Database Centric vs Domain Centric Architecture
+# Database Centric vs Domain Centric Architecture [*(open on draw.io)*](https://www.draw.io/#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fphongnguyend%2FPractical.CleanArchitecture%2Fmaster%2Fdocs%2Fimgs%2Fdatabase-centrics-vs-domain-centric-architecture.drawio)
 ![alt text](/docs/imgs/database-centrics-vs-domain-centric-architecture.png)
 
 # Hexagonal Architecture
 ![alt text](/docs/imgs/hexagonal-architecture.png)
 
-# Onion Architecture
+# Onion Architecture [*(open on draw.io)*](https://www.draw.io/#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fphongnguyend%2FPractical.CleanArchitecture%2Fmaster%2Fdocs%2Fimgs%2Fonion-architecture.drawio)
 ![alt text](/docs/imgs/onion-architecture.png)
 
 # The Clean Architecture
 ![alt text](/docs/imgs/the-clean-architecture.png)
 
 
-# Classic Three-layer Architecture
-![alt text](/docs/imgs/Classic-Three-layer-Architecture.png)
+# Classic Three-layer Architecture [*(open on draw.io)*](https://www.draw.io/#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fphongnguyend%2FPractical.CleanArchitecture%2Fmaster%2Fdocs%2Fimgs%2Fclassic-three-layer-architecture.drawio)
+![alt text](/docs/imgs/classic-three-layer-architecture.png)
 
 
-# Modern Four-layer Architecture
-![alt text](/docs/imgs/Modern-Four-layer-Architecture.png)
+# Modern Four-layer Architecture [*(open on draw.io)*](https://www.draw.io/#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fphongnguyend%2FPractical.CleanArchitecture%2Fmaster%2Fdocs%2Fimgs%2Fmodern-four-layer-architecture.drawio)
+![alt text](/docs/imgs/modern-four-layer-architecture.png)
 
 
-# Layer Dependencies
-![alt text](/docs/imgs/Layer-Dependencies.png)
+# Layer Dependencies [*(open on draw.io)*](https://www.draw.io/#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fphongnguyend%2FPractical.CleanArchitecture%2Fmaster%2Fdocs%2Fimgs%2Flayer-dependencies.drawio)
+![alt text](/docs/imgs/layer-dependencies.png)
 
-# Layer Examples
-![alt text](/docs/imgs/Layer-Examples.png)
+# Layer Examples [*(open on draw.io)*](https://www.draw.io/#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fphongnguyend%2FPractical.CleanArchitecture%2Fmaster%2Fdocs%2Fimgs%2Flayer-examples.drawio)
+![alt text](/docs/imgs/layer-examples.png)
 
 # Solution Structure
 ![alt text](/docs/imgs/code-solution-structure.png)
