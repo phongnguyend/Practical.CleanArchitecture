@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClassifiedAds.DomainServices.Infrastructure.OS
+namespace ClassifiedAds.CrossCuttingConcerns.OS
 {
     public interface IDateTimeProvider
     {

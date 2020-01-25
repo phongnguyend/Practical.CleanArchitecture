@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class PersistanceExtensions
+    public static class PersistenceExtensions
     {
         public static IServiceCollection AddPersistence(this IServiceCollection services, string connectionString, string migrationsAssembly = "")
         {

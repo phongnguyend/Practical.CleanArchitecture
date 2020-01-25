@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.DomainServices.Infrastructure.OS;
+﻿using ClassifiedAds.CrossCuttingConcerns.OS;
 using System;
 
 namespace ClassifiedAds.Infrastructure.OS
