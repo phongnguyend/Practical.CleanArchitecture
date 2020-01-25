@@ -70,7 +70,9 @@
       ```
     + Navigate to [ClassifiedAds.Migrator](/src/ClassifiedAds.Projects/ClassifiedAds.Migrator/) and run these commands:
       ```
-      dotnet ef migrations add Init --context AdsDbContext
+      dotnet ef migrations add Init --context AdsDbContext -o Migrations/AdsDb
+      dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
+      dotnet ef migrations add Init --context PersistedGrantDbContext -o Migrations/PersistedGrantDb
       dotnet ef database update --context AdsDbContext
       dotnet ef database update --context ConfigurationDbContext
       dotnet ef database update --context PersistedGrantDbContext
@@ -80,7 +82,9 @@
     + Open Package Manager Console, select **ClassifiedAds.Migrator** as Default Project
     + Run these commands:
       ```
-      Add-Migration -Context AdsDbContext Init
+      Add-Migration -Context AdsDbContext Init -OutputDir Migrations/AdsDb
+      Add-Migration -Context ConfigurationDbContext Init -OutputDir Migrations/ConfigurationDb
+      Add-Migration -Context PersistedGrantDbContext Init -OutputDir Migrations/PersistedGrantDb
       Update-Database -Context AdsDbContext
       Update-Database -Context ConfigurationDbContext
       Update-Database -Context PersistedGrantDbContext

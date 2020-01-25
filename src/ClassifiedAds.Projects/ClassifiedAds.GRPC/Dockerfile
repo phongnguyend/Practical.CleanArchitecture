@@ -19,7 +19,6 @@ COPY ./ClassifiedAds.NotificationTestClient/*.csproj ./ClassifiedAds.Notificatio
 COPY ./ClassifiedAds.Ocelot/*.csproj ./ClassifiedAds.Ocelot/
 COPY ./ClassifiedAds.Ocelot.IntegrationTests/*.csproj ./ClassifiedAds.Ocelot.IntegrationTests/
 COPY ./ClassifiedAds.Persistence/*.csproj ./ClassifiedAds.Persistence/
-COPY ./ClassifiedAds.Persistence.IdentityServer/*.csproj ./ClassifiedAds.Persistence.IdentityServer/
 COPY ./ClassifiedAds.WebAPI/*.csproj ./ClassifiedAds.WebAPI/
 COPY ./ClassifiedAds.WebAPI.IntegrationTests/*.csproj ./ClassifiedAds.WebAPI.IntegrationTests/
 COPY ./ClassifiedAds.WebMVC/*.csproj ./ClassifiedAds.WebMVC/

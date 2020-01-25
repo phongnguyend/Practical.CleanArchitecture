@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using IdentityServer4;
 using IdentityServer4.EntityFramework.DbContexts;
@@ -11,22 +10,34 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class PersistenceExtensions
+    public static class IdServerPersistenceExtensions
     {
-        public static IIdentityServerBuilder AddPersistence(this IIdentityServerBuilder services, string connectionString)
+        public static IIdentityServerBuilder AddIdServerPersistence(this IIdentityServerBuilder services, string connectionString, string migrationsAssembly = "")
         {
             services.AddConfigurationStore(options =>
             {
                 options.ConfigureDbContext = builder =>
                     builder.UseSqlServer(connectionString,
-                        sql => sql.MigrationsAssembly(typeof(PersistenceExtensions).GetTypeInfo().Assembly.GetName().Name));
+                        sql =>
+                        {
+                            if (!string.IsNullOrEmpty(migrationsAssembly))
+                            {
+                                sql.MigrationsAssembly(migrationsAssembly);
+                            }
+                        });
                 options.DefaultSchema = "idsv";
             })
                 .AddOperationalStore(options =>
                 {
                     options.ConfigureDbContext = builder =>
                         builder.UseSqlServer(connectionString,
-                            sql => sql.MigrationsAssembly(typeof(PersistenceExtensions).GetTypeInfo().Assembly.GetName().Name));
+                            sql =>
+                            {
+                                if (!string.IsNullOrEmpty(migrationsAssembly))
+                                {
+                                    sql.MigrationsAssembly(migrationsAssembly);
+                                }
+                            });
                     options.DefaultSchema = "idsv";
 
                     // this enables automatic token cleanup. this is optional.
@@ -44,13 +55,14 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
                 context.Database.Migrate();
+
                 if (!context.Clients.Any())
                 {
                     var clients = new List<Client> {
                     new Client
                     {
                         ClientId = "ClassifiedAds.WebMVC",
-                        ClientName ="ClassifiedAds Web MVC",
+                        ClientName = "ClassifiedAds Web MVC",
                         AllowedGrantTypes = GrantTypes.Hybrid.Combines(GrantTypes.ResourceOwnerPassword),
                         RedirectUris =
                         {
@@ -66,50 +78,51 @@ namespace Microsoft.Extensions.DependencyInjection
                         {
                             IdentityServerConstants.StandardScopes.OpenId,
                             IdentityServerConstants.StandardScopes.Profile,
-                            "ClassifiedAds.WebAPI"
+                            "ClassifiedAds.WebAPI",
                         },
                         ClientSecrets =
                         {
-                            new Secret("secret".Sha256())
+                            new Secret("secret".Sha256()),
                         },
-                        AllowOfflineAccess = true
+                        AllowOfflineAccess = true,
                     },
                     new Client
                     {
                         ClientId = "spa-client",
-                        ClientName ="SPA Client",
+                        ClientName = "SPA Client",
                         AllowedGrantTypes = GrantTypes.Implicit,
                         AllowAccessTokensViaBrowser = true,
                         RedirectUris =
                         {
-                            "http://localhost:4200/assets/oidc-login-redirect.html"
+                            "http://localhost:4200/assets/oidc-login-redirect.html",
                         },
                         PostLogoutRedirectUris =
                         {
-                            "http://localhost:4200/?postLogout=true"
+                            "http://localhost:4200/?postLogout=true",
                         },
                         AllowedCorsOrigins =
                         {
-                            "http://localhost:4200/"
+                            "http://localhost:4200/",
                         },
                         AllowedScopes =
                         {
                             IdentityServerConstants.StandardScopes.OpenId,
                             IdentityServerConstants.StandardScopes.Profile,
-                            "ClassifiedAds.WebAPI"
+                            "ClassifiedAds.WebAPI",
                         },
                         ClientSecrets =
                         {
-                            new Secret("secret".Sha256())
+                            new Secret("secret".Sha256()),
                         },
-                        AllowOfflineAccess = true
-                    }
+                        AllowOfflineAccess = true,
+                    },
                 };
 
                     foreach (var client in clients)
                     {
                         context.Clients.Add(client.ToEntity());
                     }
+
                     context.SaveChanges();
                 }
 
@@ -125,6 +138,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     {
                         context.IdentityResources.Add(resource.ToEntity());
                     }
+
                     context.SaveChanges();
                 }
 
@@ -133,12 +147,13 @@ namespace Microsoft.Extensions.DependencyInjection
                     var apiResources = new List<ApiResource>
                     {
                         new ApiResource("ClassifiedAds.WebAPI", "ClassifiedAds Web API",
-                        new List<string>() {"role" } )
+                        new List<string>() {"role" } ),
                     };
                     foreach (var resource in apiResources)
                     {
                         context.ApiResources.Add(resource.ToEntity());
                     }
+
                     context.SaveChanges();
                 }
             }

@@ -1,4 +1,7 @@
-﻿Add-Migration -Context AdsDbContext Init
+﻿Add-Migration -Context AdsDbContext Init -OutputDir Migrations/AdsDb
+Add-Migration -Context ConfigurationDbContext Init -OutputDir Migrations/ConfigurationDb
+Add-Migration -Context PersistedGrantDbContext Init -OutputDir Migrations/PersistedGrantDb
+
 Remove-Migration -Context AdsDbContext
 Remove-Migration -Context AdsDbContext -Force
 

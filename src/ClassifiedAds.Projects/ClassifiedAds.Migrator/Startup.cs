@@ -23,7 +23,8 @@ namespace ClassifiedAds.Migrator
                 typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
 
             services.AddIdentityServer()
-                .AddPersistence(Configuration.GetConnectionString("ClassifiedAds"));
+                .AddIdServerPersistence(Configuration.GetConnectionString("ClassifiedAds"),
+                typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

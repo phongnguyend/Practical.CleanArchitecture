@@ -44,7 +44,7 @@ namespace ClassifiedAds.IdentityServer
             services.AddIdentityServer()
                     .AddSigningCredential(new X509Certificate2(Configuration["Certificates:Default:Path"], Configuration["Certificates:Default:Password"]))
                     .AddAspNetIdentity<User>()
-                    .AddPersistence(Configuration.GetConnectionString("ClassifiedAds"));
+                    .AddIdServerPersistence(Configuration.GetConnectionString("ClassifiedAds"));
 
             services.AddMiniProfiler(options =>
             {
