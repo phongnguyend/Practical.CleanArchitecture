@@ -9,7 +9,7 @@
 # Onion Architecture [*(open on draw.io)*](https://www.draw.io/#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fphongnguyend%2FPractical.CleanArchitecture%2Fmaster%2Fdocs%2Fimgs%2Fonion-architecture.drawio)
 ![alt text](/docs/imgs/onion-architecture.png)
 
-# The Clean Architecture
+# The Clean Architecture [*(open on draw.io)*](https://www.draw.io/#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fphongnguyend%2FPractical.CleanArchitecture%2Fmaster%2Fdocs%2Fimgs%2Fthe-clean-architecture.drawio)
 ![alt text](/docs/imgs/the-clean-architecture.png)
 
 
