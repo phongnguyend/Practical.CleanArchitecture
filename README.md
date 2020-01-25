@@ -48,17 +48,30 @@
 | ClassifiedAds.GraphQL | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.GraphQL/appsettings.json) | ConnectionStrings:ClassifiedAds |
 | ClassifiedAds.Ocelot | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.Ocelot/appsettings.json) |  |
 
-- Install **dotnet-ef** cli:
-```
-dotnet tool install --global dotnet-ef --version="3.1"
-```
-- Navigate to [ClassifiedAds.Migrator](/src/ClassifiedAds.Projects/ClassifiedAds.Migrator/) and run these commands:
-```
-dotnet ef migrations add Init --context AdsDbContext
-dotnet ef database update --context AdsDbContext
-dotnet ef database update --context ConfigurationDbContext
-dotnet ef database update --context PersistedGrantDbContext
-```
+
+- Run Migration:
+  + Option 1: Using dotnet cli:
+    + Install **dotnet-ef** cli:
+    ```
+    dotnet tool install --global dotnet-ef --version="3.1"
+    ```
+    + Navigate to [ClassifiedAds.Migrator](/src/ClassifiedAds.Projects/ClassifiedAds.Migrator/) and run these commands:
+    ```
+    dotnet ef migrations add Init --context AdsDbContext
+    dotnet ef database update --context AdsDbContext
+    dotnet ef database update --context ConfigurationDbContext
+    dotnet ef database update --context PersistedGrantDbContext
+    ```
+  + Option 2: Using Package Manager Console:
+    + Set **ClassifiedAds.Migrator** as StartUp Project
+    + Open Package Manager Console, select **ClassifiedAds.Migrator** as Default Project
+    + Run these commands:
+    ```
+    Add-Migration -Context AdsDbContext Init
+    Update-Database -Context AdsDbContext
+    Update-Database -Context ConfigurationDbContext
+    Update-Database -Context PersistedGrantDbContext
+    ```
 
 ## Configure Storage
 
@@ -162,3 +175,9 @@ dotnet ef database update --context PersistedGrantDbContext
   }
 }
 ```
+
+## How to Login:
+- Option 1: Use default created account:
+  + User Name: phong@gmail.com
+  + Password: v*7Un8b4rcN@<-RN
+- Option 2: Register new account on **Identity Server** at https://localhost:44367/Account/Register
