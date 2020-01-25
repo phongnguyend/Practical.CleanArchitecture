@@ -189,8 +189,8 @@
   }
   ```
 
-## How to Login:
+## How to Login on Identity Server:
 - Option 1: Use default created account:
   + User Name: phong@gmail.com
   + Password: v*7Un8b4rcN@<-RN
-- Option 2: Register new account on **Identity Server** at https://localhost:44367/Account/Register
+- Option 2: Register new account at https://localhost:44367/Account/Register
