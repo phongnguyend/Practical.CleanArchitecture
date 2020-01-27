@@ -152,7 +152,9 @@
       "Password": "guest",
       "ExchangeName": "amq.direct",
       "RoutingKey_FileUploaded": "classifiedadds_fileuploaded",
-      "RoutingKey_FileDeleted": "classifiedadds_filedeleted"
+      "RoutingKey_FileDeleted": "classifiedadds_filedeleted",
+      "QueueName_FileUploaded": "classifiedadds_fileuploaded",
+      "QueueName_FileDeleted": "classifiedadds_filedeleted"
     },
   }
   ```
@@ -193,8 +195,32 @@
   }
   ```
 
+## Set Startup Projects
+![alt text](/docs/imgs/startup-projects.png)
+
+## Run or Debug the Solution
+- Web MVC Home Page: https://localhost:44364/
+
+![alt text](/docs/imgs/web-mvc-home-page.png)
+
+- Navigate to Health Checks UI https://localhost:44364/healthchecks-ui#/healthchecks and make sure everything is green.
+
+![alt text](/docs/imgs/health-checks-ui.png)
+
 ## How to Login on Identity Server:
 - Option 1: Use default created account:
   + User Name: phong@gmail.com
   + Password: v*7Un8b4rcN@<-RN
 - Option 2: Register new account at https://localhost:44367/Account/Register
+
+## Application URLs:
+| Project  | Launch URL | Docker Container URL| Docker Container URL|
+| -------- | ---------- | ------------------- | ------------------- |
+| BackgroundServices | [https://localhost:44318](https://localhost:44318/hangfire/) | [http://localhost:9004](http://localhost:9004/hangfire/) | [http://host.docker.internal:9004](http://host.docker.internal:9004/hangfire/) |
+| GRPC | https://localhost:5001 | https://localhost:9005 | https://host.docker.internal:9005 |
+| IdentityServer | https://localhost:44367 | http://localhost:9000 | http://host.docker.internal:9000 |
+| NotificationServer | https://localhost:44390 | http://localhost:9001 | http://host.docker.internal:9001 |
+| WebAPI | https://localhost:44312 | http://localhost:9002 | http://host.docker.internal:9002 |
+| WebMVC | https://localhost:44364 | http://localhost:9003 | http://host.docker.internal:9003 |
+| GraphQL | [https://localhost:44392](https://localhost:44392/ui/playground) | [http://localhost:9006](http://localhost:9006/ui/playground) | [http://host.docker.internal:9006](http://host.docker.internal:9006/ui/playground) |
+| Ocelot | [https://localhost:44340](https://localhost:44340/ocelot/products) | [http://localhost:9007](http://localhost:9007/ocelot/products) | [http://host.docker.internal:9007](http://host.docker.internal:9007/ocelot/products) |

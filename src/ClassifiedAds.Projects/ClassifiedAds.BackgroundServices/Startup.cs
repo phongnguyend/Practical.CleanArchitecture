@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using ClassifiedAds.BackgroundServices.Jobs;
 using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -39,9 +37,9 @@ namespace ClassifiedAds.BackgroundServices
         {
             services.AddHangfire(x =>
             {
-                var options = new Hangfire.SqlServer.SqlServerStorageOptions
+                var options = new SqlServerStorageOptions
                 {
-                    PrepareSchemaIfNecessary = true
+                    PrepareSchemaIfNecessary = true,
                 };
                 x.UseSqlServerStorage(Configuration.GetConnectionString("ClassifiedAds"), options);
             });

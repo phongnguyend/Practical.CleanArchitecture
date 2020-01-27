@@ -5,5 +5,6 @@
         public string BootstrapServers { get; set; }
         public string Topic_FileUploaded { get; set; }
         public string Topic_FileDeleted { get; set; }
+        public string GroupId { get; set; }
     }
 }

@@ -67,8 +67,6 @@ namespace ClassifiedAds.GraphQL
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
             // add http for Schema at default url /graphql
             app.UseGraphQL<ISchema>();
 

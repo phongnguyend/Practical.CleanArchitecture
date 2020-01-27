@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -53,6 +54,8 @@ namespace ClassifiedAds.WebMVC
 
         public IConfiguration Configuration { get; }
 
+        private AppSettings AppSettings { get; set; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -60,6 +63,8 @@ namespace ClassifiedAds.WebMVC
 
             var appSettings = new AppSettings();
             Configuration.Bind(appSettings);
+            AppSettings = appSettings;
+
             var validationResult = appSettings.Validate();
             if (validationResult.Failed)
             {
@@ -145,6 +150,9 @@ namespace ClassifiedAds.WebMVC
                     failureStatus: HealthStatus.Degraded)
                 .AddUrlGroup(new Uri(appSettings.ResourceServer.Endpoint),
                     name: "Resource (Web API) Server",
+                    failureStatus: HealthStatus.Degraded)
+                .AddSignalRHub(appSettings.NotificationServer.Endpoint + "/HealthCheckHub",
+                    name: "Notification (SignalR) Server",
                     failureStatus: HealthStatus.Degraded);
 
             services.AddHealthChecksUI(setupSettings: setup =>
@@ -266,6 +274,101 @@ namespace ClassifiedAds.WebMVC
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
+            });
+
+            try
+            {
+                TestMessageBrokerReceivers();
+            }
+            catch
+            {
+            }
+        }
+
+        private void TestMessageBrokerReceivers()
+        {
+            IMessageReceiver<FileUploadedEvent> fileUploadedMessageQueueReceiver = null;
+            IMessageReceiver<FileDeletedEvent> fileDeletedMessageQueueReceiver = null;
+
+            if (AppSettings.MessageBroker.UsedRabbitMQ())
+            {
+                fileUploadedMessageQueueReceiver = new RabbitMQReceiver<FileUploadedEvent>(new RabbitMQReceiverOptions
+                {
+                    HostName = AppSettings.MessageBroker.RabbitMQ.HostName,
+                    UserName = AppSettings.MessageBroker.RabbitMQ.UserName,
+                    Password = AppSettings.MessageBroker.RabbitMQ.Password,
+                    QueueName = AppSettings.MessageBroker.RabbitMQ.QueueName_FileUploaded,
+                });
+
+                fileDeletedMessageQueueReceiver = new RabbitMQReceiver<FileDeletedEvent>(new RabbitMQReceiverOptions
+                {
+                    HostName = AppSettings.MessageBroker.RabbitMQ.HostName,
+                    UserName = AppSettings.MessageBroker.RabbitMQ.UserName,
+                    Password = AppSettings.MessageBroker.RabbitMQ.Password,
+                    QueueName = AppSettings.MessageBroker.RabbitMQ.QueueName_FileDeleted,
+                });
+            }
+
+            if (AppSettings.MessageBroker.UsedKafka())
+            {
+                fileUploadedMessageQueueReceiver = new KafkaReceiver<FileUploadedEvent>(
+                    AppSettings.MessageBroker.Kafka.BootstrapServers,
+                    AppSettings.MessageBroker.Kafka.Topic_FileUploaded,
+                    AppSettings.MessageBroker.Kafka.GroupId);
+
+                fileDeletedMessageQueueReceiver = new KafkaReceiver<FileDeletedEvent>(
+                    AppSettings.MessageBroker.Kafka.BootstrapServers,
+                    AppSettings.MessageBroker.Kafka.Topic_FileDeleted,
+                    AppSettings.MessageBroker.Kafka.GroupId);
+            }
+
+            if (AppSettings.MessageBroker.UsedAzureQueue())
+            {
+                fileUploadedMessageQueueReceiver = new AzureQueueReceiver<FileUploadedEvent>(
+                    AppSettings.MessageBroker.AzureQueue.ConnectionString,
+                    AppSettings.MessageBroker.AzureQueue.QueueName_FileUploaded);
+
+                fileDeletedMessageQueueReceiver = new AzureQueueReceiver<FileDeletedEvent>(
+                    AppSettings.MessageBroker.AzureQueue.ConnectionString,
+                    AppSettings.MessageBroker.AzureQueue.QueueName_FileDeleted);
+            }
+
+            if (AppSettings.MessageBroker.UsedAzureServiceBus())
+            {
+                fileUploadedMessageQueueReceiver = new AzureServiceBusReceiver<FileUploadedEvent>(
+                    AppSettings.MessageBroker.AzureServiceBus.ConnectionString,
+                    AppSettings.MessageBroker.AzureServiceBus.QueueName_FileUploaded);
+
+                fileDeletedMessageQueueReceiver = new AzureServiceBusReceiver<FileDeletedEvent>(
+                    AppSettings.MessageBroker.AzureServiceBus.ConnectionString,
+                    AppSettings.MessageBroker.AzureServiceBus.QueueName_FileDeleted);
+            }
+
+            var connection = new HubConnectionBuilder()
+                .WithUrl($"{AppSettings.NotificationServer.Endpoint}/SimulatedLongRunningTaskHub")
+                .AddMessagePackProtocol()
+                .Build();
+
+            fileUploadedMessageQueueReceiver?.Receive(data =>
+            {
+                string message = data.FileEntry.Id.ToString();
+
+                connection.StartAsync().GetAwaiter().GetResult();
+
+                connection.InvokeAsync("SendTaskStatus", $"{AppSettings.MessageBroker.Provider} - File Uploaded", message);
+
+                connection.StopAsync().GetAwaiter().GetResult();
+            });
+
+            fileDeletedMessageQueueReceiver?.Receive(data =>
+            {
+                string message = data.FileEntry.Id.ToString();
+
+                connection.StartAsync().GetAwaiter().GetResult();
+
+                connection.InvokeAsync("SendTaskStatus", $"{AppSettings.MessageBroker.Provider} - File Deleted", message);
+
+                connection.StopAsync().GetAwaiter().GetResult();
             });
         }
     }

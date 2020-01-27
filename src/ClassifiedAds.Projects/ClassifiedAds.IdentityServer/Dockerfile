@@ -15,7 +15,6 @@ COPY ./ClassifiedAds.IdentityServer/*.csproj ./ClassifiedAds.IdentityServer/
 COPY ./ClassifiedAds.Infrastructure/*.csproj ./ClassifiedAds.Infrastructure/
 COPY ./ClassifiedAds.Migrator/*.csproj ./ClassifiedAds.Migrator/
 COPY ./ClassifiedAds.NotificationServer/*.csproj ./ClassifiedAds.NotificationServer/
-COPY ./ClassifiedAds.NotificationTestClient/*.csproj ./ClassifiedAds.NotificationTestClient/
 COPY ./ClassifiedAds.Ocelot/*.csproj ./ClassifiedAds.Ocelot/
 COPY ./ClassifiedAds.Ocelot.IntegrationTests/*.csproj ./ClassifiedAds.Ocelot.IntegrationTests/
 COPY ./ClassifiedAds.Persistence/*.csproj ./ClassifiedAds.Persistence/

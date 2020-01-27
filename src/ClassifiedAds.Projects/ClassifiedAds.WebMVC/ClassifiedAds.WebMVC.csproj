@@ -7,12 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.SignalR" Version="3.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="3.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.0.8" />
     <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="3.0.0" />
     <PackageReference Include="IdentityModel" Version="4.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />

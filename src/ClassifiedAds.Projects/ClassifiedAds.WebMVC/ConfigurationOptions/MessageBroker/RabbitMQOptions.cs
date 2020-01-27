@@ -8,5 +8,7 @@
         public string ExchangeName { get; set; }
         public string RoutingKey_FileUploaded { get; set; }
         public string RoutingKey_FileDeleted { get; set; }
+        public string QueueName_FileUploaded { get; set; }
+        public string QueueName_FileDeleted { get; set; }
     }
 }
