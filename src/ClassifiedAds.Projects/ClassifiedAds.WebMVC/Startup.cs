@@ -1,4 +1,6 @@
-﻿using ClassifiedAds.DomainServices.DomainEvents;
+﻿using Amazon;
+using Amazon.S3;
+using ClassifiedAds.DomainServices.DomainEvents;
 using ClassifiedAds.DomainServices.Identity;
 using ClassifiedAds.DomainServices.Infrastructure.MessageBrokers;
 using ClassifiedAds.DomainServices.Infrastructure.Storages;
@@ -140,7 +142,7 @@ namespace ClassifiedAds.WebMVC
             })
             .AddEntityFramework();
 
-            services.AddHealthChecks()
+            var healthChecksBuilder = services.AddHealthChecks()
                 .AddSqlServer(connectionString: appSettings.ConnectionStrings.ClassifiedAds,
                     healthQuery: "SELECT 1;",
                     name: "Sql Server",
@@ -166,14 +168,44 @@ namespace ClassifiedAds.WebMVC
             if (appSettings.Storage.UsedAzure())
             {
                 services.AddSingleton<IFileStorageManager>(new AzureBlobStorageManager(appSettings.Storage.Azure.ConnectionString, appSettings.Storage.Azure.Container));
+
+                healthChecksBuilder.AddAzureBlobStorage(
+                    appSettings.Storage.Azure.ConnectionString,
+                    containerName: appSettings.Storage.Azure.Container,
+                    name: "Storage (Azure Blob)",
+                    failureStatus: HealthStatus.Degraded);
             }
             else if (appSettings.Storage.UsedAmazon())
             {
-                services.AddSingleton<IFileStorageManager>(new AmazonS3StorageManager(appSettings.Storage.Amazon.AccessKeyID, appSettings.Storage.Amazon.SecretAccessKey, appSettings.Storage.Amazon.BucketName, appSettings.Storage.Amazon.RegionEndpoint));
+                services.AddSingleton<IFileStorageManager>(
+                    new AmazonS3StorageManager(
+                        appSettings.Storage.Amazon.AccessKeyID,
+                        appSettings.Storage.Amazon.SecretAccessKey,
+                        appSettings.Storage.Amazon.BucketName,
+                        appSettings.Storage.Amazon.RegionEndpoint));
+
+                healthChecksBuilder.AddS3(
+                    s3 =>
+                    {
+                        s3.AccessKey = appSettings.Storage.Amazon.AccessKeyID;
+                        s3.SecretKey = appSettings.Storage.Amazon.SecretAccessKey;
+                        s3.BucketName = appSettings.Storage.Amazon.BucketName;
+                        s3.S3Config = new AmazonS3Config
+                        {
+                            RegionEndpoint = RegionEndpoint.GetBySystemName(appSettings.Storage.Amazon.RegionEndpoint),
+                        };
+                    },
+                    name: "Storage (Amazon S3)",
+                    failureStatus: HealthStatus.Degraded);
             }
             else
             {
                 services.AddSingleton<IFileStorageManager>(new LocalFileStorageManager(appSettings.Storage.Local.Path));
+
+                healthChecksBuilder.AddFilePathWrite(
+                appSettings.Storage.Local.Path,
+                name: "Storage (Local Directory)",
+                failureStatus: HealthStatus.Degraded);
             }
 
             if (appSettings.MessageBroker.UsedRabbitMQ())
@@ -215,6 +247,18 @@ namespace ClassifiedAds.WebMVC
                 services.AddSingleton<IMessageSender<FileDeletedEvent>>(new AzureQueueSender<FileDeletedEvent>(
                     connectionString: appSettings.MessageBroker.AzureQueue.ConnectionString,
                     queueName: appSettings.MessageBroker.AzureQueue.QueueName_FileDeleted));
+
+                healthChecksBuilder.AddAzureQueueStorage(
+                    connectionString: appSettings.MessageBroker.AzureQueue.ConnectionString,
+                    queueName: appSettings.MessageBroker.AzureQueue.QueueName_FileUploaded,
+                    name: "Message Broker (Azure Queue) File Uploaded",
+                    failureStatus: HealthStatus.Degraded);
+
+                healthChecksBuilder.AddAzureQueueStorage(
+                    connectionString: appSettings.MessageBroker.AzureQueue.ConnectionString,
+                    queueName: appSettings.MessageBroker.AzureQueue.QueueName_FileDeleted,
+                    name: "Message Broker (Azure Queue) File Deleted",
+                    failureStatus: HealthStatus.Degraded);
             }
             else if (appSettings.MessageBroker.UsedAzureServiceBus())
             {
@@ -225,6 +269,18 @@ namespace ClassifiedAds.WebMVC
                 services.AddSingleton<IMessageSender<FileDeletedEvent>>(new AzureServiceBusSender<FileDeletedEvent>(
                     connectionString: appSettings.MessageBroker.AzureServiceBus.ConnectionString,
                     queueName: appSettings.MessageBroker.AzureServiceBus.QueueName_FileDeleted));
+
+                healthChecksBuilder.AddAzureServiceBusQueue(
+                    connectionString: appSettings.MessageBroker.AzureServiceBus.ConnectionString,
+                    queueName: appSettings.MessageBroker.AzureServiceBus.QueueName_FileUploaded,
+                    name: "Message Broker (Azure Service Bus) File Uploaded",
+                    failureStatus: HealthStatus.Degraded);
+
+                healthChecksBuilder.AddAzureServiceBusQueue(
+                    connectionString: appSettings.MessageBroker.AzureServiceBus.ConnectionString,
+                    queueName: appSettings.MessageBroker.AzureServiceBus.QueueName_FileDeleted,
+                    name: "Message Broker (Azure Service Bus) File Deleted",
+                    failureStatus: HealthStatus.Degraded);
             }
         }
 

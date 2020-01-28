@@ -28,4 +28,8 @@
     <ProjectReference Include="..\ClassifiedAds.DomainServices\ClassifiedAds.DomainServices.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="HealthChecks\" />
+  </ItemGroup>
+
 </Project>
