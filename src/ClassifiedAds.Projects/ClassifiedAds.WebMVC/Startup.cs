@@ -227,6 +227,11 @@ namespace ClassifiedAds.WebMVC
                     ExchangeName = appSettings.MessageBroker.RabbitMQ.ExchangeName,
                     RoutingKey = appSettings.MessageBroker.RabbitMQ.RoutingKey_FileDeleted,
                 }));
+
+                healthChecksBuilder.AddRabbitMQ(
+                    rabbitMQConnectionString: appSettings.MessageBroker.RabbitMQ.ConnectionString,
+                    name: "Message Broker (RabbitMQ)",
+                    failureStatus: HealthStatus.Degraded);
             }
             else if (appSettings.MessageBroker.UsedKafka())
             {
@@ -237,6 +242,15 @@ namespace ClassifiedAds.WebMVC
                 services.AddSingleton<IMessageSender<FileDeletedEvent>>(new KafkaSender<FileDeletedEvent>(
                     appSettings.MessageBroker.Kafka.BootstrapServers,
                     appSettings.MessageBroker.Kafka.Topic_FileDeleted));
+
+                healthChecksBuilder.AddKafka(
+                    setup =>
+                    {
+                        setup.BootstrapServers = appSettings.MessageBroker.Kafka.BootstrapServers;
+                        setup.MessageTimeoutMs = 5000;
+                    },
+                    name: "Message Broker (Kafka)",
+                    failureStatus: HealthStatus.Degraded);
             }
             else if (appSettings.MessageBroker.UsedAzureQueue())
             {
