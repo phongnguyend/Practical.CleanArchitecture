@@ -14,6 +14,8 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
 
         public NotificationServer NotificationServer { get; set; }
 
+        public BackgroundServer BackgroundServer { get; set; }
+
         public string AllowedHosts { get; set; }
 
         public string CurrentUrl { get; set; }

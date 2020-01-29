@@ -60,7 +60,6 @@ namespace ClassifiedAds.IdentityServer
         {
             if (env.IsDevelopment())
             {
-                app.MigrateIdServerDb();
                 app.UseDeveloperExceptionPage();
             }
 

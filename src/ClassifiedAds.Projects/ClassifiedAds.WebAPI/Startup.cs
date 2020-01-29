@@ -140,7 +140,6 @@ namespace ClassifiedAds.WebAPI
         {
             if (env.IsDevelopment())
             {
-                app.MigrateDb();
                 app.UseDeveloperExceptionPage();
             }
 

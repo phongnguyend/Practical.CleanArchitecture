@@ -46,4 +46,11 @@
     <ProjectReference Include="..\ClassifiedAds.Persistence\ClassifiedAds.Persistence.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <None Update="docker-entrypoint.sh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

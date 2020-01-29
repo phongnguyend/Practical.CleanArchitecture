@@ -18,6 +18,10 @@ namespace ClassifiedAds.WebMVC.Middleware
             var stopwatch = Stopwatch.StartNew();
             await _next(context);
             var elapsedTime = stopwatch.Elapsed;
+
+            if (context.Request.Path.HasValue && context.Request.Path.Value.Contains("oidc"))
+            {
+            }
         }
     }
 }

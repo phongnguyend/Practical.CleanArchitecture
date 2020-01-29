@@ -9,9 +9,11 @@ const connection = new signalR.HubConnectionBuilder()
     .build();
 
 connection.start().then(function () {
+    console.log("Connected to SimulatedLongRunningTaskHub");
     toastr.info("Connected to SimulatedLongRunningTaskHub")
 });
 
 connection.on("ReceiveTaskStatus", (message) => {
+    console.log("Received Message from Notification Server: </br>" + message);
     toastr.info("Received Message from Notification Server: </br>" + message)
 });

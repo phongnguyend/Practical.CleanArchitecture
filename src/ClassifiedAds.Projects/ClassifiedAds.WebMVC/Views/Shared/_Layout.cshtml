@@ -64,10 +64,10 @@
                             <a class="nav-link text-dark" href="/healthchecks-ui#/healthchecks">Health Checks UI</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="https://localhost:44318/hangfire/">Hangfire Dashboard</a>
+                            <a class="nav-link text-dark" href="@appSettings.Value.BackgroundServer.Endpoint/hangfire/">Hangfire Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="@appSettings.Value.ResourceServer.Endpoint/profiler/results">API</a>
+                            <a class="nav-link text-dark" href="@appSettings.Value.ResourceServer.PublicEndpoint/profiler/results">API</a>
                         </li>
                     </ul>
                 </div>

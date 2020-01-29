@@ -7,6 +7,8 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
     {
         public string Endpoint { get; set; }
 
+        public string PublicEndpoint { get; set; }
+
         public ValidateOptionsResult Validate()
         {
             if (!Uri.TryCreate(Endpoint, UriKind.Absolute, out _))

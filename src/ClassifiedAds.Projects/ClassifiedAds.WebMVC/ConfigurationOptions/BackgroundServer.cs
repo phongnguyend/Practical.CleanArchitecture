@@ -1,9 +1,7 @@
 ﻿namespace ClassifiedAds.WebMVC.ConfigurationOptions
 {
-    public class NotificationServer
+    public class BackgroundServer
     {
         public string Endpoint { get; set; }
-
-        public string PublicEndpoint { get; set; }
     }
 }

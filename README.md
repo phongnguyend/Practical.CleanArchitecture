@@ -201,17 +201,46 @@
 ## Run or Debug the Solution
 - Web MVC Home Page: https://localhost:44364/
 
-![alt text](/docs/imgs/web-mvc-home-page.png)
+  ![alt text](/docs/imgs/web-mvc-home-page.png)
 
 - Navigate to Health Checks UI https://localhost:44364/healthchecks-ui#/healthchecks and make sure everything is green.
 
-![alt text](/docs/imgs/health-checks-ui.png)
+  ![alt text](/docs/imgs/health-checks-ui.png)
 
-## How to Login on Identity Server:
-- Option 1: Use default created account:
-  + User Name: phong@gmail.com
-  + Password: v*7Un8b4rcN@<-RN
-- Option 2: Register new account at https://localhost:44367/Account/Register
+- Login on Identity Server:
+  + Option 1: Use default created account:
+    + User Name: phong@gmail.com
+    + Password: v*7Un8b4rcN@<-RN
+  + Option 2: Register new account at https://localhost:44367/Account/Register
+
+## How to Run on Docker Containers:
+- Add Migrations if you haven't done on previous steps:
+  + Install **dotnet-ef** cli:
+    ```
+    dotnet tool install --global dotnet-ef --version="3.1"
+    ```
+  + Navigate to [ClassifiedAds.Migrator](/src/ClassifiedAds.Projects/ClassifiedAds.Migrator/) and run these commands:
+    ```
+    dotnet ef migrations add Init --context AdsDbContext -o Migrations/AdsDb
+    dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
+    dotnet ef migrations add Init --context PersistedGrantDbContext -o Migrations/PersistedGrantDb
+    ```
+- Navigate to [ClassifiedAds.Projects](/src/ClassifiedAds.Projects/) and run:
+  ```
+  docker-compose build
+  docker-compose up
+  ```
+- Open Web MVC Home Page at: http://host.docker.internal:9003
+
+  ![alt text](/docs/imgs/web-mvc-home-page.png)
+
+- Navigate to Health Checks UI http://host.docker.internal:9003/healthchecks-ui#/healthchecks and make sure everything is green.
+
+  ![alt text](/docs/imgs/health-checks-ui-container.png)
+
+- Login on Identity Server:
+  + Use default created account: phong@gmail.com / v*7Un8b4rcN@<-RN
+  + Register new account at http://host.docker.internal:9000/Account/Register
 
 ## Application URLs:
 | Project  | Launch URL | Docker Container URL| Docker Container URL|

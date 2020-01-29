@@ -58,7 +58,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 if (!context.Clients.Any())
                 {
-                    var clients = new List<Client> {
+                    var clients = new List<Client>
+                    {
                     new Client
                     {
                         ClientId = "ClassifiedAds.WebMVC",
@@ -67,12 +68,12 @@ namespace Microsoft.Extensions.DependencyInjection
                         RedirectUris =
                         {
                             "https://localhost:44364/signin-oidc",
-                            "http://localhost:9003/signin-oidc",
+                            "http://host.docker.internal:9003/signin-oidc",
                         },
                         PostLogoutRedirectUris =
                         {
                             "https://localhost:44364/signout-callback-oidc",
-                            "http://localhost:9003/signout-callback-oidc",
+                            "http://host.docker.internal:9003/signout-callback-oidc",
                         },
                         AllowedScopes =
                         {
@@ -116,7 +117,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         },
                         AllowOfflineAccess = true,
                     },
-                };
+                    };
 
                     foreach (var client in clients)
                     {
@@ -147,7 +148,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     var apiResources = new List<ApiResource>
                     {
                         new ApiResource("ClassifiedAds.WebAPI", "ClassifiedAds Web API",
-                        new List<string>() {"role" } ),
+                        new List<string>() { "role" }),
                     };
                     foreach (var resource in apiResources)
                     {
