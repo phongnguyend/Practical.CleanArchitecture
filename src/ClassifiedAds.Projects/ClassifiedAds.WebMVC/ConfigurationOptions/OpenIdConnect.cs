@@ -9,6 +9,8 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
 
         public string ClientId { get; set; }
 
+        public string ClientSecret { get; set; }
+
         public bool RequireHttpsMetadata { get; set; }
 
         public ValidateOptionsResult Validate()

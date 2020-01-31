@@ -111,13 +111,13 @@ namespace ClassifiedAds.WebMVC
                 options.SignInScheme = "Cookies";
                 options.Authority = appSettings.OpenIdConnect.Authority;
                 options.ClientId = appSettings.OpenIdConnect.ClientId;
+                options.ClientSecret = appSettings.OpenIdConnect.ClientSecret;
                 options.ResponseType = "code id_token";
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
                 options.Scope.Add("ClassifiedAds.WebAPI");
                 options.Scope.Add("offline_access");
                 options.SaveTokens = true;
-                options.ClientSecret = "secret";
                 options.GetClaimsFromUserInfoEndpoint = true;
                 options.RequireHttpsMetadata = appSettings.OpenIdConnect.RequireHttpsMetadata;
             });

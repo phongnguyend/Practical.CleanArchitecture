@@ -11,7 +11,6 @@ namespace ClassifiedAds.WebMVC.ClaimsTransformations
     {
         public CustomClaimsTransformation()
         {
-
         }
 
         public Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
@@ -22,9 +21,16 @@ namespace ClassifiedAds.WebMVC.ClaimsTransformations
                 return Task.FromResult(principal);
             }
 
-            var claims = new List<Claim> {
+            var claims = new List<Claim>
+            {
                 new Claim("now", DateTime.Now.ToString(), ClaimValueTypes.String, "CustomClaimsTransformation"),
             };
+
+            if (identity.HasClaim(c => c.Type == "now"))
+            {
+                identity.RemoveClaim(identity.FindFirst(c => c.Type == "now"));
+            }
+
             claims.AddRange(identity.Claims);
             var newIdentity = new ClaimsIdentity(claims, identity.AuthenticationType);
             return Task.FromResult(new ClaimsPrincipal(newIdentity));

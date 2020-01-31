@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using ClassifiedAds.WebMVC.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.AspNetCore.Authentication;
-using ClassifiedAds.DomainServices;
-using IdentityModel.Client;
 using System.Net.Http;
-using ClassifiedAds.DomainServices.Entities;
-using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
+using System.Threading.Tasks;
 using ClassifiedAds.ApplicationServices;
 using ClassifiedAds.ApplicationServices.Queries.Products;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using System.Globalization;
+using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
+using ClassifiedAds.DomainServices;
+using ClassifiedAds.DomainServices.Entities;
 using ClassifiedAds.WebMVC.ConfigurationOptions;
+using ClassifiedAds.WebMVC.Models;
+using ClassifiedAds.WebMVC.Models.Home;
+using IdentityModel.Client;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace ClassifiedAds.WebMVC.Controllers
 {
@@ -40,33 +41,29 @@ namespace ClassifiedAds.WebMVC.Controllers
             _appSettings = appSettings.Value;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             _logger.LogInformation("Getting all products");
-            var products = _dispatcher.Dispatch(new GetProductsQuery());
-            return View();
-        }
 
-        public async Task<IActionResult> Privacy()
-        {
-            var httpClient = _httpClientFactory.CreateClient();
+            var products1 = _dispatcher.Dispatch(new GetProductsQuery());
+            var products2 = _productService.GetProducts().ToList();
 
             var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
 
-            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
+            if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(accessToken))
             {
-                Address = _appSettings.OpenIdConnect.Authority,
-                Policy = { RequireHttps = _appSettings.OpenIdConnect.RequireHttpsMetadata },
-            });
+                var httpClient = _httpClientFactory.CreateClient();
 
-            var response = await httpClient.GetUserInfoAsync(new UserInfoRequest { Address = metaDataResponse.UserInfoEndpoint, Token = accessToken });
+                httpClient.SetBearerToken(accessToken);
+                var response = await httpClient.GetAsync($"{_appSettings.ResourceServer.Endpoint}/api/products");
+                var product3 = await response.Content.ReadAs<List<Product>>();
+            }
 
-            var products = _productService.GetProducts().ToList();
+            return View();
+        }
 
-            httpClient.SetBearerToken(accessToken);
-            var response2 = await httpClient.GetAsync($"{_appSettings.ResourceServer.Endpoint}/api/products");
-            var products2 = await response2.Content.ReadAs<List<Product>>();
-
+        public IActionResult Privacy()
+        {
             return View();
         }
 
@@ -79,9 +76,39 @@ namespace ClassifiedAds.WebMVC.Controllers
         [Authorize]
         public async Task<IActionResult> AuthorizedAction()
         {
-            var identityToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
-            var claims = User.Claims.Select(x => new { x.Type, x.Value });
-            return Json(claims);
+            var model = new AuthenticationModel
+            {
+                User = new CurrentUserModel
+                {
+                    Identity = new CurrentUserIdentityModel
+                    {
+                        IsAuthenticated = User.Identity.IsAuthenticated,
+                        Name = User.Identity.Name,
+                        AuthenticationType = User.Identity.AuthenticationType,
+                    },
+                    Claims = User.Claims.Select(x => new ClaimModel { Type = x.Type, Value = x.Value }).ToList(),
+                },
+                Token = new TokenModel
+                {
+                    IdentityToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken),
+                    AccessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken),
+                    RefreshToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken),
+                    ExpiresAt = await HttpContext.GetTokenAsync("expires_at"),
+                },
+            };
+
+            var httpClient = _httpClientFactory.CreateClient();
+            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(_appSettings.OpenIdConnect.Authority);
+            var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+
+            var response = await httpClient.GetUserInfoAsync(new UserInfoRequest { Address = metaDataResponse.UserInfoEndpoint, Token = accessToken });
+
+            if (!response.IsError)
+            {
+                model.User.Claims.AddRange(response.Claims.Select(x => new ClaimModel { Type = x.Type, Value = x.Value }));
+            }
+
+            return View(model);
         }
 
         [Authorize]
@@ -94,22 +121,6 @@ namespace ClassifiedAds.WebMVC.Controllers
         {
             await HttpContext.SignOutAsync("Cookies");
             await HttpContext.SignOutAsync("oidc");
-        }
-
-        [Authorize]
-        public async Task<IActionResult> UserInfoClient()
-        {
-            var httpClient = _httpClientFactory.CreateClient();
-            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(_appSettings.OpenIdConnect.Authority);
-            var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
-            var response = await httpClient.GetUserInfoAsync(new UserInfoRequest { Address = metaDataResponse.UserInfoEndpoint, Token = accessToken });
-
-            if (response.IsError)
-            {
-                throw new Exception("Problem accessing the UserInfo endpoint.", response.Exception);
-            }
-
-            return Json(response.Claims);
         }
 
         [Authorize]
@@ -126,9 +137,9 @@ namespace ClassifiedAds.WebMVC.Controllers
             var response = await httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
             {
                 Address = metaDataResponse.TokenEndpoint,
-                ClientId = "ClassifiedAds.WebMVC",
-                ClientSecret = "secret",
-                RefreshToken = refreshToken
+                ClientId = _appSettings.OpenIdConnect.ClientId,
+                ClientSecret = _appSettings.OpenIdConnect.ClientSecret,
+                RefreshToken = refreshToken,
             });
 
             if (response.IsError)
@@ -143,7 +154,7 @@ namespace ClassifiedAds.WebMVC.Controllers
             auth.Properties.UpdateTokenValue("expires_at", expiresAt.ToString("o", CultureInfo.InvariantCulture));
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, auth.Principal, auth.Properties);
 
-            return Json(response);
+            return RedirectToAction(nameof(AuthorizedAction));
         }
 
         public IActionResult TestException()
