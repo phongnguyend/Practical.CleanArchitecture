@@ -53,7 +53,6 @@ namespace ClassifiedAds.BackgroundServices
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHangfireDashboard();
             app.UseHangfireServer();
 
             RecurringJob.AddOrUpdate<SendEmail>(job => job.Run(), Cron.Minutely);
@@ -62,7 +61,7 @@ namespace ClassifiedAds.BackgroundServices
 
             app.Run(async (context) =>
             {
-                await context.Response.WriteAsync("Hello World!");
+                await context.Response.WriteAsync("Hello Hangfire Server!");
             });
         }
     }

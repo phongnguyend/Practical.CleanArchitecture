@@ -112,7 +112,7 @@ services:
           ResourceServer__PublicEndpoint: "http://host.docker.internal:9002"
           NotificationServer__Endpoint: "http://notificationserver"
           NotificationServer__PublicEndpoint: "http://localhost:9001"
-          BackgroundServer__Endpoint: "http://host.docker.internal:9004"
+          BackgroundServer__Endpoint: "http://backgroundservices"
           CurrentUrl: "http://host.docker.internal:9003"
           Storage__Provider: "Local"
           Storage__Local__Path: "/files"

@@ -60,69 +60,66 @@ namespace Microsoft.Extensions.DependencyInjection
                 {
                     var clients = new List<Client>
                     {
-                    new Client
-                    {
-                        ClientId = "ClassifiedAds.WebMVC",
-                        ClientName = "ClassifiedAds Web MVC",
-                        AllowedGrantTypes = GrantTypes.Hybrid.Combines(GrantTypes.ResourceOwnerPassword),
-                        RedirectUris =
+                        new Client
                         {
-                            "https://localhost:44364/signin-oidc",
-                            "http://host.docker.internal:9003/signin-oidc",
+                            ClientId = "ClassifiedAds.WebMVC",
+                            ClientName = "ClassifiedAds Web MVC",
+                            AllowedGrantTypes = GrantTypes.Hybrid.Combines(GrantTypes.ResourceOwnerPassword),
+                            RedirectUris =
+                            {
+                                "https://localhost:44364/signin-oidc",
+                                "http://host.docker.internal:9003/signin-oidc",
+                            },
+                            PostLogoutRedirectUris =
+                            {
+                                "https://localhost:44364/signout-callback-oidc",
+                                "http://host.docker.internal:9003/signout-callback-oidc",
+                            },
+                            AllowedScopes =
+                            {
+                                IdentityServerConstants.StandardScopes.OpenId,
+                                IdentityServerConstants.StandardScopes.Profile,
+                                "ClassifiedAds.WebAPI",
+                            },
+                            ClientSecrets =
+                            {
+                                new Secret("secret".Sha256()),
+                            },
+                            AllowOfflineAccess = true,
                         },
-                        PostLogoutRedirectUris =
+                        new Client
                         {
-                            "https://localhost:44364/signout-callback-oidc",
-                            "http://host.docker.internal:9003/signout-callback-oidc",
+                            ClientId = "spa-client",
+                            ClientName = "SPA Client",
+                            AllowedGrantTypes = GrantTypes.Implicit,
+                            AllowAccessTokensViaBrowser = true,
+                            RedirectUris =
+                            {
+                                "http://localhost:4200/assets/oidc-login-redirect.html",
+                            },
+                            PostLogoutRedirectUris =
+                            {
+                                "http://localhost:4200/?postLogout=true",
+                            },
+                            AllowedCorsOrigins =
+                            {
+                                "http://localhost:4200/",
+                            },
+                            AllowedScopes =
+                            {
+                                IdentityServerConstants.StandardScopes.OpenId,
+                                IdentityServerConstants.StandardScopes.Profile,
+                                "ClassifiedAds.WebAPI",
+                            },
+                            ClientSecrets =
+                            {
+                                new Secret("secret".Sha256()),
+                            },
+                            AllowOfflineAccess = true,
                         },
-                        AllowedScopes =
-                        {
-                            IdentityServerConstants.StandardScopes.OpenId,
-                            IdentityServerConstants.StandardScopes.Profile,
-                            "ClassifiedAds.WebAPI",
-                        },
-                        ClientSecrets =
-                        {
-                            new Secret("secret".Sha256()),
-                        },
-                        AllowOfflineAccess = true,
-                    },
-                    new Client
-                    {
-                        ClientId = "spa-client",
-                        ClientName = "SPA Client",
-                        AllowedGrantTypes = GrantTypes.Implicit,
-                        AllowAccessTokensViaBrowser = true,
-                        RedirectUris =
-                        {
-                            "http://localhost:4200/assets/oidc-login-redirect.html",
-                        },
-                        PostLogoutRedirectUris =
-                        {
-                            "http://localhost:4200/?postLogout=true",
-                        },
-                        AllowedCorsOrigins =
-                        {
-                            "http://localhost:4200/",
-                        },
-                        AllowedScopes =
-                        {
-                            IdentityServerConstants.StandardScopes.OpenId,
-                            IdentityServerConstants.StandardScopes.Profile,
-                            "ClassifiedAds.WebAPI",
-                        },
-                        ClientSecrets =
-                        {
-                            new Secret("secret".Sha256()),
-                        },
-                        AllowOfflineAccess = true,
-                    },
                     };
 
-                    foreach (var client in clients)
-                    {
-                        context.Clients.Add(client.ToEntity());
-                    }
+                    context.Clients.AddRange(clients.Select(x => x.ToEntity()));
 
                     context.SaveChanges();
                 }
@@ -135,10 +132,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         new IdentityResources.Profile(),
                     };
 
-                    foreach (var resource in identityResources)
-                    {
-                        context.IdentityResources.Add(resource.ToEntity());
-                    }
+                    context.IdentityResources.AddRange(identityResources.Select(x => x.ToEntity()));
 
                     context.SaveChanges();
                 }
@@ -150,10 +144,8 @@ namespace Microsoft.Extensions.DependencyInjection
                         new ApiResource("ClassifiedAds.WebAPI", "ClassifiedAds Web API",
                         new List<string>() { "role" }),
                     };
-                    foreach (var resource in apiResources)
-                    {
-                        context.ApiResources.Add(resource.ToEntity());
-                    }
+
+                    context.ApiResources.AddRange(apiResources.Select(x => x.ToEntity()));
 
                     context.SaveChanges();
                 }
