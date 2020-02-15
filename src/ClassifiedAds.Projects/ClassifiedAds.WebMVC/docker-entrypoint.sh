@@ -23,5 +23,3 @@ curl -i -u guest:guest -H "content-type:application/json" -XPOST -d '{"routing_k
 echo finished setting up rabbitmq;
 
 cd /ClassifiedAds.Projects && dotnet ClassifiedAds.WebMVC.dll
-
-# Keep the line ending

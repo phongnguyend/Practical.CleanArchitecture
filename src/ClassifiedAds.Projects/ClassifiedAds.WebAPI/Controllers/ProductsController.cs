@@ -72,7 +72,9 @@ namespace ClassifiedAds.WebAPI.Controllers
                 return NotFound();
             }
 
+            product.Code = model.Code;
             product.Name = model.Name;
+            product.Description = model.Description;
 
             _productService.Update(product);
 

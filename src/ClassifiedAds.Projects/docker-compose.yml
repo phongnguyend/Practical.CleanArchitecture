@@ -141,6 +141,23 @@ services:
           MessageBroker__AzureServiceBus__ConnectionString: "Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=xxx;SharedAccessKey=xxx"
           MessageBroker__AzureServiceBus__QueueName_FileUploaded: "classifiedadds_fileuploaded"
           MessageBroker__AzureServiceBus__QueueName_FileDeleted: "classifiedadds_filedeleted"
+    blazorserverside:
+        build:
+          context: .
+          dockerfile: ./ClassifiedAds.BlazorServerSide/Dockerfile
+        ports:
+            - "9008:80"
+        volumes:
+            - D:\\ClassifiedAds.Projects\\Logs\\BlazorServerSide:/ClassifiedAds.Projects/logs
+        depends_on:
+          - identityserver
+          - webapi
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          OpenIdConnect__Authority: "http://host.docker.internal:9000"
+          OpenIdConnect__RequireHttpsMetadata: "false"
+          ResourceServer__Endpoint: "http://webapi"
+          ResourceServer__PublicEndpoint: "http://host.docker.internal:9002"
     backgroundservices:
         build:
           context: .

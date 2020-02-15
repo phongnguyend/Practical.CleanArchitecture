@@ -63,6 +63,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "Integra
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FunctionalTests", "FunctionalTests", "{9E758648-749A-45B1-9096-0A4B05427626}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.BlazorServerSide", "ClassifiedAds.BlazorServerSide\ClassifiedAds.BlazorServerSide.csproj", "{CFB095AD-C111-422F-BE9F-9B999127602F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -149,6 +151,10 @@ Global
 		{9AF360EF-07B2-4584-A7C7-7CE3CC782887}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AF360EF-07B2-4584-A7C7-7CE3CC782887}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AF360EF-07B2-4584-A7C7-7CE3CC782887}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFB095AD-C111-422F-BE9F-9B999127602F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFB095AD-C111-422F-BE9F-9B999127602F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFB095AD-C111-422F-BE9F-9B999127602F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFB095AD-C111-422F-BE9F-9B999127602F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -177,6 +183,7 @@ Global
 		{423CE4CB-2076-48C5-A389-D30999B08F52} = {60BC7A82-187C-43E2-8C37-DE610700A7FA}
 		{173ECE2E-FF30-4471-9484-2410BB7963C8} = {60BC7A82-187C-43E2-8C37-DE610700A7FA}
 		{9E758648-749A-45B1-9096-0A4B05427626} = {60BC7A82-187C-43E2-8C37-DE610700A7FA}
+		{CFB095AD-C111-422F-BE9F-9B999127602F} = {C6061573-0203-4860-AD42-4C6C2CF55110}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2C23354-4AAD-41AC-9E06-0A6F210ACEEF}

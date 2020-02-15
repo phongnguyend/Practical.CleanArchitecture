@@ -16,6 +16,11 @@ docker build -f "ClassifiedAds.Ocelot\Dockerfile" -t classifiedads.ocelot .
 docker-compose build
 docker-compose up
 
+docker-compose build blazorserverside
+
+docker-compose up webmvc
+docker-compose up blazorserverside
+
 docker --version
 docker version
 

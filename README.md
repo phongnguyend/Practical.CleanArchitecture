@@ -213,6 +213,10 @@
     + Password: v*7Un8b4rcN@<-RN
   + Option 2: Register new account at https://localhost:44367/Account/Register
 
+- Open Blazor Home Page at: https://localhost:44331
+
+  ![alt text](/docs/imgs/blazor-home-page.png)
+
 ## How to Run on Docker Containers:
 - Add Migrations if you haven't done on previous steps:
   + Install **dotnet-ef** cli:
@@ -225,6 +229,18 @@
     dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
     dotnet ef migrations add Init --context PersistedGrantDbContext -o Migrations/PersistedGrantDb
     ```
+- Make sure Line Ending for these files is Unix (LF):
+  | Project  | File |
+  | -------- | ---- |
+  | ClassifiedAds.Migrator | [docker-entrypoint.sh](/src/ClassifiedAds.Projects/ClassifiedAds.Migrator/docker-entrypoint.sh) |
+  | ClassifiedAds.BackgroundServices | [docker-entrypoint.sh](/src/ClassifiedAds.Projects/ClassifiedAds.BackgroundServices/docker-entrypoint.sh) |
+  | ClassifiedAds.WebMVC | [docker-entrypoint.sh](/src/ClassifiedAds.Projects/ClassifiedAds.WebMVC/docker-entrypoint.sh) |
+  
+  Otherwise you might encounter:
+  ```
+  exec user process caused "no such file or directory"
+  ```
+  Tip: Open Notepad++ -> Edit -> EOL Conversion -> Unix (LF)
 - Navigate to [ClassifiedAds.Projects](/src/ClassifiedAds.Projects/) and run:
   ```
   docker-compose build
@@ -241,11 +257,16 @@
 - Login on Identity Server:
   + Use default created account: phong@gmail.com / v*7Un8b4rcN@<-RN
   + Register new account at http://host.docker.internal:9000/Account/Register
+  
+- Open Blazor Home Page at: http://host.docker.internal:9008
 
+  ![alt text](/docs/imgs/blazor-home-page.png)
+  
 ## Application URLs:
 | Project  | Launch URL | Docker Container URL| Docker Container URL|
 | -------- | ---------- | ------------------- | ------------------- |
 | BackgroundServices | https://localhost:44318 | http://localhost:9004 | http://host.docker.internal:9004 |
+| BlazorServerSide | https://localhost:44331 | http://localhost:9008 | http://host.docker.internal:9008 |
 | GRPC | https://localhost:5001 | https://localhost:9005 | https://host.docker.internal:9005 |
 | IdentityServer | https://localhost:44367 | http://localhost:9000 | http://host.docker.internal:9000 |
 | NotificationServer | https://localhost:44390 | http://localhost:9001 | http://host.docker.internal:9001 |

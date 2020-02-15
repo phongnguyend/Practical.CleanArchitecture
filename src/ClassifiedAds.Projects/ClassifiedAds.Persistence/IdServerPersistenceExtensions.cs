@@ -89,6 +89,33 @@ namespace Microsoft.Extensions.DependencyInjection
                         },
                         new Client
                         {
+                            ClientId = "ClassifiedAds.BlazorServerSide",
+                            ClientName = "ClassifiedAds Blazor Server Side",
+                            AllowedGrantTypes = GrantTypes.Hybrid.Combines(GrantTypes.ResourceOwnerPassword),
+                            RedirectUris =
+                            {
+                                "https://localhost:44331/signin-oidc",
+                                "http://host.docker.internal:9008/signin-oidc",
+                            },
+                            PostLogoutRedirectUris =
+                            {
+                                "https://localhost:44331/signout-callback-oidc",
+                                "http://host.docker.internal:9008/signout-callback-oidc",
+                            },
+                            AllowedScopes =
+                            {
+                                IdentityServerConstants.StandardScopes.OpenId,
+                                IdentityServerConstants.StandardScopes.Profile,
+                                "ClassifiedAds.WebAPI",
+                            },
+                            ClientSecrets =
+                            {
+                                new Secret("secret".Sha256()),
+                            },
+                            AllowOfflineAccess = true,
+                        },
+                        new Client
+                        {
                             ClientId = "spa-client",
                             ClientName = "SPA Client",
                             AllowedGrantTypes = GrantTypes.Implicit,
