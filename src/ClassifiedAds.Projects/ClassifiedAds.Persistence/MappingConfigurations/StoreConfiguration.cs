@@ -1,17 +1,14 @@
 ﻿using ClassifiedAds.DomainServices.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ClassifiedAds.Persistence.MappingConfigurations
 {
-    public class EventConfiguration : IEntityTypeConfiguration<Event>
+    public class StoreConfiguration : IEntityTypeConfiguration<Store>
     {
-        public void Configure(EntityTypeBuilder<Event> builder)
+        public void Configure(EntityTypeBuilder<Store> builder)
         {
-            builder.ToTable("Events");
+            builder.ToTable("Stores");
             builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
             builder.OwnsOne(x => x.Location);
         }

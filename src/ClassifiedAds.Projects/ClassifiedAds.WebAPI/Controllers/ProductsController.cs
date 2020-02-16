@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using ClassifiedAds.DomainServices.Entities;
+﻿using ClassifiedAds.ApplicationServices;
+using ClassifiedAds.ApplicationServices.Queries.Products;
 using ClassifiedAds.DomainServices;
+using ClassifiedAds.DomainServices.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ClassifiedAds.ApplicationServices;
-using ClassifiedAds.ApplicationServices.Queries.Products;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 
 namespace ClassifiedAds.WebAPI.Controllers
 {
@@ -58,7 +58,6 @@ namespace ClassifiedAds.WebAPI.Controllers
             _productService.Create(model);
             return Created($"/api/products/{model.Id}", model);
         }
-
 
         [HttpPut("{id}")]
         [Consumes("application/json")]

@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace ClassifiedAds.DomainServices.ValueObjects
 {
     public class Address : ValueObject
     {
-        public string Street { get; }
-        public string City { get; }
-        public string ZipCode { get; }
+        public string Street { get; private set; }
+        public string City { get; private set; }
+        public string ZipCode { get; private set; }
+
+        private Address()
+        {
+        }
 
         public Address(string street, string city, string zipCode)
         {

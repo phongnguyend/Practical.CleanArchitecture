@@ -1,17 +1,14 @@
 ﻿using ClassifiedAds.DomainServices.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ClassifiedAds.Persistence.MappingConfigurations
 {
-    public class SessionConfiguration : IEntityTypeConfiguration<Session>
+    public class ProductInStoreConfiguration : IEntityTypeConfiguration<ProductInStore>
     {
-        public void Configure(EntityTypeBuilder<Session> builder)
+        public void Configure(EntityTypeBuilder<ProductInStore> builder)
         {
-            builder.ToTable("Sessions");
+            builder.ToTable("ProductInStores");
             builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
         }
     }

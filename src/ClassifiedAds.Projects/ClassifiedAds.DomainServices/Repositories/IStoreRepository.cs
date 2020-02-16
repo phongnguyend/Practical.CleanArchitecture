@@ -3,8 +3,8 @@ using System;
 
 namespace ClassifiedAds.DomainServices.Repositories
 {
-    public interface IEventRepository : IRepository<Event>
+    public interface IStoreRepository : IRepository<Store>
     {
-        Event GetEventIncludeSessions(Guid Id);
+        Store GetStoreIncludeProducts(Guid Id);
     }
 }
