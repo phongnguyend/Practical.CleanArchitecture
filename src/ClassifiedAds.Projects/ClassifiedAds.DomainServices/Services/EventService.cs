@@ -7,16 +7,17 @@ namespace ClassifiedAds.DomainServices.Services
 {
     public class EventService : GenericService<Event>, IEventService
     {
-        public EventService(IUnitOfWork unitOfWork, IRepository<Event> eventRepository) : base(unitOfWork, eventRepository)
-        {
+        private readonly IEventRepository _eventRepository;
 
+        public EventService(IUnitOfWork unitOfWork, IEventRepository eventRepository)
+            : base(unitOfWork, eventRepository)
+        {
+            _eventRepository = eventRepository;
         }
 
         public Event GetEventIncludeSessions(Guid Id)
         {
-            return _repository.GetAll()
-                //.Include(x => x.Sessions).ThenInclude(s => s.Voters)
-                .Where(x => x.Id == Id).FirstOrDefault();
+            return _eventRepository.GetEventIncludeSessions(Id);
         }
     }
 }

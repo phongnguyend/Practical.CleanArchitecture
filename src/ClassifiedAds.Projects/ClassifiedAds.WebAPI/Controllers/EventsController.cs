@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ClassifiedAds.DomainServices.Entities;
-using ClassifiedAds.DomainServices;
+﻿using ClassifiedAds.DomainServices.Entities;
 using ClassifiedAds.DomainServices.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
 
 namespace ClassifiedAds.WebAPI.Controllers
 {
@@ -29,7 +25,6 @@ namespace ClassifiedAds.WebAPI.Controllers
         {
             return Ok(_eventService.Get());
         }
-
 
         [HttpGet("{id}")]
         public IActionResult Get(Guid Id)

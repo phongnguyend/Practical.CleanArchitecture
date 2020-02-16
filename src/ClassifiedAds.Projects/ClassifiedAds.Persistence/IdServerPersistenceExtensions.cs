@@ -130,7 +130,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             },
                             AllowedCorsOrigins =
                             {
-                                "http://localhost:4200/",
+                                "http://localhost:4200",
                             },
                             AllowedScopes =
                             {

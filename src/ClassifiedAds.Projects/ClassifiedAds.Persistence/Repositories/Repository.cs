@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClassifiedAds.Persistence.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T>
+        where T : class
     {
         private readonly AdsDbContext _dbContext;
-        private DbSet<T> DbSet => _dbContext.Set<T>();
+        protected DbSet<T> DbSet => _dbContext.Set<T>();
 
         public Repository(AdsDbContext dbContext)
         {
