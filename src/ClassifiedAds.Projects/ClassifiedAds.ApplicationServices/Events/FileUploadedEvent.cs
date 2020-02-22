@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.DomainServices.Entities;
 
-namespace ClassifiedAds.DomainServices.DomainEvents
+namespace ClassifiedAds.ApplicationServices.Events
 {
     public class FileUploadedEvent
     {

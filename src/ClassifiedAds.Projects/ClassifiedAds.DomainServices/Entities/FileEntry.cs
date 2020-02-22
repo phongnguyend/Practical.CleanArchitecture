@@ -2,7 +2,7 @@
 
 namespace ClassifiedAds.DomainServices.Entities
 {
-    public class FileEntry : Entity<Guid>
+    public class FileEntry : AggregateRoot<Guid>
     {
         public string Name { get; set; }
 

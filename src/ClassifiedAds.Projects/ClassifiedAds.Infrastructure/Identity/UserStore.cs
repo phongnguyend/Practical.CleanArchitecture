@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.DomainServices.Entities;
-using ClassifiedAds.DomainServices;
 using ClassifiedAds.DomainServices.Repositories;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -22,10 +21,10 @@ namespace ClassifiedAds.Infrastructure.Identity
                              IUserTwoFactorRecoveryCodeStore<User>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<User> _userRepository;
-        private readonly IRepository<UserToken> _userTokenRepository;
+        private readonly IRepository<User, Guid> _userRepository;
+        private readonly IRepository<UserToken, Guid> _userTokenRepository;
 
-        public UserStore(IUnitOfWork unitOfWork, IRepository<User> userRepository, IRepository<UserToken> userTokenRepository)
+        public UserStore(IUnitOfWork unitOfWork, IRepository<User, Guid> userRepository, IRepository<UserToken, Guid> userTokenRepository)
         {
             _unitOfWork = unitOfWork;
             _userRepository = userRepository;

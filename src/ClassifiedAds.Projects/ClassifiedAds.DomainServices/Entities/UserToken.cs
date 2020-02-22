@@ -2,7 +2,7 @@
 
 namespace ClassifiedAds.DomainServices.Entities
 {
-    public class UserToken : Entity<Guid>
+    public class UserToken : AggregateRoot<Guid>
     {
         public Guid UserId { get; set; }
 

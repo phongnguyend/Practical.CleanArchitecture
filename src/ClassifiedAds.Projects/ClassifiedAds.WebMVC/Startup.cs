@@ -1,6 +1,6 @@
 ﻿using Amazon;
 using Amazon.S3;
-using ClassifiedAds.DomainServices.DomainEvents;
+using ClassifiedAds.ApplicationServices.Events;
 using ClassifiedAds.DomainServices.Identity;
 using ClassifiedAds.DomainServices.Infrastructure.MessageBrokers;
 using ClassifiedAds.DomainServices.Infrastructure.Storages;
@@ -314,6 +314,8 @@ namespace ClassifiedAds.WebMVC
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.ApplicationServices.RegisterDomainEventHandlers();
+
             app.UseMiddleware<CustomMiddleware>();
 
             if (env.IsDevelopment())

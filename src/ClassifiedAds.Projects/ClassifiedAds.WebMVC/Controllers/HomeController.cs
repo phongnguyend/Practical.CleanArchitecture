@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using ClassifiedAds.ApplicationServices;
+﻿using ClassifiedAds.ApplicationServices;
 using ClassifiedAds.ApplicationServices.Queries.Products;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
-using ClassifiedAds.DomainServices;
 using ClassifiedAds.DomainServices.Entities;
+using ClassifiedAds.DomainServices.Services;
 using ClassifiedAds.WebMVC.ConfigurationOptions;
 using ClassifiedAds.WebMVC.Models;
 using ClassifiedAds.WebMVC.Models.Home;
@@ -22,6 +15,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.WebMVC.Controllers
 {
@@ -47,7 +47,7 @@ namespace ClassifiedAds.WebMVC.Controllers
             _logger.LogInformation("Getting all products");
 
             var products1 = _dispatcher.Dispatch(new GetProductsQuery());
-            var products2 = _productService.GetProducts().ToList();
+            var products2 = _productService.Get().ToList();
 
             var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
 

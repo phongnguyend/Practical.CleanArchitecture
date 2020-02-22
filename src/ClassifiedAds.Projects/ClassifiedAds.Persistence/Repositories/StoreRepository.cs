@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ClassifiedAds.Persistence.Repositories
 {
-    public class StoreRepository : Repository<Store>, IStoreRepository
+    public class StoreRepository : Repository<Store, Guid>, IStoreRepository
     {
         public StoreRepository(AdsDbContext dbContext)
             : base(dbContext)

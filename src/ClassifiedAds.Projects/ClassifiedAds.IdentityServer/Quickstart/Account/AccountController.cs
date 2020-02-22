@@ -41,12 +41,12 @@ namespace IdentityServer4.Quickstart.UI
 
         private readonly ILogger _logger;
         private readonly UserManager<User> _userManager;
-        private readonly IGenericService<EmailMessage> _emailMessageService;
+        private readonly ICrudService<EmailMessage> _emailMessageService;
 
         public AccountController(
             ILogger<AccountController> logger,
             UserManager<User> userManager,
-            IGenericService<EmailMessage> emailMessageService,
+            ICrudService<EmailMessage> emailMessageService,
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,

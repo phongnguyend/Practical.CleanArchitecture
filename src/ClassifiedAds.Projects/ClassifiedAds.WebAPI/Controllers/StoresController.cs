@@ -55,7 +55,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         {
             var store = _storeService.GetStoreIncludeProducts(storeId);
 
-            var product = _productService.GetProducts().FirstOrDefault(x => x.Code == model.Code);
+            var product = _productService.Get().FirstOrDefault(x => x.Code == model.Code);
 
             var productInStore = store.Products.FirstOrDefault(x => x.ProductId == product.Id);
 

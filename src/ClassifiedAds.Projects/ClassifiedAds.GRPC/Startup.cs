@@ -1,12 +1,15 @@
-﻿using System;
+﻿using ClassifiedAds.ApplicationServices.Events;
 using ClassifiedAds.DomainServices.Identity;
+using ClassifiedAds.DomainServices.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Identity;
+using ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace ClassifiedAds.GRPC
 {
@@ -31,6 +34,16 @@ namespace ClassifiedAds.GRPC
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentWebUser>();
+
+            services.AddSingleton<IMessageSender<FileUploadedEvent>>(new RabbitMQSender<FileUploadedEvent>(new RabbitMQSenderOptions
+            {
+
+            }));
+
+            services.AddSingleton<IMessageSender<FileDeletedEvent>>(new RabbitMQSender<FileDeletedEvent>(new RabbitMQSenderOptions
+            {
+
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

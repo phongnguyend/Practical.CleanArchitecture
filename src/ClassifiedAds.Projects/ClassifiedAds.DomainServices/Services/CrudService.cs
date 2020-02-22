@@ -1,47 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClassifiedAds.DomainServices.DomainEvents;
 using ClassifiedAds.DomainServices.Entities;
 using ClassifiedAds.DomainServices.Repositories;
 
 namespace ClassifiedAds.DomainServices.Services
 {
-    public class GenericService<T> : IGenericService<T> where T : Entity<Guid>
+    public class CrudService<T> : ICrudService<T>
+        where T : AggregateRoot<Guid>
     {
         protected readonly IUnitOfWork _unitOfWork;
-        protected readonly IRepository<T> _repository;
+        protected readonly IRepository<T, Guid> _repository;
 
-        public GenericService(IUnitOfWork unitOfWork, IRepository<T> repository)
+        public CrudService(IUnitOfWork unitOfWork, IRepository<T, Guid> repository)
         {
             _unitOfWork = unitOfWork;
             _repository = repository;
         }
 
-        public void Add(T entity)
+        public virtual void Add(T entity)
         {
             _repository.Add(entity);
             _unitOfWork.SaveChanges();
+            DomainEvents.DomainEvents.Dispatch(new EntityCreatedEvent<T>(entity));
         }
 
-        public void Update(T entity)
+        public virtual void Update(T entity)
         {
             _unitOfWork.SaveChanges();
+            DomainEvents.DomainEvents.Dispatch(new EntityUpdatedEvent<T>(entity));
         }
 
-        public IList<T> Get()
+        public virtual IList<T> Get()
         {
             return _repository.GetAll().ToList();
         }
 
-        public T GetById(Guid Id)
+        public virtual T GetById(Guid Id)
         {
             return _repository.GetAll().FirstOrDefault(x => x.Id == Id);
         }
 
-        public void Delete(T entity)
+        public virtual void Delete(T entity)
         {
             _repository.Delete(entity);
             _unitOfWork.SaveChanges();
+            DomainEvents.DomainEvents.Dispatch(new EntityDeletedEvent<T>(entity));
         }
     }
 }

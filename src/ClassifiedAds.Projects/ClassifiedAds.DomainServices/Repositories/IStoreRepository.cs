@@ -3,7 +3,7 @@ using System;
 
 namespace ClassifiedAds.DomainServices.Repositories
 {
-    public interface IStoreRepository : IRepository<Store>
+    public interface IStoreRepository : IRepository<Store, Guid>
     {
         Store GetStoreIncludeProducts(Guid Id);
     }

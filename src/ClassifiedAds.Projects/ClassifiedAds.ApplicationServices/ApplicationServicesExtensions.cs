@@ -2,6 +2,7 @@
 using ClassifiedAds.ApplicationServices.Commands;
 using ClassifiedAds.ApplicationServices.Decorators;
 using ClassifiedAds.ApplicationServices.Queries;
+using ClassifiedAds.DomainServices.DomainEvents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,13 @@ using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class ApplicationServicesServiceCollectionExtensions
+    public static class ApplicationServicesExtensions
     {
         public static IServiceCollection AddMessageHandlers(this IServiceCollection services)
         {
             services.AddScoped<Dispatcher>();
 
-            List<Type> handlerTypes = typeof(ICommand).Assembly.GetTypes()
+            List<Type> handlerTypes = Assembly.GetExecutingAssembly().GetTypes()
                 .Where(x => x.GetInterfaces().Any(y => IsHandlerInterface(y)))
                 .Where(x => x.Name.EndsWith("Handler"))
                 .ToList();
@@ -25,7 +26,28 @@ namespace Microsoft.Extensions.DependencyInjection
                 AddHandler(services, type);
             }
 
+            services.AddEventHandlers();
+
             return services;
+        }
+
+        public static IServiceCollection AddEventHandlers(this IServiceCollection services)
+        {
+            var types = Assembly.GetExecutingAssembly().GetTypes()
+                    .Where(x => x.GetInterfaces().Any(y => y.IsGenericType && y.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)))
+                    .ToList();
+
+            foreach (Type type in types)
+            {
+                services.AddTransient(type);
+            }
+
+            return services;
+        }
+
+        public static void RegisterDomainEventHandlers(this IServiceProvider serviceProvider)
+        {
+            DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), serviceProvider);
         }
 
         private static void AddHandler(IServiceCollection services, Type type)
@@ -90,11 +112,15 @@ namespace Microsoft.Extensions.DependencyInjection
             Type parameterType = parameterInfo.ParameterType;
 
             if (IsHandlerInterface(parameterType))
+            {
                 return current;
+            }
 
             object service = provider.GetService(parameterType);
             if (service != null)
+            {
                 return service;
+            }
 
             throw new ArgumentException($"Type {parameterType} not found");
         }
@@ -104,10 +130,14 @@ namespace Microsoft.Extensions.DependencyInjection
             Type type = attribute.GetType();
 
             if (type == typeof(DatabaseRetryAttribute))
+            {
                 return typeof(DatabaseRetryDecorator<>);
+            }
 
             if (type == typeof(AuditLogAttribute))
+            {
                 return typeof(AuditLogDecorator<>);
+            }
 
             throw new ArgumentException(attribute.ToString());
         }
@@ -115,7 +145,9 @@ namespace Microsoft.Extensions.DependencyInjection
         private static bool IsHandlerInterface(Type type)
         {
             if (!type.IsGenericType)
+            {
                 return false;
+            }
 
             Type typeDefinition = type.GetGenericTypeDefinition();
 

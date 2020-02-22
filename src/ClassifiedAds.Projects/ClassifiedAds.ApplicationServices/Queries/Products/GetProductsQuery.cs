@@ -1,9 +1,7 @@
 ﻿using ClassifiedAds.DomainServices.Entities;
-using ClassifiedAds.DomainServices;
-using System;
+using ClassifiedAds.DomainServices.Services;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ClassifiedAds.ApplicationServices.Queries.Products
 {
@@ -21,7 +19,7 @@ namespace ClassifiedAds.ApplicationServices.Queries.Products
         }
         public List<Product> Handle(GetProductsQuery query)
         {
-            return _productService.GetProducts().ToList();
+            return _productService.Get().ToList();
         }
     }
 }

@@ -1,10 +1,11 @@
-﻿
+﻿using ClassifiedAds.DomainServices.Entities;
 using System;
 using System.Collections.Generic;
 
 namespace ClassifiedAds.DomainServices.Services
 {
-    public interface IGenericService<T>
+    public interface ICrudService<T>
+        where T : AggregateRoot<Guid>
     {
         IList<T> Get();
 

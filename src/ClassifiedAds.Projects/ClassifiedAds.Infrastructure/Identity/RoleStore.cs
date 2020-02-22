@@ -1,5 +1,5 @@
 ﻿using ClassifiedAds.DomainServices.Entities;
-using ClassifiedAds.DomainServices;
+using ClassifiedAds.DomainServices.Repositories;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading;
@@ -9,9 +9,9 @@ namespace ClassifiedAds.Infrastructure.Identity
 {
     public class RoleStore : IRoleStore<Role>
     {
-        private readonly IRepository<Role> _roleRepository;
+        private readonly IRepository<Role, Guid> _roleRepository;
 
-        public RoleStore(IRepository<Role> roleRepository)
+        public RoleStore(IRepository<Role, Guid> roleRepository)
         {
             _roleRepository = roleRepository;
         }

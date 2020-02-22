@@ -1,15 +1,16 @@
-﻿using System;
+﻿using ClassifiedAds.CrossCuttingConcerns.Exceptions;
 using ClassifiedAds.DomainServices.Entities;
+using ClassifiedAds.DomainServices.Repositories;
+using System;
 using System.Linq;
-using ClassifiedAds.CrossCuttingConcerns.Exceptions;
 
 namespace ClassifiedAds.DomainServices
 {
     public class UserService : IUserService
     {
-        private IRepository<User> _userRepository;
+        private IRepository<User, Guid> _userRepository;
 
-        public UserService(IRepository<User> userRepository)
+        public UserService(IRepository<User, Guid> userRepository)
         {
             _userRepository = userRepository;
         }

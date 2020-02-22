@@ -2,9 +2,9 @@
 
 namespace ClassifiedAds.DomainServices.Entities
 {
-    public class Entity<TId> : IHasKey<TId>, ITrackable
+    public abstract class Entity<TKey> : IHasKey<TKey>, ITrackable
     {
-        public TId Id { get; set; }
+        public TKey Id { get; set; }
 
         [Timestamp]
         public byte[] RowVersion { get; set; }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ClassifiedAds.DomainServices.Entities
 {
-    public class Store : Entity<Guid>
+    public class Store : AggregateRoot<Guid>
     {
         public string Name { get; set; }
 

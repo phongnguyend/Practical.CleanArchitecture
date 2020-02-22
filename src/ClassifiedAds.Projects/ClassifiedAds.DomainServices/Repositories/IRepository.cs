@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ClassifiedAds.DomainServices.Entities;
 using System.Linq;
-using System.Text;
 
-namespace ClassifiedAds.DomainServices
+namespace ClassifiedAds.DomainServices.Repositories
 {
-    public interface IRepository<T> where T : class
+    public interface IRepository<TEntity, TKey>
+        where TEntity : AggregateRoot<TKey>
     {
-        IQueryable<T> GetAll();
+        IQueryable<TEntity> GetAll();
 
-        void Add(T entity);
+        void Add(TEntity entity);
 
-        void Delete(T entity);
+        void Delete(TEntity entity);
     }
 }

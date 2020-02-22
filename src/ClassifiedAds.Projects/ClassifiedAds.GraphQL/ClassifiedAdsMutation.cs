@@ -1,5 +1,5 @@
-﻿using ClassifiedAds.DomainServices;
-using ClassifiedAds.DomainServices.Entities;
+﻿using ClassifiedAds.DomainServices.Entities;
+using ClassifiedAds.DomainServices.Services;
 using ClassifiedAds.GraphQL.Types;
 using GraphQL.Types;
 using System;
@@ -20,7 +20,8 @@ namespace ClassifiedAds.GraphQL
                 resolve: context =>
                 {
                     var product = context.GetArgument<Product>("product");
-                    return productService.Create(product);
+                    productService.Add(product);
+                    return product;
                 });
 
             Field<BooleanGraphType>(

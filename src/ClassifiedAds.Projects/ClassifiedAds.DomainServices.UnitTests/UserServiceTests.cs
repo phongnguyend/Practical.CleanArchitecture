@@ -1,6 +1,6 @@
 using ClassifiedAds.CrossCuttingConcerns.Exceptions;
 using ClassifiedAds.DomainServices.Entities;
-using ClassifiedAds.DomainServices;
+using ClassifiedAds.DomainServices.Repositories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -12,12 +12,12 @@ namespace ClassifiedAds.DomainServices.UnitTests
     [TestClass]
     public class UserServiceTests
     {
-        private Mock<IRepository<User>> _userRepository;
+        private Mock<IRepository<User, Guid>> _userRepository;
         private UserService _userService;
 
         public UserServiceTests()
         {
-            _userRepository = new Mock<IRepository<User>>();
+            _userRepository = new Mock<IRepository<User, Guid>>();
             _userService = new UserService(_userRepository.Object);
         }
 

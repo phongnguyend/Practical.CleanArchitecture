@@ -1,6 +1,9 @@
+using ClassifiedAds.ApplicationServices.Events;
 using ClassifiedAds.DomainServices.Identity;
+using ClassifiedAds.DomainServices.Infrastructure.MessageBrokers;
 using ClassifiedAds.GraphQL.Types;
 using ClassifiedAds.Infrastructure.Identity;
+using ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ;
 using GraphQL.Server;
 using GraphQL.Types;
 using Microsoft.AspNetCore.Builder;
@@ -57,6 +60,16 @@ namespace ClassifiedAds.GraphQL
             })
             .AddUserContextBuilder(httpContext => new GraphQLUserContext { User = httpContext.User });
             services.AddScoped<ICurrentUser, CurrentWebUser>();
+
+            services.AddSingleton<IMessageSender<FileUploadedEvent>>(new RabbitMQSender<FileUploadedEvent>(new RabbitMQSenderOptions
+            {
+
+            }));
+
+            services.AddSingleton<IMessageSender<FileDeletedEvent>>(new RabbitMQSender<FileDeletedEvent>(new RabbitMQSenderOptions
+            {
+
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

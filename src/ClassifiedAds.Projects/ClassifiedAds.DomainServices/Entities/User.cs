@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClassifiedAds.DomainServices.Entities
 {
-    public class User : Entity<Guid>
+    public class User : AggregateRoot<Guid>
     {
         public string UserName { get; set; }
 

@@ -2,7 +2,7 @@
 
 namespace ClassifiedAds.DomainServices.Entities
 {
-    public class Role : Entity<Guid>
+    public class Role : AggregateRoot<Guid>
     {
         public virtual string Name { get; set; }
 

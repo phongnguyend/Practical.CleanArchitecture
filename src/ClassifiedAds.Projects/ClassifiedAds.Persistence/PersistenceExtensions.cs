@@ -1,5 +1,4 @@
-﻿using ClassifiedAds.DomainServices;
-using ClassifiedAds.DomainServices.Repositories;
+﻿using ClassifiedAds.DomainServices.Repositories;
 using ClassifiedAds.Persistence;
 using ClassifiedAds.Persistence.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -19,7 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 }
             }))
                     .AddScoped<IUnitOfWork, UnitOfWork>()
-                    .AddScoped(typeof(IRepository<>), typeof(Repository<>))
+                    .AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
                     .AddScoped(typeof(IStoreRepository), typeof(StoreRepository));
             return services;
         }

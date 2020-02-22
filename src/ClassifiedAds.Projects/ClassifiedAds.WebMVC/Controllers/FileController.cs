@@ -3,9 +3,7 @@ using System.IO;
 using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
-using ClassifiedAds.DomainServices.DomainEvents;
 using ClassifiedAds.DomainServices.Entities;
-using ClassifiedAds.DomainServices.Infrastructure.MessageBrokers;
 using ClassifiedAds.DomainServices.Infrastructure.Storages;
 using ClassifiedAds.DomainServices.Services;
 using ClassifiedAds.WebMVC.Models.File;
@@ -15,17 +13,13 @@ namespace ClassifiedAds.WebMVC.Controllers
 {
     public class FileController : Controller
     {
-        private readonly IGenericService<FileEntry> _fileEntryService;
+        private readonly ICrudService<FileEntry> _fileEntryService;
         private readonly IFileStorageManager _fileManager;
-        private readonly IMessageSender<FileUploadedEvent> _fileUploadedEventSender;
-        private readonly IMessageSender<FileDeletedEvent> _fileDeletedEventSender;
 
-        public FileController(IGenericService<FileEntry> fileEntryService, IFileStorageManager fileManager, IMessageSender<FileUploadedEvent> fileUploadedEventSender, IMessageSender<FileDeletedEvent> fileDeletedEventSender)
+        public FileController(ICrudService<FileEntry> fileEntryService, IFileStorageManager fileManager)
         {
             _fileEntryService = fileEntryService;
             _fileManager = fileManager;
-            _fileUploadedEventSender = fileUploadedEventSender;
-            _fileDeletedEventSender = fileDeletedEventSender;
         }
 
         public IActionResult Index()
@@ -61,11 +55,6 @@ namespace ClassifiedAds.WebMVC.Controllers
 
             _fileEntryService.Update(fileEntry);
 
-            _fileUploadedEventSender.Send(new FileUploadedEvent
-            {
-                FileEntry = fileEntry,
-            });
-
             return View();
         }
 
@@ -90,11 +79,6 @@ namespace ClassifiedAds.WebMVC.Controllers
 
             _fileEntryService.Delete(fileEntry);
             _fileManager.Delete(fileEntry);
-
-            _fileDeletedEventSender.Send(new FileDeletedEvent
-            {
-                FileEntry = fileEntry,
-            });
 
             return RedirectToAction(nameof(Index));
         }

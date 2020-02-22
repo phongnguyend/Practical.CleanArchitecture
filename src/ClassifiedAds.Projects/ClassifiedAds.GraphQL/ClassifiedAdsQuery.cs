@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.DomainServices;
+﻿using ClassifiedAds.DomainServices.Services;
 using ClassifiedAds.GraphQL.Types;
 using ClassifiedAds.GRPC;
 using GraphQL.Types;

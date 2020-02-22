@@ -4,7 +4,7 @@ using System;
 
 namespace ClassifiedAds.DomainServices.Services
 {
-    public class StoreService : GenericService<Store>, IStoreService
+    public class StoreService : CrudService<Store>, IStoreService
     {
         private readonly IStoreRepository _storeRepository;
 

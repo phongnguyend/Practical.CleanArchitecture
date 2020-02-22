@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.ApplicationServices;
 using ClassifiedAds.ApplicationServices.Queries.Products;
-using ClassifiedAds.DomainServices;
 using ClassifiedAds.DomainServices.Entities;
+using ClassifiedAds.DomainServices.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -55,7 +55,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public ActionResult<Product> Post([FromBody] Product model)
         {
-            _productService.Create(model);
+            _productService.Add(model);
             return Created($"/api/products/{model.Id}", model);
         }
 

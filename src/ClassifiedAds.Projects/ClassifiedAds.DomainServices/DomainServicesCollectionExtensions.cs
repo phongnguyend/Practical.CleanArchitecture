@@ -7,7 +7,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddDomainServices(this IServiceCollection services)
         {
-            services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>))
+            services.AddScoped(typeof(ICrudService<>), typeof(CrudService<>))
                     .AddScoped<IUserService, UserService>()
                     .AddScoped<IProductService, ProductService>()
                     .AddScoped<IStoreService, StoreService>();

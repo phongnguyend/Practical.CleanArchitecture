@@ -1,8 +1,8 @@
-using System.Linq;
-using System.Threading.Tasks;
-using ClassifiedAds.DomainServices;
+using ClassifiedAds.DomainServices.Services;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.GRPC
 {
@@ -19,7 +19,7 @@ namespace ClassifiedAds.GRPC
 
         public override Task<GetProductsResponse> GetProducts(GetProductsRequest request, ServerCallContext context)
         {
-            var products = _productService.GetProducts().Select(x => new ProductMessage
+            var products = _productService.Get().Select(x => new ProductMessage
             {
                 Id = x.Id.ToString(),
                 Code = x.Code,

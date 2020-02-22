@@ -2,7 +2,7 @@
 
 namespace ClassifiedAds.DomainServices.Entities
 {
-    public class SmsMessage : Entity<Guid>
+    public class SmsMessage : AggregateRoot<Guid>
     {
         public string Message { get; set; }
 

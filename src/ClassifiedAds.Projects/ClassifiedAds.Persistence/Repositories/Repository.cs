@@ -1,11 +1,12 @@
-﻿using System.Linq;
-using ClassifiedAds.DomainServices;
+﻿using ClassifiedAds.DomainServices.Entities;
+using ClassifiedAds.DomainServices.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace ClassifiedAds.Persistence.Repositories
 {
-    public class Repository<T> : IRepository<T>
-        where T : class
+    public class Repository<T, TKey> : IRepository<T, TKey>
+        where T : AggregateRoot<TKey>
     {
         private readonly AdsDbContext _dbContext;
         protected DbSet<T> DbSet => _dbContext.Set<T>();
