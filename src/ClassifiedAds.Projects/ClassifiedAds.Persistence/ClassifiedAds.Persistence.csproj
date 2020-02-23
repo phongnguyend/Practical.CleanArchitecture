@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ClassifiedAds.DomainServices\ClassifiedAds.DomainServices.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.Domain\ClassifiedAds.Domain.csproj" />
   </ItemGroup>
 
 </Project>

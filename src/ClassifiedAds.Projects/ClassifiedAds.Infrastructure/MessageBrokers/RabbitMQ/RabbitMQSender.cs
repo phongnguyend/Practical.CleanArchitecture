@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.DomainServices.Infrastructure.MessageBrokers;
+﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System.Text;

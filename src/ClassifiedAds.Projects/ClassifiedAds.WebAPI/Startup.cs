@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using ClassifiedAds.DomainServices.Identity;
+using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
 using IdentityServer4.AccessTokenValidation;

@@ -1,5 +1,5 @@
-﻿using ClassifiedAds.DomainServices.Entities;
-using ClassifiedAds.DomainServices.Services;
+﻿using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Domain.Services;
 using ClassifiedAds.GraphQL.Types;
 using GraphQL.Types;
 using System;

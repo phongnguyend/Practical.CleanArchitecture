@@ -1,5 +1,5 @@
-﻿using ClassifiedAds.DomainServices.Entities;
-using ClassifiedAds.DomainServices.Infrastructure.Storages;
+﻿using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Domain.Infrastructure.Storages;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;

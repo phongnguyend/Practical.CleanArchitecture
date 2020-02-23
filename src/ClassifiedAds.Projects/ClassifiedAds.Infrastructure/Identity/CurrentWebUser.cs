@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.DomainServices.Identity;
+﻿using ClassifiedAds.Domain.Identity;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Security.Claims;

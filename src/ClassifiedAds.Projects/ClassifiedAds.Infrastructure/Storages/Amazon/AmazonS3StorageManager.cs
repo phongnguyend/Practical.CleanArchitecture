@@ -2,8 +2,8 @@
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
-using ClassifiedAds.DomainServices.Entities;
-using ClassifiedAds.DomainServices.Infrastructure.Storages;
+using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Domain.Infrastructure.Storages;
 using System.IO;
 
 namespace ClassifiedAds.Infrastructure.Storages.Amazon

@@ -1,9 +1,9 @@
 ﻿using Amazon;
 using Amazon.S3;
-using ClassifiedAds.ApplicationServices.Events;
-using ClassifiedAds.DomainServices.Identity;
-using ClassifiedAds.DomainServices.Infrastructure.MessageBrokers;
-using ClassifiedAds.DomainServices.Infrastructure.Storages;
+using ClassifiedAds.Application.Events;
+using ClassifiedAds.Domain.Identity;
+using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+using ClassifiedAds.Domain.Infrastructure.Storages;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;

@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.DomainServices.Services;
+﻿using ClassifiedAds.Domain.Services;
 using ClassifiedAds.GraphQL.Types;
 using ClassifiedAds.GRPC;
 using GraphQL.Types;
@@ -23,11 +23,11 @@ namespace ClassifiedAds.GraphQL
                     var client = GetGrpcClient(configuration);
                     var productsResponse = client.GetProducts(new GetProductsRequest());
 
-                    var products = new List<DomainServices.Entities.Product>();
+                    var products = new List<Domain.Entities.Product>();
 
                     foreach (var productMessage in productsResponse.Products)
                     {
-                        products.Add(new DomainServices.Entities.Product
+                        products.Add(new Domain.Entities.Product
                         {
                             Id = Guid.Parse(productMessage.Id),
                             Code = productMessage.Code,

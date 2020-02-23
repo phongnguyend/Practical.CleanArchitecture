@@ -1,5 +1,5 @@
-﻿using ClassifiedAds.DomainServices.Entities;
-using ClassifiedAds.DomainServices.Infrastructure.Storages;
+﻿using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Domain.Infrastructure.Storages;
 using System.IO;
 
 namespace ClassifiedAds.Infrastructure.Storages.Local

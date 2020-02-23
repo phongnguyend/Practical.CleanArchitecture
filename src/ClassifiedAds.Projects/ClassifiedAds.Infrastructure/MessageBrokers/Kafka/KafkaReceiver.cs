@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.DomainServices.Infrastructure.MessageBrokers;
+﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using Confluent.Kafka;
 using Newtonsoft.Json;
 using System;

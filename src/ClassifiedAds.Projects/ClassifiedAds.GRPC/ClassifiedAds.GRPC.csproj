@@ -13,8 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ClassifiedAds.ApplicationServices\ClassifiedAds.ApplicationServices.csproj" />
-    <ProjectReference Include="..\ClassifiedAds.DomainServices\ClassifiedAds.DomainServices.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.Application\ClassifiedAds.Application.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Infrastructure\ClassifiedAds.Infrastructure.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Persistence\ClassifiedAds.Persistence.csproj" />
   </ItemGroup>

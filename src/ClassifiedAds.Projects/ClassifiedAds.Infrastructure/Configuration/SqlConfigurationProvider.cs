@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.DomainServices.Entities;
+﻿using ClassifiedAds.Domain.Entities;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;

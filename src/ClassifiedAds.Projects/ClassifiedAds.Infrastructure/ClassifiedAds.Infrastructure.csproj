@@ -25,11 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ClassifiedAds.DomainServices\ClassifiedAds.DomainServices.csproj" />
+    <Folder Include="HealthChecks\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="HealthChecks\" />
+    <ProjectReference Include="..\ClassifiedAds.Domain\ClassifiedAds.Domain.csproj" />
   </ItemGroup>
 
 </Project>

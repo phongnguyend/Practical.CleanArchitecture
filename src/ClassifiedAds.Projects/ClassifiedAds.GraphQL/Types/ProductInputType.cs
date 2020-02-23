@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.DomainServices.Entities;
+﻿using ClassifiedAds.Domain.Entities;
 using GraphQL.Types;
 
 namespace ClassifiedAds.GraphQL.Types

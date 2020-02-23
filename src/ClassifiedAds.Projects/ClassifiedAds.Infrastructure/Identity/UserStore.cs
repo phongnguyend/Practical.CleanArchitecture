@@ -1,5 +1,5 @@
-﻿using ClassifiedAds.DomainServices.Entities;
-using ClassifiedAds.DomainServices.Repositories;
+﻿using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;

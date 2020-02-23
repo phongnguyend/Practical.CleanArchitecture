@@ -1,7 +1,7 @@
-﻿using ClassifiedAds.ApplicationServices;
-using ClassifiedAds.ApplicationServices.Queries.Products;
-using ClassifiedAds.DomainServices.Entities;
-using ClassifiedAds.DomainServices.Services;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.Application.Queries.Products;
+using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

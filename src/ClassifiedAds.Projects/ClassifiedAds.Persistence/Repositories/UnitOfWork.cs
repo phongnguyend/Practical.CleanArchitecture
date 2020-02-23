@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.DomainServices.Repositories;
+﻿using ClassifiedAds.Domain.Repositories;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
 using System.Data;

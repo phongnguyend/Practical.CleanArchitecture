@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.DomainServices.Entities;
+﻿using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using System;

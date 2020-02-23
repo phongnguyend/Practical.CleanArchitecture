@@ -1,4 +1,4 @@
-using ClassifiedAds.DomainServices.Services;
+using ClassifiedAds.Domain.Services;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using System.Linq;

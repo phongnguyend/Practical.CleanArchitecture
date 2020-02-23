@@ -1,5 +1,5 @@
-﻿using ClassifiedAds.DomainServices.Entities;
-using ClassifiedAds.DomainServices.Services;
+﻿using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Domain.Services;
 using ClassifiedAds.IdentityServer.Manage.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

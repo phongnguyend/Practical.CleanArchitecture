@@ -1,6 +1,6 @@
-﻿using ClassifiedAds.DomainServices;
-using ClassifiedAds.DomainServices.Entities;
-using ClassifiedAds.DomainServices.Services;
+﻿using ClassifiedAds.Domain;
+using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Domain.Services;
 using ClassifiedAds.WebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -42,7 +42,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             var store = new Store
             {
                 Name = model.Name,
-                Location = new DomainServices.ValueObjects.Address(model.Location.Street, model.Location.City, model.Location.ZipCode),
+                Location = new Domain.ValueObjects.Address(model.Location.Street, model.Location.City, model.Location.ZipCode),
                 OpenedTime = model.OpenedTime,
                 ClosedTime = model.ClosedTime,
             };

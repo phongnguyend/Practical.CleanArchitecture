@@ -52,7 +52,7 @@
   | Project  | Configuration File | Configuration Key |
   | -------- | ------------------ | ----------------- |
   | ClassifiedAds.Migrator | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.Migrator/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.BackgroundServices | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.BackgroundServices/appsettings.json) | ConnectionStrings:ClassifiedAds |
+  | ClassifiedAds.BackgroundServer | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.BackgroundServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
   | ClassifiedAds.GRPC | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.GRPC/appsettings.json) | ConnectionStrings:ClassifiedAds |
   | ClassifiedAds.IdentityServer | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.IdentityServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
   | ClassifiedAds.NotificationServer | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.NotificationServer/appsettings.json) | |
@@ -233,7 +233,7 @@
   | Project  | File |
   | -------- | ---- |
   | ClassifiedAds.Migrator | [docker-entrypoint.sh](/src/ClassifiedAds.Projects/ClassifiedAds.Migrator/docker-entrypoint.sh) |
-  | ClassifiedAds.BackgroundServices | [docker-entrypoint.sh](/src/ClassifiedAds.Projects/ClassifiedAds.BackgroundServices/docker-entrypoint.sh) |
+  | ClassifiedAds.BackgroundServer | [docker-entrypoint.sh](/src/ClassifiedAds.Projects/ClassifiedAds.BackgroundServer/docker-entrypoint.sh) |
   | ClassifiedAds.WebMVC | [docker-entrypoint.sh](/src/ClassifiedAds.Projects/ClassifiedAds.WebMVC/docker-entrypoint.sh) |
   
   Otherwise you might encounter:
@@ -265,8 +265,8 @@
 ## Application URLs:
 | Project  | Launch URL | Docker Container URL| Docker Container URL|
 | -------- | ---------- | ------------------- | ------------------- |
-| BackgroundServices | https://localhost:44318 | http://localhost:9004 | http://host.docker.internal:9004 |
-| BlazorServerSide | https://localhost:44331 | http://localhost:9008 | http://host.docker.internal:9008 |
+| BackgroundServer | https://localhost:44318 | http://localhost:9004 | http://host.docker.internal:9004 |
+| Blazor | https://localhost:44331 | http://localhost:9008 | http://host.docker.internal:9008 |
 | GRPC | https://localhost:5001 | https://localhost:9005 | https://host.docker.internal:9005 |
 | IdentityServer | https://localhost:44367 | http://localhost:9000 | http://host.docker.internal:9000 |
 | NotificationServer | https://localhost:44390 | http://localhost:9001 | http://host.docker.internal:9001 |

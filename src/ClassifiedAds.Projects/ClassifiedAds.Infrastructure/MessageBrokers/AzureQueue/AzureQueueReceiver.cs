@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.DomainServices.Infrastructure.MessageBrokers;
+﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using Microsoft.Azure.Storage;
 using Microsoft.Azure.Storage.Queue;
 using Newtonsoft.Json;

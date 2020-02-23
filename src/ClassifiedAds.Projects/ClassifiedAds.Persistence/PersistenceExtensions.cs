@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.DomainServices.Repositories;
+﻿using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Persistence;
 using ClassifiedAds.Persistence.Repositories;
 using Microsoft.AspNetCore.Builder;

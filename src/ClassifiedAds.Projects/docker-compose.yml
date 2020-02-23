@@ -112,7 +112,7 @@ services:
           ResourceServer__PublicEndpoint: "http://host.docker.internal:9002"
           NotificationServer__Endpoint: "http://notificationserver"
           NotificationServer__PublicEndpoint: "http://localhost:9001"
-          BackgroundServer__Endpoint: "http://backgroundservices"
+          BackgroundServer__Endpoint: "http://backgroundserver"
           CurrentUrl: "http://host.docker.internal:9003"
           Storage__Provider: "Local"
           Storage__Local__Path: "/files"
@@ -141,14 +141,14 @@ services:
           MessageBroker__AzureServiceBus__ConnectionString: "Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=xxx;SharedAccessKey=xxx"
           MessageBroker__AzureServiceBus__QueueName_FileUploaded: "classifiedadds_fileuploaded"
           MessageBroker__AzureServiceBus__QueueName_FileDeleted: "classifiedadds_filedeleted"
-    blazorserverside:
+    blazor:
         build:
           context: .
-          dockerfile: ./ClassifiedAds.BlazorServerSide/Dockerfile
+          dockerfile: ./ClassifiedAds.Blazor/Dockerfile
         ports:
             - "9008:80"
         volumes:
-            - D:\\ClassifiedAds.Projects\\Logs\\BlazorServerSide:/ClassifiedAds.Projects/logs
+            - D:\\ClassifiedAds.Projects\\Logs\\Blazor:/ClassifiedAds.Projects/logs
         depends_on:
           - identityserver
           - webapi
@@ -158,14 +158,14 @@ services:
           OpenIdConnect__RequireHttpsMetadata: "false"
           ResourceServer__Endpoint: "http://webapi"
           ResourceServer__PublicEndpoint: "http://host.docker.internal:9002"
-    backgroundservices:
+    backgroundserver:
         build:
           context: .
-          dockerfile: ./ClassifiedAds.BackgroundServices/Dockerfile
+          dockerfile: ./ClassifiedAds.BackgroundServer/Dockerfile
         ports:
             - "9004:80"
         volumes:
-            - D:\\ClassifiedAds.Projects\\Logs\\BackgroundServices:/ClassifiedAds.Projects/logs
+            - D:\\ClassifiedAds.Projects\\Logs\\BackgroundServer:/ClassifiedAds.Projects/logs
         depends_on:
           - db
           - migrator

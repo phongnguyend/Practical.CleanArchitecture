@@ -1,6 +1,6 @@
-﻿using ClassifiedAds.ApplicationServices.Events;
-using ClassifiedAds.DomainServices.Identity;
-using ClassifiedAds.DomainServices.Infrastructure.MessageBrokers;
+﻿using ClassifiedAds.Application.Events;
+using ClassifiedAds.Domain.Identity;
+using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ;
 using Microsoft.AspNetCore.Builder;
