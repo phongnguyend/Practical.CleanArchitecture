@@ -1,29 +1,36 @@
 ﻿@model RegisterModel
 
-<div class="row">
-    <div class="col-xs-8 col-xs-offset-2">
-        <h1 class="text-center">Register</h1>
-        <form asp-action="Register" method="post" class="form-horizontal">
-            <div class="form-group">
-                <label asp-for="UserName" class="col-sm-2"></label>
-                <div class="col-sm-10">
-                    <input asp-for="UserName" class="form-control" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="col-sm-2"></label>
-                <div class="col-sm-10">
-                    <input asp-for="Password" class="form-control" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="ConfirmPassword" class="col-sm-2"></label>
-                <div class="col-sm-10">
-                    <input asp-for="ConfirmPassword" class="form-control" />
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <div asp-validation-summary="All"></div>
-        </form>
+<h2>Register</h2>
+
+@await Html.PartialAsync("_ValidationSummary")
+
+<form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+    <h4>Create a new account.</h4>
+    <hr />
+    <div class="form-group">
+        <label asp-for="UserName" class="col-md-2 control-label">User Name</label>
+        <div class="col-md-10">
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
     </div>
-</div>
+    <div class="form-group">
+        <label asp-for="Password" class="col-md-2 control-label">Password</label>
+        <div class="col-md-10">
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="ConfirmPassword" class="col-md-2 control-label">Confirm Password</label>
+        <div class="col-md-10">
+            <input asp-for="ConfirmPassword" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+</form>

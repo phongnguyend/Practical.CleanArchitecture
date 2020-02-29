@@ -269,7 +269,7 @@ namespace IdentityServer4.Quickstart.UI
                 .Select(x => new ExternalProvider
                 {
                     DisplayName = x.DisplayName,
-                    AuthenticationScheme = x.Name
+                    AuthenticationScheme = x.Name,
                 }).ToList();
 
             var allowLocal = true;
@@ -293,7 +293,7 @@ namespace IdentityServer4.Quickstart.UI
                 EnableLocalLogin = allowLocal && AccountOptions.AllowLocalLogin,
                 ReturnUrl = returnUrl,
                 Username = context?.LoginHint,
-                ExternalProviders = providers.ToArray()
+                ExternalProviders = providers.ToArray(),
             };
         }
 
@@ -340,7 +340,7 @@ namespace IdentityServer4.Quickstart.UI
                 PostLogoutRedirectUri = logout?.PostLogoutRedirectUri,
                 ClientName = string.IsNullOrEmpty(logout?.ClientName) ? logout?.ClientId : logout?.ClientName,
                 SignOutIframeUrl = logout?.SignOutIFrameUrl,
-                LogoutId = logoutId
+                LogoutId = logoutId,
             };
 
             if (User?.Identity.IsAuthenticated == true)
@@ -377,40 +377,49 @@ namespace IdentityServer4.Quickstart.UI
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var user = await _userManager.FindByNameAsync(model.UserName);
+                return View();
+            }
 
-                if (user == null)
-                {
-                    user = new User
-                    {
-                        UserName = model.UserName,
-                        Email = model.UserName
-                    };
+            var user = await _userManager.FindByNameAsync(model.UserName);
 
-                    var result = await _userManager.CreateAsync(user, model.Password);
-
-                    if (result.Succeeded)
-                    {
-                        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                        var confirmationEmail = Url.Action("ConfirmEmailAddress", "Account",
-                            new { token = token, email = user.Email }, Request.Scheme);
-
-                        _emailMessageService.Add(new EmailMessage
-                        {
-                            From = "",
-                            To = user.Email,
-                            Subject = "Confirmation Email",
-                            Body = string.Format("Confirmation Email: {0}", confirmationEmail)
-                        });
-                    }
-                }
-
+            if (user != null)
+            {
                 return View("Success");
             }
 
-            return View();
+            user = new User
+            {
+                UserName = model.UserName,
+                Email = model.UserName,
+            };
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+
+                return View();
+            }
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationEmail = Url.Action("ConfirmEmailAddress", "Account",
+                new { token = token, email = user.Email }, Request.Scheme);
+
+            _emailMessageService.Add(new EmailMessage
+            {
+                From = string.Empty,
+                To = user.Email,
+                Subject = "Confirmation Email",
+                Body = string.Format("Confirmation Email: {0}", confirmationEmail),
+            });
+
+            return View("Success");
         }
 
         [HttpGet]
@@ -418,14 +427,16 @@ namespace IdentityServer4.Quickstart.UI
         {
             var user = await _userManager.FindByEmailAsync(email);
 
-            if (user != null)
+            if (user == null)
             {
-                var result = await _userManager.ConfirmEmailAsync(user, token);
+                return View("Error");
+            }
 
-                if (result.Succeeded)
-                {
-                    return View("Success");
-                }
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+
+            if (result.Succeeded)
+            {
+                return View("Success");
             }
 
             return View("Error");
@@ -452,10 +463,10 @@ namespace IdentityServer4.Quickstart.UI
 
                     _emailMessageService.Add(new EmailMessage
                     {
-                        From = "",
+                        From = string.Empty,
                         To = user.Email,
                         Subject = "Forgot Password",
-                        Body = string.Format("Reset Url: {0}", resetUrl)
+                        Body = string.Format("Reset Url: {0}", resetUrl),
                     });
                 }
                 else
@@ -465,6 +476,7 @@ namespace IdentityServer4.Quickstart.UI
 
                 return View("Success");
             }
+
             return View();
         }
 
@@ -489,14 +501,18 @@ namespace IdentityServer4.Quickstart.UI
                     {
                         foreach (var error in result.Errors)
                         {
-                            ModelState.AddModelError("", error.Description);
+                            ModelState.AddModelError(string.Empty, error.Description);
                         }
+
                         return View();
                     }
+
                     return View("Success");
                 }
-                ModelState.AddModelError("", "Invalid Request");
+
+                ModelState.AddModelError(string.Empty, "Invalid Request");
             }
+
             return View();
         }
     }

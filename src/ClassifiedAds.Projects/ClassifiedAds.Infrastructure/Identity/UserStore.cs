@@ -21,14 +21,12 @@ namespace ClassifiedAds.Infrastructure.Identity
                              IUserTwoFactorRecoveryCodeStore<User>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<User, Guid> _userRepository;
-        private readonly IRepository<UserToken, Guid> _userTokenRepository;
+        private readonly IUserRepository _userRepository;
 
-        public UserStore(IUnitOfWork unitOfWork, IRepository<User, Guid> userRepository, IRepository<UserToken, Guid> userTokenRepository)
+        public UserStore(IUnitOfWork unitOfWork, IUserRepository userRepository)
         {
             _unitOfWork = unitOfWork;
             _userRepository = userRepository;
-            _userTokenRepository = userTokenRepository;
         }
 
         public void Dispose()
@@ -51,17 +49,17 @@ namespace ClassifiedAds.Infrastructure.Identity
 
         public Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_userRepository.GetAll().FirstOrDefault(x => x.NormalizedEmail == normalizedEmail));
+            return Task.FromResult(_userRepository.GetAllIncludeTokens().FirstOrDefault(x => x.NormalizedEmail == normalizedEmail));
         }
 
         public Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_userRepository.GetAll().FirstOrDefault(x => x.Id == Guid.Parse(userId)));
+            return Task.FromResult(_userRepository.GetAllIncludeTokens().FirstOrDefault(x => x.Id == Guid.Parse(userId)));
         }
 
         public Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_userRepository.GetAll().FirstOrDefault(x => x.NormalizedUserName == normalizedUserName));
+            return Task.FromResult(_userRepository.GetAllIncludeTokens().FirstOrDefault(x => x.NormalizedUserName == normalizedUserName));
         }
 
         public Task<int> GetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
@@ -235,33 +233,27 @@ namespace ClassifiedAds.Infrastructure.Identity
 
         public Task<string> GetTokenAsync(User user, string loginProvider, string name, CancellationToken cancellationToken)
         {
-            var tokenEntity =
-                _userTokenRepository.GetAll().SingleOrDefault(
-                    l =>
-                        l.TokenName == name && l.LoginProvider == loginProvider &&
-                        l.UserId == user.Id);
+            var tokenEntity = user.Tokens.SingleOrDefault(
+                    l => l.TokenName == name && l.LoginProvider == loginProvider);
             return Task.FromResult(tokenEntity?.TokenValue);
         }
 
         public Task SetTokenAsync(User user, string loginProvider, string name, string value, CancellationToken cancellationToken)
         {
-            var tokenEntity =
-                _userTokenRepository.GetAll().SingleOrDefault(
-                    l =>
-                        l.TokenName == name && l.LoginProvider == loginProvider &&
-                        l.UserId == user.Id);
+            var tokenEntity = user.Tokens.SingleOrDefault(
+                    l => l.TokenName == name && l.LoginProvider == loginProvider);
             if (tokenEntity != null)
             {
                 tokenEntity.TokenValue = value;
             }
             else
             {
-                _userTokenRepository.Add(new UserToken
+                user.Tokens.Add(new UserToken
                 {
                     UserId = user.Id,
                     LoginProvider = loginProvider,
                     TokenName = name,
-                    TokenValue = value
+                    TokenValue = value,
                 });
             }
 
@@ -272,14 +264,12 @@ namespace ClassifiedAds.Infrastructure.Identity
 
         public Task RemoveTokenAsync(User user, string loginProvider, string name, CancellationToken cancellationToken)
         {
-            var tokenEntity =
-                _userTokenRepository.GetAll().SingleOrDefault(
-                    l =>
-                        l.TokenName == name && l.LoginProvider == loginProvider &&
-                        l.UserId == user.Id);
+            var tokenEntity = user.Tokens.SingleOrDefault(
+                    l => l.TokenName == name && l.LoginProvider == loginProvider);
             if (tokenEntity != null)
             {
-                _userTokenRepository.Delete(tokenEntity);
+                user.Tokens.Remove(tokenEntity);
+                _unitOfWork.SaveChanges();
             }
             return Task.FromResult(0);
         }

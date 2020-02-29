@@ -1,14 +1,18 @@
 ﻿@model ScopeViewModel
 
 <li class="list-group-item">
-    <label>
-        <input class="consent-scopecheck"
-               type="checkbox"
-               name="ScopesConsented"
-               id="scopes_@Model.Name"
-               value="@Model.Name"
-               checked="@Model.Checked"
-               disabled="@Model.Required" />
+    <div class="toggle-button__input">
+        <toggle-button>
+            <input class="consent-scopecheck"
+                   type="checkbox"
+                   name="ScopesConsented"
+                   id="scopes_@Model.Name"
+                   value="@Model.Name"
+                   checked="@Model.Checked"
+                   disabled="@Model.Required" />
+        </toggle-button>
+    </div>
+    <div class="toggle-button__text">
         @if (Model.Required)
         {
             <input type="hidden"
@@ -18,12 +22,14 @@
         <strong>@Model.DisplayName</strong>
         @if (Model.Emphasize)
         {
-            <span class="glyphicon glyphicon-exclamation-sign"></span>
+            <i class="fa fa-exclamation-circle"></i>
         }
-    </label>
+    </div>
     @if (Model.Required)
     {
-        <span><em>(required)</em></span>
+        <div class="toggle-button__text">
+            <span><em>(required)</em></span>
+        </div>
     }
     @if (Model.Description != null)
     {

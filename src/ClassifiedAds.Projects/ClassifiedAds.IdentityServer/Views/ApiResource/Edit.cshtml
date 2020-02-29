@@ -1,0 +1,148 @@
+﻿@using ClassifiedAds.IdentityServer.Models.ApiResourceModels;
+@model ApiResourceModel
+
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="ApiResource" asp-action="Index">Api Resources</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="col-12">
+        <h2>Api Resources</h2>
+    </div>
+</div>
+
+<form asp-action="Edit" method="post" id="api-resource-form">
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <!--Hidden -->
+    <input type="hidden" asp-for="Id" />
+
+    <div class="card mt-3">
+        <h5 class="card-header">Api Resources</h5>
+        <div class="card-body">
+
+            <!--Input - text -->
+            <div class="form-group row">
+                <label asp-for="Name" class="col-sm-3 col-form-label">
+                    @await Html.PartialAsync("_Label", "Name")
+                </label>
+                <div class="col-sm-9">
+                    <input type="text" required class="form-control" asp-for="Name">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!--Input - text -->
+            <div class="form-group row">
+                <label asp-for="DisplayName" class="col-sm-3 col-form-label">
+                    @await Html.PartialAsync("_Label", "Display Name")
+                </label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" asp-for="DisplayName">
+                </div>
+            </div>
+
+            <!--Input - text -->
+            <div class="form-group row">
+                <label asp-for="Description" class="col-sm-3 col-form-label">
+                    @await Html.PartialAsync("_Label", "Description")
+                </label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" asp-for="Description">
+                </div>
+            </div>
+
+            <!--Checkbox-->
+            <div class="form-group row">
+                <label asp-for="Enabled" class="col-sm-3 col-form-label">
+                    @await Html.PartialAsync("_Label", "Enabled")
+                </label>
+                <div class="col-sm-9">
+                    <toggle-button>
+                        <input asp-for="Enabled" type="checkbox">
+                    </toggle-button>
+                </div>
+            </div>
+
+            @if (Model.Id != 0)
+            {
+                <!--Button-->
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">
+                        @await Html.PartialAsync("_Label", "Scopes")
+                    </label>
+                    <div class="col-sm-9">
+                        <a asp-action="Scopes" asp-route-id="@Model.Id" class="btn btn-primary">Manage Scopes</a>
+                    </div>
+                </div>
+                <!--Button-->
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">
+                        @await Html.PartialAsync("_Label", "Secrets")
+                    </label>
+                    <div class="col-sm-9">
+                        <a asp-action="Secrets" asp-route-id="@Model.Id" class="btn btn-primary">Manage Secrets</a>
+                    </div>
+                </div>
+                <!--Button-->
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">
+                        @await Html.PartialAsync("_Label", "Properties")
+                    </label>
+                    <div class="col-sm-9">
+                        <a asp-action="Properties" asp-route-id="@Model.Id" class="btn btn-primary">Manage Properties</a>
+                    </div>
+                </div>
+            }
+
+            <!--Select with tags-->
+            <div class="form-group row">
+                <label asp-for="UserClaims" class="col-sm-3 col-form-label">
+                    @await Html.PartialAsync("_Label", "User Claims")
+                </label>
+                <div class="col-sm-9">
+                    <picker id="UserClaimsItems" multiple-select="true" min-search-text="2"
+                            selected-items="@Model.UserClaims?.Select(x=>x.Type)?.ToList()" url="@Url.Action("GetClaims","IdentityResource")?claim"
+                            search-input-placeholder="enter"
+                            selected-items-title="selected items"
+                            search-result-title="search result"
+                            suggested-items-title="suggested items"
+                            no-item-selected-title="no item selected"
+                            show-all-items-title="show all items"
+                            item-already-selected-title="item already selected">
+                    </picker>
+                </div>
+            </div>
+
+            <!--Button-->
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">
+                </label>
+                <div class="col-sm-9">
+                    <button type="submit" id="api-resource-save-button" class="btn btn-primary">Save</button>
+                    @if (Model.Id != 0)
+                    {
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+@section scripts
+	{
+    <script>
+        $(function () {
+            //Disable enter for this form
+            FormMvc.disableEnter($('#api-resource-form'));
+        });
+    </script>
+}

@@ -19,6 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
             }))
                     .AddScoped<IUnitOfWork, UnitOfWork>()
                     .AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
+                    .AddScoped(typeof(IUserRepository), typeof(UserRepository))
                     .AddScoped(typeof(IStoreRepository), typeof(StoreRepository));
             return services;
         }

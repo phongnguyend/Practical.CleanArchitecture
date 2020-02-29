@@ -1,0 +1,88 @@
+﻿@using ClassifiedAds.IdentityServer.Models.UserModels
+@model RolesModel
+
+<form asp-controller="User" asp-action="Roles" Method="post">
+    <div class="row">
+
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="User" asp-action="Index">Users</a></li>
+                    <li class="breadcrumb-item"><a asp-controller="User" asp-action="Profile" asp-route-id="@Model.User.Id">@Model.User.UserName</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Roles</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="col-md-12">
+            <h3>Roles</h3>
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <!--Hidden -->
+            <input type="hidden" asp-for="User.Id" />
+
+            <div class="card mt-3">
+                <h5 class="card-header">Roles</h5>
+                <div class="card-body">
+
+                    <!--Select-->
+                    <div class="form-group row">
+                        <label asp-for="Role.RoleId" class="col-sm-3 col-form-label">
+                            @await Html.PartialAsync("_Label", "Roles")
+                        </label>
+                        <div class="col-sm-9">
+                            <select asp-for="Role.RoleId" asp-items="@(new SelectList(Model.Roles, "Id", "Name"))" class="form-control single-select"></select>
+                        </div>
+                    </div>
+
+                    <!--Button-->
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">
+                        </label>
+                        <div class="col-sm-9">
+                            <button type="submit" class="btn btn-primary">Add Role</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mt-3">
+            <h5 class="card-header">Roles</h5>
+            <div class="card-body">
+
+                <div class="row table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var role in Model.UserRoles)
+                            {
+                                <tr>
+                                    <td>@role.Role.Name</td>
+                                    <td><a asp-action="DeleteRole" asp-route-roleId="@role.RoleId" asp-route-id="@Model.User.Id" class="btn btn-danger">Remove</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        @*@await Html.PartialAsync("Common/Pager", new Pager { Action = "UserRoles", PageSize = Model.PageSize, TotalCount = Model.TotalCount })*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
