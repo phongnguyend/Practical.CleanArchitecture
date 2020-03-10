@@ -1,0 +1,90 @@
+<div class="card">
+  <div class="card-header">
+    {{ pageTitle }}
+    <a
+      class="btn btn-primary"
+      style="float: right;"
+      routerLinkActive="active"
+      [routerLink]="['/products/add']"
+    >
+      Add Product
+    </a>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-2">Filter by:</div>
+      <div class="col-md-4">
+        <input type="text" [(ngModel)]="listFilter" />
+      </div>
+    </div>
+    <div class="row" *ngIf="listFilter">
+      <div class="col-md-6">
+        <h4>Filtered by: {{ listFilter }}</h4>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table" *ngIf="products && products.length">
+        <thead>
+          <tr>
+            <th>
+              <button class="btn btn-primary" (click)="toggleImage()">
+                {{ showImage ? "Hide" : "Show" }} Image
+              </button>
+            </th>
+            <th>Product</th>
+            <th>Code</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>5 Star Rating</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of filteredProducts">
+            <td>
+              <img
+                *ngIf="showImage"
+                [src]="product.imageUrl || '/assets/images/logo.png'"
+                [title]="product.name"
+                [style.width.px]="imageWidth"
+                [style.margin.px]="imageMargin"
+              />
+            </td>
+            <td>
+              <a [routerLink]="['/products', product.id]">
+                {{ product.name }}
+              </a>
+            </td>
+            <td>{{ product.code | uppercase }}</td>
+            <td>{{ product.description }}</td>
+            <td>{{ product.price || 5 | currency: "USD":"symbol" }}</td>
+            <td>
+              <pm-star
+                [rating]="product.starRating || 4"
+                (ratingClicked)="onRatingClicked($event)"
+              >
+              </pm-star>
+            </td>
+            <td>
+              <a
+                class="btn btn-primary"
+                routerLinkActive="active"
+                [routerLink]="['/products/edit', product.id]"
+              >
+                Edit
+              </a>
+              &nbsp;
+              <app-delete-product
+                [product]="product"
+                (confirmed)="onDeleteConfirmed($event)"
+              ></app-delete-product>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div *ngIf="errorMessage" class="alert alert-danger">
+  Error: {{ errorMessage }}
+</div>

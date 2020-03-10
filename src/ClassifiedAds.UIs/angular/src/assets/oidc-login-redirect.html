@@ -1,0 +1,16 @@
+<script src="/scripts.js"></script>
+<script>
+  var config = {
+    userStore: new Oidc.WebStorageStateStore({ store: window.localStorage })
+  };
+  var mgr = new Oidc.UserManager(config);
+  mgr.signinRedirectCallback().then(() => {
+        window.history.replaceState({},
+            window.document.title,
+            window.location.origin);
+        window.location = "/";
+    }, error => {
+        console.error(error);
+    });
+
+</script>

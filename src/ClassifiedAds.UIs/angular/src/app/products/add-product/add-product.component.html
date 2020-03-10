@@ -1,0 +1,83 @@
+<div class="card">
+  <div class="card-header">
+    Add Product
+  </div>
+  <div class="card-body">
+    <div class="row" [hidden]="!postError" class="alert alert-danger">
+      {{ postErrorMessage }}
+    </div>
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+      <div class="form-group row">
+        <label for="name" class="col-sm-2 col-form-label">Name</label>
+        <div class="col-sm-10">
+          <input
+            id="name"
+            name="name"
+            class="form-control"
+            [(ngModel)]="product.name"
+            required
+            #nameField="ngModel"
+            (blur)="onBlur(nameField)"
+            [class.is-invalid]="form.submitted && nameField.invalid"
+          />
+          <span class="invalid-feedback">
+            Enter a name
+          </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="code" class="col-sm-2 col-form-label">Code</label>
+        <div class="col-sm-10">
+          <input
+            id="code"
+            name="code"
+            class="form-control"
+            [(ngModel)]="product.code"
+            required
+            #codeField="ngModel"
+            (blur)="onBlur(codeField)"
+            [class.is-invalid]="form.submitted && codeField.invalid"
+          />
+          <span class="invalid-feedback">
+            Enter a code
+          </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="description" class="col-sm-2 col-form-label"
+          >Description</label
+        >
+        <div class="col-sm-10">
+          <input
+            id="description"
+            name="description"
+            class="form-control"
+            [(ngModel)]="product.description"
+            required
+            #descriptionField="ngModel"
+            (blur)="onBlur(descriptionField)"
+            [class.is-invalid]="form.submitted && descriptionField.invalid"
+          />
+          <span class="invalid-feedback">
+            Enter a description
+          </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="description" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+          <button class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="card-footer">
+    <a
+      class="btn btn-outline-secondary"
+      [routerLink]="['/products']"
+      style="width:80px"
+    >
+      <i class="fa fa-chevron-left"></i> Back
+    </a>
+  </div>
+</div>

@@ -1,0 +1,88 @@
+<div class="card">
+  <div class="card-header">
+    Edit Product
+  </div>
+  <div class="card-body">
+    <div class="row" [hidden]="!postError" class="alert alert-danger">
+      {{ postErrorMessage }}
+    </div>
+    <form (ngSubmit)="onSubmit()" [formGroup]="productForm">
+      <div class="form-group row">
+        <label for="name" class="col-sm-2 col-form-label">Name</label>
+        <div class="col-sm-10">
+          <input
+            id="name"
+            class="form-control"
+            formControlName="name"
+            [class.is-invalid]="isSubmitted && productForm.get('name').invalid"
+          />
+          <span class="invalid-feedback">
+            <span *ngIf="productForm.get('name').errors?.required">
+              Enter a name
+            </span>
+            <span *ngIf="productForm.get('name').errors?.minlength">
+              The name must be longer than 3 characters.
+            </span>
+          </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="code" class="col-sm-2 col-form-label">Code</label>
+        <div class="col-sm-10">
+          <input
+            id="code"
+            class="form-control"
+            formControlName="code"
+            [class.is-invalid]="isSubmitted && productForm.get('code').invalid"
+          />
+          <span class="invalid-feedback">
+            <span *ngIf="productForm.get('code').errors?.required">
+              Enter a code
+            </span>
+            <span *ngIf="productForm.get('code').errors?.maxlength">
+              The code must be less than 10 characters.
+            </span>
+          </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="description" class="col-sm-2 col-form-label"
+          >Description</label
+        >
+        <div class="col-sm-10">
+          <input
+            id="description"
+            class="form-control"
+            formControlName="description"
+            [class.is-invalid]="
+              isSubmitted && productForm.get('description').invalid
+            "
+          />
+          <span class="invalid-feedback">
+            <span *ngIf="productForm.get('description').errors?.required">
+              Enter a description
+            </span>
+            <span *ngIf="productForm.get('description').errors?.maxlength">
+              The code must be less than 100 characters.
+            </span>
+          </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="description" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+          <button class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="card-footer">
+    <a
+      class="btn btn-outline-secondary"
+      [routerLink]="['/products']"
+      style="width:80px"
+    >
+      <i class="fa fa-chevron-left"></i> Back
+    </a>
+  </div>
+</div>

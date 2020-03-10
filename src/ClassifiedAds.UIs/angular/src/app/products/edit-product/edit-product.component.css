@@ -1,0 +1,7 @@
+.field-error {
+  border: 1px solid red;
+}
+
+.col-form-label {
+  text-align: right;
+}

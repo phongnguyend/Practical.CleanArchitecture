@@ -119,12 +119,12 @@ namespace Microsoft.Extensions.DependencyInjection
                     });
                 }
 
-                if (!context.Clients.Any(x => x.ClientId == "spa-client"))
+                if (!context.Clients.Any(x => x.ClientId == "ClassifiedAds.Angular"))
                 {
                     clients.Add(new Client
                     {
-                        ClientId = "spa-client",
-                        ClientName = "SPA Client",
+                        ClientId = "ClassifiedAds.Angular",
+                        ClientName = "ClassifiedAds Angular",
                         AllowedGrantTypes = GrantTypes.Implicit,
                         AllowAccessTokensViaBrowser = true,
                         RedirectUris =

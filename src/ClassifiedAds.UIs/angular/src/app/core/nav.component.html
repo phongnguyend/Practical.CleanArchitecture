@@ -1,0 +1,29 @@
+<nav class="navbar navbar-expand navbar-light bg-light">
+  <a class="navbar-brand" href="/">{{ pageTitle | appendVersion }}</a>
+  <ul class="nav nav-pills">
+    <li>
+      <a class="nav-link" routerLinkActive="active" [routerLink]="['/welcome']"
+        >Home
+      </a>
+    </li>
+    <li>
+      <a
+        class="nav-link"
+        routerLinkActive="active"
+        [routerLink]="['/products']"
+      >
+        Product
+      </a>
+    </li>
+    <li *ngIf="!auth.isAuthenticated()">
+      <a class="nav-link" (click)="login()" href="javascript:void(0)">
+        Login
+      </a>
+    </li>
+    <li *ngIf="auth.isAuthenticated()">
+      <a class="nav-link" (click)="logout()" href="javascript:void(0)">
+        Logout
+      </a>
+    </li>
+  </ul>
+</nav>
