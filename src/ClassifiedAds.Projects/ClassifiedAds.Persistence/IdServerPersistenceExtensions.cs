@@ -153,6 +153,40 @@ namespace Microsoft.Extensions.DependencyInjection
                     });
                 }
 
+                if (!context.Clients.Any(x => x.ClientId == "ClassifiedAds.React"))
+                {
+                    clients.Add(new Client
+                    {
+                        ClientId = "ClassifiedAds.React",
+                        ClientName = "ClassifiedAds React",
+                        AllowedGrantTypes = GrantTypes.Implicit,
+                        AllowAccessTokensViaBrowser = true,
+                        RedirectUris =
+                        {
+                            "http://localhost:3000/oidc-login-redirect.html",
+                        },
+                        PostLogoutRedirectUris =
+                        {
+                            "http://localhost:3000/?postLogout=true",
+                        },
+                        AllowedCorsOrigins =
+                        {
+                            "http://localhost:3000",
+                        },
+                        AllowedScopes =
+                        {
+                            IdentityServerConstants.StandardScopes.OpenId,
+                            IdentityServerConstants.StandardScopes.Profile,
+                            "ClassifiedAds.WebAPI",
+                        },
+                        ClientSecrets =
+                        {
+                            new Secret("secret".Sha256()),
+                        },
+                        AllowOfflineAccess = true,
+                    });
+                }
+
                 if (clients.Any())
                 {
                     context.Clients.AddRange(clients.Select(x => x.ToEntity()));
