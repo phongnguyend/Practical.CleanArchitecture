@@ -187,6 +187,40 @@ namespace Microsoft.Extensions.DependencyInjection
                     });
                 }
 
+                if (!context.Clients.Any(x => x.ClientId == "ClassifiedAds.Vue"))
+                {
+                    clients.Add(new Client
+                    {
+                        ClientId = "ClassifiedAds.Vue",
+                        ClientName = "ClassifiedAds Vue",
+                        AllowedGrantTypes = GrantTypes.Implicit,
+                        AllowAccessTokensViaBrowser = true,
+                        RedirectUris =
+                        {
+                            "http://localhost:8080/oidc-login-redirect.html",
+                        },
+                        PostLogoutRedirectUris =
+                        {
+                            "http://localhost:8080/?postLogout=true",
+                        },
+                        AllowedCorsOrigins =
+                        {
+                            "http://localhost:8080",
+                        },
+                        AllowedScopes =
+                        {
+                            IdentityServerConstants.StandardScopes.OpenId,
+                            IdentityServerConstants.StandardScopes.Profile,
+                            "ClassifiedAds.WebAPI",
+                        },
+                        ClientSecrets =
+                        {
+                            new Secret("secret".Sha256()),
+                        },
+                        AllowOfflineAccess = true,
+                    });
+                }
+
                 if (clients.Any())
                 {
                     context.Clients.AddRange(clients.Select(x => x.ToEntity()));

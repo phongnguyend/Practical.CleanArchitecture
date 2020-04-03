@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.Domain.Repositories;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
 
 namespace ClassifiedAds.Persistence.Repositories

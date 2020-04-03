@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Application;
+using ClassifiedAds.Application.Commands.Products;
 using ClassifiedAds.Application.Queries.Products;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Services;
@@ -41,7 +42,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Product> Get(Guid id)
         {
-            var product = _productService.GetById(id);
+            var product = _dispatcher.Dispatch(new GetProductQuery { Id = id });
             if (product == null)
             {
                 return NotFound();
@@ -55,7 +56,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public ActionResult<Product> Post([FromBody] Product model)
         {
-            _productService.Add(model);
+            _dispatcher.Dispatch(new AddProductCommand { Product = model });
             return Created($"/api/products/{model.Id}", model);
         }
 
@@ -65,7 +66,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Put(Guid id, [FromBody] Product model)
         {
-            var product = _productService.GetById(id);
+            var product = _dispatcher.Dispatch(new GetProductQuery { Id = id });
             if (product == null)
             {
                 return NotFound();
@@ -75,7 +76,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             product.Name = model.Name;
             product.Description = model.Description;
 
-            _productService.Update(product);
+            _dispatcher.Dispatch(new UpdateProductCommand { Product = product });
 
             return Ok(product);
         }
@@ -85,13 +86,13 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Delete(Guid id)
         {
-            var product = _productService.GetById(id);
+            var product = _dispatcher.Dispatch(new GetProductQuery { Id = id });
             if (product == null)
             {
                 return NotFound();
             }
 
-            _productService.Delete(product);
+            _dispatcher.Dispatch(new DeleteProductCommand { Product = product });
 
             return Ok();
         }
