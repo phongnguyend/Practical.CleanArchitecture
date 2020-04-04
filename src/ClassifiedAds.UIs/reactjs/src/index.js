@@ -33,34 +33,14 @@ const store = createStore(
 
 sagaMiddleware.run(watchProduct);
 
-axios.interceptors.request.use(config => {
-  if (config.url.startsWith("https://localhost:44312/api/")) {
-    config.headers["Authorization"] = "Bearer " + authService.getAccessToken();
-  }
-  return config;
-});
 
-axios.interceptors.response.use(
-  response => {
-    return response;
-  },
-  error => {
-    if (401 === error.response.status) {
-      authService.login(window.location.href);
-    } else {
-      return Promise.reject(error);
-    }
-  }
-);
-
-const authService = new AuthService();
 store.dispatch({
   type: "SET_AUTH_SERVICE",
-  authService: authService
+  authService: AuthService
 });
 
-authService.loadUser().then(user => {
-  if (authService.isAuthenticated()) {
+AuthService.loadUser().then(user => {
+  if (AuthService.isAuthenticated()) {
     store.dispatch({
       type: "LOGIN",
       user: user

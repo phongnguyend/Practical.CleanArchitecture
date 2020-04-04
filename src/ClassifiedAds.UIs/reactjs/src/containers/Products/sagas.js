@@ -1,5 +1,5 @@
 import { put, takeEvery } from "redux-saga/effects";
-import axios from "axios";
+import axios from "./axios";
 
 import * as actionTypes from "./actionTypes";
 import * as actions from "./actions";
@@ -7,7 +7,7 @@ import * as actions from "./actions";
 export function* fetchProductsSaga(action) {
   yield put(actions.fetchProductsStart());
   try {
-    const response = yield axios.get("https://localhost:44312/api/products");
+    const response = yield axios.get("");
     const fetchedProducts = response.data;
     yield put(actions.fetchProductsSuccess(fetchedProducts));
   } catch (error) {
@@ -18,9 +18,7 @@ export function* fetchProductsSaga(action) {
 export function* fetchProductSaga(action) {
   yield put(actions.fetchProductStart());
   try {
-    const response = yield axios.get(
-      "https://localhost:44312/api/products/" + action.id
-    );
+    const response = yield axios.get(action.id);
     const fetchedProduct = response.data;
     yield put(actions.fetchProductSuccess(fetchedProduct));
   } catch (error) {
@@ -32,14 +30,8 @@ export function* saveProductSaga(action) {
   yield put(actions.saveProductStart());
   try {
     const response = action.product.id
-      ? yield axios.put(
-          "https://localhost:44312/api/products/" + action.product.id,
-          action.product
-        )
-      : yield axios.post(
-          "https://localhost:44312/api/products",
-          action.product
-        );
+      ? yield axios.put(action.product.id, action.product)
+      : yield axios.post("", action.product);
     const product = response.data;
     yield put(actions.saveProductSuccess(product));
   } catch (error) {
@@ -51,10 +43,7 @@ export function* saveProductSaga(action) {
 export function* deleteProductSaga(action) {
   yield put(actions.deleteProductStart());
   try {
-    const response = yield axios.delete(
-      "https://localhost:44312/api/products/" + action.product.id,
-      action.product
-    );
+    const response = yield axios.delete(action.product.id, action.product);
     yield put(actions.deleteProductSuccess(action.product));
     yield put(actions.fetchProducts());
   } catch (error) {

@@ -1,14 +1,16 @@
 import { UserManager, User, WebStorageStateStore } from "oidc-client";
 
-export default class AuthService {
+import env from "../../environments";
+
+class AuthService {
   constructor() {
     var config = {
-      authority: "https://localhost:44367",
-      client_id: "ClassifiedAds.React",
-      redirect_uri: `http://localhost:3000/oidc-login-redirect.html`,
+      authority: env.OpenIdConnect.Authority,
+      client_id: env.OpenIdConnect.ClientId,
+      redirect_uri: `${env.CurrentUrl}oidc-login-redirect.html`,
       scope: "openid profile ClassifiedAds.WebAPI",
       response_type: "id_token token",
-      post_logout_redirect_uri: `http://localhost:3000/?postLogout=true`,
+      post_logout_redirect_uri: `${env.CurrentUrl}?postLogout=true`,
       userStore: new WebStorageStateStore({ store: window.localStorage })
     };
     this._userManager = new UserManager(config);
@@ -59,3 +61,7 @@ export default class AuthService {
     return this.isLoggedIn();
   };
 }
+
+const instance = new AuthService();
+
+export default instance;
