@@ -2,7 +2,7 @@ import { UserManager, User, WebStorageStateStore } from "oidc-client";
 
 import env from "../../environments";
 
-export default class AuthService {
+class AuthService {
     constructor() {
         var config = {
             authority: env.OpenIdConnect.Authority,
@@ -61,3 +61,7 @@ export default class AuthService {
         return this.isLoggedIn();
     };
 }
+
+const instance = new AuthService();
+
+export default instance;
