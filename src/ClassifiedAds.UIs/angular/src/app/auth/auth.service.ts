@@ -16,7 +16,7 @@ export class AuthService {
     var config = {
       authority: environment.OpenIdConnect.Authority,
       client_id: environment.OpenIdConnect.ClientId,
-      redirect_uri: `${environment.CurrentUrl}assets/oidc-login-redirect.html`,
+      redirect_uri: `${environment.CurrentUrl}oidc-login-redirect`,
       scope: "openid profile ClassifiedAds.WebAPI",
       response_type: "id_token token",
       post_logout_redirect_uri: `${environment.CurrentUrl}?postLogout=true`,
@@ -37,6 +37,7 @@ export class AuthService {
 
   login(returnUrl: string): Promise<any> {
     console.log("Return Url:", returnUrl);
+    localStorage.setItem("returnUrl", returnUrl);
     return this._userManager.signinRedirect();
   }
 
@@ -69,5 +70,5 @@ export class AuthService {
     return this.isLoggedIn();
   }
 
-  updateCurrentUser(firstName: string, lastName: string) {}
+  updateCurrentUser(firstName: string, lastName: string) { }
 }

@@ -129,7 +129,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         AllowAccessTokensViaBrowser = true,
                         RedirectUris =
                         {
-                            "http://localhost:4200/assets/oidc-login-redirect.html",
+                            "http://localhost:4200/oidc-login-redirect",
                         },
                         PostLogoutRedirectUris =
                         {
@@ -163,7 +163,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         AllowAccessTokensViaBrowser = true,
                         RedirectUris =
                         {
-                            "http://localhost:3000/oidc-login-redirect.html",
+                            "http://localhost:3000/oidc-login-redirect",
                         },
                         PostLogoutRedirectUris =
                         {
@@ -197,7 +197,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         AllowAccessTokensViaBrowser = true,
                         RedirectUris =
                         {
-                            "http://localhost:8080/oidc-login-redirect.html",
+                            "http://localhost:8080/oidc-login-redirect",
                         },
                         PostLogoutRedirectUris =
                         {

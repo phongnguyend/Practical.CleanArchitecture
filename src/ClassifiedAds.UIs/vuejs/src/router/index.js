@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import OidcLoginRedirect from "../auth/OidcLoginRedirect.vue"
 
 Vue.use(VueRouter)
 
@@ -9,6 +10,11 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/oidc-login-redirect',
+    name: 'OidcLoginRedirect',
+    component: OidcLoginRedirect
   },
   {
     path: '/products',

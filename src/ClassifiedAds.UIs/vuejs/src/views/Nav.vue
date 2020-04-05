@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     login() {
-      this.$store.state.authService.login();
+      this.$store.state.authService.login("");
     },
     logout() {
       this.$store.state.authService.logout();

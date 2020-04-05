@@ -7,7 +7,7 @@ class AuthService {
         var config = {
             authority: env.OpenIdConnect.Authority,
             client_id: env.OpenIdConnect.ClientId,
-            redirect_uri: `${env.CurrentUrl}oidc-login-redirect.html`,
+            redirect_uri: `${env.CurrentUrl}oidc-login-redirect`,
             scope: "openid profile ClassifiedAds.WebAPI",
             response_type: "id_token token",
             post_logout_redirect_uri: `${env.CurrentUrl}?postLogout=true`,
