@@ -1,36 +1,38 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ClassifiedAds.Application;
+using ClassifiedAds.Application.Commands.Users;
+using ClassifiedAds.Application.Queries.Roles;
+using ClassifiedAds.Application.Queries.Users;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.IdentityServer.Models.UserModels;
-using ClassifiedAds.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ClassifiedAds.IdentityServer.Controllers
 {
     public class UserController : Controller
     {
-        private readonly AdsDbContext _dbContext;
+        private readonly Dispatcher _dispatcher;
         private readonly UserManager<User> _userManager;
 
-        public UserController(AdsDbContext dbContext, UserManager<User> userManager)
+        public UserController(Dispatcher dispatcher, UserManager<User> userManager)
         {
-            _dbContext = dbContext;
+            _dispatcher = dispatcher;
             _userManager = userManager;
         }
 
         public IActionResult Index()
         {
-            var users = _dbContext.Set<User>().ToList();
+            var users = _dispatcher.Dispatch(new GetUsersQuery { AsNoTracking = true });
             return View(users);
         }
 
         public IActionResult Profile(Guid id)
         {
             var user = id != Guid.Empty
-                ? _dbContext.Set<User>().FirstOrDefault(x => x.Id == id)
+                ? _dispatcher.Dispatch(new GetUserQuery { Id = id, AsNoTracking = true })
                 : new User();
             return View(user);
         }
@@ -41,7 +43,7 @@ namespace ClassifiedAds.IdentityServer.Controllers
             User user;
             if (model.Id != Guid.Empty)
             {
-                user = _dbContext.Set<User>().FirstOrDefault(x => x.Id == model.Id);
+                user = _dispatcher.Dispatch(new GetUserQuery { Id = model.Id });
             }
             else
             {
@@ -69,23 +71,21 @@ namespace ClassifiedAds.IdentityServer.Controllers
 
         public IActionResult ChangePassword(Guid id)
         {
-            var user = _dbContext.Set<User>().FirstOrDefault(x => x.Id == id);
+            var user = _dispatcher.Dispatch(new GetUserQuery { Id = id, AsNoTracking = true });
             return View(ChangePasswordModel.FromEntity(user));
         }
 
         public IActionResult Delete(Guid id)
         {
-            var user = _dbContext.Set<User>().FirstOrDefault(x => x.Id == id);
+            var user = _dispatcher.Dispatch(new GetUserQuery { Id = id, AsNoTracking = true });
             return View(user);
         }
 
         [HttpPost]
         public IActionResult Delete(User model)
         {
-            var user = _dbContext.Set<User>().FirstOrDefault(x => x.Id == model.Id);
-            _dbContext.Set<User>().Remove(user);
-            _dbContext.SaveChanges();
-
+            var user = _dispatcher.Dispatch(new GetUserQuery { Id = model.Id });
+            _dispatcher.Dispatch(new DeleteUserCommand { User = user });
             return RedirectToAction(nameof(Index));
         }
 
@@ -97,7 +97,7 @@ namespace ClassifiedAds.IdentityServer.Controllers
                 return View(model);
             }
 
-            var user = await _userManager.FindByIdAsync(model.Id.ToString());
+            var user = _dispatcher.Dispatch(new GetUserQuery { Id = model.Id });
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var rs = await _userManager.ResetPasswordAsync(user, token, model.ConfirmPassword);
 
@@ -116,37 +116,31 @@ namespace ClassifiedAds.IdentityServer.Controllers
 
         public IActionResult Claims(Guid id)
         {
-            var user = _dbContext.Set<User>()
-                .Include(x => x.Claims)
-                .AsNoTracking()
-                .FirstOrDefault(x => x.Id == id);
-
+            var user = _dispatcher.Dispatch(new GetUserQuery { Id = id, IncludeClaims = true, AsNoTracking = true });
             return View(ClaimsModel.FromEntity(user));
         }
 
         [HttpPost]
         public IActionResult Claims(ClaimModel model)
         {
-            var user = _dbContext.Set<User>()
-                .Include(x => x.Claims)
-                .FirstOrDefault(x => x.Id == model.User.Id);
-
-            user.Claims.Add(new UserClaim
+            var user = _dispatcher.Dispatch(new GetUserQuery { Id = model.User.Id, IncludeClaims = true });
+            _dispatcher.Dispatch(new AddClaimCommand
             {
-                Type = model.Type,
-                Value = model.Value,
+                User = user,
+                Claim = new UserClaim
+                {
+                    Type = model.Type,
+                    Value = model.Value,
+                },
             });
-
-            _dbContext.SaveChanges();
 
             return RedirectToAction(nameof(Claims), new { id = user.Id });
         }
 
-        public IActionResult DeleteClaim(Guid id)
+        public IActionResult DeleteClaim(Guid userId, Guid claimId)
         {
-            var claim = _dbContext.Set<UserClaim>()
-                .Include(x => x.User)
-                .FirstOrDefault(x => x.Id == id);
+            var user = _dispatcher.Dispatch(new GetUserQuery { Id = userId, IncludeClaims = true, AsNoTracking = true });
+            var claim = user.Claims.FirstOrDefault(x => x.Id == claimId);
 
             return View(ClaimModel.FromEntity(claim));
         }
@@ -154,28 +148,24 @@ namespace ClassifiedAds.IdentityServer.Controllers
         [HttpPost]
         public IActionResult DeleteClaim(ClaimModel model)
         {
-            var user = _dbContext.Set<User>()
-                .Include(x => x.Claims)
-                .FirstOrDefault(x => x.Id == model.User.Id);
+            var user = _dispatcher.Dispatch(new GetUserQuery { Id = model.User.Id, IncludeClaims = true });
 
             var claim = user.Claims.FirstOrDefault(x => x.Id == model.Id);
 
-            user.Claims.Remove(claim);
-
-            _dbContext.SaveChanges();
+            _dispatcher.Dispatch(new DeleteClaimCommand
+            {
+                User = user,
+                Claim = claim,
+            });
 
             return RedirectToAction(nameof(Claims), new { id = user.Id });
         }
 
         public IActionResult Roles(Guid id)
         {
-            var user = _dbContext.Set<User>()
-                .Include("UserRoles.Role")
-                .Where(x => x.Id == id)
-                .AsNoTracking()
-                .FirstOrDefault();
+            var user = _dispatcher.Dispatch(new GetUserQuery { Id = id, IncludeRoles = true, AsNoTracking = true });
 
-            var roles = _dbContext.Set<Role>().AsNoTracking().ToList();
+            var roles = _dispatcher.Dispatch(new GetRolesQuery { AsNoTracking = true });
 
             var model = new RolesModel
             {
@@ -190,27 +180,23 @@ namespace ClassifiedAds.IdentityServer.Controllers
         [HttpPost]
         public IActionResult Roles(RolesModel model)
         {
-            var user = _dbContext.Set<User>()
-                .Include(x => x.UserRoles)
-                .Where(x => x.Id == model.User.Id)
-                .FirstOrDefault();
+            var user = _dispatcher.Dispatch(new GetUserQuery { Id = model.User.Id, IncludeUserRoles = true });
 
-            user.UserRoles.Add(new UserRole
+            _dispatcher.Dispatch(new AddRoleCommand
             {
-                RoleId = model.Role.RoleId,
+                User = user,
+                Role = new UserRole
+                {
+                    RoleId = model.Role.RoleId,
+                },
             });
-
-            _dbContext.SaveChanges();
 
             return RedirectToAction(nameof(Roles), new { model.User.Id });
         }
 
         public IActionResult DeleteRole(Guid id, Guid roleId)
         {
-            var user = _dbContext.Set<User>()
-                .Include("UserRoles.Role")
-                .Where(x => x.Id == id)
-                .FirstOrDefault();
+            var user = _dispatcher.Dispatch(new GetUserQuery { Id = id, IncludeRoles = true, AsNoTracking = true });
             var role = user.UserRoles.FirstOrDefault(x => x.RoleId == roleId);
             var model = new RoleModel { User = user, Role = role.Role };
 
@@ -220,16 +206,15 @@ namespace ClassifiedAds.IdentityServer.Controllers
         [HttpPost]
         public IActionResult DeleteRole(RoleModel model)
         {
-            var user = _dbContext.Set<User>()
-                .Include(x => x.UserRoles)
-                .Where(x => x.Id == model.User.Id)
-                .FirstOrDefault();
+            var user = _dispatcher.Dispatch(new GetUserQuery { Id = model.User.Id, IncludeUserRoles = true });
 
             var role = user.UserRoles.FirstOrDefault(x => x.RoleId == model.Role.Id);
 
-            user.UserRoles.Remove(role);
-
-            _dbContext.SaveChanges();
+            _dispatcher.Dispatch(new DeleteRoleCommand
+            {
+                User = user,
+                Role = role,
+            });
 
             return RedirectToAction(nameof(Roles), new { model.User.Id });
         }

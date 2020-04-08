@@ -1,7 +1,7 @@
 using ClassifiedAds.CrossCuttingConcerns.Exceptions;
-using ClassifiedAds.Domain;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Domain.Services;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ namespace ClassifiedAds.UnitTests.Domain.Services
             _userRepository.Setup(x => x.GetAll()).Returns(users.AsQueryable());
 
             //Act
-            var user = _userService.GetUserById(Guid.NewGuid());
+            var user = _userService.GetById(Guid.NewGuid());
 
             //Assert
             Assert.Null(user);
@@ -42,7 +42,7 @@ namespace ClassifiedAds.UnitTests.Domain.Services
             var userId = Guid.Empty;
 
             //Act && Assert
-            Assert.Throws<ValidationException>(() => _userService.GetUserById(userId));
+            Assert.Throws<ValidationException>(() => _userService.GetById(userId));
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace ClassifiedAds.UnitTests.Domain.Services
             _userRepository.Setup(x => x.GetAll()).Returns(users.AsQueryable());
 
             //Act
-            var user = _userService.GetUserById(userId);
+            var user = _userService.GetById(userId);
 
             //Assert
             Assert.Equal(userId, user.Id);

@@ -1,12 +1,8 @@
 ﻿using ClassifiedAds.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ClassifiedAds.Domain
+namespace ClassifiedAds.Domain.Services
 {
-    public interface IUserService
+    public interface IUserService : ICrudService<User>
     {
-        User GetUserById(Guid Id);
     }
 }

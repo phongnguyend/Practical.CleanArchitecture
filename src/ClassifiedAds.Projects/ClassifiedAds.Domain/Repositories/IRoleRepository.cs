@@ -4,17 +4,16 @@ using System.Linq;
 
 namespace ClassifiedAds.Domain.Repositories
 {
-    public class UserQueryOptions
+    public class RoleQueryOptions
     {
         public bool IncludeClaims { get; set; }
         public bool IncludeUserRoles { get; set; }
-        public bool IncludeRoles { get; set; }
-        public bool IncludeTokens { get; set; }
+        public bool IncludeUsers { get; set; }
         public bool AsNoTracking { get; set; }
     }
 
-    public interface IUserRepository : IRepository<User, Guid>
+    public interface IRoleRepository : IRepository<Role, Guid>
     {
-        IQueryable<User> Get(UserQueryOptions queryOptions);
+        IQueryable<Role> Get(RoleQueryOptions queryOptions);
     }
 }

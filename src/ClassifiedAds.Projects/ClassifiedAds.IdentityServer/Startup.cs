@@ -39,6 +39,7 @@ namespace ClassifiedAds.IdentityServer
 
             services.AddPersistence(Configuration.GetConnectionString("ClassifiedAds"))
                     .AddDomainServices()
+                    .AddMessageHandlers()
                     .AddIdentity();
 
             services.AddIdentityServer()

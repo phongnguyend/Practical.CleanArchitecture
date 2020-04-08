@@ -49,17 +49,17 @@ namespace ClassifiedAds.Infrastructure.Identity
 
         public Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_userRepository.GetAllIncludeTokens().FirstOrDefault(x => x.NormalizedEmail == normalizedEmail));
+            return Task.FromResult(_userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefault(x => x.NormalizedEmail == normalizedEmail));
         }
 
         public Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_userRepository.GetAllIncludeTokens().FirstOrDefault(x => x.Id == Guid.Parse(userId)));
+            return Task.FromResult(_userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefault(x => x.Id == Guid.Parse(userId)));
         }
 
         public Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_userRepository.GetAllIncludeTokens().FirstOrDefault(x => x.NormalizedUserName == normalizedUserName));
+            return Task.FromResult(_userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefault(x => x.NormalizedUserName == normalizedUserName));
         }
 
         public Task<int> GetAccessFailedCountAsync(User user, CancellationToken cancellationToken)

@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Domain.Entities;
+﻿using ClassifiedAds.CrossCuttingConcerns.Exceptions;
+using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using System;
@@ -39,6 +40,7 @@ namespace ClassifiedAds.Domain.Services
 
         public virtual T GetById(Guid Id)
         {
+            ValidationException.Requires(Id != Guid.Empty, "Invalid Id");
             return _repository.GetAll().FirstOrDefault(x => x.Id == Id);
         }
 

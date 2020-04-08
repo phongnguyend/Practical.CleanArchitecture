@@ -96,7 +96,7 @@
                                 <tr>
                                     <td>@claim.Type</td>
                                     <td>@claim.Value</td>
-                                    <td><a asp-action="DeleteClaim" asp-route-id="@claim.Id" class="btn btn-danger">Remove</a></td>
+                                    <td><a asp-action="DeleteClaim" asp-route-claimId="@claim.Id" asp-route-userId="@Model.User.Id" class="btn btn-danger">Remove</a></td>
                                 </tr>
                             }
                         </tbody>
