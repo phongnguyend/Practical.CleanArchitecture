@@ -23,9 +23,9 @@ namespace ClassifiedAds.Infrastructure.Identity
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRepository _userRepository;
 
-        public UserStore(IUnitOfWork unitOfWork, IUserRepository userRepository)
+        public UserStore(IUserRepository userRepository)
         {
-            _unitOfWork = unitOfWork;
+            _unitOfWork = userRepository.UnitOfWork;
             _userRepository = userRepository;
         }
 

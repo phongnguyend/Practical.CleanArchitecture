@@ -17,7 +17,6 @@ namespace Microsoft.Extensions.DependencyInjection
                     sql.MigrationsAssembly(migrationsAssembly);
                 }
             }))
-                    .AddScoped<IUnitOfWork, UnitOfWork>()
                     .AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
                     .AddScoped(typeof(IUserRepository), typeof(UserRepository))
                     .AddScoped(typeof(IStoreRepository), typeof(StoreRepository));

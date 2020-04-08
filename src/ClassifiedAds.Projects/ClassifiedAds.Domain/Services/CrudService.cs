@@ -13,9 +13,9 @@ namespace ClassifiedAds.Domain.Services
         protected readonly IUnitOfWork _unitOfWork;
         protected readonly IRepository<T, Guid> _repository;
 
-        public CrudService(IUnitOfWork unitOfWork, IRepository<T, Guid> repository)
+        public CrudService(IRepository<T, Guid> repository)
         {
-            _unitOfWork = unitOfWork;
+            _unitOfWork = repository.UnitOfWork;
             _repository = repository;
         }
 

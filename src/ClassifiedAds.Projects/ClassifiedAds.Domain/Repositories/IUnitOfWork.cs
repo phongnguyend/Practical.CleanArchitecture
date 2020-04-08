@@ -4,7 +4,7 @@ namespace ClassifiedAds.Domain.Repositories
 {
     public interface IUnitOfWork
     {
-        void SaveChanges();
+        int SaveChanges();
 
         void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
 

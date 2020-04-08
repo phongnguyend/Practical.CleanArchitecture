@@ -7,8 +7,8 @@ namespace ClassifiedAds.Domain.Services
 {
     public class ProductService : CrudService<Product>, IProductService
     {
-        public ProductService(IUnitOfWork unitOfWork, IRepository<Product, Guid> productRepository, ICurrentUser currentUser)
-            : base(unitOfWork, productRepository)
+        public ProductService(IRepository<Product, Guid> productRepository, ICurrentUser currentUser)
+            : base(productRepository)
         {
         }
     }

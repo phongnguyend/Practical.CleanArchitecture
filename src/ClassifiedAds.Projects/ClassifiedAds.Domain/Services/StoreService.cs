@@ -8,8 +8,8 @@ namespace ClassifiedAds.Domain.Services
     {
         private readonly IStoreRepository _storeRepository;
 
-        public StoreService(IUnitOfWork unitOfWork, IStoreRepository storeRepository)
-            : base(unitOfWork, storeRepository)
+        public StoreService(IStoreRepository storeRepository)
+            : base(storeRepository)
         {
             _storeRepository = storeRepository;
         }

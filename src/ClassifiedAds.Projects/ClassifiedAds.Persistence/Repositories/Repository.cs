@@ -11,6 +11,14 @@ namespace ClassifiedAds.Persistence.Repositories
         private readonly AdsDbContext _dbContext;
         protected DbSet<T> DbSet => _dbContext.Set<T>();
 
+        public IUnitOfWork UnitOfWork
+        {
+            get
+            {
+                return _dbContext;
+            }
+        }
+
         public Repository(AdsDbContext dbContext)
         {
             _dbContext = dbContext;
