@@ -1,5 +1,4 @@
-﻿using ClassifiedAds.Domain.Services;
-using ClassifiedAds.GraphQL.Types;
+﻿using ClassifiedAds.GraphQL.Types;
 using ClassifiedAds.GRPC;
 using GraphQL.Types;
 using Grpc.Net.Client;
@@ -12,7 +11,7 @@ namespace ClassifiedAds.GraphQL
 {
     public class ClassifiedAdsQuery : ObjectGraphType<object>
     {
-        public ClassifiedAdsQuery(IProductService productService, IConfiguration configuration)
+        public ClassifiedAdsQuery(IConfiguration configuration)
         {
             Name = "Query";
 
@@ -45,8 +44,17 @@ namespace ClassifiedAds.GraphQL
                 arguments: new QueryArguments(new QueryArgument<NonNullGraphType<IdGraphType>> { Name = "id" }),
                 resolve: context =>
                 {
-                    var id = context.GetArgument<Guid>("id");
-                    return productService.GetById(id);
+                    var id = context.GetArgument<string>("id");
+                    var client = GetGrpcClient(configuration);
+                    var productResponse = client.GetProduct(new GetProductRequest { Id = id });
+                    var productMessage = productResponse.Product;
+                    return productMessage != null ? new Domain.Entities.Product
+                    {
+                        Id = Guid.Parse(productMessage.Id),
+                        Code = productMessage.Code,
+                        Name = productMessage.Name,
+                        Description = productMessage.Description
+                    } : null;
                 }
             );
         }

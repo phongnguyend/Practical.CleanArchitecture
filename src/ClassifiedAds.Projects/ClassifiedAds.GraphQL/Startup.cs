@@ -1,9 +1,4 @@
-using ClassifiedAds.Application.Events;
-using ClassifiedAds.Domain.Identity;
-using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.GraphQL.Types;
-using ClassifiedAds.Infrastructure.Identity;
-using ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ;
 using GraphQL.Server;
 using GraphQL.Types;
 using Microsoft.AspNetCore.Builder;
@@ -46,10 +41,6 @@ namespace ClassifiedAds.GraphQL
             services.AddSingleton<ProductInputType>();
             services.AddScoped<ISchema, ClassifiedAdsSchema>();
 
-            services.AddPersistence(Configuration["ConnectionStrings:ClassifiedAds"])
-                .AddDomainServices()
-                .AddMessageHandlers();
-
             services.AddLogging(builder => builder.AddConsole());
             services.AddHttpContextAccessor();
 
@@ -59,17 +50,6 @@ namespace ClassifiedAds.GraphQL
                 _.ExposeExceptions = true;
             })
             .AddUserContextBuilder(httpContext => new GraphQLUserContext { User = httpContext.User });
-            services.AddScoped<ICurrentUser, CurrentWebUser>();
-
-            services.AddSingleton<IMessageSender<FileUploadedEvent>>(new RabbitMQSender<FileUploadedEvent>(new RabbitMQSenderOptions
-            {
-
-            }));
-
-            services.AddSingleton<IMessageSender<FileDeletedEvent>>(new RabbitMQSender<FileDeletedEvent>(new RabbitMQSenderOptions
-            {
-
-            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

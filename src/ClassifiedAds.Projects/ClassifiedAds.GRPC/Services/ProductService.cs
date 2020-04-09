@@ -1,6 +1,7 @@
 using ClassifiedAds.Domain.Services;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,6 +31,23 @@ namespace ClassifiedAds.GRPC
             var rp = new GetProductsResponse();
             rp.Products.AddRange(products);
             return Task.FromResult(rp);
+        }
+
+        public override Task<GetProductResponse> GetProduct(GetProductRequest request, ServerCallContext context)
+        {
+            var product = _productService.GetById(Guid.Parse(request.Id));
+            var response = new GetProductResponse
+            {
+                Product = product != null ? new ProductMessage
+                {
+                    Id = product.Id.ToString(),
+                    Code = product.Code,
+                    Name = product.Name,
+                    Description = product.Description
+                } : null
+            };
+
+            return Task.FromResult(response);
         }
     }
 }

@@ -197,12 +197,13 @@ services:
         volumes:
             - D:\\ClassifiedAds.Projects\\Logs\\GraphQL:/ClassifiedAds.Projects/logs
         depends_on:
-          - db
-          - migrator
+          - grpc
+          - webapi
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
-          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
           GrpcService__Endpoint: "https://grpc"
+          ResourceServer__Endpoint: "http://webapi"
+          ResourceServer__PublicEndpoint: "http://host.docker.internal:9002"
     ocelot:
         build:
           context: .

@@ -6,6 +6,7 @@ package product;
 
 service Product {
   rpc GetProducts (GetProductsRequest) returns (GetProductsResponse);
+  rpc GetProduct (GetProductRequest) returns (GetProductResponse);
 }
 
 message GetProductsRequest {
@@ -14,6 +15,14 @@ message GetProductsRequest {
 
 message GetProductsResponse {
   repeated ProductMessage products = 1;
+}
+
+message GetProductRequest {
+  string id = 1;
+}
+
+message GetProductResponse {
+  ProductMessage product = 1;
 }
 
 message ProductMessage {

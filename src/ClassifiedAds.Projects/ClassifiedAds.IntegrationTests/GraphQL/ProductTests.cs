@@ -1,8 +1,11 @@
 using ClassifiedAds.Domain.Entities;
 using GraphQL.Client;
 using GraphQL.Common.Request;
+using IdentityModel.Client;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -30,7 +33,7 @@ namespace ClassifiedAds.IntegrationTests.GraphQL
                         name
                         description
                     }
-                }"
+                }",
             };
 
             var response = await _client.PostAsync(query);
@@ -52,7 +55,7 @@ namespace ClassifiedAds.IntegrationTests.GraphQL
                         description
                     }
                 }",
-                Variables = new { productId = id }
+                Variables = new { productId = id },
             };
             var response = await _client.PostAsync(query);
             return response.GetDataFieldAs<Product>("product");
@@ -73,7 +76,7 @@ namespace ClassifiedAds.IntegrationTests.GraphQL
                         description
                     }
                 }",
-                Variables = new { product = new { product.Code, product.Name, product.Description } }
+                Variables = new { product = new { product.Code, product.Name, product.Description } },
             };
             var response = await _client.PostAsync(query);
             return response.GetDataFieldAs<Product>("createProduct");
@@ -88,7 +91,7 @@ namespace ClassifiedAds.IntegrationTests.GraphQL
                 {
                     deleteProduct(id: $productId)
                 }",
-                Variables = new { productId = id }
+                Variables = new { productId = id },
             };
             var response = await _client.PostAsync(query);
             var rs = response.GetDataFieldAs<bool>("deleteProduct");
@@ -97,11 +100,26 @@ namespace ClassifiedAds.IntegrationTests.GraphQL
         [Fact]
         public async Task AllInOne()
         {
+            var httpClient = new HttpClient();
+            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync("https://localhost:44367/");
+            var tokenResponse = await httpClient.RequestPasswordTokenAsync(new PasswordTokenRequest
+            {
+                Address = metaDataResponse.TokenEndpoint,
+                ClientId = "ClassifiedAds.WebMVC",
+                ClientSecret = "secret",
+                UserName = "phong@gmail.com",
+                Password = "v*7Un8b4rcN@<-RN",
+                Scope = "ClassifiedAds.WebAPI",
+            });
+
+            var token = tokenResponse.AccessToken;
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
             var product = new Product
             {
                 Name = "Test",
                 Code = "TEST",
-                Description = "Description"
+                Description = "Description",
             };
 
             Product createdProduct = await CreateProduct(product);
@@ -119,7 +137,6 @@ namespace ClassifiedAds.IntegrationTests.GraphQL
             Assert.Equal(refreshedProduct.Code, createdProduct.Code);
             Assert.Equal(refreshedProduct.Description, createdProduct.Description);
 
-            await DeleteProduct(createdProduct.Id);
             await DeleteProduct(createdProduct.Id);
             Assert.Null(await GetProductById(createdProduct.Id));
         }
