@@ -20,9 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="docker-entrypoint.sh">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <ProjectReference Include="..\ClassifiedAds.Infrastructure\ClassifiedAds.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

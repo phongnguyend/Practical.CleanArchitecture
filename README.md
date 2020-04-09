@@ -226,18 +226,6 @@
     dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
     dotnet ef migrations add Init --context PersistedGrantDbContext -o Migrations/PersistedGrantDb
     ```
-- Make sure Line Ending for these files is Unix (LF):
-  | Project  | File |
-  | -------- | ---- |
-  | ClassifiedAds.Migrator | [docker-entrypoint.sh](/src/ClassifiedAds.Projects/ClassifiedAds.Migrator/docker-entrypoint.sh) |
-  | ClassifiedAds.BackgroundServer | [docker-entrypoint.sh](/src/ClassifiedAds.Projects/ClassifiedAds.BackgroundServer/docker-entrypoint.sh) |
-  | ClassifiedAds.WebMVC | [docker-entrypoint.sh](/src/ClassifiedAds.Projects/ClassifiedAds.WebMVC/docker-entrypoint.sh) |
-  
-  Otherwise you might encounter:
-  ```
-  exec user process caused "no such file or directory"
-  ```
-  Tip: Open Notepad++ -> Edit -> EOL Conversion -> Unix (LF)
 - Navigate to [ClassifiedAds.Projects](/src/ClassifiedAds.Projects/) and run:
   ```
   docker-compose build

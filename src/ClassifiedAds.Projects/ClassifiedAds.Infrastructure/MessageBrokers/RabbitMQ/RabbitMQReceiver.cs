@@ -12,9 +12,12 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
         private IConnection _connection;
         private IModel _channel;
         private string _queueName;
+        private readonly RabbitMQReceiverOptions _options;
 
         public RabbitMQReceiver(RabbitMQReceiverOptions options)
         {
+            _options = options;
+
             _connection = new ConnectionFactory
             {
                 HostName = options.HostName,
@@ -36,6 +39,12 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
         public void Receive(Action<T> action)
         {
             _channel = _connection.CreateModel();
+
+            if (_options.AutomaticCreateEnabled)
+            {
+                _channel.QueueDeclare(_options.QueueName, true, false, false, null);
+                _channel.QueueBind(_options.QueueName, _options.ExchangeName, _options.RoutingKey, null);
+            }
 
             /*In order to defeat that we can use the basicQos method with the prefetchCount = 1 setting.
              This tells RabbitMQ not to give more than one message to a worker at a time. 

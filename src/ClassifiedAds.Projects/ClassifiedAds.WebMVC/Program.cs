@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Infrastructure.Configuration;
+using ClassifiedAds.Infrastructure.HealthChecks;
 using ClassifiedAds.Persistence;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +28,11 @@ namespace ClassifiedAds.WebMVC
 
                     builder.AddEFConfiguration(() =>
                     {
+                        if (string.Equals(config["CheckDependency:Enabled"], "true", System.StringComparison.OrdinalIgnoreCase))
+                        {
+                            NetworkPortCheck.Wait(config["CheckDependency:Host"], 5);
+                        }
+
                         var dbContextOptionsBuilder = new DbContextOptionsBuilder<AdsDbContext>();
                         dbContextOptionsBuilder.UseSqlServer(config.GetConnectionString("ClassifiedAds"));
                         return new AdsDbContext(dbContextOptionsBuilder.Options);

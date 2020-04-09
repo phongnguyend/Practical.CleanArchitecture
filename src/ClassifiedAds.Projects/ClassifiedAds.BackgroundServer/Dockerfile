@@ -32,8 +32,4 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 WORKDIR /ClassifiedAds.Projects
 COPY --from=build-env /ClassifiedAds.Projects/out .
 
-RUN apt-get update && apt-get install -y netcat
-
-RUN chmod 755 ./docker-entrypoint.sh
-
-ENTRYPOINT ["./docker-entrypoint.sh"]
+ENTRYPOINT ["dotnet", "ClassifiedAds.BackgroundServer.dll"]

@@ -38,3 +38,17 @@ docker tag classifiedads.web acr.azurecr.io/classifiedads.web
 docker push acr.azurecr.io/classifiedads.web
 
 docker run -d --name rabbitmq -p 5672:5672 -p 5673:5673 -p 15672:15672 rabbitmq:3-management
+
+
+- Make sure Line Ending for these files is Unix (LF):
+  | Project  | File |
+  | -------- | ---- |
+  | ClassifiedAds.Migrator | [docker-entrypoint.sh](/src/ClassifiedAds.Projects/ClassifiedAds.Migrator/docker-entrypoint.sh) |
+  | ClassifiedAds.BackgroundServer | [docker-entrypoint.sh](/src/ClassifiedAds.Projects/ClassifiedAds.BackgroundServer/docker-entrypoint.sh) |
+  | ClassifiedAds.WebMVC | [docker-entrypoint.sh](/src/ClassifiedAds.Projects/ClassifiedAds.WebMVC/docker-entrypoint.sh) |
+  
+  Otherwise you might encounter:
+  ```
+  exec user process caused "no such file or directory"
+  ```
+  Tip: Open Notepad++ -> Edit -> EOL Conversion -> Unix (LF)

@@ -393,6 +393,9 @@ namespace ClassifiedAds.WebMVC
                     UserName = AppSettings.MessageBroker.RabbitMQ.UserName,
                     Password = AppSettings.MessageBroker.RabbitMQ.Password,
                     QueueName = AppSettings.MessageBroker.RabbitMQ.QueueName_FileUploaded,
+                    AutomaticCreateEnabled = true,
+                    ExchangeName = AppSettings.MessageBroker.RabbitMQ.ExchangeName,
+                    RoutingKey = AppSettings.MessageBroker.RabbitMQ.RoutingKey_FileUploaded,
                 });
 
                 fileDeletedMessageQueueReceiver = new RabbitMQReceiver<FileDeletedEvent>(new RabbitMQReceiverOptions
@@ -401,6 +404,9 @@ namespace ClassifiedAds.WebMVC
                     UserName = AppSettings.MessageBroker.RabbitMQ.UserName,
                     Password = AppSettings.MessageBroker.RabbitMQ.Password,
                     QueueName = AppSettings.MessageBroker.RabbitMQ.QueueName_FileDeleted,
+                    AutomaticCreateEnabled = true,
+                    ExchangeName = AppSettings.MessageBroker.RabbitMQ.ExchangeName,
+                    RoutingKey = AppSettings.MessageBroker.RabbitMQ.RoutingKey_FileDeleted,
                 });
             }
 

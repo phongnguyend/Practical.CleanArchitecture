@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using ClassifiedAds.BackgroundServer.Jobs;
+using ClassifiedAds.Infrastructure.HealthChecks;
 using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Builder;
@@ -35,6 +36,11 @@ namespace ClassifiedAds.BackgroundServer
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            if (string.Equals(Configuration["CheckDependency:Enabled"], "true", StringComparison.OrdinalIgnoreCase))
+            {
+                NetworkPortCheck.Wait(Configuration["CheckDependency:Host"], 5);
+            }
+
             services.AddHangfire(x =>
             {
                 var options = new SqlServerStorageOptions

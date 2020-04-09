@@ -42,6 +42,8 @@ services:
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          CheckDependency__Enabled: "true"
+          CheckDependency__Host: "db:1433"
     identityserver:
         build:
           context: .
@@ -106,6 +108,8 @@ services:
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          CheckDependency__Enabled: "true"
+          CheckDependency__Host: "migrator:80"
           OpenIdConnect__Authority: "http://host.docker.internal:9000"
           OpenIdConnect__RequireHttpsMetadata: "false"
           ResourceServer__Endpoint: "http://webapi"
@@ -172,6 +176,8 @@ services:
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          CheckDependency__Enabled: "true"
+          CheckDependency__Host: "migrator:80"
           NotificationServer__Endpoint: "http://notificationserver"
     grpc:
         build:
