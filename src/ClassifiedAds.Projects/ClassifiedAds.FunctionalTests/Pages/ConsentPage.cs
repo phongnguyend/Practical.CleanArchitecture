@@ -16,11 +16,12 @@ namespace ClassifiedAds.FunctionalTests.Pages
             set
             {
                 var remember = _driver.FindElement(By.Id("RememberConsent"));
+                var btn = _driver.FindElement(By.XPath("//input[@id='RememberConsent']/following-sibling::div"));
                 if (value)
                 {
                     if (!remember.Selected)
                     {
-                        remember.Click();
+                        btn.Click();
                     }
 
                 }
@@ -28,7 +29,7 @@ namespace ClassifiedAds.FunctionalTests.Pages
                 {
                     if (remember.Selected)
                     {
-                        remember.Click();
+                        btn.Click();
                     }
                 }
             }
@@ -36,7 +37,7 @@ namespace ClassifiedAds.FunctionalTests.Pages
 
         public void Confirm()
         {
-            var loginButton = _driver.FindElement(By.CssSelector("button.btn.btn-primary"));
+            var loginButton = _driver.FindElement(By.Id("btnYes"));
             loginButton.Click();
         }
     }

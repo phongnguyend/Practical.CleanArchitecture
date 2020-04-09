@@ -3,23 +3,23 @@ using ClassifiedAds.Domain.Repositories;
 
 namespace ClassifiedAds.Application.Commands.Roles
 {
-    public class AddRoleCommand : ICommand
+    public class AddUpdateRoleCommand : ICommand
     {
         public Role Role { get; set; }
     }
 
-    internal class AddRoleCommandHandler : ICommandHandler<AddRoleCommand>
+    internal class AddUpdateRoleCommandHandler : ICommandHandler<AddUpdateRoleCommand>
     {
         private readonly IRoleRepository _roleRepository;
 
-        public AddRoleCommandHandler(IRoleRepository roleRepository)
+        public AddUpdateRoleCommandHandler(IRoleRepository roleRepository)
         {
             _roleRepository = roleRepository;
         }
 
-        public void Handle(AddRoleCommand command)
+        public void Handle(AddUpdateRoleCommand command)
         {
-            _roleRepository.Add(command.Role);
+            _roleRepository.AddOrUpdate(command.Role);
             _roleRepository.UnitOfWork.SaveChanges();
         }
     }

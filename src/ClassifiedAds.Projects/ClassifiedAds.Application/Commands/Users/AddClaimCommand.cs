@@ -21,7 +21,7 @@ namespace ClassifiedAds.Application.Commands.Users
         public void Handle(AddClaimCommand command)
         {
             command.User.Claims.Add(command.Claim);
-            _userService.Update(command.User);
+            _userService.AddOrUpdate(command.User);
         }
     }
 }

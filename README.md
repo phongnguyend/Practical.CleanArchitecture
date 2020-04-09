@@ -132,7 +132,7 @@
 
 ## Configure Message Broker
 
-- Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.WebMVC/appsettings.json) and jump to **MessageBroker** section.
+- Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.WebMVC/appsettings.json) and [ClassifiedAds.BackgroundServer/appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.BackgroundServer/appsettings.json) and jump to **MessageBroker** section.
   ```js
   "MessageBroker": {
     "Provider": "RabbitMQ",
@@ -209,11 +209,48 @@
     + User Name: phong@gmail.com
     + Password: v*7Un8b4rcN@<-RN
   + Option 2: Register new account at https://localhost:44367/Account/Register
+  
+  ![alt text](/docs/imgs/identity-server-login-page.png)
 
 - Open Blazor Home Page at: https://localhost:44331
 
   ![alt text](/docs/imgs/blazor-home-page.png)
 
+## How to Build and Run Single Page Applications:
+- Angular:
+  + Navigate to folder: [ClassifiedAds.UIs/angular/](/src/ClassifiedAds.UIs/angular/)
+    ```
+    npm install
+    ng serve
+    ```
+  + Go to http://localhost:4200/
+
+    ![alt text](/docs/imgs/angular-home-page.png)
+  
+- React:
+  + Navigate to folder: [ClassifiedAds.UIs/reactjs/](/src/ClassifiedAds.UIs/reactjs/)
+    ```
+    npm install
+    npm run start
+    ```
+  + Go to http://localhost:3000/
+  
+    ![alt text](/docs/imgs/react-home-page.png)
+  
+- Vue:
+  + Navigate to folder: [ClassifiedAds.UIs/vuejs/](/src/ClassifiedAds.UIs/vuejs/)
+    ```
+    npm install
+    npm run serve
+    ```
+  + Go to http://localhost:8080/
+  
+    ![alt text](/docs/imgs/vue-home-page.png)
+
+- Before Login, go to Identity Server https://localhost:44367/Client to make sure application clients have been registered:
+
+  ![alt text](/docs/imgs/identity-server-clients-page.png)
+    
 ## How to Run on Docker Containers:
 - Add Migrations if you haven't done on previous steps:
   + Install **dotnet-ef** cli:

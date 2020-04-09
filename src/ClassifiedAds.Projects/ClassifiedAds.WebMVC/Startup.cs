@@ -4,11 +4,13 @@ using ClassifiedAds.Application.Events;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Infrastructure.Storages;
+using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
 using ClassifiedAds.Infrastructure.MessageBrokers.Kafka;
 using ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ;
+using ClassifiedAds.Infrastructure.Notification;
 using ClassifiedAds.Infrastructure.Storages.Amazon;
 using ClassifiedAds.Infrastructure.Storages.Azure;
 using ClassifiedAds.Infrastructure.Storages.Local;
@@ -28,7 +30,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -38,7 +39,6 @@ using Microsoft.Extensions.Options;
 using Serilog;
 using System;
 using System.IO;
-using System.Threading;
 
 namespace ClassifiedAds.WebMVC
 {
@@ -177,6 +177,7 @@ namespace ClassifiedAds.WebMVC
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentWebUser>();
+            services.AddTransient<IWebNotification, SignalRNotification>();
 
             if (appSettings.Storage.UsedAzure())
             {
@@ -369,111 +370,6 @@ namespace ClassifiedAds.WebMVC
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
-            });
-
-            try
-            {
-                TestMessageBrokerReceivers();
-            }
-            catch
-            {
-            }
-        }
-
-        private void TestMessageBrokerReceivers()
-        {
-            IMessageReceiver<FileUploadedEvent> fileUploadedMessageQueueReceiver = null;
-            IMessageReceiver<FileDeletedEvent> fileDeletedMessageQueueReceiver = null;
-
-            if (AppSettings.MessageBroker.UsedRabbitMQ())
-            {
-                fileUploadedMessageQueueReceiver = new RabbitMQReceiver<FileUploadedEvent>(new RabbitMQReceiverOptions
-                {
-                    HostName = AppSettings.MessageBroker.RabbitMQ.HostName,
-                    UserName = AppSettings.MessageBroker.RabbitMQ.UserName,
-                    Password = AppSettings.MessageBroker.RabbitMQ.Password,
-                    QueueName = AppSettings.MessageBroker.RabbitMQ.QueueName_FileUploaded,
-                    AutomaticCreateEnabled = true,
-                    ExchangeName = AppSettings.MessageBroker.RabbitMQ.ExchangeName,
-                    RoutingKey = AppSettings.MessageBroker.RabbitMQ.RoutingKey_FileUploaded,
-                });
-
-                fileDeletedMessageQueueReceiver = new RabbitMQReceiver<FileDeletedEvent>(new RabbitMQReceiverOptions
-                {
-                    HostName = AppSettings.MessageBroker.RabbitMQ.HostName,
-                    UserName = AppSettings.MessageBroker.RabbitMQ.UserName,
-                    Password = AppSettings.MessageBroker.RabbitMQ.Password,
-                    QueueName = AppSettings.MessageBroker.RabbitMQ.QueueName_FileDeleted,
-                    AutomaticCreateEnabled = true,
-                    ExchangeName = AppSettings.MessageBroker.RabbitMQ.ExchangeName,
-                    RoutingKey = AppSettings.MessageBroker.RabbitMQ.RoutingKey_FileDeleted,
-                });
-            }
-
-            if (AppSettings.MessageBroker.UsedKafka())
-            {
-                fileUploadedMessageQueueReceiver = new KafkaReceiver<FileUploadedEvent>(
-                    AppSettings.MessageBroker.Kafka.BootstrapServers,
-                    AppSettings.MessageBroker.Kafka.Topic_FileUploaded,
-                    AppSettings.MessageBroker.Kafka.GroupId);
-
-                fileDeletedMessageQueueReceiver = new KafkaReceiver<FileDeletedEvent>(
-                    AppSettings.MessageBroker.Kafka.BootstrapServers,
-                    AppSettings.MessageBroker.Kafka.Topic_FileDeleted,
-                    AppSettings.MessageBroker.Kafka.GroupId);
-            }
-
-            if (AppSettings.MessageBroker.UsedAzureQueue())
-            {
-                fileUploadedMessageQueueReceiver = new AzureQueueReceiver<FileUploadedEvent>(
-                    AppSettings.MessageBroker.AzureQueue.ConnectionString,
-                    AppSettings.MessageBroker.AzureQueue.QueueName_FileUploaded);
-
-                fileDeletedMessageQueueReceiver = new AzureQueueReceiver<FileDeletedEvent>(
-                    AppSettings.MessageBroker.AzureQueue.ConnectionString,
-                    AppSettings.MessageBroker.AzureQueue.QueueName_FileDeleted);
-            }
-
-            if (AppSettings.MessageBroker.UsedAzureServiceBus())
-            {
-                fileUploadedMessageQueueReceiver = new AzureServiceBusReceiver<FileUploadedEvent>(
-                    AppSettings.MessageBroker.AzureServiceBus.ConnectionString,
-                    AppSettings.MessageBroker.AzureServiceBus.QueueName_FileUploaded);
-
-                fileDeletedMessageQueueReceiver = new AzureServiceBusReceiver<FileDeletedEvent>(
-                    AppSettings.MessageBroker.AzureServiceBus.ConnectionString,
-                    AppSettings.MessageBroker.AzureServiceBus.QueueName_FileDeleted);
-            }
-
-            var connection = new HubConnectionBuilder()
-                .WithUrl($"{AppSettings.NotificationServer.Endpoint}/SimulatedLongRunningTaskHub")
-                .AddMessagePackProtocol()
-                .Build();
-
-            fileUploadedMessageQueueReceiver?.Receive(data =>
-            {
-                Thread.Sleep(5000); // simulate long running task
-
-                string message = data.FileEntry.Id.ToString();
-
-                connection.StartAsync().GetAwaiter().GetResult();
-
-                connection.InvokeAsync("SendTaskStatus", $"{AppSettings.MessageBroker.Provider} - File Uploaded", message);
-
-                connection.StopAsync().GetAwaiter().GetResult();
-            });
-
-            fileDeletedMessageQueueReceiver?.Receive(data =>
-            {
-                Thread.Sleep(5000); // simulate long running task
-
-                string message = data.FileEntry.Id.ToString();
-
-                connection.StartAsync().GetAwaiter().GetResult();
-
-                connection.InvokeAsync("SendTaskStatus", $"{AppSettings.MessageBroker.Provider} - File Deleted", message);
-
-                connection.StopAsync().GetAwaiter().GetResult();
             });
         }
     }

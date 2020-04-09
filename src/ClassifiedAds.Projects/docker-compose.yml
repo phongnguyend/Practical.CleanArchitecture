@@ -173,12 +173,32 @@ services:
         depends_on:
           - db
           - migrator
+          - rabbitmq
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
           CheckDependency__Enabled: "true"
-          CheckDependency__Host: "migrator:80"
+          CheckDependency__Host: "migrator:80,rabbitmq:5672"
           NotificationServer__Endpoint: "http://notificationserver"
+          MessageBroker__Provider: "RabbitMQ"
+          MessageBroker__RabbitMQ__HostName: "rabbitmq"
+          MessageBroker__RabbitMQ__UserName: "guest"
+          MessageBroker__RabbitMQ__Password: "guest"
+          MessageBroker__RabbitMQ__ExchangeName: "amq.direct"
+          MessageBroker__RabbitMQ__RoutingKey_FileUploaded: "classifiedadds_fileuploaded"
+          MessageBroker__RabbitMQ__RoutingKey_FileDeleted: "classifiedadds_filedeleted"
+          MessageBroker__RabbitMQ__QueueName_FileUploaded: "classifiedadds_fileuploaded"
+          MessageBroker__RabbitMQ__QueueName_FileDeleted: "classifiedadds_filedeleted"
+          MessageBroker__Kafka__BootstrapServers: "kafka:9092"
+          MessageBroker__Kafka__Topic_FileUploaded: "classifiedadds_fileuploaded"
+          MessageBroker__Kafka__Topic_FileDeleted: "classifiedadds_filedeleted"
+          MessageBroker__Kafka__GroupId: "classified"
+          MessageBroker__AzureQueue__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
+          MessageBroker__AzureQueue__QueueName_FileUploaded: "classifiedadds-fileuploaded"
+          MessageBroker__AzureQueue__QueueName_FileDeleted: "classifiedadds-filedeleted"
+          MessageBroker__AzureServiceBus__ConnectionString: "Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=xxx;SharedAccessKey=xxx"
+          MessageBroker__AzureServiceBus__QueueName_FileUploaded: "classifiedadds_fileuploaded"
+          MessageBroker__AzureServiceBus__QueueName_FileDeleted: "classifiedadds_filedeleted"
     grpc:
         build:
           context: .

@@ -411,7 +411,7 @@ namespace IdentityServer4.Quickstart.UI
             var confirmationEmail = Url.Action("ConfirmEmailAddress", "Account",
                 new { token = token, email = user.Email }, Request.Scheme);
 
-            _emailMessageService.Add(new EmailMessage
+            _emailMessageService.AddOrUpdate(new EmailMessage
             {
                 From = string.Empty,
                 To = user.Email,
@@ -461,7 +461,7 @@ namespace IdentityServer4.Quickstart.UI
                     var resetUrl = Url.Action("ResetPassword", "Account",
                         new { token = token, email = user.Email }, Request.Scheme);
 
-                    _emailMessageService.Add(new EmailMessage
+                    _emailMessageService.AddOrUpdate(new EmailMessage
                     {
                         From = string.Empty,
                         To = user.Email,

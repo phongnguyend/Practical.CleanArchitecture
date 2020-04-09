@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Infrastructure.Configuration;
 using ClassifiedAds.Infrastructure.HealthChecks;
 using ClassifiedAds.Persistence;
+using ClassifiedAds.WebMVC.ConfigurationOptions;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -25,27 +26,29 @@ namespace ClassifiedAds.WebMVC
                 .ConfigureAppConfiguration((ctx, builder) =>
                 {
                     var config = builder.Build();
+                    var appSettings = new AppSettings();
+                    config.Bind(appSettings);
 
                     builder.AddEFConfiguration(() =>
                     {
-                        if (string.Equals(config["CheckDependency:Enabled"], "true", System.StringComparison.OrdinalIgnoreCase))
+                        if (appSettings.CheckDependency.Enabled)
                         {
-                            NetworkPortCheck.Wait(config["CheckDependency:Host"], 5);
+                            NetworkPortCheck.Wait(appSettings.CheckDependency.Host, 5);
                         }
 
                         var dbContextOptionsBuilder = new DbContextOptionsBuilder<AdsDbContext>();
-                        dbContextOptionsBuilder.UseSqlServer(config.GetConnectionString("ClassifiedAds"));
+                        dbContextOptionsBuilder.UseSqlServer(appSettings.ConnectionStrings.ClassifiedAds);
                         return new AdsDbContext(dbContextOptionsBuilder.Options);
                     });
 
-                    //builder.AddSqlConfigurationVariables(config.GetConnectionString("ClassifiedAds"));
+                    //builder.AddSqlConfigurationVariables(appSettings.ConnectionStrings.ClassifiedAds);
 
                     if (ctx.HostingEnvironment.IsDevelopment())
                     {
                         return;
                     }
 
-                    builder.AddAzureKeyVault($"https://{config["KeyVaultName"]}.vault.azure.net/");
+                    builder.AddAzureKeyVault($"https://{appSettings.KeyVaultName}.vault.azure.net/");
                 })
                 .ConfigureLogging(logging =>
                 {

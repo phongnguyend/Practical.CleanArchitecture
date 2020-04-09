@@ -11,9 +11,7 @@ namespace ClassifiedAds.Domain.Services
 
         T GetById(Guid guid);
 
-        void Add(T entity);
-
-        void Update(T entity);
+        void AddOrUpdate(T entity);
 
         void Delete(T entity);
     }

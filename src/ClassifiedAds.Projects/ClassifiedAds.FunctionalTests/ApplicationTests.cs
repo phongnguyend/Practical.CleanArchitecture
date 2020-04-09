@@ -14,7 +14,7 @@ namespace ClassifiedAds.FunctionalTests
             var loginPage = navigator.LoginPage();
             loginPage.UserName = Configuration.Login_UserName;
             loginPage.Password = Configuration.Login_Password;
-            loginPage.RememberMyLogin = false;
+            loginPage.RememberMyLogin = true;
             Thread.Sleep(2000);
 
             var consentPage = loginPage.Login();
@@ -23,11 +23,14 @@ namespace ClassifiedAds.FunctionalTests
             Thread.Sleep(2000);
             consentPage.Confirm();
             Thread.Sleep(2000);
-           
+
             navigator.HomePage();
             Thread.Sleep(2000);
 
             navigator.PrivacyPage();
+            Thread.Sleep(2000);
+
+            navigator.AuthorizedActionPage();
             Thread.Sleep(2000);
 
             navigator.Logout();

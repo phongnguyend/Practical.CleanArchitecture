@@ -8,6 +8,8 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
     {
         public ConnectionStrings ConnectionStrings { get; set; }
 
+        public CheckDependency CheckDependency { get; set; }
+
         public OpenIdConnect OpenIdConnect { get; set; }
 
         public ResourceServer ResourceServer { get; set; }
@@ -19,6 +21,8 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
         public string AllowedHosts { get; set; }
 
         public string CurrentUrl { get; set; }
+
+        public string KeyVaultName { get; set; }
 
         public StorageOptions Storage { get; set; }
 

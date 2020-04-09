@@ -3,23 +3,23 @@ using ClassifiedAds.Domain.Services;
 
 namespace ClassifiedAds.Application.Commands.Products
 {
-    public class UpdateProductCommand : ICommand
+    public class AddUpdateProductCommand : ICommand
     {
         public Product Product { get; set; }
     }
 
-    internal class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand>
+    internal class AddUpdateProductCommandHandler : ICommandHandler<AddUpdateProductCommand>
     {
         private readonly IProductService _productService;
 
-        public UpdateProductCommandHandler(IProductService productService)
+        public AddUpdateProductCommandHandler(IProductService productService)
         {
             _productService = productService;
         }
 
-        public void Handle(UpdateProductCommand command)
+        public void Handle(AddUpdateProductCommand command)
         {
-            _productService.Update(command.Product);
+            _productService.AddOrUpdate(command.Product);
         }
     }
 }

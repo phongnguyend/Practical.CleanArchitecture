@@ -36,7 +36,7 @@ namespace ClassifiedAds.Infrastructure.Identity
 
         public Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
         {
-            _userRepository.Add(user);
+            _userRepository.AddOrUpdate(user);
             _unitOfWork.SaveChanges();
             return Task.FromResult(IdentityResult.Success);
         }

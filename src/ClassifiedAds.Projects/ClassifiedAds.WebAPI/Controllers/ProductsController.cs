@@ -56,7 +56,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public ActionResult<Product> Post([FromBody] Product model)
         {
-            _dispatcher.Dispatch(new AddProductCommand { Product = model });
+            _dispatcher.Dispatch(new AddUpdateProductCommand { Product = model });
             return Created($"/api/products/{model.Id}", model);
         }
 
@@ -76,7 +76,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             product.Name = model.Name;
             product.Description = model.Description;
 
-            _dispatcher.Dispatch(new UpdateProductCommand { Product = product });
+            _dispatcher.Dispatch(new AddUpdateProductCommand { Product = product });
 
             return Ok(product);
         }

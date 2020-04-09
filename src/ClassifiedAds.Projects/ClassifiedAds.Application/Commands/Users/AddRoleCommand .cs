@@ -21,7 +21,7 @@ namespace ClassifiedAds.Application.Commands.Users
         public void Handle(AddRoleCommand command)
         {
             command.User.UserRoles.Add(command.Role);
-            _userService.Update(command.User);
+            _userService.AddOrUpdate(command.User);
         }
     }
 }

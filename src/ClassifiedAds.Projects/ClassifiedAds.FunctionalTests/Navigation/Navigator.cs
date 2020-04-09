@@ -16,14 +16,20 @@ namespace ClassifiedAds.FunctionalTests.Navigation
 
         public void HomePage()
         {
-            var logoutLink = _driver.FindElement(By.CssSelector("body > header > nav > div > div > ul > li:nth-child(1) > a"));
-            _javaScriptExecutor.ExecuteScript("arguments[0].click();", logoutLink);
+            var link = _driver.FindElement(By.CssSelector("body > header > nav > div > div > ul > li:nth-child(1) > a"));
+            _javaScriptExecutor.ExecuteScript("arguments[0].click();", link);
         }
 
         public void PrivacyPage()
         {
-            var logoutLink = _driver.FindElement(By.CssSelector("body > header > nav > div > div > ul > li:nth-child(2) > a"));
-            _javaScriptExecutor.ExecuteScript("arguments[0].click();", logoutLink);
+            var link = _driver.FindElement(By.CssSelector("body > header > nav > div > div > ul > li:nth-child(2) > a"));
+            _javaScriptExecutor.ExecuteScript("arguments[0].click();", link);
+        }
+
+        public void AuthorizedActionPage()
+        {
+            var link = _driver.FindElement(By.CssSelector("body > header > nav > div > div > ul > li:nth-child(3) > a"));
+            _javaScriptExecutor.ExecuteScript("arguments[0].click();", link);
         }
 
         public LoginPage LoginPage()

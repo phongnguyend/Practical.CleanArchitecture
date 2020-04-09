@@ -1,6 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Domain.Services;
 
 namespace ClassifiedAds.Application.Commands.Roles
 {

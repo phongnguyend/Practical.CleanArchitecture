@@ -45,7 +45,7 @@ namespace ClassifiedAds.WebMVC.Controllers
                 FileName = model.FormFile.FileName,
             };
 
-            _fileEntryService.Add(fileEntry);
+            _fileEntryService.AddOrUpdate(fileEntry);
 
             using (var stream = new MemoryStream())
             {
@@ -53,7 +53,7 @@ namespace ClassifiedAds.WebMVC.Controllers
                 _fileManager.Create(fileEntry, stream);
             }
 
-            _fileEntryService.Update(fileEntry);
+            _fileEntryService.AddOrUpdate(fileEntry);
 
             return View();
         }

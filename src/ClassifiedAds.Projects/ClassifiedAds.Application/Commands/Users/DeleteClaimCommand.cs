@@ -21,7 +21,7 @@ namespace ClassifiedAds.Application.Commands.Users
         public void Handle(DeleteClaimCommand command)
         {
             command.User.Claims.Remove(command.Claim);
-            _userService.Update(command.User);
+            _userService.AddOrUpdate(command.User);
         }
     }
 }

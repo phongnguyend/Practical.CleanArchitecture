@@ -9,8 +9,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddScoped(typeof(ICrudService<>), typeof(CrudService<>))
                     .AddScoped<IUserService, UserService>()
-                    .AddScoped<IProductService, ProductService>()
-                    .AddScoped<IStoreService, StoreService>();
+                    .AddScoped<IProductService, ProductService>();
             return services;
         }
     }

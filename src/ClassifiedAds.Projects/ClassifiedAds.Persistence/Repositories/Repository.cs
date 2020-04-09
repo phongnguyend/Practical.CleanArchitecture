@@ -24,9 +24,12 @@ namespace ClassifiedAds.Persistence.Repositories
             _dbContext = dbContext;
         }
 
-        public void Add(T entity)
+        public void AddOrUpdate(T entity)
         {
-            DbSet.Add(entity);
+            if (entity.Id.Equals(default(TKey)))
+            {
+                DbSet.Add(entity);
+            }
         }
 
         public void Delete(T entity)

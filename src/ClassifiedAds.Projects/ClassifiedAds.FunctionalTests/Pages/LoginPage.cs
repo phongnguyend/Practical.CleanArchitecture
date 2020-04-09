@@ -40,11 +40,12 @@ namespace ClassifiedAds.FunctionalTests.Pages
             set
             {
                 var remember = _driver.FindElement(By.Id("RememberLogin"));
+                var btn = _driver.FindElement(By.XPath("//input[@id='RememberLogin']/following-sibling::div"));
                 if (value)
                 {
                     if (!remember.Selected)
                     {
-                        remember.Click();
+                        btn.Click();
                     }
 
                 }
@@ -52,7 +53,7 @@ namespace ClassifiedAds.FunctionalTests.Pages
                 {
                     if (remember.Selected)
                     {
-                        remember.Click();
+                        btn.Click();
                     }
                 }
             }
@@ -60,7 +61,7 @@ namespace ClassifiedAds.FunctionalTests.Pages
 
         internal ConsentPage Login()
         {
-            var loginButton = _driver.FindElement(By.CssSelector("button.btn.btn-primary"));
+            var loginButton = _driver.FindElement(By.Id("btnLogin"));
             loginButton.Click();
 
             return new ConsentPage(_driver);

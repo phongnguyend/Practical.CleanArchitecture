@@ -21,7 +21,7 @@ namespace ClassifiedAds.Application.Commands.Users
         public void Handle(DeleteRoleCommand command)
         {
             command.User.UserRoles.Remove(command.Role);
-            _userService.Update(command.User);
+            _userService.AddOrUpdate(command.User);
         }
     }
 }

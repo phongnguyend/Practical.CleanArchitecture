@@ -1,16 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace ClassifiedAds.BackgroundServer.Jobs
+namespace ClassifiedAds.Application.BackgroundTasks
 {
-    public class SendSms
+    public class SendEmail
     {
         private readonly ILogger _logger;
 
-        public SendSms(ILogger<SendEmail> logger)
+        public SendEmail(ILogger<SendEmail> logger)
         {
             _logger = logger;
         }

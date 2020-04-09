@@ -10,7 +10,7 @@ namespace ClassifiedAds.Domain.Repositories
 
         IQueryable<TEntity> GetAll();
 
-        void Add(TEntity entity);
+        void AddOrUpdate(TEntity entity);
 
         void Delete(TEntity entity);
     }

@@ -54,14 +54,14 @@ namespace ClassifiedAds.IdentityServer.Controllers
                     NormalizedName = model.Name.ToUpper(),
                 };
 
-                _dispatcher.Dispatch(new AddRoleCommand { Role = role });
+                _dispatcher.Dispatch(new AddUpdateRoleCommand { Role = role });
             }
             else
             {
                 role = _dispatcher.Dispatch(new GetRoleQuery { Id = model.Id });
                 role.Name = model.Name;
                 role.NormalizedName = model.Name.ToUpper();
-                _dispatcher.Dispatch(new UpdateRoleCommand { Role = role });
+                _dispatcher.Dispatch(new AddUpdateRoleCommand { Role = role });
             }
 
             return RedirectToAction(nameof(Edit), new { role.Id });
