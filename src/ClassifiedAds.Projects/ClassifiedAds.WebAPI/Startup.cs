@@ -4,6 +4,7 @@ using System.IO;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
+using ClassifiedAds.WebAPI.Filters;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -45,7 +46,10 @@ namespace ClassifiedAds.WebAPI
 
             services.Configure<AppSettings>(Configuration);
 
-            services.AddControllers();
+            services.AddControllers(configure =>
+            {
+                configure.Filters.Add(typeof(GlobalExceptionFilter));
+            });
 
             services.AddCors(options =>
             {

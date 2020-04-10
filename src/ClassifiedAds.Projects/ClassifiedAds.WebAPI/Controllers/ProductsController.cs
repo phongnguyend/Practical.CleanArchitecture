@@ -42,12 +42,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Product> Get(Guid id)
         {
-            var product = _dispatcher.Dispatch(new GetProductQuery { Id = id });
-            if (product == null)
-            {
-                return NotFound();
-            }
-
+            var product = _dispatcher.Dispatch(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
             return Ok(product);
         }
 
@@ -66,11 +61,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Put(Guid id, [FromBody] Product model)
         {
-            var product = _dispatcher.Dispatch(new GetProductQuery { Id = id });
-            if (product == null)
-            {
-                return NotFound();
-            }
+            var product = _dispatcher.Dispatch(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
 
             product.Code = model.Code;
             product.Name = model.Name;
@@ -86,11 +77,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Delete(Guid id)
         {
-            var product = _dispatcher.Dispatch(new GetProductQuery { Id = id });
-            if (product == null)
-            {
-                return NotFound();
-            }
+            var product = _dispatcher.Dispatch(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
 
             _dispatcher.Dispatch(new DeleteProductCommand { Product = product });
 

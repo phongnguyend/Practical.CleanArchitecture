@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Domain.Entities;
+﻿using ClassifiedAds.CrossCuttingConcerns.Exceptions;
+using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Services;
 using System;
 
@@ -7,6 +8,7 @@ namespace ClassifiedAds.Application.Queries.Products
     public class GetProductQuery : IQuery<Product>
     {
         public Guid Id { get; set; }
+        public bool ThrowNotFoundIfNull { get; set; }
     }
 
     internal class GetProductQueryHandler : IQueryHandler<GetProductQuery, Product>
@@ -20,7 +22,14 @@ namespace ClassifiedAds.Application.Queries.Products
 
         public Product Handle(GetProductQuery query)
         {
-            return _productService.GetById(query.Id);
+            var product = _productService.GetById(query.Id);
+
+            if (query.ThrowNotFoundIfNull && product == null)
+            {
+                throw new NotFoundException($"Product {query.Id} not found.");
+            }
+
+            return product;
         }
     }
 }
