@@ -7,9 +7,8 @@ COPY ./ClassifiedAds.BackgroundServer/*.csproj ./ClassifiedAds.BackgroundServer/
 COPY ./ClassifiedAds.Blazor/*.csproj ./ClassifiedAds.Blazor/
 COPY ./ClassifiedAds.CrossCuttingConcerns/*.csproj ./ClassifiedAds.CrossCuttingConcerns/
 COPY ./ClassifiedAds.Domain/*.csproj ./ClassifiedAds.Domain/
-COPY ./ClassifiedAds.FunctionalTests/*.csproj ./ClassifiedAds.FunctionalTests/
+COPY ./ClassifiedAds.EndToEndTests/*.csproj ./ClassifiedAds.EndToEndTests/
 COPY ./ClassifiedAds.GraphQL/*.csproj ./ClassifiedAds.GraphQL/
-COPY ./ClassifiedAds.GRPC/*.csproj ./ClassifiedAds.GRPC/
 COPY ./ClassifiedAds.IdentityServer/*.csproj ./ClassifiedAds.IdentityServer/
 COPY ./ClassifiedAds.Infrastructure/*.csproj ./ClassifiedAds.Infrastructure/
 COPY ./ClassifiedAds.IntegrationTests/*.csproj ./ClassifiedAds.IntegrationTests/

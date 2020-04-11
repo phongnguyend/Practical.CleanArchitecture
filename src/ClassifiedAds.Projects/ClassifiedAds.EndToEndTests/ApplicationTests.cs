@@ -1,8 +1,8 @@
-using ClassifiedAds.FunctionalTests.Navigation;
+using ClassifiedAds.EndToEndTests.Navigation;
 using System.Threading;
 using Xunit;
 
-namespace ClassifiedAds.FunctionalTests
+namespace ClassifiedAds.EndToEndTests
 {
     public class ApplicationTests : TestBase
     {

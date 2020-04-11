@@ -1,0 +1,246 @@
+version: "3.6"
+services:
+    db:
+        image: "mcr.microsoft.com/mssql/server:2017-latest"
+        ports:
+            - "1434:1433"
+        environment:
+            SA_PASSWORD: "sqladmin123!@#"
+            MSSQL_PID: "Developer"
+            ACCEPT_EULA: "Y"
+    rabbitmq:
+        image: "rabbitmq:3-management"
+        ports:
+          - "5672:5672"
+          - "15672:15672"
+    zookeeper:
+        image: confluentinc/cp-zookeeper:latest
+        environment:
+          ZOOKEEPER_CLIENT_PORT: 2181
+          ZOOKEEPER_TICK_TIME: 2000
+    kafka:
+        image: confluentinc/cp-kafka:latest
+        depends_on:
+          - zookeeper
+        ports:
+          - 9092:9092
+        environment:
+          KAFKA_BROKER_ID: 1
+          KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+          KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://host.docker.internal:9092
+          KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+          KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+          KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    migrator:
+        build:
+          context: .
+          dockerfile: ./ClassifiedAds.Migrator/Dockerfile
+        volumes:
+            - D:\\ClassifiedAds.Projects\\Logs\\Migrator:/ClassifiedAds.Projects/logs
+        depends_on:
+          - db
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          CheckDependency__Enabled: "true"
+          CheckDependency__Host: "db:1433"
+    identityserver:
+        build:
+          context: .
+          dockerfile: ./ClassifiedAds.IdentityServer/Dockerfile
+        ports:
+            - "9000:80"
+        volumes:
+            - D:\\ClassifiedAds.Projects\\Logs\\IdentityServer:/ClassifiedAds.Projects/logs
+        depends_on:
+          - db
+          - migrator
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+    notificationserver:
+        build:
+          context: .
+          dockerfile: ./ClassifiedAds.NotificationServer/Dockerfile
+        ports:
+            - "9001:80"
+        volumes:
+            - D:\\ClassifiedAds.Projects\\Logs\\NotificationServer:/ClassifiedAds.Projects/logs
+        depends_on:
+          - db
+          - migrator
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+    webapi:
+        build:
+          context: .
+          dockerfile: ./ClassifiedAds.WebAPI/Dockerfile
+        ports:
+            - "9002:80"
+        volumes:
+            - D:\\ClassifiedAds.Projects\\Logs\\WebAPI:/ClassifiedAds.Projects/logs
+        depends_on:
+          - db
+          - migrator
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
+          IdentityServerAuthentication__RequireHttpsMetadata: "false"
+    webmvc:
+        build:
+          context: .
+          dockerfile: ./ClassifiedAds.WebMVC/Dockerfile
+        ports:
+            - "9003:80"
+        volumes:
+            - D:\\ClassifiedAds.Projects\\Files:/files
+            - D:\\ClassifiedAds.Projects\\Logs\\WebMVC:/ClassifiedAds.Projects/logs
+        depends_on:
+          - db
+          - migrator
+          - rabbitmq
+          - kafka
+          - identityserver
+          - webapi
+          - notificationserver
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          CheckDependency__Enabled: "true"
+          CheckDependency__Host: "migrator:80"
+          OpenIdConnect__Authority: "http://host.docker.internal:9000"
+          OpenIdConnect__RequireHttpsMetadata: "false"
+          ResourceServer__Endpoint: "http://webapi"
+          ResourceServer__PublicEndpoint: "http://host.docker.internal:9002"
+          NotificationServer__Endpoint: "http://notificationserver"
+          NotificationServer__PublicEndpoint: "http://localhost:9001"
+          BackgroundServer__Endpoint: "http://backgroundserver"
+          CurrentUrl: "http://host.docker.internal:9003"
+          Storage__Provider: "Local"
+          Storage__Local__Path: "/files"
+          Storage__Azure__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
+          Storage__Azure__Container: "classifiedadds"
+          Storage__Amazon__AccessKeyID: "xxx"
+          Storage__Amazon__SecretAccessKey: "xxx"
+          Storage__Amazon__BucketName: "classifiedadds"
+          Storage__Amazon__RegionEndpoint: "ap-southeast-1"
+          MessageBroker__Provider: "RabbitMQ"
+          MessageBroker__RabbitMQ__HostName: "rabbitmq"
+          MessageBroker__RabbitMQ__UserName: "guest"
+          MessageBroker__RabbitMQ__Password: "guest"
+          MessageBroker__RabbitMQ__ExchangeName: "amq.direct"
+          MessageBroker__RabbitMQ__RoutingKey_FileUploaded: "classifiedadds_fileuploaded"
+          MessageBroker__RabbitMQ__RoutingKey_FileDeleted: "classifiedadds_filedeleted"
+          MessageBroker__RabbitMQ__QueueName_FileUploaded: "classifiedadds_fileuploaded"
+          MessageBroker__RabbitMQ__QueueName_FileDeleted: "classifiedadds_filedeleted"
+          MessageBroker__Kafka__BootstrapServers: "kafka:9092"
+          MessageBroker__Kafka__Topic_FileUploaded: "classifiedadds_fileuploaded"
+          MessageBroker__Kafka__Topic_FileDeleted: "classifiedadds_filedeleted"
+          MessageBroker__Kafka__GroupId: "classified"
+          MessageBroker__AzureQueue__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
+          MessageBroker__AzureQueue__QueueName_FileUploaded: "classifiedadds-fileuploaded"
+          MessageBroker__AzureQueue__QueueName_FileDeleted: "classifiedadds-filedeleted"
+          MessageBroker__AzureServiceBus__ConnectionString: "Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=xxx;SharedAccessKey=xxx"
+          MessageBroker__AzureServiceBus__QueueName_FileUploaded: "classifiedadds_fileuploaded"
+          MessageBroker__AzureServiceBus__QueueName_FileDeleted: "classifiedadds_filedeleted"
+    blazor:
+        build:
+          context: .
+          dockerfile: ./ClassifiedAds.Blazor/Dockerfile
+        ports:
+            - "9008:80"
+        volumes:
+            - D:\\ClassifiedAds.Projects\\Logs\\Blazor:/ClassifiedAds.Projects/logs
+        depends_on:
+          - identityserver
+          - webapi
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          OpenIdConnect__Authority: "http://host.docker.internal:9000"
+          OpenIdConnect__RequireHttpsMetadata: "false"
+          ResourceServer__Endpoint: "http://webapi"
+          ResourceServer__PublicEndpoint: "http://host.docker.internal:9002"
+    backgroundserver:
+        build:
+          context: .
+          dockerfile: ./ClassifiedAds.BackgroundServer/Dockerfile
+        ports:
+            - "9004:80"
+        volumes:
+            - D:\\ClassifiedAds.Projects\\Logs\\BackgroundServer:/ClassifiedAds.Projects/logs
+        depends_on:
+          - db
+          - migrator
+          - rabbitmq
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          CheckDependency__Enabled: "true"
+          CheckDependency__Host: "migrator:80,rabbitmq:5672"
+          NotificationServer__Endpoint: "http://notificationserver"
+          MessageBroker__Provider: "RabbitMQ"
+          MessageBroker__RabbitMQ__HostName: "rabbitmq"
+          MessageBroker__RabbitMQ__UserName: "guest"
+          MessageBroker__RabbitMQ__Password: "guest"
+          MessageBroker__RabbitMQ__ExchangeName: "amq.direct"
+          MessageBroker__RabbitMQ__RoutingKey_FileUploaded: "classifiedadds_fileuploaded"
+          MessageBroker__RabbitMQ__RoutingKey_FileDeleted: "classifiedadds_filedeleted"
+          MessageBroker__RabbitMQ__QueueName_FileUploaded: "classifiedadds_fileuploaded"
+          MessageBroker__RabbitMQ__QueueName_FileDeleted: "classifiedadds_filedeleted"
+          MessageBroker__Kafka__BootstrapServers: "kafka:9092"
+          MessageBroker__Kafka__Topic_FileUploaded: "classifiedadds_fileuploaded"
+          MessageBroker__Kafka__Topic_FileDeleted: "classifiedadds_filedeleted"
+          MessageBroker__Kafka__GroupId: "classified"
+          MessageBroker__AzureQueue__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
+          MessageBroker__AzureQueue__QueueName_FileUploaded: "classifiedadds-fileuploaded"
+          MessageBroker__AzureQueue__QueueName_FileDeleted: "classifiedadds-filedeleted"
+          MessageBroker__AzureServiceBus__ConnectionString: "Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=xxx;SharedAccessKey=xxx"
+          MessageBroker__AzureServiceBus__QueueName_FileUploaded: "classifiedadds_fileuploaded"
+          MessageBroker__AzureServiceBus__QueueName_FileDeleted: "classifiedadds_filedeleted"
+    grpc:
+        build:
+          context: .
+          dockerfile: ./ClassifiedAds.GRPC/Dockerfile
+        ports:
+            - "9005:443"
+        volumes:
+            - D:\\ClassifiedAds.Projects\\Logs\\GRPC:/ClassifiedAds.Projects/logs
+        depends_on:
+          - db
+          - migrator
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          ASPNETCORE_URLS: "https://+"
+          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+    graphql:
+        build:
+          context: .
+          dockerfile: ./ClassifiedAds.GraphQL/Dockerfile
+        ports:
+            - "9006:80"
+        volumes:
+            - D:\\ClassifiedAds.Projects\\Logs\\GraphQL:/ClassifiedAds.Projects/logs
+        depends_on:
+          - grpc
+          - webapi
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Development"
+          GrpcService__Endpoint: "https://grpc"
+          ResourceServer__Endpoint: "http://webapi"
+          ResourceServer__PublicEndpoint: "http://host.docker.internal:9002"
+    ocelot:
+        build:
+          context: .
+          dockerfile: ./ClassifiedAds.Ocelot/Dockerfile
+        ports:
+            - "9007:80"
+        volumes:
+            - D:\\ClassifiedAds.Projects\\Logs\\Ocelot:/ClassifiedAds.Projects/logs
+        depends_on:
+          - db
+          - migrator
+        environment:
+          ASPNETCORE_ENVIRONMENT: "Docker"
+          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"

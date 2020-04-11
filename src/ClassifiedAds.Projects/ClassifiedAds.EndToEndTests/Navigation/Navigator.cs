@@ -1,7 +1,7 @@
-﻿using ClassifiedAds.FunctionalTests.Pages;
+﻿using ClassifiedAds.EndToEndTests.Pages;
 using OpenQA.Selenium;
 
-namespace ClassifiedAds.FunctionalTests.Navigation
+namespace ClassifiedAds.EndToEndTests.Navigation
 {
     public class Navigator
     {

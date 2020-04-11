@@ -1,17 +1,16 @@
-﻿using ClassifiedAds.GraphQL.Types;
-using ClassifiedAds.GRPC;
+﻿using ClassifiedAds.GraphQL.DownstreamServices;
+using ClassifiedAds.GraphQL.Types;
 using GraphQL.Types;
-using Grpc.Net.Client;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 
 namespace ClassifiedAds.GraphQL
 {
     public class ClassifiedAdsQuery : ObjectGraphType<object>
     {
-        public ClassifiedAdsQuery(IConfiguration configuration)
+        public ClassifiedAdsQuery(IConfiguration configuration, IHttpContextAccessor httpContext)
         {
             Name = "Query";
 
@@ -19,23 +18,8 @@ namespace ClassifiedAds.GraphQL
                 "products",
                 resolve: context =>
                 {
-                    var client = GetGrpcClient(configuration);
-                    var productsResponse = client.GetProducts(new GetProductsRequest());
-
-                    var products = new List<Domain.Entities.Product>();
-
-                    foreach (var productMessage in productsResponse.Products)
-                    {
-                        products.Add(new Domain.Entities.Product
-                        {
-                            Id = Guid.Parse(productMessage.Id),
-                            Code = productMessage.Code,
-                            Name = productMessage.Name,
-                            Description = productMessage.Description
-                        });
-                    }
-
-                    return products;
+                    var productService = GetProductService(configuration, httpContext);
+                    return productService.GetProducts();
                 }
                 );
 
@@ -45,37 +29,21 @@ namespace ClassifiedAds.GraphQL
                 resolve: context =>
                 {
                     var id = context.GetArgument<string>("id");
-                    var client = GetGrpcClient(configuration);
-                    var productResponse = client.GetProduct(new GetProductRequest { Id = id });
-                    var productMessage = productResponse.Product;
-                    return productMessage != null ? new Domain.Entities.Product
-                    {
-                        Id = Guid.Parse(productMessage.Id),
-                        Code = productMessage.Code,
-                        Name = productMessage.Name,
-                        Description = productMessage.Description
-                    } : null;
+                    var productService = GetProductService(configuration, httpContext);
+                    return productService.GetProductById(Guid.Parse(id));
                 }
             );
         }
 
-        private static Product.ProductClient GetGrpcClient(IConfiguration configuration)
+        public ProductService GetProductService(IConfiguration configuration, IHttpContextAccessor httpContext)
         {
-            var channel = GrpcChannel.ForAddress(configuration["GrpcService:Endpoint"],
-                new GrpcChannelOptions
-                {
-                    HttpClient = new HttpClient(new HttpClientHandler
-                    {
-                        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
-                        {
-                            // TODO: verify the Certificate
-                            return true;
-                        }
-                    })
-                });
-
-            var client = new Product.ProductClient(channel);
-            return client;
+            var accessToken = httpContext.HttpContext.Request.Headers["Authorization"].ToString();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(configuration["ResourceServer:Endpoint"]);
+            client.Timeout = new TimeSpan(0, 0, 30);
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("Authorization", accessToken);
+            return new ProductService(client);
         }
     }
 }

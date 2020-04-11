@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\ClassifiedAds.GRPC\Protos\product.proto" GrpcServices="Client" Link="Protos\product.proto" />
     <PackageReference Include="Google.Protobuf" Version="3.10.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.25.0" />
     <PackageReference Include="Grpc.Tools" Version="2.26.0">

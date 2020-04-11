@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ClassifiedAds.FunctionalTests
+namespace ClassifiedAds.EndToEndTests
 {
     public class TestBase : IDisposable
     {

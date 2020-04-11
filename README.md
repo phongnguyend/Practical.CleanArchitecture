@@ -53,7 +53,6 @@
   | -------- | ------------------ | ----------------- |
   | ClassifiedAds.Migrator | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.Migrator/appsettings.json) | ConnectionStrings:ClassifiedAds |
   | ClassifiedAds.BackgroundServer | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.BackgroundServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.GRPC | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.GRPC/appsettings.json) | ConnectionStrings:ClassifiedAds |
   | ClassifiedAds.IdentityServer | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.IdentityServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
   | ClassifiedAds.WebAPI | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.WebAPI/appsettings.json) | ConnectionStrings:ClassifiedAds |
   | ClassifiedAds.WebMVC | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.WebMVC/appsettings.json) | ConnectionStrings:ClassifiedAds |
@@ -289,7 +288,6 @@
 | -------- | ---------- | ------------------- | ------------------- |
 | BackgroundServer | https://localhost:44318 | http://localhost:9004 | http://host.docker.internal:9004 |
 | Blazor | https://localhost:44331 | http://localhost:9008 | http://host.docker.internal:9008 |
-| GRPC | https://localhost:5001 | https://localhost:9005 | https://host.docker.internal:9005 |
 | IdentityServer | https://localhost:44367 | http://localhost:9000 | http://host.docker.internal:9000 |
 | NotificationServer | https://localhost:44390 | http://localhost:9001 | http://host.docker.internal:9001 |
 | WebAPI | https://localhost:44312 | http://localhost:9002 | http://host.docker.internal:9002 |

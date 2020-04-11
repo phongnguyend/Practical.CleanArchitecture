@@ -1,6 +1,6 @@
 ﻿using OpenQA.Selenium;
 
-namespace ClassifiedAds.FunctionalTests.Pages
+namespace ClassifiedAds.EndToEndTests.Pages
 {
     public class ConsentPage
     {

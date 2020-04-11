@@ -199,21 +199,6 @@ services:
           MessageBroker__AzureServiceBus__ConnectionString: "Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=xxx;SharedAccessKey=xxx"
           MessageBroker__AzureServiceBus__QueueName_FileUploaded: "classifiedadds_fileuploaded"
           MessageBroker__AzureServiceBus__QueueName_FileDeleted: "classifiedadds_filedeleted"
-    grpc:
-        build:
-          context: .
-          dockerfile: ./ClassifiedAds.GRPC/Dockerfile
-        ports:
-            - "9005:443"
-        volumes:
-            - D:\\ClassifiedAds.Projects\\Logs\\GRPC:/ClassifiedAds.Projects/logs
-        depends_on:
-          - db
-          - migrator
-        environment:
-          ASPNETCORE_ENVIRONMENT: "Development"
-          ASPNETCORE_URLS: "https://+"
-          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
     graphql:
         build:
           context: .
@@ -223,11 +208,9 @@ services:
         volumes:
             - D:\\ClassifiedAds.Projects\\Logs\\GraphQL:/ClassifiedAds.Projects/logs
         depends_on:
-          - grpc
           - webapi
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
-          GrpcService__Endpoint: "https://grpc"
           ResourceServer__Endpoint: "http://webapi"
           ResourceServer__PublicEndpoint: "http://host.docker.internal:9002"
     ocelot:
