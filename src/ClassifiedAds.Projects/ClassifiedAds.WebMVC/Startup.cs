@@ -6,6 +6,7 @@ using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Infrastructure.Storages;
 using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Infrastructure.Identity;
+using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
 using ClassifiedAds.Infrastructure.MessageBrokers.Kafka;
@@ -36,9 +37,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Serilog;
 using System;
-using System.IO;
 
 namespace ClassifiedAds.WebMVC
 {
@@ -48,14 +47,16 @@ namespace ClassifiedAds.WebMVC
         {
             Configuration = configuration;
 
-            Directory.CreateDirectory(Path.Combine(env.ContentRootPath, "logs"));
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.File(Path.Combine(env.ContentRootPath, "logs", "log.txt"),
-                    fileSizeLimitBytes: 10 * 1024 * 1024,
-                    rollOnFileSizeLimit: true,
-                    shared: true,
-                    flushToDiskInterval: TimeSpan.FromSeconds(1))
-                .CreateLogger();
+            AppSettings = new AppSettings();
+            Configuration.Bind(AppSettings);
+
+            var validationResult = AppSettings.Validate();
+            if (validationResult.Failed)
+            {
+                throw new Exception(validationResult.FailureMessage);
+            }
+
+            Logger.Configure(env, AppSettings.LoggerOptions);
         }
 
         public IConfiguration Configuration { get; }
@@ -66,16 +67,6 @@ namespace ClassifiedAds.WebMVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.TryAddEnumerable(ServiceDescriptor.Singleton<IValidateOptions<AppSettings>, AppSettingsValidation>());
-
-            var appSettings = new AppSettings();
-            Configuration.Bind(appSettings);
-            AppSettings = appSettings;
-
-            var validationResult = appSettings.Validate();
-            if (validationResult.Failed)
-            {
-                throw new Exception(validationResult.FailureMessage);
-            }
 
             services.Configure<AppSettings>(Configuration);
 
@@ -96,7 +87,7 @@ namespace ClassifiedAds.WebMVC
             })
             .AddNewtonsoftJson();
 
-            services.AddPersistence(appSettings.ConnectionStrings.ClassifiedAds)
+            services.AddPersistence(AppSettings.ConnectionStrings.ClassifiedAds)
                     .AddDomainServices()
                     .AddMessageHandlers();
 
@@ -112,9 +103,9 @@ namespace ClassifiedAds.WebMVC
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
                 options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.Authority = appSettings.OpenIdConnect.Authority;
-                options.ClientId = appSettings.OpenIdConnect.ClientId;
-                options.ClientSecret = appSettings.OpenIdConnect.ClientSecret;
+                options.Authority = AppSettings.OpenIdConnect.Authority;
+                options.ClientId = AppSettings.OpenIdConnect.ClientId;
+                options.ClientSecret = AppSettings.OpenIdConnect.ClientSecret;
                 options.ResponseType = "code id_token";
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
@@ -122,7 +113,7 @@ namespace ClassifiedAds.WebMVC
                 options.Scope.Add("offline_access");
                 options.SaveTokens = true;
                 options.GetClaimsFromUserInfoEndpoint = true;
-                options.RequireHttpsMetadata = appSettings.OpenIdConnect.RequireHttpsMetadata;
+                options.RequireHttpsMetadata = AppSettings.OpenIdConnect.RequireHttpsMetadata;
             });
             services.AddSingleton<IClaimsTransformation, CustomClaimsTransformation>();
 
@@ -148,65 +139,65 @@ namespace ClassifiedAds.WebMVC
             .AddEntityFramework();
 
             var healthChecksBuilder = services.AddHealthChecks()
-                .AddSqlServer(connectionString: appSettings.ConnectionStrings.ClassifiedAds,
+                .AddSqlServer(connectionString: AppSettings.ConnectionStrings.ClassifiedAds,
                     healthQuery: "SELECT 1;",
                     name: "Sql Server",
                     failureStatus: HealthStatus.Degraded)
-                .AddUrlGroup(new Uri(appSettings.OpenIdConnect.Authority),
+                .AddUrlGroup(new Uri(AppSettings.OpenIdConnect.Authority),
                     name: "Identity Server",
                     failureStatus: HealthStatus.Degraded)
-                .AddUrlGroup(new Uri(appSettings.ResourceServer.Endpoint),
+                .AddUrlGroup(new Uri(AppSettings.ResourceServer.Endpoint),
                     name: "Resource (Web API) Server",
                     failureStatus: HealthStatus.Degraded)
-                .AddSignalRHub(appSettings.NotificationServer.Endpoint + "/HealthCheckHub",
+                .AddSignalRHub(AppSettings.NotificationServer.Endpoint + "/HealthCheckHub",
                     name: "Notification (SignalR) Server",
                     failureStatus: HealthStatus.Degraded)
-                .AddUrlGroup(new Uri(appSettings.BackgroundServer.Endpoint),
+                .AddUrlGroup(new Uri(AppSettings.BackgroundServer.Endpoint),
                     name: "Background Services Server",
                     failureStatus: HealthStatus.Degraded);
 
             services.AddHealthChecksUI(setupSettings: setup =>
             {
-                setup.AddHealthCheckEndpoint("Basic Health Check", $"{appSettings.CurrentUrl}/healthcheck");
+                setup.AddHealthCheckEndpoint("Basic Health Check", $"{AppSettings.CurrentUrl}/healthcheck");
             });
 
             services.AddHangfire(x =>
             {
-                x.UseSqlServerStorage(appSettings.ConnectionStrings.ClassifiedAds);
+                x.UseSqlServerStorage(AppSettings.ConnectionStrings.ClassifiedAds);
             });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentWebUser>();
             services.AddTransient<IWebNotification, SignalRNotification>();
 
-            if (appSettings.Storage.UsedAzure())
+            if (AppSettings.Storage.UsedAzure())
             {
-                services.AddSingleton<IFileStorageManager>(new AzureBlobStorageManager(appSettings.Storage.Azure.ConnectionString, appSettings.Storage.Azure.Container));
+                services.AddSingleton<IFileStorageManager>(new AzureBlobStorageManager(AppSettings.Storage.Azure.ConnectionString, AppSettings.Storage.Azure.Container));
 
                 healthChecksBuilder.AddAzureBlobStorage(
-                    appSettings.Storage.Azure.ConnectionString,
-                    containerName: appSettings.Storage.Azure.Container,
+                    AppSettings.Storage.Azure.ConnectionString,
+                    containerName: AppSettings.Storage.Azure.Container,
                     name: "Storage (Azure Blob)",
                     failureStatus: HealthStatus.Degraded);
             }
-            else if (appSettings.Storage.UsedAmazon())
+            else if (AppSettings.Storage.UsedAmazon())
             {
                 services.AddSingleton<IFileStorageManager>(
                     new AmazonS3StorageManager(
-                        appSettings.Storage.Amazon.AccessKeyID,
-                        appSettings.Storage.Amazon.SecretAccessKey,
-                        appSettings.Storage.Amazon.BucketName,
-                        appSettings.Storage.Amazon.RegionEndpoint));
+                        AppSettings.Storage.Amazon.AccessKeyID,
+                        AppSettings.Storage.Amazon.SecretAccessKey,
+                        AppSettings.Storage.Amazon.BucketName,
+                        AppSettings.Storage.Amazon.RegionEndpoint));
 
                 healthChecksBuilder.AddS3(
                     s3 =>
                     {
-                        s3.AccessKey = appSettings.Storage.Amazon.AccessKeyID;
-                        s3.SecretKey = appSettings.Storage.Amazon.SecretAccessKey;
-                        s3.BucketName = appSettings.Storage.Amazon.BucketName;
+                        s3.AccessKey = AppSettings.Storage.Amazon.AccessKeyID;
+                        s3.SecretKey = AppSettings.Storage.Amazon.SecretAccessKey;
+                        s3.BucketName = AppSettings.Storage.Amazon.BucketName;
                         s3.S3Config = new AmazonS3Config
                         {
-                            RegionEndpoint = RegionEndpoint.GetBySystemName(appSettings.Storage.Amazon.RegionEndpoint),
+                            RegionEndpoint = RegionEndpoint.GetBySystemName(AppSettings.Storage.Amazon.RegionEndpoint),
                         };
                     },
                     name: "Storage (Amazon S3)",
@@ -214,99 +205,99 @@ namespace ClassifiedAds.WebMVC
             }
             else
             {
-                services.AddSingleton<IFileStorageManager>(new LocalFileStorageManager(appSettings.Storage.Local.Path));
+                services.AddSingleton<IFileStorageManager>(new LocalFileStorageManager(AppSettings.Storage.Local.Path));
 
                 healthChecksBuilder.AddFilePathWrite(
-                appSettings.Storage.Local.Path,
+                AppSettings.Storage.Local.Path,
                 name: "Storage (Local Directory)",
                 failureStatus: HealthStatus.Degraded);
             }
 
-            if (appSettings.MessageBroker.UsedRabbitMQ())
+            if (AppSettings.MessageBroker.UsedRabbitMQ())
             {
                 services.AddSingleton<IMessageSender<FileUploadedEvent>>(new RabbitMQSender<FileUploadedEvent>(new RabbitMQSenderOptions
                 {
-                    HostName = appSettings.MessageBroker.RabbitMQ.HostName,
-                    UserName = appSettings.MessageBroker.RabbitMQ.UserName,
-                    Password = appSettings.MessageBroker.RabbitMQ.Password,
-                    ExchangeName = appSettings.MessageBroker.RabbitMQ.ExchangeName,
-                    RoutingKey = appSettings.MessageBroker.RabbitMQ.RoutingKey_FileUploaded,
+                    HostName = AppSettings.MessageBroker.RabbitMQ.HostName,
+                    UserName = AppSettings.MessageBroker.RabbitMQ.UserName,
+                    Password = AppSettings.MessageBroker.RabbitMQ.Password,
+                    ExchangeName = AppSettings.MessageBroker.RabbitMQ.ExchangeName,
+                    RoutingKey = AppSettings.MessageBroker.RabbitMQ.RoutingKey_FileUploaded,
                 }));
 
                 services.AddSingleton<IMessageSender<FileDeletedEvent>>(new RabbitMQSender<FileDeletedEvent>(new RabbitMQSenderOptions
                 {
-                    HostName = appSettings.MessageBroker.RabbitMQ.HostName,
-                    UserName = appSettings.MessageBroker.RabbitMQ.UserName,
-                    Password = appSettings.MessageBroker.RabbitMQ.Password,
-                    ExchangeName = appSettings.MessageBroker.RabbitMQ.ExchangeName,
-                    RoutingKey = appSettings.MessageBroker.RabbitMQ.RoutingKey_FileDeleted,
+                    HostName = AppSettings.MessageBroker.RabbitMQ.HostName,
+                    UserName = AppSettings.MessageBroker.RabbitMQ.UserName,
+                    Password = AppSettings.MessageBroker.RabbitMQ.Password,
+                    ExchangeName = AppSettings.MessageBroker.RabbitMQ.ExchangeName,
+                    RoutingKey = AppSettings.MessageBroker.RabbitMQ.RoutingKey_FileDeleted,
                 }));
 
                 healthChecksBuilder.AddRabbitMQ(
-                    rabbitMQConnectionString: appSettings.MessageBroker.RabbitMQ.ConnectionString,
+                    rabbitMQConnectionString: AppSettings.MessageBroker.RabbitMQ.ConnectionString,
                     name: "Message Broker (RabbitMQ)",
                     failureStatus: HealthStatus.Degraded);
             }
-            else if (appSettings.MessageBroker.UsedKafka())
+            else if (AppSettings.MessageBroker.UsedKafka())
             {
                 services.AddSingleton<IMessageSender<FileUploadedEvent>>(new KafkaSender<FileUploadedEvent>(
-                    appSettings.MessageBroker.Kafka.BootstrapServers,
-                    appSettings.MessageBroker.Kafka.Topic_FileUploaded));
+                    AppSettings.MessageBroker.Kafka.BootstrapServers,
+                    AppSettings.MessageBroker.Kafka.Topic_FileUploaded));
 
                 services.AddSingleton<IMessageSender<FileDeletedEvent>>(new KafkaSender<FileDeletedEvent>(
-                    appSettings.MessageBroker.Kafka.BootstrapServers,
-                    appSettings.MessageBroker.Kafka.Topic_FileDeleted));
+                    AppSettings.MessageBroker.Kafka.BootstrapServers,
+                    AppSettings.MessageBroker.Kafka.Topic_FileDeleted));
 
                 healthChecksBuilder.AddKafka(
                     setup =>
                     {
-                        setup.BootstrapServers = appSettings.MessageBroker.Kafka.BootstrapServers;
+                        setup.BootstrapServers = AppSettings.MessageBroker.Kafka.BootstrapServers;
                         setup.MessageTimeoutMs = 5000;
                     },
                     name: "Message Broker (Kafka)",
                     failureStatus: HealthStatus.Degraded);
             }
-            else if (appSettings.MessageBroker.UsedAzureQueue())
+            else if (AppSettings.MessageBroker.UsedAzureQueue())
             {
                 services.AddSingleton<IMessageSender<FileUploadedEvent>>(new AzureQueueSender<FileUploadedEvent>(
-                    connectionString: appSettings.MessageBroker.AzureQueue.ConnectionString,
-                    queueName: appSettings.MessageBroker.AzureQueue.QueueName_FileUploaded));
+                    connectionString: AppSettings.MessageBroker.AzureQueue.ConnectionString,
+                    queueName: AppSettings.MessageBroker.AzureQueue.QueueName_FileUploaded));
 
                 services.AddSingleton<IMessageSender<FileDeletedEvent>>(new AzureQueueSender<FileDeletedEvent>(
-                    connectionString: appSettings.MessageBroker.AzureQueue.ConnectionString,
-                    queueName: appSettings.MessageBroker.AzureQueue.QueueName_FileDeleted));
+                    connectionString: AppSettings.MessageBroker.AzureQueue.ConnectionString,
+                    queueName: AppSettings.MessageBroker.AzureQueue.QueueName_FileDeleted));
 
                 healthChecksBuilder.AddAzureQueueStorage(
-                    connectionString: appSettings.MessageBroker.AzureQueue.ConnectionString,
-                    queueName: appSettings.MessageBroker.AzureQueue.QueueName_FileUploaded,
+                    connectionString: AppSettings.MessageBroker.AzureQueue.ConnectionString,
+                    queueName: AppSettings.MessageBroker.AzureQueue.QueueName_FileUploaded,
                     name: "Message Broker (Azure Queue) File Uploaded",
                     failureStatus: HealthStatus.Degraded);
 
                 healthChecksBuilder.AddAzureQueueStorage(
-                    connectionString: appSettings.MessageBroker.AzureQueue.ConnectionString,
-                    queueName: appSettings.MessageBroker.AzureQueue.QueueName_FileDeleted,
+                    connectionString: AppSettings.MessageBroker.AzureQueue.ConnectionString,
+                    queueName: AppSettings.MessageBroker.AzureQueue.QueueName_FileDeleted,
                     name: "Message Broker (Azure Queue) File Deleted",
                     failureStatus: HealthStatus.Degraded);
             }
-            else if (appSettings.MessageBroker.UsedAzureServiceBus())
+            else if (AppSettings.MessageBroker.UsedAzureServiceBus())
             {
                 services.AddSingleton<IMessageSender<FileUploadedEvent>>(new AzureServiceBusSender<FileUploadedEvent>(
-                    connectionString: appSettings.MessageBroker.AzureServiceBus.ConnectionString,
-                    queueName: appSettings.MessageBroker.AzureServiceBus.QueueName_FileUploaded));
+                    connectionString: AppSettings.MessageBroker.AzureServiceBus.ConnectionString,
+                    queueName: AppSettings.MessageBroker.AzureServiceBus.QueueName_FileUploaded));
 
                 services.AddSingleton<IMessageSender<FileDeletedEvent>>(new AzureServiceBusSender<FileDeletedEvent>(
-                    connectionString: appSettings.MessageBroker.AzureServiceBus.ConnectionString,
-                    queueName: appSettings.MessageBroker.AzureServiceBus.QueueName_FileDeleted));
+                    connectionString: AppSettings.MessageBroker.AzureServiceBus.ConnectionString,
+                    queueName: AppSettings.MessageBroker.AzureServiceBus.QueueName_FileDeleted));
 
                 healthChecksBuilder.AddAzureServiceBusQueue(
-                    connectionString: appSettings.MessageBroker.AzureServiceBus.ConnectionString,
-                    queueName: appSettings.MessageBroker.AzureServiceBus.QueueName_FileUploaded,
+                    connectionString: AppSettings.MessageBroker.AzureServiceBus.ConnectionString,
+                    queueName: AppSettings.MessageBroker.AzureServiceBus.QueueName_FileUploaded,
                     name: "Message Broker (Azure Service Bus) File Uploaded",
                     failureStatus: HealthStatus.Degraded);
 
                 healthChecksBuilder.AddAzureServiceBusQueue(
-                    connectionString: appSettings.MessageBroker.AzureServiceBus.ConnectionString,
-                    queueName: appSettings.MessageBroker.AzureServiceBus.QueueName_FileDeleted,
+                    connectionString: AppSettings.MessageBroker.AzureServiceBus.ConnectionString,
+                    queueName: AppSettings.MessageBroker.AzureServiceBus.QueueName_FileDeleted,
                     name: "Message Broker (Azure Service Bus) File Deleted",
                     failureStatus: HealthStatus.Degraded);
             }

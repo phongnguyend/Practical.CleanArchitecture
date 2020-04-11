@@ -7,6 +7,7 @@ using ClassifiedAds.BackgroundServer.ConfigurationOptions;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Infrastructure.HealthChecks;
+using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
 using ClassifiedAds.Infrastructure.MessageBrokers.Kafka;
@@ -20,7 +21,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Serilog;
 
 namespace ClassifiedAds.BackgroundServer
 {
@@ -30,14 +30,7 @@ namespace ClassifiedAds.BackgroundServer
         {
             Configuration = configuration;
 
-            Directory.CreateDirectory(Path.Combine(env.ContentRootPath, "logs"));
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.File(Path.Combine(env.ContentRootPath, "logs", "log.txt"),
-                    fileSizeLimitBytes: 10 * 1024 * 1024,
-                    rollOnFileSizeLimit: true,
-                    shared: true,
-                    flushToDiskInterval: TimeSpan.FromSeconds(1))
-                .CreateLogger();
+            Logger.Configure(env);
         }
 
         public IConfiguration Configuration { get; }

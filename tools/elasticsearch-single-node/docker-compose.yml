@@ -1,0 +1,23 @@
+version: "3.6"
+services:
+    elasticsearch:
+        image: "docker.elastic.co/elasticsearch/elasticsearch:7.6.2"
+        ports:
+          - "9200:9200"
+        environment:
+          - discovery.type=single-node
+          - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    kibana:
+        image: "docker.elastic.co/kibana/kibana:7.6.2"
+        ports:
+          - "5601:5601"
+        environment:
+          - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+        depends_on:
+          - elasticsearch
+    logstash:
+        image: "docker.elastic.co/logstash/logstash:7.6.2"
+        links:
+          - elasticsearch
+        depends_on:
+          - elasticsearch

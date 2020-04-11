@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.WebMVC.ConfigurationOptions.MessageBroker;
+﻿using ClassifiedAds.Infrastructure.Logging;
+using ClassifiedAds.WebMVC.ConfigurationOptions.MessageBroker;
 using ClassifiedAds.WebMVC.ConfigurationOptions.Storage;
 using Microsoft.Extensions.Options;
 
@@ -9,6 +10,8 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
         public ConnectionStrings ConnectionStrings { get; set; }
 
         public CheckDependency CheckDependency { get; set; }
+
+        public LoggerOptions LoggerOptions { get; set; }
 
         public OpenIdConnect OpenIdConnect { get; set; }
 

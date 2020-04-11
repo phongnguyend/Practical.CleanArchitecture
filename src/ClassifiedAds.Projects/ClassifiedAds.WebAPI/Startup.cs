@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Infrastructure.Identity;
+using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
 using ClassifiedAds.WebAPI.Filters;
 using IdentityServer4.AccessTokenValidation;
@@ -13,7 +13,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Serilog;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace ClassifiedAds.WebAPI
@@ -24,14 +23,10 @@ namespace ClassifiedAds.WebAPI
         {
             Configuration = configuration;
 
-            Directory.CreateDirectory(Path.Combine(env.ContentRootPath, "logs"));
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.File(Path.Combine(env.ContentRootPath, "logs", "log.txt"),
-                    fileSizeLimitBytes: 10 * 1024 * 1024,
-                    rollOnFileSizeLimit: true,
-                    shared: true,
-                    flushToDiskInterval: TimeSpan.FromSeconds(1))
-                .CreateLogger();
+            AppSettings = new AppSettings();
+            Configuration.Bind(AppSettings);
+
+            Logger.Configure(env, AppSettings.LoggerOptions);
         }
 
         public IConfiguration Configuration { get; }
@@ -40,10 +35,6 @@ namespace ClassifiedAds.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var appSettings = new AppSettings();
-            Configuration.Bind(appSettings);
-            AppSettings = appSettings;
-
             services.Configure<AppSettings>(Configuration);
 
             services.AddControllers(configure =>
@@ -54,7 +45,7 @@ namespace ClassifiedAds.WebAPI
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowedOrigins", builder => builder
-                    .WithOrigins(appSettings.CORS.AllowedOrigins)
+                    .WithOrigins(AppSettings.CORS.AllowedOrigins)
                     .AllowAnyMethod()
                     .AllowAnyHeader());
 
@@ -69,16 +60,16 @@ namespace ClassifiedAds.WebAPI
                     .WithHeaders("Content-Type"));
             });
 
-            services.AddPersistence(appSettings.ConnectionStrings.ClassifiedAds)
+            services.AddPersistence(AppSettings.ConnectionStrings.ClassifiedAds)
                     .AddDomainServices()
                     .AddMessageHandlers();
 
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = appSettings.IdentityServerAuthentication.Authority;
-                    options.ApiName = appSettings.IdentityServerAuthentication.ApiName;
-                    options.RequireHttpsMetadata = appSettings.IdentityServerAuthentication.RequireHttpsMetadata;
+                    options.Authority = AppSettings.IdentityServerAuthentication.Authority;
+                    options.ApiName = AppSettings.IdentityServerAuthentication.ApiName;
+                    options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
                 });
 
             services.AddSwaggerGen(setupAction =>

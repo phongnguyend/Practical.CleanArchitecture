@@ -9,6 +9,7 @@ using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.IdentityServer.Models.UserModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace ClassifiedAds.IdentityServer.Controllers
 {
@@ -17,10 +18,12 @@ namespace ClassifiedAds.IdentityServer.Controllers
         private readonly Dispatcher _dispatcher;
         private readonly UserManager<User> _userManager;
 
-        public UserController(Dispatcher dispatcher, UserManager<User> userManager)
+        public UserController(Dispatcher dispatcher, UserManager<User> userManager, ILogger<UserController> logger)
         {
             _dispatcher = dispatcher;
             _userManager = userManager;
+
+            logger.LogInformation("UserController");
         }
 
         public IActionResult Index()

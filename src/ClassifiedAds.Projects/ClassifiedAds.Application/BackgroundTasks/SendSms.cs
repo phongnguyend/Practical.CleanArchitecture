@@ -6,7 +6,7 @@ namespace ClassifiedAds.Application.BackgroundTasks
     {
         private readonly ILogger _logger;
 
-        public SendSms(ILogger<SendEmail> logger)
+        public SendSms(ILogger<SendSms> logger)
         {
             _logger = logger;
         }

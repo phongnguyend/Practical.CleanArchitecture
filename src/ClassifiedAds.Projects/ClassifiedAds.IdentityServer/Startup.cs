@@ -1,13 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Security.Cryptography.X509Certificates;
+﻿using System.Security.Cryptography.X509Certificates;
 using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Infrastructure.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Serilog;
 
 namespace ClassifiedAds.IdentityServer
 {
@@ -17,14 +15,7 @@ namespace ClassifiedAds.IdentityServer
         {
             Configuration = configuration;
 
-            Directory.CreateDirectory(Path.Combine(env.ContentRootPath, "logs"));
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.File(Path.Combine(env.ContentRootPath, "logs", "log.txt"),
-                    fileSizeLimitBytes: 10 * 1024 * 1024,
-                    rollOnFileSizeLimit: true,
-                    shared: true,
-                    flushToDiskInterval: TimeSpan.FromSeconds(1))
-                .CreateLogger();
+            Logger.Configure(env);
         }
 
         public IConfiguration Configuration { get; }
