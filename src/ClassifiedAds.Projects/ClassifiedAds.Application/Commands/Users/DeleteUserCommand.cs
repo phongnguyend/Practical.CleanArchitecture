@@ -1,5 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Services;
+using ClassifiedAds.Domain.Repositories;
 
 namespace ClassifiedAds.Application.Commands.Users
 {
@@ -10,16 +10,17 @@ namespace ClassifiedAds.Application.Commands.Users
 
     internal class DeleteUserCommandHandler : ICommandHandler<DeleteUserCommand>
     {
-        private readonly IUserService _userService;
+        private readonly IUserRepository _userRepository;
 
-        public DeleteUserCommandHandler(IUserService productService)
+        public DeleteUserCommandHandler(IUserRepository userRepository)
         {
-            _userService = productService;
+            _userRepository = userRepository;
         }
 
         public void Handle(DeleteUserCommand command)
         {
-            _userService.Delete(command.User);
+            _userRepository.Delete(command.User);
+            _userRepository.UnitOfWork.SaveChanges();
         }
     }
 }

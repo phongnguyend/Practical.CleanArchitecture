@@ -1,5 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Services;
+using ClassifiedAds.Domain.Repositories;
 
 namespace ClassifiedAds.Application.Commands.Users
 {
@@ -11,17 +11,18 @@ namespace ClassifiedAds.Application.Commands.Users
 
     internal class DeleteRoleCommandHandler : ICommandHandler<DeleteRoleCommand>
     {
-        private readonly IUserService _userService;
+        private readonly IUserRepository _userRepository;
 
-        public DeleteRoleCommandHandler(IUserService productService)
+        public DeleteRoleCommandHandler(IUserRepository userRepository)
         {
-            _userService = productService;
+            _userRepository = userRepository;
         }
 
         public void Handle(DeleteRoleCommand command)
         {
             command.User.UserRoles.Remove(command.Role);
-            _userService.AddOrUpdate(command.User);
+            _userRepository.AddOrUpdate(command.User);
+            _userRepository.UnitOfWork.SaveChanges();
         }
     }
 }

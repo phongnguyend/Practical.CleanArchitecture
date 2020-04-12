@@ -1,7 +1,8 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Exceptions;
 using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Services;
+using ClassifiedAds.Domain.Repositories;
 using System;
+using System.Linq;
 
 namespace ClassifiedAds.Application.Queries.Products
 {
@@ -13,16 +14,16 @@ namespace ClassifiedAds.Application.Queries.Products
 
     internal class GetProductQueryHandler : IQueryHandler<GetProductQuery, Product>
     {
-        private readonly IProductService _productService;
+        private readonly IRepository<Product, Guid> _productRepository;
 
-        public GetProductQueryHandler(IProductService productService)
+        public GetProductQueryHandler(IRepository<Product, Guid> productRepository)
         {
-            _productService = productService;
+            _productRepository = productRepository;
         }
 
         public Product Handle(GetProductQuery query)
         {
-            var product = _productService.GetById(query.Id);
+            var product = _productRepository.GetAll().FirstOrDefault(x => x.Id == query.Id);
 
             if (query.ThrowNotFoundIfNull && product == null)
             {

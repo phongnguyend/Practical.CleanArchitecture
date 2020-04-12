@@ -1,5 +1,4 @@
-﻿using ClassifiedAds.Domain;
-using ClassifiedAds.Domain.Services;
+﻿using ClassifiedAds.Domain.Services;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -7,9 +6,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddDomainServices(this IServiceCollection services)
         {
-            services.AddScoped(typeof(ICrudService<>), typeof(CrudService<>))
-                    .AddScoped<IUserService, UserService>()
-                    .AddScoped<IProductService, ProductService>();
+            services.AddScoped<ProductService, ProductService>();
             return services;
         }
     }

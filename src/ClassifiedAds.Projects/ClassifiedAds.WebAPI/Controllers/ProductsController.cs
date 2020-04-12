@@ -2,7 +2,6 @@
 using ClassifiedAds.Application.Commands.Products;
 using ClassifiedAds.Application.Queries.Products;
 using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,13 +17,11 @@ namespace ClassifiedAds.WebAPI.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductService _productService;
         private readonly Dispatcher _dispatcher;
         private readonly ILogger _logger;
 
-        public ProductsController(IProductService productService, Dispatcher dispatcher, ILogger<ProductsController> logger)
+        public ProductsController(Dispatcher dispatcher, ILogger<ProductsController> logger)
         {
-            _productService = productService;
             _dispatcher = dispatcher;
             _logger = logger;
         }

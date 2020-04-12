@@ -2,6 +2,7 @@
 using ClassifiedAds.Application.Commands;
 using ClassifiedAds.Application.Decorators;
 using ClassifiedAds.Application.Queries;
+using ClassifiedAds.Application.Services;
 using ClassifiedAds.Domain.Events;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,19 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ApplicationServicesExtensions
     {
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+        {
+            DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly());
+
+            services
+                .AddSingleton<IDomainEvents, DomainEvents>()
+                .AddScoped(typeof(ICrudService<>), typeof(CrudService<>))
+                .AddScoped<IUserService, UserService>()
+                .AddScoped<IProductService, ProductService>();
+
+            return services;
+        }
+
         public static IServiceCollection AddMessageHandlers(this IServiceCollection services)
         {
             services.AddScoped<Dispatcher>();
@@ -43,11 +57,6 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             return services;
-        }
-
-        public static void RegisterDomainEventHandlers(this IServiceProvider serviceProvider)
-        {
-            DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), serviceProvider);
         }
 
         private static void AddHandler(IServiceCollection services, Type type)

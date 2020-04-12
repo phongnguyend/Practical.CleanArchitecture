@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ClassifiedAds.Domain.Services
+namespace ClassifiedAds.Application.Services
 {
     public interface ICrudService<T>
         where T : AggregateRoot<Guid>

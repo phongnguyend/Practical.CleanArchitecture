@@ -1,5 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Services;
+using ClassifiedAds.Domain.Repositories;
 
 namespace ClassifiedAds.Application.Commands.Users
 {
@@ -11,17 +11,18 @@ namespace ClassifiedAds.Application.Commands.Users
 
     internal class AddClaimCommandHandler : ICommandHandler<AddClaimCommand>
     {
-        private readonly IUserService _userService;
+        private readonly IUserRepository _userRepository;
 
-        public AddClaimCommandHandler(IUserService productService)
+        public AddClaimCommandHandler(IUserRepository userRepository)
         {
-            _userService = productService;
+            _userRepository = userRepository;
         }
 
         public void Handle(AddClaimCommand command)
         {
             command.User.Claims.Add(command.Claim);
-            _userService.AddOrUpdate(command.User);
+            _userRepository.AddOrUpdate(command.User);
+            _userRepository.UnitOfWork.SaveChanges();
         }
     }
 }

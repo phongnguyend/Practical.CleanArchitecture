@@ -1,14 +1,15 @@
+using ClassifiedAds.Application.Services;
 using ClassifiedAds.CrossCuttingConcerns.Exceptions;
 using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Domain.Services;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace ClassifiedAds.UnitTests.Domain.Services
+namespace ClassifiedAds.UnitTests.Application.Services
 {
     public class UserServiceTests
     {
@@ -18,45 +19,46 @@ namespace ClassifiedAds.UnitTests.Domain.Services
         public UserServiceTests()
         {
             _userRepository = new Mock<IRepository<User, Guid>>();
-            _userService = new UserService(_userRepository.Object);
+            var domainEvents = new Mock<IDomainEvents>();
+            _userService = new UserService(_userRepository.Object, domainEvents.Object);
         }
 
         [Fact]
         public void GetUserById_ThereIsNoUser_ReturnNull()
         {
-            //Arrange
+            // Arrange
             var users = new List<User>();
             _userRepository.Setup(x => x.GetAll()).Returns(users.AsQueryable());
 
-            //Act
+            // Act
             var user = _userService.GetById(Guid.NewGuid());
 
-            //Assert
+            // Assert
             Assert.Null(user);
         }
 
         [Fact]
         public void GetUserById_InvalidId_ThrowException()
         {
-            //Arrange
+            // Arrange
             var userId = Guid.Empty;
 
-            //Act && Assert
+            // Act && Assert
             Assert.Throws<ValidationException>(() => _userService.GetById(userId));
         }
 
         [Fact]
         public void GetUserById_ThereIsUser_ReturnOne()
         {
-            //Arrange
+            // Arrange
             var userId = Guid.NewGuid();
             var users = new List<User> { new User { Id = userId, UserName = "XXX" } };
             _userRepository.Setup(x => x.GetAll()).Returns(users.AsQueryable());
 
-            //Act
+            // Act
             var user = _userService.GetById(userId);
 
-            //Assert
+            // Assert
             Assert.Equal(userId, user.Id);
             Assert.Equal("XXX", user.UserName);
         }

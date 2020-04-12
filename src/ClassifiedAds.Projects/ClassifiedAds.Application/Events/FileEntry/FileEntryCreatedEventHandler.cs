@@ -1,5 +1,5 @@
-﻿using ClassifiedAds.Domain.Events;
-using ClassifiedAds.Domain.Entities;
+﻿using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 
 namespace ClassifiedAds.Application.Events

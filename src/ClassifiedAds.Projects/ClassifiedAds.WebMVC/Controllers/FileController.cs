@@ -3,9 +3,9 @@ using System.IO;
 using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using ClassifiedAds.Application.Services;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.Storages;
-using ClassifiedAds.Domain.Services;
 using ClassifiedAds.WebMVC.Models.File;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,4 +1,4 @@
-[Clean Architecture: Patterns, Practices, and Principles | Matthew Renze | Pluralsight](https://app.pluralsight.com/library/courses/clean-architecture-patterns-practices-principles/table-of-contents)
+[Domain-Driven Design Path | Pluralsight](https://app.pluralsight.com/paths/skills/domain-driven-design)
 
 # Database Centric vs Domain Centric Architecture 
 ![alt text](/docs/imgs/database-centrics-vs-domain-centric-architecture.png)

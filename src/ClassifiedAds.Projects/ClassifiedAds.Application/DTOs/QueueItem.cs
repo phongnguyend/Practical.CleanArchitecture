@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ClassifiedAds.Contracts.DTOs
+namespace ClassifiedAds.Application.DTOs
 {
     public class QueueItem
     {

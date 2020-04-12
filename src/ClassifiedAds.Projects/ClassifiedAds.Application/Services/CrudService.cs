@@ -6,18 +6,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassifiedAds.Domain.Services
+namespace ClassifiedAds.Application.Services
 {
     public class CrudService<T> : ICrudService<T>
         where T : AggregateRoot<Guid>
     {
-        protected readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
         protected readonly IRepository<T, Guid> _repository;
+        private readonly IDomainEvents _domainEvents;
 
-        public CrudService(IRepository<T, Guid> repository)
+        public CrudService(IRepository<T, Guid> repository, IDomainEvents domainEvents)
         {
             _unitOfWork = repository.UnitOfWork;
             _repository = repository;
+            _domainEvents = domainEvents;
         }
 
         public virtual void AddOrUpdate(T entity)
@@ -29,11 +31,11 @@ namespace ClassifiedAds.Domain.Services
 
             if (adding)
             {
-                DomainEvents.Dispatch(new EntityCreatedEvent<T>(entity));
+                _domainEvents.Dispatch(new EntityCreatedEvent<T>(entity));
             }
             else
             {
-                DomainEvents.Dispatch(new EntityUpdatedEvent<T>(entity));
+                _domainEvents.Dispatch(new EntityUpdatedEvent<T>(entity));
             }
         }
 
@@ -52,7 +54,7 @@ namespace ClassifiedAds.Domain.Services
         {
             _repository.Delete(entity);
             _unitOfWork.SaveChanges();
-            DomainEvents.Dispatch(new EntityDeletedEvent<T>(entity));
+            _domainEvents.Dispatch(new EntityDeletedEvent<T>(entity));
         }
     }
 }

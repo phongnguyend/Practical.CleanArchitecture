@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ClassifiedAds.Domain.DTOs
+namespace ClassifiedAds.Application.DTOs
 {
     public class ProductDTO
     {

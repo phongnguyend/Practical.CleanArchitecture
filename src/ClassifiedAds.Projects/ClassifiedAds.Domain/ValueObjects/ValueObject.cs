@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ClassifiedAds.Domain.ValueObjects
 {
@@ -12,10 +11,14 @@ namespace ClassifiedAds.Domain.ValueObjects
         public override bool Equals(object obj)
         {
             if (obj == null)
+            {
                 return false;
+            }
 
             if (GetType() != obj.GetType())
+            {
                 throw new ArgumentException($"Invalid comparison of Value Objects of different types: {GetType()} and {obj.GetType()}");
+            }
 
             var valueObject = (ValueObject)obj;
 
@@ -29,7 +32,7 @@ namespace ClassifiedAds.Domain.ValueObjects
                 {
                     unchecked
                     {
-                        return current * 23 + (obj?.GetHashCode() ?? 0);
+                        return (current * 23) + (obj?.GetHashCode() ?? 0);
                     }
                 });
         }
@@ -37,10 +40,14 @@ namespace ClassifiedAds.Domain.ValueObjects
         public static bool operator ==(ValueObject a, ValueObject b)
         {
             if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
+            {
                 return true;
+            }
 
             if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+            {
                 return false;
+            }
 
             return a.Equals(b);
         }

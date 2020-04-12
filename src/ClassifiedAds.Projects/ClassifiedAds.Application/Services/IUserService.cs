@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.Domain.Entities;
 
-namespace ClassifiedAds.Domain.Services
+namespace ClassifiedAds.Application.Services
 {
     public interface IUserService : ICrudService<User>
     {

@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Services;
+using ClassifiedAds.Domain.Repositories;
+using System;
 
 namespace ClassifiedAds.Application.Commands.Products
 {
@@ -10,16 +11,17 @@ namespace ClassifiedAds.Application.Commands.Products
 
     internal class AddUpdateProductCommandHandler : ICommandHandler<AddUpdateProductCommand>
     {
-        private readonly IProductService _productService;
+        private readonly IRepository<Product, Guid> _productRepository;
 
-        public AddUpdateProductCommandHandler(IProductService productService)
+        public AddUpdateProductCommandHandler(IRepository<Product, Guid> productRepository)
         {
-            _productService = productService;
+            _productRepository = productRepository;
         }
 
         public void Handle(AddUpdateProductCommand command)
         {
-            _productService.AddOrUpdate(command.Product);
+            _productRepository.AddOrUpdate(command.Product);
+            _productRepository.UnitOfWork.SaveChanges();
         }
     }
 }

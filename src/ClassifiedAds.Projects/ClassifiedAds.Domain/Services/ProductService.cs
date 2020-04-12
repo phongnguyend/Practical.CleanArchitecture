@@ -1,15 +1,6 @@
-﻿using System;
-using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Identity;
-using ClassifiedAds.Domain.Repositories;
-
-namespace ClassifiedAds.Domain.Services
+﻿namespace ClassifiedAds.Domain.Services
 {
-    public class ProductService : CrudService<Product>, IProductService
+    public class ProductService
     {
-        public ProductService(IRepository<Product, Guid> productRepository, ICurrentUser currentUser)
-            : base(productRepository)
-        {
-        }
     }
 }

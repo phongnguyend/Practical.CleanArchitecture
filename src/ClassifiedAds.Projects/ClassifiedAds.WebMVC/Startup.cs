@@ -89,6 +89,7 @@ namespace ClassifiedAds.WebMVC
 
             services.AddPersistence(AppSettings.ConnectionStrings.ClassifiedAds)
                     .AddDomainServices()
+                    .AddApplicationServices()
                     .AddMessageHandlers();
 
             services.AddAuthentication(options =>
@@ -306,8 +307,6 @@ namespace ClassifiedAds.WebMVC
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.ApplicationServices.RegisterDomainEventHandlers();
-
             app.UseMiddleware<CustomMiddleware>();
 
             if (env.IsDevelopment())

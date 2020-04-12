@@ -1,5 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Services;
+using ClassifiedAds.Domain.Repositories;
 
 namespace ClassifiedAds.Application.Commands.Users
 {
@@ -11,17 +11,18 @@ namespace ClassifiedAds.Application.Commands.Users
 
     internal class DeleteClaimCommandHandler : ICommandHandler<DeleteClaimCommand>
     {
-        private readonly IUserService _userService;
+        private readonly IUserRepository _userRepository;
 
-        public DeleteClaimCommandHandler(IUserService productService)
+        public DeleteClaimCommandHandler(IUserRepository userRepository)
         {
-            _userService = productService;
+            _userRepository = userRepository;
         }
 
         public void Handle(DeleteClaimCommand command)
         {
             command.User.Claims.Remove(command.Claim);
-            _userService.AddOrUpdate(command.User);
+            _userRepository.AddOrUpdate(command.User);
+            _userRepository.UnitOfWork.SaveChanges();
         }
     }
 }
