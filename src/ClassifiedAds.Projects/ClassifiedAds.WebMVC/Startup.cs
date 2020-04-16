@@ -56,7 +56,7 @@ namespace ClassifiedAds.WebMVC
                 throw new Exception(validationResult.FailureMessage);
             }
 
-            Logger.Configure(env, AppSettings.LoggerOptions);
+            env.UseLogger(AppSettings.LoggerOptions);
         }
 
         public IConfiguration Configuration { get; }

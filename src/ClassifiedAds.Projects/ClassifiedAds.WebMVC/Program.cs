@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Infrastructure.Configuration;
 using ClassifiedAds.Infrastructure.HealthChecks;
+using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Persistence;
 using ClassifiedAds.WebMVC.ConfigurationOptions;
 using Microsoft.AspNetCore;
@@ -7,9 +8,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.EventLog;
-using Serilog;
 
 namespace ClassifiedAds.WebMVC
 {
@@ -50,15 +48,6 @@ namespace ClassifiedAds.WebMVC
 
                     builder.AddAzureKeyVault($"https://{appSettings.KeyVaultName}.vault.azure.net/");
                 })
-                .ConfigureLogging(logging =>
-                {
-                    //logging.AddEventLog(new EventLogSettings
-                    //{
-                    //    LogName = "ClassifiedAds",
-                    //    SourceName = "WebMVC",
-                    //    Filter = (a, b) => b >= LogLevel.Information
-                    //});
-                })
-                .UseSerilog();
+                .UseLogger();
     }
 }

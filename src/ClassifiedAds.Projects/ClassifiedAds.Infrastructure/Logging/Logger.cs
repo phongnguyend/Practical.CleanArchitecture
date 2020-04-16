@@ -9,9 +9,9 @@ using System.Reflection;
 
 namespace ClassifiedAds.Infrastructure.Logging
 {
-    public class Logger
+    public static class Logger
     {
-        public static void Configure(IWebHostEnvironment env, LoggerOptions options = null)
+        public static void UseLogger(this IWebHostEnvironment env, LoggerOptions options = null)
         {
             options ??= new LoggerOptions
             {
@@ -46,6 +46,11 @@ namespace ClassifiedAds.Infrastructure.Logging
                     if (logEvent.Level >= options.File.MinimumLogEventLevel
                     || logEvent.Level >= options.Elasticsearch.MinimumLogEventLevel)
                     {
+                        if (logEvent.Level >= Serilog.Events.LogEventLevel.Warning)
+                        {
+                            return true;
+                        }
+
                         var sourceContext = logEvent.Properties.ContainsKey("SourceContext")
                              ? logEvent.Properties["SourceContext"].ToString()
                              : null;
@@ -83,6 +88,23 @@ namespace ClassifiedAds.Infrastructure.Logging
             }
 
             Log.Logger = loggerConfiguration.CreateLogger();
+        }
+
+        public static IWebHostBuilder UseLogger(this IWebHostBuilder builder)
+        {
+            builder.ConfigureLogging(logging =>
+            {
+                //logging.AddEventLog(new EventLogSettings
+                //{
+                //    LogName = "ClassifiedAds",
+                //    SourceName = "WebAPI",
+                //    Filter = (a, b) => b >= LogLevel.Information
+                //});
+            });
+
+            builder.UseSerilog();
+
+            return builder;
         }
     }
 }

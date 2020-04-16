@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore;
+﻿using ClassifiedAds.Infrastructure.Logging;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.EventLog;
-using Serilog;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ClassifiedAds.WebAPI
 {
@@ -15,16 +14,8 @@ namespace ClassifiedAds.WebAPI
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseMonitoringServices()
                 .UseStartup<Startup>()
-                .ConfigureLogging(logging =>
-                {
-                    //logging.AddEventLog(new EventLogSettings
-                    //{
-                    //    LogName = "ClassifiedAds",
-                    //    SourceName = "WebAPI",
-                    //    Filter = (a, b) => b >= LogLevel.Information
-                    //});
-                })
-                .UseSerilog();
+                .UseLogger();
     }
 }

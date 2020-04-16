@@ -1,0 +1,37 @@
+version: "3.6"
+services:
+    prometheus:
+        image: prom/prometheus:latest
+        volumes:
+          - ./prometheus/:/etc/prometheus/
+        command:
+          - '--config.file=/etc/prometheus/prometheus.yml'
+        ports:
+          - 9090:9090
+#        links:
+#          - cadvisor:cadvisor
+#          - alertmanager:alertmanager
+#        depends_on:
+#          - cadvisor
+#    node-exporter:
+#        image: prom/node-exporter
+#        ports:
+#          - 9100:9100
+#    alertmanager:
+#        image: prom/alertmanager
+#        ports:
+#          - 9093:9093
+#    cadvisor:
+#        image: google/cadvisor
+#        ports:
+#          - 8080:8080      
+    grafana:
+        image: grafana/grafana:latest
+        ports:
+            - "3000:3000"
+        environment:
+            - GF_INSTALL_PLUGINS=grafana-clock-panel,briangann-gauge-panel,natel-plotly-panel,grafana-simple-json-datasource,grafana-piechart-panel
+            - GF_SECURITY_ADMIN_USER=admin
+            - GF_SECURITY_ADMIN_PASSWORD=password
+        links:
+            - prometheus

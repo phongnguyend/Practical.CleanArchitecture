@@ -30,7 +30,7 @@ namespace ClassifiedAds.BackgroundServer
         {
             Configuration = configuration;
 
-            Logger.Configure(env);
+            env.UseLogger();
         }
 
         public IConfiguration Configuration { get; }

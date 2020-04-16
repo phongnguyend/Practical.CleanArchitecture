@@ -15,7 +15,7 @@ namespace ClassifiedAds.IdentityServer
         {
             Configuration = configuration;
 
-            Logger.Configure(env);
+            env.UseLogger();
         }
 
         public IConfiguration Configuration { get; }

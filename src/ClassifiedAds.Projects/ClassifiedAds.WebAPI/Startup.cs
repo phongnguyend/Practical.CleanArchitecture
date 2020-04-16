@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ClassifiedAds.Domain.Identity;
+﻿using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
@@ -14,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System;
+using System.Collections.Generic;
 
 namespace ClassifiedAds.WebAPI
 {
@@ -26,7 +26,7 @@ namespace ClassifiedAds.WebAPI
             AppSettings = new AppSettings();
             Configuration.Bind(AppSettings);
 
-            Logger.Configure(env, AppSettings.LoggerOptions);
+            env.UseLogger(AppSettings.LoggerOptions);
         }
 
         public IConfiguration Configuration { get; }
@@ -37,10 +37,12 @@ namespace ClassifiedAds.WebAPI
         {
             services.Configure<AppSettings>(Configuration);
 
+            services.AddMonitoringServices();
+
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
-            });
+            }).AddMonitoringServices();
 
             services.AddCors(options =>
             {
@@ -138,6 +140,8 @@ namespace ClassifiedAds.WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseMonitoringServices();
 
             app.UseRouting();
 
