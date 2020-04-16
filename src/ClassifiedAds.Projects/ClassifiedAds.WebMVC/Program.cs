@@ -48,6 +48,6 @@ namespace ClassifiedAds.WebMVC
 
                     builder.AddAzureKeyVault($"https://{appSettings.KeyVaultName}.vault.azure.net/");
                 })
-                .UseLogger();
+                .UseClassifiedAdsLogger();
     }
 }

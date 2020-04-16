@@ -9,9 +9,9 @@ using System.Linq;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class MonitoringServicesExtensions
+    public static class MonitoringExtensions
     {
-        public static IWebHostBuilder UseMonitoringServices(this IWebHostBuilder hostBuilder)
+        public static IWebHostBuilder UseClassifiedAdsMonitoringServices(this IWebHostBuilder hostBuilder)
         {
             var metrics = AppMetrics.CreateDefaultBuilder()
                   .OutputMetrics.AsPrometheusPlainText()
@@ -30,7 +30,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return hostBuilder;
         }
 
-        public static IServiceCollection AddMonitoringServices(this IServiceCollection services)
+        public static IServiceCollection AddClassifiedAdsMonitoringServices(this IServiceCollection services)
         {
             // If using Kestrel:
             services.Configure<KestrelServerOptions>(options =>
@@ -49,14 +49,14 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        public static IMvcBuilder AddMonitoringServices(this IMvcBuilder mvcBuilder)
+        public static IMvcBuilder AddClassifiedAdsMonitoringServices(this IMvcBuilder mvcBuilder)
         {
             mvcBuilder.AddMetrics();
 
             return mvcBuilder;
         }
 
-        public static IApplicationBuilder UseMonitoringServices(this IApplicationBuilder app)
+        public static IApplicationBuilder UseClassifiedAdsMonitoringServices(this IApplicationBuilder app)
         {
             app.UseMetricsAllMiddleware();
 

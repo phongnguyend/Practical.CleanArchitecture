@@ -14,6 +14,6 @@ namespace ClassifiedAds.BackgroundServer
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseLogger();
+                .UseClassifiedAdsLogger();
     }
 }

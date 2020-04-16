@@ -14,6 +14,6 @@ namespace ClassifiedAds.IdentityServer
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseLogger();
+                .UseClassifiedAdsLogger();
     }
 }

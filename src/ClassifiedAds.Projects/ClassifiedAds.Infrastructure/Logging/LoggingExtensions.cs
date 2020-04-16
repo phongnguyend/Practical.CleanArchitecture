@@ -9,9 +9,9 @@ using System.Reflection;
 
 namespace ClassifiedAds.Infrastructure.Logging
 {
-    public static class Logger
+    public static class LoggingExtensions
     {
-        public static void UseLogger(this IWebHostEnvironment env, LoggerOptions options = null)
+        public static void UseClassifiedAdsLogger(this IWebHostEnvironment env, LoggerOptions options = null)
         {
             options ??= new LoggerOptions
             {
@@ -90,7 +90,7 @@ namespace ClassifiedAds.Infrastructure.Logging
             Log.Logger = loggerConfiguration.CreateLogger();
         }
 
-        public static IWebHostBuilder UseLogger(this IWebHostBuilder builder)
+        public static IWebHostBuilder UseClassifiedAdsLogger(this IWebHostBuilder builder)
         {
             builder.ConfigureLogging(logging =>
             {

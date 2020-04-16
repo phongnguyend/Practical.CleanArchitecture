@@ -26,7 +26,7 @@ namespace ClassifiedAds.WebAPI
             AppSettings = new AppSettings();
             Configuration.Bind(AppSettings);
 
-            env.UseLogger(AppSettings.LoggerOptions);
+            env.UseClassifiedAdsLogger(AppSettings.LoggerOptions);
         }
 
         public IConfiguration Configuration { get; }
@@ -37,12 +37,12 @@ namespace ClassifiedAds.WebAPI
         {
             services.Configure<AppSettings>(Configuration);
 
-            services.AddMonitoringServices();
+            services.AddClassifiedAdsMonitoringServices();
 
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
-            }).AddMonitoringServices();
+            }).AddClassifiedAdsMonitoringServices();
 
             services.AddCors(options =>
             {
@@ -120,14 +120,7 @@ namespace ClassifiedAds.WebAPI
                 });
             });
 
-            services.AddMemoryCache()
-            .AddMiniProfiler(options =>
-            {
-                options.RouteBasePath = "/profiler"; // access /profiler/results to see last profile check
-                options.PopupRenderPosition = StackExchange.Profiling.RenderPosition.BottomLeft;
-                options.PopupShowTimeWithChildren = true;
-            })
-            .AddEntityFramework();
+            services.AddClassifiedAdsProfiler();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentWebUser>();
@@ -141,7 +134,7 @@ namespace ClassifiedAds.WebAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMonitoringServices();
+            app.UseClassifiedAdsMonitoringServices();
 
             app.UseRouting();
 
@@ -167,7 +160,7 @@ namespace ClassifiedAds.WebAPI
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseMiniProfiler();
+            app.UseClassifiedAdsProfiler();
 
             app.UseEndpoints(endpoints =>
             {

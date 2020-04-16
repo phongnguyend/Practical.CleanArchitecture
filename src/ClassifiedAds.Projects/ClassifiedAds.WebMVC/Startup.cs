@@ -56,7 +56,7 @@ namespace ClassifiedAds.WebMVC
                 throw new Exception(validationResult.FailureMessage);
             }
 
-            env.UseLogger(AppSettings.LoggerOptions);
+            env.UseClassifiedAdsLogger(AppSettings.LoggerOptions);
         }
 
         public IConfiguration Configuration { get; }
@@ -131,13 +131,7 @@ namespace ClassifiedAds.WebMVC
             services.AddHttpClient(string.Empty)
                     .AddHttpMessageHandler<ProfilingHttpHandler>();
 
-            services.AddMiniProfiler(options =>
-            {
-                options.RouteBasePath = "/profiler"; // access /profiler/results to see last profile check
-                options.PopupRenderPosition = StackExchange.Profiling.RenderPosition.BottomLeft;
-                options.PopupShowTimeWithChildren = true;
-            })
-            .AddEntityFramework();
+            services.AddClassifiedAdsProfiler();
 
             var healthChecksBuilder = services.AddHealthChecks()
                 .AddSqlServer(connectionString: AppSettings.ConnectionStrings.ClassifiedAds,
@@ -330,7 +324,7 @@ namespace ClassifiedAds.WebMVC
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseMiniProfiler();
+            app.UseClassifiedAdsProfiler();
 
             app.UseRouting();
 

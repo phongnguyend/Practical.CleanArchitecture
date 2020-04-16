@@ -14,8 +14,8 @@ namespace ClassifiedAds.WebAPI
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseMonitoringServices()
+                .UseClassifiedAdsMonitoringServices()
                 .UseStartup<Startup>()
-                .UseLogger();
+                .UseClassifiedAdsLogger();
     }
 }

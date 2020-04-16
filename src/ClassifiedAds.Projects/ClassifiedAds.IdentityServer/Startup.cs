@@ -15,7 +15,7 @@ namespace ClassifiedAds.IdentityServer
         {
             Configuration = configuration;
 
-            env.UseLogger();
+            env.UseClassifiedAdsLogger();
         }
 
         public IConfiguration Configuration { get; }
@@ -39,13 +39,7 @@ namespace ClassifiedAds.IdentityServer
                     .AddAspNetIdentity<User>()
                     .AddIdServerPersistence(Configuration.GetConnectionString("ClassifiedAds"));
 
-            services.AddMiniProfiler(options =>
-            {
-                options.RouteBasePath = "/profiler"; // access /profiler/results to see last profile check
-                options.PopupRenderPosition = StackExchange.Profiling.RenderPosition.BottomLeft;
-                options.PopupShowTimeWithChildren = true;
-            })
-            .AddEntityFramework();
+            services.AddClassifiedAdsProfiler();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,7 +61,7 @@ namespace ClassifiedAds.IdentityServer
                 .AllowAnyMethod()
             );
 
-            app.UseMiniProfiler();
+            app.UseClassifiedAdsProfiler();
             app.UseIdentityServer();
             app.UseAuthorization();
 
