@@ -51,11 +51,11 @@
 
   | Project  | Configuration File | Configuration Key |
   | -------- | ------------------ | ----------------- |
-  | ClassifiedAds.Migrator | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.Migrator/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.BackgroundServer | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.BackgroundServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.IdentityServer | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.IdentityServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.WebAPI | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.WebAPI/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.WebMVC | [appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.WebMVC/appsettings.json) | ConnectionStrings:ClassifiedAds |
+  | ClassifiedAds.Migrator | [appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.Migrator/appsettings.json) | ConnectionStrings:ClassifiedAds |
+  | ClassifiedAds.BackgroundServer | [appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.BackgroundServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
+  | ClassifiedAds.IdentityServer | [appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.IdentityServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
+  | ClassifiedAds.WebAPI | [appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebAPI/appsettings.json) | ConnectionStrings:ClassifiedAds |
+  | ClassifiedAds.WebMVC | [appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json) | ConnectionStrings:ClassifiedAds |
 
 
 - Run Migration:
@@ -64,7 +64,7 @@
       ```
       dotnet tool install --global dotnet-ef --version="3.1"
       ```
-    + Navigate to [ClassifiedAds.Migrator](/src/ClassifiedAds.Projects/ClassifiedAds.Migrator/) and run these commands:
+    + Navigate to [ClassifiedAds.Migrator](/src/ClassifiedAds.Monolith/ClassifiedAds.Migrator/) and run these commands:
       ```
       dotnet ef migrations add Init --context AdsDbContext -o Migrations/AdsDb
       dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
@@ -88,7 +88,7 @@
 
 ## Configure Storage
 
-- Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.WebMVC/appsettings.json) and jump to **Storage** section.
+- Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json) and jump to **Storage** section.
   ```js
   "Storage": {
     "Provider": "Local",
@@ -131,7 +131,7 @@
 
 ## Configure Message Broker
 
-- Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.WebMVC/appsettings.json) and [ClassifiedAds.BackgroundServer/appsettings.json](/src/ClassifiedAds.Projects/ClassifiedAds.BackgroundServer/appsettings.json) and jump to **MessageBroker** section.
+- Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json) and [ClassifiedAds.BackgroundServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.BackgroundServer/appsettings.json) and jump to **MessageBroker** section.
   ```js
   "MessageBroker": {
     "Provider": "RabbitMQ",
@@ -256,13 +256,13 @@
     ```
     dotnet tool install --global dotnet-ef --version="3.1"
     ```
-  + Navigate to [ClassifiedAds.Migrator](/src/ClassifiedAds.Projects/ClassifiedAds.Migrator/) and run these commands:
+  + Navigate to [ClassifiedAds.Migrator](/src/ClassifiedAds.Monolith/ClassifiedAds.Migrator/) and run these commands:
     ```
     dotnet ef migrations add Init --context AdsDbContext -o Migrations/AdsDb
     dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
     dotnet ef migrations add Init --context PersistedGrantDbContext -o Migrations/PersistedGrantDb
     ```
-- Navigate to [ClassifiedAds.Projects](/src/ClassifiedAds.Projects/) and run:
+- Navigate to [ClassifiedAds.Monolith](/src/ClassifiedAds.Monolith/) and run:
   ```
   docker-compose build
   docker-compose up
