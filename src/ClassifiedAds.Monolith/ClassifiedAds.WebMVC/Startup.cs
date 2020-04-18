@@ -1,6 +1,6 @@
 ﻿using Amazon;
 using Amazon.S3;
-using ClassifiedAds.Application.FileEntries.Events;
+using ClassifiedAds.Application.FileEntries.DTOs;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Infrastructure.Storages;

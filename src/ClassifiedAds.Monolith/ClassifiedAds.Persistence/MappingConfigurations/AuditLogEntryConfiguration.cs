@@ -1,17 +1,14 @@
 ﻿using ClassifiedAds.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ClassifiedAds.Persistence.MappingConfigurations
 {
-    public class VoterConfiguration : IEntityTypeConfiguration<Voter>
+    public class AuditLogEntryConfiguration : IEntityTypeConfiguration<AuditLogEntry>
     {
-        public void Configure(EntityTypeBuilder<Voter> builder)
+        public void Configure(EntityTypeBuilder<AuditLogEntry> builder)
         {
-            builder.ToTable("Voters");
+            builder.ToTable("AuditLogEntries");
             builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
         }
     }

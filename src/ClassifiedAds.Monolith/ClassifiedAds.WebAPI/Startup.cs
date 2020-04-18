@@ -65,7 +65,8 @@ namespace ClassifiedAds.WebAPI
             services.AddPersistence(AppSettings.ConnectionStrings.ClassifiedAds)
                     .AddDomainServices()
                     .AddApplicationServices()
-                    .AddMessageHandlers();
+                    .AddMessageHandlers()
+                    .AddIdentityCore();
 
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>

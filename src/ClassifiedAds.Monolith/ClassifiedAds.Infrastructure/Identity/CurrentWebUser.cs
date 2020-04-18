@@ -26,7 +26,10 @@ namespace ClassifiedAds.Infrastructure.Identity
         {
             get
             {
-                return Guid.Parse(_context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+                var userId = _context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                    ?? _context.HttpContext.User.FindFirst("sub")?.Value;
+
+                return Guid.Parse(userId);
             }
         }
     }

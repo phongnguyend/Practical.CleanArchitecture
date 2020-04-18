@@ -9,15 +9,24 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddIdentity(this IServiceCollection services)
         {
-            //services.AddIdentity<User, IdentityRole>(options =>
-            //        {
-            //            options.Tokens.EmailConfirmationTokenProvider = "EmailConfirmation";
-            //        })
-            //        .AddEntityFrameworkStores<AdsDbContext>()
-            //        .AddDefaultTokenProviders()
-            //        .AddTokenProvider<EmailConfirmationTokenProvider<User>>("EmailConfirmation");
-
             services.AddIdentity<User, Role>(options =>
+                    {
+                        options.Tokens.EmailConfirmationTokenProvider = "EmailConfirmation";
+                    })
+                    .AddUserManager<UserManager<User>>()
+                    .AddDefaultTokenProviders()
+                    .AddTokenProvider<EmailConfirmationTokenProvider<User>>("EmailConfirmation");
+            services.AddTransient<IUserStore<User>, UserStore>();
+            services.AddTransient<IRoleStore<Role>, RoleStore>();
+
+            services.Configure<DataProtectionTokenProviderOptions>(options => options.TokenLifespan = TimeSpan.FromHours(3));
+            services.Configure<EmailConfirmationTokenProviderOptions>(options => options.TokenLifespan = TimeSpan.FromDays(2));
+            return services;
+        }
+
+        public static IServiceCollection AddIdentityCore(this IServiceCollection services)
+        {
+            services.AddIdentityCore<User>(options =>
                     {
                         options.Tokens.EmailConfirmationTokenProvider = "EmailConfirmation";
                     })

@@ -31,8 +31,8 @@ namespace ClassifiedAds.WebAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<User>> Get()
         {
-            var products = _dispatcher.Dispatch(new GetUsersQuery());
-            return Ok(products);
+            var users = _dispatcher.Dispatch(new GetUsersQuery());
+            return Ok(users);
         }
 
         [HttpGet("{id}")]

@@ -1,6 +1,4 @@
 ﻿using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Repositories;
-using System;
 
 namespace ClassifiedAds.Application.Products.Commands
 {
@@ -11,17 +9,16 @@ namespace ClassifiedAds.Application.Products.Commands
 
     internal class DeleteProductCommandHandler : ICommandHandler<DeleteProductCommand>
     {
-        private readonly IRepository<Product, Guid> _productRepository;
+        private readonly ICrudService<Product> _productService;
 
-        public DeleteProductCommandHandler(IRepository<Product, Guid> productRepository)
+        public DeleteProductCommandHandler(ICrudService<Product> productService)
         {
-            _productRepository = productRepository;
+            _productService = productService;
         }
 
         public void Handle(DeleteProductCommand command)
         {
-            _productRepository.Delete(command.Product);
-            _productRepository.UnitOfWork.SaveChanges();
+            _productService.Delete(command.Product);
         }
     }
 }

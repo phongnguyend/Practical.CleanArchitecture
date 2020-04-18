@@ -31,11 +31,11 @@ namespace ClassifiedAds.Application
 
             if (adding)
             {
-                _domainEvents.Dispatch(new EntityCreatedEvent<T>(entity));
+                _domainEvents.Dispatch(new EntityCreatedEvent<T>(entity, DateTime.Now));
             }
             else
             {
-                _domainEvents.Dispatch(new EntityUpdatedEvent<T>(entity));
+                _domainEvents.Dispatch(new EntityUpdatedEvent<T>(entity, DateTime.Now));
             }
         }
 
@@ -54,7 +54,7 @@ namespace ClassifiedAds.Application
         {
             _repository.Delete(entity);
             _unitOfWork.SaveChanges();
-            _domainEvents.Dispatch(new EntityDeletedEvent<T>(entity));
+            _domainEvents.Dispatch(new EntityDeletedEvent<T>(entity, DateTime.Now));
         }
     }
 }
