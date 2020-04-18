@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Application;
+using ClassifiedAds.Application.AuditLogEntries.DTOs;
+using ClassifiedAds.Application.AuditLogEntries.Queries;
 using ClassifiedAds.Application.Products.Commands;
+using ClassifiedAds.Application.Products.DTOs;
 using ClassifiedAds.Application.Products.Queries;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Models.Products;
@@ -8,8 +11,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClassifiedAds.WebAPI.Controllers
 {
@@ -89,6 +94,39 @@ namespace ClassifiedAds.WebAPI.Controllers
             _dispatcher.Dispatch(new DeleteProductCommand { Product = product });
 
             return Ok();
+        }
+
+        [HttpGet("{id}/auditlogs")]
+        public ActionResult<IEnumerable<AuditLogEntryDTO>> GetAuditLogs(Guid id)
+        {
+            var logs = _dispatcher.Dispatch(new GetAuditEntriesQuery { ObjectId = id.ToString() });
+
+            List<dynamic> entries = new List<dynamic>();
+            ProductDTO previous = null;
+            foreach (var log in logs.OrderBy(x => x.CreatedDateTime))
+            {
+                var data = JsonConvert.DeserializeObject<ProductDTO>(log.Log);
+                var highLight = new
+                {
+                    Code = previous != null && data.Code != previous.Code,
+                    Name = previous != null && data.Name != previous.Name,
+                    Description = previous != null && data.Description != previous.Description,
+                };
+
+                var entry = new
+                {
+                    log.UserName,
+                    Action = log.Action.Replace("_PRODUCT", string.Empty),
+                    log.CreatedDateTime,
+                    data,
+                    highLight,
+                };
+                entries.Add(entry);
+
+                previous = data;
+            }
+
+            return Ok(entries.OrderByDescending(x => x.CreatedDateTime));
         }
     }
 }

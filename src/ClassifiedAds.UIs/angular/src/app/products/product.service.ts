@@ -5,9 +5,10 @@ import { catchError, tap, map } from "rxjs/operators";
 
 import { IProduct } from "./product";
 import { environment } from "src/environments/environment";
+import { IAuditLogEntry } from "../auditlogs/audit-log";
 
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class ProductService {
   private productUrl = environment.ResourceServer.Endpoint + "products";
@@ -43,6 +44,13 @@ export class ProductService {
       .delete<IProduct>(this.productUrl + "/" + product.id)
       .pipe(catchError(this.handleError));
   }
+
+  getAuditLogs(id: string): Observable<IAuditLogEntry[] | undefined> {
+    return this.http
+      .get<IAuditLogEntry[]>(this.productUrl + "/" + id + "/auditLogs")
+      .pipe(catchError(this.handleError));
+  }
+
   private handleError(err: HttpErrorResponse) {
     // in a real world app, we may send the server to some remote logging infrastructure
     // instead of just logging it to the console

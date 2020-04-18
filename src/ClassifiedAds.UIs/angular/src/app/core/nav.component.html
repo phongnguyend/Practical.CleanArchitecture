@@ -15,6 +15,15 @@
         Product
       </a>
     </li>
+    <li>
+      <a
+        class="nav-link"
+        routerLinkActive="active"
+        [routerLink]="['/auditlogs']"
+      >
+        Audit Logs
+      </a>
+    </li>
     <li *ngIf="!auth.isAuthenticated()">
       <a class="nav-link" (click)="login()" href="javascript:void(0)">
         Login

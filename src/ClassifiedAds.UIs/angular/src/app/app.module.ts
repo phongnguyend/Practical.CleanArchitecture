@@ -9,6 +9,7 @@ import { LoggingModule } from "./logging/logging.module";
 import { GlobalErrorHandler } from "./shared/global-error-handler";
 import { SharedModule } from "./shared/shared.module";
 import { CoreModule } from "./core/core.module";
+import { AuditLogModule } from "./auditlogs/audit-log.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -16,17 +17,18 @@ import { CoreModule } from "./core/core.module";
     BrowserModule,
     SharedModule,
     CoreModule,
+    AuditLogModule,
     ProductModule,
     AppRoutingModule,
     AuthModule,
-    LoggingModule
+    LoggingModule,
   ],
   providers: [
     {
       provide: ErrorHandler,
-      useClass: GlobalErrorHandler
-    }
+      useClass: GlobalErrorHandler,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

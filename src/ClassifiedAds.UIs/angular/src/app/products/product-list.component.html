@@ -74,6 +74,14 @@
                 Edit
               </a>
               &nbsp;
+              <button
+                type="button"
+                class="btn btn-primary btn-secondary"
+                (click)="viewAuditLogs(template, product.id)"
+              >
+                View Audit Logs
+              </button>
+              &nbsp;
               <app-delete-product
                 [product]="product"
                 (confirmed)="onDeleteConfirmed($event)"
@@ -88,3 +96,40 @@
 <div *ngIf="errorMessage" class="alert alert-danger">
   Error: {{ errorMessage }}
 </div>
+
+<ng-template #template>
+  <div class="modal-body text-center">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date Time</th>
+            <th>User Name</th>
+            <th>Action</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let auditLog of auditLogs">
+            <td>
+              {{ auditLog.createdDateTime | date: "dd/MM/yyyy hh:mm:ss" }}
+            </td>
+            <td>{{ auditLog.userName }}</td>
+            <td>{{ auditLog.action }}</td>
+            <td [style.color]="auditLog.highLight.code ? 'red' : ''">
+              {{ auditLog.data.code }}
+            </td>
+            <td [style.color]="auditLog.highLight.name ? 'red' : ''">
+              {{ auditLog.data.name }}
+            </td>
+            <td [style.color]="auditLog.highLight.description ? 'red' : ''">
+              {{ auditLog.data.description }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-template>

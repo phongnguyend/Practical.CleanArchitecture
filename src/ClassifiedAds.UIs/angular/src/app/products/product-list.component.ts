@@ -1,12 +1,14 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, TemplateRef } from "@angular/core";
 
 import { IProduct } from "./product";
 import { ProductService } from "./product.service";
 import { Title } from "@angular/platform-browser";
+import { IAuditLogEntry } from "../auditlogs/audit-log";
+import { BsModalService } from "ngx-bootstrap";
 
 @Component({
   templateUrl: "./product-list.component.html",
-  styleUrls: ["./product-list.component.css"]
+  styleUrls: ["./product-list.component.css"],
 })
 export class ProductListComponent implements OnInit {
   pageTitle = "Product List";
@@ -14,6 +16,7 @@ export class ProductListComponent implements OnInit {
   imageMargin = 2;
   showImage = false;
   errorMessage = "";
+  auditLogs: IAuditLogEntry[];
 
   _listFilter = "";
   get listFilter(): string {
@@ -31,7 +34,8 @@ export class ProductListComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private titleService: Title
+    private titleService: Title,
+    private modalService: BsModalService
   ) {
     this.titleService.setTitle("ClassifiedAds Angular - Product");
   }
@@ -42,11 +46,11 @@ export class ProductListComponent implements OnInit {
 
   onDeleteConfirmed(product: IProduct): void {
     this.productService.deleteProduct(product).subscribe({
-      next: rs => {
+      next: (rs) => {
         console.log(rs);
         this.ngOnInit();
       },
-      error: err => (this.errorMessage = err)
+      error: (err) => (this.errorMessage = err),
     });
   }
 
@@ -64,11 +68,21 @@ export class ProductListComponent implements OnInit {
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe({
-      next: products => {
+      next: (products) => {
         this.products = products;
         this.filteredProducts = this.products;
       },
-      error: err => (this.errorMessage = err)
+      error: (err) => (this.errorMessage = err),
+    });
+  }
+
+  viewAuditLogs(template: TemplateRef<any>, id: string) {
+    this.productService.getAuditLogs(id).subscribe({
+      next: (logs) => {
+        this.auditLogs = logs;
+        this.modalService.show(template, { class: "modal-xl" });
+      },
+      error: (err) => (this.errorMessage = err),
     });
   }
 }

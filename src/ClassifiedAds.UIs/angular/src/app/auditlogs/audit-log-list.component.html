@@ -1,0 +1,29 @@
+<div class="card">
+  <div class="card-header">
+    Audit Logs
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table" *ngIf="auditLogs && auditLogs.length">
+        <thead>
+          <tr>
+            <th>Date Time</th>
+            <th>User Name</th>
+            <th>Action</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let auditLog of auditLogs">
+            <td>
+              {{ auditLog.createdDateTime | date: "dd/MM/yyyy hh:mm:ss" }}
+            </td>
+            <td>{{ auditLog.userName }}</td>
+            <td>{{ auditLog.action }}</td>
+            <td>{{ auditLog.log }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
