@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Domain.Identity;
+﻿using AutoMapper;
+using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
@@ -35,6 +36,8 @@ namespace ClassifiedAds.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
+
             services.Configure<AppSettings>(Configuration);
 
             services.AddClassifiedAdsMonitoringServices();

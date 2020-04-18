@@ -1,7 +1,9 @@
-﻿using ClassifiedAds.Application;
+﻿using AutoMapper;
+using ClassifiedAds.Application;
 using ClassifiedAds.Application.Roles.Commands;
 using ClassifiedAds.Application.Roles.Queries;
 using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.WebAPI.Models.Roles;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,17 +21,20 @@ namespace ClassifiedAds.WebAPI.Controllers
     public class RolesController : ControllerBase
     {
         private readonly Dispatcher _dispatcher;
+        private readonly IMapper _mapper;
 
-        public RolesController(Dispatcher dispatcher, ILogger<RolesController> logger)
+        public RolesController(Dispatcher dispatcher, ILogger<RolesController> logger, IMapper mapper)
         {
             _dispatcher = dispatcher;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Role>> Get()
         {
             var roles = _dispatcher.Dispatch(new GetRolesQuery { AsNoTracking = true });
-            return Ok(roles);
+            var model = _mapper.Map<List<RoleModel>>(roles);
+            return Ok(model);
         }
 
         [HttpGet("{id}")]
@@ -38,13 +43,14 @@ namespace ClassifiedAds.WebAPI.Controllers
         public ActionResult<Role> Get(Guid id)
         {
             var role = _dispatcher.Dispatch(new GetRoleQuery { Id = id, AsNoTracking = true });
-            return Ok(role);
+            var model = _mapper.Map<RoleModel>(role);
+            return Ok(model);
         }
 
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<Role>> Post([FromBody] Role model)
+        public async Task<ActionResult<Role>> Post([FromBody] RoleModel model)
         {
             var role = new Role
             {
@@ -54,6 +60,8 @@ namespace ClassifiedAds.WebAPI.Controllers
 
             _dispatcher.Dispatch(new AddUpdateRoleCommand { Role = role });
 
+            model = _mapper.Map<RoleModel>(role);
+
             return Created($"/api/roles/{model.Id}", model);
         }
 
@@ -61,7 +69,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Put(Guid id, [FromBody] Role model)
+        public async Task<ActionResult> Put(Guid id, [FromBody] RoleModel model)
         {
             var role = _dispatcher.Dispatch(new GetRoleQuery { Id = id });
 
@@ -70,7 +78,9 @@ namespace ClassifiedAds.WebAPI.Controllers
 
             _dispatcher.Dispatch(new AddUpdateRoleCommand { Role = role });
 
-            return Ok(role);
+            model = _mapper.Map<RoleModel>(role);
+
+            return Ok(model);
         }
 
         [HttpDelete("{id}")]
