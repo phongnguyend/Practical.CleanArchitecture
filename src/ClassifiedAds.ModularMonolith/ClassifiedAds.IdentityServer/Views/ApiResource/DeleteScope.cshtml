@@ -1,0 +1,56 @@
+﻿@using ClassifiedAds.IdentityServer.Models.ApiResourceModels
+@model ScopeModel
+
+
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="ApiResource" asp-action="Index">Api Resources</a></li>
+                <li class="breadcrumb-item"><a asp-controller="ApiResource" asp-action="Edit" asp-route-id="@Model.ApiResourceId">@Model.ApiResourceName</a></li>
+                <li class="breadcrumb-item"><a asp-controller="ApiResource" asp-action="Scopes" asp-route-id="@Model.ApiResourceId">Scopes</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+
+            </ol>
+        </nav>
+    </div>
+
+    <div class="col-12">
+        <h2>Delete Scope</h2>
+    </div>
+</div>
+
+<form asp-action="DeleteScope" method="post">
+
+    <!--Hidden -->
+    <input type="hidden" asp-for="Id" />
+
+    <!--Hidden -->
+    <input type="hidden" asp-for="ApiResourceId" />
+
+    <div class="card mt-3">
+        <h5 class="card-header">Delete Scope</h5>
+        <div class="card-body">
+
+            <!--Input - text -->
+            <div class="form-group row">
+                <label asp-for="Name" class="col-sm-3 col-form-label">
+                    @await Html.PartialAsync("_Label", "Name")
+                </label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" disabled="disabled" asp-for="Name">
+                </div>
+            </div>
+
+            <!--Button-->
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">
+                </label>
+                <div class="col-sm-9">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>

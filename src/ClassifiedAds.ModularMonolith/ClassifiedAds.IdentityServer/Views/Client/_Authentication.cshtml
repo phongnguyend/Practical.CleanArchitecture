@@ -1,0 +1,111 @@
+﻿@using ClassifiedAds.IdentityServer.Models.ClientModels
+@model ClientModel
+
+<div class="card mt-3">
+    <h5 class="card-header">Authentication</h5>
+    <div class="card-body">
+        <!--Input - text -->
+        <div class="form-group row">
+            <label asp-for="FrontChannelLogoutUri" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Front Channel Logout Uri")
+            </label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" asp-for="FrontChannelLogoutUri">
+            </div>
+        </div>
+
+        <!--Checkbox-->
+        <div class="form-group row">
+            <label asp-for="FrontChannelLogoutSessionRequired" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Front Channel Logout Session Required")
+            </label>
+            <div class="col-sm-9">
+                <toggle-button>
+                    <input asp-for="FrontChannelLogoutSessionRequired" type="checkbox">
+                </toggle-button>
+            </div>
+        </div>
+
+        <!--Input - text -->
+        <div class="form-group row">
+            <label asp-for="BackChannelLogoutUri" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Back Channel Logout Uri")
+            </label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" asp-for="BackChannelLogoutUri">
+            </div>
+        </div>
+
+        <!--Checkbox-->
+        <div class="form-group row">
+            <label asp-for="BackChannelLogoutSessionRequired" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Back Channel Logout Session Required")
+            </label>
+            <div class="col-sm-9">
+                <toggle-button>
+                    <input asp-for="BackChannelLogoutSessionRequired" type="checkbox">
+                </toggle-button>
+            </div>
+        </div>
+
+        <!--Checkbox-->
+        <div class="form-group row">
+            <label asp-for="EnableLocalLogin" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Enable Local Login")
+            </label>
+            <div class="col-sm-9">
+                <toggle-button>
+                    <input asp-for="EnableLocalLogin" type="checkbox">
+                </toggle-button>
+            </div>
+        </div>
+
+        <!--Select with tags-->
+        <div class="form-group row">
+            <label asp-for="PostLogoutRedirectUris" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Post Logout Redirect Uris")
+            </label>
+            <div class="col-sm-9">
+                <picker id="PostLogoutRedirectUrisItems" multiple-select="true" min-search-text="2"
+                        selected-items="@Model.PostLogoutRedirectUris?.ToList()"
+                        search-input-placeholder="enter"
+                        selected-items-title="selected items"
+                        search-result-title="search result"
+                        suggested-items-title="suggested items"
+                        no-item-selected-title="no item selected"
+                        show-all-items-title="show all items"
+                        item-already-selected-title="item already selected">
+                </picker>
+            </div>
+        </div>
+
+        <!--Select with tags-->
+        <div class="form-group row">
+            <label asp-for="IdentityProviderRestrictions" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Identity Provider Restrictions")
+            </label>
+            <div class="col-sm-9">
+                <picker id="IdentityProviderRestrictionsItems" multiple-select="true" min-search-text="2"
+                        selected-items="@Model.IdentityProviderRestrictions?.ToList()"
+                        search-input-placeholder="enter"
+                        selected-items-title="selected items"
+                        search-result-title="search result"
+                        suggested-items-title="suggested items"
+                        no-item-selected-title="no item selected"
+                        show-all-items-title="show all items"
+                        item-already-selected-title="item already selected">
+                </picker>
+            </div>
+        </div>
+
+        <!--Input - number -->
+        <div class="form-group row">
+            <label asp-for="UserSsoLifetime" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "User Sso Lifetime")
+            </label>
+            <div class="col-sm-9">
+                <input type="number" class="form-control" asp-for="UserSsoLifetime">
+            </div>
+        </div>
+    </div>
+</div>

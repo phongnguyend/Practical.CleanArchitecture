@@ -1,0 +1,186 @@
+﻿@using ClassifiedAds.IdentityServer.Models.ClientModels
+@model ClientModel
+@{
+    var protocolTypes = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("oidc", "OpenID Connect") };
+}
+
+<!--Hidden -->
+<input type="hidden" asp-for="Id" />
+
+<div class="card mt-3">
+    <h5 class="card-header">Basics</h5>
+    <div class="card-body">
+        <!--Checkbox-->
+        <div class="form-group row">
+            <label asp-for="Enabled" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Enabled")
+            </label>
+            <div class="col-sm-9">
+                <toggle-button>
+                    <input asp-for="Enabled" type="checkbox">
+                </toggle-button>
+            </div>
+        </div>
+
+        <!--Input - text -->
+        <div class="form-group row">
+            <label asp-for="Description" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Description")
+            </label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" asp-for="Description">
+            </div>
+        </div>
+
+        <!--Select-->
+        <div class="form-group row">
+            <label asp-for="ProtocolType" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Protocol Type")
+            </label>
+            <div class="col-sm-9">
+                <select asp-for="ProtocolType" asp-items="@(new SelectList(protocolTypes,"Key","Value"))" class="form-control single-select"></select>
+            </div>
+        </div>
+
+        <!--Checkbox-->
+        <div class="form-group row">
+            <label asp-for="RequireClientSecret" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Require Client Secret")
+            </label>
+            <div class="col-sm-9">
+                <toggle-button>
+                    <input asp-for="RequireClientSecret" type="checkbox">
+                </toggle-button>
+            </div>
+        </div>
+
+        <!--Checkbox-->
+        <div class="form-group row">
+            <label asp-for="RequirePkce" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Require Pkce")
+            </label>
+            <div class="col-sm-9">
+                <toggle-button>
+                    <input asp-for="RequirePkce" type="checkbox">
+                </toggle-button>
+            </div>
+        </div>
+
+        <!--Checkbox-->
+        <div class="form-group row">
+            <label asp-for="AllowPlainTextPkce" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Allow Plain Text Pkce")
+            </label>
+            <div class="col-sm-9">
+                <toggle-button>
+                    <input asp-for="AllowPlainTextPkce" type="checkbox">
+                </toggle-button>
+            </div>
+        </div>
+
+        <!--Checkbox-->
+        <div class="form-group row">
+            <label asp-for="AllowOfflineAccess" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Allow Offline Access")
+            </label>
+            <div class="col-sm-9">
+                <toggle-button>
+                    <input asp-for="AllowOfflineAccess" type="checkbox">
+                </toggle-button>
+            </div>
+        </div>
+
+        <!--Checkbox-->
+        <div class="form-group row">
+            <label asp-for="AllowAccessTokensViaBrowser" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Allow Access Tokens Via Browser")
+            </label>
+            <div class="col-sm-9">
+                <toggle-button>
+                    <input asp-for="AllowAccessTokensViaBrowser" type="checkbox">
+                </toggle-button>
+            </div>
+        </div>
+
+        <!--Select with tags-->
+        <div class="form-group row">
+            <label asp-for="AllowedScopes" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Allowed Scopes")
+            </label>
+            <div class="col-sm-9">
+                <picker id="AllowedScopesItems" multiple-select="true" min-search-text="2"
+                        selected-items="@Model.AllowedScopes?.ToList()"
+                        url="@Url.Action("GetScopes","Client")?scope"
+                        search-input-placeholder="enter"
+                        selected-items-title="selected items"
+                        search-result-title="search result"
+                        suggested-items-title="suggested items"
+                        no-item-selected-title="no item selected"
+                        show-all-items-title="show all items"
+                        item-already-selected-title="item already selected">
+                </picker>
+            </div>
+        </div>
+
+
+        <!--Select with tags-->
+        <div class="form-group row">
+            <label asp-for="RedirectUris" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Redirect Uris")
+            </label>
+            <div class="col-sm-9">
+                <picker id="RedirectUrisItems" multiple-select="true" min-search-text="2"
+                        selected-items="@Model.RedirectUris?.ToList()"
+                        search-input-placeholder="enter"
+                        selected-items-title="selected items"
+                        search-result-title="search result"
+                        suggested-items-title="suggested items"
+                        no-item-selected-title="no item selected"
+                        show-all-items-title="show all items"
+                        item-already-selected-title="item already selected">
+                </picker>
+            </div>
+        </div>
+
+        <!--Select with tags-->
+        <div class="form-group row">
+            <label asp-for="AllowedGrantTypes" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Allowed Grant Types")
+            </label>
+            <div class="col-sm-9">
+                <picker id="AllowedGrantTypesItems" multiple-select="true" min-search-text="2"
+                        url="@Url.Action("GetGrantTypes","Client")?grant"
+                        selected-items="@Model.AllowedGrantTypes?.ToList()"
+                        search-input-placeholder="enter"
+                        selected-items-title="selected items"
+                        search-result-title="search result"
+                        suggested-items-title="suggested items"
+                        no-item-selected-title="no item selected"
+                        show-all-items-title="show all items"
+                        item-already-selected-title="item already selected">
+                </picker>
+            </div>
+        </div>
+
+        <!--Button-->
+        <div class="form-group row">
+            <label asp-for="ClientSecrets" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Client Secrets")
+            </label>
+            <div class="col-sm-9">
+                <a asp-action="Secrets" asp-route-id="@Model.Id" class="btn btn-primary">Manage Secrets</a>
+            </div>
+        </div>
+
+
+        <!--Button-->
+        <div class="form-group row">
+            <label asp-for="Properties" class="col-sm-3 col-form-label">
+                @await Html.PartialAsync("_Label", "Properties")
+            </label>
+            <div class="col-sm-9">
+                <a asp-action="Properties" asp-route-id="@Model.Id" class="btn btn-primary">Manage Properties</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+﻿@using ClassifiedAds.Modules.Identity.Entities;
+@model IEnumerable<Role>
+
+<h2>Roles</h2>
+
+<a asp-action="Edit" class="btn btn-outline-primary mb-3 mt-3"><span class="oi oi-plus"></span> Add Role</a>
+
+<div class="row">
+    <div class="col-12">
+        @*@await Html.PartialAsync("Common/Search", new Search { Action = "Search", Controller = "Role" })*@
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var role in Model)
+                    {
+                        <tr>
+                            <th>
+                                <a class="btn btn-primary" asp-action="Edit" asp-route-id="@role.Id">Edit</a>
+                                <a class="btn btn-primary" asp-action="Users" asp-route-id="@role.Id">Users</a>
+                            </th>
+                            <td>@role.Name</td>
+                            <td>
+                                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@role.Id"><span class="oi oi-x"></span></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        @*@await Html.PartialAsync("Common/Pager", new Pager { Action = "Roles", PageSize = Model.PageSize, TotalCount = Model.TotalCount })*@
+    </div>
+</div>

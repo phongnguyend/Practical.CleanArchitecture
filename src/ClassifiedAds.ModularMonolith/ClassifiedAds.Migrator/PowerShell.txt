@@ -1,0 +1,18 @@
+﻿Add-Migration -Context AuditLogDbContext Init -OutputDir Migrations/AuditLogDb
+Add-Migration -Context IdentityDbContext Init -OutputDir Migrations/IdentityDb
+Add-Migration -Context NotificationDbContext Init -OutputDir Migrations/NotificationDb
+Add-Migration -Context ProductDbContext Init -OutputDir Migrations/ProductDb
+Add-Migration -Context StorageDbContext Init -OutputDir Migrations/StorageDb
+Add-Migration -Context ConfigurationDbContext Init -OutputDir Migrations/ConfigurationDb
+Add-Migration -Context PersistedGrantDbContext Init -OutputDir Migrations/PersistedGrantDb
+
+Remove-Migration -Context AuditLogDbContext
+Remove-Migration -Context AuditLogDbContext -Force
+
+Update-Database -Context AuditLogDbContext
+Update-Database -Context IdentityDbContext
+Update-Database -Context NotificationDbContext
+Update-Database -Context ProductDbContext
+Update-Database -Context StorageDbContext
+Update-Database -Context ConfigurationDbContext
+Update-Database -Context PersistedGrantDbContext

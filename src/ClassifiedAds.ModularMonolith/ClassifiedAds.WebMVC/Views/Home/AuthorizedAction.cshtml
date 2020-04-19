@@ -1,0 +1,57 @@
+﻿@using ClassifiedAds.WebMVC.Models.Home
+@model AuthenticationModel
+@{
+    ViewData["Title"] = "AuthorizedAction";
+}
+
+<h1>Auths Information</h1>
+<a asp-controller="Home" asp-action="RefreshToken">Click to Refresh Token</a>
+<table style="table-layout:fixed" width="100%">
+    <tbody>
+        <tr style="border-bottom:1px solid black">
+            <td width="20%">Access Token</td>
+            <td style="word-wrap:break-word">@Model.Token.AccessToken</td>
+        </tr>
+        <tr style="border-bottom:1px solid black">
+            <td>Refresh Token</td>
+            <td style="word-wrap:break-word">@Model.Token.RefreshToken</td>
+        </tr>
+        <tr style="border-bottom:1px solid black">
+            <td>Expires At</td>
+            <td style="word-wrap:break-word; font-weight:bold">@Model.Token.ExpiresAt</td>
+        </tr>
+        <tr style="border-bottom:1px solid black">
+            <td>Identity Token</td>
+            <td style="word-wrap:break-word">@Model.Token.IdentityToken</td>
+        </tr>
+    </tbody>
+</table>
+<h1>Current User Information</h1>
+<table style="table-layout:fixed" width="100%">
+    <tbody>
+        <tr style="border-bottom:1px solid black">
+            <td width="20%">Is Authenticated</td>
+            <td style="word-wrap:break-word">@Model.User.Identity.IsAuthenticated</td>
+        </tr>
+        <tr style="border-bottom:1px solid black">
+            <td>Name</td>
+            <td style="word-wrap:break-word">@Model.User.Identity.Name</td>
+        </tr>
+        <tr style="border-bottom:1px solid black">
+            <td>Authentication Type</td>
+            <td style="word-wrap:break-word">@Model.User.Identity.AuthenticationType</td>
+        </tr>
+    </tbody>
+</table>
+<h1>Claims</h1>
+<table style="table-layout:fixed" width="100%">
+    <tbody>
+        @foreach (var claim in Model.User.Claims)
+        {
+            <tr style="border-bottom:1px solid black">
+                <td style="word-wrap:break-word">@claim.Type</td>
+                <td style="word-wrap:break-word">@claim.Value</td>
+            </tr>
+        }
+    </tbody>
+</table>

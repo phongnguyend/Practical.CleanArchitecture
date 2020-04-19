@@ -1,0 +1,35 @@
+﻿@using ClassifiedAds.WebMVC.Models.File
+@model UploadFile
+@{
+    ViewData["Title"] = "Upload";
+}
+
+<h1>Upload</h1>
+
+<form enctype="multipart/form-data" method="post" asp-action="Upload">
+    <dl>
+        <dt>
+            <label asp-for="Name"></label>
+        </dt>
+        <dd>
+            <input asp-for="Name" type="text" />
+            <span asp-validation-for="Name"></span>
+        </dd>
+        <dt>
+            <label asp-for="Description"></label>
+        </dt>
+        <dd>
+            <input asp-for="Description" type="text" />
+            <span asp-validation-for="Description"></span>
+        </dd>
+        <dt>
+            <label asp-for="FormFile"></label>
+        </dt>
+        <dd>
+            <input asp-for="FormFile" type="file" />
+            <span asp-validation-for="FormFile"></span>
+        </dd>
+    </dl>
+    <input class="btn" type="submit" value="Upload" />
+</form>
+<a asp-controller="File" asp-action="Index">Back to Files</a>

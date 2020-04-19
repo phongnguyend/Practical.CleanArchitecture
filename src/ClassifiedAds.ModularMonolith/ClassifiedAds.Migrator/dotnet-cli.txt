@@ -1,0 +1,13 @@
+﻿dotnet tool install --global dotnet-ef --version="3.1"
+
+dotnet ef migrations add Init --context AdsDbContext -o Migrations/AdsDb
+dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
+dotnet ef migrations add Init --context PersistedGrantDbContext -o Migrations/PersistedGrantDb
+
+dotnet ef migrations script --context AdsDbContext
+dotnet ef migrations script --context ConfigurationDbContext
+dotnet ef migrations script --context PersistedGrantDbContext
+
+dotnet ef database update --context AdsDbContext
+dotnet ef database update --context ConfigurationDbContext
+dotnet ef database update --context PersistedGrantDbContext

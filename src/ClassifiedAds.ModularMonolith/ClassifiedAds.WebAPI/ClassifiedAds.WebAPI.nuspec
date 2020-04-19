@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>ClassifiedAds.WebAPI</id>
+        <version>1.0.0</version>
+        <authors>phongnguyend</authors>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>ClassifiedAds WebAPI</description>
+    </metadata>
+    <files>
+        <file src="ClassifiedAds.WebAPI\bin\publish\**\*.*" />
+    </files>
+</package>

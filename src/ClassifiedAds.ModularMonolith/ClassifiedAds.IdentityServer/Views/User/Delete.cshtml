@@ -1,0 +1,46 @@
+﻿@using ClassifiedAds.Modules.Identity.Entities;
+@model User
+
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="User" asp-action="Index">Users</a></li>
+                <li class="breadcrumb-item"><a asp-controller="User" asp-action="Profile" asp-route-id="@Model.Id">@Model.UserName</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Delete</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<form id="client-form" asp-controller="User" asp-action="Delete" Method="post">
+
+    <h2>Delete</h2>
+
+    <!--Hidden -->
+    <input type="hidden" asp-for="Id" />
+    <div class="card mt-3">
+        <h5 class="card-header">Delete</h5>
+        <div class="card-body">
+
+            <!--Input - text -->
+            <div class="form-group row">
+                <label asp-for="UserName" class="col-sm-3 col-form-label">
+                    @await Html.PartialAsync("_Label", "User Name")
+                </label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" disabled="disabled" asp-for="UserName">
+                </div>
+            </div>
+
+            <!--Button-->
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">
+                </label>
+                <div class="col-sm-9">
+                    <button type="submit" class="btn btn-danger">Delete User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

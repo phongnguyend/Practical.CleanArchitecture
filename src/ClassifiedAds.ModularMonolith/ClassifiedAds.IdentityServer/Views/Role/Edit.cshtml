@@ -1,0 +1,63 @@
+﻿@using ClassifiedAds.Modules.Identity.Entities;
+@model Role
+
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="Role" asp-action="Index">Roles</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="col-12">
+        <h2>Role</h2>
+    </div>
+</div>
+
+
+<form id="client-form" asp-controller="Role" asp-action="Edit" Method="post">
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    @if (Model.Id != Guid.Empty)
+    {
+        <!--Button-->
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <a asp-action="Claims" asp-route-id="@Model.Id" class="btn btn-outline-primary"><span class="oi oi-plus"></span> Claims</a>
+                <a asp-action="Users" asp-route-id="@Model.Id" class="btn btn-primary">Users</a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    }
+
+    <!--Hidden -->
+    <input type="hidden" asp-for="Id" />
+    <div class="card mt-3">
+        <h5 class="card-header">Role</h5>
+        <div class="card-body">
+
+            <!--Input - text -->
+            <div class="form-group row">
+                <label asp-for="Name" class="col-sm-3 col-form-label">
+                    @await Html.PartialAsync("_Label", "Name")
+                </label>
+                <div class="col-sm-9">
+                    <input type="text" required class="form-control" asp-for="Name">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!--Button-->
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">
+                </label>
+                <div class="col-sm-9">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

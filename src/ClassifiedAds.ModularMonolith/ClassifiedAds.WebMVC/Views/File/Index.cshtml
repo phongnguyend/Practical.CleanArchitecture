@@ -1,0 +1,52 @@
+﻿@using ClassifiedAds.Domain.Entities
+@model List<FileEntry>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Files</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>
+                File Name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Size (bytes)
+            </th>
+            <th>
+                Uploaded Time
+            </th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var file in Model)
+        {
+            <tr>
+                <td>
+                    <b>@file.Name (@file.FileName)</b>
+                </td>
+                <td>
+                    <b>@file.Description</b>
+                </td>
+                <td class="text-center">
+                    @file.Size.ToString("N0")
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => file.UploadedTime)
+                </td>
+                <td class="text-center">
+                    <a asp-action="Download" asp-route-id="@file.Id">Download</a> |
+                    <a asp-action="Delete" asp-route-id="@file.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a asp-controller="File" asp-action="Upload">Click to Upload a File</a>

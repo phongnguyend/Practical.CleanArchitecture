@@ -1,0 +1,60 @@
+﻿@using ClassifiedAds.IdentityServer.Models.ClientModels
+@model PropertyModel
+
+<form asp-controller="Client" asp-action="DeleteProperty" Method="post">
+    <div class="row">
+
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Client" asp-action="Index">Clients</a></li>
+                    <li class="breadcrumb-item"><a asp-controller="Client" asp-action="Edit" asp-route-id="@Model.Client.Id">@Model.Client.ClientId</a></li>
+                    <li class="breadcrumb-item"><a asp-controller="Client" asp-action="Properties" asp-route-id="@Model.Client.Id">Properties</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Delete Property</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="col-md-12">
+            <h3>Delete Property</h3>
+
+            <!--Hidden -->
+            <input type="hidden" asp-for="Client.Id" />
+            <input type="hidden" asp-for="Id" />
+
+            <div class="card mt-3">
+                <h5 class="card-header">Delete Property</h5>
+                <div class="card-body">
+                    <!--Input - text -->
+                    <div class="form-group row">
+                        <label asp-for="Key" class="col-sm-3 col-form-label">
+                            @await Html.PartialAsync("_Label", "Property Key")
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" disabled="disabled" asp-for="Key">
+                        </div>
+                    </div>
+
+                    <!--Input - text -->
+                    <div class="form-group row">
+                        <label asp-for="Value" class="col-sm-3 col-form-label">
+                            @await Html.PartialAsync("_Label", "Property Value")
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" disabled="disabled" asp-for="Value">
+                        </div>
+                    </div>
+
+                    <!--Button-->
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">
+                        </label>
+                        <div class="col-sm-9">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

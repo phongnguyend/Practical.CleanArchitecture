@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <CodeAnalysisRuleSet>ClassifiedAds.Migrator.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Scripts\Functions\" />
+    <Folder Include="Scripts\Indexes\" />
+    <Folder Include="Scripts\Types\" />
+    <Folder Include="Scripts\Stored Procedures\" />
+    <Folder Include="Scripts\Views\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ClassifiedAds.Infrastructure\ClassifiedAds.Infrastructure.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.Modules.AuditLog\ClassifiedAds.Modules.AuditLog.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.Modules.Identity\ClassifiedAds.Modules.Identity.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.Modules.Notification\ClassifiedAds.Modules.Notification.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.Modules.Product\ClassifiedAds.Modules.Product.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.Modules.Storage\ClassifiedAds.Modules.Storage.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.Modules.TokenProvider\ClassifiedAds.Modules.TokenProvider.csproj" />
+  </ItemGroup>
+
+</Project>
