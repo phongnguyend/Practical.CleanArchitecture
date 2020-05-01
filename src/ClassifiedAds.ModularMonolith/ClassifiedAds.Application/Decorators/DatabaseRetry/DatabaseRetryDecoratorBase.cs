@@ -1,10 +1,19 @@
 ﻿using System;
+using ClassifiedAds.Application.Decorators.Core;
 
-namespace ClassifiedAds.Application.Decorators
+namespace ClassifiedAds.Application.Decorators.DatabaseRetry
 {
-    public abstract class DatabaseRetryDecoratorBase
+    public abstract class DatabaseRetryDecoratorBase : ISettingsAcceptable
     {
-        private const int RetryTimes = 3;
+        private int _retryTimes;
+
+        void ISettingsAcceptable.Accept(ISettingsProvider settingsProvider)
+        {
+            if (settingsProvider is IDatabaseRetrySettingsProvider databaseRetrySettingsProvider)
+            {
+                _retryTimes = databaseRetrySettingsProvider.RetryTimes;
+            }
+        }
 
         protected void WrapExecution(Action action)
         {
@@ -20,7 +29,7 @@ namespace ClassifiedAds.Application.Decorators
                 }
                 catch (Exception ex)
                 {
-                    if (executedTimes >= RetryTimes || !IsDatabaseException(ex))
+                    if (executedTimes >= _retryTimes || !IsDatabaseException(ex))
                     {
                         throw;
                     }

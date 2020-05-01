@@ -1,4 +1,4 @@
-﻿namespace ClassifiedAds.Application.Decorators
+﻿namespace ClassifiedAds.Application.Decorators.DatabaseRetry
 {
     public class DatabaseRetryQueryDecorator<TQuery, TResult> : DatabaseRetryDecoratorBase, IQueryHandler<TQuery, TResult>
         where TQuery : IQuery<TResult>

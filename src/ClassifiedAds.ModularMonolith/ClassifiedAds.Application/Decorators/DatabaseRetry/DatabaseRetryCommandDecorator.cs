@@ -1,4 +1,4 @@
-﻿namespace ClassifiedAds.Application.Decorators
+﻿namespace ClassifiedAds.Application.Decorators.DatabaseRetry
 {
     public class DatabaseRetryCommandDecorator<TCommand> : DatabaseRetryDecoratorBase, ICommandHandler<TCommand>
         where TCommand : ICommand

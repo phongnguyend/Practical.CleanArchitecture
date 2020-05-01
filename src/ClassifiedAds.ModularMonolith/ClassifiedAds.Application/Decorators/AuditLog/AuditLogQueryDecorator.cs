@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace ClassifiedAds.Application.Decorators
+namespace ClassifiedAds.Application.Decorators.AuditLog
 {
     public class AuditLogQueryDecorator<TQuery, TResult> : IQueryHandler<TQuery, TResult>
         where TQuery : IQuery<TResult>
