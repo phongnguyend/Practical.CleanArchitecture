@@ -3,12 +3,12 @@ using Newtonsoft.Json;
 
 namespace ClassifiedAds.Application.Decorators
 {
-    public class AuditLogDecorator<TCommand> : ICommandHandler<TCommand>
+    public class AuditLogCommandDecorator<TCommand> : ICommandHandler<TCommand>
         where TCommand : ICommand
     {
         private readonly ICommandHandler<TCommand> _handler;
 
-        public AuditLogDecorator(ICommandHandler<TCommand> handler)
+        public AuditLogCommandDecorator(ICommandHandler<TCommand> handler)
         {
             _handler = handler;
         }

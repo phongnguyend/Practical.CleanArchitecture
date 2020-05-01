@@ -55,7 +55,7 @@ namespace Microsoft.Extensions.DependencyInjection
             object[] attributes = type.GetCustomAttributes(false);
 
             List<Type> pipeline = attributes
-                .Select(x => ToDecorator(x))
+                .Select(x => ToDecorator(type, x))
                 .Concat(new[] { type })
                 .Reverse()
                 .ToList();
@@ -129,18 +129,34 @@ namespace Microsoft.Extensions.DependencyInjection
             throw new ArgumentException($"Type {parameterType} not found");
         }
 
-        private static Type ToDecorator(object attribute)
+        private static Type ToDecorator(Type type, object attribute)
         {
-            Type type = attribute.GetType();
+            Type attributeType = attribute.GetType();
 
-            if (type == typeof(DatabaseRetryAttribute))
+            if (attributeType == typeof(DatabaseRetryAttribute))
             {
-                return typeof(DatabaseRetryDecorator<>);
+                if (HasInterface(type, typeof(ICommandHandler<>)))
+                {
+                    return typeof(DatabaseRetryCommandDecorator<>);
+                }
+
+                if (HasInterface(type, typeof(IQueryHandler<,>)))
+                {
+                    return typeof(DatabaseRetryQueryDecorator<,>);
+                }
             }
 
-            if (type == typeof(AuditLogAttribute))
+            if (attributeType == typeof(AuditLogAttribute))
             {
-                return typeof(AuditLogDecorator<>);
+                if (HasInterface(type, typeof(ICommandHandler<>)))
+                {
+                    return typeof(AuditLogCommandDecorator<>);
+                }
+
+                if (HasInterface(type, typeof(IQueryHandler<,>)))
+                {
+                    return typeof(AuditLogQueryDecorator<,>);
+                }
             }
 
             throw new ArgumentException(attribute.ToString());
@@ -156,6 +172,11 @@ namespace Microsoft.Extensions.DependencyInjection
             Type typeDefinition = type.GetGenericTypeDefinition();
 
             return typeDefinition == typeof(ICommandHandler<>) || typeDefinition == typeof(IQueryHandler<,>);
+        }
+
+        private static bool HasInterface(Type type, Type interfaceType)
+        {
+            return type.FindInterfaces((i, _) => i.GetGenericTypeDefinition() == interfaceType, null).Length > 0;
         }
     }
 }
