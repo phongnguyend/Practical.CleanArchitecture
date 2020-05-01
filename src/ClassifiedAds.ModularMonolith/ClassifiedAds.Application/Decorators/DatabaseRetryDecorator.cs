@@ -19,6 +19,7 @@ namespace ClassifiedAds.Application.Decorators
                 try
                 {
                     _handler.Handle(command);
+                    return;
                 }
                 catch (Exception ex)
                 {
