@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Infrastructure.Logging;
+using ClassifiedAds.IdentityServer.ConfigurationOptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -15,10 +15,13 @@ namespace ClassifiedAds.IdentityServer
         {
             Configuration = configuration;
 
-            env.UseClassifiedAdsLogger();
+            AppSettings = new AppSettings();
+            Configuration.Bind(AppSettings);
         }
 
         public IConfiguration Configuration { get; }
+
+        private AppSettings AppSettings { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -28,7 +31,7 @@ namespace ClassifiedAds.IdentityServer
 
             services.AddCors();
 
-            services.AddPersistence(Configuration.GetConnectionString("ClassifiedAds"))
+            services.AddPersistence(AppSettings.ConnectionStrings.ClassifiedAds)
                     .AddDomainServices()
                     .AddApplicationServices()
                     .AddMessageHandlers()
@@ -37,7 +40,7 @@ namespace ClassifiedAds.IdentityServer
             services.AddIdentityServer()
                     .AddSigningCredential(new X509Certificate2(Configuration["Certificates:Default:Path"], Configuration["Certificates:Default:Password"]))
                     .AddAspNetIdentity<User>()
-                    .AddIdServerPersistence(Configuration.GetConnectionString("ClassifiedAds"));
+                    .AddIdServerPersistence(AppSettings.ConnectionStrings.ClassifiedAds);
 
             services.AddClassifiedAdsProfiler();
         }
@@ -61,11 +64,13 @@ namespace ClassifiedAds.IdentityServer
                 .AllowAnyMethod()
             );
 
-            app.UseClassifiedAdsProfiler();
             app.UseIdentityServer();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => {
+            app.UseClassifiedAdsProfiler();
+
+            app.UseEndpoints(endpoints =>
+            {
                 endpoints.MapDefaultControllerRoute();
             });
         }

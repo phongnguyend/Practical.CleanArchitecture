@@ -21,7 +21,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
                 .AddScoped(typeof(ICrudService<>), typeof(CrudService<>));
 
-            DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly());
+            DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
 
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 

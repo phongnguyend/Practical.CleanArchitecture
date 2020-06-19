@@ -1,31 +1,23 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.EventLog;
 using Serilog;
 using Serilog.Formatting.Json;
 using Serilog.Sinks.Elasticsearch;
 using Serilog.Sinks.File;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace ClassifiedAds.Infrastructure.Logging
 {
     public static class LoggingExtensions
     {
-        public static void UseClassifiedAdsLogger(this IWebHostEnvironment env, LoggerOptions options = null)
+        private static void UseClassifiedAdsLogger(this IWebHostEnvironment env, LoggingOptions options)
         {
-            options ??= new LoggerOptions
-            {
-                File = new FileOptions
-                {
-                    MinimumLogEventLevel = Serilog.Events.LogEventLevel.Debug,
-                },
-                Elasticsearch = new ElasticsearchOptions
-                {
-                    IsEnabled = false,
-                    MinimumLogEventLevel = Serilog.Events.LogEventLevel.Debug,
-                },
-            };
-
             var assemblyName = Assembly.GetEntryAssembly()?.GetName().Name;
 
             var logsPath = Path.Combine(env.ContentRootPath, "logs");
@@ -46,19 +38,13 @@ namespace ClassifiedAds.Infrastructure.Logging
                     if (logEvent.Level >= options.File.MinimumLogEventLevel
                     || logEvent.Level >= options.Elasticsearch.MinimumLogEventLevel)
                     {
-                        if (logEvent.Level >= Serilog.Events.LogEventLevel.Warning)
-                        {
-                            return true;
-                        }
-
                         var sourceContext = logEvent.Properties.ContainsKey("SourceContext")
                              ? logEvent.Properties["SourceContext"].ToString()
                              : null;
 
-                        if (sourceContext.Contains("ClassifiedAds."))
-                        {
-                            return true;
-                        }
+                        var logLevel = GetLogLevel(sourceContext, options);
+
+                        return logEvent.Level >= logLevel;
                     }
 
                     return false;
@@ -83,26 +69,77 @@ namespace ClassifiedAds.Infrastructure.Logging
                         // BufferBaseFilename = Path.Combine(env.ContentRootPath, "logs", "buffer"),
                         InlineFields = true,
                         EmitEventFailure = EmitEventFailureHandling.WriteToFailureSink,
-                        FailureSink = new FileSink(Path.Combine(logsPath, "elasticsearch-failures.txt"), new JsonFormatter(), null)
+                        FailureSink = new FileSink(Path.Combine(logsPath, "elasticsearch-failures.txt"), new JsonFormatter(), null),
                     });
             }
 
             Log.Logger = loggerConfiguration.CreateLogger();
         }
 
-        public static IWebHostBuilder UseClassifiedAdsLogger(this IWebHostBuilder builder)
+        private static LoggingOptions SetDefault(LoggingOptions options)
         {
-            builder.ConfigureLogging(logging =>
+            options ??= new LoggingOptions
             {
-                //logging.AddEventLog(new EventLogSettings
-                //{
-                //    LogName = "ClassifiedAds",
-                //    SourceName = "WebAPI",
-                //    Filter = (a, b) => b >= LogLevel.Information
-                //});
-            });
+            };
 
-            builder.UseSerilog();
+            options.LogLevel ??= new Dictionary<string, string>();
+
+            if (!options.LogLevel.ContainsKey("Default"))
+            {
+                options.LogLevel["Default"] = "Warning";
+            }
+
+            options.File ??= new FileOptions
+            {
+                MinimumLogEventLevel = Serilog.Events.LogEventLevel.Warning,
+            };
+
+            options.Elasticsearch ??= new ElasticsearchOptions
+            {
+                IsEnabled = false,
+                MinimumLogEventLevel = Serilog.Events.LogEventLevel.Warning,
+            };
+
+            options.EventLog ??= new EventLogOptions
+            {
+                IsEnabled = false,
+            };
+            return options;
+        }
+
+        private static Serilog.Events.LogEventLevel GetLogLevel(string context, LoggingOptions options)
+        {
+            context = context.Replace("\"", string.Empty);
+            string level = "Default";
+            var matches = options.LogLevel.Keys.Where(k => context.StartsWith(k));
+
+            if (matches.Any())
+            {
+                level = matches.Max();
+            }
+
+            return (Serilog.Events.LogEventLevel)Enum.Parse(typeof(Serilog.Events.LogEventLevel), options.LogLevel[level], true);
+        }
+
+        public static IWebHostBuilder UseClassifiedAdsLogger(this IWebHostBuilder builder, Func<IConfiguration, LoggingOptions> logOptions)
+        {
+            builder.ConfigureLogging((context, logging) =>
+            {
+                logging.AddSerilog();
+
+                LoggingOptions options = SetDefault(logOptions(context.Configuration));
+
+                if (options.EventLog != null && options.EventLog.IsEnabled)
+                {
+                    logging.AddEventLog(new EventLogSettings
+                    {
+                        LogName = options.EventLog.LogName,
+                        SourceName = options.EventLog.SourceName,
+                    });
+                }
+
+                context.HostingEnvironment.UseClassifiedAdsLogger(options);
+            });
 
             return builder;
         }

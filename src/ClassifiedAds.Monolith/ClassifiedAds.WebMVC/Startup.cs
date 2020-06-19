@@ -6,7 +6,6 @@ using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Infrastructure.Storages;
 using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Infrastructure.Identity;
-using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
 using ClassifiedAds.Infrastructure.MessageBrokers.Kafka;
@@ -55,8 +54,6 @@ namespace ClassifiedAds.WebMVC
             {
                 throw new Exception(validationResult.FailureMessage);
             }
-
-            env.UseClassifiedAdsLogger(AppSettings.LoggerOptions);
         }
 
         public IConfiguration Configuration { get; }
@@ -131,7 +128,7 @@ namespace ClassifiedAds.WebMVC
             services.AddHttpClient(string.Empty)
                     .AddHttpMessageHandler<ProfilingHttpHandler>();
 
-            services.AddClassifiedAdsProfiler();
+            services.AddClassifiedAdsProfiler(AppSettings.ConnectionStrings.ClassifiedAds);
 
             var healthChecksBuilder = services.AddHealthChecks()
                 .AddSqlServer(connectionString: AppSettings.ConnectionStrings.ClassifiedAds,
@@ -301,6 +298,7 @@ namespace ClassifiedAds.WebMVC
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseDebuggingMiddleware();
             app.UseMiddleware<CustomMiddleware>();
 
             if (env.IsDevelopment())
@@ -315,7 +313,7 @@ namespace ClassifiedAds.WebMVC
                 app.UseHsts();
             }
 
-            app.UseSecurityHeaders();
+            app.UseSecurityHeaders(AppSettings.SecurityHeaders);
 
             app.UseIPFiltering();
 
@@ -324,12 +322,12 @@ namespace ClassifiedAds.WebMVC
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseClassifiedAdsProfiler();
-
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseClassifiedAdsProfiler();
 
             app.UseHealthChecks("/healthcheck", new HealthCheckOptions
             {

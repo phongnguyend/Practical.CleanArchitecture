@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Modules.Identity.Entities;
+﻿using ClassifiedAds.Application.Decorators.DatabaseRetry;
+using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace ClassifiedAds.Application.Roles.Queries
         public bool AsNoTracking { get; set; }
     }
 
+    [DatabaseRetry(retryTimes: 2)]
     public class GetRolesQueryHandler : IQueryHandler<GetRolesQuery, List<Role>>
     {
         private readonly IRoleRepository _roleRepository;

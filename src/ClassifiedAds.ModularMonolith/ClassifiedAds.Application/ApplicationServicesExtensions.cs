@@ -23,23 +23,17 @@ namespace Microsoft.Extensions.DependencyInjection
 
             foreach (var type in assemblyTypes)
             {
-                var typeInterfaces = type.GetInterfaces();
-
-                var handlerInterfaces = typeInterfaces
+                var handlerInterfaces = type.GetInterfaces()
                    .Where(Utils.IsHandlerInterface)
                    .ToList();
-                if (handlerInterfaces.Count > 0)
+
+                if (handlerInterfaces.Any())
                 {
                     var handlerFactory = new HandlerFactory(type);
                     foreach (var interfaceType in handlerInterfaces)
                     {
                         services.AddTransient(interfaceType, provider => handlerFactory.Create(provider, interfaceType));
                     }
-                }
-
-                if (typeInterfaces.Any(Utils.IsEventHandlerInterface))
-                {
-                    services.AddTransient(type);
                 }
             }
 

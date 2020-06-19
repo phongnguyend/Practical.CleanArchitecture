@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,11 +11,16 @@ namespace ClassifiedAds.Domain.Events
         private static List<Type> _handlers = new List<Type>();
         private static IServiceProvider _serviceProvider;
 
-        public static void RegisterHandlers(Assembly assembly)
+        public static void RegisterHandlers(Assembly assembly, IServiceCollection services)
         {
             var types = assembly.GetTypes()
                                 .Where(x => x.GetInterfaces().Any(y => y.IsGenericType && y.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)))
                                 .ToList();
+
+            foreach (var type in types)
+            {
+                services.AddTransient(type);
+            }
 
             _handlers.AddRange(types);
         }

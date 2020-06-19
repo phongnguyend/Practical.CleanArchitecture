@@ -1,28 +1,26 @@
 ﻿using System;
 
-namespace ClassifiedAds.Application.Decorators
+namespace ClassifiedAds.Application.Decorators.DatabaseRetry
 {
-    public class DatabaseRetryDecorator<TCommand> : ICommandHandler<TCommand>
-        where TCommand : ICommand
+    public abstract class DatabaseRetryDecoratorBase
     {
-        private readonly ICommandHandler<TCommand> _handler;
+        protected DatabaseRetryAttribute DatabaseRetryOptions { get; set; }
 
-        public DatabaseRetryDecorator(ICommandHandler<TCommand> handler)
+        protected void WrapExecution(Action action)
         {
-            _handler = handler;
-        }
+            int executedTimes = 0;
 
-        public void Handle(TCommand command)
-        {
-            for (int i = 0; ; i++)
+            while (true)
             {
                 try
                 {
-                    _handler.Handle(command);
+                    executedTimes++;
+                    action();
+                    return;
                 }
                 catch (Exception ex)
                 {
-                    if (i >= 3 || !IsDatabaseException(ex))
+                    if (executedTimes >= DatabaseRetryOptions.RetryTimes || !IsDatabaseException(ex))
                     {
                         throw;
                     }
@@ -30,7 +28,7 @@ namespace ClassifiedAds.Application.Decorators
             }
         }
 
-        private bool IsDatabaseException(Exception exception)
+        private static bool IsDatabaseException(Exception exception)
         {
             string message = exception.InnerException?.Message;
 

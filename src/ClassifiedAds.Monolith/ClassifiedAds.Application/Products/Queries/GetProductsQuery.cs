@@ -1,4 +1,6 @@
-﻿using ClassifiedAds.Domain.Entities;
+﻿using ClassifiedAds.Application.Decorators.AuditLog;
+using ClassifiedAds.Application.Decorators.DatabaseRetry;
+using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,8 @@ namespace ClassifiedAds.Application.Products.Queries
     {
     }
 
+    [AuditLog]
+    [DatabaseRetry]
     internal class GetProductsQueryHandler : IQueryHandler<GetProductsQuery, List<Product>>
     {
         private readonly IRepository<Product, Guid> _productRepository;

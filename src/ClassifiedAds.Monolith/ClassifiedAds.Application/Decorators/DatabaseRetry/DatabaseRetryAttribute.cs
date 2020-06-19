@@ -1,10 +1,9 @@
 ﻿using System;
-using ClassifiedAds.Application.Decorators.DatabaseRetry;
 
-namespace ClassifiedAds.Application.Decorators
+namespace ClassifiedAds.Application.Decorators.DatabaseRetry
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
-    public sealed class DatabaseRetryAttribute : Attribute, IDatabaseRetrySettingsProvider
+    public sealed class DatabaseRetryAttribute : Attribute
     {
         public int RetryTimes { get; }
 

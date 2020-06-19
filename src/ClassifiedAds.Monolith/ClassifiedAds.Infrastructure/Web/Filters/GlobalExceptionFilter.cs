@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace ClassifiedAds.WebAPI.Filters
+namespace ClassifiedAds.Infrastructure.Web.Filters
 {
     public class GlobalExceptionFilter : IExceptionFilter
     {

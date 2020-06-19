@@ -1,6 +1,8 @@
 ﻿using ClassifiedAds.Infrastructure.Logging;
+using ClassifiedAds.WebAPI.ConfigurationOptions;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ClassifiedAds.WebAPI
@@ -16,6 +18,11 @@ namespace ClassifiedAds.WebAPI
             WebHost.CreateDefaultBuilder(args)
                 .UseClassifiedAdsMonitoringServices()
                 .UseStartup<Startup>()
-                .UseClassifiedAdsLogger();
+                .UseClassifiedAdsLogger(configuration =>
+                {
+                    var appSettings = new AppSettings();
+                    configuration.Bind(appSettings);
+                    return appSettings.Logging;
+                });
     }
 }

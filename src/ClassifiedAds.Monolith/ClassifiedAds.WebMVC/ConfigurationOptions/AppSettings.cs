@@ -2,6 +2,7 @@
 using ClassifiedAds.WebMVC.ConfigurationOptions.MessageBroker;
 using ClassifiedAds.WebMVC.ConfigurationOptions.Storage;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 
 namespace ClassifiedAds.WebMVC.ConfigurationOptions
 {
@@ -11,7 +12,7 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
 
         public CheckDependency CheckDependency { get; set; }
 
-        public LoggerOptions LoggerOptions { get; set; }
+        public LoggingOptions Logging { get; set; }
 
         public OpenIdConnect OpenIdConnect { get; set; }
 
@@ -30,6 +31,8 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
         public StorageOptions Storage { get; set; }
 
         public MessageBrokerOptions MessageBroker { get; set; }
+
+        public Dictionary<string, string> SecurityHeaders { get; set; }
 
         public ValidateOptionsResult Validate()
         {

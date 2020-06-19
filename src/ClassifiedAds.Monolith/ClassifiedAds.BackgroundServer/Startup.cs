@@ -7,7 +7,6 @@ using ClassifiedAds.BackgroundServer.ConfigurationOptions;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Infrastructure.HealthChecks;
-using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
 using ClassifiedAds.Infrastructure.MessageBrokers.Kafka;
@@ -30,7 +29,15 @@ namespace ClassifiedAds.BackgroundServer
         {
             Configuration = configuration;
 
-            env.UseClassifiedAdsLogger();
+            var appSettings = new AppSettings();
+            Configuration.Bind(appSettings);
+            AppSettings = appSettings;
+
+            var validationResult = appSettings.Validate();
+            if (validationResult.Failed)
+            {
+                throw new Exception(validationResult.FailureMessage);
+            }
         }
 
         public IConfiguration Configuration { get; }
@@ -41,21 +48,11 @@ namespace ClassifiedAds.BackgroundServer
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            var appSettings = new AppSettings();
-            Configuration.Bind(appSettings);
-            AppSettings = appSettings;
-
-            var validationResult = appSettings.Validate();
-            if (validationResult.Failed)
-            {
-                throw new Exception(validationResult.FailureMessage);
-            }
-
             services.Configure<AppSettings>(Configuration);
 
-            if (appSettings.CheckDependency.Enabled)
+            if (AppSettings.CheckDependency.Enabled)
             {
-                var hosts = appSettings.CheckDependency.Host.Split(',');
+                var hosts = AppSettings.CheckDependency.Host.Split(',');
                 foreach (var host in hosts)
                 {
                     NetworkPortCheck.Wait(host, 5);
@@ -68,7 +65,7 @@ namespace ClassifiedAds.BackgroundServer
                 {
                     PrepareSchemaIfNecessary = true,
                 };
-                x.UseSqlServerStorage(appSettings.ConnectionStrings.ClassifiedAds, options);
+                x.UseSqlServerStorage(AppSettings.ConnectionStrings.ClassifiedAds, options);
             });
 
             services.AddTransient<IWebNotification, SignalRNotification>();

@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 
 namespace ClassifiedAds.Application.Decorators.AuditLog
 {
+    [Mapping(Type = typeof(AuditLogAttribute))]
     public class AuditLogCommandDecorator<TCommand> : ICommandHandler<TCommand>
         where TCommand : ICommand
     {

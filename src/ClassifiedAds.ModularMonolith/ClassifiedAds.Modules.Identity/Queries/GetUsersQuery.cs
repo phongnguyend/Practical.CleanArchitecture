@@ -1,4 +1,6 @@
-﻿using ClassifiedAds.Modules.Identity.Contracts.DTOs;
+﻿using ClassifiedAds.Application.Decorators.AuditLog;
+using ClassifiedAds.Application.Decorators.DatabaseRetry;
+using ClassifiedAds.Modules.Identity.Contracts.DTOs;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
 using System.Collections.Generic;
@@ -14,6 +16,8 @@ namespace ClassifiedAds.Application.Users.Queries
         public bool AsNoTracking { get; set; }
     }
 
+    [AuditLog]
+    [DatabaseRetry(retryTimes: 4)]
     public class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, List<User>>, IQueryHandler<Modules.Identity.Contracts.Queries.GetUsersQuery, List<UserDTO>>
     {
         private readonly IUserRepository _userRepository;

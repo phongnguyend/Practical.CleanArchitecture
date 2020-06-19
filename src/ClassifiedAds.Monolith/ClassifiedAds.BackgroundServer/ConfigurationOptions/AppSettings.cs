@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.BackgroundServer.ConfigurationOptions.MessageBroker;
 using ClassifiedAds.BackgroundServer.ConfigurationOptions.Storage;
+using ClassifiedAds.Infrastructure.Logging;
 using Microsoft.Extensions.Options;
 
 namespace ClassifiedAds.BackgroundServer.ConfigurationOptions
@@ -7,6 +8,8 @@ namespace ClassifiedAds.BackgroundServer.ConfigurationOptions
     public class AppSettings
     {
         public ConnectionStrings ConnectionStrings { get; set; }
+
+        public LoggingOptions Logging { get; set; }
 
         public CheckDependency CheckDependency { get; set; }
 

@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Infrastructure.Identity;
-using ClassifiedAds.Infrastructure.Logging;
+using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
-using ClassifiedAds.WebAPI.Filters;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,8 +25,6 @@ namespace ClassifiedAds.WebAPI
 
             AppSettings = new AppSettings();
             Configuration.Bind(AppSettings);
-
-            env.UseClassifiedAdsLogger(AppSettings.LoggerOptions);
         }
 
         public IConfiguration Configuration { get; }
@@ -133,6 +130,8 @@ namespace ClassifiedAds.WebAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseDebuggingMiddleware();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -143,6 +142,8 @@ namespace ClassifiedAds.WebAPI
             app.UseRouting();
 
             app.UseCors(AppSettings.CORS.AllowAnyOrigin ? "AllowAnyOrigin" : "AllowedOrigins");
+
+            app.UseSecurityHeaders(AppSettings.SecurityHeaders);
 
             app.UseSwagger();
 

@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.WebMVC.Middleware
+namespace ClassifiedAds.Infrastructure.Web.Middleware
 {
     public class IPFilteringMiddleware
     {
