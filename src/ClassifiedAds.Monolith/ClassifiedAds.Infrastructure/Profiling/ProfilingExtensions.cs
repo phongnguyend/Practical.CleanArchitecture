@@ -26,8 +26,18 @@ namespace Microsoft.Extensions.DependencyInjection
                     var storage = new SqlServerStorage(connectionString);
                     _ = storage.TableCreationScripts;
 
-                    // options.Storage = storage;
+                    options.Storage = storage;
                 }
+
+                options.ShouldProfile = (request) =>
+                {
+                    if (request.Path.StartsWithSegments("/healthcheck"))
+                    {
+                        return false;
+                    }
+
+                    return true;
+                };
             })
             .AddEntityFramework();
             return services;

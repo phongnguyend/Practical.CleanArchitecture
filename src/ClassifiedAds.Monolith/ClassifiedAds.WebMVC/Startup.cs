@@ -128,7 +128,7 @@ namespace ClassifiedAds.WebMVC
             services.AddHttpClient(string.Empty)
                     .AddHttpMessageHandler<ProfilingHttpHandler>();
 
-            services.AddClassifiedAdsProfiler(AppSettings.ConnectionStrings.ClassifiedAds);
+            services.AddClassifiedAdsProfiler();
 
             var healthChecksBuilder = services.AddHealthChecks()
                 .AddSqlServer(connectionString: AppSettings.ConnectionStrings.ClassifiedAds,

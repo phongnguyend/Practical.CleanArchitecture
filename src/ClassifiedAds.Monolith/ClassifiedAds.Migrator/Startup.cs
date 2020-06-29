@@ -1,6 +1,8 @@
 ﻿using ClassifiedAds.Infrastructure.HealthChecks;
+using ClassifiedAds.Persistence.MiniProfiler;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -31,13 +33,19 @@ namespace ClassifiedAds.Migrator
             services.AddIdentityServer()
                 .AddIdServerPersistence(Configuration.GetConnectionString("ClassifiedAds"),
                 typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
+
+            services.AddDbContext<MiniProfilerDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ClassifiedAds"), sql =>
+            {
+                sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.MigrateDb();
+            app.MigrateAdsDb();
             app.MigrateIdServerDb();
+            app.MigrateMiniProfilerDb();
         }
     }
 }
