@@ -64,8 +64,12 @@ namespace ClassifiedAds.WebAPI
 
             services.AddPersistence(AppSettings.ConnectionStrings.ClassifiedAds)
                     .AddDomainServices()
-                    .AddApplicationServices()
+                    .AddApplicationServices((Type serviceType, Type implementationType, ServiceLifetime serviceLifetime) =>
+                    {
+                        services.AddInterceptors(serviceType, implementationType, serviceLifetime, AppSettings.Interceptors);
+                    })
                     .AddMessageHandlers()
+                    .ConfigureInterceptors()
                     .AddIdentityCore();
 
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)

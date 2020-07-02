@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClassifiedAds.Application.Core
+namespace ClassifiedAds.Application
 {
     internal static class Utils
     {

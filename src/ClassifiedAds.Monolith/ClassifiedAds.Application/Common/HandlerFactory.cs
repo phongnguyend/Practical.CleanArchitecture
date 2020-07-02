@@ -5,7 +5,7 @@ using System.Reflection;
 using ClassifiedAds.Application.Decorators;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 
-namespace ClassifiedAds.Application.Core
+namespace ClassifiedAds.Application
 {
     internal class HandlerFactory
     {
@@ -40,10 +40,12 @@ namespace ClassifiedAds.Application.Core
                 var hasDecoratorHandler = (type.HasInterface(typeof(ICommandHandler<>)) && Mappings.AttributeToCommandHandler.TryGetValue(attributeType, out decoratorHandlerType))
                 || (type.HasInterface(typeof(IQueryHandler<,>)) && Mappings.AttributeToQueryHandler.TryGetValue(attributeType, out decoratorHandlerType));
 
-                if (hasDecoratorHandler)
+                if (!hasDecoratorHandler)
                 {
-                    AddHandlerFactory(decoratorHandlerType, attribute);
+                    continue;
                 }
+
+                AddHandlerFactory(decoratorHandlerType, attribute);
             }
         }
 

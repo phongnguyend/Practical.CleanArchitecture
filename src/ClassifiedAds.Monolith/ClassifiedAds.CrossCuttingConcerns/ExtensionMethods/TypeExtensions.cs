@@ -25,7 +25,7 @@ namespace ClassifiedAds.CrossCuttingConcerns.ExtensionMethods
 
         public static Type MakeGenericTypeSafe(this Type type, params Type[] typeArguments)
         {
-            return type.IsGenericType
+            return type.IsGenericType && !type.GenericTypeArguments.Any()
                 ? type.MakeGenericType(typeArguments)
                 : type;
         }

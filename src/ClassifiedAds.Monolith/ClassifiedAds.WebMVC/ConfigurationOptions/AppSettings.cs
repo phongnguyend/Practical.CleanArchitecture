@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Infrastructure.Logging;
+﻿using ClassifiedAds.Infrastructure.Interceptors;
+using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.WebMVC.ConfigurationOptions.MessageBroker;
 using ClassifiedAds.WebMVC.ConfigurationOptions.Storage;
 using Microsoft.Extensions.Options;
@@ -33,6 +34,8 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
         public MessageBrokerOptions MessageBroker { get; set; }
 
         public Dictionary<string, string> SecurityHeaders { get; set; }
+
+        public InterceptorsOptions Interceptors { get; set; }
 
         public ValidateOptionsResult Validate()
         {

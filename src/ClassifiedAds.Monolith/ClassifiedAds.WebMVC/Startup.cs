@@ -86,8 +86,12 @@ namespace ClassifiedAds.WebMVC
 
             services.AddPersistence(AppSettings.ConnectionStrings.ClassifiedAds)
                     .AddDomainServices()
-                    .AddApplicationServices()
-                    .AddMessageHandlers();
+                    .AddApplicationServices((Type serviceType, Type implementationType, ServiceLifetime serviceLifetime) =>
+                    {
+                        services.AddInterceptors(serviceType, implementationType, serviceLifetime, AppSettings.Interceptors);
+                    })
+                    .AddMessageHandlers()
+                    .ConfigureInterceptors();
 
             services.AddAuthentication(options =>
             {

@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System;
+using System.Security.Cryptography.X509Certificates;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.IdentityServer.ConfigurationOptions;
 using Microsoft.AspNetCore.Builder;
@@ -33,12 +34,16 @@ namespace ClassifiedAds.IdentityServer
 
             services.AddPersistence(AppSettings.ConnectionStrings.ClassifiedAds)
                     .AddDomainServices()
-                    .AddApplicationServices()
+                    .AddApplicationServices((Type serviceType, Type implementationType, ServiceLifetime serviceLifetime) =>
+                    {
+                        services.AddInterceptors(serviceType, implementationType, serviceLifetime, AppSettings.Interceptors);
+                    })
                     .AddMessageHandlers()
+                    .ConfigureInterceptors()
                     .AddIdentity();
 
             services.AddIdentityServer()
-                    .AddSigningCredential(new X509Certificate2(Configuration["Certificates:Default:Path"], Configuration["Certificates:Default:Password"]))
+                    .AddSigningCredential(new X509Certificate2(AppSettings.Certificates.Default.Path, AppSettings.Certificates.Default.Password))
                     .AddAspNetIdentity<User>()
                     .AddIdServerPersistence(AppSettings.ConnectionStrings.ClassifiedAds);
 
@@ -63,6 +68,8 @@ namespace ClassifiedAds.IdentityServer
                 .AllowAnyHeader()
                 .AllowAnyMethod()
             );
+
+            app.UseSecurityHeaders(AppSettings.SecurityHeaders);
 
             app.UseIdentityServer();
             app.UseAuthorization();
