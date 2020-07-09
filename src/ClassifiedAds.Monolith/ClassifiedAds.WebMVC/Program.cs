@@ -1,11 +1,9 @@
 ﻿using ClassifiedAds.Infrastructure.Configuration;
 using ClassifiedAds.Infrastructure.HealthChecks;
 using ClassifiedAds.Infrastructure.Logging;
-using ClassifiedAds.Persistence;
 using ClassifiedAds.WebMVC.ConfigurationOptions;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
@@ -27,26 +25,25 @@ namespace ClassifiedAds.WebMVC
                     var appSettings = new AppSettings();
                     config.Bind(appSettings);
 
-                    builder.AddEFConfiguration(() =>
+                    if (appSettings.CheckDependency.Enabled)
                     {
-                        if (appSettings.CheckDependency.Enabled)
-                        {
-                            NetworkPortCheck.Wait(appSettings.CheckDependency.Host, 5);
-                        }
+                        NetworkPortCheck.Wait(appSettings.CheckDependency.Host, 5);
+                    }
 
-                        var dbContextOptionsBuilder = new DbContextOptionsBuilder<AdsDbContext>();
-                        dbContextOptionsBuilder.UseSqlServer(appSettings.ConnectionStrings.ClassifiedAds);
-                        return new AdsDbContext(dbContextOptionsBuilder.Options);
-                    });
-
-                    //builder.AddSqlConfigurationVariables(appSettings.ConnectionStrings.ClassifiedAds);
+                    if (appSettings?.ConfigurationSources?.SqlServer?.IsEnabled ?? false)
+                    {
+                        builder.AddSqlConfigurationVariables(appSettings.ConfigurationSources.SqlServer);
+                    }
 
                     if (ctx.HostingEnvironment.IsDevelopment())
                     {
                         return;
                     }
 
-                    builder.AddAzureKeyVault($"https://{appSettings.KeyVaultName}.vault.azure.net/");
+                    if (appSettings?.ConfigurationSources?.AzureKeyVault?.IsEnabled ?? false)
+                    {
+                        builder.AddAzureKeyVault($"https://{appSettings.ConfigurationSources.AzureKeyVault.VaultName}.vault.azure.net/");
+                    }
                 })
                 .UseClassifiedAdsLogger(configuration =>
                 {

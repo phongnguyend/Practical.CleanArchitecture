@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Infrastructure.Interceptors;
+﻿using ClassifiedAds.Infrastructure.Configuration;
+using ClassifiedAds.Infrastructure.Interceptors;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.WebMVC.ConfigurationOptions.MessageBroker;
 using ClassifiedAds.WebMVC.ConfigurationOptions.Storage;
@@ -27,7 +28,7 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
 
         public string CurrentUrl { get; set; }
 
-        public string KeyVaultName { get; set; }
+        public ConfigurationSourcesOptions ConfigurationSources { get; set; }
 
         public StorageOptions Storage { get; set; }
 

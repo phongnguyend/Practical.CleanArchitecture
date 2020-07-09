@@ -93,6 +93,61 @@
 </details>
 
 <details>
+  <summary><b>Configure Additional Configuration Sources</b></summary>
+  
+  - Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json) and jump to **ConfigurationSources** section.
+    ```js
+    "ConfigurationSources": {
+      "SqlServer": {
+        "IsEnabled": false,
+        "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
+        "SqlQuery": "select [Key], [Value] from ConfigurationEntries"
+      },
+      "AzureKeyVault": {
+        "IsEnabled": false,
+        "VaultName": "SD1597"
+      }
+    },
+    ```
+
+  - Get from Sql Server database:
+    ```js
+    "ConfigurationSources": {
+      "SqlServer": {
+        "IsEnabled": true,
+        "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
+        "SqlQuery": "select [Key], [Value] from ConfigurationEntries"
+      },
+    },
+    ```
+
+  - Get from Azure Key Vault:
+    ```js
+    "ConfigurationSources": {
+      "AzureKeyVault": {
+        "IsEnabled": true,
+        "VaultName": "SD1597"
+      }
+    },
+    ```
+
+  - Use Both:
+    ```js
+    "ConfigurationSources": {
+      "SqlServer": {
+        "IsEnabled": true,
+        "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
+        "SqlQuery": "select [Key], [Value] from ConfigurationEntries"
+      },
+      "AzureKeyVault": {
+        "IsEnabled": true,
+        "VaultName": "SD1597"
+      }
+    },
+    ```
+</details>
+
+<details>
   <summary><b>Storage</b></summary>
   
   - Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json) and jump to **Storage** section.
@@ -279,6 +334,22 @@
         "LogName": "Application",
         "SourceName": "ClassifiedAds.WebAPI"
       }
+    },
+    ```
+</details>
+
+<details>
+  <summary><b>Interceptors</b></summary>
+  
+  - Open and jump to **Interceptors** section of below files:
+    + [ClassifiedAds.WebAPI/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebAPI/appsettings.json)
+    + [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json)
+    + [ClassifiedAds.IdentityServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.IdentityServer/appsettings.json)
+    + [ClassifiedAds.BackgroundServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.BackgroundServer/appsettings.json)
+    ```js
+    "Interceptors": {
+      "LoggingInterceptor": true,
+      "ErrorCatchingInterceptor": false
     },
     ```
 </details>
