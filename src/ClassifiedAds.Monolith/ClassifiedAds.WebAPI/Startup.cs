@@ -125,7 +125,8 @@ namespace ClassifiedAds.WebAPI
                 });
             });
 
-            services.AddClassifiedAdsProfiler(AppSettings.ConnectionStrings.ClassifiedAds);
+            services.AddCaches(AppSettings.Caching)
+                    .AddClassifiedAdsProfiler(AppSettings.ConnectionStrings.ClassifiedAds);
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentWebUser>();

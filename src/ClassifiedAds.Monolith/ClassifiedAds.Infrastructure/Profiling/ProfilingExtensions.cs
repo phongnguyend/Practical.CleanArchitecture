@@ -8,8 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddClassifiedAdsProfiler(this IServiceCollection services, string connectionString = "")
         {
-            services.AddMemoryCache()
-            .AddMiniProfiler(options =>
+            services.AddMiniProfiler(options =>
             {
                 options.UserIdProvider = (request) =>
                 {

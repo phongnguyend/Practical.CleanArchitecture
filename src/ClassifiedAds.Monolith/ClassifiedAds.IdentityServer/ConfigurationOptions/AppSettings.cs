@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Infrastructure.Interceptors;
+﻿using ClassifiedAds.Infrastructure.Caching;
+using ClassifiedAds.Infrastructure.Interceptors;
 using ClassifiedAds.Infrastructure.Logging;
 using System.Collections.Generic;
 
@@ -9,6 +10,8 @@ namespace ClassifiedAds.IdentityServer.ConfigurationOptions
         public ConnectionStrings ConnectionStrings { get; set; }
 
         public LoggingOptions Logging { get; set; }
+
+        public CachingOptions Caching { get; set; }
 
         public Dictionary<string, string> SecurityHeaders { get; set; }
 

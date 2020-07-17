@@ -93,7 +93,7 @@
 </details>
 
 <details>
-  <summary><b>Configure Additional Configuration Sources</b></summary>
+  <summary><b>Additional Configuration Sources</b></summary>
   
   - Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json) and jump to **ConfigurationSources** section.
     ```js
