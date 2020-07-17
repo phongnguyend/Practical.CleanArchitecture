@@ -47,7 +47,8 @@ namespace ClassifiedAds.IdentityServer
                     .AddAspNetIdentity<User>()
                     .AddIdServerPersistence(AppSettings.ConnectionStrings.ClassifiedAds);
 
-            services.AddClassifiedAdsProfiler();
+            services.AddCaches(AppSettings.Caching)
+                    .AddClassifiedAdsProfiler();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

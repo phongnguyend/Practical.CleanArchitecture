@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -27,14 +28,16 @@ namespace ClassifiedAds.WebMVC.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IDistributedCache _distributedCache;
         private readonly IProductService _productService;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly Dispatcher _dispatcher;
         private readonly ILogger _logger;
         private readonly AppSettings _appSettings;
 
-        public HomeController(IProductService productService, IHttpClientFactory httpClientFactory, Dispatcher dispatcher, ILogger<HomeController> logger, IOptionsSnapshot<AppSettings> appSettings)
+        public HomeController(IDistributedCache distributedCache, IProductService productService, IHttpClientFactory httpClientFactory, Dispatcher dispatcher, ILogger<HomeController> logger, IOptionsSnapshot<AppSettings> appSettings)
         {
+            _distributedCache = distributedCache;
             _productService = productService;
             _httpClientFactory = httpClientFactory;
             _dispatcher = dispatcher;
@@ -44,6 +47,8 @@ namespace ClassifiedAds.WebMVC.Controllers
 
         public async Task<IActionResult> Index()
         {
+            _distributedCache.SetString("Test", "Test");
+
             _logger.LogInformation("Getting all products");
 
             _logger.LogDebug("Test LogDebug");
@@ -63,6 +68,8 @@ namespace ClassifiedAds.WebMVC.Controllers
                 var response = await httpClient.GetAsync($"{_appSettings.ResourceServer.Endpoint}/api/products");
                 var product3 = await response.Content.ReadAs<List<Product>>();
             }
+
+            var cachedValue = _distributedCache.GetString("Test");
 
             return View();
         }

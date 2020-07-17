@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Infrastructure.Configuration;
+﻿using ClassifiedAds.Infrastructure.Caching;
+using ClassifiedAds.Infrastructure.Configuration;
 using ClassifiedAds.Infrastructure.Interceptors;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.WebMVC.ConfigurationOptions.MessageBroker;
@@ -15,6 +16,8 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
         public CheckDependency CheckDependency { get; set; }
 
         public LoggingOptions Logging { get; set; }
+
+        public CachingOptions Caching { get; set; }
 
         public OpenIdConnect OpenIdConnect { get; set; }
 

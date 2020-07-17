@@ -93,14 +93,14 @@
 </details>
 
 <details>
-  <summary><b>Configure Additional Configuration Sources</b></summary>
+  <summary><b>Additional Configuration Sources</b></summary>
   
   - Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json) and jump to **ConfigurationSources** section.
     ```js
     "ConfigurationSources": {
       "SqlServer": {
         "IsEnabled": false,
-        "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
+        "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
         "SqlQuery": "select [Key], [Value] from ConfigurationEntries"
       },
       "AzureKeyVault": {
@@ -115,7 +115,7 @@
     "ConfigurationSources": {
       "SqlServer": {
         "IsEnabled": true,
-        "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
+        "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
         "SqlQuery": "select [Key], [Value] from ConfigurationEntries"
       },
     },
@@ -136,7 +136,7 @@
     "ConfigurationSources": {
       "SqlServer": {
         "IsEnabled": true,
-        "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
+        "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
         "SqlQuery": "select [Key], [Value] from ConfigurationEntries"
       },
       "AzureKeyVault": {
@@ -333,6 +333,85 @@
         "IsEnabled": true,
         "LogName": "Application",
         "SourceName": "ClassifiedAds.WebAPI"
+      }
+    },
+    ```
+</details>
+
+<details>
+  <summary><b>Caching</b></summary>
+  
+  - Open and jump to **Caching** section of below files:
+    + [ClassifiedAds.WebAPI/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebAPI/appsettings.json)
+    + [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json)
+    + [ClassifiedAds.IdentityServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.IdentityServer/appsettings.json)
+    ```js
+    "Caching": {
+      "InMemory": {
+        "SizeLimit": null
+      },
+      "Distributed": {
+        "Provider": "InMemory",
+        "InMemory": {
+          "SizeLimit": null
+        },
+        "Redis": {
+          "Configuration": "xxx.redis.cache.windows.net:6380,password=xxx,ssl=True,abortConnect=False",
+          "InstanceName": ""
+        },
+        "SqlServer": {
+          "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
+          "SchemaName": "dbo",
+          "TableName": "CacheEntries"
+        }
+      }
+    },
+    ```
+  - Configure options for In Memory Cache:
+    ```js
+    "Caching": {
+      "InMemory": {
+        "SizeLimit": null
+      },
+    },
+    ```
+  - Use In Memory Distributed Cache (For Local Testing):
+    ```js
+    "Caching": {
+      "Distributed": {
+        "Provider": "InMemory",
+        "InMemory": {
+          "SizeLimit": null
+        }
+      }
+    },
+    ```
+  - Use Redis Distributed Cache:
+    ```js
+    "Caching": {
+      "Distributed": {
+        "Provider": "Redis",
+        "Redis": {
+          "Configuration": "xxx.redis.cache.windows.net:6380,password=xxx,ssl=True,abortConnect=False",
+          "InstanceName": ""
+        }
+      }
+    },
+    ```
+  - Use Sql Server Distributed Cache:
+    ```js
+	dotnet tool install --global dotnet-sql-cache --version="3.1"
+	dotnet sql-cache create "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#" dbo CacheEntries
+    ```
+    ```js
+    "Caching": {
+      "Distributed": {
+        "Provider": "SqlServer",
+        "SqlServer": {
+          "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
+          "SchemaName": "dbo",
+          "TableName": "CacheEntries"
+        }
       }
     },
     ```
