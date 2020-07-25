@@ -100,7 +100,7 @@
     "ConfigurationSources": {
       "SqlServer": {
         "IsEnabled": false,
-        "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
+        "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
         "SqlQuery": "select [Key], [Value] from ConfigurationEntries"
       },
       "AzureKeyVault": {
@@ -115,7 +115,7 @@
     "ConfigurationSources": {
       "SqlServer": {
         "IsEnabled": true,
-        "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
+        "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
         "SqlQuery": "select [Key], [Value] from ConfigurationEntries"
       },
     },
@@ -136,7 +136,7 @@
     "ConfigurationSources": {
       "SqlServer": {
         "IsEnabled": true,
-        "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
+        "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
         "SqlQuery": "select [Key], [Value] from ConfigurationEntries"
       },
       "AzureKeyVault": {
@@ -360,7 +360,7 @@
           "InstanceName": ""
         },
         "SqlServer": {
-          "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
+          "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
           "SchemaName": "dbo",
           "TableName": "CacheEntries"
         }
@@ -401,14 +401,14 @@
   - Use Sql Server Distributed Cache:
     ```js
 	dotnet tool install --global dotnet-sql-cache --version="3.1"
-	dotnet sql-cache create "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true" dbo CacheEntries
+	dotnet sql-cache create "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#" dbo CacheEntries
     ```
     ```js
     "Caching": {
       "Distributed": {
         "Provider": "SqlServer",
         "SqlServer": {
-          "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
+          "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
           "SchemaName": "dbo",
           "TableName": "CacheEntries"
         }
