@@ -2,6 +2,7 @@
 using ClassifiedAds.Infrastructure.Configuration;
 using ClassifiedAds.Infrastructure.Interceptors;
 using ClassifiedAds.Infrastructure.Logging;
+using ClassifiedAds.Infrastructure.Profiling;
 using ClassifiedAds.WebMVC.ConfigurationOptions.MessageBroker;
 using ClassifiedAds.WebMVC.ConfigurationOptions.Storage;
 using Microsoft.Extensions.Options;
@@ -18,6 +19,8 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
         public LoggingOptions Logging { get; set; }
 
         public CachingOptions Caching { get; set; }
+
+        public MonitoringOptions Monitoring { get; set; }
 
         public OpenIdConnect OpenIdConnect { get; set; }
 
