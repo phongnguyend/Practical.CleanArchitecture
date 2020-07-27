@@ -6,6 +6,8 @@ using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Infrastructure.Storages;
 using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Infrastructure.Identity;
+using ClassifiedAds.Infrastructure.MessageBrokers.AzureEventGrid;
+using ClassifiedAds.Infrastructure.MessageBrokers.AzureEventHub;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
 using ClassifiedAds.Infrastructure.MessageBrokers.Kafka;
@@ -133,7 +135,7 @@ namespace ClassifiedAds.WebMVC
                     .AddHttpMessageHandler<ProfilingHttpHandler>();
 
             services.AddCaches(AppSettings.Caching)
-                    .AddClassifiedAdsProfiler();
+                    .AddClassifiedAdsProfiler(AppSettings.Monitoring);
 
             var healthChecksBuilder = services.AddHealthChecks()
                 .AddSqlServer(connectionString: AppSettings.ConnectionStrings.ClassifiedAds,
@@ -297,6 +299,32 @@ namespace ClassifiedAds.WebMVC
                     queueName: AppSettings.MessageBroker.AzureServiceBus.QueueName_FileDeleted,
                     name: "Message Broker (Azure Service Bus) File Deleted",
                     failureStatus: HealthStatus.Degraded);
+            }
+            else if (AppSettings.MessageBroker.UsedAzureEventGrid())
+            {
+                services.AddSingleton<IMessageSender<FileUploadedEvent>>(new AzureEventGridSender<FileUploadedEvent>(
+                                AppSettings.MessageBroker.AzureEventGrid.DomainEndpoint,
+                                AppSettings.MessageBroker.AzureEventGrid.DomainKey,
+                                AppSettings.MessageBroker.AzureEventGrid.Topic_FileUploaded));
+
+                services.AddSingleton<IMessageSender<FileDeletedEvent>>(new AzureEventGridSender<FileDeletedEvent>(
+                                AppSettings.MessageBroker.AzureEventGrid.DomainEndpoint,
+                                AppSettings.MessageBroker.AzureEventGrid.DomainKey,
+                                AppSettings.MessageBroker.AzureEventGrid.Topic_FileDeleted));
+
+                // TODO: Add Health Check
+            }
+            else if (AppSettings.MessageBroker.UsedAzureEventHub())
+            {
+                services.AddSingleton<IMessageSender<FileUploadedEvent>>(new AzureEventHubSender<FileUploadedEvent>(
+                                AppSettings.MessageBroker.AzureEventHub.ConnectionString,
+                                AppSettings.MessageBroker.AzureEventHub.Hub_FileUploaded));
+
+                services.AddSingleton<IMessageSender<FileDeletedEvent>>(new AzureEventHubSender<FileDeletedEvent>(
+                                AppSettings.MessageBroker.AzureEventHub.ConnectionString,
+                                AppSettings.MessageBroker.AzureEventHub.Hub_FileDeleted));
+
+                // TODO: Add Health Check
             }
         }
 

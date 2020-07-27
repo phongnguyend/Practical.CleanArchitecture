@@ -7,6 +7,7 @@ using ClassifiedAds.BackgroundServer.ConfigurationOptions;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Infrastructure.HealthChecks;
+using ClassifiedAds.Infrastructure.MessageBrokers.AzureEventHub;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
 using ClassifiedAds.Infrastructure.MessageBrokers.Kafka;
@@ -156,6 +157,21 @@ namespace ClassifiedAds.BackgroundServer
                 fileDeletedMessageQueueReceiver = new AzureServiceBusReceiver<FileDeletedEvent>(
                     AppSettings.MessageBroker.AzureServiceBus.ConnectionString,
                     AppSettings.MessageBroker.AzureServiceBus.QueueName_FileDeleted);
+            }
+
+            if (AppSettings.MessageBroker.UsedAzureEventHub())
+            {
+                fileUploadedMessageQueueReceiver = new AzureEventHubReceiver<FileUploadedEvent>(
+                                AppSettings.MessageBroker.AzureEventHub.ConnectionString,
+                                AppSettings.MessageBroker.AzureEventHub.Hub_FileUploaded,
+                                AppSettings.MessageBroker.AzureEventHub.StorageConnectionString,
+                                AppSettings.MessageBroker.AzureEventHub.StorageContainerName_FileUploaded);
+
+                fileDeletedMessageQueueReceiver = new AzureEventHubReceiver<FileDeletedEvent>(
+                                AppSettings.MessageBroker.AzureEventHub.ConnectionString,
+                                AppSettings.MessageBroker.AzureEventHub.Hub_FileDeleted,
+                                AppSettings.MessageBroker.AzureEventHub.StorageConnectionString,
+                                AppSettings.MessageBroker.AzureEventHub.StorageContainerName_FileDeleted);
             }
 
             var notification = new SignalRNotification();

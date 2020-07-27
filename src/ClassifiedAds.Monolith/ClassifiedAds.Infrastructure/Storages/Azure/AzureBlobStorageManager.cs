@@ -1,8 +1,7 @@
 ﻿using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.Storages;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
-using System;
+using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Blob;
 using System.IO;
 
 namespace ClassifiedAds.Infrastructure.Storages.Azure
