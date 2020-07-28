@@ -1,5 +1,7 @@
 ﻿using ClassifiedAds.Infrastructure.Profiling;
+using ClassifiedAds.Infrastructure.Profiling.AzureApplicationInsights;
 using Microsoft.ApplicationInsights.DependencyCollector;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using StackExchange.Profiling.Storage;
 using System.Security.Claims;
@@ -57,6 +59,9 @@ namespace Microsoft.Extensions.DependencyInjection
                 {
                     module.EnableSqlCommandTextInstrumentation = monitoringOptions.AzureApplicationInsights.EnableSqlCommandTextInstrumentation;
                 });
+
+                services.AddApplicationInsightsTelemetryProcessor<CustomTelemetryProcessor>();
+                services.AddSingleton<ITelemetryInitializer, CustomTelemetryInitializer>();
             }
 
             return services;
