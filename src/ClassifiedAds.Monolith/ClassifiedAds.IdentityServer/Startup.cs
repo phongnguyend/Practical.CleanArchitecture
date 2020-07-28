@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.IdentityServer.ConfigurationOptions;
+using IdentityServer4;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -49,6 +51,39 @@ namespace ClassifiedAds.IdentityServer
 
             services.AddCaches(AppSettings.Caching)
                     .AddClassifiedAdsProfiler(AppSettings.Monitoring);
+
+            services.AddAuthentication()
+                    .AddOpenIdConnect("AAD", "Azure Active Directory", options =>
+                    {
+                        options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                        options.SignOutScheme = IdentityServerConstants.SignoutScheme;
+                        options.Authority = AppSettings.AzureActiveDirectory.Authority;
+                        options.ClientId = AppSettings.AzureActiveDirectory.ClientId;
+                        options.ClientSecret = AppSettings.AzureActiveDirectory.ClientSecret;
+                        options.ResponseType = "code id_token";
+                        options.Scope.Add("openid");
+                        options.Scope.Add("profile");
+                        options.Scope.Add("email");
+                        options.Scope.Add("offline_access");
+                        options.SaveTokens = true;
+                        options.GetClaimsFromUserInfoEndpoint = true;
+                        options.Events.OnTicketReceived = (ct) =>
+                        {
+                            return Task.CompletedTask;
+                        };
+                        options.Events.OnTokenResponseReceived = (ct) =>
+                        {
+                            return Task.CompletedTask;
+                        };
+                        options.Events.OnTokenValidated = (ct) =>
+                        {
+                            return Task.CompletedTask;
+                        };
+                        options.Events.OnUserInformationReceived = (ct) =>
+                        {
+                            return Task.CompletedTask;
+                        };
+                    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

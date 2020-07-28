@@ -21,5 +21,7 @@ namespace ClassifiedAds.IdentityServer.ConfigurationOptions
         public CertificatesOptions Certificates { get; set; }
 
         public InterceptorsOptions Interceptors { get; set; }
+
+        public AzureActiveDirectoryOptions AzureActiveDirectory { get; set; }
     }
 }
