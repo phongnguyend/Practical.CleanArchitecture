@@ -12,6 +12,8 @@
 
         public AzureServiceBusOptions AzureServiceBus { get; set; }
 
+        public AzureEventHubOptions AzureEventHub { get; set; }
+
         public bool UsedRabbitMQ()
         {
             return Provider == "RabbitMQ";
@@ -30,6 +32,11 @@
         public bool UsedAzureServiceBus()
         {
             return Provider == "AzureServiceBus";
+        }
+
+        public bool UsedAzureEventHub()
+        {
+            return Provider == "AzureEventHub";
         }
     }
 }
