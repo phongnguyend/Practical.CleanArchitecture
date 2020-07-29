@@ -42,7 +42,7 @@ namespace ClassifiedAds.WebMVC
 
                     if (appSettings?.ConfigurationSources?.AzureKeyVault?.IsEnabled ?? false)
                     {
-                        builder.AddAzureKeyVault($"https://{appSettings.ConfigurationSources.AzureKeyVault.VaultName}.vault.azure.net/");
+                        builder.AddAzureKeyVault(appSettings.ConfigurationSources.AzureKeyVault.VaultName);
                     }
                 })
                 .UseClassifiedAdsLogger(configuration =>

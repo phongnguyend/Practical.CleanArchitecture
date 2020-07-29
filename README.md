@@ -105,7 +105,7 @@
       },
       "AzureKeyVault": {
         "IsEnabled": false,
-        "VaultName": "SD1597"
+        "VaultName": "https://xxx.vault.azure.net/"
       }
     },
     ```
@@ -126,7 +126,7 @@
     "ConfigurationSources": {
       "AzureKeyVault": {
         "IsEnabled": true,
-        "VaultName": "SD1597"
+        "VaultName": "https://xxx.vault.azure.net/"
       }
     },
     ```
@@ -141,7 +141,7 @@
       },
       "AzureKeyVault": {
         "IsEnabled": true,
-        "VaultName": "SD1597"
+        "VaultName": "https://xxx.vault.azure.net/"
       }
     },
     ```
