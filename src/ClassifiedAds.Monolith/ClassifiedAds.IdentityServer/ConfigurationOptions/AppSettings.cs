@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Infrastructure.Caching;
+﻿using ClassifiedAds.IdentityServer.ConfigurationOptions.ExternalLogin;
+using ClassifiedAds.Infrastructure.Caching;
 using ClassifiedAds.Infrastructure.Interceptors;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.Profiling;
@@ -22,6 +23,6 @@ namespace ClassifiedAds.IdentityServer.ConfigurationOptions
 
         public InterceptorsOptions Interceptors { get; set; }
 
-        public AzureActiveDirectoryOptions AzureActiveDirectory { get; set; }
+        public ExternalLoginOptions ExternalLogin { get; set; }
     }
 }

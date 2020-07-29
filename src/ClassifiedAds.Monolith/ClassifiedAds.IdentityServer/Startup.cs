@@ -52,38 +52,72 @@ namespace ClassifiedAds.IdentityServer
             services.AddCaches(AppSettings.Caching)
                     .AddClassifiedAdsProfiler(AppSettings.Monitoring);
 
-            services.AddAuthentication()
-                    .AddOpenIdConnect("AAD", "Azure Active Directory", options =>
+            var authenBuilder = services.AddAuthentication();
+
+            if (AppSettings?.ExternalLogin?.AzureActiveDirectory?.IsEnabled ?? false)
+            {
+                authenBuilder.AddOpenIdConnect("AAD", "Azure Active Directory", options =>
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    options.SignOutScheme = IdentityServerConstants.SignoutScheme;
+                    options.Authority = AppSettings.ExternalLogin.AzureActiveDirectory.Authority;
+                    options.ClientId = AppSettings.ExternalLogin.AzureActiveDirectory.ClientId;
+                    options.ClientSecret = AppSettings.ExternalLogin.AzureActiveDirectory.ClientSecret;
+                    options.ResponseType = "code id_token";
+                    options.Scope.Add("openid");
+                    options.Scope.Add("profile");
+                    options.Scope.Add("email");
+                    options.Scope.Add("offline_access");
+                    options.SaveTokens = true;
+                    options.GetClaimsFromUserInfoEndpoint = true;
+                    options.Events.OnTicketReceived = (ct) =>
                     {
-                        options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-                        options.SignOutScheme = IdentityServerConstants.SignoutScheme;
-                        options.Authority = AppSettings.AzureActiveDirectory.Authority;
-                        options.ClientId = AppSettings.AzureActiveDirectory.ClientId;
-                        options.ClientSecret = AppSettings.AzureActiveDirectory.ClientSecret;
-                        options.ResponseType = "code id_token";
-                        options.Scope.Add("openid");
-                        options.Scope.Add("profile");
-                        options.Scope.Add("email");
-                        options.Scope.Add("offline_access");
-                        options.SaveTokens = true;
-                        options.GetClaimsFromUserInfoEndpoint = true;
-                        options.Events.OnTicketReceived = (ct) =>
-                        {
-                            return Task.CompletedTask;
-                        };
-                        options.Events.OnTokenResponseReceived = (ct) =>
-                        {
-                            return Task.CompletedTask;
-                        };
-                        options.Events.OnTokenValidated = (ct) =>
-                        {
-                            return Task.CompletedTask;
-                        };
-                        options.Events.OnUserInformationReceived = (ct) =>
-                        {
-                            return Task.CompletedTask;
-                        };
-                    });
+                        return Task.CompletedTask;
+                    };
+                    options.Events.OnTokenResponseReceived = (ct) =>
+                    {
+                        return Task.CompletedTask;
+                    };
+                    options.Events.OnTokenValidated = (ct) =>
+                    {
+                        return Task.CompletedTask;
+                    };
+                    options.Events.OnUserInformationReceived = (ct) =>
+                    {
+                        return Task.CompletedTask;
+                    };
+                });
+            }
+
+            if (AppSettings?.ExternalLogin?.Microsoft?.IsEnabled ?? false)
+            {
+                authenBuilder.AddMicrosoftAccount(options =>
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    options.ClientId = AppSettings.ExternalLogin.Microsoft.ClientId;
+                    options.ClientSecret = AppSettings.ExternalLogin.Microsoft.ClientSecret;
+                });
+            }
+
+            if (AppSettings?.ExternalLogin?.Google?.IsEnabled ?? false)
+            {
+                authenBuilder.AddGoogle(options =>
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    options.ClientId = AppSettings.ExternalLogin.Google.ClientId;
+                    options.ClientSecret = AppSettings.ExternalLogin.Google.ClientSecret;
+                });
+            }
+
+            if (AppSettings?.ExternalLogin?.Facebook?.IsEnabled ?? false)
+            {
+                authenBuilder.AddFacebook(options =>
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    options.AppId = AppSettings.ExternalLogin.Facebook.AppId;
+                    options.AppSecret = AppSettings.ExternalLogin.Facebook.AppSecret;
+                });
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
