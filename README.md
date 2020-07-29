@@ -434,6 +434,68 @@
 </details>
 
 <details>
+  <summary><b>Monitoring</b></summary>
+  
+  - Open and jump to **Monitoring** section of below files:
+    + [ClassifiedAds.WebAPI/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebAPI/appsettings.json)
+    + [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json)
+    + [ClassifiedAds.IdentityServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.IdentityServer/appsettings.json)
+    ```js
+    "Monitoring": {
+      "MiniProfiler": {
+        
+      },
+      "AzureApplicationInsights": {
+        
+      }
+    },
+    ```
+  - Use MiniProfiler:
+    ```js
+    "Monitoring": {
+      "MiniProfiler": {
+        "IsEnabled": true,
+        "SqlServerStorage": {
+          "ConectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
+          "ProfilersTable": "MiniProfilers",
+          "TimingsTable": "MiniProfilerTimings",
+          "ClientTimingsTable": "MiniProfilerClientTimings"
+        }
+      },
+    },
+    ```
+  - Use Azure Application Insights:
+    ```js
+	"Monitoring": {
+      "AzureApplicationInsights": {
+        "IsEnabled": true,
+		"InstrumentationKey": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+		"EnableSqlCommandTextInstrumentation": true
+      }
+	},
+    ```
+  - Use Both:
+    ```js
+    "Monitoring": {
+      "MiniProfiler": {
+        "IsEnabled": true,
+        "SqlServerStorage": {
+          "ConectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
+          "ProfilersTable": "MiniProfilers",
+          "TimingsTable": "MiniProfilerTimings",
+          "ClientTimingsTable": "MiniProfilerClientTimings"
+        }
+      },
+      "AzureApplicationInsights": {
+        "IsEnabled": true,
+        "InstrumentationKey": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "EnableSqlCommandTextInstrumentation": true
+      }
+    },
+    ```
+</details>
+
+<details>
   <summary><b>Interceptors</b></summary>
   
   - Open and jump to **Interceptors** section of below files:
