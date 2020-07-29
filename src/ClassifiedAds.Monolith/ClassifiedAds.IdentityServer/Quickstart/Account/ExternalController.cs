@@ -187,7 +187,7 @@ namespace IdentityServer4.Quickstart.UI
             // try to determine the unique id of the external user (issued by the provider)
             // the most common claim type for that are the sub claim and the NameIdentifier
             // depending on the external provider, some other claim type might be used
-            var emailClaim = externalUser.FindFirst(JwtClaimTypes.Email) ??
+            var emailClaim = externalUser.FindFirst(ClaimTypes.Email) ??
                                 externalUser.FindFirst(JwtClaimTypes.Subject) ??
                                 externalUser.FindFirst(ClaimTypes.NameIdentifier) ??
                                 throw new Exception("Unknown userid");
@@ -201,6 +201,10 @@ namespace IdentityServer4.Quickstart.UI
                 emailClaim = externalUser.FindFirst(ClaimTypes.Email);
             }
             else if (provider == "Google")
+            {
+                emailClaim = externalUser.FindFirst(ClaimTypes.Email);
+            }
+            else if (provider == "Facebook")
             {
                 emailClaim = externalUser.FindFirst(ClaimTypes.Email);
             }

@@ -215,7 +215,7 @@
         "RoutingKey_FileDeleted": "classifiedadds_filedeleted",
         "QueueName_FileUploaded": "classifiedadds_fileuploaded",
         "QueueName_FileDeleted": "classifiedadds_filedeleted"
-      },
+      }
     }
     ```
 
@@ -227,7 +227,7 @@
         "BootstrapServers": "localhost:9092",
         "Topic_FileUploaded": "classifiedadds_fileuploaded",
         "Topic_FileDeleted": "classifiedadds_filedeleted"
-      },
+      }
     }
     ```
 
@@ -239,7 +239,7 @@
         "ConnectionString": "xxx",
         "QueueName_FileUploaded": "classifiedadds-fileuploaded",
         "QueueName_FileDeleted": "classifiedadds-filedeleted"
-      },
+      }
     }
     ```
 
@@ -251,6 +251,34 @@
         "ConnectionString": "xxx",
         "QueueName_FileUploaded": "classifiedadds_fileuploaded",
         "QueueName_FileDeleted": "classifiedadds_filedeleted"
+      }
+    }
+    ```
+	
+  - Use Azure Event Grid:
+    ```js
+    "MessageBroker": {
+      "Provider": "AzureEventGrid",
+      "AzureEventGrid": {
+        "DomainEndpoint": "https://xxx.xxx-1.eventgrid.azure.net/api/events",
+        "DomainKey": "xxxx",
+        "Topic_FileUploaded": "classifiedadds_fileuploaded",
+        "Topic_FileDeleted": "classifiedadds_filedeleted"
+      }
+    }
+    ```
+	
+  - Use Azure Event Hubs:
+    ```js
+    "MessageBroker": {
+      "Provider": "AzureEventHub",
+      "AzureEventHub": {
+        "ConnectionString": "Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=xxx;SharedAccessKey=xxx",
+        "Hub_FileUploaded": "classifiedadds_fileuploaded",
+        "Hub_FileDeleted": "classifiedadds_filedeleted",
+        "StorageConnectionString": "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net",
+        "StorageContainerName_FileUploaded": "eventhub-fileuploaded",
+        "StorageContainerName_FileDeleted": "eventhub-filedeleted"
       }
     }
     ```
@@ -348,22 +376,10 @@
     ```js
     "Caching": {
       "InMemory": {
-        "SizeLimit": null
+
       },
       "Distributed": {
-        "Provider": "InMemory",
-        "InMemory": {
-          "SizeLimit": null
-        },
-        "Redis": {
-          "Configuration": "xxx.redis.cache.windows.net:6380,password=xxx,ssl=True,abortConnect=False",
-          "InstanceName": ""
-        },
-        "SqlServer": {
-          "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
-          "SchemaName": "dbo",
-          "TableName": "CacheEntries"
-        }
+
       }
     },
     ```
@@ -475,6 +491,37 @@
     "CORS": {
       "AllowedOrigins": [ "https://localhost:44364", "http://host.docker.internal:9003" ]
     }
+    ```
+</details>
+
+<details>
+  <summary><b>External Login</b></summary>
+  
+  - Open [ClassifiedAds.IdentityServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.IdentityServer/appsettings.json) and jump to **ExternalLogin** section:
+    ```js
+    "ExternalLogin": {
+      "AzureActiveDirectory": {
+        "IsEnabled": true,
+        "Authority": "https://login.microsoftonline.com/<Directory (tenant) ID>",
+        "ClientId": "<Application (client) ID",
+        "ClientSecret": "xxx"
+      },
+      "Microsoft": {
+        "IsEnabled": true,
+        "ClientId": "<Application (client) ID",
+        "ClientSecret": "xxx"
+      },
+      "Google": {
+        "IsEnabled": true,
+        "ClientId": "xxx",
+        "ClientSecret": "xxx"
+      },
+      "Facebook": {
+        "IsEnabled": true,
+        "AppId": "xxx",
+        "AppSecret": "xxx"
+      }
+    },
     ```
 </details>
 
