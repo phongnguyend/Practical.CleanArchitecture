@@ -1,0 +1,131 @@
+<div class="card">
+  <div class="card-header">
+    Files
+    <a
+      class="btn btn-primary"
+      style="float: right;"
+      routerLinkActive="active"
+      [routerLink]="['/files/upload']"
+    >
+      Upload File
+    </a>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table" *ngIf="files && files.length">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Size</th>
+            <th>Uploaded Time</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let file of files">
+            <td>
+              <a [routerLink]="['/files/edit', file.id]">
+                {{ file.name }} ({{ file.fileName }})
+              </a>
+            </td>
+            <td>{{ file.description }}</td>
+            <td>{{ file.size }}</td>
+            <td>{{ file.uploadedTime | date: "dd/MM/yyyy hh:mm:ss" }}</td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-primary btn-secondary"
+                (click)="download(file)"
+              >
+                Download
+              </button>
+              &nbsp;
+              <a
+                class="btn btn-primary"
+                routerLinkActive="active"
+                [routerLink]="['/files/edit', file.id]"
+              >
+                Edit
+              </a>
+              &nbsp;
+              <button
+                type="button"
+                class="btn btn-primary btn-secondary"
+                (click)="viewAuditLogs(auditlogtemplate, file)"
+              >
+                View Audit Logs
+              </button>
+              &nbsp;
+              <button
+                type="button"
+                class="btn btn-primary btn-danger"
+                (click)="deleteFile(deletetemplate, file)"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div *ngIf="errorMessage" class="alert alert-danger">
+  Error: {{ errorMessage }}
+</div>
+
+<ng-template #deletetemplate>
+  <div class="modal-body text-center">
+    <p>
+      Are you sure you want to delete <strong> {{ selectedFile.name }}</strong>
+    </p>
+    <button type="button" class="btn btn-primary" (click)="confirmDelete()">
+      Yes
+    </button>
+    <button type="button" class="btn btn-default" (click)="cancelDelete()">
+      No
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #auditlogtemplate>
+  <div class="modal-body text-center">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date Time</th>
+            <th>User Name</th>
+            <th>Action</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>File Name</th>
+            <th>File Location</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let auditLog of auditLogs">
+            <td>
+              {{ auditLog.createdDateTime | date: "dd/MM/yyyy hh:mm:ss" }}
+            </td>
+            <td>{{ auditLog.userName }}</td>
+            <td>{{ auditLog.action }}</td>
+            <td [style.color]="auditLog.highLight.name ? 'red' : ''">
+              {{ auditLog.data.name }}
+            </td>
+            <td [style.color]="auditLog.highLight.description ? 'red' : ''">
+              {{ auditLog.data.description }}
+            </td>
+            <td [style.color]="auditLog.highLight.fileName ? 'red' : ''">
+              {{ auditLog.data.fileName }}
+            </td>
+            <td [style.color]="auditLog.highLight.fileLocation ? 'red' : ''">
+              {{ auditLog.data.fileLocation }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-template>
