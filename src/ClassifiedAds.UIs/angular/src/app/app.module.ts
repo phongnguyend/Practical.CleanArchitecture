@@ -10,6 +10,7 @@ import { GlobalErrorHandler } from "./shared/global-error-handler";
 import { SharedModule } from "./shared/shared.module";
 import { CoreModule } from "./core/core.module";
 import { AuditLogModule } from "./auditlogs/audit-log.module";
+import { FileModule } from "./files/file.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,6 +20,7 @@ import { AuditLogModule } from "./auditlogs/audit-log.module";
     CoreModule,
     AuditLogModule,
     ProductModule,
+    FileModule,
     AppRoutingModule,
     AuthModule,
     LoggingModule,
