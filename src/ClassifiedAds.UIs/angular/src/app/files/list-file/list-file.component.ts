@@ -29,6 +29,20 @@ export class ListFileComponent implements OnInit {
     });
   }
 
+  download(file: IFile) {
+    this.fileService.downloadFile(file).subscribe({
+      next: (rs) => {
+        const url = window.URL.createObjectURL(rs);
+        const element = document.createElement("a");
+        element.href = url;
+        element.download = file.fileName;
+        document.body.appendChild(element);
+        element.click();
+      },
+      error: (err) => (this.errorMessage = err),
+    });
+  }
+
   deleteFile(template: TemplateRef<any>, file: IFile) {
     this.selectedFile = file;
     this.modalRef = this.modalService.show(template, { class: "modal-sm" });

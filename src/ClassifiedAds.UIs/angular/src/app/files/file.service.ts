@@ -43,6 +43,12 @@ export class FileService {
       .pipe(catchError(this.handleError));
   }
 
+  downloadFile(file: IFile): Observable<Blob> {
+    return this.http
+      .get(this.fileUrl + "/" + file.id + "/download", { responseType: "blob" })
+      .pipe(catchError(this.handleError));
+  }
+
   deleteFile(file: IFile): Observable<IFile | undefined> {
     return this.http
       .delete<IFile>(this.fileUrl + "/" + file.id)

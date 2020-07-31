@@ -33,6 +33,14 @@
             <td>{{ file.size }}</td>
             <td>{{ file.uploadedTime | date: "dd/MM/yyyy hh:mm:ss" }}</td>
             <td>
+              <button
+                type="button"
+                class="btn btn-primary btn-secondary"
+                (click)="download(file)"
+              >
+                Download
+              </button>
+              &nbsp;
               <a
                 class="btn btn-primary"
                 routerLinkActive="active"
