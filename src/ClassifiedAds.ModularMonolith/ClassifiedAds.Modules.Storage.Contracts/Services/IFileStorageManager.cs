@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.Modules.Storage.Contracts.DTOs;
 using System.IO;
 
-namespace ClassifiedAds.Modules.Storage.Storages
+namespace ClassifiedAds.Modules.Storage.Contracts
 {
     public interface IFileStorageManager
     {

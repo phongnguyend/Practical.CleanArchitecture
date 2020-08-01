@@ -1,8 +1,10 @@
 ﻿using ClassifiedAds.Domain.Events;
+using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Modules.Product.Entities;
 using ClassifiedAds.Modules.Product.Repositories;
-using ClassifiedAds.Modules.Product.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -19,8 +21,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 }
             }));
 
-            services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
-                .AddScoped(typeof(ICrudService<>), typeof(CrudService<>))
+            services
+                .AddScoped<IRepository<Product, Guid>, Repository<Product, Guid>>()
                 .AddScoped(typeof(IProductRepository), typeof(ProductRepository));
 
             DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);

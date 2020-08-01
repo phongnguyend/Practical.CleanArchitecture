@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Modules.Storage.Contracts.DTOs;
+﻿using ClassifiedAds.Modules.Storage.Contracts;
+using ClassifiedAds.Modules.Storage.Contracts.DTOs;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System.IO;

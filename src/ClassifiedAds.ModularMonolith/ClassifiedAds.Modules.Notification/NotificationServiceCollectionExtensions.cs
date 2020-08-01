@@ -1,7 +1,10 @@
-﻿using ClassifiedAds.Modules.Notification.Repositories;
+﻿using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Modules.Notification.Entities;
+using ClassifiedAds.Modules.Notification.Repositories;
 using ClassifiedAds.Modules.Notification.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -17,8 +20,8 @@ namespace Microsoft.Extensions.DependencyInjection
                     sql.MigrationsAssembly(migrationsAssembly);
                 }
             }))
-                .AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
-                .AddScoped(typeof(ICrudService<>), typeof(CrudService<>));
+                .AddScoped<IRepository<EmailMessage, Guid>, Repository<EmailMessage, Guid>>()
+                .AddScoped<IRepository<SmsMessage, Guid>, Repository<SmsMessage, Guid>>();
 
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 

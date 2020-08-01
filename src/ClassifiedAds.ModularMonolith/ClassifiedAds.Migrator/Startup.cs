@@ -1,4 +1,6 @@
 ﻿using ClassifiedAds.Infrastructure.HealthChecks;
+using ClassifiedAds.Modules.Storage;
+using ClassifiedAds.Modules.Storage.ConfigurationOptions.MessageBroker;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -33,7 +35,9 @@ namespace ClassifiedAds.Migrator
                 typeof(Startup).GetTypeInfo().Assembly.GetName().Name)
                 .AddProductModule(Configuration["ConnectionStrings:ClassifiedAds"],
                 typeof(Startup).GetTypeInfo().Assembly.GetName().Name)
-                .AddStorageModule(Configuration["ConnectionStrings:ClassifiedAds"],
+                .AddStorageModule(new StorageOptions(),
+                new MessageBrokerOptions(),
+                Configuration["ConnectionStrings:ClassifiedAds"],
                 typeof(Startup).GetTypeInfo().Assembly.GetName().Name)
                 .AddApplicationServices();
 

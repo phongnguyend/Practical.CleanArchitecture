@@ -1,9 +1,10 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Domain.Events;
+using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
 using ClassifiedAds.Modules.AuditLog.Contracts.Services;
 using ClassifiedAds.Modules.AuditLog.Entities;
-using ClassifiedAds.Modules.AuditLog.Repositories;
+using System;
 
 namespace ClassifiedAds.Modules.AuditLog.Services
 {
@@ -11,8 +12,8 @@ namespace ClassifiedAds.Modules.AuditLog.Services
     {
         private readonly Dispatcher _dispatcher;
 
-        public AuditLogService(AuditLogDbContext dbContext, IDomainEvents domainEvents, Dispatcher dispatcher)
-            : base(dbContext, domainEvents)
+        public AuditLogService(IRepository<AuditLogEntry, Guid> repository, IDomainEvents domainEvents, Dispatcher dispatcher)
+            : base(repository, domainEvents)
         {
             _dispatcher = dispatcher;
         }

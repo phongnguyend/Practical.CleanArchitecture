@@ -1,4 +1,6 @@
 ﻿using ClassifiedAds.Infrastructure.Logging;
+using ClassifiedAds.Modules.Storage;
+using ClassifiedAds.Modules.Storage.ConfigurationOptions.MessageBroker;
 
 namespace ClassifiedAds.WebAPI.ConfigurationOptions
 {
@@ -13,5 +15,9 @@ namespace ClassifiedAds.WebAPI.ConfigurationOptions
         public string AllowedHosts { get; set; }
 
         public CORS CORS { get; set; }
+
+        public StorageOptions Storage { get; set; }
+
+        public MessageBrokerOptions MessageBroker { get; set; }
     }
 }

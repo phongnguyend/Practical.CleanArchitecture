@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Modules.Storage.Contracts.DTOs;
 using System;
 
 namespace ClassifiedAds.Modules.Storage.Entities
@@ -16,5 +17,15 @@ namespace ClassifiedAds.Modules.Storage.Entities
         public string FileName { get; set; }
 
         public string FileLocation { get; set; }
+
+        public FileEntryDTO ToFileEntryDTO()
+        {
+            return new FileEntryDTO
+            {
+                Id = Id,
+                FileName = FileName,
+                FileLocation = FileLocation,
+            };
+        }
     }
 }

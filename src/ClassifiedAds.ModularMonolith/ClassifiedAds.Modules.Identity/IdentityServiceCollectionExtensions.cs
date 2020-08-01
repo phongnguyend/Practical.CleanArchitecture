@@ -20,8 +20,6 @@ namespace Microsoft.Extensions.DependencyInjection
                     sql.MigrationsAssembly(migrationsAssembly);
                 }
             }))
-                .AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
-                .AddScoped(typeof(ICrudService<>), typeof(CrudService<>))
                 .AddScoped(typeof(IUserRepository), typeof(UserRepository))
                 .AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
 
@@ -52,8 +50,6 @@ namespace Microsoft.Extensions.DependencyInjection
                     sql.MigrationsAssembly(migrationsAssembly);
                 }
             }))
-                .AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
-                .AddScoped(typeof(ICrudService<>), typeof(CrudService<>))
                 .AddScoped(typeof(IUserRepository), typeof(UserRepository))
                 .AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
 

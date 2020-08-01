@@ -1,7 +1,7 @@
-﻿using ClassifiedAds.IdentityServer.Manage.Models;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.IdentityServer.Manage.Models;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Notification.Entities;
-using ClassifiedAds.Modules.Notification.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
