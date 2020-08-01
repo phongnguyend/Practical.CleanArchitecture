@@ -13,30 +13,36 @@ class Products extends Component {
     showImage: false,
     showDeleteModal: false,
     deletingProduct: null,
-    listFilter: ""
+    listFilter: "",
+    showAuditLogsModal: false,
   };
 
   toggleImage = () => {
     this.setState({ showImage: !this.state.showImage });
   };
 
-  filterChanged = event => {
+  filterChanged = (event) => {
     this.setState({ listFilter: event.target.value });
   };
 
   performFilter(filterBy) {
     filterBy = filterBy.toLocaleLowerCase();
     return this.props.products.filter(
-      product => product.name.toLocaleLowerCase().indexOf(filterBy) !== -1
+      (product) => product.name.toLocaleLowerCase().indexOf(filterBy) !== -1
     );
   }
 
-  onRatingClicked = event => {
+  onRatingClicked = (event) => {
     const pageTitle = "Product List: " + event;
     this.setState({ pageTitle: pageTitle });
   };
 
-  deleteProduct = product => {
+  viewAuditLogs = (product) => {
+    this.props.fetchAuditLogs(product);
+    this.setState({ showAuditLogsModal: true });
+  };
+
+  deleteProduct = (product) => {
     this.setState({ showDeleteModal: true, deletingProduct: product });
   };
 
@@ -58,7 +64,7 @@ class Products extends Component {
       ? this.performFilter(this.state.listFilter)
       : this.props.products;
 
-    const rows = filteredProducts?.map(product => (
+    const rows = filteredProducts?.map((product) => (
       <tr key={product.id}>
         <td>
           {this.state.showImage ? (
@@ -78,7 +84,7 @@ class Products extends Component {
         <td>
           <Star
             rating={product.starRating || 4}
-            ratingClicked={event => this.onRatingClicked(event)}
+            ratingClicked={(event) => this.onRatingClicked(event)}
           ></Star>
         </td>
         <td>
@@ -88,6 +94,14 @@ class Products extends Component {
           >
             Edit
           </NavLink>
+          &nbsp;
+          <button
+            type="button"
+            className="btn btn-primary btn-secondary"
+            onClick={() => this.viewAuditLogs(product)}
+          >
+            View Audit Logs
+          </button>
           &nbsp;
           <button
             type="button"
@@ -120,6 +134,47 @@ class Products extends Component {
         <tbody>{rows}</tbody>
       </table>
     ) : null;
+    const auditLogRows = this.props.auditLogs?.map((auditLog) => (
+      <tr>
+        <td>{auditLog.createdDateTime}</td>
+        <td>{auditLog.userName}</td>
+        <td>{auditLog.action}</td>
+        <td style={{ color: auditLog.highLight.code ? "red" : "" }}>
+          {auditLog.data.code}
+        </td>
+        <td style={{ color: auditLog.highLight.name ? "red" : "" }}>
+          {auditLog.data.name}
+        </td>
+        <td style={{ color: auditLog.highLight.description ? "red" : "" }}>
+          {auditLog.data.description}
+        </td>
+      </tr>
+    ));
+    const auditLogsModal = (
+      <Modal
+        size="xl"
+        show={this.state.showAuditLogsModal}
+        onHide={() => this.setState({ showAuditLogsModal: false })}
+      >
+        <Modal.Body>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Date Time</th>
+                  <th>User Name</th>
+                  <th>Action</th>
+                  <th>Code</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>{auditLogRows}</tbody>
+            </table>
+          </div>
+        </Modal.Body>
+      </Modal>
+    );
 
     const deleteModal = (
       <Modal show={this.state.showDeleteModal} onHide={this.deleteCanceled}>
@@ -161,7 +216,7 @@ class Products extends Component {
                 <input
                   type="text"
                   value={this.state.listFilter}
-                  onChange={event => this.filterChanged(event)}
+                  onChange={(event) => this.filterChanged(event)}
                 />
               </div>
             </div>
@@ -181,21 +236,24 @@ class Products extends Component {
           </div>
         ) : null}
         {deleteModal}
+        {auditLogsModal}
       </div>
     );
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    products: state.product.products
+    products: state.product.products,
+    auditLogs: state.product.auditLogs,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     fetchProducts: () => dispatch(actions.fetchProducts()),
-    deleteProduct: product => dispatch(actions.deleteProduct(product))
+    deleteProduct: (product) => dispatch(actions.deleteProduct(product)),
+    fetchAuditLogs: (product) => dispatch(actions.fetchAuditLogs(product)),
   };
 };
 
