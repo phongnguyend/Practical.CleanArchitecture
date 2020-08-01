@@ -60,6 +60,11 @@
                 <router-link class="btn btn-primary" :to="'/products/edit/'+ product.id">Edit</router-link>&nbsp;
                 <button
                   type="button"
+                  class="btn btn-primary btn-secondary"
+                  @click="viewAuditLogs(product)"
+                >View Audit Logs</button>&nbsp;
+                <button
+                  type="button"
                   class="btn btn-primary btn-danger"
                   @click="deleteProduct(product)"
                 >Delete</button>
@@ -75,6 +80,34 @@
         Are you sure you want to delete:
         <strong>{{selectedProduct.name}}</strong>
       </p>
+    </b-modal>
+    <b-modal id="modal-audit-logs" hide-footer hide-header size="xl">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Date Time</th>
+              <th>User Name</th>
+              <th>Action</th>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="auditLog in auditLogs" :key="auditLog.id">
+              <td>{{ auditLog.createdDateTime }}</td>
+              <td>{{ auditLog.userName }}</td>
+              <td>{{ auditLog.action }}</td>
+              <td :style="{color: auditLog.highLight.code ? 'red' : ''}">{{ auditLog.data.code }}</td>
+              <td :style="{color: auditLog.highLight.name ? 'red' : ''}">{{ auditLog.data.name }}</td>
+              <td
+                :style="{color: auditLog.highLight.description ? 'red' : ''}"
+              >{{ auditLog.data.description }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </b-modal>
   </div>
 </template>
@@ -94,23 +127,24 @@ export default {
       imageMargin: 2,
       logo: logo,
       products: [],
+      auditLogs: [],
       selectedProduct: {},
       listFilter: "",
-      errorMessage: ""
+      errorMessage: "",
     };
   },
   computed: {
     filteredProducts() {
       if (this.listFilter) {
         return this.products.filter(
-          product =>
+          (product) =>
             product.name
               .toLocaleLowerCase()
               .indexOf(this.listFilter.toLocaleLowerCase()) !== -1
         );
       }
       return this.products;
-    }
+    },
   },
   methods: {
     toggleImage() {
@@ -120,7 +154,7 @@ export default {
       this.pageTitle = "Product List: " + event;
     },
     loadProducts() {
-      axios.get("").then(rs => {
+      axios.get("").then((rs) => {
         this.products = rs.data;
       });
     },
@@ -129,22 +163,28 @@ export default {
       this.$bvModal.show("modal-delete");
     },
     deleteConfirmed() {
-      axios.delete(this.selectedProduct.id).then(rs => {
+      axios.delete(this.selectedProduct.id).then((rs) => {
         this.loadProducts();
       });
-    }
+    },
+    viewAuditLogs(product) {
+      axios.get(product.id + "/auditLogs").then((rs) => {
+        this.auditLogs = rs.data;
+        this.$bvModal.show("modal-audit-logs");
+      });
+    },
   },
   components: {
-    appStar: Star
+    appStar: Star,
   },
   filters: {
-    lowercase: function(value) {
+    lowercase: function (value) {
       return value.toLowerCase();
-    }
+    },
   },
   created() {
     this.loadProducts();
-  }
+  },
 };
 </script>
 
