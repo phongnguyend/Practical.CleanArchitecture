@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClassifiedAds.Domain.Repositories;
+using System;
 
 namespace ClassifiedAds.Modules.Product.Repositories
 {

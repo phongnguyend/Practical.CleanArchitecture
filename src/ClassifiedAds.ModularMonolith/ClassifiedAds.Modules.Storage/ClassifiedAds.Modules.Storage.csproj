@@ -24,10 +24,14 @@
     <ProjectReference Include="..\ClassifiedAds.Application\ClassifiedAds.Application.csproj" />
     <ProjectReference Include="..\ClassifiedAds.CrossCuttingConcerns\ClassifiedAds.CrossCuttingConcerns.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Domain\ClassifiedAds.Domain.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.Infrastructure\ClassifiedAds.Infrastructure.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Modules.AuditLog.Contracts\ClassifiedAds.Modules.AuditLog.Contracts.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Modules.Identity.Contracts\ClassifiedAds.Modules.Identity.Contracts.csproj" />
-    <ProjectReference Include="..\ClassifiedAds.Modules.MessageBrokers.Contracts\ClassifiedAds.Modules.MessageBrokers.Contracts.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Modules.Storage.Contracts\ClassifiedAds.Modules.Storage.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
+using ClassifiedAds.Modules.Storage.Contracts;
 using ClassifiedAds.Modules.Storage.Contracts.DTOs;
 using System.IO;
 

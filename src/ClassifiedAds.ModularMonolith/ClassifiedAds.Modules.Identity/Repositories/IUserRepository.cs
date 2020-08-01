@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Modules.Identity.Entities;
+﻿using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Modules.Identity.Entities;
 using System;
 using System.Linq;
 

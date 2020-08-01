@@ -75,7 +75,7 @@ namespace ClassifiedAds.WebAPI
                     .AddIdentityModuleCore(Configuration["ConnectionStrings:ClassifiedAds"])
                     .AddNotificationModule(Configuration["ConnectionStrings:ClassifiedAds"])
                     .AddProductModule(Configuration["ConnectionStrings:ClassifiedAds"])
-                    .AddStorageModule(Configuration["ConnectionStrings:ClassifiedAds"])
+                    .AddStorageModule(AppSettings.Storage, AppSettings.MessageBroker, Configuration["ConnectionStrings:ClassifiedAds"])
                     .AddApplicationServices();
 
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)

@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.Modules.Product.Services;
 
 namespace ClassifiedAds.Modules.Product.Commands
 {

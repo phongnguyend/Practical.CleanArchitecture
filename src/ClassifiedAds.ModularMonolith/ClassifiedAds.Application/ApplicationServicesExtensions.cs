@@ -1,7 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using ClassifiedAds.Application;
-using ClassifiedAds.Application.Core;
+using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Events;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -12,7 +13,8 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddScoped<Dispatcher>();
 
-            services.AddSingleton<IDomainEvents, DomainEvents>();
+            services.AddSingleton<IDomainEvents, DomainEvents>()
+                .AddScoped(typeof(ICrudService<>), typeof(CrudService<>));
 
             return services;
         }
@@ -30,6 +32,31 @@ namespace Microsoft.Extensions.DependencyInjection
                 if (handlerInterfaces.Any())
                 {
                     var handlerFactory = new HandlerFactory(type);
+                    foreach (var interfaceType in handlerInterfaces)
+                    {
+                        services.AddTransient(interfaceType, provider => handlerFactory.Create(provider, interfaceType));
+                    }
+                }
+            }
+
+            var aggregateRootTypes = assembly.GetTypes().Where(x => x.BaseType == typeof(AggregateRoot<Guid>)).ToList();
+
+            var genericHandlerTypes = new[]
+            {
+                typeof(GetEntititesQueryHandler<>),
+                typeof(GetEntityByIdQueryHandler<>),
+                typeof(AddOrUpdateEntityCommandHandler<>),
+                typeof(DeleteEntityCommandHandler<>),
+            };
+
+            foreach (var aggregateRootType in aggregateRootTypes)
+            {
+                foreach (var genericHandlerType in genericHandlerTypes)
+                {
+                    var handlerType = genericHandlerType.MakeGenericType(aggregateRootType);
+                    var handlerInterfaces = handlerType.GetInterfaces();
+
+                    var handlerFactory = new HandlerFactory(handlerType);
                     foreach (var interfaceType in handlerInterfaces)
                     {
                         services.AddTransient(interfaceType, provider => handlerFactory.Create(provider, interfaceType));
