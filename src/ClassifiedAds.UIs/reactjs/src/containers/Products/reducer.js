@@ -6,12 +6,13 @@ const initialState = {
   product: {
     name: "",
     code: "",
-    description: ""
+    description: "",
   },
+  auditLogs: [],
   loading: false,
   saved: false,
   deleted: false,
-  error: null
+  error: null,
 };
 
 /// Products
@@ -22,7 +23,7 @@ const fetchProductsStart = (state, action) => {
 const fetchProductsSuccess = (state, action) => {
   return updateObject(state, {
     products: action.products,
-    loading: false
+    loading: false,
   });
 };
 
@@ -40,7 +41,7 @@ const fetchProductStart = (state, action) => {
 const fetchProductSuccess = (state, action) => {
   return updateObject(state, {
     product: action.product,
-    loading: false
+    loading: false,
   });
 };
 
@@ -58,7 +59,7 @@ const saveProductSuccess = (state, action) => {
   return updateObject(state, {
     product: action.product,
     loading: false,
-    saved: true
+    saved: true,
   });
 };
 
@@ -93,19 +94,34 @@ const reducer = (state = initialState, action) => {
       return updateObject(state, {
         product: action.product,
         loading: true,
-        deleted: false
+        deleted: false,
       });
     case actionTypes.DELETE_PRODUCT_SUCCESS:
       return updateObject(state, {
         product: action.product,
         loading: false,
-        deleted: true
+        deleted: true,
       });
     case actionTypes.DELETE_PRODUCT_FAIL:
       return updateObject(state, {
         error: action.error,
         loading: false,
-        deleted: false
+        deleted: false,
+      });
+    case actionTypes.FETCH_PRODUCT_AUDIT_LOGS_START:
+      return updateObject(state, {
+        product: action.product,
+        loading: true,
+      });
+    case actionTypes.FETCH_PRODUCT_AUDIT_LOGS_SUCCESS:
+      return updateObject(state, {
+        auditLogs: action.auditLogs,
+        loading: false,
+      });
+    case actionTypes.FETCH_PRODUCT_AUDIT_LOGS_FAIL:
+      return updateObject(state, {
+        error: action.error,
+        loading: false,
       });
     default:
       return state;

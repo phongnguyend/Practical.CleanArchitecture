@@ -27,6 +27,12 @@ class Nav extends Component {
             </NavLink>
           </li>
 
+          <li>
+            <NavLink className="nav-link" to="/auditlogs">
+              Audit Logs
+            </NavLink>
+          </li>
+
           {!this.props.authService.isAuthenticated() ? (
             <li>
               <NavLink
@@ -57,14 +63,14 @@ class Nav extends Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
-    authService: state.auth.authService
+    authService: state.auth.authService,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {};
 };
 

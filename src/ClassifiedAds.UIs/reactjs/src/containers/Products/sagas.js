@@ -52,9 +52,21 @@ export function* deleteProductSaga(action) {
   }
 }
 
+export function* fetchAuditLogsSaga(action) {
+  yield put(actions.fetchAuditLogsStart());
+  try {
+    const response = yield axios.get(action.product.id + "/auditLogs");
+    const fetchedAuditLogs = response.data;
+    yield put(actions.fetchAuditLogsSuccess(fetchedAuditLogs));
+  } catch (error) {
+    yield put(actions.fetchAuditLogsFail(error));
+  }
+}
+
 export function* watchProduct() {
   yield takeEvery(actionTypes.FETCH_PRODUCTS, fetchProductsSaga);
   yield takeEvery(actionTypes.FETCH_PRODUCT, fetchProductSaga);
   yield takeEvery(actionTypes.SAVE_PRODUCT, saveProductSaga);
   yield takeEvery(actionTypes.DELETE_PRODUCT, deleteProductSaga);
+  yield takeEvery(actionTypes.FETCH_PRODUCT_AUDIT_LOGS, fetchAuditLogsSaga);
 }
