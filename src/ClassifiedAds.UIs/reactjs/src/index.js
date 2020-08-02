@@ -16,10 +16,8 @@ import authReducer from "./containers/Auth/reducer";
 import auditLogReducer from "./containers/AuditLogs/reducer";
 import { watchAuditLog } from "./containers/AuditLogs/sagas";
 
-const composeEnhancers =
-  process.env.NODE_ENV === "development"
-    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    : null || compose;
+const composeEnhancers = (process.env.NODE_ENV === 'development' ?
+  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null) || compose;
 
 const rootReducer = combineReducers({
   auth: authReducer,
