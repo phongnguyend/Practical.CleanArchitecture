@@ -8,6 +8,9 @@
       <li>
         <router-link class="nav-link" to="/products" active-class="active">Product</router-link>
       </li>
+      <li>
+        <router-link class="nav-link" to="/auditlogs" active-class="active">Audit Logs</router-link>
+      </li>
       <li v-if="!isAuthenticated">
         <a class="nav-link" @click="login" href="javascript:void(0)">Login</a>
       </li>
@@ -26,7 +29,7 @@ export default {
   computed: {
     isAuthenticated() {
       return this.$store.state.authService.isAuthenticated();
-    }
+    },
   },
   methods: {
     login() {
@@ -34,8 +37,8 @@ export default {
     },
     logout() {
       this.$store.state.authService.logout();
-    }
-  }
+    },
+  },
 };
 </script>
 
