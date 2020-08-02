@@ -73,5 +73,53 @@
     >
       <i class="fa fa-chevron-left"></i> Back
     </a>
+    &nbsp;
+    <button
+      type="button"
+      class="btn btn-primary btn-secondary"
+      (click)="viewAuditLogs(auditlogtemplate)"
+    >
+      View Audit Logs
+    </button>
   </div>
 </div>
+<ng-template #auditlogtemplate>
+  <div class="modal-body text-center">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date Time</th>
+            <th>User Name</th>
+            <th>Action</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>File Name</th>
+            <th>File Location</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let auditLog of auditLogs">
+            <td>
+              {{ auditLog.createdDateTime | date: "dd/MM/yyyy hh:mm:ss" }}
+            </td>
+            <td>{{ auditLog.userName }}</td>
+            <td>{{ auditLog.action }}</td>
+            <td [style.color]="auditLog.highLight.name ? 'red' : ''">
+              {{ auditLog.data.name }}
+            </td>
+            <td [style.color]="auditLog.highLight.description ? 'red' : ''">
+              {{ auditLog.data.description }}
+            </td>
+            <td [style.color]="auditLog.highLight.fileName ? 'red' : ''">
+              {{ auditLog.data.fileName }}
+            </td>
+            <td [style.color]="auditLog.highLight.fileLocation ? 'red' : ''">
+              {{ auditLog.data.fileLocation }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-template>

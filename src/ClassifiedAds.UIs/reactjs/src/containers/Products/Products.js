@@ -55,6 +55,12 @@ class Products extends Component {
     this.setState({ showDeleteModal: false, deletingProduct: null });
   };
 
+  formatDateTime = (value) => {
+    if (!value) return value;
+    var date = new Date(value);
+    return date.toLocaleDateString() + " " + date.toLocaleTimeString();
+  };
+
   componentDidMount() {
     this.props.fetchProducts();
   }
@@ -135,8 +141,8 @@ class Products extends Component {
       </table>
     ) : null;
     const auditLogRows = this.props.auditLogs?.map((auditLog) => (
-      <tr>
-        <td>{auditLog.createdDateTime}</td>
+      <tr key={auditLog.id}>
+        <td>{this.formatDateTime(auditLog.createdDateTime)}</td>
         <td>{auditLog.userName}</td>
         <td>{auditLog.action}</td>
         <td style={{ color: auditLog.highLight.code ? "red" : "" }}>
@@ -157,8 +163,8 @@ class Products extends Component {
         onHide={() => this.setState({ showAuditLogsModal: false })}
       >
         <Modal.Body>
-          <div class="table-responsive">
-            <table class="table">
+          <div className="table-responsive">
+            <table className="table">
               <thead>
                 <tr>
                   <th>Date Time</th>

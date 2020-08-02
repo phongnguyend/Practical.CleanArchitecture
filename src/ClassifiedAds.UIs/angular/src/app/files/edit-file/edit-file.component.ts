@@ -1,8 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, TemplateRef } from "@angular/core";
 import { FileService } from "../file.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { IFile } from "../file";
 import { NgModel, NgForm } from "@angular/forms";
+import { IAuditLogEntry } from "src/app/auditlogs/audit-log";
+import { BsModalService } from "ngx-bootstrap";
 
 @Component({
   selector: "app-edit-file",
@@ -14,10 +16,12 @@ export class EditFileComponent implements OnInit {
   postErrorMessage: string = "";
   postError = false;
   isDirty = false;
+  auditLogs: IAuditLogEntry[];
   constructor(
     private fileService: FileService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private modalService: BsModalService
   ) {}
 
   ngOnInit(): void {
@@ -52,6 +56,16 @@ export class EditFileComponent implements OnInit {
       this.postError = true;
       this.postErrorMessage = "Please fix the errors";
     }
+  }
+
+  viewAuditLogs(template: TemplateRef<any>) {
+    this.fileService.getAuditLogs(this.file.id).subscribe({
+      next: (logs) => {
+        this.auditLogs = logs;
+        this.modalService.show(template, { class: "modal-xl" });
+      },
+      error: (error) => this.onHttpError(error),
+    });
   }
 
   onHttpError(errorResponse: any) {

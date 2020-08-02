@@ -20,7 +20,11 @@ class Nav extends Component {
               Home
             </NavLink>
           </li>
-
+          <li>
+            <NavLink className="nav-link" to="/files">
+              File
+            </NavLink>
+          </li>
           <li>
             <NavLink className="nav-link" to="/products">
               Product

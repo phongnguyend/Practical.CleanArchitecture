@@ -124,6 +124,7 @@ namespace ClassifiedAds.WebAPI.Controllers
 
                 var entry = new
                 {
+                    log.Id,
                     log.UserName,
                     Action = log.Action.Replace("_FILEENTRY", string.Empty),
                     log.CreatedDateTime,

@@ -7,6 +7,12 @@ class AuditLogs extends Component {
     pageTitle: "Audit Logs",
   };
 
+  formatDateTime = (value) => {
+    if (!value) return value;
+    var date = new Date(value);
+    return date.toLocaleDateString() + " " + date.toLocaleTimeString();
+  };
+
   componentDidMount() {
     this.props.fetchAuditLogs();
   }
@@ -14,7 +20,7 @@ class AuditLogs extends Component {
   render() {
     const rows = this.props.auditLogs?.map((auditLog) => (
       <tr key={auditLog.id}>
-        <td>{auditLog.createdDateTime}</td>
+        <td>{this.formatDateTime(auditLog.createdDateTime)}</td>
         <td>{auditLog.userName}</td>
         <td>{auditLog.action}</td>
         <td>{auditLog.log}</td>
@@ -22,7 +28,7 @@ class AuditLogs extends Component {
     ));
 
     const table = this.props.auditLogs ? (
-      <table class="table">
+      <table className="table">
         <thead>
           <tr>
             <th>Date Time</th>
@@ -36,10 +42,10 @@ class AuditLogs extends Component {
     ) : null;
 
     return (
-      <div class="card">
-        <div class="card-header">Audit Logs</div>
-        <div class="card-body">
-          <div class="table-responsive">{table}</div>
+      <div className="card">
+        <div className="card-header">Audit Logs</div>
+        <div className="card-body">
+          <div className="table-responsive">{table}</div>
         </div>
       </div>
     );

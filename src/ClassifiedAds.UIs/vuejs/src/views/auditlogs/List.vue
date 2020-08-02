@@ -14,7 +14,7 @@
           </thead>
           <tbody>
             <tr v-for="auditLog in auditLogs" :key="auditLog.id">
-              <td>{{ auditLog.createdDateTime}}</td>
+              <td>{{ auditLog.createdDateTime | formatedDateTime}}</td>
               <td>{{ auditLog.userName }}</td>
               <td>{{ auditLog.action }}</td>
               <td>{{ auditLog.log }}</td>
@@ -49,6 +49,11 @@ export default {
   filters: {
     lowercase: function (value) {
       return value.toLowerCase();
+    },
+    formatedDateTime: function (value) {
+      if (!value) return value;
+      var date = new Date(value);
+      return date.toLocaleDateString() + " " + date.toLocaleTimeString();
     },
   },
   created() {

@@ -17,6 +17,21 @@ const routes = [
     component: OidcLoginRedirect
   },
   {
+    path: "/files",
+    name: "File",
+    component: () => import("../views/files/List.vue")
+  },
+  {
+    path: "/files/upload",
+    name: "UploadFile",
+    component: () => import("../views/files/Upload.vue")
+  },
+  {
+    path: "/files/edit/:id",
+    name: "EditFile",
+    component: () => import("../views/files/Edit.vue")
+  },
+  {
     path: "/products",
     name: "Product",
     component: () => import("../views/products/List.vue")

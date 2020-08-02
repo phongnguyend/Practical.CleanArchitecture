@@ -6,6 +6,9 @@
         <router-link class="nav-link" to="/" active-class="active" exact>Home</router-link>
       </li>
       <li>
+        <router-link class="nav-link" to="/files" active-class="active">File</router-link>
+      </li>
+      <li>
         <router-link class="nav-link" to="/products" active-class="active">Product</router-link>
       </li>
       <li>
