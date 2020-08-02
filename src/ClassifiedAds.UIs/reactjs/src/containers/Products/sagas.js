@@ -68,5 +68,5 @@ export function* watchProduct() {
   yield takeEvery(actionTypes.FETCH_PRODUCT, fetchProductSaga);
   yield takeEvery(actionTypes.SAVE_PRODUCT, saveProductSaga);
   yield takeEvery(actionTypes.DELETE_PRODUCT, deleteProductSaga);
-  yield takeEvery(actionTypes.FETCH_AUDIT_LOGS, fetchAuditLogsSaga);
+  yield takeEvery(actionTypes.FETCH_PRODUCT_AUDIT_LOGS, fetchAuditLogsSaga);
 }

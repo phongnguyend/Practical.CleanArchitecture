@@ -132,27 +132,27 @@ export const deleteProduct = (product) => {
 /// VIEW AUDIT LOGS
 export const fetchAuditLogsSuccess = (auditLogs) => {
   return {
-    type: actionTypes.FETCH_AUDIT_LOGS_SUCCESS,
+    type: actionTypes.FETCH_PRODUCT_AUDIT_LOGS_SUCCESS,
     auditLogs: auditLogs,
   };
 };
 
 export const fetchAuditLogsFail = (error) => {
   return {
-    type: actionTypes.FETCH_AUDIT_LOGS_FAIL,
+    type: actionTypes.FETCH_PRODUCT_AUDIT_LOGS_FAIL,
     error: error,
   };
 };
 
 export const fetchAuditLogsStart = () => {
   return {
-    type: actionTypes.FETCH_AUDIT_LOGS_START,
+    type: actionTypes.FETCH_PRODUCT_AUDIT_LOGS_START,
   };
 };
 
 export const fetchAuditLogs = (product) => {
   return {
-    type: actionTypes.FETCH_AUDIT_LOGS,
+    type: actionTypes.FETCH_PRODUCT_AUDIT_LOGS,
     product: product,
   };
 };

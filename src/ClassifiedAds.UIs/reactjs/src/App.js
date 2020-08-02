@@ -4,10 +4,11 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import "./App.css";
 import Nav from "./components/Nav/Nav";
 import Home from "./containers/Home/Home";
-import OidcLoginRedirect from "./containers/Auth/OidcLoginRedirect"
+import OidcLoginRedirect from "./containers/Auth/OidcLoginRedirect";
 import Products from "./containers/Products/Products";
 import AddProduct from "./containers/Products/AddProduct/AddProduct";
 import ViewProduct from "./containers/Products/ViewProduct/ViewProduct";
+import AuditLogs from "./containers/AuditLogs/AuditLogs";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/products/edit/:id" component={AddProduct} />
         <Route path="/products/:id" component={ViewProduct} />
         <Route path="/products" component={Products} />
+        <Route path="/auditlogs" component={AuditLogs} />
         <Redirect to="/home" />
       </Switch>
     </div>

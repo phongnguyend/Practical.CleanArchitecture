@@ -108,17 +108,17 @@ const reducer = (state = initialState, action) => {
         loading: false,
         deleted: false,
       });
-    case actionTypes.FETCH_AUDIT_LOGS_START:
+    case actionTypes.FETCH_PRODUCT_AUDIT_LOGS_START:
       return updateObject(state, {
         product: action.product,
         loading: true,
       });
-    case actionTypes.FETCH_AUDIT_LOGS_SUCCESS:
+    case actionTypes.FETCH_PRODUCT_AUDIT_LOGS_SUCCESS:
       return updateObject(state, {
         auditLogs: action.auditLogs,
         loading: false,
       });
-    case actionTypes.FETCH_AUDIT_LOGS_FAIL:
+    case actionTypes.FETCH_PRODUCT_AUDIT_LOGS_FAIL:
       return updateObject(state, {
         error: action.error,
         loading: false,

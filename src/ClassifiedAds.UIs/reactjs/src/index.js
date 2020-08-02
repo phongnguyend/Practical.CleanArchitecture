@@ -13,6 +13,8 @@ import productReducer from "./containers/Products/reducer";
 import { watchProduct } from "./containers/Products/sagas";
 import AuthService from "./containers/Auth/authService";
 import authReducer from "./containers/Auth/reducer";
+import auditLogReducer from "./containers/AuditLogs/reducer";
+import { watchAuditLog } from "./containers/AuditLogs/sagas";
 
 const composeEnhancers =
   process.env.NODE_ENV === "development"
@@ -21,7 +23,8 @@ const composeEnhancers =
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  product: productReducer
+  product: productReducer,
+  auditLog: auditLogReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
@@ -32,18 +35,18 @@ const store = createStore(
 );
 
 sagaMiddleware.run(watchProduct);
-
+sagaMiddleware.run(watchAuditLog);
 
 store.dispatch({
   type: "SET_AUTH_SERVICE",
-  authService: AuthService
+  authService: AuthService,
 });
 
-AuthService.loadUser().then(user => {
+AuthService.loadUser().then((user) => {
   if (AuthService.isAuthenticated()) {
     store.dispatch({
       type: "LOGIN",
-      user: user
+      user: user,
     });
   }
 
