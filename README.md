@@ -150,7 +150,7 @@
 <details>
   <summary><b>Storage</b></summary>
   
-  - Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json) and jump to **Storage** section.
+  - Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json), [ClassifiedAds.WebAPI/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebAPI/appsettings.json) and jump to **Storage** section.
     ```js
     "Storage": {
       "Provider": "Local",
@@ -195,7 +195,7 @@
 <details>
   <summary><b>Message Broker</b></summary>
   
-  - Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json) and [ClassifiedAds.BackgroundServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.BackgroundServer/appsettings.json) and jump to **MessageBroker** section.
+  - Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json), [ClassifiedAds.WebAPI/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebAPI/appsettings.json), [ClassifiedAds.BackgroundServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.BackgroundServer/appsettings.json) and jump to **MessageBroker** section.
     ```js
     "MessageBroker": {
       "Provider": "RabbitMQ",
