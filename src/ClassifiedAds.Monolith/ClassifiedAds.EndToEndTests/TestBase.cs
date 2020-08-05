@@ -1,8 +1,9 @@
-﻿using OpenQA.Selenium;
+﻿using ClassifiedAds.EndToEndTests.Configuration;
+using Microsoft.Extensions.Configuration;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.IO;
 
 namespace ClassifiedAds.EndToEndTests
 {
@@ -10,9 +11,19 @@ namespace ClassifiedAds.EndToEndTests
     {
         public IWebDriver Driver { get; private set; }
 
+        public AppSettings AppSettings { get; set; } = new AppSettings();
+
         public TestBase()
         {
-            Driver = new ChromeDriver(Configuration.ChromeDriverPath);
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json");
+
+            var configuration = builder.Build();
+
+            configuration.Bind(AppSettings);
+
+            Driver = new ChromeDriver(AppSettings.ChromeDriverPath);
             Driver.Manage().Window.Maximize();
             Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(2);
         }

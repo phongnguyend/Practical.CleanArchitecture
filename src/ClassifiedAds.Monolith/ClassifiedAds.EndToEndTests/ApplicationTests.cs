@@ -9,11 +9,11 @@ namespace ClassifiedAds.EndToEndTests
         [Fact]
         public void HomePage()
         {
-            var navigator = new Navigator(Driver);
+            var navigator = new Navigator(Driver, AppSettings);
 
             var loginPage = navigator.LoginPage();
-            loginPage.UserName = Configuration.Login_UserName;
-            loginPage.Password = Configuration.Login_Password;
+            loginPage.UserName = AppSettings.Login.UserName;
+            loginPage.Password = AppSettings.Login.Password;
             loginPage.RememberMyLogin = true;
             Thread.Sleep(2000);
 

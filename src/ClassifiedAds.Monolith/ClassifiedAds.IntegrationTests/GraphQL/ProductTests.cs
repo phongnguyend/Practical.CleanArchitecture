@@ -11,13 +11,14 @@ using Xunit;
 
 namespace ClassifiedAds.IntegrationTests.GraphQL
 {
-    public class ProductTests
+    public class ProductTests : TestBase
     {
         private readonly GraphQLClient _client;
 
         public ProductTests()
+            : base()
         {
-            _client = new GraphQLClient("https://localhost:44392/graphql");
+            _client = new GraphQLClient(AppSettings.GraphQL.Endpoint);
         }
 
         private async Task<List<Product>> GetProducts()
@@ -101,15 +102,20 @@ namespace ClassifiedAds.IntegrationTests.GraphQL
         public async Task AllInOne()
         {
             var httpClient = new HttpClient();
-            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync("https://localhost:44367/");
+            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
+            {
+                Address = AppSettings.OpenIdConnect.Authority,
+                Policy = { RequireHttps = AppSettings.OpenIdConnect.RequireHttpsMetadata },
+            });
+
             var tokenResponse = await httpClient.RequestPasswordTokenAsync(new PasswordTokenRequest
             {
                 Address = metaDataResponse.TokenEndpoint,
-                ClientId = "ClassifiedAds.WebMVC",
-                ClientSecret = "secret",
-                UserName = "phong@gmail.com",
-                Password = "v*7Un8b4rcN@<-RN",
-                Scope = "ClassifiedAds.WebAPI",
+                ClientId = AppSettings.OpenIdConnect.ClientId,
+                ClientSecret = AppSettings.OpenIdConnect.ClientSecret,
+                UserName = AppSettings.Login.UserName,
+                Password = AppSettings.Login.Password,
+                Scope = AppSettings.Login.Scope,
             });
 
             var token = tokenResponse.AccessToken;

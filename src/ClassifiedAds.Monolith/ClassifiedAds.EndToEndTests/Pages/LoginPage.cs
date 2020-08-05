@@ -1,19 +1,22 @@
-﻿using OpenQA.Selenium;
+﻿using ClassifiedAds.EndToEndTests.Configuration;
+using OpenQA.Selenium;
 
 namespace ClassifiedAds.EndToEndTests.Pages
 {
     public class LoginPage
     {
-        IWebDriver _driver;
+        private readonly IWebDriver _driver;
+        private readonly AppSettings _appSettings;
 
-        public LoginPage(IWebDriver driver)
+        public LoginPage(IWebDriver driver, AppSettings appSettings)
         {
             _driver = driver;
+            _appSettings = appSettings;
         }
 
         public void GoTo()
         {
-            var loginUrl = Configuration.Login_Url;
+            var loginUrl = _appSettings.Login.Url;
             _driver.Navigate().GoToUrl(loginUrl);
         }
 

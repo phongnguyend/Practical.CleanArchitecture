@@ -10,13 +10,14 @@ using Xunit;
 
 namespace ClassifiedAds.IntegrationTests.WebAPI
 {
-    public class ProductsControllerTests
+    public class ProductsControllerTests : TestBase
     {
         private static HttpClient _httpClient = new HttpClient();
 
         public ProductsControllerTests()
+            : base()
         {
-            _httpClient.BaseAddress = new Uri("https://localhost:44312");
+            _httpClient.BaseAddress = new Uri(AppSettings.WebAPI.Endpoint);
             _httpClient.Timeout = new TimeSpan(0, 0, 30);
             _httpClient.DefaultRequestHeaders.Clear();
         }
@@ -75,15 +76,20 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
         [Fact]
         public async Task AllInOne()
         {
-            var metaDataResponse = await _httpClient.GetDiscoveryDocumentAsync("https://localhost:44367/");
+            var metaDataResponse = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
+            {
+                Address = AppSettings.OpenIdConnect.Authority,
+                Policy = { RequireHttps = AppSettings.OpenIdConnect.RequireHttpsMetadata },
+            });
+
             var tokenResponse = await _httpClient.RequestPasswordTokenAsync(new PasswordTokenRequest
             {
                 Address = metaDataResponse.TokenEndpoint,
-                ClientId = "ClassifiedAds.WebMVC",
-                ClientSecret = "secret",
-                UserName = "phong@gmail.com",
-                Password = "v*7Un8b4rcN@<-RN",
-                Scope = "ClassifiedAds.WebAPI"
+                ClientId = AppSettings.OpenIdConnect.ClientId,
+                ClientSecret = AppSettings.OpenIdConnect.ClientSecret,
+                UserName = AppSettings.Login.UserName,
+                Password = AppSettings.Login.Password,
+                Scope = AppSettings.Login.Scope,
             });
 
             var token = tokenResponse.AccessToken;
@@ -94,7 +100,7 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             {
                 Name = "Test",
                 Code = "TEST",
-                Description = "Description"
+                Description = "Description",
             };
             Product createdProduct = await CreateProduct(product);
             Assert.True(product.Id != createdProduct.Id);

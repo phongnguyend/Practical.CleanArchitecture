@@ -1,16 +1,19 @@
-﻿using ClassifiedAds.EndToEndTests.Pages;
+﻿using ClassifiedAds.EndToEndTests.Configuration;
+using ClassifiedAds.EndToEndTests.Pages;
 using OpenQA.Selenium;
 
 namespace ClassifiedAds.EndToEndTests.Navigation
 {
     public class Navigator
     {
-        IWebDriver _driver;
-        IJavaScriptExecutor _javaScriptExecutor;
+        private readonly IWebDriver _driver;
+        private readonly AppSettings _appSettings;
+        private readonly IJavaScriptExecutor _javaScriptExecutor;
 
-        public Navigator(IWebDriver driver)
+        public Navigator(IWebDriver driver, AppSettings appSettings)
         {
             _driver = driver;
+            _appSettings = appSettings;
             _javaScriptExecutor = (IJavaScriptExecutor)_driver;
         }
 
@@ -34,7 +37,7 @@ namespace ClassifiedAds.EndToEndTests.Navigation
 
         public LoginPage LoginPage()
         {
-            var loginPage = new LoginPage(_driver);
+            var loginPage = new LoginPage(_driver, _appSettings);
             loginPage.GoTo();
             return loginPage;
         }
