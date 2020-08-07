@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <CodeAnalysisRuleSet>ClassifiedAds.Migrator.ruleset</CodeAnalysisRuleSet>
+    <UserSecretsId>b8df572d-5be2-4f41-b55a-8f4e2ef2b569</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
