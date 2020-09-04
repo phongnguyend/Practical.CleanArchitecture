@@ -125,6 +125,8 @@ namespace ClassifiedAds.Infrastructure.Logging
         {
             builder.ConfigureLogging((context, logging) =>
             {
+                logging.AddAzureWebAppDiagnostics();
+
                 logging.AddSerilog();
 
                 LoggingOptions options = SetDefault(logOptions(context.Configuration));
