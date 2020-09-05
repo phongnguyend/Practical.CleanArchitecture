@@ -1,15 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import "~font-awesome/css/font-awesome.min.css";
+@import "~ngx-bootstrap/datepicker/bs-datepicker.css";
 
 div.card-header {
- font-size: large;
+  font-size: large;
 }
 
 div.card {
-  margin-top: 10px
+  margin-top: 10px;
 }
 
 .table {
-  margin-top: 10px
+  margin-top: 10px;
 }

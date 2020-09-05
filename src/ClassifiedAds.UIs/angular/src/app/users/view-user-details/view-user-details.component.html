@@ -1,0 +1,166 @@
+<div class="card" *ngIf="user">
+  <div class="card-header">
+    {{ "User Detail: " + user.userName }}
+  </div>
+
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-md-4">User Name:</div>
+          <div class="col-md-8">{{ user.userName }}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">Email:</div>
+          <div class="col-md-8">{{ user.email }}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">Email Confirmed:</div>
+          <div class="col-md-8">{{ user.emailConfirmed }}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">Phone Number Confirmed:</div>
+          <div class="col-md-8">{{ user.phoneNumberConfirmed }}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">Phone Number:</div>
+          <div class="col-md-8">{{ user.phoneNumber }}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">Two Factor Enabled:</div>
+          <div class="col-md-8">{{ user.twoFactorEnabled }}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">Lockout Enabled:</div>
+          <div class="col-md-8">{{ user.lockoutEnabled }}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">Access Failed Count:</div>
+          <div class="col-md-8">{{ user.accessFailedCount }}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">Lockout End:</div>
+          <div class="col-md-8">{{ user.lockoutEnd }}</div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <img
+          class="center-block img-responsive"
+          [style.width.px]="200"
+          [style.margin.px]="2"
+          [src]="'/assets/images/logo.png'"
+          [title]="user.userName"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <button
+      class="btn btn-outline-secondary"
+      [routerLink]="['/users']"
+      style="width: 80px"
+    >
+      <i class="fa fa-chevron-left"></i> Back
+    </button>
+    &nbsp;
+    <a
+      class="btn btn-primary"
+      routerLinkActive="active"
+      [routerLink]="['/users/edit', user.id]"
+    >
+      Edit
+    </a>
+    &nbsp;
+    <button
+      type="button"
+      class="btn btn-primary btn-secondary"
+      (click)="setPassword(template)"
+    >
+      Set Password
+    </button>
+  </div>
+</div>
+
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Set Password</h4>
+    <button
+      type="button"
+      class="close pull-right"
+      aria-label="Close"
+      (click)="setPasswordModalRef.hide()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div
+      class="row"
+      [hidden]="!passwordValidationErrors || !passwordValidationErrors.length"
+      class="alert alert-danger"
+    >
+      <ul>
+        <li *ngFor="let error of passwordValidationErrors">
+          {{ error.description }}
+        </li>
+      </ul>
+    </div>
+    <div class="row" [hidden]="!postErrorMessage" class="alert alert-danger">
+      {{ postErrorMessage }}
+    </div>
+    <form #form="ngForm" (ngSubmit)="onSubmitSetPassword(form)">
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label">User Name</label>
+        <div class="col-sm-8">
+          {{ user.userName }}
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="password" class="col-sm-4 col-form-label">Password</label>
+        <div class="col-sm-8">
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-control"
+            required
+            [(ngModel)]="setPasswordModel.password"
+            #passwordField="ngModel"
+            [class.is-invalid]="form.submitted && passwordField.invalid"
+          />
+          <span class="invalid-feedback"> Enter a password </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="confirmPassword" class="col-sm-4 col-form-label"
+          >Confirm Password</label
+        >
+        <div class="col-sm-8">
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            class="form-control"
+            [(ngModel)]="setPasswordModel.confirmPassword"
+            #confirmPasswordField="ngModel"
+            [class.is-invalid]="
+              form.submitted &&
+              confirmPasswordField.value != passwordField.value
+            "
+          />
+          <span class="invalid-feedback">
+            Confirm Password does not match
+          </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label"></label>
+        <div class="col-sm-8">
+          <button class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>

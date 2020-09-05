@@ -11,6 +11,7 @@ import { SharedModule } from "./shared/shared.module";
 import { CoreModule } from "./core/core.module";
 import { AuditLogModule } from "./auditlogs/audit-log.module";
 import { FileModule } from "./files/file.module";
+import { UserModule } from "./users/user.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,6 +22,7 @@ import { FileModule } from "./files/file.module";
     AuditLogModule,
     ProductModule,
     FileModule,
+    UserModule,
     AppRoutingModule,
     AuthModule,
     LoggingModule,

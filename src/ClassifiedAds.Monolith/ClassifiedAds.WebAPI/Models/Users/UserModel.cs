@@ -31,5 +31,7 @@ namespace ClassifiedAds.WebAPI.Models.Users
         public DateTimeOffset? LockoutEnd { get; set; }
 
         public int AccessFailedCount { get; set; }
+
+        public string Password { get; set; }
     }
 }

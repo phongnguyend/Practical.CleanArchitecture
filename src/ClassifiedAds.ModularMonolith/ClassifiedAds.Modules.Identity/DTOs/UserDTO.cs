@@ -31,5 +31,7 @@ namespace ClassifiedAds.Modules.Identity.DTOs.Users
         public DateTimeOffset? LockoutEnd { get; set; }
 
         public int AccessFailedCount { get; set; }
+
+        public string Password { get; set; }
     }
 }

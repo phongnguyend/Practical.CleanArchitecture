@@ -102,6 +102,25 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
+        [HttpPut("{id}/password")]
+        [Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> SetPassword(Guid id, [FromBody] UserModel model)
+        {
+            User user = _dispatcher.Dispatch(new GetUserQuery { Id = id });
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var rs = await _userManager.ResetPasswordAsync(user, token, model.Password);
+
+            if (rs.Succeeded)
+            {
+                return Ok();
+            }
+
+            return BadRequest(rs.Errors);
+        }
+
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
