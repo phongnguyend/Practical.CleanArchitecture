@@ -1,5 +1,4 @@
-﻿using ClassifiedAds.Modules.Storage.Contracts;
-using ClassifiedAds.Modules.Storage.Contracts.DTOs;
+﻿using ClassifiedAds.Modules.Storage.DTOs;
 using System.IO;
 
 namespace ClassifiedAds.Modules.Storage.Storages.Local

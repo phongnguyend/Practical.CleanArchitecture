@@ -21,7 +21,7 @@
     <ProjectReference Include="..\ClassifiedAds.Infrastructure\ClassifiedAds.Infrastructure.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Modules.Identity\ClassifiedAds.Modules.Identity.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Modules.Notification\ClassifiedAds.Modules.Notification.csproj" />
-    <ProjectReference Include="..\ClassifiedAds.Modules.TokenProvider\ClassifiedAds.Modules.TokenProvider.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.Modules.Auth\ClassifiedAds.Modules.Auth.csproj" />
   </ItemGroup>
 
   <ItemGroup>

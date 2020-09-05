@@ -27,7 +27,6 @@
     <ProjectReference Include="..\ClassifiedAds.Infrastructure\ClassifiedAds.Infrastructure.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Modules.AuditLog.Contracts\ClassifiedAds.Modules.AuditLog.Contracts.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Modules.Identity.Contracts\ClassifiedAds.Modules.Identity.Contracts.csproj" />
-    <ProjectReference Include="..\ClassifiedAds.Modules.Storage.Contracts\ClassifiedAds.Modules.Storage.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

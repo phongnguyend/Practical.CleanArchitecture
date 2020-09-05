@@ -1,8 +1,8 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
 using ClassifiedAds.Modules.AuditLog.Contracts.Queries;
-using ClassifiedAds.Modules.Storage.Contracts;
 using ClassifiedAds.Modules.Storage.Entities;
+using ClassifiedAds.Modules.Storage.Storages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
