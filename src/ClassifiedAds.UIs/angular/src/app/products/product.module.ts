@@ -2,9 +2,9 @@ import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { ModalModule } from "ngx-bootstrap";
 
-import { ProductListComponent } from "./product-list.component";
-import { ProductDetailComponent } from "./product-detail.component";
-import { ProductDetailGuard } from "./product-detail.guard";
+import { ListProductsComponent } from "./list-products/list-products.component";
+import { ProductDetailComponent } from "./view-product-details/product-detail.component";
+import { ProductDetailGuard } from "./view-product-details/product-detail.guard";
 import { SharedModule } from "../shared/shared.module";
 import { AddProductComponent } from "./add-product/add-product.component";
 import { DeleteProductComponent } from "./delete-product/delete-product.component";
@@ -15,32 +15,32 @@ import { EditProductGuard } from "./edit-product/edit-product.guard";
 @NgModule({
   imports: [
     RouterModule.forChild([
-      { path: "products", component: ProductListComponent },
+      { path: "products", component: ListProductsComponent },
       {
         path: "products/add",
         component: AddProductComponent,
-        canDeactivate: [AddProductGuard]
+        canDeactivate: [AddProductGuard],
       },
       {
         path: "products/edit/:id",
         component: EditProductComponent,
-        canDeactivate: [EditProductGuard]
+        canDeactivate: [EditProductGuard],
       },
       {
         path: "products/:id",
         component: ProductDetailComponent,
-        canActivate: [ProductDetailGuard]
-      }
+        canActivate: [ProductDetailGuard],
+      },
     ]),
     ModalModule.forRoot(),
-    SharedModule
+    SharedModule,
   ],
   declarations: [
-    ProductListComponent,
+    ListProductsComponent,
     ProductDetailComponent,
     AddProductComponent,
     DeleteProductComponent,
-    EditProductComponent
-  ]
+    EditProductComponent,
+  ],
 })
 export class ProductModule {}

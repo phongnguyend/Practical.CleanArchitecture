@@ -1,16 +1,16 @@
 import { Component, OnInit, TemplateRef } from "@angular/core";
 
-import { IProduct } from "./product";
-import { ProductService } from "./product.service";
+import { IProduct } from "../product";
+import { ProductService } from "../product.service";
 import { Title } from "@angular/platform-browser";
-import { IAuditLogEntry } from "../auditlogs/audit-log";
+import { IAuditLogEntry } from "../../auditlogs/audit-log";
 import { BsModalService } from "ngx-bootstrap";
 
 @Component({
-  templateUrl: "./product-list.component.html",
-  styleUrls: ["./product-list.component.css"],
+  templateUrl: "./list-products.component.html",
+  styleUrls: ["./list-products.component.css"],
 })
-export class ProductListComponent implements OnInit {
+export class ListProductsComponent implements OnInit {
   pageTitle = "Product List";
   imageWidth = 50;
   imageMargin = 2;

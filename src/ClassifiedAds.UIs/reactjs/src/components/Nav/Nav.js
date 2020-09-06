@@ -22,12 +22,12 @@ class Nav extends Component {
           </li>
           <li>
             <NavLink className="nav-link" to="/files">
-              File
+              Files
             </NavLink>
           </li>
           <li>
             <NavLink className="nav-link" to="/products">
-              Product
+              Products
             </NavLink>
           </li>
 

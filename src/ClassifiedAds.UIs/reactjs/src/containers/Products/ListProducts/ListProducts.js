@@ -3,11 +3,11 @@ import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { Modal, Button } from "react-bootstrap";
 
-import logo from "../../logo.svg";
-import * as actions from "./actions";
-import Star from "../../components/Star/Star";
+import logo from "../../../logo.svg";
+import * as actions from "../actions";
+import Star from "../../../components/Star/Star";
 
-class Products extends Component {
+class ListProducts extends Component {
   state = {
     pageTitle: "Product List",
     showImage: false,
@@ -263,4 +263,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Products);
+export default connect(mapStateToProps, mapDispatchToProps)(ListProducts);

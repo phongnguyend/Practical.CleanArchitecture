@@ -5,7 +5,7 @@ import "./App.css";
 import Nav from "./components/Nav/Nav";
 import Home from "./containers/Home/Home";
 import OidcLoginRedirect from "./containers/Auth/OidcLoginRedirect";
-import Products from "./containers/Products/Products";
+import ListProducts from "./containers/Products/ListProducts/ListProducts";
 import AddProduct from "./containers/Products/AddProduct/AddProduct";
 import ViewProduct from "./containers/Products/ViewProduct/ViewProduct";
 import AuditLogs from "./containers/AuditLogs/AuditLogs";
@@ -26,7 +26,7 @@ function App() {
         <Route path="/products/add" component={AddProduct} />
         <Route path="/products/edit/:id" component={AddProduct} />
         <Route path="/products/:id" component={ViewProduct} />
-        <Route path="/products" component={Products} />
+        <Route path="/products" component={ListProducts} />
         <Route path="/auditlogs" component={AuditLogs} />
         <Redirect to="/home" />
       </Switch>

@@ -1,10 +1,10 @@
 import { Component, OnInit, TemplateRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
-import { IProduct } from "./product";
-import { ProductService } from "./product.service";
+import { IProduct } from "../product";
+import { ProductService } from "../product.service";
 import { BsModalService } from "ngx-bootstrap";
-import { IAuditLogEntry } from "../auditlogs/audit-log";
+import { IAuditLogEntry } from "../../auditlogs/audit-log";
 
 @Component({
   templateUrl: "./product-detail.component.html",

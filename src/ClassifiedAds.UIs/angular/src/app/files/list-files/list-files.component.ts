@@ -5,11 +5,11 @@ import { BsModalService, BsModalRef } from "ngx-bootstrap";
 import { IAuditLogEntry } from "src/app/auditlogs/audit-log";
 
 @Component({
-  selector: "app-list-file",
-  templateUrl: "./list-file.component.html",
-  styleUrls: ["./list-file.component.css"],
+  selector: "app-list-files",
+  templateUrl: "./list-files.component.html",
+  styleUrls: ["./list-files.component.css"],
 })
-export class ListFileComponent implements OnInit {
+export class ListFilesComponent implements OnInit {
   files: IFile[] = [];
   selectedFile: IFile = null;
   modalRef: BsModalRef;

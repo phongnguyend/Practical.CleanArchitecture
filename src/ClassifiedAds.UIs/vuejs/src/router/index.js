@@ -18,7 +18,7 @@ const routes = [
   },
   {
     path: "/files",
-    name: "File",
+    name: "Files",
     component: () => import("../views/files/List.vue")
   },
   {
@@ -33,7 +33,7 @@ const routes = [
   },
   {
     path: "/products",
-    name: "Product",
+    name: "Products",
     component: () => import("../views/products/List.vue")
   },
   {
