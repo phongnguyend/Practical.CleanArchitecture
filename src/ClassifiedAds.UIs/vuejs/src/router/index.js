@@ -9,59 +9,79 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home
+    component: Home,
   },
   {
     path: "/oidc-login-redirect",
     name: "OidcLoginRedirect",
-    component: OidcLoginRedirect
+    component: OidcLoginRedirect,
   },
   {
     path: "/files",
     name: "Files",
-    component: () => import("../views/files/List.vue")
+    component: () => import("../views/files/List.vue"),
   },
   {
     path: "/files/upload",
     name: "UploadFile",
-    component: () => import("../views/files/Upload.vue")
+    component: () => import("../views/files/Upload.vue"),
   },
   {
     path: "/files/edit/:id",
     name: "EditFile",
-    component: () => import("../views/files/Edit.vue")
+    component: () => import("../views/files/Edit.vue"),
   },
   {
     path: "/products",
     name: "Products",
-    component: () => import("../views/products/List.vue")
+    component: () => import("../views/products/List.vue"),
   },
   {
     path: "/products/add",
     name: "AddProduct",
-    component: () => import("../views/products/Edit.vue")
+    component: () => import("../views/products/Edit.vue"),
   },
   {
     path: "/products/edit/:id",
     name: "EditProduct",
-    component: () => import("../views/products/Edit.vue")
+    component: () => import("../views/products/Edit.vue"),
   },
   {
     path: "/products/:id",
     name: "ProductDetail",
-    component: () => import("../views/products/Detail.vue")
+    component: () => import("../views/products/Detail.vue"),
+  },
+  {
+    path: "/users",
+    name: "Users",
+    component: () => import("../views/users/List.vue"),
+  },
+  {
+    path: "/users/add",
+    name: "AddUser",
+    component: () => import("../views/users/Edit.vue"),
+  },
+  {
+    path: "/users/edit/:id",
+    name: "EditUser",
+    component: () => import("../views/users/Edit.vue"),
+  },
+  {
+    path: "/users/:id",
+    name: "UserDetail",
+    component: () => import("../views/users/Detail.vue"),
   },
   {
     path: "/auditlogs",
     name: "AuditLogs",
-    component: () => import("../views/auditlogs/List.vue")
-  }
+    component: () => import("../views/auditlogs/List.vue"),
+  },
 ];
 
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes
+  routes,
 });
 
 export default router;

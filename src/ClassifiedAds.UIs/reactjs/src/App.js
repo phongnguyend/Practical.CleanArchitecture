@@ -12,6 +12,9 @@ import AuditLogs from "./containers/AuditLogs/AuditLogs";
 import ListFiles from "./containers/Files/ListFiles/ListFiles";
 import UploadFile from "./containers/Files/UploadFile/UploadFile";
 import EditFile from "./containers/Files/EditFile/EditFile";
+import ListUsers from "./containers/Users/ListUsers/ListUsers";
+import AddUser from "./containers/Users/AddUser/AddUser";
+import ViewUser from "./containers/Users/ViewUser/ViewUser";
 
 function App() {
   return (
@@ -27,6 +30,10 @@ function App() {
         <Route path="/products/edit/:id" component={AddProduct} />
         <Route path="/products/:id" component={ViewProduct} />
         <Route path="/products" component={ListProducts} />
+        <Route path="/users/add" component={AddUser} />
+        <Route path="/users/edit/:id" component={AddUser} />
+        <Route path="/users/:id" component={ViewUser} />
+        <Route path="/users" component={ListUsers} />
         <Route path="/auditlogs" component={AuditLogs} />
         <Redirect to="/home" />
       </Switch>

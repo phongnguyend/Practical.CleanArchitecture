@@ -19,12 +19,12 @@
           <div class="col-md-8">{{ user.emailConfirmed }}</div>
         </div>
         <div class="row">
-          <div class="col-md-4">Phone Number Confirmed:</div>
-          <div class="col-md-8">{{ user.phoneNumberConfirmed }}</div>
-        </div>
-        <div class="row">
           <div class="col-md-4">Phone Number:</div>
           <div class="col-md-8">{{ user.phoneNumber }}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">Phone Number Confirmed:</div>
+          <div class="col-md-8">{{ user.phoneNumberConfirmed }}</div>
         </div>
         <div class="row">
           <div class="col-md-4">Two Factor Enabled:</div>
@@ -75,7 +75,7 @@
     &nbsp;
     <button
       type="button"
-      class="btn btn-primary btn-secondary"
+      class="btn btn-secondary"
       (click)="setPassword(template)"
     >
       Set Password

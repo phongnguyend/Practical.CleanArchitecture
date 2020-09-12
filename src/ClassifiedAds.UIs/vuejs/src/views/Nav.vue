@@ -12,6 +12,9 @@
         <router-link class="nav-link" to="/products" active-class="active">Products</router-link>
       </li>
       <li>
+        <router-link class="nav-link" to="/users" active-class="active">Users</router-link>
+      </li>
+      <li>
         <router-link class="nav-link" to="/auditlogs" active-class="active">Audit Logs</router-link>
       </li>
       <li v-if="!isAuthenticated">

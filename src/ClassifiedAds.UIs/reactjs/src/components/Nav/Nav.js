@@ -30,7 +30,11 @@ class Nav extends Component {
               Products
             </NavLink>
           </li>
-
+          <li>
+            <NavLink className="nav-link" to="/users">
+              Users
+            </NavLink>
+          </li>
           <li>
             <NavLink className="nav-link" to="/auditlogs">
               Audit Logs

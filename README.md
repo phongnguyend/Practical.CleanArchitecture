@@ -618,6 +618,19 @@
     npm install
     ng serve
     ```
+  + Update [environment.ts](/src/ClassifiedAds.UIs/angular/src/environments/environment.ts) & [environment.prod.ts](/src/ClassifiedAds.UIs/angular/src/environments/environment.prod.ts) 
+    ```ts
+    export const environment = {
+      OpenIdConnect: {
+        Authority: "https://localhost:44367",
+        ClientId: "ClassifiedAds.Angular"
+      },
+      ResourceServer: {
+        Endpoint: "https://localhost:44312/api/"
+      },
+      CurrentUrl: "http://localhost:4200/"
+    };
+    ```
   + Go to http://localhost:4200/
 
     ![alt text](/docs/imgs/angular-home-page.png)
@@ -627,6 +640,20 @@
     ```
     npm install
     npm run start
+    ```
+  + Update [environment.dev.js](/src/ClassifiedAds.UIs/reactjs/src/environments/environment.dev.js) & [environment.js](/src/ClassifiedAds.UIs/reactjs/src/environments/environment.js) 
+    ```js
+    const environment = {
+        OpenIdConnect: {
+            Authority: "https://localhost:44367",
+            ClientId: "ClassifiedAds.React"
+        },
+        ResourceServer: {
+            Endpoint: "https://localhost:44312/api/"
+        },
+        CurrentUrl: "http://localhost:3000/"
+    };
+    export default environment;
     ```
   + Go to http://localhost:3000/
   
@@ -638,7 +665,21 @@
     npm install
     npm run serve
     ```
-  + Go to http://localhost:8080/
+  + Update [environment.dev.js](/src/ClassifiedAds.UIs/vuejs/environments/environment.dev.js) & [environment.dev.js](/src/ClassifiedAds.UIs/vuejs/environments/environment.js) 
+    ```js
+    const environment = {
+        OpenIdConnect: {
+            Authority: "https://localhost:44367",
+            ClientId: "ClassifiedAds.Vue"
+        },
+        ResourceServer: {
+            Endpoint: "https://localhost:44312/api/"
+        },
+        CurrentUrl: "http://localhost:8080/"
+    };
+    export default environment;
+    ```
++ Go to http://localhost:8080/
   
     ![alt text](/docs/imgs/vue-home-page.png)
 

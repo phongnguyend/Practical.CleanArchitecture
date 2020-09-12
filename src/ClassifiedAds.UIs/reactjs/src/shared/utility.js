@@ -1,7 +1,7 @@
 export const updateObject = (oldObject, updatedProperties) => {
   return {
     ...oldObject,
-    ...updatedProperties
+    ...updatedProperties,
   };
 };
 
@@ -12,7 +12,7 @@ export const checkValidity = (value, rules) => {
   }
 
   if (rules.required) {
-    rs.isValid = value.trim() !== "";
+    rs.isValid = (value || "").trim() !== "";
     if (!rs.isValid) {
       rs.required = true;
       return rs;
