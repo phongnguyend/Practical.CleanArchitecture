@@ -720,6 +720,50 @@
 - Open Blazor Home Page at: http://host.docker.internal:9008
 
   ![alt text](/docs/imgs/blazor-home-page.png)
+
+## How to Run Integration & End to End Tests:
+- Update [ClassifiedAds.IntegrationTests/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.IntegrationTests/appsettings.json)
+  ```js
+  {
+    "OpenIdConnect": {
+      "Authority": "https://localhost:44367",
+      "ClientId": "ClassifiedAds.WebMVC",
+      "ClientSecret": "secret",
+      "RequireHttpsMetadata": "true"
+    },
+    "WebAPI": {
+      "Endpoint": "https://localhost:44312"
+    },
+    "Ocelot": {
+      "Endpoint": "https://localhost:44340"
+    },
+    "GraphQL": {
+      "Endpoint": "https://localhost:44392/graphql"
+    },
+    "Login": {
+      "UserName": "phong@gmail.com",
+      "Password": "v*7Un8b4rcN@<-RN",
+      "Scope": "ClassifiedAds.WebAPI"
+    }
+  }
+  ```
+- Download [Chrome Driver](https://chromedriver.chromium.org/downloads)
+
+  ![alt text](/docs/imgs/chrome_driver_path.png)
+
+- Update [ClassifiedAds.EndToEndTests/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.EndToEndTests/appsettings.json)
+  ```js
+  {
+    "ChromeDriverPath": "D:\\Downloads\\chromedriver_win32\\72",
+    "Login": {
+      "Url": "https://localhost:44364/Home/Login",
+      "UserName": "phong@gmail.com",
+      "Password": "v*7Un8b4rcN@<-RN"
+    }
+  }
+  ```
+  
+  ![alt text](/docs/imgs/run_e2e_tests.gif)
   
 ## Application URLs:
 | Project  | Launch URL | Docker Container URL| Docker Container URL|
