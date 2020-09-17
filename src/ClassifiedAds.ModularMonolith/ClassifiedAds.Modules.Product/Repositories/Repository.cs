@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Domain.Entities;
+﻿using ClassifiedAds.CrossCuttingConcerns.OS;
+using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace ClassifiedAds.Modules.Product.Repositories
         where T : AggregateRoot<TKey>
     {
         private readonly ProductDbContext _dbContext;
+        private readonly IDateTimeProvider _dateTimeProvider;
+
         protected DbSet<T> DbSet => _dbContext.Set<T>();
 
         public IUnitOfWork UnitOfWork
@@ -19,16 +22,22 @@ namespace ClassifiedAds.Modules.Product.Repositories
             }
         }
 
-        public Repository(ProductDbContext dbContext)
+        public Repository(ProductDbContext dbContext, IDateTimeProvider dateTimeProvider)
         {
             _dbContext = dbContext;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public void AddOrUpdate(T entity)
         {
             if (entity.Id.Equals(default(TKey)))
             {
+                entity.CreatedDateTime = _dateTimeProvider.OffsetNow;
                 DbSet.Add(entity);
+            }
+            else
+            {
+                entity.UpdatedDateTime = _dateTimeProvider.OffsetNow;
             }
         }
 

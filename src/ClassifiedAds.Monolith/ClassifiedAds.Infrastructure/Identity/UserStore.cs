@@ -223,6 +223,7 @@ namespace ClassifiedAds.Infrastructure.Identity
 
         public Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
         {
+            _userRepository.AddOrUpdate(user);
             _unitOfWork.SaveChanges();
             return Task.FromResult(IdentityResult.Success);
         }

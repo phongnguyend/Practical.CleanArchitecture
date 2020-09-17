@@ -8,6 +8,7 @@
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
@@ -21,6 +22,7 @@
     <ProjectReference Include="..\ClassifiedAds.CrossCuttingConcerns\ClassifiedAds.CrossCuttingConcerns.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Domain\ClassifiedAds.Domain.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Modules.Identity.Contracts\ClassifiedAds.Modules.Identity.Contracts.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.Modules.Notification.Contracts\ClassifiedAds.Modules.Notification.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

@@ -21,6 +21,8 @@ class ViewUser extends Component {
       lockoutEnd: null,
     },
     showSetPasswordModal: false,
+    showSendPasswordResetEmailModal: false,
+    showSendEmailAddressConfirmationEmailModal: false,
     setPasswordModel: {
       id: "",
       password: "",
@@ -72,9 +74,33 @@ class ViewUser extends Component {
     this.props.setPasswordInit();
   };
 
-  setPasswordCanceled = () => {
+  cancelSetPassword = () => {
     this.setState({ showSetPasswordModal: false });
     this.props.setPasswordInit();
+  };
+
+  showSendPasswordResetEmailModal = () => {
+    this.setState({
+      showSendPasswordResetEmailModal: true,
+    });
+    this.props.sendPasswordResetEmailInit();
+  };
+
+  cancelSendPasswordResetEmail = () => {
+    this.setState({ showSendPasswordResetEmailModal: false });
+    this.props.sendPasswordResetEmailInit();
+  };
+
+  showSendEmailAddressConfirmationEmailModal = () => {
+    this.setState({
+      showSendEmailAddressConfirmationEmailModal: true,
+    });
+    this.props.sendEmailAddressConfirmationEmailInit();
+  };
+
+  cancelSendEmailAddressConfirmationEmail = () => {
+    this.setState({ showSendEmailAddressConfirmationEmailModal: false });
+    this.props.sendEmailAddressConfirmationEmailInit();
   };
 
   fieldChanged = (event) => {
@@ -113,7 +139,7 @@ class ViewUser extends Component {
     return validationRs.isValid;
   };
 
-  onSubmit = (event) => {
+  confirmSetPassword = (event) => {
     event.preventDefault();
     this.setState({ submitted: true });
 
@@ -146,7 +172,7 @@ class ViewUser extends Component {
     const setPasswordModal = (
       <Modal
         show={this.state.showSetPasswordModal && !this.props.savedPassword}
-        onHide={this.setPasswordCanceled}
+        onHide={this.cancelSetPassword}
       >
         <Modal.Header closeButton>
           <Modal.Title>Set Password</Modal.Title>
@@ -162,7 +188,7 @@ class ViewUser extends Component {
               {this.props.postError?.response?.status}
             </div>
           ) : null}
-          <form onSubmit={this.onSubmit}>
+          <form onSubmit={this.confirmSetPassword}>
             <div className="form-group row">
               <label htmlFor="userName" className="col-sm-4 col-form-label">
                 User Name
@@ -234,6 +260,74 @@ class ViewUser extends Component {
             </div>
           </form>
         </Modal.Body>
+      </Modal>
+    );
+
+    const sendPasswordResetEmailModal = (
+      <Modal
+        show={
+          this.state.showSendPasswordResetEmailModal &&
+          !this.props.sentPasswordResetEmail
+        }
+        onHide={this.cancelSendPasswordResetEmail}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Send Password Reset Email</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to send reset password email
+          <strong> {this.props.user?.userName}</strong>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={this.cancelSendPasswordResetEmail}
+          >
+            No
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() =>
+              this.props.sendPasswordResetEmail(this.props.user.id)
+            }
+          >
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+
+    const sendEmailAddressConfirmationEmailModal = (
+      <Modal
+        show={
+          this.state.showSendEmailAddressConfirmationEmailModal &&
+          !this.props.sentEmailAddressConfirmationEmail
+        }
+        onHide={this.cancelSendEmailAddressConfirmationEmail}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Send Email Address Confirmation Email</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to send email address confirmation email
+          <strong> {this.props.user?.userName}</strong>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={this.cancelSendEmailAddressConfirmationEmail}
+          >
+            No
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() =>
+              this.props.sendEmailAddressConfirmationEmail(this.props.user.id)
+            }
+          >
+            Yes
+          </Button>
+        </Modal.Footer>
       </Modal>
     );
 
@@ -328,9 +422,27 @@ class ViewUser extends Component {
           >
             Set Password
           </button>
+          &nbsp;
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => this.showSendPasswordResetEmailModal()}
+          >
+            Send Password Reset Email
+          </button>
+          &nbsp;
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => this.showSendEmailAddressConfirmationEmailModal()}
+          >
+            Send Email Address Confirmation Email
+          </button>
         </div>
 
         {setPasswordModal}
+        {sendPasswordResetEmailModal}
+        {sendEmailAddressConfirmationEmailModal}
       </div>
     ) : null;
     return page;
@@ -342,6 +454,9 @@ const mapStateToProps = (state) => {
     user: state.user.user,
     postError: state.user.error,
     savedPassword: state.user.savedPassword,
+    sentPasswordResetEmail: state.user.sentPasswordResetEmail,
+    sentEmailAddressConfirmationEmail:
+      state.user.sentEmailAddressConfirmationEmail,
   };
 };
 
@@ -350,6 +465,14 @@ const mapDispatchToProps = (dispatch) => {
     fetchUser: (id) => dispatch(actions.fetchUser(id)),
     setPasswordInit: () => dispatch(actions.setPasswordInit()),
     setPassword: (password) => dispatch(actions.setPassword(password)),
+    sendPasswordResetEmailInit: () =>
+      dispatch(actions.sendPasswordResetEmailInit()),
+    sendPasswordResetEmail: (id) =>
+      dispatch(actions.sendPasswordResetEmail(id)),
+    sendEmailAddressConfirmationEmailInit: () =>
+      dispatch(actions.sendEmailAddressConfirmationEmailInit()),
+    sendEmailAddressConfirmationEmail: (id) =>
+      dispatch(actions.sendEmailAddressConfirmationEmail(id)),
   };
 };
 

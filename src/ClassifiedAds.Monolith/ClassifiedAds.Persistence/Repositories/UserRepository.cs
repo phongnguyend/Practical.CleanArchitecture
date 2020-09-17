@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Domain.Entities;
+﻿using ClassifiedAds.CrossCuttingConcerns.OS;
+using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,8 +9,8 @@ namespace ClassifiedAds.Persistence.Repositories
 {
     public class UserRepository : Repository<User, Guid>, IUserRepository
     {
-        public UserRepository(AdsDbContext dbContext)
-            : base(dbContext)
+        public UserRepository(AdsDbContext dbContext, IDateTimeProvider dateTimeProvider)
+            : base(dbContext, dateTimeProvider)
         {
         }
 

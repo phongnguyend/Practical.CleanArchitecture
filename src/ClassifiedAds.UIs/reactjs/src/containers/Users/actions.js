@@ -191,3 +191,75 @@ export const setPassword = (password) => {
   };
 };
 /// SET PASSWORD
+
+/// SEND PASSWORD RESET EMAIL
+
+export const sendPasswordResetEmail = (id) => {
+  return {
+    type: actionTypes.SEND_PASSWORD_RESET_EMAIL,
+    id: id,
+  };
+};
+
+export const sendPasswordResetEmailInit = () => {
+  return {
+    type: actionTypes.SEND_PASSWORD_RESET_EMAIL_INIT,
+  };
+};
+
+export const sendPasswordResetEmailStart = () => {
+  return {
+    type: actionTypes.SEND_PASSWORD_RESET_EMAIL_START,
+  };
+};
+
+export const sendPasswordResetEmailSuccess = () => {
+  return {
+    type: actionTypes.SEND_PASSWORD_RESET_EMAIL_SUCCESS,
+  };
+};
+
+export const sendPasswordResetEmailFail = (error) => {
+  return {
+    type: actionTypes.SEND_PASSWORD_RESET_EMAIL_FAIL,
+    error: error,
+  };
+};
+
+/// SEND PASSWORD RESET EMAIL
+
+/// SEND EMAIL ADDRESS CONFIRMATION EMAIL
+
+export const sendEmailAddressConfirmationEmail = (id) => {
+  return {
+    type: actionTypes.SEND_EMAIL_ADDRESS_CONFIRMATION_EMAIL,
+    id: id,
+  };
+};
+
+export const sendEmailAddressConfirmationEmailInit = () => {
+  return {
+    type: actionTypes.SEND_EMAIL_ADDRESS_CONFIRMATION_EMAIL_INIT,
+  };
+};
+
+export const sendEmailAddressConfirmationEmailStart = () => {
+  return {
+    type: actionTypes.SEND_EMAIL_ADDRESS_CONFIRMATION_EMAIL_START,
+  };
+};
+
+export const sendEmailAddressConfirmationEmailSuccess = () => {
+  return {
+    type: actionTypes.SEND_EMAIL_ADDRESS_CONFIRMATION_EMAIL_SUCCESS,
+  };
+};
+
+export const sendEmailAddressConfirmationEmailFail = (error) => {
+  return {
+    type: actionTypes.SEND_EMAIL_ADDRESS_CONFIRMATION_EMAIL_FAIL,
+    error: error,
+  };
+};
+
+/// SEND EMAIL ADDRESS CONFIRMATION EMAIL

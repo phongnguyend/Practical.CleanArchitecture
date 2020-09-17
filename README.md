@@ -195,7 +195,11 @@
 <details>
   <summary><b>Message Broker</b></summary>
   
-  - Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json), [ClassifiedAds.WebAPI/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebAPI/appsettings.json), [ClassifiedAds.BackgroundServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.BackgroundServer/appsettings.json) and jump to **MessageBroker** section.
+  - Open below files and jump to **MessageBroker** section:
+    + [ClassifiedAds.IdentityServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.IdentityServer/appsettings.json)
+    + [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json)
+    + [ClassifiedAds.WebAPI/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebAPI/appsettings.json)
+    + [ClassifiedAds.BackgroundServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.BackgroundServer/appsettings.json)
     ```js
     "MessageBroker": {
       "Provider": "RabbitMQ",
@@ -211,10 +215,18 @@
         "UserName": "guest",
         "Password": "guest",
         "ExchangeName": "amq.direct",
-        "RoutingKey_FileUploaded": "classifiedadds_fileuploaded",
-        "RoutingKey_FileDeleted": "classifiedadds_filedeleted",
-        "QueueName_FileUploaded": "classifiedadds_fileuploaded",
-        "QueueName_FileDeleted": "classifiedadds_filedeleted"
+        "RoutingKeys": {
+          "FileUploadedEvent": "classifiedadds_fileuploaded",
+          "FileDeletedEvent": "classifiedadds_filedeleted",
+          "EmailMessageCreatedEvent": "classifiedadds_emailcreated",
+          "SmsMessageCreatedEvent": "classifiedadds_smscreated"
+        },
+        "QueueNames": {
+          "FileUploadedEvent": "classifiedadds_fileuploaded",
+          "FileDeletedEvent": "classifiedadds_filedeleted",
+          "EmailMessageCreatedEvent": "classifiedadds_emailcreated",
+          "SmsMessageCreatedEvent": "classifiedadds_smscreated"
+        }
       }
     }
     ```
@@ -225,8 +237,12 @@
       "Provider": "Kafka",
       "Kafka": {
         "BootstrapServers": "localhost:9092",
-        "Topic_FileUploaded": "classifiedadds_fileuploaded",
-        "Topic_FileDeleted": "classifiedadds_filedeleted"
+        "Topics": {
+          "FileUploadedEvent": "classifiedadds_fileuploaded",
+          "FileDeletedEvent": "classifiedadds_filedeleted",
+          "EmailMessageCreatedEvent": "classifiedadds_emailcreated",
+          "SmsMessageCreatedEvent": "classifiedadds_smscreated"
+        },
       }
     }
     ```
@@ -237,8 +253,12 @@
       "Provider": "AzureQueue",
       "AzureQueue": {
         "ConnectionString": "xxx",
-        "QueueName_FileUploaded": "classifiedadds-fileuploaded",
-        "QueueName_FileDeleted": "classifiedadds-filedeleted"
+        "QueueNames": {
+          "FileUploadedEvent": "classifiedadds-fileuploaded",
+          "FileDeletedEvent": "classifiedadds-filedeleted",
+          "EmailMessageCreatedEvent": "classifiedadds-emailcreated",
+          "SmsMessageCreatedEvent": "classifiedadds-smscreated"
+        }
       }
     }
     ```
@@ -249,8 +269,12 @@
       "Provider": "AzureServiceBus",
       "AzureServiceBus": {
         "ConnectionString": "xxx",
-        "QueueName_FileUploaded": "classifiedadds_fileuploaded",
-        "QueueName_FileDeleted": "classifiedadds_filedeleted"
+        "QueueNames": {
+          "FileUploadedEvent": "classifiedadds_fileuploaded",
+          "FileDeletedEvent": "classifiedadds_filedeleted",
+          "EmailMessageCreatedEvent": "classifiedadds_emailcreated",
+          "SmsMessageCreatedEvent": "classifiedadds_smscreated"
+        }
       }
     }
     ```
@@ -262,8 +286,12 @@
       "AzureEventGrid": {
         "DomainEndpoint": "https://xxx.xxx-1.eventgrid.azure.net/api/events",
         "DomainKey": "xxxx",
-        "Topic_FileUploaded": "classifiedadds_fileuploaded",
-        "Topic_FileDeleted": "classifiedadds_filedeleted"
+        "Topics": {
+          "FileUploadedEvent": "classifiedadds_fileuploaded",
+          "FileDeletedEvent": "classifiedadds_filedeleted"
+          "EmailMessageCreatedEvent": "classifiedadds_emailcreated",
+          "SmsMessageCreatedEvent": "classifiedadds_smscreated"
+        }
       }
     }
     ```
@@ -274,11 +302,19 @@
       "Provider": "AzureEventHub",
       "AzureEventHub": {
         "ConnectionString": "Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=xxx;SharedAccessKey=xxx",
-        "Hub_FileUploaded": "classifiedadds_fileuploaded",
-        "Hub_FileDeleted": "classifiedadds_filedeleted",
+        "Hubs": {
+          "FileUploadedEvent": "classifiedadds_fileuploaded",
+          "FileDeletedEvent": "classifiedadds_filedeleted",
+          "EmailMessageCreatedEvent": "classifiedadds_emailcreated",
+          "SmsMessageCreatedEvent": "classifiedadds_smscreated"
+        },
         "StorageConnectionString": "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net",
-        "StorageContainerName_FileUploaded": "eventhub-fileuploaded",
-        "StorageContainerName_FileDeleted": "eventhub-filedeleted"
+        "StorageContainerNames": {
+          "FileUploadedEvent": "eventhub-fileuploaded",
+          "FileDeletedEvent": "eventhub-filedeleted",
+          "EmailMessageCreatedEvent": "eventhub-emailcreated",
+          "SmsMessageCreatedEvent": "eventhub-smscreated"
+        }
       }
     }
     ```
@@ -587,6 +623,60 @@
     ```
 </details>
 
+<details>
+  <summary><b>Sending Email</b></summary>
+  
+  - Open [ClassifiedAds.BackgroundServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.BackgroundServer/appsettings.json) and jump to **Notification -> Email** section:
+    ```js
+    "Notification": {
+      "Email": {
+        "Provider": "Fake",
+      }
+    }
+    ```
+  - Use SmtpClient:
+    ```js
+    "Notification": {
+      "Email": {
+        "Provider": "SmtpClient",
+        "SmtpClient": {
+          "Host": "localhost",
+          "Port": "",
+          "UserName": "",
+          "Password": "",
+          "EnableSsl": ""
+        }
+      }
+    }
+    ```
+</details>
+
+<details>
+  <summary><b>Sending SMS</b></summary>
+  
+  - Open [ClassifiedAds.BackgroundServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.BackgroundServer/appsettings.json) and jump to **Notification -> Sms** section:
+    ```js
+    "Notification": {
+      "Sms": {
+        "Provider": "Fake",
+      }
+    }
+    ```
+  - Use Twilio
+    ```js
+    "Notification": {
+      "Sms": {
+        "Provider": "Twilio",
+        "Twilio": {
+          "AccountSId": "",
+          "AuthToken": "",
+          "FromNumber": ""
+        }
+      }
+    }
+    ```
+</details>
+
 ## Set Startup Projects
 ![alt text](/docs/imgs/startup-projects.png)
 
@@ -766,16 +856,11 @@
   ![alt text](/docs/imgs/run_e2e_tests.gif)
   
 ## Application URLs:
-| Project  | Launch URL | Docker Container URL| Docker Container URL|
-| -------- | ---------- | ------------------- | ------------------- |
-| BackgroundServer | https://localhost:44318 | http://localhost:9004 | http://host.docker.internal:9004 |
-| Blazor | https://localhost:44331 | http://localhost:9008 | http://host.docker.internal:9008 |
-| IdentityServer | https://localhost:44367 | http://localhost:9000 | http://host.docker.internal:9000 |
-| NotificationServer | https://localhost:44390 | http://localhost:9001 | http://host.docker.internal:9001 |
-| WebAPI | https://localhost:44312 | http://localhost:9002 | http://host.docker.internal:9002 |
-| WebMVC | https://localhost:44364 | http://localhost:9003 | http://host.docker.internal:9003 |
-| GraphQL | [https://localhost:44392](https://localhost:44392/ui/playground) | [http://localhost:9006](http://localhost:9006/ui/playground) | [http://host.docker.internal:9006](http://host.docker.internal:9006/ui/playground) |
-| Ocelot | [https://localhost:44340](https://localhost:44340/ocelot/products) | [http://localhost:9007](http://localhost:9007/ocelot/products) | [http://host.docker.internal:9007](http://host.docker.internal:9007/ocelot/products) |
-| Angular | http://localhost:4200/ | | |
-| React | http://localhost:3000/ | | |
-| Vue | http://localhost:8080/ | | |
+
+https://github.com/phongnguyend/Practical.CleanArchitecture/wiki/Application-URLs
+
+## Roadmap:
+
+https://github.com/phongnguyend/Practical.CleanArchitecture/wiki/Roadmap
+
+##

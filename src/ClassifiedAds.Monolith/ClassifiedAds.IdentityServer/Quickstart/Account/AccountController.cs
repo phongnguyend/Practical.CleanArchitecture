@@ -411,8 +411,8 @@ namespace IdentityServer4.Quickstart.UI
 
             _dispatcher.Dispatch(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
             {
-                From = string.Empty,
-                To = user.Email,
+                From = "phong@gmail.com",
+                Tos = user.Email,
                 Subject = "Confirmation Email",
                 Body = string.Format("Confirmation Email: {0}", confirmationEmail),
             }
@@ -462,8 +462,8 @@ namespace IdentityServer4.Quickstart.UI
 
                     _dispatcher.Dispatch(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
                     {
-                        From = string.Empty,
-                        To = user.Email,
+                        From = "phong@gmail.com",
+                        Tos = user.Email,
                         Subject = "Forgot Password",
                         Body = string.Format("Reset Url: {0}", resetUrl),
                     }));

@@ -1,6 +1,10 @@
-﻿using ClassifiedAds.Infrastructure.Logging;
+﻿using ClassifiedAds.Infrastructure.Caching;
+using ClassifiedAds.Infrastructure.Interceptors;
+using ClassifiedAds.Infrastructure.Logging;
+using ClassifiedAds.Infrastructure.MessageBrokers;
+using ClassifiedAds.Infrastructure.Profiling;
 using ClassifiedAds.Modules.Storage;
-using ClassifiedAds.Modules.Storage.ConfigurationOptions.MessageBroker;
+using System.Collections.Generic;
 
 namespace ClassifiedAds.WebAPI.ConfigurationOptions
 {
@@ -8,7 +12,11 @@ namespace ClassifiedAds.WebAPI.ConfigurationOptions
     {
         public ConnectionStrings ConnectionStrings { get; set; }
 
-        public LoggerOptions LoggerOptions { get; set; }
+        public LoggingOptions Logging { get; set; }
+
+        public CachingOptions Caching { get; set; }
+
+        public MonitoringOptions Monitoring { get; set; }
 
         public IdentityServerAuthentication IdentityServerAuthentication { get; set; }
 
@@ -19,5 +27,9 @@ namespace ClassifiedAds.WebAPI.ConfigurationOptions
         public StorageOptions Storage { get; set; }
 
         public MessageBrokerOptions MessageBroker { get; set; }
+
+        public Dictionary<string, string> SecurityHeaders { get; set; }
+
+        public InterceptorsOptions Interceptors { get; set; }
     }
 }

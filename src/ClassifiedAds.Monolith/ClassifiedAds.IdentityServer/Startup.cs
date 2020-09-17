@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using ClassifiedAds.Application.EmailMessages.DTOs;
+using ClassifiedAds.Application.SmsMessages.DTOs;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.IdentityServer.ConfigurationOptions;
+using ClassifiedAds.Persistence;
 using IdentityServer4;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +38,8 @@ namespace ClassifiedAds.IdentityServer
 
             services.AddCors();
 
+            services.AddDateTimeProvider();
+
             services.AddPersistence(AppSettings.ConnectionStrings.ClassifiedAds)
                     .AddDomainServices()
                     .AddApplicationServices((Type serviceType, Type implementationType, ServiceLifetime serviceLifetime) =>
@@ -48,6 +54,10 @@ namespace ClassifiedAds.IdentityServer
                     .AddSigningCredential(new X509Certificate2(AppSettings.Certificates.Default.Path, AppSettings.Certificates.Default.Password))
                     .AddAspNetIdentity<User>()
                     .AddIdServerPersistence(AppSettings.ConnectionStrings.ClassifiedAds);
+
+            services.AddDataProtection()
+                .PersistKeysToDbContext<AdsDbContext>()
+                .SetApplicationName("ClassifiedAds");
 
             services.AddCaches(AppSettings.Caching)
                     .AddClassifiedAdsProfiler(AppSettings.Monitoring);
@@ -118,6 +128,9 @@ namespace ClassifiedAds.IdentityServer
                     options.AppSecret = AppSettings.ExternalLogin.Facebook.AppSecret;
                 });
             }
+
+            services.AddMessageBusSender<EmailMessageCreatedEvent>(AppSettings.MessageBroker);
+            services.AddMessageBusSender<SmsMessageCreatedEvent>(AppSettings.MessageBroker);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -47,6 +47,7 @@ namespace ClassifiedAds.Modules.AuditLog.Queries
             var rs = auditLogs.Join(users, x => x.UserId, y => y.Id,
                 (x, y) => new AuditLogEntryDTO
                 {
+                    Id = x.Id,
                     UserId = x.UserId,
                     Action = x.Action,
                     ObjectId = x.ObjectId,

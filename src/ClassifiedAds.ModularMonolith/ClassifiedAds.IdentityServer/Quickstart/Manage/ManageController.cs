@@ -17,19 +17,19 @@ namespace ClassifiedAds.IdentityServer.Quickstart.Manage
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly Dispatcher _dispatcher;
         private readonly ILogger _logger;
-        private readonly ICrudService<SmsMessage> _smsMessageService;
 
         public ManageController(
         UserManager<User> userManager,
         SignInManager<User> signInManager,
         ILoggerFactory loggerFactory,
-        ICrudService<SmsMessage> smsMessageService)
+        Dispatcher dispatcher)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _dispatcher = dispatcher;
             _logger = loggerFactory.CreateLogger<ManageController>();
-            _smsMessageService = smsMessageService;
         }
 
         //
@@ -100,11 +100,11 @@ namespace ClassifiedAds.IdentityServer.Quickstart.Manage
             // Generate the token and send it
             var user = await GetCurrentUserAsync();
             var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, model.PhoneNumber);
-            _smsMessageService.AddOrUpdate(new SmsMessage
+            _dispatcher.Dispatch(new AddOrUpdateEntityCommand<SmsMessage>(new SmsMessage
             {
                 PhoneNumber = model.PhoneNumber,
-                Message = "Your security code is: " + code
-            });
+                Message = "Your security code is: " + code,
+            }));
             return RedirectToAction(nameof(VerifyPhoneNumber), new { PhoneNumber = model.PhoneNumber });
         }
 

@@ -5,6 +5,7 @@
     <CodeAnalysisRuleSet>ClassifiedAds.BackgroundServer.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>ClassifiedAds.BackgroundServer</AssemblyName>
     <RootNamespace>ClassifiedAds.BackgroundServer</RootNamespace>
+    <UserSecretsId>2afdbe02-eb10-41d2-8fee-1cb29d0dfffb</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ClassifiedAds.Application\ClassifiedAds.Application.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Infrastructure\ClassifiedAds.Infrastructure.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.Persistence\ClassifiedAds.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

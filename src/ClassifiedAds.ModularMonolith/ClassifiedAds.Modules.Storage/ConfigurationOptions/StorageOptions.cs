@@ -24,6 +24,11 @@
         {
             return Provider == "Amazon";
         }
+
+        public bool UsedFake()
+        {
+            return Provider == "Fake";
+        }
     }
 
     public class AmazonOptions

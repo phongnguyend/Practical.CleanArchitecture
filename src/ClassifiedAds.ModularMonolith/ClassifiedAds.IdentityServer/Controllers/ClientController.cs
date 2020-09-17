@@ -92,7 +92,7 @@ namespace ClassifiedAds.IdentityServer.Controllers
                         .Include(x => x.Properties)
                         .Where(x => x.Id == model.Id)
                         .FirstOrDefault();
-                client.Updated = DateTime.Now;
+                client.Updated = DateTime.UtcNow;
             }
 
             model.UpdateEntity(client);
@@ -254,7 +254,7 @@ namespace ClassifiedAds.IdentityServer.Controllers
 
             var secret = new ClientSecret
             {
-                Created = DateTime.Now,
+                Created = DateTime.UtcNow,
             };
 
             model.HashSecret();

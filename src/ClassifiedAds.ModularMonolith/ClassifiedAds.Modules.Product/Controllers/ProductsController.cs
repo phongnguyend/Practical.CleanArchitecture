@@ -113,6 +113,7 @@ namespace ClassifiedAds.Modules.Product.Controllers
 
                 var entry = new
                 {
+                    log.Id,
                     log.UserName,
                     Action = log.Action.Replace("_PRODUCT", string.Empty),
                     log.CreatedDateTime,

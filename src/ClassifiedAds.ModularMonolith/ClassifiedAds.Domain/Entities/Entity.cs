@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClassifiedAds.Domain.Entities
 {
@@ -8,5 +9,9 @@ namespace ClassifiedAds.Domain.Entities
 
         [Timestamp]
         public byte[] RowVersion { get; set; }
+
+        public DateTimeOffset CreatedDateTime { get; set; }
+
+        public DateTimeOffset? UpdatedDateTime { get; set; }
     }
 }

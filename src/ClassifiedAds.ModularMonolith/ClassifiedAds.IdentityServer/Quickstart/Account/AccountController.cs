@@ -12,7 +12,6 @@ using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
-using IdentityServer4.Test;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -42,21 +41,20 @@ namespace IdentityServer4.Quickstart.UI
 
         private readonly ILogger _logger;
         private readonly UserManager<User> _userManager;
-        private readonly ICrudService<EmailMessage> _emailMessageService;
+        private readonly Dispatcher _dispatcher;
 
         public AccountController(
             ILogger<AccountController> logger,
             UserManager<User> userManager,
-            ICrudService<EmailMessage> emailMessageService,
+            Dispatcher dispatcher,
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
-            IEventService events,
-            TestUserStore users = null)
+            IEventService events)
         {
             _logger = logger;
             _userManager = userManager;
-            _emailMessageService = emailMessageService;
+            _dispatcher = dispatcher;
             _interaction = interaction;
             _clientStore = clientStore;
             _schemeProvider = schemeProvider;
@@ -412,13 +410,14 @@ namespace IdentityServer4.Quickstart.UI
             var confirmationEmail = Url.Action("ConfirmEmailAddress", "Account",
                 new { token = token, email = user.Email }, Request.Scheme);
 
-            _emailMessageService.AddOrUpdate(new EmailMessage
+            _dispatcher.Dispatch(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
             {
-                From = string.Empty,
-                To = user.Email,
+                From = "phong@gmail.com",
+                Tos = user.Email,
                 Subject = "Confirmation Email",
                 Body = string.Format("Confirmation Email: {0}", confirmationEmail),
-            });
+            }
+            ));
 
             return View("Success");
         }
@@ -462,13 +461,13 @@ namespace IdentityServer4.Quickstart.UI
                     var resetUrl = Url.Action("ResetPassword", "Account",
                         new { token = token, email = user.Email }, Request.Scheme);
 
-                    _emailMessageService.AddOrUpdate(new EmailMessage
+                    _dispatcher.Dispatch(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
                     {
-                        From = string.Empty,
-                        To = user.Email,
+                        From = "phong@gmail.com",
+                        Tos = user.Email,
                         Subject = "Forgot Password",
                         Body = string.Format("Reset Url: {0}", resetUrl),
-                    });
+                    }));
                 }
                 else
                 {

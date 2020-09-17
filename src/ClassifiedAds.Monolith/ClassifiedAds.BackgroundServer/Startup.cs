@@ -2,16 +2,16 @@
 using System.IO;
 using System.Threading;
 using ClassifiedAds.Application.BackgroundTasks;
+using ClassifiedAds.Application.EmailMessages.DTOs;
+using ClassifiedAds.Application.EmailMessages.Services;
 using ClassifiedAds.Application.FileEntries.DTOs;
+using ClassifiedAds.Application.SmsMessages.DTOs;
+using ClassifiedAds.Application.SmsMessages.Services;
 using ClassifiedAds.BackgroundServer.ConfigurationOptions;
+using ClassifiedAds.BackgroundServer.HostedServices;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Infrastructure.HealthChecks;
-using ClassifiedAds.Infrastructure.MessageBrokers.AzureEventHub;
-using ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
-using ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
-using ClassifiedAds.Infrastructure.MessageBrokers.Kafka;
-using ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ;
 using ClassifiedAds.Infrastructure.Notification;
 using Hangfire;
 using Hangfire.SqlServer;
@@ -69,7 +69,25 @@ namespace ClassifiedAds.BackgroundServer
                 x.UseSqlServerStorage(AppSettings.ConnectionStrings.ClassifiedAds, options);
             });
 
-            services.AddTransient<IWebNotification, SignalRNotification>();
+            services.AddDateTimeProvider();
+            services.AddPersistence(AppSettings.ConnectionStrings.ClassifiedAds)
+                    .AddDomainServices()
+                    .AddApplicationServices();
+
+            services.AddMessageBusSender<FileUploadedEvent>(AppSettings.MessageBroker);
+            services.AddMessageBusSender<FileDeletedEvent>(AppSettings.MessageBroker);
+            services.AddMessageBusSender<EmailMessageCreatedEvent>(AppSettings.MessageBroker);
+            services.AddMessageBusSender<SmsMessageCreatedEvent>(AppSettings.MessageBroker);
+
+            services.AddMessageBusReceiver<FileUploadedEvent>(AppSettings.MessageBroker);
+            services.AddMessageBusReceiver<FileDeletedEvent>(AppSettings.MessageBroker);
+            services.AddMessageBusReceiver<EmailMessageCreatedEvent>(AppSettings.MessageBroker);
+            services.AddMessageBusReceiver<SmsMessageCreatedEvent>(AppSettings.MessageBroker);
+
+            services.AddNotificationServices(AppSettings.Notification);
+
+            services.AddHostedService<ResendEmailHostedService>();
+            services.AddHostedService<ResendSmsHostedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,11 +100,9 @@ namespace ClassifiedAds.BackgroundServer
 
             app.UseHangfireServer();
 
-            RecurringJob.AddOrUpdate<SendEmail>(job => job.Run(), Cron.Minutely);
-            RecurringJob.AddOrUpdate<SendSms>(job => job.Run(), Cron.Minutely);
             RecurringJob.AddOrUpdate<SimulatedLongRunningJob>(job => job.Run(AppSettings.NotificationServer.Endpoint), Cron.Minutely);
 
-            RunMessageBrokerReceivers();
+            RunMessageBrokerReceivers(app.ApplicationServices.CreateScope().ServiceProvider);
 
             app.Run(async (context) =>
             {
@@ -94,87 +110,14 @@ namespace ClassifiedAds.BackgroundServer
             });
         }
 
-        private void RunMessageBrokerReceivers()
+        private void RunMessageBrokerReceivers(IServiceProvider serviceProvider)
         {
-            IMessageReceiver<FileUploadedEvent> fileUploadedMessageQueueReceiver = null;
-            IMessageReceiver<FileDeletedEvent> fileDeletedMessageQueueReceiver = null;
+            var fileUploadedMessageQueueReceiver = serviceProvider.GetService<IMessageReceiver<FileUploadedEvent>>();
+            var fileDeletedMessageQueueReceiver = serviceProvider.GetService<IMessageReceiver<FileDeletedEvent>>();
+            var emailMessageCreatedMessageQueueReceiver = serviceProvider.GetService<IMessageReceiver<EmailMessageCreatedEvent>>();
+            var smsMessageCreatedMessageQueueReceiver = serviceProvider.GetService<IMessageReceiver<SmsMessageCreatedEvent>>();
 
-            if (AppSettings.MessageBroker.UsedRabbitMQ())
-            {
-                fileUploadedMessageQueueReceiver = new RabbitMQReceiver<FileUploadedEvent>(new RabbitMQReceiverOptions
-                {
-                    HostName = AppSettings.MessageBroker.RabbitMQ.HostName,
-                    UserName = AppSettings.MessageBroker.RabbitMQ.UserName,
-                    Password = AppSettings.MessageBroker.RabbitMQ.Password,
-                    QueueName = AppSettings.MessageBroker.RabbitMQ.QueueName_FileUploaded,
-                    AutomaticCreateEnabled = true,
-                    ExchangeName = AppSettings.MessageBroker.RabbitMQ.ExchangeName,
-                    RoutingKey = AppSettings.MessageBroker.RabbitMQ.RoutingKey_FileUploaded,
-                });
-
-                fileDeletedMessageQueueReceiver = new RabbitMQReceiver<FileDeletedEvent>(new RabbitMQReceiverOptions
-                {
-                    HostName = AppSettings.MessageBroker.RabbitMQ.HostName,
-                    UserName = AppSettings.MessageBroker.RabbitMQ.UserName,
-                    Password = AppSettings.MessageBroker.RabbitMQ.Password,
-                    QueueName = AppSettings.MessageBroker.RabbitMQ.QueueName_FileDeleted,
-                    AutomaticCreateEnabled = true,
-                    ExchangeName = AppSettings.MessageBroker.RabbitMQ.ExchangeName,
-                    RoutingKey = AppSettings.MessageBroker.RabbitMQ.RoutingKey_FileDeleted,
-                });
-            }
-
-            if (AppSettings.MessageBroker.UsedKafka())
-            {
-                fileUploadedMessageQueueReceiver = new KafkaReceiver<FileUploadedEvent>(
-                    AppSettings.MessageBroker.Kafka.BootstrapServers,
-                    AppSettings.MessageBroker.Kafka.Topic_FileUploaded,
-                    AppSettings.MessageBroker.Kafka.GroupId);
-
-                fileDeletedMessageQueueReceiver = new KafkaReceiver<FileDeletedEvent>(
-                    AppSettings.MessageBroker.Kafka.BootstrapServers,
-                    AppSettings.MessageBroker.Kafka.Topic_FileDeleted,
-                    AppSettings.MessageBroker.Kafka.GroupId);
-            }
-
-            if (AppSettings.MessageBroker.UsedAzureQueue())
-            {
-                fileUploadedMessageQueueReceiver = new AzureQueueReceiver<FileUploadedEvent>(
-                    AppSettings.MessageBroker.AzureQueue.ConnectionString,
-                    AppSettings.MessageBroker.AzureQueue.QueueName_FileUploaded);
-
-                fileDeletedMessageQueueReceiver = new AzureQueueReceiver<FileDeletedEvent>(
-                    AppSettings.MessageBroker.AzureQueue.ConnectionString,
-                    AppSettings.MessageBroker.AzureQueue.QueueName_FileDeleted);
-            }
-
-            if (AppSettings.MessageBroker.UsedAzureServiceBus())
-            {
-                fileUploadedMessageQueueReceiver = new AzureServiceBusReceiver<FileUploadedEvent>(
-                    AppSettings.MessageBroker.AzureServiceBus.ConnectionString,
-                    AppSettings.MessageBroker.AzureServiceBus.QueueName_FileUploaded);
-
-                fileDeletedMessageQueueReceiver = new AzureServiceBusReceiver<FileDeletedEvent>(
-                    AppSettings.MessageBroker.AzureServiceBus.ConnectionString,
-                    AppSettings.MessageBroker.AzureServiceBus.QueueName_FileDeleted);
-            }
-
-            if (AppSettings.MessageBroker.UsedAzureEventHub())
-            {
-                fileUploadedMessageQueueReceiver = new AzureEventHubReceiver<FileUploadedEvent>(
-                                AppSettings.MessageBroker.AzureEventHub.ConnectionString,
-                                AppSettings.MessageBroker.AzureEventHub.Hub_FileUploaded,
-                                AppSettings.MessageBroker.AzureEventHub.StorageConnectionString,
-                                AppSettings.MessageBroker.AzureEventHub.StorageContainerName_FileUploaded);
-
-                fileDeletedMessageQueueReceiver = new AzureEventHubReceiver<FileDeletedEvent>(
-                                AppSettings.MessageBroker.AzureEventHub.ConnectionString,
-                                AppSettings.MessageBroker.AzureEventHub.Hub_FileDeleted,
-                                AppSettings.MessageBroker.AzureEventHub.StorageConnectionString,
-                                AppSettings.MessageBroker.AzureEventHub.StorageContainerName_FileDeleted);
-            }
-
-            var notification = new SignalRNotification();
+            var notification = serviceProvider.GetService<IWebNotification>();
             var endpoint = $"{AppSettings.NotificationServer.Endpoint}/SimulatedLongRunningTaskHub";
 
             fileUploadedMessageQueueReceiver?.Receive(data =>
@@ -184,7 +127,6 @@ namespace ClassifiedAds.BackgroundServer
                 string message = data.FileEntry.Id.ToString();
 
                 notification.Send(endpoint, "SendTaskStatus", new { Step = $"{AppSettings.MessageBroker.Provider} - File Uploaded", Message = message });
-
             });
 
             fileDeletedMessageQueueReceiver?.Receive(data =>
@@ -194,6 +136,38 @@ namespace ClassifiedAds.BackgroundServer
                 string message = data.FileEntry.Id.ToString();
 
                 notification.Send(endpoint, "SendTaskStatus", new { Step = $"{AppSettings.MessageBroker.Provider} - File Deleted", Message = message });
+            });
+
+            var emailMessageService = serviceProvider.GetService<EmailMessageService>();
+
+            emailMessageCreatedMessageQueueReceiver?.Receive(data =>
+            {
+                string message = data.Id.ToString();
+
+                try
+                {
+                    emailMessageService.SendEmailMessage(data.Id);
+                }
+                catch (Exception ex)
+                { }
+
+                notification.Send(endpoint, "SendTaskStatus", new { Step = $"Send Email", Message = message });
+            });
+
+            var smsMessageService = serviceProvider.GetService<SmsMessageService>();
+
+            smsMessageCreatedMessageQueueReceiver?.Receive(data =>
+            {
+                string message = data.Id.ToString();
+
+                try
+                {
+                    smsMessageService.SendSmsMessage(data.Id);
+                }
+                catch (Exception ex)
+                { }
+
+                notification.Send(endpoint, "SendTaskStatus", new { Step = $"Send Sms", Message = message });
             });
         }
     }

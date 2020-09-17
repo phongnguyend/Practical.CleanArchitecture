@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Domain.Entities;
+﻿using ClassifiedAds.CrossCuttingConcerns.OS;
+using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,8 +9,8 @@ namespace ClassifiedAds.Persistence.Repositories
 {
     public class RoleRepository : Repository<Role, Guid>, IRoleRepository
     {
-        public RoleRepository(AdsDbContext dbContext)
-            : base(dbContext)
+        public RoleRepository(AdsDbContext dbContext, IDateTimeProvider dateTimeProvider)
+            : base(dbContext, dateTimeProvider)
         {
         }
 

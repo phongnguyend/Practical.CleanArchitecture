@@ -2,6 +2,7 @@
 using ClassifiedAds.Application.Roles.Queries;
 using ClassifiedAds.Application.Users.Commands;
 using ClassifiedAds.Application.Users.Queries;
+using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.IdentityServer.Models.UserModels;
 using ClassifiedAds.Modules.Identity.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -17,12 +18,16 @@ namespace ClassifiedAds.IdentityServer.Controllers
     {
         private readonly Dispatcher _dispatcher;
         private readonly UserManager<User> _userManager;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public UserController(Dispatcher dispatcher, UserManager<User> userManager, ILogger<UserController> logger)
+        public UserController(Dispatcher dispatcher,
+            UserManager<User> userManager,
+            ILogger<UserController> logger,
+            IDateTimeProvider dateTimeProvider)
         {
             _dispatcher = dispatcher;
             _userManager = userManager;
-
+            _dateTimeProvider = dateTimeProvider;
             logger.LogInformation("UserController");
         }
 

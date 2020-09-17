@@ -29,12 +29,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
             var queueClient = storageAccount.CreateCloudQueueClient();
             var queue = queueClient.GetQueueReference(_queueName);
 
-            bool exists = await queue.ExistsAsync();
-
-            if (!exists)
-            {
-                return;
-            }
+            await queue.CreateIfNotExistsAsync();
 
             while (true)
             {

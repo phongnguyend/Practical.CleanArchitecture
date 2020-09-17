@@ -27,6 +27,8 @@ namespace ClassifiedAds.Migrator
                 NetworkPortCheck.Wait(Configuration["CheckDependency:Host"], 5);
             }
 
+            services.AddDateTimeProvider();
+
             services.AddPersistence(Configuration["ConnectionStrings:ClassifiedAds"],
                 typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
 

@@ -1,13 +1,25 @@
 ﻿dotnet tool install --global dotnet-ef --version="3.1"
 
-dotnet ef migrations add Init --context AdsDbContext -o Migrations/AdsDb
+dotnet ef migrations add Init --context AuditLogDbContext -o Migrations/AuditLogDb
+dotnet ef migrations add Init --context IdentityDbContext -o Migrations/IdentityDb
+dotnet ef migrations add Init --context NotificationDbContext -o Migrations/NotificationDb
+dotnet ef migrations add Init --context ProductDbContext -o Migrations/ProductDb
+dotnet ef migrations add Init --context StorageDbContext -o Migrations/StorageDb
 dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
 dotnet ef migrations add Init --context PersistedGrantDbContext -o Migrations/PersistedGrantDb
 
-dotnet ef migrations script --context AdsDbContext
+dotnet ef migrations script --context AuditLogDbContext
+dotnet ef migrations script --context IdentityDbContext
+dotnet ef migrations script --context NotificationDbContext
+dotnet ef migrations script --context ProductDbContext
+dotnet ef migrations script --context StorageDbContext
 dotnet ef migrations script --context ConfigurationDbContext
 dotnet ef migrations script --context PersistedGrantDbContext
 
-dotnet ef database update --context AdsDbContext
+dotnet ef database update --context AuditLogDbContext
+dotnet ef database update --context IdentityDbContext
+dotnet ef database update --context NotificationDbContext
+dotnet ef database update --context ProductDbContext
+dotnet ef database update --context StorageDbContext
 dotnet ef database update --context ConfigurationDbContext
 dotnet ef database update --context PersistedGrantDbContext

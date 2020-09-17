@@ -8,6 +8,14 @@ Add-Migration -Context PersistedGrantDbContext Init -OutputDir Migrations/Persis
 
 Remove-Migration -Context AuditLogDbContext
 Remove-Migration -Context AuditLogDbContext -Force
+Remove-Migration -Context IdentityDbContext
+Remove-Migration -Context IdentityDbContext -Force
+Remove-Migration -Context NotificationDbContext
+Remove-Migration -Context NotificationDbContext -Force
+Remove-Migration -Context ProductDbContext
+Remove-Migration -Context ProductDbContext -Force
+Remove-Migration -Context StorageDbContext
+Remove-Migration -Context StorageDbContext -Force
 
 Update-Database -Context AuditLogDbContext
 Update-Database -Context IdentityDbContext

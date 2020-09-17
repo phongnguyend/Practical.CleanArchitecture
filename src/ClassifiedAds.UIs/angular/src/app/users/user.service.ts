@@ -48,6 +48,22 @@ export class UserService {
       .pipe(catchError(this.handleSetPasswordError));
   }
 
+  sendPasswordResetEmail(id: string): Observable<IUser | undefined> {
+    return this.http
+      .post<IUser>(this.userUrl + "/" + id + "/passwordresetemail", {
+        id: id,
+      })
+      .pipe(catchError(this.handleError));
+  }
+
+  sendEmailAddressConfirmationEmail(id: string): Observable<IUser | undefined> {
+    return this.http
+      .post<IUser>(this.userUrl + "/" + id + "/emailaddressconfirmation", {
+        id: id,
+      })
+      .pipe(catchError(this.handleError));
+  }
+
   deleteUser(user: IUser): Observable<IUser | undefined> {
     return this.http
       .delete<IUser>(this.userUrl + "/" + user.id)

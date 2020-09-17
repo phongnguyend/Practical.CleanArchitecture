@@ -19,6 +19,8 @@ const initialState = {
   saved: false,
   deleted: false,
   savedPassword: false,
+  sentPasswordResetEmail: false,
+  sentEmailAddressConfirmationEmail: false,
   error: null,
 };
 
@@ -154,6 +156,54 @@ const reducer = (state = initialState, action) => {
         error: action.error,
         loading: false,
         savedPassword: false,
+      });
+    case actionTypes.SEND_PASSWORD_RESET_EMAIL_INIT:
+      return updateObject(state, {
+        loading: false,
+        error: null,
+        sentPasswordResetEmail: false,
+      });
+    case actionTypes.SEND_PASSWORD_RESET_EMAIL_START:
+      return updateObject(state, {
+        loading: true,
+        error: null,
+        sentPasswordResetEmail: false,
+      });
+    case actionTypes.SEND_PASSWORD_RESET_EMAIL_SUCCESS:
+      return updateObject(state, {
+        loading: false,
+        error: null,
+        sentPasswordResetEmail: true,
+      });
+    case actionTypes.SEND_PASSWORD_RESET_EMAIL_FAIL:
+      return updateObject(state, {
+        error: action.error,
+        loading: false,
+        sentPasswordResetEmail: false,
+      });
+    case actionTypes.SEND_EMAIL_ADDRESS_CONFIRMATION_EMAIL_INIT:
+      return updateObject(state, {
+        loading: false,
+        error: null,
+        sentEmailAddressConfirmationEmail: false,
+      });
+    case actionTypes.SEND_EMAIL_ADDRESS_CONFIRMATION_EMAIL_START:
+      return updateObject(state, {
+        loading: true,
+        error: null,
+        sentEmailAddressConfirmationEmail: false,
+      });
+    case actionTypes.SEND_EMAIL_ADDRESS_CONFIRMATION_EMAIL_SUCCESS:
+      return updateObject(state, {
+        loading: false,
+        error: null,
+        sentEmailAddressConfirmationEmail: true,
+      });
+    case actionTypes.SEND_EMAIL_ADDRESS_CONFIRMATION_EMAIL_FAIL:
+      return updateObject(state, {
+        error: action.error,
+        loading: false,
+        sentEmailAddressConfirmationEmail: false,
       });
     default:
       return state;

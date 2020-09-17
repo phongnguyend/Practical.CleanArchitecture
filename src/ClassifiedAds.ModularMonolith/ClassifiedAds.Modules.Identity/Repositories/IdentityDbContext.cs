@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Repositories;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
@@ -6,7 +7,7 @@ using System.Reflection;
 
 namespace ClassifiedAds.Modules.Identity.Repositories
 {
-    public class IdentityDbContext : DbContext, IUnitOfWork
+    public class IdentityDbContext : DbContext, IUnitOfWork, IDataProtectionKeyContext
     {
         private IDbContextTransaction _dbContextTransaction;
 
@@ -14,6 +15,8 @@ namespace ClassifiedAds.Modules.Identity.Repositories
             : base(options)
         {
         }
+
+        public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
 
         public void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {

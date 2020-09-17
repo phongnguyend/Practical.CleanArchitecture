@@ -1,6 +1,8 @@
-﻿using ClassifiedAds.Infrastructure.Logging;
+﻿using ClassifiedAds.IdentityServer.ConfigurationOptions;
+using ClassifiedAds.Infrastructure.Logging;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace ClassifiedAds.IdentityServer
 {
@@ -14,6 +16,11 @@ namespace ClassifiedAds.IdentityServer
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseClassifiedAdsLogger();
+                .UseClassifiedAdsLogger(configuration =>
+                {
+                    var appSettings = new AppSettings();
+                    configuration.Bind(appSettings);
+                    return appSettings.Logging;
+                });
     }
 }

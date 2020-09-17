@@ -1,21 +1,8 @@
-﻿using Amazon;
-using Amazon.S3;
-using ClassifiedAds.Application.FileEntries.DTOs;
+﻿using ClassifiedAds.Application.FileEntries.DTOs;
 using ClassifiedAds.Domain.Identity;
-using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using ClassifiedAds.Domain.Infrastructure.Storages;
 using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Infrastructure.Identity;
-using ClassifiedAds.Infrastructure.MessageBrokers.AzureEventGrid;
-using ClassifiedAds.Infrastructure.MessageBrokers.AzureEventHub;
-using ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
-using ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
-using ClassifiedAds.Infrastructure.MessageBrokers.Kafka;
-using ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ;
 using ClassifiedAds.Infrastructure.Notification;
-using ClassifiedAds.Infrastructure.Storages.Amazon;
-using ClassifiedAds.Infrastructure.Storages.Azure;
-using ClassifiedAds.Infrastructure.Storages.Local;
 using ClassifiedAds.WebMVC.Authorization;
 using ClassifiedAds.WebMVC.ClaimsTransformations;
 using ClassifiedAds.WebMVC.ConfigurationOptions;
@@ -39,6 +26,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 
 namespace ClassifiedAds.WebMVC
 {
@@ -85,6 +73,8 @@ namespace ClassifiedAds.WebMVC
                 setupAction.Filters.Add(typeof(CustomExceptionFilter));
             })
             .AddNewtonsoftJson();
+
+            services.AddDateTimeProvider();
 
             services.AddPersistence(AppSettings.ConnectionStrings.ClassifiedAds)
                     .AddDomainServices()
@@ -167,165 +157,12 @@ namespace ClassifiedAds.WebMVC
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentWebUser>();
-            services.AddTransient<IWebNotification, SignalRNotification>();
 
-            if (AppSettings.Storage.UsedAzure())
-            {
-                services.AddSingleton<IFileStorageManager>(new AzureBlobStorageManager(AppSettings.Storage.Azure.ConnectionString, AppSettings.Storage.Azure.Container));
+            services.AddStorageManager(AppSettings.Storage, healthChecksBuilder);
 
-                healthChecksBuilder.AddAzureBlobStorage(
-                    AppSettings.Storage.Azure.ConnectionString,
-                    containerName: AppSettings.Storage.Azure.Container,
-                    name: "Storage (Azure Blob)",
-                    failureStatus: HealthStatus.Degraded);
-            }
-            else if (AppSettings.Storage.UsedAmazon())
-            {
-                services.AddSingleton<IFileStorageManager>(
-                    new AmazonS3StorageManager(
-                        AppSettings.Storage.Amazon.AccessKeyID,
-                        AppSettings.Storage.Amazon.SecretAccessKey,
-                        AppSettings.Storage.Amazon.BucketName,
-                        AppSettings.Storage.Amazon.RegionEndpoint));
-
-                healthChecksBuilder.AddS3(
-                    s3 =>
-                    {
-                        s3.AccessKey = AppSettings.Storage.Amazon.AccessKeyID;
-                        s3.SecretKey = AppSettings.Storage.Amazon.SecretAccessKey;
-                        s3.BucketName = AppSettings.Storage.Amazon.BucketName;
-                        s3.S3Config = new AmazonS3Config
-                        {
-                            RegionEndpoint = RegionEndpoint.GetBySystemName(AppSettings.Storage.Amazon.RegionEndpoint),
-                        };
-                    },
-                    name: "Storage (Amazon S3)",
-                    failureStatus: HealthStatus.Degraded);
-            }
-            else
-            {
-                services.AddSingleton<IFileStorageManager>(new LocalFileStorageManager(AppSettings.Storage.Local.Path));
-
-                healthChecksBuilder.AddFilePathWrite(
-                AppSettings.Storage.Local.Path,
-                name: "Storage (Local Directory)",
-                failureStatus: HealthStatus.Degraded);
-            }
-
-            if (AppSettings.MessageBroker.UsedRabbitMQ())
-            {
-                services.AddSingleton<IMessageSender<FileUploadedEvent>>(new RabbitMQSender<FileUploadedEvent>(new RabbitMQSenderOptions
-                {
-                    HostName = AppSettings.MessageBroker.RabbitMQ.HostName,
-                    UserName = AppSettings.MessageBroker.RabbitMQ.UserName,
-                    Password = AppSettings.MessageBroker.RabbitMQ.Password,
-                    ExchangeName = AppSettings.MessageBroker.RabbitMQ.ExchangeName,
-                    RoutingKey = AppSettings.MessageBroker.RabbitMQ.RoutingKey_FileUploaded,
-                }));
-
-                services.AddSingleton<IMessageSender<FileDeletedEvent>>(new RabbitMQSender<FileDeletedEvent>(new RabbitMQSenderOptions
-                {
-                    HostName = AppSettings.MessageBroker.RabbitMQ.HostName,
-                    UserName = AppSettings.MessageBroker.RabbitMQ.UserName,
-                    Password = AppSettings.MessageBroker.RabbitMQ.Password,
-                    ExchangeName = AppSettings.MessageBroker.RabbitMQ.ExchangeName,
-                    RoutingKey = AppSettings.MessageBroker.RabbitMQ.RoutingKey_FileDeleted,
-                }));
-
-                healthChecksBuilder.AddRabbitMQ(
-                    rabbitMQConnectionString: AppSettings.MessageBroker.RabbitMQ.ConnectionString,
-                    name: "Message Broker (RabbitMQ)",
-                    failureStatus: HealthStatus.Degraded);
-            }
-            else if (AppSettings.MessageBroker.UsedKafka())
-            {
-                services.AddSingleton<IMessageSender<FileUploadedEvent>>(new KafkaSender<FileUploadedEvent>(
-                    AppSettings.MessageBroker.Kafka.BootstrapServers,
-                    AppSettings.MessageBroker.Kafka.Topic_FileUploaded));
-
-                services.AddSingleton<IMessageSender<FileDeletedEvent>>(new KafkaSender<FileDeletedEvent>(
-                    AppSettings.MessageBroker.Kafka.BootstrapServers,
-                    AppSettings.MessageBroker.Kafka.Topic_FileDeleted));
-
-                healthChecksBuilder.AddKafka(
-                    setup =>
-                    {
-                        setup.BootstrapServers = AppSettings.MessageBroker.Kafka.BootstrapServers;
-                        setup.MessageTimeoutMs = 5000;
-                    },
-                    name: "Message Broker (Kafka)",
-                    failureStatus: HealthStatus.Degraded);
-            }
-            else if (AppSettings.MessageBroker.UsedAzureQueue())
-            {
-                services.AddSingleton<IMessageSender<FileUploadedEvent>>(new AzureQueueSender<FileUploadedEvent>(
-                    connectionString: AppSettings.MessageBroker.AzureQueue.ConnectionString,
-                    queueName: AppSettings.MessageBroker.AzureQueue.QueueName_FileUploaded));
-
-                services.AddSingleton<IMessageSender<FileDeletedEvent>>(new AzureQueueSender<FileDeletedEvent>(
-                    connectionString: AppSettings.MessageBroker.AzureQueue.ConnectionString,
-                    queueName: AppSettings.MessageBroker.AzureQueue.QueueName_FileDeleted));
-
-                healthChecksBuilder.AddAzureQueueStorage(
-                    connectionString: AppSettings.MessageBroker.AzureQueue.ConnectionString,
-                    queueName: AppSettings.MessageBroker.AzureQueue.QueueName_FileUploaded,
-                    name: "Message Broker (Azure Queue) File Uploaded",
-                    failureStatus: HealthStatus.Degraded);
-
-                healthChecksBuilder.AddAzureQueueStorage(
-                    connectionString: AppSettings.MessageBroker.AzureQueue.ConnectionString,
-                    queueName: AppSettings.MessageBroker.AzureQueue.QueueName_FileDeleted,
-                    name: "Message Broker (Azure Queue) File Deleted",
-                    failureStatus: HealthStatus.Degraded);
-            }
-            else if (AppSettings.MessageBroker.UsedAzureServiceBus())
-            {
-                services.AddSingleton<IMessageSender<FileUploadedEvent>>(new AzureServiceBusSender<FileUploadedEvent>(
-                    connectionString: AppSettings.MessageBroker.AzureServiceBus.ConnectionString,
-                    queueName: AppSettings.MessageBroker.AzureServiceBus.QueueName_FileUploaded));
-
-                services.AddSingleton<IMessageSender<FileDeletedEvent>>(new AzureServiceBusSender<FileDeletedEvent>(
-                    connectionString: AppSettings.MessageBroker.AzureServiceBus.ConnectionString,
-                    queueName: AppSettings.MessageBroker.AzureServiceBus.QueueName_FileDeleted));
-
-                healthChecksBuilder.AddAzureServiceBusQueue(
-                    connectionString: AppSettings.MessageBroker.AzureServiceBus.ConnectionString,
-                    queueName: AppSettings.MessageBroker.AzureServiceBus.QueueName_FileUploaded,
-                    name: "Message Broker (Azure Service Bus) File Uploaded",
-                    failureStatus: HealthStatus.Degraded);
-
-                healthChecksBuilder.AddAzureServiceBusQueue(
-                    connectionString: AppSettings.MessageBroker.AzureServiceBus.ConnectionString,
-                    queueName: AppSettings.MessageBroker.AzureServiceBus.QueueName_FileDeleted,
-                    name: "Message Broker (Azure Service Bus) File Deleted",
-                    failureStatus: HealthStatus.Degraded);
-            }
-            else if (AppSettings.MessageBroker.UsedAzureEventGrid())
-            {
-                services.AddSingleton<IMessageSender<FileUploadedEvent>>(new AzureEventGridSender<FileUploadedEvent>(
-                                AppSettings.MessageBroker.AzureEventGrid.DomainEndpoint,
-                                AppSettings.MessageBroker.AzureEventGrid.DomainKey,
-                                AppSettings.MessageBroker.AzureEventGrid.Topic_FileUploaded));
-
-                services.AddSingleton<IMessageSender<FileDeletedEvent>>(new AzureEventGridSender<FileDeletedEvent>(
-                                AppSettings.MessageBroker.AzureEventGrid.DomainEndpoint,
-                                AppSettings.MessageBroker.AzureEventGrid.DomainKey,
-                                AppSettings.MessageBroker.AzureEventGrid.Topic_FileDeleted));
-
-                // TODO: Add Health Check
-            }
-            else if (AppSettings.MessageBroker.UsedAzureEventHub())
-            {
-                services.AddSingleton<IMessageSender<FileUploadedEvent>>(new AzureEventHubSender<FileUploadedEvent>(
-                                AppSettings.MessageBroker.AzureEventHub.ConnectionString,
-                                AppSettings.MessageBroker.AzureEventHub.Hub_FileUploaded));
-
-                services.AddSingleton<IMessageSender<FileDeletedEvent>>(new AzureEventHubSender<FileDeletedEvent>(
-                                AppSettings.MessageBroker.AzureEventHub.ConnectionString,
-                                AppSettings.MessageBroker.AzureEventHub.Hub_FileDeleted));
-
-                // TODO: Add Health Check
-            }
+            var checkDuplicatedHeathChecks = new HashSet<string>();
+            services.AddMessageBusSender<FileUploadedEvent>(AppSettings.MessageBroker, healthChecksBuilder, checkDuplicatedHeathChecks);
+            services.AddMessageBusSender<FileDeletedEvent>(AppSettings.MessageBroker, healthChecksBuilder, checkDuplicatedHeathChecks);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -6,6 +6,10 @@ namespace ClassifiedAds.CrossCuttingConcerns.OS
     {
         DateTime Now { get; }
 
+        DateTime UtcNow { get; }
+
         DateTimeOffset OffsetNow { get; }
+
+        DateTimeOffset OffsetUtcNow { get; }
     }
 }

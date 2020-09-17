@@ -10,7 +10,7 @@ namespace ClassifiedAds.Domain.Entities
 
         public long Size { get; set; }
 
-        public DateTime UploadedTime { get; set; }
+        public DateTimeOffset UploadedTime { get; set; }
 
         public string FileName { get; set; }
 

@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>ClassifiedAds.WebAPI</RootNamespace>
     <CodeAnalysisRuleSet>ClassifiedAds.WebAPI.ruleset</CodeAnalysisRuleSet>
-    <UserSecretsId>3ff01eab-d9b1-4512-8d11-eeea4a087035</UserSecretsId>
+    <UserSecretsId>a3cce8d1-91dc-440d-aa9d-6fc323cb0ab6</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

@@ -74,6 +74,30 @@ export function* setPasswordSaga(action) {
   }
 }
 
+export function* sendPasswordResetEmailSaga(action) {
+  yield put(actions.sendPasswordResetEmailStart());
+  try {
+    const response = yield axios.post(action.id + "/passwordresetemail", {
+      id: action.id,
+    });
+    yield put(actions.sendPasswordResetEmailSuccess());
+  } catch (error) {
+    yield put(actions.sendPasswordResetEmailFail(error));
+  }
+}
+
+export function* sendEmailAddressConfirmationEmailSaga(action) {
+  yield put(actions.sendEmailAddressConfirmationEmailStart());
+  try {
+    const response = yield axios.post(action.id + "/emailaddressconfirmation", {
+      id: action.id,
+    });
+    yield put(actions.sendEmailAddressConfirmationEmailSuccess());
+  } catch (error) {
+    yield put(actions.sendEmailAddressConfirmationEmailFail(error));
+  }
+}
+
 export function* watchUser() {
   yield takeEvery(actionTypes.FETCH_USERS, fetchUsersSaga);
   yield takeEvery(actionTypes.FETCH_USER, fetchUserSaga);
@@ -81,4 +105,12 @@ export function* watchUser() {
   yield takeEvery(actionTypes.DELETE_USER, deleteUserSaga);
   yield takeEvery(actionTypes.FETCH_USER_AUDIT_LOGS, fetchAuditLogsSaga);
   yield takeEvery(actionTypes.SET_PASSWORD, setPasswordSaga);
+  yield takeEvery(
+    actionTypes.SEND_PASSWORD_RESET_EMAIL,
+    sendPasswordResetEmailSaga
+  );
+  yield takeEvery(
+    actionTypes.SEND_EMAIL_ADDRESS_CONFIRMATION_EMAIL,
+    sendEmailAddressConfirmationEmailSaga
+  );
 }

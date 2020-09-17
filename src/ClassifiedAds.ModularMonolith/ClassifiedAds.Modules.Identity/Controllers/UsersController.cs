@@ -2,16 +2,21 @@
 using ClassifiedAds.Application;
 using ClassifiedAds.Application.Users.Commands;
 using ClassifiedAds.Application.Users.Queries;
+using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Modules.Identity.DTOs.Users;
 using ClassifiedAds.Modules.Identity.Entities;
+using ClassifiedAds.Modules.Notification.Contracts.DTOs;
+using ClassifiedAds.Modules.Notification.Contracts.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace ClassifiedAds.Modules.Identity.Controllers
 {
@@ -24,12 +29,24 @@ namespace ClassifiedAds.Modules.Identity.Controllers
         private readonly Dispatcher _dispatcher;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
+        private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly IEmailMessageService _emailMessageService;
+        private readonly IConfiguration _configuration;
 
-        public UsersController(Dispatcher dispatcher, UserManager<User> userManager, ILogger<UsersController> logger, IMapper mapper)
+        public UsersController(Dispatcher dispatcher,
+            UserManager<User> userManager,
+            ILogger<UsersController> logger,
+            IMapper mapper,
+            IDateTimeProvider dateTimeProvider,
+            IEmailMessageService emailMessageService,
+            IConfiguration configuration)
         {
             _dispatcher = dispatcher;
             _userManager = userManager;
             _mapper = mapper;
+            _dateTimeProvider = dateTimeProvider;
+            _emailMessageService = emailMessageService;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -128,6 +145,59 @@ namespace ClassifiedAds.Modules.Identity.Controllers
         {
             var user = _dispatcher.Dispatch(new GetUserQuery { Id = id });
             _dispatcher.Dispatch(new DeleteUserCommand { User = user });
+
+            return Ok();
+        }
+
+        [HttpPost("{id}/passwordresetemail")]
+        public async Task<ActionResult> SendResetPasswordEmail(Guid id)
+        {
+            User user = _dispatcher.Dispatch(new GetUserQuery { Id = id });
+
+            if (user != null)
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var resetUrl = $"{_configuration["IdentityServerAuthentication:Authority"]}/Account/ResetPassword?token={HttpUtility.UrlEncode(token)}&email={user.Email}";
+
+                _emailMessageService.CreateEmailMessage(new EmailMessageDTO
+                {
+                    From = "phong@gmail.com",
+                    Tos = user.Email,
+                    Subject = "Forgot Password",
+                    Body = string.Format("Reset Url: {0}", resetUrl),
+                });
+            }
+            else
+            {
+                // email user and inform them that they do not have an account
+            }
+
+            return Ok();
+        }
+
+        [HttpPost("{id}/emailaddressconfirmation")]
+        public async Task<ActionResult> SendConfirmationEmailAddressEmail(Guid id)
+        {
+            User user = _dispatcher.Dispatch(new GetUserQuery { Id = id });
+
+            if (user != null)
+            {
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                var confirmationEmail = $"{_configuration["IdentityServerAuthentication:Authority"]}/Account/ConfirmEmailAddress?token={HttpUtility.UrlEncode(token)}&email={user.Email}";
+
+                _emailMessageService.CreateEmailMessage(new EmailMessageDTO
+                {
+                    From = "phong@gmail.com",
+                    Tos = user.Email,
+                    Subject = "Confirmation Email",
+                    Body = string.Format("Confirmation Email: {0}", confirmationEmail),
+                });
+            }
+            else
+            {
+                // email user and inform them that they do not have an account
+            }
 
             return Ok();
         }

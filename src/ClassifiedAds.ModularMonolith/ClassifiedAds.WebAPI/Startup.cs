@@ -1,12 +1,16 @@
 ﻿using AutoMapper;
-using ClassifiedAds.Infrastructure.Logging;
+using ClassifiedAds.Infrastructure.Notification;
+using ClassifiedAds.Infrastructure.Notification.Email;
+using ClassifiedAds.Infrastructure.Notification.Sms;
+using ClassifiedAds.Infrastructure.Notification.Web;
+using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Modules.Identity.Contracts.Services;
 using ClassifiedAds.Modules.Identity.Repositories;
 using ClassifiedAds.Modules.Identity.Services;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
-using ClassifiedAds.WebAPI.Filters;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -27,8 +31,6 @@ namespace ClassifiedAds.WebAPI
 
             AppSettings = new AppSettings();
             Configuration.Bind(AppSettings);
-
-            env.UseClassifiedAdsLogger(AppSettings.LoggerOptions);
         }
 
         public IConfiguration Configuration { get; }
@@ -37,11 +39,12 @@ namespace ClassifiedAds.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(AuditLogServicesExtensions),
+            services.AddAutoMapper(
+                typeof(AuditLogModuleServiceCollectionExtensions),
                 typeof(IdentityDbContext),
-                typeof(NotificationServiceCollectionExtensions),
-                typeof(ProductServiceCollectionExtensions),
-                typeof(StorageServiceCollectionExtensions)
+                typeof(NotificationModuleServiceCollectionExtensions),
+                typeof(ProductModuleServiceCollectionExtensions),
+                typeof(StorageModuleServiceCollectionExtensions)
                 );
 
             services.Configure<AppSettings>(Configuration);
@@ -71,12 +74,25 @@ namespace ClassifiedAds.WebAPI
                     .WithHeaders("Content-Type"));
             });
 
-            services.AddAuditLogModule(Configuration["ConnectionStrings:ClassifiedAds"])
-                    .AddIdentityModuleCore(Configuration["ConnectionStrings:ClassifiedAds"])
-                    .AddNotificationModule(Configuration["ConnectionStrings:ClassifiedAds"])
-                    .AddProductModule(Configuration["ConnectionStrings:ClassifiedAds"])
-                    .AddStorageModule(AppSettings.Storage, AppSettings.MessageBroker, Configuration["ConnectionStrings:ClassifiedAds"])
+            services.AddDateTimeProvider();
+
+            var notificationOptions = new NotificationOptions
+            {
+                Email = new EmailOptions { Provider = "Fake" },
+                Sms = new SmsOptions { Provider = "Fake" },
+                Web = new WebOptions { Provider = "Fake" },
+            };
+
+            services.AddAuditLogModule(AppSettings.ConnectionStrings.ClassifiedAds)
+                    .AddIdentityModuleCore(AppSettings.ConnectionStrings.ClassifiedAds)
+                    .AddNotificationModule(AppSettings.MessageBroker, notificationOptions, AppSettings.ConnectionStrings.ClassifiedAds)
+                    .AddProductModule(AppSettings.ConnectionStrings.ClassifiedAds)
+                    .AddStorageModule(AppSettings.Storage, AppSettings.MessageBroker, AppSettings.ConnectionStrings.ClassifiedAds)
                     .AddApplicationServices();
+
+            services.AddDataProtection()
+                .PersistKeysToDbContext<IdentityDbContext>()
+                .SetApplicationName("ClassifiedAds");
 
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>

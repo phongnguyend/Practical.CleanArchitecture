@@ -16,6 +16,8 @@ export class ViewUserDetailsComponent implements OnInit {
   passwordValidationErrors: any = [];
   postErrorMessage: string = "";
   setPasswordModalRef: BsModalRef;
+  sendPasswordResetEmailModalRef: BsModalRef;
+  sendEmailAddressConfirmationEmailModalRef: BsModalRef;
   constructor(
     private userService: UserService,
     private router: Router,
@@ -35,7 +37,7 @@ export class ViewUserDetailsComponent implements OnInit {
     }
   }
 
-  setPassword(template: TemplateRef<any>) {
+  setPasswordModal(template: TemplateRef<any>) {
     this.setPasswordModel = {};
     this.passwordValidationErrors = [];
     this.setPasswordModalRef = this.modalService.show(template, {
@@ -43,7 +45,44 @@ export class ViewUserDetailsComponent implements OnInit {
     });
   }
 
-  onSubmitSetPassword(form: NgForm) {
+  sendPasswordResetEmailModal(template: TemplateRef<any>) {
+    this.sendPasswordResetEmailModalRef = this.modalService.show(template, {
+      class: "modal-sm",
+    });
+  }
+
+  confirmSendPasswordResetEmail() {
+    this.userService.sendPasswordResetEmail(this.user.id).subscribe({
+      next: () => {
+        this.sendPasswordResetEmailModalRef.hide();
+      },
+      error: (err) => {
+        this.postErrorMessage = err;
+      },
+    });
+  }
+
+  sendEmailAddressConfirmationEmailModal(template: TemplateRef<any>) {
+    this.sendEmailAddressConfirmationEmailModalRef = this.modalService.show(
+      template,
+      {
+        class: "modal-sm",
+      }
+    );
+  }
+
+  confirmSendEmailAddressConfirmationEmail() {
+    this.userService.sendEmailAddressConfirmationEmail(this.user.id).subscribe({
+      next: () => {
+        this.sendEmailAddressConfirmationEmailModalRef.hide();
+      },
+      error: (err) => {
+        this.postErrorMessage = err;
+      },
+    });
+  }
+
+  confirmSetPassword(form: NgForm) {
     if (
       this.setPasswordModel.password &&
       this.setPasswordModel.password == this.setPasswordModel.confirmPassword

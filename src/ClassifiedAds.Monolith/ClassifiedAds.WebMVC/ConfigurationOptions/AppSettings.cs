@@ -2,9 +2,9 @@
 using ClassifiedAds.Infrastructure.Configuration;
 using ClassifiedAds.Infrastructure.Interceptors;
 using ClassifiedAds.Infrastructure.Logging;
+using ClassifiedAds.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Profiling;
-using ClassifiedAds.WebMVC.ConfigurationOptions.MessageBroker;
-using ClassifiedAds.WebMVC.ConfigurationOptions.Storage;
+using ClassifiedAds.Infrastructure.Storages;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 

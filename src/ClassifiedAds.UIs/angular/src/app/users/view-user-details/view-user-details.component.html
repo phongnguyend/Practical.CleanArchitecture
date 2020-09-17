@@ -76,14 +76,34 @@
     <button
       type="button"
       class="btn btn-secondary"
-      (click)="setPassword(template)"
+      (click)="setPasswordModal(setPasswordTemplate)"
     >
       Set Password
+    </button>
+    &nbsp;
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="sendPasswordResetEmailModal(sendPasswordResetEmailTemplate)"
+    >
+      Send Password Reset Email
+    </button>
+    &nbsp;
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="
+        sendEmailAddressConfirmationEmailModal(
+          sendEmailAddressConfirmationEmailTemplate
+        )
+      "
+    >
+      Send Email Address Confirmation Email
     </button>
   </div>
 </div>
 
-<ng-template #template>
+<ng-template #setPasswordTemplate>
   <div class="modal-header">
     <h4 class="modal-title pull-left">Set Password</h4>
     <button
@@ -110,7 +130,7 @@
     <div class="row" [hidden]="!postErrorMessage" class="alert alert-danger">
       {{ postErrorMessage }}
     </div>
-    <form #form="ngForm" (ngSubmit)="onSubmitSetPassword(form)">
+    <form #form="ngForm" (ngSubmit)="confirmSetPassword(form)">
       <div class="form-group row">
         <label class="col-sm-4 col-form-label">User Name</label>
         <div class="col-sm-8">
@@ -162,5 +182,51 @@
         </div>
       </div>
     </form>
+  </div>
+</ng-template>
+
+<ng-template #sendPasswordResetEmailTemplate>
+  <div class="modal-body text-center">
+    <p>
+      Are you sure you want to send reset password email
+      <strong> {{ user.userName }}</strong>
+    </p>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="confirmSendPasswordResetEmail()"
+    >
+      Yes
+    </button>
+    <button
+      type="button"
+      class="btn btn-default"
+      (click)="sendPasswordResetEmailModalRef.hide()"
+    >
+      No
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #sendEmailAddressConfirmationEmailTemplate>
+  <div class="modal-body text-center">
+    <p>
+      Are you sure you want to send email address confirmation email
+      <strong> {{ user.userName }}</strong>
+    </p>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="confirmSendEmailAddressConfirmationEmail()"
+    >
+      Yes
+    </button>
+    <button
+      type="button"
+      class="btn btn-default"
+      (click)="sendEmailAddressConfirmationEmailModalRef.hide()"
+    >
+      No
+    </button>
   </div>
 </ng-template>

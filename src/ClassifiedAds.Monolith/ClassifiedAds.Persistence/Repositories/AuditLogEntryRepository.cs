@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Domain.Entities;
+﻿using ClassifiedAds.CrossCuttingConcerns.OS;
+using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,8 +9,8 @@ namespace ClassifiedAds.Persistence.Repositories
 {
     public class AuditLogEntryRepository : Repository<AuditLogEntry, Guid>, IAuditLogEntryRepository
     {
-        public AuditLogEntryRepository(AdsDbContext dbContext)
-            : base(dbContext)
+        public AuditLogEntryRepository(AdsDbContext dbContext, IDateTimeProvider dateTimeProvider)
+            : base(dbContext, dateTimeProvider)
         {
         }
 

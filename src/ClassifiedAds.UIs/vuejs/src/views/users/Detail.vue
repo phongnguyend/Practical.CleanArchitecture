@@ -60,10 +60,20 @@
       </button>
       &nbsp;
       <router-link class="btn btn-primary" :to="'/users/edit/'+ user.id">Edit</router-link>&nbsp;
-      <button type="button" class="btn btn-secondary" @click="setPassword()">Set Password</button>
+      <button type="button" class="btn btn-secondary" @click="setPasswordModal()">Set Password</button>&nbsp;
+      <button
+        type="button"
+        class="btn btn-secondary"
+        @click="sendPasswordResetEmailModal()"
+      >Send Password Reset Email</button>&nbsp;
+      <button
+        type="button"
+        class="btn btn-secondary"
+        @click="sendEmailAddressConfirmationEmailModal()"
+      >Send Email Address Confirmation Email</button>
     </div>
 
-    <b-modal id="modal-set-password" title="Set Password" :hide-footer="true" @ok="setPassword">
+    <b-modal id="modal-set-password" title="Set Password" :hide-footer="true">
       <div
         class="row alert alert-danger"
         v-show="passwordValidationErrors && passwordValidationErrors.length"
@@ -73,7 +83,7 @@
         </ul>
       </div>
       <div class="row alert alert-danger" v-show="postErrorMessage">{{ postErrorMessage }}</div>
-      <form @submit.prevent="onSubmit">
+      <form @submit.prevent="confirmSetPassword">
         <div class="form-group row">
           <label class="col-sm-4 col-form-label">User Name</label>
           <div class="col-sm-8">{{ user.userName }}</div>
@@ -116,6 +126,28 @@
         </div>
       </form>
     </b-modal>
+
+    <b-modal
+      id="modal-send-password-reset-email"
+      title="Send Password Reset Email"
+      @ok="confirmSendPasswordResetEmail"
+    >
+      <p>
+        Are you sure you want to send reset password email
+        <strong>{{ user.userName }}</strong>
+      </p>
+    </b-modal>
+
+    <b-modal
+      id="modal-send-email-address-confirmation-email"
+      title="Send Email Address Confirmation Email"
+      @ok="confirmSendEmailAddressConfirmationEmail"
+    >
+      <p>
+        Are you sure you want to send email address confirmation email
+        <strong>{{ user.userName }}</strong>
+      </p>
+    </b-modal>
   </div>
 </template>
 
@@ -145,10 +177,10 @@ export default {
     onBack() {
       this.$router.push("/users");
     },
-    setPassword() {
+    setPasswordModal() {
       this.$bvModal.show("modal-set-password");
     },
-    onSubmit() {
+    confirmSetPassword() {
       this.isSubmitted = true;
 
       if (
@@ -176,6 +208,30 @@ export default {
           } else {
             this.postErrorMessage = error?.response?.status;
           }
+        });
+    },
+    sendPasswordResetEmailModal() {
+      this.$bvModal.show("modal-send-password-reset-email");
+    },
+    confirmSendPasswordResetEmail() {
+      axios
+        .post(this.user.id + "/passwordresetemail", {
+          id: this.user.id,
+        })
+        .then((rs) => {
+          this.$bvModal.hide("modal-send-password-reset-email");
+        });
+    },
+    sendEmailAddressConfirmationEmailModal() {
+      this.$bvModal.show("modal-send-email-address-confirmation-email");
+    },
+    confirmSendEmailAddressConfirmationEmail() {
+      axios
+        .post(this.user.id + "/emailaddressconfirmation", {
+          id: this.user.id,
+        })
+        .then((rs) => {
+          this.$bvModal.hide("modal-send-email-address-confirmation-email");
         });
     },
   },

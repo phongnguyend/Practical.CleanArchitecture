@@ -160,7 +160,7 @@ namespace ClassifiedAds.IdentityServer.Controllers
 
             var secret = new ApiSecret
             {
-                Created = DateTime.Now,
+                Created = DateTime.UtcNow,
             };
 
             model.HashSecret();

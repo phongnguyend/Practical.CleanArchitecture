@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Modules.Identity.Entities;
+﻿using ClassifiedAds.CrossCuttingConcerns.OS;
+using ClassifiedAds.Modules.Identity.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -7,8 +8,8 @@ namespace ClassifiedAds.Modules.Identity.Repositories
 {
     public class RoleRepository : Repository<Role, Guid>, IRoleRepository
     {
-        public RoleRepository(IdentityDbContext dbContext)
-            : base(dbContext)
+        public RoleRepository(IdentityDbContext dbContext, IDateTimeProvider dateTimeProvider)
+            : base(dbContext, dateTimeProvider)
         {
         }
 

@@ -5,6 +5,7 @@ Add-Migration -Context MiniProfilerDbContext Init -OutputDir Migrations/MiniProf
 
 Remove-Migration -Context AdsDbContext
 Remove-Migration -Context AdsDbContext -Force
+Remove-Migration -Context MiniProfilerDbContext
 Remove-Migration -Context MiniProfilerDbContext -Force
 
 Update-Database -Context AdsDbContext

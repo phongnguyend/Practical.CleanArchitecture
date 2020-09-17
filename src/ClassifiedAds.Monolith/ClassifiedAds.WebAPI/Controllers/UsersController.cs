@@ -2,16 +2,20 @@
 using ClassifiedAds.Application;
 using ClassifiedAds.Application.Users.Commands;
 using ClassifiedAds.Application.Users.Queries;
+using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.WebAPI.ConfigurationOptions;
 using ClassifiedAds.WebAPI.Models.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace ClassifiedAds.WebAPI.Controllers
 {
@@ -24,12 +28,21 @@ namespace ClassifiedAds.WebAPI.Controllers
         private readonly Dispatcher _dispatcher;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
+        private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly AppSettings _appSettings;
 
-        public UsersController(Dispatcher dispatcher, UserManager<User> userManager, ILogger<UsersController> logger, IMapper mapper)
+        public UsersController(Dispatcher dispatcher,
+            UserManager<User> userManager,
+            ILogger<UsersController> logger,
+            IMapper mapper,
+            IDateTimeProvider dateTimeProvider,
+            IOptionsSnapshot<AppSettings> appSettings)
         {
             _dispatcher = dispatcher;
             _userManager = userManager;
             _mapper = mapper;
+            _dateTimeProvider = dateTimeProvider;
+            _appSettings = appSettings.Value;
         }
 
         [HttpGet]
@@ -128,6 +141,60 @@ namespace ClassifiedAds.WebAPI.Controllers
         {
             var user = _dispatcher.Dispatch(new GetUserQuery { Id = id });
             _dispatcher.Dispatch(new DeleteUserCommand { User = user });
+
+            return Ok();
+        }
+
+        [HttpPost("{id}/passwordresetemail")]
+        public async Task<ActionResult> SendResetPasswordEmail(Guid id)
+        {
+            User user = _dispatcher.Dispatch(new GetUserQuery { Id = id });
+
+            if (user != null)
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var resetUrl = $"{_appSettings.IdentityServerAuthentication.Authority}/Account/ResetPassword?token={HttpUtility.UrlEncode(token)}&email={user.Email}";
+
+                _dispatcher.Dispatch(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
+                {
+                    From = "phong@gmail.com",
+                    Tos = user.Email,
+                    Subject = "Forgot Password",
+                    Body = string.Format("Reset Url: {0}", resetUrl),
+                }));
+            }
+            else
+            {
+                // email user and inform them that they do not have an account
+            }
+
+            return Ok();
+        }
+
+        [HttpPost("{id}/emailaddressconfirmation")]
+        public async Task<ActionResult> SendConfirmationEmailAddressEmail(Guid id)
+        {
+            User user = _dispatcher.Dispatch(new GetUserQuery { Id = id });
+
+            if (user != null)
+            {
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                var confirmationEmail = $"{_appSettings.IdentityServerAuthentication.Authority}/Account/ConfirmEmailAddress?token={HttpUtility.UrlEncode(token)}&email={user.Email}";
+
+                _dispatcher.Dispatch(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
+                {
+                    From = "phong@gmail.com",
+                    Tos = user.Email,
+                    Subject = "Confirmation Email",
+                    Body = string.Format("Confirmation Email: {0}", confirmationEmail),
+                }
+                ));
+            }
+            else
+            {
+                // email user and inform them that they do not have an account
+            }
 
             return Ok();
         }
