@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Services.Identity.Api", "ClassifiedAds.Services.Identity.Api\ClassifiedAds.Services.Identity.Api.csproj", "{008115AD-55E4-4ED8-9B89-44D0E8750A39}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Services.Identity.Grpc", "ClassifiedAds.Services.Identity.Grpc\ClassifiedAds.Services.Identity.Grpc.csproj", "{E3CA8A8C-D167-4C2F-A87D-24D038993FD3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{008115AD-55E4-4ED8-9B89-44D0E8750A39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{008115AD-55E4-4ED8-9B89-44D0E8750A39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{008115AD-55E4-4ED8-9B89-44D0E8750A39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{008115AD-55E4-4ED8-9B89-44D0E8750A39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3CA8A8C-D167-4C2F-A87D-24D038993FD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3CA8A8C-D167-4C2F-A87D-24D038993FD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3CA8A8C-D167-4C2F-A87D-24D038993FD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3CA8A8C-D167-4C2F-A87D-24D038993FD3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A15AF90A-969D-49BF-A61D-023A4B2A4100}
+	EndGlobalSection
+EndGlobal

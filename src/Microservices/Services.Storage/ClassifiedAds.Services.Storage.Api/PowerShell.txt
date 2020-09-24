@@ -1,0 +1,6 @@
+﻿Add-Migration -Context StorageDbContext Init -OutputDir Migrations/StorageDb
+
+Remove-Migration -Context StorageDbContext
+Remove-Migration -Context StorageDbContext -Force
+
+Update-Database -Context StorageDbContext

@@ -1,0 +1,97 @@
+﻿@using ClassifiedAds.IdentityServer.Models.ClientModels
+@model ClientModel
+
+<form id="client-form" asp-controller="Client" asp-action="Edit" Method="post">
+
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Client" asp-action="Index">Clients</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@Model.ClientId</li>
+                </ol>
+            </nav>
+        </div>
+
+        @if (Model.Id != 0)
+        {
+            <div class="col-12">
+                <h2>Edit @Model.ClientId</h2>
+            </div>
+        }
+
+        <div class="col-12">
+            <div asp-validation-summary="All" class="text-danger"></div>
+        </div>
+    </div>
+
+    @if (Model.Id != 0)
+    {
+        <div class="row client">
+            @await Html.PartialAsync("_Actions")
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Settings</h3>
+            <nav>
+                <div class="nav nav-tabs mt-3" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link active" id="nav-name-tab" data-toggle="tab" href="#nav-name" role="tab" aria-controls="nav-name" aria-selected="true">Name</a>
+                    @if (Model.Id != 0)
+                    {
+                        <a class="nav-item nav-link" id="nav-basics-tab" data-toggle="tab" href="#nav-basics" role="tab" aria-controls="nav-basics" aria-selected="false">Basics</a>
+                        <a class="nav-item nav-link" id="nav-authentication-tab" data-toggle="tab" href="#nav-authentication" role="tab" aria-controls="nav-authentication" aria-selected="false">Authentication</a>
+                        <a class="nav-item nav-link" id="nav-token-tab" data-toggle="tab" href="#nav-token" role="tab" aria-controls="nav-token" aria-selected="false">Token</a>
+                        <a class="nav-item nav-link" id="nav-consent-tab" data-toggle="tab" href="#nav-consent" role="tab" aria-controls="nav-consent" aria-selected="false">Consent</a>
+                        <a class="nav-item nav-link" id="nav-deviceflow-tab" data-toggle="tab" href="#nav-deviceflow" role="tab" aria-controls="nav-deviceflow" aria-selected="false">Device Flow</a>
+                    }
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane show active" id="nav-name" role="tabpanel" aria-labelledby="nav-name-tab">
+                    @await Html.PartialAsync("_Name")
+                </div>
+
+                @if (Model.Id != 0)
+                {
+                    <div class="tab-pane" id="nav-basics" role="tabpanel" aria-labelledby="nav-basics-tab">
+                        @await Html.PartialAsync("_Basics")
+                    </div>
+
+                    <div class="tab-pane" id="nav-authentication" role="tabpanel" aria-labelledby="nav-authentication-tab">
+                        @await Html.PartialAsync("_Authentication")
+                    </div>
+                    <div class="tab-pane" id="nav-token" role="tabpanel" aria-labelledby="nav-token-tab">
+                        @await Html.PartialAsync("_Token")
+                    </div>
+                    <div class="tab-pane" id="nav-consent" role="tabpanel" aria-labelledby="nav-consent-tab">
+                        @await Html.PartialAsync("_Consent")
+                    </div>
+                    <div class="tab-pane" id="nav-deviceflow" role="tabpanel" aria-labelledby="nav-deviceflow-tab">
+                        @await Html.PartialAsync("_DeviceFlow")
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row client">
+        @await Html.PartialAsync("_Actions")
+    </div>
+</form>
+
+@section scripts
+	{
+    <script>
+        $(function () {
+            //Disable enter for this form
+            FormMvc.disableEnter($('#client-form'));
+
+            //Radio image
+            $("label.radio-img>img").click(function () {
+                $(this).parent().find("input:radio").click();
+            });
+        });
+    </script>
+}
+

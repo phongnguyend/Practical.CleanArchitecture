@@ -1,0 +1,6 @@
+﻿Add-Migration -Context NotificationDbContext Init -OutputDir Migrations/NotificationDb
+
+Remove-Migration -Context NotificationDbContext
+Remove-Migration -Context NotificationDbContext -Force
+
+Update-Database -Context NotificationDbContext

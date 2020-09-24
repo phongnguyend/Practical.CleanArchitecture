@@ -1,0 +1,71 @@
+﻿@using IdentityServer4.Extensions
+@{
+    string name = null;
+    if (!true.Equals(ViewData["signed-out"]))
+    {
+        name = Context.User?.GetDisplayName();
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IdentityServer4</title>
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico" />
+    <link rel="stylesheet" href="~/css/bundle.min.css" />
+    <link rel="stylesheet" href="~/css/web.css" />
+</head>
+<body>
+    <div class="menu d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+        <!--Site name -->
+        <h3 class="menu-logo my-0 mr-md-auto font-weight-normal">
+            <a class="logo" asp-area="" asp-controller="Home" asp-action="Index">
+                <img src="~/icon.png" class="icon-banner">
+                IdentityServer4
+            </a>
+        </h3>
+
+        <!--Menu item -->
+        <div class="menu-item my-2 my-md-0 mr-md-3 dropdown">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                Configuration
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" asp-area="" asp-controller="Client" asp-action="Index">Clients</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" asp-area="" asp-controller="IdentityResource" asp-action="Index">Identity Resources</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" asp-area="" asp-controller="ApiResource" asp-action="Index">Api Resources</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" asp-area="" asp-controller="Grants" asp-action="Index">Persisted Grants</a>
+            </div>
+        </div>
+
+        <!--Menu item -->
+        <div class="menu-item my-2 my-md-0 mr-md-3 dropdown">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                User Management
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" asp-area="" asp-controller="User" asp-action="Index">Users</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Role" asp-action="Index">Roles</a>
+            </div>
+        </div>
+
+        <!--Menu item -->
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a class="menu-item my-2 btn btn-outline-primary" asp-action="Logout" asp-controller="Account">@User.GetDisplayName() - Logout</a>
+        }
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+    <mini-profiler />
+    <script src="~/js/bundle.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,5 @@
+﻿Add-Migration -Context ConfigurationDbContext Init -OutputDir Migrations/ConfigurationDb
+Add-Migration -Context PersistedGrantDbContext Init -OutputDir Migrations/PersistedGrantDb
+
+Update-Database -Context ConfigurationDbContext
+Update-Database -Context PersistedGrantDbContext

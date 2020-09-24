@@ -1,0 +1,7 @@
+﻿dotnet tool install --global dotnet-ef --version="3.1"
+
+dotnet ef migrations add Init --context NotificationDbContext -o Migrations/NotificationDb
+
+dotnet ef migrations script --context NotificationDbContext
+
+dotnet ef database update --context NotificationDbContext

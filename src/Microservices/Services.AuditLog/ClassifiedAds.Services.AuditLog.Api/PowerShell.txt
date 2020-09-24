@@ -1,0 +1,6 @@
+﻿Add-Migration -Context AuditLogDbContext Init -OutputDir Migrations/AuditLogDb
+
+Remove-Migration -Context AuditLogDbContext
+Remove-Migration -Context AuditLogDbContext -Force
+
+Update-Database -Context AuditLogDbContext

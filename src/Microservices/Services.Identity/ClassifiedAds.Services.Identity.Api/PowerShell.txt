@@ -1,0 +1,6 @@
+﻿Add-Migration -Context IdentityDbContext Init -OutputDir Migrations/IdentityDb
+
+Remove-Migration -Context IdentityDbContext
+Remove-Migration -Context IdentityDbContext -Force
+
+Update-Database -Context IdentityDbContext

@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option csharp_namespace = "ClassifiedAds.Services.Identity.Grpc";
+
+package user;
+
+service User {
+  rpc GetUsers (GetUsersRequest) returns (GetUsersResponse);
+  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+}
+
+message GetUsersRequest {
+
+}
+
+message GetUsersResponse {
+  repeated UserMessage users = 1;
+}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message GetUserResponse {
+  UserMessage user = 1;
+}
+
+message UserMessage {
+  string id = 1;
+  string userName = 2;
+  string email = 3;
+}

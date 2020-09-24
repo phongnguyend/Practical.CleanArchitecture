@@ -1,0 +1,7 @@
+﻿dotnet tool install --global dotnet-ef --version="3.1"
+
+dotnet ef migrations add Init --context ProductDbContext -o Migrations/ProductDb
+
+dotnet ef migrations script --context ProductDbContext
+
+dotnet ef database update --context ProductDbContext

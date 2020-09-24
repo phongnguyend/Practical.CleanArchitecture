@@ -1,0 +1,7 @@
+﻿dotnet tool install --global dotnet-ef --version="3.1"
+
+dotnet ef migrations add Init --context StorageDbContext -o Migrations/StorageDb
+
+dotnet ef migrations script --context StorageDbContext
+
+dotnet ef database update --context StorageDbContext

@@ -1,0 +1,55 @@
+﻿@using ClassifiedAds.IdentityServer.Models.UserModels
+@model RoleModel
+
+<form asp-controller="User" asp-action="DeleteRole" Method="post">
+    <div class="row">
+
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="User" asp-action="Index">Users</a></li>
+                    <li class="breadcrumb-item"><a asp-controller="User" asp-action="Profile" asp-route-id="@Model.User.Id">@Model.User.UserName</a></li>
+                    <li class="breadcrumb-item"><a asp-controller="User" asp-action="Roles" asp-route-id="@Model.User.Id">Roles</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Delete Role</li>
+                </ol>
+            </nav>
+        </div>
+
+
+        <div class="col-md-12">
+
+            <h3>Delete Role</h3>
+
+            <!--Hidden -->
+            <input type="hidden" asp-for="User.Id" />
+
+            <!--Hidden -->
+            <input type="hidden" asp-for="Role.Id" />
+
+            <div class="card mt-3">
+                <h5 class="card-header">Delete Role</h5>
+                <div class="card-body">
+
+                    <!--Select-->
+                    <div class="form-group row">
+                        <label asp-for="Role.Name" class="col-sm-3 col-form-label">
+                            @await Html.PartialAsync("_Label", "Role")
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" asp-for="Role.Name" disabled="disabled" class="form-control"/>
+                        </div>
+                    </div>
+
+                    <!--Button-->
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">
+                        </label>
+                        <div class="col-sm-9">
+                            <button type="submit" class="btn btn-danger">Delete Role</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

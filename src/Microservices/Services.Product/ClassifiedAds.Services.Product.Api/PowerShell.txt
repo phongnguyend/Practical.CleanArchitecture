@@ -1,0 +1,6 @@
+﻿Add-Migration -Context ProductDbContext Init -OutputDir Migrations/ProductDb
+
+Remove-Migration -Context ProductDbContext
+Remove-Migration -Context ProductDbContext -Force
+
+Update-Database -Context ProductDbContext
