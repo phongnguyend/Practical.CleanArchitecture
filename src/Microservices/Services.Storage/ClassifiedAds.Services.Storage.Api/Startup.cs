@@ -1,12 +1,17 @@
 using AutoMapper;
+using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.MessageBrokers;
+using ClassifiedAds.Infrastructure.Storages;
 using ClassifiedAds.Infrastructure.Web.Filters;
+using ClassifiedAds.Services.Storage.DTOs;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Threading;
 
 namespace ClassifiedAds.Services.Storage
 {
@@ -41,8 +46,11 @@ namespace ClassifiedAds.Services.Storage
             services.AddDateTimeProvider();
             services.AddApplicationServices();
 
-            var messageBrokerOptions = new MessageBrokerOptions { Provider = "Fake" };
-            var storageOptions = new StorageOptions { Provider = "Fake" };
+            var storageOptions = new StorageOptions();
+            var messageBrokerOptions = new MessageBrokerOptions();
+
+            Configuration.GetSection("Storage").Bind(storageOptions);
+            Configuration.GetSection("MessageBroker").Bind(messageBrokerOptions);
 
             services.AddStorageModule(storageOptions, messageBrokerOptions, Configuration.GetConnectionString("ClassifiedAds"));
 
@@ -63,6 +71,8 @@ namespace ClassifiedAds.Services.Storage
                 app.UseDeveloperExceptionPage();
             }
 
+            RunMessageBrokerReceivers(app.ApplicationServices.CreateScope().ServiceProvider);
+
             app.UseRouting();
 
             app.UseCors("AllowAnyOrigin");
@@ -73,6 +83,26 @@ namespace ClassifiedAds.Services.Storage
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+        }
+
+        private void RunMessageBrokerReceivers(IServiceProvider serviceProvider)
+        {
+            var fileUploadedMessageQueueReceiver = serviceProvider.GetService<IMessageReceiver<FileUploadedEvent>>();
+            var fileDeletedMessageQueueReceiver = serviceProvider.GetService<IMessageReceiver<FileDeletedEvent>>();
+
+            fileUploadedMessageQueueReceiver?.Receive(data =>
+            {
+                Thread.Sleep(5000); // simulate long running task
+
+                string message = data.FileEntry.Id.ToString();
+            });
+
+            fileDeletedMessageQueueReceiver?.Receive(data =>
+            {
+                Thread.Sleep(5000); // simulate long running task
+
+                string message = data.FileEntry.Id.ToString();
             });
         }
     }

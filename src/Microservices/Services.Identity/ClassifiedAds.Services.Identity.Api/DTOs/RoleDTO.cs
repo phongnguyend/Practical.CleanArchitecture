@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClassifiedAds.Services.Identity.DTOs.Roles
+namespace ClassifiedAds.Services.Identity.DTOs
 {
     public class RoleDTO
     {

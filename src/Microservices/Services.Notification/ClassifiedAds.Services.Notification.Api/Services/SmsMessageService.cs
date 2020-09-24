@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Notification.Sms;
-using ClassifiedAds.Services.Notification.Contracts.DTOs;
+using ClassifiedAds.Services.Notification.DTOs;
 using ClassifiedAds.Services.Notification.Repositories;
 using Microsoft.Extensions.Logging;
 using System;

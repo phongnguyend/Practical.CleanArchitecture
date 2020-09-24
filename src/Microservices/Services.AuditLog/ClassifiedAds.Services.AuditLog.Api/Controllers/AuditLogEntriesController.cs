@@ -1,9 +1,9 @@
-﻿using ClassifiedAds.Application;
-using ClassifiedAds.Services.AuditLog.Contracts.DTOs;
-using ClassifiedAds.Services.AuditLog.Contracts.Queries;
+﻿using System.Collections.Generic;
+using ClassifiedAds.Application;
+using ClassifiedAds.Services.AuditLog.DTOs;
+using ClassifiedAds.Services.AuditLog.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace ClassifiedAds.Services.AuditLog.Controllers
 {

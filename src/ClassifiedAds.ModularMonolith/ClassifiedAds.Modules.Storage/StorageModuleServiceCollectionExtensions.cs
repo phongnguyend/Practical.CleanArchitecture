@@ -1,15 +1,10 @@
 ﻿using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.MessageBrokers;
-using ClassifiedAds.Modules.Storage;
+using ClassifiedAds.Infrastructure.Storages;
 using ClassifiedAds.Modules.Storage.DTOs;
 using ClassifiedAds.Modules.Storage.Entities;
 using ClassifiedAds.Modules.Storage.Repositories;
-using ClassifiedAds.Modules.Storage.Storages;
-using ClassifiedAds.Modules.Storage.Storages.Amazon;
-using ClassifiedAds.Modules.Storage.Storages.Azure;
-using ClassifiedAds.Modules.Storage.Storages.Fake;
-using ClassifiedAds.Modules.Storage.Storages.Local;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -34,27 +29,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
-            if (storageOptions.UsedAzure())
-            {
-                services.AddSingleton<IFileStorageManager>(new AzureBlobStorageManager(storageOptions.Azure.ConnectionString, storageOptions.Azure.Container));
-            }
-            else if (storageOptions.UsedAmazon())
-            {
-                services.AddSingleton<IFileStorageManager>(
-                    new AmazonS3StorageManager(
-                        storageOptions.Amazon.AccessKeyID,
-                        storageOptions.Amazon.SecretAccessKey,
-                        storageOptions.Amazon.BucketName,
-                        storageOptions.Amazon.RegionEndpoint));
-            }
-            else if (storageOptions.UsedLocal())
-            {
-                services.AddSingleton<IFileStorageManager>(new LocalFileStorageManager(storageOptions.Local.Path));
-            }
-            else if (storageOptions.UsedFake())
-            {
-                services.AddSingleton<IFileStorageManager>(new FakeStorageManager());
-            }
+            services.AddStorageManager(storageOptions);
 
             services.AddMessageBusSender<FileUploadedEvent>(messageBrokerOptions);
             services.AddMessageBusSender<FileDeletedEvent>(messageBrokerOptions);

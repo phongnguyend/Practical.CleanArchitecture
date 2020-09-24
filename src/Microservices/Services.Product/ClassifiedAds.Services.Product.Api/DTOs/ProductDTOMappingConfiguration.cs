@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace ClassifiedAds.Services.Product.DTOs.Products
+namespace ClassifiedAds.Services.Product.DTOs
 {
     public class ProductDTOMappingConfiguration : Profile
     {

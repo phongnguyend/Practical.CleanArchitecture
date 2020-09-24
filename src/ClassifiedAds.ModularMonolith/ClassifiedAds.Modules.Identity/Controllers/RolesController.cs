@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Application;
-using ClassifiedAds.Application.Roles.Commands;
-using ClassifiedAds.Application.Roles.Queries;
+using ClassifiedAds.Modules.Identity.Commands.Roles;
 using ClassifiedAds.Modules.Identity.DTOs.Roles;
 using ClassifiedAds.Modules.Identity.Entities;
+using ClassifiedAds.Modules.Identity.Queries.Roles;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

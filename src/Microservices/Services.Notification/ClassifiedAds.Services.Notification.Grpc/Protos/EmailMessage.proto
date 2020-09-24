@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "ClassifiedAds.Services.Notification.Grpc";
+
+package NotificationPackage;
+
+service Email {
+  rpc AddEmailMessage (AddEmailMessageRequest) returns (AddEmailMessageResponse);
+}
+
+message AddEmailMessageRequest {
+  EmailMessage message = 1;
+}
+
+message AddEmailMessageResponse {
+  EmailMessage message = 1;
+}
+
+message EmailMessage {
+  string Id = 1;
+  string From = 2;
+  string Tos = 3;
+  string CCs = 4;
+  string BCCs = 5;
+  string Subject = 6;
+  string Body = 7;
+}

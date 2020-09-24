@@ -1,9 +1,11 @@
-﻿using ClassifiedAds.Modules.Identity.Entities;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.Modules.Identity.Contracts.DTOs;
+using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
 using System;
 using System.Linq;
 
-namespace ClassifiedAds.Application.Users.Queries
+namespace ClassifiedAds.Modules.Identity.Queries.Roles
 {
     public class GetUserQuery : IQuery<User>
     {

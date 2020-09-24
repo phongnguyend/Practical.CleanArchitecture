@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Modules.Identity;
+using ClassifiedAds.Modules.Identity.Contracts.Services;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
 using ClassifiedAds.Modules.Identity.Services;
@@ -21,7 +22,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 }
             }))
                 .AddScoped(typeof(IUserRepository), typeof(UserRepository))
-                .AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
+                .AddScoped(typeof(IRoleRepository), typeof(RoleRepository))
+                .AddScoped(typeof(IUserService), typeof(UserService));
 
             services.AddIdentity<User, Role>(options =>
                     {
@@ -51,7 +53,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 }
             }))
                 .AddScoped(typeof(IUserRepository), typeof(UserRepository))
-                .AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
+                .AddScoped(typeof(IRoleRepository), typeof(RoleRepository))
+                .AddScoped(typeof(IUserService), typeof(UserService));
 
             services.AddIdentityCore<User>(options =>
                     {

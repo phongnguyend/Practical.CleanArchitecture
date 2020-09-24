@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using ClassifiedAds.Application;
-using ClassifiedAds.Application.Roles.Commands;
-using ClassifiedAds.Application.Roles.Queries;
 using ClassifiedAds.IdentityServer.Models.RoleModels;
+using ClassifiedAds.Modules.Identity.Commands.Roles;
 using ClassifiedAds.Modules.Identity.Entities;
+using ClassifiedAds.Modules.Identity.Queries.Roles;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClassifiedAds.IdentityServer.Controllers

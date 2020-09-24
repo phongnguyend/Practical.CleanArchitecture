@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
-using ClassifiedAds.Modules.AuditLog.Contracts.Queries;
+using ClassifiedAds.Modules.AuditLog.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;

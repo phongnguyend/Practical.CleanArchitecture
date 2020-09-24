@@ -4,7 +4,9 @@ using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
 using ClassifiedAds.Modules.AuditLog.Contracts.Services;
 using ClassifiedAds.Modules.AuditLog.Entities;
+using ClassifiedAds.Modules.AuditLog.Queries;
 using System;
+using System.Collections.Generic;
 
 namespace ClassifiedAds.Modules.AuditLog.Services
 {
@@ -28,6 +30,18 @@ namespace ClassifiedAds.Modules.AuditLog.Services
                 ObjectId = dto.ObjectId,
                 Log = dto.Log,
             });
+        }
+
+        public List<AuditLogEntryDTO> GetAuditLogEntries(AuditLogEntryQueryOptions query)
+        {
+            var logs = _dispatcher.Dispatch(new GetAuditEntriesQuery
+            {
+                UserId = query.UserId,
+                ObjectId = query.ObjectId,
+                AsNoTracking = query.AsNoTracking,
+            });
+
+            return logs;
         }
     }
 }

@@ -1,9 +1,6 @@
 using AutoMapper;
 using ClassifiedAds.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Notification;
-using ClassifiedAds.Infrastructure.Notification.Email;
-using ClassifiedAds.Infrastructure.Notification.Sms;
-using ClassifiedAds.Infrastructure.Notification.Web;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
@@ -45,13 +42,11 @@ namespace ClassifiedAds.Services.Notification
             services.AddDateTimeProvider();
             services.AddApplicationServices();
 
-            var messageBrokerOptions = new MessageBrokerOptions { Provider = "Fake" };
-            var notificationOptions = new NotificationOptions
-            {
-                Email = new EmailOptions { Provider = "Fake" },
-                Sms = new SmsOptions { Provider = "Fake" },
-                Web = new WebOptions { Provider = "Fake" },
-            };
+            var messageBrokerOptions = new MessageBrokerOptions();
+            var notificationOptions = new NotificationOptions();
+
+            Configuration.GetSection("MessageBroker").Bind(messageBrokerOptions);
+            Configuration.GetSection("Notification").Bind(notificationOptions);
 
             services.AddNotificationModule(messageBrokerOptions, notificationOptions, Configuration.GetConnectionString("ClassifiedAds"));
 

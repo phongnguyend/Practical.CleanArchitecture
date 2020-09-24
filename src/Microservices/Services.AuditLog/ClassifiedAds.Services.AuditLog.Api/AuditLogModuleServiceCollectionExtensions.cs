@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Services.AuditLog.Contracts.Services;
 using ClassifiedAds.Services.AuditLog.Entities;
 using ClassifiedAds.Services.AuditLog.Repositories;
 using ClassifiedAds.Services.AuditLog.Services;

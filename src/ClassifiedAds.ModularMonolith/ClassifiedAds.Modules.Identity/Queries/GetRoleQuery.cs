@@ -1,9 +1,10 @@
-﻿using ClassifiedAds.Modules.Identity.Entities;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
 using System;
 using System.Linq;
 
-namespace ClassifiedAds.Application.Roles.Queries
+namespace ClassifiedAds.Modules.Identity.Queries.Roles
 {
     public class GetRoleQuery : IQuery<Role>
     {

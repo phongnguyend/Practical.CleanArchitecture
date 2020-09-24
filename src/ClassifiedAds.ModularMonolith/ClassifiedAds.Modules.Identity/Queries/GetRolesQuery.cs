@@ -1,10 +1,11 @@
-﻿using ClassifiedAds.Application.Decorators.DatabaseRetry;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.Application.Decorators.DatabaseRetry;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassifiedAds.Application.Roles.Queries
+namespace ClassifiedAds.Modules.Identity.Queries.Roles
 {
     public class GetRolesQuery : IQuery<List<Role>>
     {

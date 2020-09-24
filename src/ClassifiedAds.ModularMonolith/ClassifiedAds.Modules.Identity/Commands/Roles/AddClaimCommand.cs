@@ -1,7 +1,8 @@
-﻿using ClassifiedAds.Modules.Identity.Entities;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
 
-namespace ClassifiedAds.Application.Roles.Commands
+namespace ClassifiedAds.Modules.Identity.Commands.Roles
 {
     public class AddClaimCommand : ICommand
     {

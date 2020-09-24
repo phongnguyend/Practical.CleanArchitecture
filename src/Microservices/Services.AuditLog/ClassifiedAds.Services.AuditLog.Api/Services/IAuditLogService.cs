@@ -1,6 +1,6 @@
-﻿using ClassifiedAds.Services.AuditLog.Contracts.DTOs;
+﻿using ClassifiedAds.Services.AuditLog.DTOs;
 
-namespace ClassifiedAds.Services.AuditLog.Contracts.Services
+namespace ClassifiedAds.Services.AuditLog.Services
 {
     public interface IAuditLogService
     {

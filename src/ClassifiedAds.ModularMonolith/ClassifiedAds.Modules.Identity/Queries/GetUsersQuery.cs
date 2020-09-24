@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Application.Decorators.AuditLog;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.Application.Decorators.AuditLog;
 using ClassifiedAds.Application.Decorators.DatabaseRetry;
 using ClassifiedAds.Modules.Identity.Contracts.DTOs;
 using ClassifiedAds.Modules.Identity.Entities;
@@ -6,19 +7,15 @@ using ClassifiedAds.Modules.Identity.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassifiedAds.Application.Users.Queries
+namespace ClassifiedAds.Modules.Identity.Queries.Roles
 {
-    public class GetUsersQuery : IQuery<List<User>>
+    public class GetUsersQuery : UserQueryOptions, IQuery<List<User>>
     {
-        public bool IncludeClaims { get; set; }
-        public bool IncludeUserRoles { get; set; }
-        public bool IncludeRoles { get; set; }
-        public bool AsNoTracking { get; set; }
     }
 
     [AuditLog]
     [DatabaseRetry(retryTimes: 4)]
-    public class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, List<User>>, IQueryHandler<Modules.Identity.Contracts.Queries.GetUsersQuery, List<UserDTO>>
+    public class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, List<User>>
     {
         private readonly IUserRepository _userRepository;
 
@@ -40,21 +37,5 @@ namespace ClassifiedAds.Application.Users.Queries
             return db.ToList();
         }
 
-        public List<UserDTO> Handle(Modules.Identity.Contracts.Queries.GetUsersQuery query)
-        {
-            var db = _userRepository.Get(new UserQueryOptions
-            {
-                IncludeClaims = query.IncludeClaims,
-                IncludeUserRoles = query.IncludeUserRoles,
-                IncludeRoles = query.IncludeRoles,
-                AsNoTracking = query.AsNoTracking,
-            }).Select(x => new UserDTO
-            {
-                Id = x.Id,
-                UserName = x.UserName,
-            });
-
-            return db.ToList();
-        }
     }
 }

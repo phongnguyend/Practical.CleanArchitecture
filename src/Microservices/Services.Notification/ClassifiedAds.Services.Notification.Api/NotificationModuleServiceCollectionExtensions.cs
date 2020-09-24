@@ -2,8 +2,7 @@
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Notification;
-using ClassifiedAds.Services.Notification.Contracts.DTOs;
-using ClassifiedAds.Services.Notification.Contracts.Services;
+using ClassifiedAds.Services.Notification.DTOs;
 using ClassifiedAds.Services.Notification.Entities;
 using ClassifiedAds.Services.Notification.Repositories;
 using ClassifiedAds.Services.Notification.Services;
@@ -42,7 +41,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services
                 .AddMessageBusSender<EmailMessageCreatedEvent>(messageBrokerOptions)
-                .AddMessageBusSender<SmsMessageCreatedEvent>(messageBrokerOptions);
+                .AddMessageBusSender<SmsMessageCreatedEvent>(messageBrokerOptions)
+                .AddMessageBusReceiver<EmailMessageCreatedEvent>(messageBrokerOptions)
+                .AddMessageBusReceiver<SmsMessageCreatedEvent>(messageBrokerOptions);
 
             services.AddNotificationServices(notificationOptions);
 

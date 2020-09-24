@@ -3,13 +3,18 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <CodeAnalysisRuleSet>ClassifiedAds.ruleset</CodeAnalysisRuleSet>
+    <UserSecretsId>f2e298d9-f756-4769-92a2-d920b7e1a422</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <Protobuf Include="..\..\Services.AuditLog\ClassifiedAds.Services.AuditLog.Grpc\Protos\auditlog.proto" GrpcServices="Client" Link="Protos\auditlog.proto" />
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="AWSSDK.S3" Version="3.3.110.7" />
+    <PackageReference Include="Grpc.Tools" Version="2.26.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Azure.Storage.Queue" Version="11.1.7" />

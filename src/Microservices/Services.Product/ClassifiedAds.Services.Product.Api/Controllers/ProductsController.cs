@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Application;
-using ClassifiedAds.Services.AuditLog.Contracts.DTOs;
-using ClassifiedAds.Services.AuditLog.Contracts.Queries;
 using ClassifiedAds.Services.Product.Commands;
 using ClassifiedAds.Services.Product.DTOs;
 using ClassifiedAds.Services.Product.Queries;

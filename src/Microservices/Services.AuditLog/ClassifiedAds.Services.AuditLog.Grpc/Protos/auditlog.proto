@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "ClassifiedAds.Services.AuditLog.Grpc";
+
+package AuditLogPackage;
+
+service AuditLog {
+  rpc GetAuditLogEntries (GetAuditLogEntriesRequest) returns (GetAuditLogEntriesResponse);
+  rpc AddAuditLogEntry (AddAuditLogEntryRequest) returns (AddAuditLogEntryResponse);
+}
+
+message GetAuditLogEntriesRequest {
+  string objectId = 1;
+}
+
+message GetAuditLogEntriesResponse {
+  repeated AuditLogEntryMessage entries = 1;
+}
+
+message AddAuditLogEntryRequest {
+  AuditLogEntryMessage entry = 1;
+}
+
+message AddAuditLogEntryResponse {
+  AuditLogEntryMessage entry = 1;
+}
+
+message AuditLogEntryMessage {
+  string id = 1;
+  string userId = 2;
+  string action = 3;
+  string objectId = 4;
+  string log = 5;
+  string userName = 6;
+  google.protobuf.Timestamp createdDateTime = 7;
+}

@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using ClassifiedAds.Services.Notification.Contracts.DTOs;
+using ClassifiedAds.Services.Notification.DTOs;
 using ClassifiedAds.Services.Notification.Entities;
 
 namespace ClassifiedAds.Services.Notification.EventHandlers

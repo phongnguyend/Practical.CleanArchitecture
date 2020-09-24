@@ -1,12 +1,12 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Infrastructure.Grpc;
-using ClassifiedAds.Services.Identity.Contracts.DTOs;
+using ClassifiedAds.Services.AuditLog.DTOs;
 using ClassifiedAds.Services.Identity.Grpc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassifiedAds.Services.Identity.Contracts.Queries
+namespace ClassifiedAds.Services.AuditLog.Queries
 {
     public class GetUsersQuery : IQuery<List<UserDTO>>
     {
@@ -16,7 +16,7 @@ namespace ClassifiedAds.Services.Identity.Contracts.Queries
         public bool AsNoTracking { get; set; }
     }
 
-    public class GetAuditEntriesQueryHandler : IQueryHandler<GetUsersQuery, List<UserDTO>>
+    public class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, List<UserDTO>>
     {
         public List<UserDTO> Handle(GetUsersQuery query)
         {

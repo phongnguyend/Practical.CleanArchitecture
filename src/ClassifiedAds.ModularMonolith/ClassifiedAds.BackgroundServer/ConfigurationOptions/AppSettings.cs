@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Notification;
-using ClassifiedAds.Modules.Storage;
+using ClassifiedAds.Infrastructure.Storages;
 using Microsoft.Extensions.Options;
 
 namespace ClassifiedAds.BackgroundServer.ConfigurationOptions

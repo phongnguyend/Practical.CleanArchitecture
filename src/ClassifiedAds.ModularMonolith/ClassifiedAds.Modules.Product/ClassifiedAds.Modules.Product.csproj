@@ -24,8 +24,4 @@
     <ProjectReference Include="..\ClassifiedAds.Modules.Identity.Contracts\ClassifiedAds.Modules.Identity.Contracts.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>

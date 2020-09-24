@@ -3,8 +3,7 @@ using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Notification.Email;
-using ClassifiedAds.Services.Notification.Contracts.DTOs;
-using ClassifiedAds.Services.Notification.Contracts.Services;
+using ClassifiedAds.Services.Notification.DTOs;
 using ClassifiedAds.Services.Notification.Entities;
 using ClassifiedAds.Services.Notification.Repositories;
 using Microsoft.Extensions.Logging;
@@ -36,7 +35,7 @@ namespace ClassifiedAds.Services.Notification.Services
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public void CreateEmailMessage(Contracts.DTOs.EmailMessageDTO emailMessage)
+        public void CreateEmailMessage(DTOs.EmailMessageDTO emailMessage)
         {
             AddOrUpdate(new EmailMessage
             {

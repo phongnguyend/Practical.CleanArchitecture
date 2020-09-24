@@ -1,7 +1,8 @@
-﻿using ClassifiedAds.Services.Identity.Entities;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.Services.Identity.Entities;
 using ClassifiedAds.Services.Identity.Repositories;
 
-namespace ClassifiedAds.Application.Roles.Commands
+namespace ClassifiedAds.Services.Identity.Commands.Roles
 {
     public class AddUpdateRoleCommand : ICommand
     {

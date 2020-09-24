@@ -1,5 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.IdentityServer.Manage.Models;
+using ClassifiedAds.Infrastructure.Notification.Sms;
+using ClassifiedAds.Services.Identity.Commands.SmsMessages;
 using ClassifiedAds.Services.Identity.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -96,14 +98,20 @@ namespace ClassifiedAds.IdentityServer.Quickstart.Manage
             {
                 return View(model);
             }
+
             // Generate the token and send it
             var user = await GetCurrentUserAsync();
             var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, model.PhoneNumber);
-            //_dispatcher.Dispatch(new AddOrUpdateEntityCommand<SmsMessage>(new SmsMessage
-            //{
-            //    PhoneNumber = model.PhoneNumber,
-            //    Message = "Your security code is: " + code,
-            //}));
+
+            _dispatcher.Dispatch(new AddSmsMessageCommand
+            {
+                SmsMessage = new SmsMessageDTO
+                {
+                    PhoneNumber = model.PhoneNumber,
+                    Message = "Your security code is: " + code,
+                },
+            });
+
             return RedirectToAction(nameof(VerifyPhoneNumber), new { PhoneNumber = model.PhoneNumber });
         }
 

@@ -6,7 +6,7 @@ using ClassifiedAds.Services.Identity.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassifiedAds.Services.Identity.Contracts.Queries
+namespace ClassifiedAds.Services.Identity.Queries
 {
     public class GetUsersQuery : IQuery<List<User>>
     {

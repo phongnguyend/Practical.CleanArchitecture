@@ -4,6 +4,8 @@
 
 using ClassifiedAds.Application;
 using ClassifiedAds.IdentityServer.Models;
+using ClassifiedAds.Infrastructure.Notification.Email;
+using ClassifiedAds.Services.Identity.Commands.EmailMessages;
 using ClassifiedAds.Services.Identity.Entities;
 using IdentityModel;
 using IdentityServer4.Events;
@@ -409,14 +411,16 @@ namespace IdentityServer4.Quickstart.UI
             var confirmationEmail = Url.Action("ConfirmEmailAddress", "Account",
                 new { token = token, email = user.Email }, Request.Scheme);
 
-            //_dispatcher.Dispatch(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
-            //{
-            //    From = "phong@gmail.com",
-            //    Tos = user.Email,
-            //    Subject = "Confirmation Email",
-            //    Body = string.Format("Confirmation Email: {0}", confirmationEmail),
-            //}
-            //));
+            _dispatcher.Dispatch(new AddEmailMessageCommand
+            {
+                EmailMessage = new EmailMessageDTO
+                {
+                    From = "phong@gmail.com",
+                    Tos = user.Email,
+                    Subject = "Confirmation Email",
+                    Body = string.Format("Confirmation Email: {0}", confirmationEmail),
+                },
+            });
 
             return View("Success");
         }
@@ -460,13 +464,16 @@ namespace IdentityServer4.Quickstart.UI
                     var resetUrl = Url.Action("ResetPassword", "Account",
                         new { token = token, email = user.Email }, Request.Scheme);
 
-                    //_dispatcher.Dispatch(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
-                    //{
-                    //    From = "phong@gmail.com",
-                    //    Tos = user.Email,
-                    //    Subject = "Forgot Password",
-                    //    Body = string.Format("Reset Url: {0}", resetUrl),
-                    //}));
+                    _dispatcher.Dispatch(new AddEmailMessageCommand
+                    {
+                        EmailMessage = new EmailMessageDTO
+                        {
+                            From = "phong@gmail.com",
+                            Tos = user.Email,
+                            Subject = "Forgot Password",
+                            Body = string.Format("Reset Url: {0}", resetUrl),
+                        },
+                    });
                 }
                 else
                 {

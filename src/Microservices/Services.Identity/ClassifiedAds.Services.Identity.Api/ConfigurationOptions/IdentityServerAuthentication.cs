@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ClassifiedAds.Services.Identity.ConfigurationOptions
+﻿namespace ClassifiedAds.Services.Identity.ConfigurationOptions
 {
     public class IdentityServerAuthentication
     {

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Services.Identity.Entities;
 
-namespace ClassifiedAds.Services.Identity.DTOs.Roles
+namespace ClassifiedAds.Services.Identity.DTOs
 {
     public class RoleDTOMappingConfiguration : Profile
     {

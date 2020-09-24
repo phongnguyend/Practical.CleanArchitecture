@@ -1,8 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Services.AuditLog.Contracts.DTOs;
-using ClassifiedAds.Services.AuditLog.Contracts.Services;
+using ClassifiedAds.Services.AuditLog.DTOs;
 using ClassifiedAds.Services.AuditLog.Entities;
 using System;
 

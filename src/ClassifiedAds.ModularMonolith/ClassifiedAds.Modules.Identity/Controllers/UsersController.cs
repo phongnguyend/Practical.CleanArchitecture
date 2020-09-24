@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Application;
-using ClassifiedAds.Application.Users.Commands;
-using ClassifiedAds.Application.Users.Queries;
 using ClassifiedAds.CrossCuttingConcerns.OS;
+using ClassifiedAds.Modules.Identity.Commands.Users;
 using ClassifiedAds.Modules.Identity.DTOs.Users;
 using ClassifiedAds.Modules.Identity.Entities;
+using ClassifiedAds.Modules.Identity.Queries.Roles;
 using ClassifiedAds.Modules.Notification.Contracts.DTOs;
 using ClassifiedAds.Modules.Notification.Contracts.Services;
 using Microsoft.AspNetCore.Authorization;

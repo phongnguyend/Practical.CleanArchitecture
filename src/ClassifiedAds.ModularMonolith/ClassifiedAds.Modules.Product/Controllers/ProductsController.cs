@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Application;
 using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
-using ClassifiedAds.Modules.AuditLog.Contracts.Queries;
 using ClassifiedAds.Modules.Product.Commands;
 using ClassifiedAds.Modules.Product.DTOs;
 using ClassifiedAds.Modules.Product.Queries;

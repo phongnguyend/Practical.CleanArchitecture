@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClassifiedAds.Services.AuditLog.Contracts.DTOs
+namespace ClassifiedAds.Services.Product.DTOs
 {
     public class AuditLogEntryQueryOptions
     {

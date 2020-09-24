@@ -1,6 +1,6 @@
-﻿using ClassifiedAds.Services.Notification.Contracts.DTOs;
+﻿using ClassifiedAds.Services.Notification.DTOs;
 
-namespace ClassifiedAds.Services.Notification.Contracts.Services
+namespace ClassifiedAds.Services.Notification.Services
 {
     public interface IEmailMessageService
     {

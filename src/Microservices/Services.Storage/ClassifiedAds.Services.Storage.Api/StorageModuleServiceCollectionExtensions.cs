@@ -2,15 +2,10 @@
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Infrastructure.MessageBrokers;
-using ClassifiedAds.Services.Storage;
+using ClassifiedAds.Infrastructure.Storages;
 using ClassifiedAds.Services.Storage.DTOs;
 using ClassifiedAds.Services.Storage.Entities;
 using ClassifiedAds.Services.Storage.Repositories;
-using ClassifiedAds.Services.Storage.Storages;
-using ClassifiedAds.Services.Storage.Storages.Amazon;
-using ClassifiedAds.Services.Storage.Storages.Azure;
-using ClassifiedAds.Services.Storage.Storages.Fake;
-using ClassifiedAds.Services.Storage.Storages.Local;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -39,30 +34,12 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentWebUser>();
 
-            if (storageOptions.UsedAzure())
-            {
-                services.AddSingleton<IFileStorageManager>(new AzureBlobStorageManager(storageOptions.Azure.ConnectionString, storageOptions.Azure.Container));
-            }
-            else if (storageOptions.UsedAmazon())
-            {
-                services.AddSingleton<IFileStorageManager>(
-                    new AmazonS3StorageManager(
-                        storageOptions.Amazon.AccessKeyID,
-                        storageOptions.Amazon.SecretAccessKey,
-                        storageOptions.Amazon.BucketName,
-                        storageOptions.Amazon.RegionEndpoint));
-            }
-            else if (storageOptions.UsedLocal())
-            {
-                services.AddSingleton<IFileStorageManager>(new LocalFileStorageManager(storageOptions.Local.Path));
-            }
-            else if (storageOptions.UsedFake())
-            {
-                services.AddSingleton<IFileStorageManager>(new FakeStorageManager());
-            }
+            services.AddStorageManager(storageOptions);
 
-            services.AddMessageBusSender<FileUploadedEvent>(messageBrokerOptions);
-            services.AddMessageBusSender<FileDeletedEvent>(messageBrokerOptions);
+            services.AddMessageBusSender<FileUploadedEvent>(messageBrokerOptions)
+                    .AddMessageBusSender<FileDeletedEvent>(messageBrokerOptions)
+                    .AddMessageBusReceiver<FileUploadedEvent>(messageBrokerOptions)
+                    .AddMessageBusReceiver<FileDeletedEvent>(messageBrokerOptions);
 
             return services;
         }

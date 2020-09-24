@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.OS;
+using ClassifiedAds.Modules.Identity.Contracts.DTOs;
 using ClassifiedAds.Modules.Identity.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;

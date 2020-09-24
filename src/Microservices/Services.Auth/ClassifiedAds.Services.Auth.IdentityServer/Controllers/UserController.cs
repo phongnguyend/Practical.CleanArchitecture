@@ -1,11 +1,9 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.Application.Roles.Queries;
-using ClassifiedAds.Application.Users.Commands;
-using ClassifiedAds.Application.Users.Queries;
 using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.IdentityServer.Models.UserModels;
-using ClassifiedAds.Services.Identity.Contracts.Queries;
+using ClassifiedAds.Services.Identity.Commands.Users;
 using ClassifiedAds.Services.Identity.Entities;
+using ClassifiedAds.Services.Identity.Queries;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

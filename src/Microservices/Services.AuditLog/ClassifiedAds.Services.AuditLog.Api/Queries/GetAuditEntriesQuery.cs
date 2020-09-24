@@ -1,14 +1,13 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.Services.AuditLog.Contracts.DTOs;
+using ClassifiedAds.Services.AuditLog.DTOs;
 using ClassifiedAds.Services.AuditLog.Entities;
 using ClassifiedAds.Services.AuditLog.Repositories;
-using ClassifiedAds.Services.Identity.Contracts.Queries;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassifiedAds.Services.AuditLog.Contracts.Queries
+namespace ClassifiedAds.Services.AuditLog.Queries
 {
     public class GetAuditEntriesQuery : AuditLogEntryQueryOptions, IQuery<List<AuditLogEntryDTO>>
     {

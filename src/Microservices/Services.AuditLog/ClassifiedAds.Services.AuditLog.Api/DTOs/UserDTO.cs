@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClassifiedAds.Services.Identity.Contracts.DTOs
+namespace ClassifiedAds.Services.AuditLog.DTOs
 {
     public class UserDTO
     {

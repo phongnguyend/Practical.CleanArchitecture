@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "ClassifiedAds.Services.Notification.Grpc";
+
+package NotificationPackage;
+
+service Sms {
+  rpc AddSmsMessage (AddSmsMessageRequest) returns (AddSmsMessageResponse);
+}
+
+message AddSmsMessageRequest {
+  SmsMessage message = 1;
+}
+
+message AddSmsMessageResponse {
+  SmsMessage message = 1;
+}
+
+message SmsMessage {
+  string Id = 1;
+  string Message = 2;
+  string PhoneNumber = 3;
+}

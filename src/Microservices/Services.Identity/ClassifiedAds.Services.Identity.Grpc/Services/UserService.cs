@@ -1,6 +1,5 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.Application.Users.Queries;
-using ClassifiedAds.Services.Identity.Contracts.Queries;
+using ClassifiedAds.Services.Identity.Queries;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using System;

@@ -1,7 +1,8 @@
-﻿using ClassifiedAds.Modules.Identity.Entities;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
 
-namespace ClassifiedAds.Application.Users.Commands
+namespace ClassifiedAds.Modules.Identity.Commands.Users
 {
     public class DeleteUserCommand : ICommand
     {
