@@ -52,11 +52,11 @@
 
   | Project  | Configuration File | Configuration Key |
   | -------- | ------------------ | ----------------- |
-  | ClassifiedAds.Migrator | [appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.Migrator/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.BackgroundServer | [appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.BackgroundServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.IdentityServer | [appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.IdentityServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.WebAPI | [appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebAPI/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.WebMVC | [appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json) | ConnectionStrings:ClassifiedAds |
+  | ClassifiedAds.Migrator | [appsettings.json](/src/Monolith/ClassifiedAds.Migrator/appsettings.json) | ConnectionStrings:ClassifiedAds |
+  | ClassifiedAds.BackgroundServer | [appsettings.json](/src/Monolith/ClassifiedAds.BackgroundServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
+  | ClassifiedAds.IdentityServer | [appsettings.json](/src/Monolith/ClassifiedAds.IdentityServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
+  | ClassifiedAds.WebAPI | [appsettings.json](/src/Monolith/ClassifiedAds.WebAPI/appsettings.json) | ConnectionStrings:ClassifiedAds |
+  | ClassifiedAds.WebMVC | [appsettings.json](/src/Monolith/ClassifiedAds.WebMVC/appsettings.json) | ConnectionStrings:ClassifiedAds |
 
 
 - Run Migration:
@@ -65,7 +65,7 @@
       ```
       dotnet tool install --global dotnet-ef --version="3.1"
       ```
-    + Navigate to [ClassifiedAds.Migrator](/src/ClassifiedAds.Monolith/ClassifiedAds.Migrator/) and run these commands:
+    + Navigate to [ClassifiedAds.Migrator](/src/Monolith/ClassifiedAds.Migrator/) and run these commands:
       ```
       dotnet ef migrations add Init --context AdsDbContext -o Migrations/AdsDb
       dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
@@ -95,7 +95,7 @@
 <details>
   <summary><b>Additional Configuration Sources</b></summary>
   
-  - Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json) and jump to **ConfigurationSources** section.
+  - Open [ClassifiedAds.WebMVC/appsettings.json](/src/Monolith/ClassifiedAds.WebMVC/appsettings.json) and jump to **ConfigurationSources** section.
     ```js
     "ConfigurationSources": {
       "SqlServer": {
@@ -150,7 +150,7 @@
 <details>
   <summary><b>Storage</b></summary>
   
-  - Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json), [ClassifiedAds.WebAPI/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebAPI/appsettings.json) and jump to **Storage** section.
+  - Open [ClassifiedAds.WebMVC/appsettings.json](/src/Monolith/ClassifiedAds.WebMVC/appsettings.json), [ClassifiedAds.WebAPI/appsettings.json](/src/Monolith/ClassifiedAds.WebAPI/appsettings.json) and jump to **Storage** section.
     ```js
     "Storage": {
       "Provider": "Local",
@@ -196,10 +196,10 @@
   <summary><b>Message Broker</b></summary>
   
   - Open below files and jump to **MessageBroker** section:
-    + [ClassifiedAds.IdentityServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.IdentityServer/appsettings.json)
-    + [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json)
-    + [ClassifiedAds.WebAPI/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebAPI/appsettings.json)
-    + [ClassifiedAds.BackgroundServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.BackgroundServer/appsettings.json)
+    + [ClassifiedAds.IdentityServer/appsettings.json](/src/Monolith/ClassifiedAds.IdentityServer/appsettings.json)
+    + [ClassifiedAds.WebMVC/appsettings.json](/src/Monolith/ClassifiedAds.WebMVC/appsettings.json)
+    + [ClassifiedAds.WebAPI/appsettings.json](/src/Monolith/ClassifiedAds.WebAPI/appsettings.json)
+    + [ClassifiedAds.BackgroundServer/appsettings.json](/src/Monolith/ClassifiedAds.BackgroundServer/appsettings.json)
     ```js
     "MessageBroker": {
       "Provider": "RabbitMQ",
@@ -324,10 +324,10 @@
   <summary><b>Logging</b></summary>
   
   - Open and jump to **Logging** section of below files:
-    + [ClassifiedAds.WebAPI/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebAPI/appsettings.json)
-    + [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json)
-    + [ClassifiedAds.IdentityServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.IdentityServer/appsettings.json)
-    + [ClassifiedAds.BackgroundServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.BackgroundServer/appsettings.json)
+    + [ClassifiedAds.WebAPI/appsettings.json](/src/Monolith/ClassifiedAds.WebAPI/appsettings.json)
+    + [ClassifiedAds.WebMVC/appsettings.json](/src/Monolith/ClassifiedAds.WebMVC/appsettings.json)
+    + [ClassifiedAds.IdentityServer/appsettings.json](/src/Monolith/ClassifiedAds.IdentityServer/appsettings.json)
+    + [ClassifiedAds.BackgroundServer/appsettings.json](/src/Monolith/ClassifiedAds.BackgroundServer/appsettings.json)
     ```js
     "Logging": {
       "LogLevel": {
@@ -406,9 +406,9 @@
   <summary><b>Caching</b></summary>
   
   - Open and jump to **Caching** section of below files:
-    + [ClassifiedAds.WebAPI/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebAPI/appsettings.json)
-    + [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json)
-    + [ClassifiedAds.IdentityServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.IdentityServer/appsettings.json)
+    + [ClassifiedAds.WebAPI/appsettings.json](/src/Monolith/ClassifiedAds.WebAPI/appsettings.json)
+    + [ClassifiedAds.WebMVC/appsettings.json](/src/Monolith/ClassifiedAds.WebMVC/appsettings.json)
+    + [ClassifiedAds.IdentityServer/appsettings.json](/src/Monolith/ClassifiedAds.IdentityServer/appsettings.json)
     ```js
     "Caching": {
       "InMemory": {
@@ -473,9 +473,9 @@
   <summary><b>Monitoring</b></summary>
   
   - Open and jump to **Monitoring** section of below files:
-    + [ClassifiedAds.WebAPI/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebAPI/appsettings.json)
-    + [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json)
-    + [ClassifiedAds.IdentityServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.IdentityServer/appsettings.json)
+    + [ClassifiedAds.WebAPI/appsettings.json](/src/Monolith/ClassifiedAds.WebAPI/appsettings.json)
+    + [ClassifiedAds.WebMVC/appsettings.json](/src/Monolith/ClassifiedAds.WebMVC/appsettings.json)
+    + [ClassifiedAds.IdentityServer/appsettings.json](/src/Monolith/ClassifiedAds.IdentityServer/appsettings.json)
     ```js
     "Monitoring": {
       "MiniProfiler": {
@@ -535,10 +535,10 @@
   <summary><b>Interceptors</b></summary>
   
   - Open and jump to **Interceptors** section of below files:
-    + [ClassifiedAds.WebAPI/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebAPI/appsettings.json)
-    + [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json)
-    + [ClassifiedAds.IdentityServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.IdentityServer/appsettings.json)
-    + [ClassifiedAds.BackgroundServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.BackgroundServer/appsettings.json)
+    + [ClassifiedAds.WebAPI/appsettings.json](/src/Monolith/ClassifiedAds.WebAPI/appsettings.json)
+    + [ClassifiedAds.WebMVC/appsettings.json](/src/Monolith/ClassifiedAds.WebMVC/appsettings.json)
+    + [ClassifiedAds.IdentityServer/appsettings.json](/src/Monolith/ClassifiedAds.IdentityServer/appsettings.json)
+    + [ClassifiedAds.BackgroundServer/appsettings.json](/src/Monolith/ClassifiedAds.BackgroundServer/appsettings.json)
     ```js
     "Interceptors": {
       "LoggingInterceptor": true,
@@ -550,7 +550,7 @@
 <details>
   <summary><b>Security Headers</b></summary>
   
-  - Open [ClassifiedAds.WebAPI/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebAPI/appsettings.json) and jump to **SecurityHeaders** section:
+  - Open [ClassifiedAds.WebAPI/appsettings.json](/src/Monolith/ClassifiedAds.WebAPI/appsettings.json) and jump to **SecurityHeaders** section:
     ```js
     "SecurityHeaders": {
       "Cache-Control": "no-cache, no-store, must-revalidate",
@@ -558,7 +558,7 @@
       "Expires": "0"
     },
     ```
-  - Open [ClassifiedAds.WebMVC/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebMVC/appsettings.json) and jump to **SecurityHeaders** section:
+  - Open [ClassifiedAds.WebMVC/appsettings.json](/src/Monolith/ClassifiedAds.WebMVC/appsettings.json) and jump to **SecurityHeaders** section:
     ```js
     "SecurityHeaders": {
       "Content-Security-Policy": "form-action 'self'; frame-ancestors 'none'",
@@ -577,14 +577,14 @@
 <details>
   <summary><b>Cross-Origin Resource Sharing (CORS)</b></summary>
   
-  - Open [ClassifiedAds.WebAPI/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.WebAPI/appsettings.json) and jump to **CORS** section:
+  - Open [ClassifiedAds.WebAPI/appsettings.json](/src/Monolith/ClassifiedAds.WebAPI/appsettings.json) and jump to **CORS** section:
     ```js
     "CORS": {
       "AllowAnyOrigin": false,
       "AllowedOrigins": [ "http://localhost:4200", "http://localhost:3000", "http://localhost:8080" ]
     },
     ```
-  - Open [ClassifiedAds.NotificationServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.NotificationServer/appsettings.json) and jump to **CORS** section:
+  - Open [ClassifiedAds.NotificationServer/appsettings.json](/src/Monolith/ClassifiedAds.NotificationServer/appsettings.json) and jump to **CORS** section:
     ```js
     "CORS": {
       "AllowedOrigins": [ "https://localhost:44364", "http://host.docker.internal:9003" ]
@@ -595,7 +595,7 @@
 <details>
   <summary><b>External Login</b></summary>
   
-  - Open [ClassifiedAds.IdentityServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.IdentityServer/appsettings.json) and jump to **ExternalLogin** section:
+  - Open [ClassifiedAds.IdentityServer/appsettings.json](/src/Monolith/ClassifiedAds.IdentityServer/appsettings.json) and jump to **ExternalLogin** section:
     ```js
     "ExternalLogin": {
       "AzureActiveDirectory": {
@@ -626,7 +626,7 @@
 <details>
   <summary><b>Sending Email</b></summary>
   
-  - Open [ClassifiedAds.BackgroundServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.BackgroundServer/appsettings.json) and jump to **Notification -> Email** section:
+  - Open [ClassifiedAds.BackgroundServer/appsettings.json](/src/Monolith/ClassifiedAds.BackgroundServer/appsettings.json) and jump to **Notification -> Email** section:
     ```js
     "Notification": {
       "Email": {
@@ -654,7 +654,7 @@
 <details>
   <summary><b>Sending SMS</b></summary>
   
-  - Open [ClassifiedAds.BackgroundServer/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.BackgroundServer/appsettings.json) and jump to **Notification -> Sms** section:
+  - Open [ClassifiedAds.BackgroundServer/appsettings.json](/src/Monolith/ClassifiedAds.BackgroundServer/appsettings.json) and jump to **Notification -> Sms** section:
     ```js
     "Notification": {
       "Sms": {
@@ -703,12 +703,12 @@
 
 ## How to Build and Run Single Page Applications:
 - Angular:
-  + Navigate to folder: [ClassifiedAds.UIs/angular/](/src/ClassifiedAds.UIs/angular/)
+  + Navigate to folder: [UIs/angular/](/src/UIs/angular/)
     ```
     npm install
     ng serve
     ```
-  + Update [environment.ts](/src/ClassifiedAds.UIs/angular/src/environments/environment.ts) & [environment.prod.ts](/src/ClassifiedAds.UIs/angular/src/environments/environment.prod.ts) 
+  + Update [environment.ts](/src/UIs/angular/src/environments/environment.ts) & [environment.prod.ts](/src/UIs/angular/src/environments/environment.prod.ts) 
     ```ts
     export const environment = {
       OpenIdConnect: {
@@ -726,12 +726,12 @@
     ![alt text](/docs/imgs/angular-home-page.png)
   
 - React:
-  + Navigate to folder: [ClassifiedAds.UIs/reactjs/](/src/ClassifiedAds.UIs/reactjs/)
+  + Navigate to folder: [UIs/reactjs/](/src/UIs/reactjs/)
     ```
     npm install
     npm run start
     ```
-  + Update [environment.dev.js](/src/ClassifiedAds.UIs/reactjs/src/environments/environment.dev.js) & [environment.js](/src/ClassifiedAds.UIs/reactjs/src/environments/environment.js) 
+  + Update [environment.dev.js](/src/UIs/reactjs/src/environments/environment.dev.js) & [environment.js](/src/UIs/reactjs/src/environments/environment.js) 
     ```js
     const environment = {
         OpenIdConnect: {
@@ -750,12 +750,12 @@
     ![alt text](/docs/imgs/react-home-page.png)
   
 - Vue:
-  + Navigate to folder: [ClassifiedAds.UIs/vuejs/](/src/ClassifiedAds.UIs/vuejs/)
+  + Navigate to folder: [UIs/vuejs/](/src/UIs/vuejs/)
     ```
     npm install
     npm run serve
     ```
-  + Update [environment.dev.js](/src/ClassifiedAds.UIs/vuejs/environments/environment.dev.js) & [environment.dev.js](/src/ClassifiedAds.UIs/vuejs/environments/environment.js) 
+  + Update [environment.dev.js](/src/UIs/vuejs/environments/environment.dev.js) & [environment.dev.js](/src/UIs/vuejs/environments/environment.js) 
     ```js
     const environment = {
         OpenIdConnect: {
@@ -783,14 +783,14 @@
     ```
     dotnet tool install --global dotnet-ef --version="3.1"
     ```
-  + Navigate to [ClassifiedAds.Migrator](/src/ClassifiedAds.Monolith/ClassifiedAds.Migrator/) and run these commands:
+  + Navigate to [ClassifiedAds.Migrator](/src/Monolith/ClassifiedAds.Migrator/) and run these commands:
     ```
     dotnet ef migrations add Init --context AdsDbContext -o Migrations/AdsDb
     dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
     dotnet ef migrations add Init --context PersistedGrantDbContext -o Migrations/PersistedGrantDb
     dotnet ef migrations add Init --context MiniProfilerDbContext -o Migrations/MiniProfilerDb
     ```
-- Navigate to [ClassifiedAds.Monolith](/src/ClassifiedAds.Monolith/) and run:
+- Navigate to [Monolith](/src/Monolith/) and run:
   ```
   docker-compose build
   docker-compose up
@@ -812,7 +812,7 @@
   ![alt text](/docs/imgs/blazor-home-page.png)
 
 ## How to Run Integration & End to End Tests:
-- Update [ClassifiedAds.IntegrationTests/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.IntegrationTests/appsettings.json)
+- Update [ClassifiedAds.IntegrationTests/appsettings.json](/src/Monolith/ClassifiedAds.IntegrationTests/appsettings.json)
   ```js
   {
     "OpenIdConnect": {
@@ -841,7 +841,7 @@
 
   ![alt text](/docs/imgs/chrome_driver_path.png)
 
-- Update [ClassifiedAds.EndToEndTests/appsettings.json](/src/ClassifiedAds.Monolith/ClassifiedAds.EndToEndTests/appsettings.json)
+- Update [ClassifiedAds.EndToEndTests/appsettings.json](/src/Monolith/ClassifiedAds.EndToEndTests/appsettings.json)
   ```js
   {
     "ChromeDriverPath": "D:\\Downloads\\chromedriver_win32\\72",
