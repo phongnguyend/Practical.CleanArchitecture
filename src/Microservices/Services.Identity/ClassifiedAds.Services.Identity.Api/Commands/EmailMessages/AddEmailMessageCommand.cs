@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Infrastructure.Grpc;
 using ClassifiedAds.Infrastructure.Notification.Email;
+using Microsoft.Extensions.Configuration;
 using static ClassifiedAds.Services.Notification.Grpc.Email;
 
 namespace ClassifiedAds.Services.Identity.Commands.EmailMessages
@@ -12,13 +13,16 @@ namespace ClassifiedAds.Services.Identity.Commands.EmailMessages
 
     public class AddEmailMessageCommandHandler : ICommandHandler<AddEmailMessageCommand>
     {
-        public AddEmailMessageCommandHandler()
+        private readonly IConfiguration _configuration;
+
+        public AddEmailMessageCommandHandler(IConfiguration configuration)
         {
+            _configuration = configuration;
         }
 
         public void Handle(AddEmailMessageCommand command)
         {
-            var client = new EmailClient(ChannelFactory.Create("https://localhost:5003"));
+            var client = new EmailClient(ChannelFactory.Create(_configuration["Services:Notification:Grpc"]));
             client.AddEmailMessage(new Notification.Grpc.AddEmailMessageRequest
             {
                 Message = new Notification.Grpc.EmailMessage

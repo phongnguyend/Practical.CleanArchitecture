@@ -1,0 +1,50 @@
+
+--- Build ---
+
+docker build -f "Gateways.Ocelot\ClassifiedAds.Gateways.Ocelot\Dockerfile" -t classifiedads.gateways.ocelot .
+
+docker build -f "Services.AuditLog\ClassifiedAds.Services.AuditLog.Api\Dockerfile" -t classifiedads.services.auditlog.api .
+docker build -f "Services.AuditLog\ClassifiedAds.Services.AuditLog.Grpc\Dockerfile" -t classifiedads.services.auditlog.grpc .
+
+docker build -f "Services.Identity\ClassifiedAds.Services.Identity.Api\Dockerfile" -t classifiedads.services.identity.api .
+docker build -f "Services.Identity\ClassifiedAds.Services.Identity.AuthServer\Dockerfile" -t classifiedads.services.identity.authserver .
+docker build -f "Services.Identity\ClassifiedAds.Services.Identity.Grpc\Dockerfile" -t classifiedads.services.identity.grpc .
+
+docker build -f "Services.Notification\ClassifiedAds.Services.Notification.Api\Dockerfile" -t classifiedads.services.notification.api .
+docker build -f "Services.Notification\ClassifiedAds.Services.Notification.Background\Dockerfile" -t classifiedads.services.notification.background .
+docker build -f "Services.Notification\ClassifiedAds.Services.Notification.Grpc\Dockerfile" -t classifiedads.services.notification.grpc .
+
+docker build -f "Services.Product\ClassifiedAds.Services.Product.Api\Dockerfile" -t classifiedads.services.product.api .
+
+docker build -f "Services.Storage\ClassifiedAds.Services.Storage.Api\Dockerfile" -t classifiedads.services.storage.api .
+
+--- Push ---
+
+docker tag classifiedads.gateways.ocelot phongnguyend/classifiedads.gateways.ocelot
+docker push phongnguyend/classifiedads.gateways.ocelot
+
+docker tag classifiedads.services.auditlog.api phongnguyend/classifiedads.services.auditlog.api
+docker tag classifiedads.services.auditlog.grpc phongnguyend/classifiedads.services.auditlog.grpc
+docker push phongnguyend/classifiedads.services.auditlog.api
+docker push phongnguyend/classifiedads.services.auditlog.grpc
+
+docker tag classifiedads.services.identity.api phongnguyend/classifiedads.services.identity.api
+docker tag classifiedads.services.identity.authserver phongnguyend/classifiedads.services.identity.authserver
+docker tag classifiedads.services.identity.grpc phongnguyend/classifiedads.services.identity.grpc
+docker push phongnguyend/classifiedads.services.identity.api
+docker push phongnguyend/classifiedads.services.identity.authserver
+docker push phongnguyend/classifiedads.services.identity.grpc
+
+docker tag classifiedads.services.notification.api phongnguyend/classifiedads.services.notification.api
+docker tag classifiedads.services.notification.background phongnguyend/classifiedads.services.notification.background
+docker tag classifiedads.services.notification.grpc phongnguyend/classifiedads.services.notification.grpc
+docker push phongnguyend/classifiedads.services.notification.api
+docker push phongnguyend/classifiedads.services.notification.background
+docker push phongnguyend/classifiedads.services.notification.grpc
+
+docker tag classifiedads.services.product.api phongnguyend/classifiedads.services.product.api
+docker push phongnguyend/classifiedads.services.product.api
+
+docker tag classifiedads.services.storage.api phongnguyend/classifiedads.services.storage.api
+docker push phongnguyend/classifiedads.services.storage.api
+

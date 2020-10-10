@@ -1,0 +1,9 @@
+
+
+docker build -f "ClassifiedAds.Services.Notification.Api\Dockerfile" -t classifiedads.services.notification.api ../
+docker build -f "ClassifiedAds.Services.Notification.Background\Dockerfile" -t classifiedads.services.notification.background ../
+docker build -f "ClassifiedAds.Services.Notification.Grpc\Dockerfile" -t classifiedads.services.notification.grpc ../
+
+docker run -d -p 8080:80 --name classifiedads.services.notification.api classifiedads.services.notification.api
+docker run -d -p 8081:80 --name classifiedads.services.notification.background classifiedads.services.notification.background
+docker run -d -p 8082:80 --name classifiedads.services.notification.grpc classifiedads.services.notification.grpc

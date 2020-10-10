@@ -2,6 +2,7 @@
 using ClassifiedAds.Infrastructure.Grpc;
 using ClassifiedAds.Services.Product.DTOs;
 using Google.Protobuf.WellKnownTypes;
+using Microsoft.Extensions.Configuration;
 using static ClassifiedAds.Services.AuditLog.Grpc.AuditLog;
 
 namespace ClassifiedAds.Services.Product.Commands
@@ -13,13 +14,16 @@ namespace ClassifiedAds.Services.Product.Commands
 
     public class AddAuditLogEntryCommandHandler : ICommandHandler<AddAuditLogEntryCommand>
     {
-        public AddAuditLogEntryCommandHandler()
+        private readonly IConfiguration _configuration;
+
+        public AddAuditLogEntryCommandHandler(IConfiguration configuration)
         {
+            _configuration = configuration;
         }
 
         public void Handle(AddAuditLogEntryCommand command)
         {
-            var client = new AuditLogClient(ChannelFactory.Create("https://localhost:5002"));
+            var client = new AuditLogClient(ChannelFactory.Create(_configuration["Services:AuditLog:Grpc"]));
             client.AddAuditLogEntry(new AuditLog.Grpc.AddAuditLogEntryRequest
             {
                 Entry = new AuditLog.Grpc.AuditLogEntryMessage

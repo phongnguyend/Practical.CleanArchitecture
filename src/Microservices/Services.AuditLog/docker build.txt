@@ -1,0 +1,6 @@
+
+docker build -f "ClassifiedAds.Services.AuditLog.Api\Dockerfile" -t classifiedads.services.auditlog.api ../
+docker build -f "ClassifiedAds.Services.AuditLog.Grpc\Dockerfile" -t classifiedads.services.auditlog.grpc ../
+
+docker run -d -p 8080:80 --name classifiedads.services.auditlog.api classifiedads.services.auditlog.api
+docker run -d -p 8081:80 --name classifiedads.services.auditlog.grpc classifiedads.services.auditlog.grpc

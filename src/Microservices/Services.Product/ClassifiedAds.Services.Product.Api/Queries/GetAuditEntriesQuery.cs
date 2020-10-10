@@ -2,6 +2,7 @@
 using ClassifiedAds.Infrastructure.Grpc;
 using ClassifiedAds.Services.AuditLog.Grpc;
 using ClassifiedAds.Services.Product.DTOs;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +16,16 @@ namespace ClassifiedAds.Services.Product.Queries
 
     public class GetAuditEntriesQueryHandler : IQueryHandler<GetAuditEntriesQuery, List<AuditLogEntryDTO>>
     {
-        public GetAuditEntriesQueryHandler()
+        private readonly IConfiguration _configuration;
+
+        public GetAuditEntriesQueryHandler(IConfiguration configuration)
         {
+            _configuration = configuration;
         }
 
         public List<AuditLogEntryDTO> Handle(GetAuditEntriesQuery queryOptions)
         {
-            var client = new AuditLogClient(ChannelFactory.Create("https://localhost:5002"));
+            var client = new AuditLogClient(ChannelFactory.Create(_configuration["Services:AuditLog:Grpc"]));
             var entries = client.GetAuditLogEntries(new GetAuditLogEntriesRequest
             {
                 ObjectId = queryOptions.ObjectId,

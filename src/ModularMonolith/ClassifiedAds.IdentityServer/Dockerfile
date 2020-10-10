@@ -1,25 +1,32 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
-WORKDIR /ClassifiedAds.Projects
+WORKDIR /ClassifiedAds.ModularMonolith
 
 # Copy csproj and restore as distinct layers
 COPY ./ClassifiedAds.Application/*.csproj ./ClassifiedAds.Application/
-COPY ./ClassifiedAds.BackgroundServer/*.csproj ./ClassifiedAds.BackgroundServer/
-COPY ./ClassifiedAds.Blazor/*.csproj ./ClassifiedAds.Blazor/
 COPY ./ClassifiedAds.CrossCuttingConcerns/*.csproj ./ClassifiedAds.CrossCuttingConcerns/
 COPY ./ClassifiedAds.Domain/*.csproj ./ClassifiedAds.Domain/
-COPY ./ClassifiedAds.EndToEndTests/*.csproj ./ClassifiedAds.EndToEndTests/
-COPY ./ClassifiedAds.GraphQL/*.csproj ./ClassifiedAds.GraphQL/
-COPY ./ClassifiedAds.IdentityServer/*.csproj ./ClassifiedAds.IdentityServer/
 COPY ./ClassifiedAds.Infrastructure/*.csproj ./ClassifiedAds.Infrastructure/
-COPY ./ClassifiedAds.IntegrationTests/*.csproj ./ClassifiedAds.IntegrationTests/
+
+COPY ./ClassifiedAds.Modules.AuditLog/*.csproj ./ClassifiedAds.Modules.AuditLog/
+COPY ./ClassifiedAds.Modules.AuditLog.Contracts/*.csproj ./ClassifiedAds.Modules.AuditLog.Contracts/
+COPY ./ClassifiedAds.Modules.Auth/*.csproj ./ClassifiedAds.Modules.Auth/
+COPY ./ClassifiedAds.Modules.Identity/*.csproj ./ClassifiedAds.Modules.Identity/
+COPY ./ClassifiedAds.Modules.Identity.Contracts/*.csproj ./ClassifiedAds.Modules.Identity.Contracts/
+COPY ./ClassifiedAds.Modules.Notification/*.csproj ./ClassifiedAds.Modules.Notification/
+COPY ./ClassifiedAds.Modules.Notification.Contracts/*.csproj ./ClassifiedAds.Modules.Notification.Contracts/
+COPY ./ClassifiedAds.Modules.Product/*.csproj ./ClassifiedAds.Modules.Product/
+COPY ./ClassifiedAds.Modules.Product.EndToEndTests/*.csproj ./ClassifiedAds.Modules.Product.EndToEndTests/
+COPY ./ClassifiedAds.Modules.Product.IntegrationTests/*.csproj ./ClassifiedAds.Modules.Product.IntegrationTests/
+COPY ./ClassifiedAds.Modules.Product.UnitTests/*.csproj ./ClassifiedAds.Modules.Product.UnitTests/
+COPY ./ClassifiedAds.Modules.Storage/*.csproj ./ClassifiedAds.Modules.Storage/
+
+COPY ./ClassifiedAds.BackgroundServer/*.csproj ./ClassifiedAds.BackgroundServer/
+COPY ./ClassifiedAds.IdentityServer/*.csproj ./ClassifiedAds.IdentityServer/
 COPY ./ClassifiedAds.Migrator/*.csproj ./ClassifiedAds.Migrator/
 COPY ./ClassifiedAds.NotificationServer/*.csproj ./ClassifiedAds.NotificationServer/
-COPY ./ClassifiedAds.Ocelot/*.csproj ./ClassifiedAds.Ocelot/
-COPY ./ClassifiedAds.Persistence/*.csproj ./ClassifiedAds.Persistence/
-COPY ./ClassifiedAds.UnitTests/*.csproj ./ClassifiedAds.UnitTests/
 COPY ./ClassifiedAds.WebAPI/*.csproj ./ClassifiedAds.WebAPI/
-COPY ./ClassifiedAds.WebMVC/*.csproj ./ClassifiedAds.WebMVC/
-COPY ./ClassifiedAds.Monolith.sln .
+
+COPY ./ClassifiedAds.ModularMonolith.sln .
 RUN dotnet restore
 
 # Copy everything else and build
@@ -28,7 +35,7 @@ RUN dotnet publish ./ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.c
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
-WORKDIR /ClassifiedAds.Projects
-COPY --from=build-env /ClassifiedAds.Projects/out .
+WORKDIR /ClassifiedAds.ModularMonolith
+COPY --from=build-env /ClassifiedAds.ModularMonolith/out .
 
 ENTRYPOINT ["dotnet", "ClassifiedAds.IdentityServer.dll"]

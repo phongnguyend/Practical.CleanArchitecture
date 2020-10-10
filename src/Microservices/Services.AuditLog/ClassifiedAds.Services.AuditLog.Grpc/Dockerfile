@@ -1,0 +1,22 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+WORKDIR /ClassifiedAds.Services.AuditLog
+
+# Copy csproj and restore as distinct layers
+COPY ./Common/ClassifiedAds.Application/*.csproj ./Common/ClassifiedAds.Application/
+COPY ./Common/ClassifiedAds.CrossCuttingConcerns/*.csproj ./Common/ClassifiedAds.CrossCuttingConcerns/
+COPY ./Common/ClassifiedAds.Domain/*.csproj ./Common/ClassifiedAds.Domain/
+COPY ./Common/ClassifiedAds.Infrastructure/*.csproj ./Common/ClassifiedAds.Infrastructure/
+COPY ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Api/*.csproj ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Api/
+COPY ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/*.csproj ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/
+RUN dotnet restore ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/ClassifiedAds.Services.AuditLog.Grpc.csproj
+
+# Copy everything else and build ClassifiedAds
+COPY . ./
+RUN dotnet publish ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/ClassifiedAds.Services.AuditLog.Grpc.csproj -c Release -o out
+
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+WORKDIR /ClassifiedAds.Services.AuditLog
+COPY --from=build-env /ClassifiedAds.Services.AuditLog/out .
+
+ENTRYPOINT ["dotnet", "ClassifiedAds.Services.AuditLog.Grpc.dll"]

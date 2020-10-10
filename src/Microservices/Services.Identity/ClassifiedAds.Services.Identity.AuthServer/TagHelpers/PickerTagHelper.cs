@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Services.Auth.IdentityServer.TagHelpers
+namespace ClassifiedAds.Services.Identity.AuthServer.TagHelpers
 {
     [HtmlTargetElement("picker")]
     public class PickerTagHelper : TagHelper

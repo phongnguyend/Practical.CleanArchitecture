@@ -28,7 +28,7 @@
     <ProjectReference Include="..\..\Common\ClassifiedAds.CrossCuttingConcerns\ClassifiedAds.CrossCuttingConcerns.csproj" />
     <ProjectReference Include="..\..\Common\ClassifiedAds.Domain\ClassifiedAds.Domain.csproj" />
     <ProjectReference Include="..\..\Common\ClassifiedAds.Infrastructure\ClassifiedAds.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\Services.Identity\ClassifiedAds.Services.Identity.Api\ClassifiedAds.Services.Identity.Api.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.Services.Identity.Api\ClassifiedAds.Services.Identity.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>

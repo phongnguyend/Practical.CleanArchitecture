@@ -2,6 +2,7 @@
 using ClassifiedAds.Infrastructure.Grpc;
 using ClassifiedAds.Services.AuditLog.DTOs;
 using ClassifiedAds.Services.Identity.Grpc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +19,16 @@ namespace ClassifiedAds.Services.AuditLog.Queries
 
     public class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, List<UserDTO>>
     {
+        private readonly IConfiguration _configuration;
+
+        public GetUsersQueryHandler(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public List<UserDTO> Handle(GetUsersQuery query)
         {
-            var client = new User.UserClient(ChannelFactory.Create("https://localhost:5001"));
+            var client = new User.UserClient(ChannelFactory.Create(_configuration["Services:Identity:Grpc"]));
             var response = client.GetUsersAsync(new GetUsersRequest()).GetAwaiter().GetResult();
 
             return response.Users.Select(x => new UserDTO

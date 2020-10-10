@@ -1,0 +1,5 @@
+
+
+docker build -f "ClassifiedAds.Services.Storage.Api\Dockerfile" -t classifiedads.services.storage.api ../
+
+docker run -d -p 8080:80 --name classifiedads.services.storage.api classifiedads.services.storage.api

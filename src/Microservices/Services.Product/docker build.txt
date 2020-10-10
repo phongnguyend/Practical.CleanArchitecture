@@ -1,0 +1,5 @@
+
+
+docker build -f "ClassifiedAds.Services.Product.Api\Dockerfile" -t classifiedads.services.product.api ../
+
+docker run -d -p 8080:80 --name classifiedads.services.product.api classifiedads.services.product.api

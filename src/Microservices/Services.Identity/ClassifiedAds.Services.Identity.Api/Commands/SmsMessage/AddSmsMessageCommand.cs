@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Infrastructure.Grpc;
 using ClassifiedAds.Infrastructure.Notification.Sms;
+using Microsoft.Extensions.Configuration;
 using static ClassifiedAds.Services.Notification.Grpc.Sms;
 
 namespace ClassifiedAds.Services.Identity.Commands.SmsMessages
@@ -12,13 +13,16 @@ namespace ClassifiedAds.Services.Identity.Commands.SmsMessages
 
     public class AddSmsMessageCommandHandler : ICommandHandler<AddSmsMessageCommand>
     {
-        public AddSmsMessageCommandHandler()
+        private readonly IConfiguration _configuration;
+
+        public AddSmsMessageCommandHandler(IConfiguration configuration)
         {
+            _configuration = configuration;
         }
 
         public void Handle(AddSmsMessageCommand command)
         {
-            var client = new SmsClient(ChannelFactory.Create("https://localhost:5003"));
+            var client = new SmsClient(ChannelFactory.Create(_configuration["Services:Notification:Grpc"]));
             client.AddSmsMessage(new Notification.Grpc.AddSmsMessageRequest
             {
                 Message = new Notification.Grpc.SmsMessage
