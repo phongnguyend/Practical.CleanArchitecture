@@ -1,5 +1,5 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
-WORKDIR /ClassifiedAds.Projects
+WORKDIR /ClassifiedAds.Monolith
 
 # Copy csproj and restore as distinct layers
 COPY ./ClassifiedAds.Application/*.csproj ./ClassifiedAds.Application/
@@ -14,7 +14,6 @@ COPY ./ClassifiedAds.Infrastructure/*.csproj ./ClassifiedAds.Infrastructure/
 COPY ./ClassifiedAds.IntegrationTests/*.csproj ./ClassifiedAds.IntegrationTests/
 COPY ./ClassifiedAds.Migrator/*.csproj ./ClassifiedAds.Migrator/
 COPY ./ClassifiedAds.NotificationServer/*.csproj ./ClassifiedAds.NotificationServer/
-COPY ./ClassifiedAds.Ocelot/*.csproj ./ClassifiedAds.Ocelot/
 COPY ./ClassifiedAds.Persistence/*.csproj ./ClassifiedAds.Persistence/
 COPY ./ClassifiedAds.UnitTests/*.csproj ./ClassifiedAds.UnitTests/
 COPY ./ClassifiedAds.WebAPI/*.csproj ./ClassifiedAds.WebAPI/
@@ -28,8 +27,8 @@ RUN dotnet publish ./ClassifiedAds.WebMVC/ClassifiedAds.WebMVC.csproj -c Release
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
-WORKDIR /ClassifiedAds.Projects
-COPY --from=build-env /ClassifiedAds.Projects/out .
+WORKDIR /ClassifiedAds.Monolith
+COPY --from=build-env /ClassifiedAds.Monolith/out .
 
 HEALTHCHECK CMD curl --fail http://localhost:80/healthcheck || exit 1
 

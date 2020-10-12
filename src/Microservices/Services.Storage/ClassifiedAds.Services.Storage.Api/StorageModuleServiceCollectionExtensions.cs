@@ -44,7 +44,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        public static void MigrateDb(this IApplicationBuilder app)
+        public static void MigrateStorageDb(this IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {

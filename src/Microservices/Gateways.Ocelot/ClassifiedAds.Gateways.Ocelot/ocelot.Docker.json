@@ -5,59 +5,91 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "webapi",
+          "Host": "product_api",
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/ocelot/products",
-      "UpstreamHttpMethod": [
-        "GET",
-        "POST",
-        "PUT",
-        "DELETE"
-      ],
-      "RateLimitOptions": {
-        "ClientWhitelist": [],
-        "EnableRateLimiting": true,
-        "Period": "1s",
-        "PeriodTimespan": 1,
-        "Limit": 1
-      },
-      "FileCacheOptions": {
-        "TtlSeconds": 15,
-        "Region": "productcaching"
-      }
+      "UpstreamPathTemplate": "/api/products"
     },
     {
       "DownstreamPathTemplate": "/api/products/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "webapi",
+          "Host": "product_api",
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/ocelot/products/{everything}",
-      "UpstreamHttpMethod": [
-        "GET",
-        "POST",
-        "PUT",
-        "DELETE"
+      "UpstreamPathTemplate": "/api/products/{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/files",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "storage_api",
+          "Port": 80
+        }
       ],
-      "RateLimitOptions": {
-        "ClientWhitelist": [],
-        "EnableRateLimiting": true,
-        "Period": "1s",
-        "PeriodTimespan": 1,
-        "Limit": 1
-      },
-      "FileCacheOptions": {
-        "TtlSeconds": 15,
-        "Region": "productcaching"
-      }
+      "UpstreamPathTemplate": "/api/files"
+    },
+    {
+      "DownstreamPathTemplate": "/api/files/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "storage_api",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/files/{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/auditLogEntries",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "auditlog_api",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auditLogEntries"
+    },
+    {
+      "DownstreamPathTemplate": "/api/auditLogEntries/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "auditlog_api",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auditLogEntries/{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/users",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity_api",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users"
+    },
+    {
+      "DownstreamPathTemplate": "/api/users/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity_api",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/users/{everything}"
     }
   ],
   "GlobalConfiguration": {
-
+    "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ]
   }
 }

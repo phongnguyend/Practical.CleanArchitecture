@@ -13,6 +13,11 @@ services:
         ports:
           - "5672:5672"
           - "15672:15672"
+    mailhog:
+        image: mailhog/mailhog
+        ports: 
+          - 1025:1025 # smtp server
+          - 8025:8025 # web ui
     zookeeper:
         image: confluentinc/cp-zookeeper:latest
         environment:
@@ -32,11 +37,12 @@ services:
           KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
           KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     migrator:
+        image: classifiedads.migrator
         build:
           context: .
           dockerfile: ./ClassifiedAds.Migrator/Dockerfile
         volumes:
-            - D:\\ClassifiedAds.Projects\\Logs\\Migrator:/ClassifiedAds.Projects/logs
+            - D:\\ClassifiedAds.Monolith\\Logs\\Migrator:/ClassifiedAds.Monolith/logs
         depends_on:
           - db
         environment:
@@ -45,39 +51,35 @@ services:
           CheckDependency__Enabled: "true"
           CheckDependency__Host: "db:1433"
     identityserver:
+        image: classifiedads.identityserver
         build:
           context: .
           dockerfile: ./ClassifiedAds.IdentityServer/Dockerfile
         ports:
             - "9000:80"
         volumes:
-            - D:\\ClassifiedAds.Projects\\Logs\\IdentityServer:/ClassifiedAds.Projects/logs
+            - D:\\ClassifiedAds.Monolith\\Logs\\IdentityServer:/ClassifiedAds.Monolith/logs
         depends_on:
           - db
           - migrator
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          CookiePolicyOptions__IsEnabled: "true"
+          CookiePolicyOptions__MinimumSameSitePolicy: "Lax"
+          CookiePolicyOptions__Secure: "None"
           MessageBroker__Provider: "RabbitMQ"
           MessageBroker__RabbitMQ__HostName: "rabbitmq"
-          MessageBroker__RabbitMQ__UserName: "guest"
-          MessageBroker__RabbitMQ__Password: "guest"
-          MessageBroker__RabbitMQ__ExchangeName: "amq.direct"
-          MessageBroker__RabbitMQ__RoutingKeys__EmailMessageCreatedEvent: "classifiedadds_emailcreated"
-          MessageBroker__RabbitMQ__RoutingKeys__SmsMessageCreatedEvent: "classifiedadds_smscreated"
-          MessageBroker__RabbitMQ__QueueNames__EmailMessageCreatedEvent: "classifiedadds_emailcreated"
-          MessageBroker__RabbitMQ__QueueNames__SmsMessageCreatedEvent: "classifiedadds_smscreated"
           MessageBroker__AzureQueue__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
-          MessageBroker__AzureQueue__QueueNames__EmailMessageCreatedEvent: "classifiedadds-emailcreated"
-          MessageBroker__AzureQueue__QueueNames__SmsMessageCreatedEvent: "classifiedadds-smscreated"
     notificationserver:
+        image: classifiedads.notificationserver
         build:
           context: .
           dockerfile: ./ClassifiedAds.NotificationServer/Dockerfile
         ports:
             - "9001:80"
         volumes:
-            - D:\\ClassifiedAds.Projects\\Logs\\NotificationServer:/ClassifiedAds.Projects/logs
+            - D:\\ClassifiedAds.Monolith\\Logs\\NotificationServer:/ClassifiedAds.Monolith/logs
         depends_on:
           - db
           - migrator
@@ -85,13 +87,15 @@ services:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
     webapi:
+        image: classifiedads.webapi
         build:
           context: .
           dockerfile: ./ClassifiedAds.WebAPI/Dockerfile
         ports:
             - "9002:80"
         volumes:
-            - D:\\ClassifiedAds.Projects\\Logs\\WebAPI:/ClassifiedAds.Projects/logs
+            - D:\\ClassifiedAds.Monolith\\Logs\\WebAPI:/ClassifiedAds.Monolith/logs
+            - D:\\ClassifiedAds.Monolith\\Files:/files
         depends_on:
           - db
           - migrator
@@ -110,29 +114,18 @@ services:
           Storage__Amazon__RegionEndpoint: "ap-southeast-1"
           MessageBroker__Provider: "RabbitMQ"
           MessageBroker__RabbitMQ__HostName: "rabbitmq"
-          MessageBroker__RabbitMQ__UserName: "guest"
-          MessageBroker__RabbitMQ__Password: "guest"
-          MessageBroker__RabbitMQ__ExchangeName: "amq.direct"
-          MessageBroker__RabbitMQ__RoutingKeys__FileUploadedEvent: "classifiedadds_fileuploaded"
-          MessageBroker__RabbitMQ__RoutingKeys__FileDeletedEvent: "classifiedadds_filedeleted"
-          MessageBroker__RabbitMQ__QueueNames__FileUploadedEvent: "classifiedadds_fileuploaded"
-          MessageBroker__RabbitMQ__QueueNames__FileDeletedEvent: "classifiedadds_filedeleted"
           MessageBroker__Kafka__BootstrapServers: "kafka:9092"
-          MessageBroker__Kafka__Topics__FileUploadedEvent: "classifiedadds_fileuploaded"
-          MessageBroker__Kafka__Topics__FileDeletedEvent: "classifiedadds_filedeleted"
-          MessageBroker__Kafka__GroupId: "classified"
           MessageBroker__AzureQueue__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
-          MessageBroker__AzureQueue__QueueNames__FileUploadedEvent: "classifiedadds-fileuploaded"
-          MessageBroker__AzureQueue__QueueNames__FileDeletedEvent: "classifiedadds-filedeleted"
     webmvc:
+        image: classifiedads.webmvc
         build:
           context: .
           dockerfile: ./ClassifiedAds.WebMVC/Dockerfile
         ports:
             - "9003:80"
         volumes:
-            - D:\\ClassifiedAds.Projects\\Files:/files
-            - D:\\ClassifiedAds.Projects\\Logs\\WebMVC:/ClassifiedAds.Projects/logs
+            - D:\\ClassifiedAds.Monolith\\Files:/files
+            - D:\\ClassifiedAds.Monolith\\Logs\\WebMVC:/ClassifiedAds.Monolith/logs
         depends_on:
           - db
           - migrator
@@ -144,6 +137,9 @@ services:
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          CookiePolicyOptions__IsEnabled: "true"
+          CookiePolicyOptions__MinimumSameSitePolicy: "Lax"
+          CookiePolicyOptions__Secure: "None"          
           CheckDependency__Enabled: "true"
           CheckDependency__Host: "migrator:80"
           OpenIdConnect__Authority: "http://host.docker.internal:9000"
@@ -164,28 +160,17 @@ services:
           Storage__Amazon__RegionEndpoint: "ap-southeast-1"
           MessageBroker__Provider: "RabbitMQ"
           MessageBroker__RabbitMQ__HostName: "rabbitmq"
-          MessageBroker__RabbitMQ__UserName: "guest"
-          MessageBroker__RabbitMQ__Password: "guest"
-          MessageBroker__RabbitMQ__ExchangeName: "amq.direct"
-          MessageBroker__RabbitMQ__RoutingKeys__FileUploadedEvent: "classifiedadds_fileuploaded"
-          MessageBroker__RabbitMQ__RoutingKeys__FileDeletedEvent: "classifiedadds_filedeleted"
-          MessageBroker__RabbitMQ__QueueNames__FileUploadedEvent: "classifiedadds_fileuploaded"
-          MessageBroker__RabbitMQ__QueueNames__FileDeletedEvent: "classifiedadds_filedeleted"
           MessageBroker__Kafka__BootstrapServers: "kafka:9092"
-          MessageBroker__Kafka__Topics__FileUploadedEvent: "classifiedadds_fileuploaded"
-          MessageBroker__Kafka__Topics__FileDeletedEvent: "classifiedadds_filedeleted"
-          MessageBroker__Kafka__GroupId: "classified"
           MessageBroker__AzureQueue__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
-          MessageBroker__AzureQueue__QueueNames__FileUploadedEvent: "classifiedadds-fileuploaded"
-          MessageBroker__AzureQueue__QueueNames__FileDeletedEvent: "classifiedadds-filedeleted"
     blazor:
+        image: classifiedads.blazor
         build:
           context: .
           dockerfile: ./ClassifiedAds.Blazor/Dockerfile
         ports:
             - "9008:80"
         volumes:
-            - D:\\ClassifiedAds.Projects\\Logs\\Blazor:/ClassifiedAds.Projects/logs
+            - D:\\ClassifiedAds.Monolith\\Logs\\Blazor:/ClassifiedAds.Monolith/logs
         depends_on:
           - identityserver
           - webapi
@@ -195,18 +180,23 @@ services:
           OpenIdConnect__RequireHttpsMetadata: "false"
           ResourceServer__Endpoint: "http://webapi"
           ResourceServer__PublicEndpoint: "http://host.docker.internal:9002"
+          CookiePolicyOptions__IsEnabled: "true"
+          CookiePolicyOptions__MinimumSameSitePolicy: "Lax"
+          CookiePolicyOptions__Secure: "None" 
     backgroundserver:
+        image: classifiedads.backgroundserver
         build:
           context: .
           dockerfile: ./ClassifiedAds.BackgroundServer/Dockerfile
         ports:
             - "9004:80"
         volumes:
-            - D:\\ClassifiedAds.Projects\\Logs\\BackgroundServer:/ClassifiedAds.Projects/logs
+            - D:\\ClassifiedAds.Monolith\\Logs\\BackgroundServer:/ClassifiedAds.Monolith/logs
         depends_on:
           - db
           - migrator
           - rabbitmq
+          - mailhog
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
@@ -215,51 +205,27 @@ services:
           NotificationServer__Endpoint: "http://notificationserver"
           MessageBroker__Provider: "RabbitMQ"
           MessageBroker__RabbitMQ__HostName: "rabbitmq"
-          MessageBroker__RabbitMQ__UserName: "guest"
-          MessageBroker__RabbitMQ__Password: "guest"
-          MessageBroker__RabbitMQ__ExchangeName: "amq.direct"
-          MessageBroker__RabbitMQ__RoutingKeys__FileUploadedEvent: "classifiedadds_fileuploaded"
-          MessageBroker__RabbitMQ__RoutingKeys__FileDeletedEvent: "classifiedadds_filedeleted"
-          MessageBroker__RabbitMQ__RoutingKeys__EmailMessageCreatedEvent: "classifiedadds_emailcreated"
-          MessageBroker__RabbitMQ__RoutingKeys__SmsMessageCreatedEvent: "classifiedadds_smscreated"
-          MessageBroker__RabbitMQ__QueueNames__FileUploadedEvent: "classifiedadds_fileuploaded"
-          MessageBroker__RabbitMQ__QueueNames__FileDeletedEvent: "classifiedadds_filedeleted"
-          MessageBroker__RabbitMQ__QueueNames__EmailMessageCreatedEvent: "classifiedadds_emailcreated"
-          MessageBroker__RabbitMQ__QueueNames__SmsMessageCreatedEvent: "classifiedadds_smscreated"
           MessageBroker__Kafka__BootstrapServers: "kafka:9092"
-          MessageBroker__Kafka__Topics__FileUploadedEvent: "classifiedadds_fileuploaded"
-          MessageBroker__Kafka__Topics__FileDeletedEvent: "classifiedadds_filedeleted"
-          MessageBroker__Kafka__GroupId: "classified"
           MessageBroker__AzureQueue__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
-          MessageBroker__AzureQueue__QueueNames__FileUploadedEvent: "classifiedadds-fileuploaded"
-          MessageBroker__AzureQueue__QueueNames__FileDeletedEvent: "classifiedadds-filedeleted"
-          MessageBroker__AzureQueue__QueueNames__EmailMessageCreatedEvent: "classifiedadds-emailcreated"
-          MessageBroker__AzureQueue__QueueNames__SmsMessageCreatedEvent: "classifiedadds-smscreated"
+          Notification__Email__Provider: "SmtpClient"
+          Notification__Email__SmtpClient__Host: "mailhog"
+          Notification__Email__SmtpClient__Port: "1025"
+          Notification__Sms__Provider: "Fake"
+          Notification__Sms__Twilio__AccountSId: ""
+          Notification__Sms__Twilio__AuthToken: ""
+          Notification__Sms__Twilio__FromNumber: ""
     graphql:
+        image: classifiedads.graphql
         build:
           context: .
           dockerfile: ./ClassifiedAds.GraphQL/Dockerfile
         ports:
             - "9006:80"
         volumes:
-            - D:\\ClassifiedAds.Projects\\Logs\\GraphQL:/ClassifiedAds.Projects/logs
+            - D:\\ClassifiedAds.Monolith\\Logs\\GraphQL:/ClassifiedAds.Monolith/logs
         depends_on:
           - webapi
         environment:
           ASPNETCORE_ENVIRONMENT: "Development"
           ResourceServer__Endpoint: "http://webapi"
           ResourceServer__PublicEndpoint: "http://host.docker.internal:9002"
-    ocelot:
-        build:
-          context: .
-          dockerfile: ./ClassifiedAds.Ocelot/Dockerfile
-        ports:
-            - "9007:80"
-        volumes:
-            - D:\\ClassifiedAds.Projects\\Logs\\Ocelot:/ClassifiedAds.Projects/logs
-        depends_on:
-          - db
-          - migrator
-        environment:
-          ASPNETCORE_ENVIRONMENT: "Docker"
-          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"

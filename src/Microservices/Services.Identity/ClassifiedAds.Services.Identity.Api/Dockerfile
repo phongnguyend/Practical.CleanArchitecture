@@ -1,11 +1,14 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
-WORKDIR /ClassifiedAds.Services.Identity
+WORKDIR /ClassifiedAds.Microservices
 
 # Copy csproj and restore as distinct layers
 COPY ./Common/ClassifiedAds.Application/*.csproj ./Common/ClassifiedAds.Application/
 COPY ./Common/ClassifiedAds.CrossCuttingConcerns/*.csproj ./Common/ClassifiedAds.CrossCuttingConcerns/
 COPY ./Common/ClassifiedAds.Domain/*.csproj ./Common/ClassifiedAds.Domain/
 COPY ./Common/ClassifiedAds.Infrastructure/*.csproj ./Common/ClassifiedAds.Infrastructure/
+RUN dotnet restore ./Common/ClassifiedAds.Application/ClassifiedAds.Application.csproj
+RUN dotnet restore ./Common/ClassifiedAds.Infrastructure/ClassifiedAds.Infrastructure.csproj
+
 COPY ./Services.Identity/ClassifiedAds.Services.Identity.Api/*.csproj ./Services.Identity/ClassifiedAds.Services.Identity.Api/
 RUN dotnet restore ./Services.Identity/ClassifiedAds.Services.Identity.Api/ClassifiedAds.Services.Identity.Api.csproj
 
@@ -15,7 +18,7 @@ RUN dotnet publish ./Services.Identity/ClassifiedAds.Services.Identity.Api/Class
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
-WORKDIR /ClassifiedAds.Services.Identity
-COPY --from=build-env /ClassifiedAds.Services.Identity/out .
+WORKDIR /ClassifiedAds.Microservices
+COPY --from=build-env /ClassifiedAds.Microservices/out .
 
 ENTRYPOINT ["dotnet", "ClassifiedAds.Services.Identity.Api.dll"]

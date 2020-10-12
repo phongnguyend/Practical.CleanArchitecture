@@ -27,5 +27,7 @@ namespace ClassifiedAds.IdentityServer.ConfigurationOptions
         public InterceptorsOptions Interceptors { get; set; }
 
         public ExternalLoginOptions ExternalLogin { get; set; }
+
+        public CookiePolicyOptions CookiePolicyOptions { get; set; }
     }
 }

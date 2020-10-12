@@ -30,6 +30,17 @@ namespace ClassifiedAds.IdentityServer
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            if (AppSettings.CookiePolicyOptions?.IsEnabled ?? false)
+            {
+                services.Configure<Microsoft.AspNetCore.Builder.CookiePolicyOptions>(options =>
+                {
+                    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                    options.CheckConsentNeeded = context => true;
+                    options.MinimumSameSitePolicy = AppSettings.CookiePolicyOptions.MinimumSameSitePolicy;
+                    options.Secure = AppSettings.CookiePolicyOptions.Secure;
+                });
+            }
+
             services.AddControllersWithViews();
 
             services.AddCors();
@@ -63,6 +74,11 @@ namespace ClassifiedAds.IdentityServer
             }
 
             app.UseStaticFiles();
+
+            if (AppSettings.CookiePolicyOptions?.IsEnabled ?? false)
+            {
+                app.UseCookiePolicy();
+            }
 
             app.UseRouting();
 

@@ -17,23 +17,36 @@ namespace ClassifiedAds.Blazor
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            AppSettings = new AppSettings();
+            Configuration.Bind(AppSettings);
         }
 
         public IConfiguration Configuration { get; }
+
+        private AppSettings AppSettings { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            var appSettings = new AppSettings();
-            Configuration.Bind(appSettings);
+            if (AppSettings.CookiePolicyOptions?.IsEnabled ?? false)
+            {
+                services.Configure<Microsoft.AspNetCore.Builder.CookiePolicyOptions>(options =>
+                {
+                    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                    options.CheckConsentNeeded = context => true;
+                    options.MinimumSameSitePolicy = AppSettings.CookiePolicyOptions.MinimumSameSitePolicy;
+                    options.Secure = AppSettings.CookiePolicyOptions.Secure;
+                });
+            }
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddHttpClient<ProductService, ProductService>(client =>
             {
-                client.BaseAddress = new Uri(appSettings.ResourceServer.Endpoint);
+                client.BaseAddress = new Uri(AppSettings.ResourceServer.Endpoint);
                 client.Timeout = new TimeSpan(0, 0, 30);
                 client.DefaultRequestHeaders.Clear();
             });
@@ -47,9 +60,9 @@ namespace ClassifiedAds.Blazor
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
                 options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.Authority = appSettings.OpenIdConnect.Authority;
-                options.ClientId = appSettings.OpenIdConnect.ClientId;
-                options.ClientSecret = appSettings.OpenIdConnect.ClientSecret;
+                options.Authority = AppSettings.OpenIdConnect.Authority;
+                options.ClientId = AppSettings.OpenIdConnect.ClientId;
+                options.ClientSecret = AppSettings.OpenIdConnect.ClientSecret;
                 options.ResponseType = "code id_token";
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
@@ -57,7 +70,7 @@ namespace ClassifiedAds.Blazor
                 options.Scope.Add("offline_access");
                 options.SaveTokens = true;
                 options.GetClaimsFromUserInfoEndpoint = true;
-                options.RequireHttpsMetadata = appSettings.OpenIdConnect.RequireHttpsMetadata;
+                options.RequireHttpsMetadata = AppSettings.OpenIdConnect.RequireHttpsMetadata;
             });
         }
 
@@ -77,6 +90,11 @@ namespace ClassifiedAds.Blazor
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            if (AppSettings.CookiePolicyOptions?.IsEnabled ?? false)
+            {
+                app.UseCookiePolicy();
+            }
 
             app.UseRouting();
 

@@ -40,6 +40,8 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
 
         public MessageBrokerOptions MessageBroker { get; set; }
 
+        public CookiePolicyOptions CookiePolicyOptions { get; set; }
+
         public Dictionary<string, string> SecurityHeaders { get; set; }
 
         public InterceptorsOptions Interceptors { get; set; }

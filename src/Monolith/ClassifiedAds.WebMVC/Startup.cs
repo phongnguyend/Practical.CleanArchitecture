@@ -57,13 +57,16 @@ namespace ClassifiedAds.WebMVC
 
             services.Configure<AppSettings>(Configuration);
 
-            services.Configure<CookiePolicyOptions>(options =>
+            if (AppSettings.CookiePolicyOptions?.IsEnabled ?? false)
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-                options.Secure = CookieSecurePolicy.None;
-            });
+                services.Configure<Microsoft.AspNetCore.Builder.CookiePolicyOptions>(options =>
+                {
+                    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                    options.CheckConsentNeeded = context => true;
+                    options.MinimumSameSitePolicy = AppSettings.CookiePolicyOptions.MinimumSameSitePolicy;
+                    options.Secure = AppSettings.CookiePolicyOptions.Secure;
+                });
+            }
 
             services.AddControllersWithViews(setupAction =>
             {
@@ -190,7 +193,11 @@ namespace ClassifiedAds.WebMVC
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
-            app.UseCookiePolicy();
+
+            if (AppSettings.CookiePolicyOptions?.IsEnabled ?? false)
+            {
+                app.UseCookiePolicy();
+            }
 
             app.UseRouting();
 

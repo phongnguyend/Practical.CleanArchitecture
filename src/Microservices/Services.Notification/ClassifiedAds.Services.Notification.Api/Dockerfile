@@ -1,11 +1,14 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
-WORKDIR /ClassifiedAds.Services.Notification
+WORKDIR /ClassifiedAds.Microservices
 
 # Copy csproj and restore as distinct layers
 COPY ./Common/ClassifiedAds.Application/*.csproj ./Common/ClassifiedAds.Application/
 COPY ./Common/ClassifiedAds.CrossCuttingConcerns/*.csproj ./Common/ClassifiedAds.CrossCuttingConcerns/
 COPY ./Common/ClassifiedAds.Domain/*.csproj ./Common/ClassifiedAds.Domain/
 COPY ./Common/ClassifiedAds.Infrastructure/*.csproj ./Common/ClassifiedAds.Infrastructure/
+RUN dotnet restore ./Common/ClassifiedAds.Application/ClassifiedAds.Application.csproj
+RUN dotnet restore ./Common/ClassifiedAds.Infrastructure/ClassifiedAds.Infrastructure.csproj
+
 COPY ./Services.Notification/ClassifiedAds.Services.Notification.Api/*.csproj ./Services.Notification/ClassifiedAds.Services.Notification.Api/
 RUN dotnet restore ./Services.Notification/ClassifiedAds.Services.Notification.Api/ClassifiedAds.Services.Notification.Api.csproj
 
@@ -15,7 +18,7 @@ RUN dotnet publish ./Services.Notification/ClassifiedAds.Services.Notification.A
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
-WORKDIR /ClassifiedAds.Services.Notification
-COPY --from=build-env /ClassifiedAds.Services.Notification/out .
+WORKDIR /ClassifiedAds.Microservices
+COPY --from=build-env /ClassifiedAds.Microservices/out .
 
 ENTRYPOINT ["dotnet", "ClassifiedAds.Services.Notification.Api.dll"]

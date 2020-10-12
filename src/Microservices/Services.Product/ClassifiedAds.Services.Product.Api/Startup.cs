@@ -54,6 +54,8 @@ namespace ClassifiedAds.Services.Product
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.MigrateProductDb();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

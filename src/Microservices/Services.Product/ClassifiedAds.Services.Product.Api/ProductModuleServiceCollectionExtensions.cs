@@ -37,7 +37,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        public static void MigrateDb(this IApplicationBuilder app)
+        public static void MigrateProductDb(this IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {

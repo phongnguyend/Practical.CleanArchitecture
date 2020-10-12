@@ -3,6 +3,7 @@ using ClassifiedAds.Modules.Identity.Contracts.Services;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
 using ClassifiedAds.Modules.Identity.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -72,6 +73,14 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
             return services;
+        }
+
+        public static void MigrateIdentityDb(this IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                serviceScope.ServiceProvider.GetRequiredService<IdentityDbContext>().Database.Migrate();
+            }
         }
     }
 }

@@ -7,7 +7,9 @@ namespace ClassifiedAds.Blazor.ConfigurationOptions
         public OpenIdConnect OpenIdConnect { get; set; }
 
         public ResourceServer ResourceServer { get; set; }
-       
+
+        public CookiePolicyOptions CookiePolicyOptions { get; set; }
+
         public ValidateOptionsResult Validate()
         {
             var validationRs = OpenIdConnect.Validate();
