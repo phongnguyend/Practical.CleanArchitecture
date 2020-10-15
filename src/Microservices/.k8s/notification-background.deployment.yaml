@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: notification-background
+  name: notification-background
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-background
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: notification-background
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        envFrom:
+        - configMapRef:
+            name: shared
+        - configMapRef:
+            name: notification
+        image: phongnguyend/classifiedads.services.notification.background
+        name: notification-background
+        resources: {}
+      restartPolicy: Always
+status: {}

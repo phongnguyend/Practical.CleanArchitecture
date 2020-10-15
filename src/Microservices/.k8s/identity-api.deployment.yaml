@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: identity-api
+  name: identity-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: identity-api
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: identity-api
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        envFrom:
+        - configMapRef:
+            name: shared
+        - configMapRef:
+            name: identity
+        image: phongnguyend/classifiedads.services.identity.api
+        name: identity-api
+        resources: {}
+      restartPolicy: Always
+status: {}

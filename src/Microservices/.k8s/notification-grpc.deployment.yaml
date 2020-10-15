@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: notification-grpc
+  name: notification-grpc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-grpc
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: notification-grpc
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: ASPNETCORE_URLS
+          value: https://+
+        envFrom:
+        - configMapRef:
+            name: shared
+        - configMapRef:
+            name: notification
+        image: phongnguyend/classifiedads.services.notification.grpc
+        name: notification-grpc
+        resources: {}
+      restartPolicy: Always
+status: {}

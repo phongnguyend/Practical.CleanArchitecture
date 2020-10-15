@@ -5,7 +5,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "product_api",
+          "Host": "product-api",
           "Port": 80
         }
       ],
@@ -16,7 +16,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "product_api",
+          "Host": "product-api",
           "Port": 80
         }
       ],
@@ -27,7 +27,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "storage_api",
+          "Host": "storage-api",
           "Port": 80
         }
       ],
@@ -38,7 +38,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "storage_api",
+          "Host": "storage-api",
           "Port": 80
         }
       ],
@@ -49,7 +49,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "auditlog_api",
+          "Host": "auditlog-api",
           "Port": 80
         }
       ],
@@ -60,7 +60,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "auditlog_api",
+          "Host": "auditlog-api",
           "Port": 80
         }
       ],
@@ -71,7 +71,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "identity_api",
+          "Host": "identity-api",
           "Port": 80
         }
       ],
@@ -82,7 +82,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "identity_api",
+          "Host": "identity-api",
           "Port": 80
         }
       ],

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: auditlog-grpc
+  name: auditlog-grpc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auditlog-grpc
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: auditlog-grpc
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: ASPNETCORE_URLS
+          value: https://+
+        envFrom:
+        - configMapRef:
+            name: shared
+        - configMapRef:
+            name: auditlog            
+        image: phongnguyend/classifiedads.services.auditlog.grpc
+        name: auditlog-grpc
+        resources: {}
+      restartPolicy: Always
+status: {}

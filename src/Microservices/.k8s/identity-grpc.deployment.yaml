@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: identity-grpc
+  name: identity-grpc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: identity-grpc
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: identity-grpc
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: ASPNETCORE_URLS
+          value: https://+
+        envFrom:
+        - configMapRef:
+            name: shared
+        - configMapRef:
+            name: identity
+        image: phongnguyend/classifiedads.services.identity.grpc
+        name: identity-grpc
+        resources: {}
+      restartPolicy: Always
+status: {}

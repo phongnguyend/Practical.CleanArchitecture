@@ -370,6 +370,17 @@ az webapp config appsettings set \
              "Monitoring__AzureApplicationInsights__InstrumentationKey=$instrumentationKey"
 ```
 
+- Create Kubernetes Cluster
+```
+az aks create --resource-group "ClassifiedAds_DEV" \
+	--name ClassifiedAdsCluster \
+	--location "southeastasia" \
+	--node-count 3
+
+az login
+az aks get-credentials --resource-group ClassifiedAds_DEV --name ClassifiedAdsCluster --overwrite-existing
+```
+
 - Create Lock
 ```
 az lock create --lock-type CanNotDelete \

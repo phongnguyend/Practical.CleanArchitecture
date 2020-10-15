@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: identityserver
+  name: identityserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: identityserver
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: identityserver
+    spec:
+      containers:
+      - env:
+        - name: CookiePolicyOptions__IsEnabled
+          value: "true"
+        - name: CookiePolicyOptions__MinimumSameSitePolicy
+          value: Lax
+        - name: CookiePolicyOptions__Secure
+          value: None
+        envFrom:
+        - configMapRef:
+            name: shared
+        - configMapRef:
+            name: identityserver
+        image: phongnguyend/classifiedads.identityserver
+        name: identityserver
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+status: {}

@@ -18,7 +18,7 @@ services:
         ports: 
           - 1025:1025 # smtp server
           - 8025:8025 # web ui
-    auditlog_api:
+    auditlog-api:
         image: classifiedads.services.auditlog.api
         build:
           context: .
@@ -32,10 +32,10 @@ services:
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
           IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
           IdentityServerAuthentication__RequireHttpsMetadata: "false"
-          Services__AuditLog__Grpc: "https://auditlog_grpc"
-          Services__Identity__Grpc: "https://identity_grpc"
-          Services__Notification__Grpc: "https://notification_grpc"
-    auditlog_grpc:
+          Services__AuditLog__Grpc: "https://auditlog-grpc"
+          Services__Identity__Grpc: "https://identity-grpc"
+          Services__Notification__Grpc: "https://notification-grpc"
+    auditlog-grpc:
         image: classifiedads.services.auditlog.grpc
         build:
           context: .
@@ -48,10 +48,10 @@ services:
           ASPNETCORE_ENVIRONMENT: "Development"
           ASPNETCORE_URLS: "https://+"
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
-          Services__AuditLog__Grpc: "https://auditlog_grpc"
-          Services__Identity__Grpc: "https://identity_grpc"
-          Services__Notification__Grpc: "https://notification_grpc"
-    identity_api:
+          Services__AuditLog__Grpc: "https://auditlog-grpc"
+          Services__Identity__Grpc: "https://identity-grpc"
+          Services__Notification__Grpc: "https://notification-grpc"
+    identity-api:
         image: classifiedads.services.identity.api
         build:
           context: .
@@ -65,10 +65,10 @@ services:
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
           IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
           IdentityServerAuthentication__RequireHttpsMetadata: "false"
-          Services__AuditLog__Grpc: "https://auditlog_grpc"
-          Services__Identity__Grpc: "https://identity_grpc"
-          Services__Notification__Grpc: "https://notification_grpc"
-    identity_authserver:
+          Services__AuditLog__Grpc: "https://auditlog-grpc"
+          Services__Identity__Grpc: "https://identity-grpc"
+          Services__Notification__Grpc: "https://notification-grpc"
+    identity-authserver:
         image: classifiedads.services.identity.authserver
         build:
           context: .
@@ -87,10 +87,10 @@ services:
           CookiePolicyOptions__Secure: "None"
           MessageBroker__Provider: "RabbitMQ"
           MessageBroker__RabbitMQ__HostName: "rabbitmq"
-          Services__AuditLog__Grpc: "https://auditlog_grpc"
-          Services__Identity__Grpc: "https://identity_grpc"
-          Services__Notification__Grpc: "https://notification_grpc"
-    identity_grpc:
+          Services__AuditLog__Grpc: "https://auditlog-grpc"
+          Services__Identity__Grpc: "https://identity-grpc"
+          Services__Notification__Grpc: "https://notification-grpc"
+    identity-grpc:
         image: classifiedads.services.identity.grpc
         build:
           context: .
@@ -103,10 +103,10 @@ services:
           ASPNETCORE_ENVIRONMENT: "Development"
           ASPNETCORE_URLS: "https://+"
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
-          Services__AuditLog__Grpc: "https://auditlog_grpc"
-          Services__Identity__Grpc: "https://identity_grpc"
-          Services__Notification__Grpc: "https://notification_grpc"
-    notification_api:
+          Services__AuditLog__Grpc: "https://auditlog-grpc"
+          Services__Identity__Grpc: "https://identity-grpc"
+          Services__Notification__Grpc: "https://notification-grpc"
+    notification-api:
         image: classifiedads.services.notification.api
         build:
           context: .
@@ -122,10 +122,10 @@ services:
           IdentityServerAuthentication__RequireHttpsMetadata: "false"
           MessageBroker__Provider: "RabbitMQ"
           MessageBroker__RabbitMQ__HostName: "rabbitmq"
-          Services__AuditLog__Grpc: "https://auditlog_grpc"
-          Services__Identity__Grpc: "https://identity_grpc"
-          Services__Notification__Grpc: "https://notification_grpc"
-    notification_background:
+          Services__AuditLog__Grpc: "https://auditlog-grpc"
+          Services__Identity__Grpc: "https://identity-grpc"
+          Services__Notification__Grpc: "https://notification-grpc"
+    notification-background:
         image: classifiedads.services.notification.background
         build:
           context: .
@@ -148,10 +148,10 @@ services:
           Notification__Sms__Twilio__AccountSId: ""
           Notification__Sms__Twilio__AuthToken: ""
           Notification__Sms__Twilio__FromNumber: ""
-          Services__AuditLog__Grpc: "https://auditlog_grpc"
-          Services__Identity__Grpc: "https://identity_grpc"
-          Services__Notification__Grpc: "https://notification_grpc"
-    notification_grpc:
+          Services__AuditLog__Grpc: "https://auditlog-grpc"
+          Services__Identity__Grpc: "https://identity-grpc"
+          Services__Notification__Grpc: "https://notification-grpc"
+    notification-grpc:
         image: classifiedads.services.notification.grpc
         build:
           context: .
@@ -166,10 +166,10 @@ services:
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
           MessageBroker__Provider: "RabbitMQ"
           MessageBroker__RabbitMQ__HostName: "rabbitmq"
-          Services__AuditLog__Grpc: "https://auditlog_grpc"
-          Services__Identity__Grpc: "https://identity_grpc"
-          Services__Notification__Grpc: "https://notification_grpc"
-    product_api:
+          Services__AuditLog__Grpc: "https://auditlog-grpc"
+          Services__Identity__Grpc: "https://identity-grpc"
+          Services__Notification__Grpc: "https://notification-grpc"
+    product-api:
         image: classifiedads.services.product.api
         build:
           context: .
@@ -183,10 +183,10 @@ services:
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
           IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
           IdentityServerAuthentication__RequireHttpsMetadata: "false"
-          Services__AuditLog__Grpc: "https://auditlog_grpc"
-          Services__Identity__Grpc: "https://identity_grpc"
-          Services__Notification__Grpc: "https://notification_grpc"
-    storage_api:
+          Services__AuditLog__Grpc: "https://auditlog-grpc"
+          Services__Identity__Grpc: "https://identity-grpc"
+          Services__Notification__Grpc: "https://notification-grpc"
+    storage-api:
         image: classifiedads.services.storage.api
         build:
           context: .
@@ -205,9 +205,9 @@ services:
           MessageBroker__RabbitMQ__HostName: "rabbitmq"
           Storage__Provider: "Local"
           Storage__Local__Path: "/files"
-          Services__AuditLog__Grpc: "https://auditlog_grpc"
-          Services__Identity__Grpc: "https://identity_grpc"
-          Services__Notification__Grpc: "https://notification_grpc"
+          Services__AuditLog__Grpc: "https://auditlog-grpc"
+          Services__Identity__Grpc: "https://identity-grpc"
+          Services__Notification__Grpc: "https://notification-grpc"
     ocelot:
         image: classifiedads.gateways.ocelot
         build:
@@ -221,4 +221,3 @@ services:
           - db
         environment:
           ASPNETCORE_ENVIRONMENT: "Docker"
-          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
