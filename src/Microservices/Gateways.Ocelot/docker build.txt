@@ -1,5 +1,0 @@
-
-
-docker build -f "ClassifiedAds.Gateways.Ocelot\Dockerfile" -t classifiedads.gateways.ocelot ../
-
-docker run -d -p 8080:80 --name classifiedads.gateways.ocelot classifiedads.gateways.ocelot

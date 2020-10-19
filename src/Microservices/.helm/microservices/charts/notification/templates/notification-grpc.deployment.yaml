@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name}}-notification-grpc
+  name: {{ .Release.Name}}-notification-grpc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name}}-notification-grpc
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name}}-notification-grpc
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: ASPNETCORE_URLS
+          value: https://+
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name}}-shared
+        - configMapRef:
+            name: {{ .Release.Name}}-notification
+        image: phongnguyend/classifiedads.services.notification.grpc
+        name: {{ .Release.Name}}-notification-grpc
+        resources: {}
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name}}-identityserver
+  name: {{ .Release.Name}}-identityserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name}}-identityserver
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name}}-identityserver
+    spec:
+      containers:
+      - env:
+        - name: CookiePolicyOptions__IsEnabled
+          value: "true"
+        - name: CookiePolicyOptions__MinimumSameSitePolicy
+          value: Lax
+        - name: CookiePolicyOptions__Secure
+          value: None
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name}}-shared
+        image: phongnguyend/classifiedads.modularmonolith.identityserver
+        name: {{ .Release.Name}}-identityserver
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+status: {}

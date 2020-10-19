@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Gateways.WebAPI", "ClassifiedAds.Gateways.WebAPI\ClassifiedAds.Gateways.WebAPI.csproj", "{FD46958B-00EA-466A-9607-6862D16A6241}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FD46958B-00EA-466A-9607-6862D16A6241}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD46958B-00EA-466A-9607-6862D16A6241}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD46958B-00EA-466A-9607-6862D16A6241}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD46958B-00EA-466A-9607-6862D16A6241}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {51DB3D8E-F5CF-48CA-9AD8-4D53285CEBB9}
+	EndGlobalSection
+EndGlobal

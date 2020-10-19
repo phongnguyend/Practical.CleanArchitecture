@@ -10,7 +10,7 @@
 
 - Tag
   ```
-  docker tag classifiedads.gateways.ocelot phongnguyend/classifiedads.gateways.ocelot
+  docker tag classifiedads.gateways.webapi phongnguyend/classifiedads.gateways.webapi
   docker tag classifiedads.services.auditlog.api phongnguyend/classifiedads.services.auditlog.api
   docker tag classifiedads.services.auditlog.grpc phongnguyend/classifiedads.services.auditlog.grpc
   docker tag classifiedads.services.identity.api phongnguyend/classifiedads.services.identity.api
@@ -25,7 +25,7 @@
 
 - Push
   ```
-  docker push phongnguyend/classifiedads.gateways.ocelot
+  docker push phongnguyend/classifiedads.gateways.webapi
   docker push phongnguyend/classifiedads.services.auditlog.api
   docker push phongnguyend/classifiedads.services.auditlog.grpc
   docker push phongnguyend/classifiedads.services.identity.api
@@ -50,4 +50,15 @@
   ```
   kubectl delete -f .k8s
   ```
-  
+
+- Use Helm
+  ```
+  helm install myrelease .helm/microservices
+  helm list
+  helm upgrade myrelease .helm/microservices
+  ```
+
+- UnInstall
+  ```
+  helm uninstall myrelease
+  ```

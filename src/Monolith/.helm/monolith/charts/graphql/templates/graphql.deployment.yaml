@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name}}-graphql
+  name: {{ .Release.Name}}-graphql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name}}-graphql
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name}}-graphql
+    spec:
+      containers:
+      - env:
+        - name: ResourceServer__Endpoint
+          value: http://{{ .Release.Name}}-webapi
+        - name: ResourceServer__PublicEndpoint
+          value: http://host.docker.internal:9002
+        image: phongnguyend/classifiedads.graphql
+        name: {{ .Release.Name}}-graphql
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+status: {}

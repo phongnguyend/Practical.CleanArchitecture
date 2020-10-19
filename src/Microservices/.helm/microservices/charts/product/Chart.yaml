@@ -1,0 +1,4 @@
+apiVersion: v2
+name: product
+version: 1.0.0
+type: application

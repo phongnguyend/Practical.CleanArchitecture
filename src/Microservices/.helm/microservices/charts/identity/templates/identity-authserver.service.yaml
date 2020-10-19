@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ .Release.Name}}-identity-authserver
+  name: {{ .Release.Name}}-identity-authserver
+spec:
+  ports:
+  - name: "80"
+    port: 80
+    targetPort: 80
+  selector:
+    app: {{ .Release.Name}}-identity-authserver
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ .Release.Name}}-identity-authserver
+  name: {{ .Release.Name}}-identityserver
+spec:
+  ports:
+  - name: "80"
+    port: 80
+    targetPort: 80
+  selector:
+    app: {{ .Release.Name}}-identity-authserver
+status:
+  loadBalancer: {}
+  
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ .Release.Name}}-identity-authserver
+  name: {{ .Release.Name}}-identity-authserver-public
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "80"
+    port: 80
+    targetPort: 80
+  selector:
+    app: {{ .Release.Name}}-identity-authserver
+status:
+  loadBalancer: {}

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name}}-webmvc
+  name: {{ .Release.Name}}-webmvc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name}}-webmvc
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name}}-webmvc
+    spec:
+      containers:
+      - env:
+        - name: BackgroundServer__Endpoint
+          value: http://{{ .Release.Name}}-backgroundserver
+        - name: CheckDependency__Enabled
+          value: "true"
+        - name: CheckDependency__Host
+          value: {{ .Release.Name}}-migrator:80
+        - name: CookiePolicyOptions__IsEnabled
+          value: "true"
+        - name: CookiePolicyOptions__MinimumSameSitePolicy
+          value: Lax
+        - name: CookiePolicyOptions__Secure
+          value: None
+        - name: CurrentUrl
+          value: http://host.docker.internal:9003
+        - name: NotificationServer__Endpoint
+          value: http://{{ .Release.Name}}-notificationserver
+        - name: NotificationServer__PublicEndpoint
+          value: http://localhost:9001
+        - name: OpenIdConnect__Authority
+          value: http://{{ .Release.Name}}-identityserver
+        - name: OpenIdConnect__RequireHttpsMetadata
+          value: "false"
+        - name: ResourceServer__Endpoint
+          value: http://{{ .Release.Name}}-webapi
+        - name: ResourceServer__PublicEndpoint
+          value: http://{{ .Release.Name}}-webapi
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name}}-shared
+        image: phongnguyend/classifiedads.webmvc
+        name: {{ .Release.Name}}-webmvc
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,4 @@
+apiVersion: v2
+name: backgroundserver
+version: 1.0.0
+type: application

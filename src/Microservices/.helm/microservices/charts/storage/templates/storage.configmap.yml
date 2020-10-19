@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name}}-storage
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ConnectionStrings__ClassifiedAds: "Server={{ .Release.Name}}-db;Database=ClassifiedAds.Microservices;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+  Storage__Provider: "Fake"
+  Storage__Local__Path: "/files"
+  Storage__Azure__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
+  Storage__Azure__Container: "classifiedadds"
+  Storage__Amazon__AccessKeyID: "xxx"
+  Storage__Amazon__SecretAccessKey: "xxx"
+  Storage__Amazon__BucketName: "classifiedadds"
+  Storage__Amazon__RegionEndpoint: "ap-southeast-1"

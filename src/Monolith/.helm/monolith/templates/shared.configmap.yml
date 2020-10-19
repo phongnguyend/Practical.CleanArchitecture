@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name}}-shared
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ConnectionStrings__ClassifiedAds: "Server={{ .Release.Name}}-db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+  MessageBroker__Provider: "RabbitMQ"
+  MessageBroker__RabbitMQ__HostName: "{{ .Release.Name}}-rabbitmq"
+  MessageBroker__Kafka__BootstrapServers: "kafka:9092"
+  MessageBroker__AzureQueue__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
+  Storage__Provider: "Fake"
+  Storage__Local__Path: "/files"
+  Storage__Azure__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
+  Storage__Azure__Container: "classifiedadds"
+  Storage__Amazon__AccessKeyID: "xxx"
+  Storage__Amazon__SecretAccessKey: "xxx"
+  Storage__Amazon__BucketName: "classifiedadds"
+  Storage__Amazon__RegionEndpoint: "ap-southeast-1"
+  Notification__Email__Provider: "SmtpClient"
+  Notification__Email__SmtpClient__Host: "{{ .Release.Name}}-mailhog"
+  Notification__Email__SmtpClient__Port: "1025"
+  Notification__Sms__Provider: "Fake"
+  Notification__Sms__Twilio__AccountSId: ""
+  Notification__Sms__Twilio__AuthToken: ""
+  Notification__Sms__Twilio__FromNumber: ""

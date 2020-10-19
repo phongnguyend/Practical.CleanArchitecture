@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name}}-webapi
+  name: {{ .Release.Name}}-webapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name}}-webapi
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name}}-webapi
+    spec:
+      containers:
+      - env:
+        - name: IdentityServerAuthentication__Authority
+          value: http://{{ .Release.Name}}-identityserver
+        - name: IdentityServerAuthentication__RequireHttpsMetadata
+          value: "false"
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name}}-shared
+        image: phongnguyend/classifiedads.modularmonolith.webapi
+        name: {{ .Release.Name}}-webapi
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+status: {}

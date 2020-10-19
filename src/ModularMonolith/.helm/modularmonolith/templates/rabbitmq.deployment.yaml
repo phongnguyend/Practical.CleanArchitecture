@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name}}-rabbitmq
+  name: {{ .Release.Name}}-rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name}}-rabbitmq
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name}}-rabbitmq
+    spec:
+      containers:
+      - image: rabbitmq:3-management
+        name: {{ .Release.Name}}-rabbitmq
+        ports:
+        - containerPort: 5672
+        - containerPort: 15672
+        resources: {}
+      restartPolicy: Always
+status: {}

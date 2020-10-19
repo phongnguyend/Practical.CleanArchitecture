@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name}}-notification
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ConnectionStrings__ClassifiedAds: "Server={{ .Release.Name}}-db;Database=ClassifiedAds.Microservices;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+  MessageBroker__Provider: "RabbitMQ"
+  MessageBroker__RabbitMQ__HostName: "{{ .Release.Name}}-rabbitmq"
+  Notification__Email__Provider: "SmtpClient"
+  Notification__Email__SmtpClient__Host: "{{ .Release.Name}}-mailhog"
+  Notification__Email__SmtpClient__Port: "1025"
+  Notification__Sms__Provider: "Fake"
+  Notification__Sms__Twilio__AccountSId: ""
+  Notification__Sms__Twilio__AuthToken: ""
+  Notification__Sms__Twilio__FromNumber: ""

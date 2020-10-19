@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name}}-mailhog
+  name: {{ .Release.Name}}-mailhog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name}}-mailhog
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name}}-mailhog
+    spec:
+      containers:
+      - image: mailhog/mailhog
+        name: {{ .Release.Name}}-mailhog
+        ports:
+        - containerPort: 1025
+        - containerPort: 8025
+        resources: {}
+      restartPolicy: Always
+status: {}

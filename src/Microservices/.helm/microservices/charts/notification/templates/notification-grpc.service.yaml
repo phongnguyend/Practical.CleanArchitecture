@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ .Release.Name}}-notification-grpc
+  name: {{ .Release.Name}}-notification-grpc
+spec:
+  ports:
+  - name: "443"
+    port: 443
+    targetPort: 443
+  selector:
+    app: {{ .Release.Name}}-notification-grpc
+status:
+  loadBalancer: {}

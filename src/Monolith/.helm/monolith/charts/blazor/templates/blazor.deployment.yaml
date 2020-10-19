@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name}}-blazor
+  name: {{ .Release.Name}}-blazor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name}}-blazor
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name}}-blazor
+    spec:
+      containers:
+      - env:
+        - name: CookiePolicyOptions__IsEnabled
+          value: "true"
+        - name: CookiePolicyOptions__MinimumSameSitePolicy
+          value: Lax
+        - name: CookiePolicyOptions__Secure
+          value: None
+        - name: OpenIdConnect__Authority
+          value: http://{{ .Release.Name}}-identityserver
+        - name: OpenIdConnect__RequireHttpsMetadata
+          value: "false"
+        - name: ResourceServer__Endpoint
+          value: http://{{ .Release.Name}}-webapi
+        - name: ResourceServer__PublicEndpoint
+          value: http://host.docker.internal:9002
+        image: phongnguyend/classifiedads.blazor
+        name: {{ .Release.Name}}-blazor
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+status: {}

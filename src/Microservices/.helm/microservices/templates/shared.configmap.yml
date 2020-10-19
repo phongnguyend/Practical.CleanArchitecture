@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name}}-shared
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  IdentityServerAuthentication__Authority: "http://{{ .Release.Name}}-identityserver"
+  IdentityServerAuthentication__RequireHttpsMetadata: "false"
+  Services__AuditLog__Grpc: "https://{{ .Release.Name}}-auditlog-grpc"
+  Services__Identity__Grpc: "https://{{ .Release.Name}}-identity-grpc"
+  Services__Notification__Grpc: "https://{{ .Release.Name}}-notification-grpc"

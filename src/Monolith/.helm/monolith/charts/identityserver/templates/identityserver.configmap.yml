@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name}}-identityserver
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  CookiePolicyOptions__IsEnabled: "true"
+  CookiePolicyOptions__MinimumSameSitePolicy: "Lax"
+  CookiePolicyOptions__Secure: "None"

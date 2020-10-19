@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name}}-backgroundserver
+  name: {{ .Release.Name}}-backgroundserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name}}-backgroundserver
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name}}-backgroundserver
+    spec:
+      containers:
+      - env:
+        - name: CheckDependency__Enabled
+          value: "true"
+        - name: CheckDependency__Host
+          value: {{ .Release.Name}}-migrator:80,{{ .Release.Name}}-rabbitmq:5672
+        - name: NotificationServer__Endpoint
+          value: http://{{ .Release.Name}}-notificationserver
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name}}-shared
+        image: phongnguyend/classifiedads.backgroundserver
+        name: {{ .Release.Name}}-backgroundserver
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+status: {}

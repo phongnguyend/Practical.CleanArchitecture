@@ -1,0 +1,4 @@
+apiVersion: v2
+name: webmvc
+version: 1.0.0
+type: application

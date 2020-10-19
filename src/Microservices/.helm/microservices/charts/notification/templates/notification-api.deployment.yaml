@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name}}-notification-api
+  name: {{ .Release.Name}}-notification-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name}}-notification-api
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name}}-notification-api
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name}}-shared
+        - configMapRef:
+            name: {{ .Release.Name}}-notification
+        image: phongnguyend/classifiedads.services.notification.api
+        name: {{ .Release.Name}}-notification-api
+        resources: {}
+      restartPolicy: Always
+status: {}

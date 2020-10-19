@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name}}-migrator
+  name: {{ .Release.Name}}-migrator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name}}-migrator
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name}}-migrator
+    spec:
+      containers:
+      - env:
+        - name: CheckDependency__Enabled
+          value: "true"
+        - name: CheckDependency__Host
+          value: {{ .Release.Name}}-db:1433
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name}}-shared
+        image: phongnguyend/classifiedads.modularmonolith.migrator
+        name: {{ .Release.Name}}-migrator
+        resources: {}
+      restartPolicy: Always
+status: {}

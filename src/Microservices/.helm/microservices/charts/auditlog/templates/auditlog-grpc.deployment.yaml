@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name}}-auditlog-grpc
+  name: {{ .Release.Name}}-auditlog-grpc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name}}-auditlog-grpc
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name}}-auditlog-grpc
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: ASPNETCORE_URLS
+          value: https://+
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name}}-shared
+        - configMapRef:
+            name: {{ .Release.Name}}-auditlog            
+        image: phongnguyend/classifiedads.services.auditlog.grpc
+        name: {{ .Release.Name}}-auditlog-grpc
+        resources: {}
+      restartPolicy: Always
+status: {}

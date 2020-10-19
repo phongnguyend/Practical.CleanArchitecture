@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name}}-webapi
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ReRoutes__0__DownstreamScheme: "http"
+  ReRoutes__0__DownstreamHostAndPorts__0__Host: "{{ .Release.Name}}-product-api"
+  ReRoutes__0__DownstreamHostAndPorts__0__Port: "80"
+  ReRoutes__1__DownstreamScheme: "http"
+  ReRoutes__1__DownstreamHostAndPorts__0__Host: "{{ .Release.Name}}-product-api"
+  ReRoutes__1__DownstreamHostAndPorts__0__Port: "80"
+  ReRoutes__2__DownstreamScheme: "http"
+  ReRoutes__2__DownstreamHostAndPorts__0__Host: "{{ .Release.Name}}-storage-api"
+  ReRoutes__2__DownstreamHostAndPorts__0__Port: "80"
+  ReRoutes__3__DownstreamScheme: "http"
+  ReRoutes__3__DownstreamHostAndPorts__0__Host: "{{ .Release.Name}}-storage-api"
+  ReRoutes__3__DownstreamHostAndPorts__0__Port: "80"
+  ReRoutes__4__DownstreamScheme: "http"
+  ReRoutes__4__DownstreamHostAndPorts__0__Host: "{{ .Release.Name}}-auditlog-api"
+  ReRoutes__4__DownstreamHostAndPorts__0__Port: "80"
+  ReRoutes__5__DownstreamScheme: "http"
+  ReRoutes__5__DownstreamHostAndPorts__0__Host: "{{ .Release.Name}}-auditlog-api"
+  ReRoutes__5__DownstreamHostAndPorts__0__Port: "80"
+  ReRoutes__6__DownstreamScheme: "http"
+  ReRoutes__6__DownstreamHostAndPorts__0__Host: "{{ .Release.Name}}-identity-api"
+  ReRoutes__6__DownstreamHostAndPorts__0__Port: "80"
+  ReRoutes__7__DownstreamScheme: "http"
+  ReRoutes__7__DownstreamHostAndPorts__0__Host: "{{ .Release.Name}}-identity-api"
+  ReRoutes__7__DownstreamHostAndPorts__0__Port: "80"

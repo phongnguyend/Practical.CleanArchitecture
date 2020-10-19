@@ -1,7 +1,7 @@
 
 --- Build ---
 
-docker build -f "Gateways.Ocelot\ClassifiedAds.Gateways.Ocelot\Dockerfile" -t classifiedads.gateways.ocelot .
+docker build -f "Gateways.WebAPI\ClassifiedAds.Gateways.WebAPI\Dockerfile" -t classifiedads.gateways.webapi .
 
 docker build -f "Services.AuditLog\ClassifiedAds.Services.AuditLog.Api\Dockerfile" -t classifiedads.services.auditlog.api .
 docker build -f "Services.AuditLog\ClassifiedAds.Services.AuditLog.Grpc\Dockerfile" -t classifiedads.services.auditlog.grpc .
@@ -20,8 +20,8 @@ docker build -f "Services.Storage\ClassifiedAds.Services.Storage.Api\Dockerfile"
 
 --- Push ---
 
-docker tag classifiedads.gateways.ocelot phongnguyend/classifiedads.gateways.ocelot
-docker push phongnguyend/classifiedads.gateways.ocelot
+docker tag classifiedads.gateways.webapi phongnguyend/classifiedads.gateways.webapi
+docker push phongnguyend/classifiedads.gateways.webapi
 
 docker tag classifiedads.services.auditlog.api phongnguyend/classifiedads.services.auditlog.api
 docker tag classifiedads.services.auditlog.grpc phongnguyend/classifiedads.services.auditlog.grpc

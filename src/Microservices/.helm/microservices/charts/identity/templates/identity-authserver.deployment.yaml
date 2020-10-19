@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name}}-identity-authserver
+  name: {{ .Release.Name}}-identity-authserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name}}-identity-authserver
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name}}-identity-authserver
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: CookiePolicyOptions__IsEnabled
+          value: "true"
+        - name: CookiePolicyOptions__MinimumSameSitePolicy
+          value: Lax
+        - name: CookiePolicyOptions__Secure
+          value: None
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name}}-shared
+        - configMapRef:
+            name: {{ .Release.Name}}-identity
+        image: phongnguyend/classifiedads.services.identity.authserver
+        name: {{ .Release.Name}}-identity-authserver
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+status: {}

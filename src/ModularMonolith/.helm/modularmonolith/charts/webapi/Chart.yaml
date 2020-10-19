@@ -1,0 +1,4 @@
+apiVersion: v2
+name: webapi
+version: 1.0.0
+type: application

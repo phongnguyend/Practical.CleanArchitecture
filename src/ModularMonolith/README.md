@@ -36,3 +36,15 @@
   ```
   kubectl delete -f .k8s
   ```
+  
+- Use Helm
+  ```
+  helm install myrelease .helm/modularmonolith
+  helm list
+  helm upgrade myrelease .helm/modularmonolith
+  ```
+
+- UnInstall
+  ```
+  helm uninstall myrelease
+  ```
