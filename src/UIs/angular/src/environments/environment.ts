@@ -5,12 +5,14 @@
 export const environment = {
   production: false,
   OpenIdConnect: {
-	Authority: "https://localhost:44367",
+    Authority: "https://localhost:44367",
+    //Authority: "http://host.docker.internal:9000/",
     //Authority: "http://identityserver",
     ClientId: "ClassifiedAds.Angular"
   },
   ResourceServer: {
     Endpoint: "https://localhost:44312/api/"
+    //Endpoint: "http://host.docker.internal:9002/api/"
     //Endpoint: "http://webapi/api/"
   },
   CurrentUrl: "http://localhost:4200/"

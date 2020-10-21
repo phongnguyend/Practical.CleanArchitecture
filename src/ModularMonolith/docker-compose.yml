@@ -28,8 +28,8 @@ services:
         depends_on:
           - db
         environment:
-          ASPNETCORE_ENVIRONMENT: "Development"
-          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.ModularMonolith;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+          ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
           CheckDependency__Enabled: "true"
           CheckDependency__Host: "db:1433"
     identityserver:
@@ -46,13 +46,13 @@ services:
           - migrator
           - rabbitmq
         environment:
-          ASPNETCORE_ENVIRONMENT: "Development"
-          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.ModularMonolith;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+          ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
           CookiePolicyOptions__IsEnabled: "true"
           CookiePolicyOptions__MinimumSameSitePolicy: "Lax"
           CookiePolicyOptions__Secure: "None"
-          MessageBroker__Provider: "RabbitMQ"
-          MessageBroker__RabbitMQ__HostName: "rabbitmq"
+          MessageBroker__Provider: ${MessageBroker__Provider}
+          MessageBroker__RabbitMQ__HostName: ${MessageBroker__RabbitMQ__HostName}
     webapi:
         image: classifiedads.modularmonolith.webapi
         build:
@@ -68,14 +68,14 @@ services:
           - migrator
           - rabbitmq
         environment:
-          ASPNETCORE_ENVIRONMENT: "Development"
-          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.ModularMonolith;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+          ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
           IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
           IdentityServerAuthentication__RequireHttpsMetadata: "false"
-          MessageBroker__Provider: "RabbitMQ"
-          MessageBroker__RabbitMQ__HostName: "rabbitmq"
-          Storage__Provider: "Local"
-          Storage__Local__Path: "/files"
+          MessageBroker__Provider: ${MessageBroker__Provider}
+          MessageBroker__RabbitMQ__HostName: ${MessageBroker__RabbitMQ__HostName}
+          Storage__Provider: ${Storage__Provider}
+          Storage__Local__Path: ${Storage__Local__Path}
     backgroundserver:
         image: classifiedads.modularmonolith.backgroundserver
         build:
@@ -91,15 +91,15 @@ services:
           - rabbitmq
           - mailhog
         environment:
-          ASPNETCORE_ENVIRONMENT: "Development"
-          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.ModularMonolith;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+          ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
           CheckDependency__Enabled: "true"
           CheckDependency__Host: "migrator:80,rabbitmq:5672"
           NotificationServer__Endpoint: "http://notificationserver"
-          MessageBroker__Provider: "RabbitMQ"
-          MessageBroker__RabbitMQ__HostName: "rabbitmq"
-          Storage__Provider: "Local"
-          Storage__Local__Path: "/files"
+          MessageBroker__Provider: ${MessageBroker__Provider}
+          MessageBroker__RabbitMQ__HostName: ${MessageBroker__RabbitMQ__HostName}
+          Storage__Provider: ${Storage__Provider}
+          Storage__Local__Path: ${Storage__Local__Path}
           Notification__Email__Provider: "SmtpClient"
           Notification__Email__SmtpClient__Host: "mailhog"
           Notification__Email__SmtpClient__Port: "1025"

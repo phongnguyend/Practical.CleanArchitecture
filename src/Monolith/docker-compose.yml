@@ -46,8 +46,8 @@ services:
         depends_on:
           - db
         environment:
-          ASPNETCORE_ENVIRONMENT: "Development"
-          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+          ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
           CheckDependency__Enabled: "true"
           CheckDependency__Host: "db:1433"
     identityserver:
@@ -63,14 +63,15 @@ services:
           - db
           - migrator
         environment:
-          ASPNETCORE_ENVIRONMENT: "Development"
-          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+          ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
           CookiePolicyOptions__IsEnabled: "true"
           CookiePolicyOptions__MinimumSameSitePolicy: "Lax"
           CookiePolicyOptions__Secure: "None"
-          MessageBroker__Provider: "RabbitMQ"
-          MessageBroker__RabbitMQ__HostName: "rabbitmq"
-          MessageBroker__AzureQueue__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
+          MessageBroker__Provider: ${MessageBroker__Provider}
+          MessageBroker__RabbitMQ__HostName: ${MessageBroker__RabbitMQ__HostName}
+          MessageBroker__Kafka__BootstrapServers: ${MessageBroker__Kafka__BootstrapServers}
+          MessageBroker__AzureQueue__ConnectionString: ${MessageBroker__AzureQueue__ConnectionString}
     notificationserver:
         image: classifiedads.notificationserver
         build:
@@ -84,8 +85,8 @@ services:
           - db
           - migrator
         environment:
-          ASPNETCORE_ENVIRONMENT: "Development"
-          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+          ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
     webapi:
         image: classifiedads.webapi
         build:
@@ -100,22 +101,22 @@ services:
           - db
           - migrator
         environment:
-          ASPNETCORE_ENVIRONMENT: "Development"
-          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+          ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
           IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
           IdentityServerAuthentication__RequireHttpsMetadata: "false"
-          Storage__Provider: "Local"
-          Storage__Local__Path: "/files"
-          Storage__Azure__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
-          Storage__Azure__Container: "classifiedadds"
-          Storage__Amazon__AccessKeyID: "xxx"
-          Storage__Amazon__SecretAccessKey: "xxx"
-          Storage__Amazon__BucketName: "classifiedadds"
-          Storage__Amazon__RegionEndpoint: "ap-southeast-1"
-          MessageBroker__Provider: "RabbitMQ"
-          MessageBroker__RabbitMQ__HostName: "rabbitmq"
-          MessageBroker__Kafka__BootstrapServers: "kafka:9092"
-          MessageBroker__AzureQueue__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
+          Storage__Provider: ${Storage__Provider}
+          Storage__Local__Path: ${Storage__Local__Path}
+          Storage__Azure__ConnectionString: ${Storage__Azure__ConnectionString}
+          Storage__Azure__Container: ${Storage__Azure__Container}
+          Storage__Amazon__AccessKeyID: ${Storage__Amazon__AccessKeyID}
+          Storage__Amazon__SecretAccessKey: ${Storage__Amazon__SecretAccessKey}
+          Storage__Amazon__BucketName: ${Storage__Amazon__BucketName}
+          Storage__Amazon__RegionEndpoint: ${Storage__Amazon__RegionEndpoint}
+          MessageBroker__Provider: ${MessageBroker__Provider}
+          MessageBroker__RabbitMQ__HostName: ${MessageBroker__RabbitMQ__HostName}
+          MessageBroker__Kafka__BootstrapServers: ${MessageBroker__Kafka__BootstrapServers}
+          MessageBroker__AzureQueue__ConnectionString: ${MessageBroker__AzureQueue__ConnectionString}
     webmvc:
         image: classifiedads.webmvc
         build:
@@ -135,8 +136,8 @@ services:
           - webapi
           - notificationserver
         environment:
-          ASPNETCORE_ENVIRONMENT: "Development"
-          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+          ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
           CookiePolicyOptions__IsEnabled: "true"
           CookiePolicyOptions__MinimumSameSitePolicy: "Lax"
           CookiePolicyOptions__Secure: "None"          
@@ -144,24 +145,24 @@ services:
           CheckDependency__Host: "migrator:80"
           OpenIdConnect__Authority: "http://host.docker.internal:9000"
           OpenIdConnect__RequireHttpsMetadata: "false"
-          ResourceServer__Endpoint: "http://webapi"
-          ResourceServer__PublicEndpoint: "http://host.docker.internal:9002"
-          NotificationServer__Endpoint: "http://notificationserver"
-          NotificationServer__PublicEndpoint: "http://localhost:9001"
-          BackgroundServer__Endpoint: "http://backgroundserver"
+          ResourceServer__Endpoint: ${ResourceServer__Endpoint}
+          ResourceServer__PublicEndpoint: ${ResourceServer__PublicEndpoint}
+          NotificationServer__Endpoint: ${NotificationServer__Endpoint}
+          NotificationServer__PublicEndpoint: ${NotificationServer__PublicEndpoint}
+          BackgroundServer__Endpoint: ${BackgroundServer__Endpoint}
           CurrentUrl: "http://host.docker.internal:9003"
-          Storage__Provider: "Local"
-          Storage__Local__Path: "/files"
-          Storage__Azure__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
-          Storage__Azure__Container: "classifiedadds"
-          Storage__Amazon__AccessKeyID: "xxx"
-          Storage__Amazon__SecretAccessKey: "xxx"
-          Storage__Amazon__BucketName: "classifiedadds"
-          Storage__Amazon__RegionEndpoint: "ap-southeast-1"
-          MessageBroker__Provider: "RabbitMQ"
-          MessageBroker__RabbitMQ__HostName: "rabbitmq"
-          MessageBroker__Kafka__BootstrapServers: "kafka:9092"
-          MessageBroker__AzureQueue__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
+          Storage__Provider: ${Storage__Provider}
+          Storage__Local__Path: ${Storage__Local__Path}
+          Storage__Azure__ConnectionString: ${Storage__Azure__ConnectionString}
+          Storage__Azure__Container: ${Storage__Azure__Container}
+          Storage__Amazon__AccessKeyID: ${Storage__Amazon__AccessKeyID}
+          Storage__Amazon__SecretAccessKey: ${Storage__Amazon__SecretAccessKey}
+          Storage__Amazon__BucketName: ${Storage__Amazon__BucketName}
+          Storage__Amazon__RegionEndpoint: ${Storage__Amazon__RegionEndpoint}
+          MessageBroker__Provider: ${MessageBroker__Provider}
+          MessageBroker__RabbitMQ__HostName: ${MessageBroker__RabbitMQ__HostName}
+          MessageBroker__Kafka__BootstrapServers: ${MessageBroker__Kafka__BootstrapServers}
+          MessageBroker__AzureQueue__ConnectionString: ${MessageBroker__AzureQueue__ConnectionString}
     blazor:
         image: classifiedads.blazor
         build:
@@ -175,11 +176,11 @@ services:
           - identityserver
           - webapi
         environment:
-          ASPNETCORE_ENVIRONMENT: "Development"
+          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
           OpenIdConnect__Authority: "http://host.docker.internal:9000"
           OpenIdConnect__RequireHttpsMetadata: "false"
-          ResourceServer__Endpoint: "http://webapi"
-          ResourceServer__PublicEndpoint: "http://host.docker.internal:9002"
+          ResourceServer__Endpoint: ${ResourceServer__Endpoint}
+          ResourceServer__PublicEndpoint: ${ResourceServer__PublicEndpoint}
           CookiePolicyOptions__IsEnabled: "true"
           CookiePolicyOptions__MinimumSameSitePolicy: "Lax"
           CookiePolicyOptions__Secure: "None" 
@@ -198,15 +199,15 @@ services:
           - rabbitmq
           - mailhog
         environment:
-          ASPNETCORE_ENVIRONMENT: "Development"
-          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+          ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
           CheckDependency__Enabled: "true"
           CheckDependency__Host: "migrator:80,rabbitmq:5672"
-          NotificationServer__Endpoint: "http://notificationserver"
-          MessageBroker__Provider: "RabbitMQ"
-          MessageBroker__RabbitMQ__HostName: "rabbitmq"
-          MessageBroker__Kafka__BootstrapServers: "kafka:9092"
-          MessageBroker__AzureQueue__ConnectionString: "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net"
+          NotificationServer__Endpoint: ${NotificationServer__Endpoint}
+          MessageBroker__Provider: ${MessageBroker__Provider}
+          MessageBroker__RabbitMQ__HostName: ${MessageBroker__RabbitMQ__HostName}
+          MessageBroker__Kafka__BootstrapServers: ${MessageBroker__Kafka__BootstrapServers}
+          MessageBroker__AzureQueue__ConnectionString: ${MessageBroker__AzureQueue__ConnectionString}
           Notification__Email__Provider: "SmtpClient"
           Notification__Email__SmtpClient__Host: "mailhog"
           Notification__Email__SmtpClient__Port: "1025"
@@ -226,6 +227,6 @@ services:
         depends_on:
           - webapi
         environment:
-          ASPNETCORE_ENVIRONMENT: "Development"
-          ResourceServer__Endpoint: "http://webapi"
-          ResourceServer__PublicEndpoint: "http://host.docker.internal:9002"
+          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+          ResourceServer__Endpoint: ${ResourceServer__Endpoint}
+          ResourceServer__PublicEndpoint: ${ResourceServer__PublicEndpoint}
