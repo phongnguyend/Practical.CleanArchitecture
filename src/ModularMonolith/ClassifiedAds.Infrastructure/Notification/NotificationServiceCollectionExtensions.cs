@@ -10,8 +10,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSmsNotification(options.Sms);
 
-            services.AddWebNotification(options.Web);
-
             return services;
         }
     }

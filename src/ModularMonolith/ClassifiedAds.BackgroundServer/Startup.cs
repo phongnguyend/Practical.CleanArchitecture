@@ -7,6 +7,7 @@ using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.HealthChecks;
 using ClassifiedAds.Infrastructure.Notification.Web;
 using ClassifiedAds.Modules.Notification.Contracts.DTOs;
+using ClassifiedAds.Modules.Notification.Hubs;
 using ClassifiedAds.Modules.Notification.Services;
 using ClassifiedAds.Modules.Storage.DTOs;
 using Hangfire;
@@ -77,6 +78,8 @@ namespace ClassifiedAds.BackgroundServer
 
             services.AddHostedService<ResendEmailHostedService>();
             services.AddHostedService<ResendSmsHostedService>();
+
+            services.AddWebNotification<SendTaskStatusMessage>(AppSettings.Notification.Web);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -104,8 +107,7 @@ namespace ClassifiedAds.BackgroundServer
             var emailMessageCreatedMessageQueueReceiver = serviceProvider.GetService<IMessageReceiver<EmailMessageCreatedEvent>>();
             var smsMessageCreatedMessageQueueReceiver = serviceProvider.GetService<IMessageReceiver<SmsMessageCreatedEvent>>();
 
-            var notification = serviceProvider.GetService<IWebNotification>();
-            var endpoint = $"{AppSettings.NotificationServer.Endpoint}/SimulatedLongRunningTaskHub";
+            var notification = serviceProvider.GetService<IWebNotification<SendTaskStatusMessage>>();
 
             fileUploadedMessageQueueReceiver?.Receive(data =>
             {
@@ -113,7 +115,7 @@ namespace ClassifiedAds.BackgroundServer
 
                 string message = data.FileEntry.Id.ToString();
 
-                notification.Send(endpoint, "SendTaskStatus", new { Step = $"{AppSettings.MessageBroker.Provider} - File Uploaded", Message = message });
+                notification.Send(new SendTaskStatusMessage { Step = $"{AppSettings.MessageBroker.Provider} - File Uploaded", Message = message });
             });
 
             fileDeletedMessageQueueReceiver?.Receive(data =>
@@ -122,7 +124,7 @@ namespace ClassifiedAds.BackgroundServer
 
                 string message = data.FileEntry.Id.ToString();
 
-                notification.Send(endpoint, "SendTaskStatus", new { Step = $"{AppSettings.MessageBroker.Provider} - File Deleted", Message = message });
+                notification.Send(new SendTaskStatusMessage { Step = $"{AppSettings.MessageBroker.Provider} - File Deleted", Message = message });
             });
 
             var emailMessageService = serviceProvider.GetService<EmailMessageService>();
@@ -138,7 +140,7 @@ namespace ClassifiedAds.BackgroundServer
                 catch (Exception ex)
                 { }
 
-                notification.Send(endpoint, "SendTaskStatus", new { Step = $"Send Email", Message = message });
+                notification.Send(new SendTaskStatusMessage { Step = $"Send Email", Message = message });
             });
 
             var smsMessageService = serviceProvider.GetService<SmsMessageService>();
@@ -154,7 +156,7 @@ namespace ClassifiedAds.BackgroundServer
                 catch (Exception ex)
                 { }
 
-                notification.Send(endpoint, "SendTaskStatus", new { Step = $"Send Sms", Message = message });
+                notification.Send(new SendTaskStatusMessage { Step = $"Send Sms", Message = message });
             });
         }
     }

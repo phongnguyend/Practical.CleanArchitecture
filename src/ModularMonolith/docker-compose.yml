@@ -95,7 +95,6 @@ services:
           ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
           CheckDependency__Enabled: "true"
           CheckDependency__Host: "migrator:80,rabbitmq:5672"
-          NotificationServer__Endpoint: "http://notificationserver"
           MessageBroker__Provider: ${MessageBroker__Provider}
           MessageBroker__RabbitMQ__HostName: ${MessageBroker__RabbitMQ__HostName}
           Storage__Provider: ${Storage__Provider}
@@ -107,3 +106,5 @@ services:
           Notification__Sms__Twilio__AccountSId: ""
           Notification__Sms__Twilio__AuthToken: ""
           Notification__Sms__Twilio__FromNumber: ""
+          Notification__Web__Provider: "Fake"
+          Notification__Web__SignalR__Endpoint: "http://notificationserver"

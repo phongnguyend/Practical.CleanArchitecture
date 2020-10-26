@@ -2,14 +2,14 @@
 
 namespace ClassifiedAds.Infrastructure.Notification.Web.Fake
 {
-    public class FakeWebNotification : IWebNotification
+    public class FakeWebNotification<T> : IWebNotification<T>
     {
-        public void Send<T>(string endpoint, string eventName, T message)
+        public void Send(T message)
         {
             // do nothing
         }
 
-        public Task SendAsync<T>(string endpoint, string eventName, T message)
+        public Task SendAsync(T message)
         {
             // do nothing
             return Task.CompletedTask;

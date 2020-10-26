@@ -21,8 +21,6 @@ spec:
           value: "true"
         - name: CheckDependency__Host
           value: migrator:80,rabbitmq:5672
-        - name: NotificationServer__Endpoint
-          value: http://notificationserver
         envFrom:
         - configMapRef:
             name: shared

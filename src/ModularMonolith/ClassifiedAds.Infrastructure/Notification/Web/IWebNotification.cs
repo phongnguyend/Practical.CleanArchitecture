@@ -2,9 +2,9 @@
 
 namespace ClassifiedAds.Infrastructure.Notification.Web
 {
-    public interface IWebNotification
+    public interface IWebNotification<T>
     {
-        void Send<T>(string endpoint, string eventName, T message);
-        Task SendAsync<T>(string endpoint, string eventName, T message);
+        void Send(T message);
+        Task SendAsync(T message);
     }
 }
