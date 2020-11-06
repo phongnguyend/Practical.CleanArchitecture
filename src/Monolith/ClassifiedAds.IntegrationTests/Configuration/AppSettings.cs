@@ -6,8 +6,6 @@
 
         public ResourceServer WebAPI { get; set; }
 
-        public ResourceServer Ocelot { get; set; }
-
         public ResourceServer GraphQL { get; set; }
 
         public LoginOptions Login { get; set; }
