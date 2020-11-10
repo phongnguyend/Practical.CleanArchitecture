@@ -1,0 +1,35 @@
+﻿@page "/auditlogs"
+@attribute [Authorize]
+
+<div class="card">
+    <div class="card-header">
+        Audit Logs
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date Time</th>
+                        <th>User Name</th>
+                        <th>Action</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var auditLog in AuditLogs)
+                    {
+                        <tr>
+                            <td>
+                                @auditLog.CreatedDateTime
+                            </td>
+                            <td>@auditLog.UserName</td>
+                            <td>@auditLog.Action</td>
+                            <td>@auditLog.Log</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

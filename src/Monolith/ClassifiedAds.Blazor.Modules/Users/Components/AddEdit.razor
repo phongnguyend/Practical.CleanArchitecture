@@ -1,0 +1,67 @@
+﻿<EditForm Model="User" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group row">
+        <label for="userName" class="col-sm-3 col-form-label">User Name</label>
+        <div class="col-sm-9">
+            <InputText id="userName" class="form-control" @bind-Value="User.UserName" placeholder="Enter an user name" />
+            <ValidationMessage For="@(() => User.UserName)" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="email" class="col-sm-3 col-form-label">Email</label>
+        <div class="col-sm-9">
+            <InputText id="email" class="form-control" @bind-Value="User.Email" placeholder="Enter an email" />
+            <ValidationMessage For="@(() => User.Email)" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="emailConfirmed" class="col-sm-3 col-form-label">Email Confirmed</label>
+        <div class="col-sm-9">
+            <InputCheckbox id="emailConfirmed" @bind-Value="User.EmailConfirmed" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="phoneNumber" class="col-sm-3 col-form-label">Phone Number</label>
+        <div class="col-sm-9">
+            <InputText id="phoneNumber" class="form-control" @bind-Value="User.PhoneNumber" placeholder="Enter a phone number" />
+            <ValidationMessage For="@(() => User.PhoneNumber)" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="phoneNumberConfirmed" class="col-sm-3 col-form-label">Phone Number Confirmed</label>
+        <div class="col-sm-9">
+            <InputCheckbox id="phoneNumberConfirmed" @bind-Value="User.PhoneNumberConfirmed" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="twoFactorEnabled" class="col-sm-3 col-form-label">Two Factor Enabled</label>
+        <div class="col-sm-9">
+            <InputCheckbox id="twoFactorEnabled" @bind-Value="User.TwoFactorEnabled" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="lockoutEnabled" class="col-sm-3 col-form-label">Lockout Enabled</label>
+        <div class="col-sm-9">
+            <InputCheckbox id="lockoutEnabled" @bind-Value="User.LockoutEnabled" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="accessFailedCount" class="col-sm-3 col-form-label">Access Failed Count</label>
+        <div class="col-sm-9">
+            <InputNumber id="accessFailedCount" class="form-control" @bind-Value="User.AccessFailedCount" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="lockoutEnd" class="col-sm-3 col-form-label">Lockout End</label>
+        <div class="col-sm-9">
+            <InputDateTime id="lockoutEnd" class="form-control" @bind-Value="User.LockoutEnd" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9">
+            <button class="btn btn-primary">Save</button>
+        </div>
+    </div>
+</EditForm>

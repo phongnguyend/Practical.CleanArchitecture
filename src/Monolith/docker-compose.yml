@@ -167,11 +167,11 @@ services:
         image: classifiedads.blazor
         build:
           context: .
-          dockerfile: ./ClassifiedAds.Blazor/Dockerfile
+          dockerfile: ./ClassifiedAds.BlazorServerSide/Dockerfile
         ports:
             - "9008:80"
         volumes:
-            - D:\\ClassifiedAds.Monolith\\Logs\\Blazor:/ClassifiedAds.Monolith/logs
+            - D:\\ClassifiedAds.Monolith\\Logs\\BlazorServerSide:/ClassifiedAds.Monolith/logs
         depends_on:
           - identityserver
           - webapi

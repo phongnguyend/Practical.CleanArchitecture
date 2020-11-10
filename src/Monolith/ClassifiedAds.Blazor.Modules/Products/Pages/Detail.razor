@@ -1,0 +1,60 @@
+﻿@page "/products/{ProductId:guid}"
+@attribute [Authorize]
+
+@using ClassifiedAds.Blazor.Modules.Products.Components
+
+<div class="card">
+    <div class="card-header">
+        Product Detail: @Product.Name
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-4">Name:</div>
+                    <div class="col-md-8">@Product.Name</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">Code:</div>
+                    <div class="col-md-8">@Product.Code?.ToUpper()</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">Description:</div>
+                    <div class="col-md-8">@Product.Description</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">Price:</div>
+                    <div class="col-md-8">
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">5 Star Rating:</div>
+                    <div class="col-md-8">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <img class="center-block img-responsive"
+                     style="width:200px; margin:2px;"
+                     src="/images/logo.png"
+                     title="@Product.Name" />
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <NavLink class="btn btn-outline-secondary" href="products">
+            <i class="fa fa-chevron-left"></i> Back
+        </NavLink>
+        &nbsp;
+        <button @onclick="@(()=> NavManager.NavigateTo($"/products/edit/{ProductId}"))" class="btn btn-primary" title="Edit">Edit</button>
+        &nbsp;
+        <button @onclick="(()=> ViewAuditLogs())" class="btn btn-secondary" title="View Audit Logs">View Audit Logs</button>
+    </div>
+</div>
+
+<AuditLogsDialog @ref="AuditLogsDialog"></AuditLogsDialog>

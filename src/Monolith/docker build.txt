@@ -9,7 +9,7 @@ docker build -f "ClassifiedAds.Migrator\Dockerfile" -t classifiedads.migrator .
 docker build -f "ClassifiedAds.NotificationServer\Dockerfile" -t classifiedads.notificationserver .
 docker build -f "ClassifiedAds.WebAPI\Dockerfile" -t classifiedads.webapi .
 docker build -f "ClassifiedAds.GraphQL\Dockerfile" -t classifiedads.graphql .
-docker build -f "ClassifiedAds.Blazor\Dockerfile" -t classifiedads.blazor .
+docker build -f "ClassifiedAds.BlazorServerSide\Dockerfile" -t classifiedads.blazor .
 docker build -f "ClassifiedAds.IdentityServer\Dockerfile" -t classifiedads.identityserver .
 docker build -f "ClassifiedAds.WebMVC\Dockerfile" -t classifiedads.webmvc .
 

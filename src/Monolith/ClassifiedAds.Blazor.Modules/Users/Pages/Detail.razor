@@ -1,0 +1,104 @@
+﻿@page "/users/{Id:guid}"
+@attribute [Authorize]
+
+@using ClassifiedAds.Blazor.Modules.Users.Components
+
+<div class="card">
+    <div class="card-header">
+        User Detail:  @User.UserName
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-4">User Name:</div>
+                    <div class="col-md-8">@User.UserName</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">Email:</div>
+                    <div class="col-md-8">@User.Email</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">Email Confirmed:</div>
+                    <div class="col-md-8">@User.EmailConfirmed</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">Phone Number:</div>
+                    <div class="col-md-8">@User.PhoneNumber</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">Phone Number Confirmed:</div>
+                    <div class="col-md-8">@User.PhoneNumberConfirmed</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">Two Factor Enabled:</div>
+                    <div class="col-md-8">@User.TwoFactorEnabled</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">Lockout Enabled:</div>
+                    <div class="col-md-8">@User.LockoutEnabled</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">Access Failed Count:</div>
+                    <div class="col-md-8">@User.AccessFailedCount</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">Lockout End:</div>
+                    <div class="col-md-8">@User.LockoutEnd</div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <img class="center-block img-responsive"
+                     style="width:200px; margin:2px;"
+                     src="/images/logo.png"
+                     title="@User.UserName" />
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <a class="btn btn-outline-secondary"
+           href="@("/users")"
+           style="width: 80px;">
+            <i class="fa fa-chevron-left"></i> Back
+        </a>
+        &nbsp;
+        <button @onclick="@(()=> NavManager.NavigateTo($"/users/edit/{User.Id}"))" class="btn btn-primary" title="Edit">Edit</button>
+        &nbsp;
+        <button type="button"
+                class="btn btn-secondary"
+                @onclick="() => SetPasswordDialog.Show(User)">
+            Set Password
+        </button>
+        &nbsp;
+        <button type="button"
+                class="btn btn-secondary"
+                @onclick="() => SendPasswordResetEmailDialog.Show()">
+            Send Password Reset Email
+        </button>
+        &nbsp;
+        <button type="button"
+                class="btn btn-secondary"
+                @onclick="() => SendEmailAddressConfirmationEmailDialog.Show()">
+            Send Email Address Confirmation Email
+        </button>
+    </div>
+</div>
+
+<SetPasswordDialog @ref="SetPasswordDialog"></SetPasswordDialog>
+
+<ConfirmDialog @ref="SendPasswordResetEmailDialog" Title="Send Password Reset Email" YesText="Yes" NoText="No" ConfirmEventCallback="ConfirmedSendPasswordResetEmail">
+    <Message>
+        Are you sure you want to send reset password email
+        <strong> @User.UserName</strong>
+    </Message>
+</ConfirmDialog>
+
+<ConfirmDialog @ref="SendEmailAddressConfirmationEmailDialog" Title="Send Email Address Confirmation" YesText="Yes" NoText="No" ConfirmEventCallback="ConfirmedSendEmailAddressConfirmation">
+    <Message>
+        Are you sure you want to send email address confirmation email
+        <strong> @User.UserName</strong>
+    </Message> 
+</ConfirmDialog>

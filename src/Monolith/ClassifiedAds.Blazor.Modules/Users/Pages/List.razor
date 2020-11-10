@@ -1,0 +1,52 @@
+﻿@page "/users"
+@attribute [Authorize]
+
+@using ClassifiedAds.Blazor.Modules.Users.Components
+
+<div class="card">
+    <div class="card-header">
+        Users
+        <button class="btn btn-primary"
+                style="float: right;"
+                @onclick="@(()=> NavManager.NavigateTo("/users/add"))">
+            Add User
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>User Name</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Users)
+                    {
+                        <tr>
+                            <td>
+                                <a href="@($"/users/{user.Id}")">
+                                    @user.UserName
+                                </a>
+                            </td>
+                            <td>@user.Email</td>
+                            <td>
+                                <button @onclick="@(()=> NavManager.NavigateTo($"/users/edit/{user.Id}"))" class="btn btn-primary" title="Edit">Edit</button>
+                                &nbsp;
+                                <button @onclick="(()=> DeleteUser(user))" class="btn btn-danger" title="Delete">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<ConfirmDialog @ref="DeleteDialog" Title="Delete User" YesText="Yes" NoText="No" ConfirmEventCallback="ConfirmedDeleteUser">
+    <Message>
+        Are you sure you want to delete user: <strong>@DeletingUser.UserName</strong>
+    </Message>
+</ConfirmDialog>

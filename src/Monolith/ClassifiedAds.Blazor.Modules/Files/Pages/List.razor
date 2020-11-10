@@ -1,0 +1,65 @@
+﻿@page "/files"
+@attribute [Authorize]
+
+@using ClassifiedAds.Blazor.Modules.Files.Components
+
+<div class="card">
+    <div class="card-header">
+        Files
+        <button class="btn btn-primary"
+                style="float: right;"
+                @onclick="@(()=> NavManager.NavigateTo("/files/upload"))">
+            Upload File
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Size</th>
+                        <th>Uploaded Time</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var file in Files)
+                    {
+                        <tr>
+                            <td>
+                                <a href="@($"/files/edit/{file.Id}")">
+                                    @file.Name  (@file.FileName)
+                                </a>
+                            </td>
+                            <td>@file.Description</td>
+                            <td>@file.Size</td>
+                            <td>@file.UploadedTime</td>
+                            <td>
+                                <button type="button"
+                                        class="btn btn-secondary"
+                                        @onclick="(()=> Download(file))">
+                                    Download
+                                </button>
+                                &nbsp;
+                                <button @onclick="@(()=> NavManager.NavigateTo($"/files/edit/{file.Id}"))" class="btn btn-primary" title="Edit">Edit</button>
+                                &nbsp;
+                                <button @onclick="(()=> ViewAuditLogs(file))" class="btn btn-secondary" title="View Audit Logs">View Audit Logs</button>
+                                &nbsp;
+                                <button @onclick="(()=> DeleteFile(file))" class="btn btn-danger" title="Delete">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<AuditLogsDialog @ref="AuditLogsDialog"></AuditLogsDialog>
+<ConfirmDialog @ref="DeleteDialog" Title="Delete File" YesText="Yes" NoText="No" ConfirmEventCallback="ConfirmedDeleteFile">
+    <Message>
+        Are you sure you want to delete file: <strong>@DeletingFile.Name</strong>
+    </Message>
+</ConfirmDialog>

@@ -1,0 +1,58 @@
+﻿@page "/files/edit/{Id:guid}"
+@attribute [Authorize]
+
+@using ClassifiedAds.Blazor.Modules.Files.Components
+
+<div class="card">
+    <div class="card-header">
+        Edit File
+    </div>
+    <div class="card-body">
+        <EditForm Model="File" OnValidSubmit="HandleValidSubmit">
+
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group row">
+                <label for="fileName" class="col-sm-2 col-form-label">Name: </label>
+                <div class="col-sm-10">
+                    <InputText id="fileName" class="form-control" @bind-Value="File.Name" placeholder="Enter Name"></InputText>
+                    <ValidationMessage For="@(() => File.Name)" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="description" class="col-sm-2 col-form-label">Description: </label>
+                <div class="col-sm-10">
+                    <InputText id="description" class="form-control" @bind-Value="File.Description" placeholder="Enter Description"></InputText>
+                    <ValidationMessage For="@(() => File.Description)" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="formFile" class="col-sm-2 col-form-label">File</label>
+                <div class="col-sm-10">
+                    <input id="formFile"
+                           name="formFile"
+                           class="form-control" value="@File.FileName" disabled/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="description" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <button class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+    <div class="card-footer">
+        <a class="btn btn-outline-secondary"
+           href="@("/files")"
+           style="width: 80px;">
+            <i class="fa fa-chevron-left"></i> Back
+        </a>
+        &nbsp;
+        <button @onclick="(ViewAuditLogs)" class="btn btn-secondary" title="View Audit Logs">View Audit Logs</button>
+    </div>
+</div>
+
+<AuditLogsDialog @ref="AuditLogsDialog"></AuditLogsDialog>

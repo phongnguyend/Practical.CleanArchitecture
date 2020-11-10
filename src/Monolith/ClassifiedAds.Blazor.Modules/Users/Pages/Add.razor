@@ -1,0 +1,18 @@
+﻿@page "/users/add"
+@attribute [Authorize]
+
+@using ClassifiedAds.Blazor.Modules.Users.Components
+
+<div class="card">
+    <div class="card-header">Add User</div>
+    <div class="card-body">
+        <AddEdit User="User"></AddEdit>
+    </div>
+    <div class="card-footer">
+        <a class="btn btn-outline-secondary"
+           href="@("/users")"
+           style="width: 80px;">
+            <i class="fa fa-chevron-left"></i> Back
+        </a>
+    </div>
+</div>

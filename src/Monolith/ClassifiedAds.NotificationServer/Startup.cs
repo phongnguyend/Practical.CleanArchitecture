@@ -21,11 +21,17 @@ namespace ClassifiedAds.NotificationServer
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSignalR()
-                .AddMessagePackProtocol();
-
             var appSettings = new AppSettings();
             Configuration.Bind(appSettings);
+
+            var signalR = services.AddSignalR();
+
+            if (appSettings.Azure?.SignalR?.IsEnabled ?? false)
+            {
+                signalR.AddAzureSignalR();
+            }
+
+            signalR.AddMessagePackProtocol();
 
             services.AddCors(options =>
             {

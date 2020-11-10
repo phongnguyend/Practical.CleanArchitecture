@@ -1,0 +1,16 @@
+﻿@inherits InputBase<DateTimeOffset?>
+
+<input @bind=CurrentValue
+       @attributes=AdditionalAttributes
+       @bind:format="yyyy-MM-ddTHH:mm"
+       class=@CssClass
+       type="datetime-local" />
+
+@code {
+    protected override bool TryParseValueFromString(string value, out DateTimeOffset? result, out string validationErrorMessage)
+    {
+        result = CurrentValue;
+        validationErrorMessage = "";
+        return true;
+    }
+}

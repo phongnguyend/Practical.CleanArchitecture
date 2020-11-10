@@ -6,6 +6,7 @@ using ClassifiedAds.Domain.Infrastructure.Storages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -26,11 +27,13 @@ namespace ClassifiedAds.WebAPI.Controllers
     {
         private readonly Dispatcher _dispatcher;
         private readonly IFileStorageManager _fileManager;
+        private readonly IMemoryCache _memoryCache;
 
-        public FilesController(Dispatcher dispatcher, IFileStorageManager fileManager)
+        public FilesController(Dispatcher dispatcher, IFileStorageManager fileManager, IMemoryCache memoryCache)
         {
             _dispatcher = dispatcher;
             _fileManager = fileManager;
+            _memoryCache = memoryCache;
         }
 
         public ActionResult<IEnumerable<FileEntry>> Get()

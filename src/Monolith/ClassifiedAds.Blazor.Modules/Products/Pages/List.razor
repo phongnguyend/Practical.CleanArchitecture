@@ -1,0 +1,58 @@
+﻿@page "/products"
+@attribute [Authorize]
+@using ClassifiedAds.Blazor.Modules.Products.Components
+
+<div class="card">
+    <div class="card-header">
+        Product List
+        <button class="btn btn-primary"
+                style="float: right;"
+                @onclick="QuickAddProduct">
+            Add Product
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+
+            @if (Products == null)
+            {
+                <p><em>Loading...</em></p>
+            }
+            else
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Description</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Products)
+                        {
+                            <tr @key="product.Id">
+                                <td><a href="@($"/products/{product.Id}")">@product.Name</a></td>
+                                <td>@product.Code</td>
+                                <td>@product.Description</td>
+                                <td>
+                                    <button @onclick="(()=> EditProduct(product))" class="btn btn-primary" title="Edit">Edit</button>
+                                    <button @onclick="(()=> ViewAuditLogs(product))" class="btn btn-secondary" title="View Audit Logs">View Audit Logs</button>
+                                    <button @onclick="(()=> DeleteProduct(product))" class="btn btn-danger" title="Delete">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<AuditLogsDialog @ref="AuditLogsDialog"></AuditLogsDialog>
+<ConfirmDialog @ref="DeleteDialog" Title="Delete Product" YesText="Yes" NoText="No" ConfirmEventCallback="ConfirmedDeleteProduct">
+    <Message>
+        Are you sure you want to delete product: <strong>@DeletingProduct.Name</strong>
+    </Message>
+</ConfirmDialog>

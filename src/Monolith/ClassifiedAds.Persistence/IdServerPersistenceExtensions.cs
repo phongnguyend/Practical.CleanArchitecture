@@ -88,12 +88,12 @@ namespace Microsoft.Extensions.DependencyInjection
                     });
                 }
 
-                if (!context.Clients.Any(x => x.ClientId == "ClassifiedAds.Blazor"))
+                if (!context.Clients.Any(x => x.ClientId == "ClassifiedAds.BlazorServerSide"))
                 {
                     clients.Add(new Client
                     {
-                        ClientId = "ClassifiedAds.Blazor",
-                        ClientName = "ClassifiedAds Blazor",
+                        ClientId = "ClassifiedAds.BlazorServerSide",
+                        ClientName = "ClassifiedAds BlazorServerSide",
                         AllowedGrantTypes = GrantTypes.Hybrid.Combines(GrantTypes.ResourceOwnerPassword),
                         RedirectUris =
                         {
@@ -104,6 +104,37 @@ namespace Microsoft.Extensions.DependencyInjection
                         {
                             "https://localhost:44331/signout-callback-oidc",
                             "http://host.docker.internal:9008/signout-callback-oidc",
+                        },
+                        AllowedScopes =
+                        {
+                            IdentityServerConstants.StandardScopes.OpenId,
+                            IdentityServerConstants.StandardScopes.Profile,
+                            "ClassifiedAds.WebAPI",
+                        },
+                        ClientSecrets =
+                        {
+                            new Secret("secret".Sha256()),
+                        },
+                        AllowOfflineAccess = true,
+                    });
+                }
+
+                if (!context.Clients.Any(x => x.ClientId == "ClassifiedAds.BlazorWebAssembly"))
+                {
+                    clients.Add(new Client
+                    {
+                        ClientId = "ClassifiedAds.BlazorWebAssembly",
+                        ClientName = "ClassifiedAds BlazorWebAssembly",
+                        AllowedGrantTypes = GrantTypes.Code,
+                        RequireClientSecret = false,
+                        RequirePkce = true,
+                        RedirectUris =
+                        {
+                            "https://localhost:44348/authentication/login-callback",
+                        },
+                        PostLogoutRedirectUris =
+                        {
+                            "https://localhost:44348/authentication/logout-callback",
                         },
                         AllowedScopes =
                         {
