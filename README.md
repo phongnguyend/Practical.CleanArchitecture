@@ -63,7 +63,7 @@
   + Option 1: Using dotnet cli:
     + Install **dotnet-ef** cli:
       ```
-      dotnet tool install --global dotnet-ef --version="3.1"
+      dotnet tool install --global dotnet-ef --version="5.0"
       ```
     + Navigate to [ClassifiedAds.Migrator](/src/Monolith/ClassifiedAds.Migrator/) and run these commands:
       ```
@@ -452,7 +452,7 @@
     ```
   - Use Sql Server Distributed Cache:
     ```js
-	dotnet tool install --global dotnet-sql-cache --version="3.1"
+	dotnet tool install --global dotnet-sql-cache --version="5.0"
 	dotnet sql-cache create "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#" dbo CacheEntries
     ```
     ```js
@@ -781,7 +781,7 @@
 - Add Migrations if you haven't done on previous steps:
   + Install **dotnet-ef** cli:
     ```
-    dotnet tool install --global dotnet-ef --version="3.1"
+    dotnet tool install --global dotnet-ef --version="5.0"
     ```
   + Navigate to [ClassifiedAds.Migrator](/src/Monolith/ClassifiedAds.Migrator/) and run these commands:
     ```

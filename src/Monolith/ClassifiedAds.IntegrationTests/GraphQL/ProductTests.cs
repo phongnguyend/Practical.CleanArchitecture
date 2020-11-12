@@ -1,6 +1,7 @@
 using ClassifiedAds.Domain.Entities;
-using GraphQL.Client;
-using GraphQL.Common.Request;
+using GraphQL;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
 using IdentityModel.Client;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,12 @@ namespace ClassifiedAds.IntegrationTests.GraphQL
 {
     public class ProductTests : TestBase
     {
-        private readonly GraphQLClient _client;
+        private readonly GraphQLHttpClient _client;
 
         public ProductTests()
             : base()
         {
-            _client = new GraphQLClient(AppSettings.GraphQL.Endpoint);
+            _client = new GraphQLHttpClient(AppSettings.GraphQL.Endpoint, new NewtonsoftJsonSerializer());
         }
 
         private async Task<List<Product>> GetProducts()
@@ -37,8 +38,9 @@ namespace ClassifiedAds.IntegrationTests.GraphQL
                 }",
             };
 
-            var response = await _client.PostAsync(query);
-            return response.GetDataFieldAs<List<Product>>("products");
+            var response = await _client.SendQueryAsync<ProductResponse>(query);
+
+            return response.Data.Products;
         }
 
         private async Task<Product> GetProductById(Guid id)
@@ -58,8 +60,8 @@ namespace ClassifiedAds.IntegrationTests.GraphQL
                 }",
                 Variables = new { productId = id },
             };
-            var response = await _client.PostAsync(query);
-            return response.GetDataFieldAs<Product>("product");
+            var response = await _client.SendQueryAsync<ProductResponse>(query);
+            return response.Data.Product;
         }
 
         private async Task<Product> CreateProduct(Product product)
@@ -79,8 +81,8 @@ namespace ClassifiedAds.IntegrationTests.GraphQL
                 }",
                 Variables = new { product = new { product.Code, product.Name, product.Description } },
             };
-            var response = await _client.PostAsync(query);
-            return response.GetDataFieldAs<Product>("createProduct");
+            var response = await _client.SendQueryAsync<ProductResponse>(query);
+            return response.Data.CreateProduct;
         }
 
         private async Task DeleteProduct(Guid id)
@@ -94,8 +96,8 @@ namespace ClassifiedAds.IntegrationTests.GraphQL
                 }",
                 Variables = new { productId = id },
             };
-            var response = await _client.PostAsync(query);
-            var rs = response.GetDataFieldAs<bool>("deleteProduct");
+
+            var response = await _client.SendQueryAsync<ProductResponse>(query);
         }
 
         [Fact]
@@ -119,7 +121,7 @@ namespace ClassifiedAds.IntegrationTests.GraphQL
             });
 
             var token = tokenResponse.AccessToken;
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            _client.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var product = new Product
             {
@@ -146,5 +148,16 @@ namespace ClassifiedAds.IntegrationTests.GraphQL
             await DeleteProduct(createdProduct.Id);
             Assert.Null(await GetProductById(createdProduct.Id));
         }
+    }
+
+    public class ProductResponse
+    {
+        public List<Product> Products { get; set; }
+
+        public Product Product { get; set; }
+
+        public Product CreateProduct { get; set; }
+
+        public bool? DeleteProduct { get; set; }
     }
 }

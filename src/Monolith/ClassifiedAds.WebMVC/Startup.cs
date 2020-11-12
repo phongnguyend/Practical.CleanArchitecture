@@ -1,8 +1,6 @@
 ﻿using ClassifiedAds.Application.FileEntries.DTOs;
 using ClassifiedAds.Domain.Identity;
-using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Infrastructure.Identity;
-using ClassifiedAds.Infrastructure.Notification;
 using ClassifiedAds.WebMVC.Authorization;
 using ClassifiedAds.WebMVC.ClaimsTransformations;
 using ClassifiedAds.WebMVC.ConfigurationOptions;
@@ -148,10 +146,12 @@ namespace ClassifiedAds.WebMVC
                     name: "Background Services Server",
                     failureStatus: HealthStatus.Degraded);
 
-            services.AddHealthChecksUI(setupSettings: setup =>
-            {
-                setup.AddHealthCheckEndpoint("Basic Health Check", $"{AppSettings.CurrentUrl}/healthcheck");
-            });
+            // TODO: .Net 5
+            //services.AddHealthChecksUI(setupSettings: setup =>
+            //{
+            //    setup.AddHealthCheckEndpoint("Basic Health Check", $"{AppSettings.CurrentUrl}/healthcheck");
+            //    setup.DisableDatabaseMigrations();
+            //}).AddInMemoryStorage();
 
             services.AddHangfire(x =>
             {
@@ -218,7 +218,8 @@ namespace ClassifiedAds.WebMVC
                 },
             });
 
-            app.UseHealthChecksUI(); // /healthchecks-ui#/healthchecks
+            // TODO: .Net 5
+            //app.UseHealthChecksUI(); // /healthchecks-ui#/healthchecks
 
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {

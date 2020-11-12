@@ -47,8 +47,9 @@ namespace ClassifiedAds.GraphQL
             services.AddGraphQL(_ =>
             {
                 _.EnableMetrics = true;
-                _.ExposeExceptions = true;
             })
+            .AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)
+            .AddSystemTextJson()
             .AddUserContextBuilder(httpContext => new GraphQLUserContext { User = httpContext.User });
         }
 

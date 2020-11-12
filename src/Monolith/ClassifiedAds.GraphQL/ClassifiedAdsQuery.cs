@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.GraphQL.DownstreamServices;
 using ClassifiedAds.GraphQL.Types;
+using GraphQL;
 using GraphQL.Types;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;

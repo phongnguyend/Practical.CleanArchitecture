@@ -36,6 +36,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             _memoryCache = memoryCache;
         }
 
+        [HttpGet]
         public ActionResult<IEnumerable<FileEntry>> Get()
         {
             return Ok(_dispatcher.Dispatch(new GetEntititesQuery<FileEntry>()));
