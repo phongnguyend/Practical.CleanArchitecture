@@ -33,6 +33,7 @@ namespace ClassifiedAds.Services.Storage.Controllers
             _fileManager = fileManager;
         }
 
+        [HttpGet]
         public ActionResult<IEnumerable<FileEntry>> Get()
         {
             return Ok(_dispatcher.Dispatch(new GetEntititesQuery<FileEntry>()));
