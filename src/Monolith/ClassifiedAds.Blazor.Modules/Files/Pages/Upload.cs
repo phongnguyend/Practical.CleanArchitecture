@@ -1,7 +1,9 @@
 ﻿using ClassifiedAds.Blazor.Modules.Files.Models;
 using ClassifiedAds.Blazor.Modules.Files.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Blazor.Modules.Files.Pages
@@ -19,17 +21,36 @@ namespace ClassifiedAds.Blazor.Modules.Files.Pages
 
         public FileEntryModel File { get; set; } = new FileEntryModel();
 
+        public EditContext EditContext { get; set; }
+
+        protected override void OnInitialized()
+        {
+            EditContext = new EditContext(File);
+            EditContext.SetFieldCssClassProvider(new MyFieldClassProvider());
+        }
+
         protected async Task HandleValidSubmit()
         {
             var dotNetObj = DotNetObjectReference.Create(this);
             await JSRuntime.InvokeVoidAsync("interop.uploadFile", FileService.GetUploadUrl(), await FileService.GetAccessToken(), File, dotNetObj);
-            
+
         }
 
         [JSInvokable]
         public void Uploaded(string id)
         {
             NavManager.NavigateTo($"/files/edit/{id}");
+        }
+    }
+
+    public class MyFieldClassProvider : FieldCssClassProvider
+    {
+        public override string GetFieldCssClass(EditContext editContext,
+            in FieldIdentifier fieldIdentifier)
+        {
+            var isValid = !editContext.GetValidationMessages(fieldIdentifier).Any();
+
+            return isValid ? "is-valid" : "is-invalid";
         }
     }
 }

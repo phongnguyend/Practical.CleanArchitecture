@@ -6,7 +6,7 @@
         Upload File
     </div>
     <div class="card-body">
-        <EditForm Model="File" OnValidSubmit="HandleValidSubmit">
+        <EditForm EditContext="@EditContext" OnValidSubmit="HandleValidSubmit">
 
             <DataAnnotationsValidator />
             <ValidationSummary />
