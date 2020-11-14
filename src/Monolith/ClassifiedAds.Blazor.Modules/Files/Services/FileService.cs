@@ -1,8 +1,10 @@
 ﻿using ClassifiedAds.Blazor.Modules.Core.Services;
 using ClassifiedAds.Blazor.Modules.Files.Models;
+using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Blazor.Modules.Files.Services
@@ -36,15 +38,27 @@ namespace ClassifiedAds.Blazor.Modules.Files.Services
             return file;
         }
 
-        public async Task<FileEntryModel> CreateFile(FileEntryModel product)
+        public async Task<FileEntryModel> UploadFile(FileEntryModel fileEntryModel, byte[] bytes)
         {
-            var createdFile = await PostAsync<FileEntryModel>("api/files", product);
-            return createdFile;
+            using var form = new MultipartFormDataContent();
+            using var fileContent = new ByteArrayContent(bytes);
+            fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+            form.Add(fileContent, "formFile", fileEntryModel.FileName);
+            form.Add(new StringContent(fileEntryModel.Name), "name");
+            form.Add(new StringContent(fileEntryModel.Description), "description");
+
+            await SetBearerToken();
+
+            var response = await _httpClient.PostAsync($"api/files", form);
+            response.EnsureSuccessStatusCode();
+
+            var result = await response.Content.ReadAs<FileEntryModel>();
+            return result;
         }
 
-        public async Task<FileEntryModel> UpdateFile(Guid id, FileEntryModel product)
+        public async Task<FileEntryModel> UpdateFile(Guid id, FileEntryModel file)
         {
-            var updatedFile = await PutAsync<FileEntryModel>($"api/files/{id}", product);
+            var updatedFile = await PutAsync<FileEntryModel>($"api/files/{id}", file);
             return updatedFile;
         }
 

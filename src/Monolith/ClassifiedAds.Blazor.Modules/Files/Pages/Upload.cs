@@ -41,6 +41,18 @@ namespace ClassifiedAds.Blazor.Modules.Files.Pages
         {
             NavManager.NavigateTo($"/files/edit/{id}");
         }
+
+        private async Task OnInputFileChange(InputFileChangeEventArgs e)
+        {
+            var file = e.File;
+            var buffer = new byte[file.Size];
+            await file.OpenReadStream().ReadAsync(buffer);
+
+            File.FileName = file.Name;
+            var res = await FileService.UploadFile(File, buffer);
+
+            NavManager.NavigateTo($"/files/edit/{res.Id}");
+        }
     }
 
     public class MyFieldClassProvider : FieldCssClassProvider
