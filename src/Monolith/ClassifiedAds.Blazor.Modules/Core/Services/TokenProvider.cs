@@ -14,8 +14,10 @@ namespace ClassifiedAds.Blazor.Modules.Core.Services
         {
             get
             {
-                return ExpiresAt.AddSeconds(-60).ToUniversalTime() <= DateTime.UtcNow;
+                return ExpiresAt.ToUniversalTime() <= DateTime.UtcNow.AddSeconds(60);
             }
         }
+
+        public bool IsReady { get; set; }
     }
 }

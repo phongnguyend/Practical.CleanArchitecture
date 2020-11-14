@@ -23,6 +23,7 @@ namespace ClassifiedAds.Blazor.Modules.Core.Services
             if (token.TokenExpired)
             {
                 await _tokenManager.RefreshToken();
+                token = await _tokenManager.GetToken();
             }
 
             return token.AccessToken;

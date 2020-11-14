@@ -36,6 +36,7 @@ namespace ClassifiedAds.BlazorServerSide
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<AppSettings>(Configuration);
+            services.AddSingleton(AppSettings);
 
             if (AppSettings.CookiePolicyOptions?.IsEnabled ?? false)
             {
@@ -55,17 +56,7 @@ namespace ClassifiedAds.BlazorServerSide
                 services.AddSignalR()
                         .AddAzureSignalR();
             }
-            services.AddScoped<ITokenManager, TokenManager>(services =>
-            {
-                return new TokenManager(services.GetRequiredService<IHttpClientFactory>(), new OpenIdConnectOptions
-                {
-                    Authority = AppSettings.OpenIdConnect.Authority,
-                    ClientId = AppSettings.OpenIdConnect.ClientId,
-                    ClientSecret = AppSettings.OpenIdConnect.ClientSecret,
-                    RequireHttpsMetadata = AppSettings.OpenIdConnect.RequireHttpsMetadata,
-                }
-                , services.GetRequiredService<TokenProvider>());
-            });
+            services.AddScoped<ITokenManager, TokenManager>();
             services.AddScoped<TokenProvider>();
             services.AddHttpClient<FileService, FileService>(client =>
             {
