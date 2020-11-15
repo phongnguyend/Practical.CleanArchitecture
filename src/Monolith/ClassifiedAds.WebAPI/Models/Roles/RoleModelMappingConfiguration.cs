@@ -1,13 +1,25 @@
-﻿using AutoMapper;
-using ClassifiedAds.Domain.Entities;
+﻿using ClassifiedAds.Domain.Entities;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ClassifiedAds.WebAPI.Models.Roles
 {
-    public class RoleModelMappingConfiguration : Profile
+    public static class RoleModelMappingConfiguration
     {
-        public RoleModelMappingConfiguration()
+        public static IEnumerable<RoleModel> ToDTOs(this IEnumerable<Role> entities)
         {
-            CreateMap<Role, RoleModel>();
+            return entities.Select(x => x.ToDTO());
+        }
+
+        public static RoleModel ToDTO(this Role entity)
+        {
+            return new RoleModel
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                NormalizedName = entity.NormalizedName,
+                ConcurrencyStamp = entity.ConcurrencyStamp,
+            };
         }
     }
 }

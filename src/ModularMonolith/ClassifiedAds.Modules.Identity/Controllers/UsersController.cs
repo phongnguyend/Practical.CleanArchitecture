@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ClassifiedAds.Application;
+﻿using ClassifiedAds.Application;
 using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Modules.Identity.Commands.Users;
 using ClassifiedAds.Modules.Identity.DTOs.Users;
@@ -28,7 +27,6 @@ namespace ClassifiedAds.Modules.Identity.Controllers
     {
         private readonly Dispatcher _dispatcher;
         private readonly UserManager<User> _userManager;
-        private readonly IMapper _mapper;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IEmailMessageService _emailMessageService;
         private readonly IConfiguration _configuration;
@@ -36,14 +34,12 @@ namespace ClassifiedAds.Modules.Identity.Controllers
         public UsersController(Dispatcher dispatcher,
             UserManager<User> userManager,
             ILogger<UsersController> logger,
-            IMapper mapper,
             IDateTimeProvider dateTimeProvider,
             IEmailMessageService emailMessageService,
             IConfiguration configuration)
         {
             _dispatcher = dispatcher;
             _userManager = userManager;
-            _mapper = mapper;
             _dateTimeProvider = dateTimeProvider;
             _emailMessageService = emailMessageService;
             _configuration = configuration;
@@ -53,7 +49,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
         public ActionResult<IEnumerable<User>> Get()
         {
             var users = _dispatcher.Dispatch(new GetUsersQuery());
-            var model = _mapper.Map<List<UserDTO>>(users);
+            var model = users.ToDTOs();
             return Ok(model);
         }
 
@@ -63,7 +59,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
         public ActionResult<User> Get(Guid id)
         {
             var user = _dispatcher.Dispatch(new GetUserQuery { Id = id, AsNoTracking = true });
-            var model = _mapper.Map<UserDTO>(user);
+            var model = user.ToDTO();
             return Ok(model);
         }
 
@@ -89,7 +85,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
 
             _ = await _userManager.CreateAsync(user);
 
-            model = _mapper.Map<UserDTO>(user);
+            model = user.ToDTO();
             return Created($"/api/users/{model.Id}", model);
         }
 
@@ -115,7 +111,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
 
             _ = await _userManager.UpdateAsync(user);
 
-            model = _mapper.Map<UserDTO>(user);
+            model = user.ToDTO();
             return Ok(model);
         }
 

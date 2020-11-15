@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ClassifiedAds.Infrastructure.Notification;
+﻿using ClassifiedAds.Infrastructure.Notification;
 using ClassifiedAds.Infrastructure.Notification.Email;
 using ClassifiedAds.Infrastructure.Notification.Sms;
 using ClassifiedAds.Infrastructure.Notification.Web;
@@ -39,14 +38,6 @@ namespace ClassifiedAds.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAutoMapper(
-                typeof(AuditLogModuleServiceCollectionExtensions),
-                typeof(IdentityDbContext),
-                typeof(NotificationModuleServiceCollectionExtensions),
-                typeof(ProductModuleServiceCollectionExtensions),
-                typeof(StorageModuleServiceCollectionExtensions)
-                );
-
             services.Configure<AppSettings>(Configuration);
 
             services.AddClassifiedAdsMonitoringServices();
@@ -54,7 +45,13 @@ namespace ClassifiedAds.WebAPI
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
-            }).AddClassifiedAdsMonitoringServices();
+            })
+                .AddAuditLogModule()
+                .AddIdentityModule()
+                .AddNotificationModule()
+                .AddProductModule()
+                .AddStorageModule()
+                .AddClassifiedAdsMonitoringServices();
 
             services.AddCors(options =>
             {

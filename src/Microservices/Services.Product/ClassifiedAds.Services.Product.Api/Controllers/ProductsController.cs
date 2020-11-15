@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ClassifiedAds.Application;
+﻿using ClassifiedAds.Application;
 using ClassifiedAds.Services.Product.Commands;
 using ClassifiedAds.Services.Product.DTOs;
 using ClassifiedAds.Services.Product.Queries;
@@ -22,13 +21,11 @@ namespace ClassifiedAds.Services.Product.Controllers
     {
         private readonly Dispatcher _dispatcher;
         private readonly ILogger _logger;
-        private readonly IMapper _mapper;
 
-        public ProductsController(Dispatcher dispatcher, ILogger<ProductsController> logger, IMapper mapper)
+        public ProductsController(Dispatcher dispatcher, ILogger<ProductsController> logger)
         {
             _dispatcher = dispatcher;
             _logger = logger;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -36,7 +33,7 @@ namespace ClassifiedAds.Services.Product.Controllers
         {
             _logger.LogInformation("Getting all products");
             var products = _dispatcher.Dispatch(new GetProductsQuery());
-            var model = _mapper.Map<List<ProductDTO>>(products);
+            var model = products.ToDTOs();
             return Ok(model);
         }
 
@@ -46,7 +43,7 @@ namespace ClassifiedAds.Services.Product.Controllers
         public ActionResult<Entities.Product> Get(Guid id)
         {
             var product = _dispatcher.Dispatch(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
-            var model = _mapper.Map<ProductDTO>(product);
+            var model = product.ToDTO();
             return Ok(model);
         }
 
@@ -55,9 +52,9 @@ namespace ClassifiedAds.Services.Product.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public ActionResult<Entities.Product> Post([FromBody] ProductDTO model)
         {
-            var product = _mapper.Map<Entities.Product>(model);
+            var product = model.ToEntity();
             _dispatcher.Dispatch(new AddUpdateProductCommand { Product = product });
-            model = _mapper.Map<ProductDTO>(product);
+            model = product.ToDTO();
             return Created($"/api/products/{model.Id}", model);
         }
 
@@ -75,7 +72,7 @@ namespace ClassifiedAds.Services.Product.Controllers
 
             _dispatcher.Dispatch(new AddUpdateProductCommand { Product = product });
 
-            model = _mapper.Map<ProductDTO>(product);
+            model = product.ToDTO();
 
             return Ok(model);
         }

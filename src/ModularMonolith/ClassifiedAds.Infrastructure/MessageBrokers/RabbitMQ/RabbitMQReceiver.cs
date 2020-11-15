@@ -55,7 +55,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
             var consumer = new EventingBasicConsumer(_channel);
             consumer.Received += (model, ea) =>
             {
-                var body = Encoding.UTF8.GetString(ea.Body);
+                var body = Encoding.UTF8.GetString(ea.Body.Span);
                 var message = JsonConvert.DeserializeObject<T>(body);
                 action(message);
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);

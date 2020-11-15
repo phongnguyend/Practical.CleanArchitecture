@@ -75,6 +75,11 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+        public static IMvcBuilder AddIdentityModule(this IMvcBuilder builder)
+        {
+            return builder.AddApplicationPart(Assembly.GetExecutingAssembly());
+        }
+
         public static void MigrateIdentityDb(this IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())

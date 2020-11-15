@@ -1,13 +1,25 @@
-﻿using AutoMapper;
-using ClassifiedAds.Modules.Identity.Entities;
+﻿using ClassifiedAds.Modules.Identity.Entities;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ClassifiedAds.Modules.Identity.DTOs.Roles
 {
-    public class RoleDTOMappingConfiguration : Profile
+    public static class RoleDTOMappingConfiguration
     {
-        public RoleDTOMappingConfiguration()
+        public static IEnumerable<RoleDTO> ToDTOs(this IEnumerable<Role> entities)
         {
-            CreateMap<Role, RoleDTO>();
+            return entities.Select(x => x.ToDTO());
+        }
+
+        public static RoleDTO ToDTO(this Role entity)
+        {
+            return new RoleDTO
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                NormalizedName = entity.NormalizedName,
+                ConcurrencyStamp = entity.ConcurrencyStamp,
+            };
         }
     }
 }

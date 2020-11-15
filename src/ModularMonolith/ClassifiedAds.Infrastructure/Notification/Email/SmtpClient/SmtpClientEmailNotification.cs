@@ -19,14 +19,17 @@ namespace ClassifiedAds.Infrastructure.Notification.Email.SmtpClient
             mail.From = new MailAddress(emailMessage.From);
 
             emailMessage.Tos?.Split(';')
+                .Where(x => !string.IsNullOrWhiteSpace(x))
                 .ToList()
                 .ForEach(x => mail.To.Add(x));
 
             emailMessage.CCs?.Split(';')
+                .Where(x => !string.IsNullOrWhiteSpace(x))
                 .ToList()
                 .ForEach(x => mail.CC.Add(x));
 
             emailMessage.BCCs?.Split(';')
+                .Where(x => !string.IsNullOrWhiteSpace(x))
                 .ToList()
                 .ForEach(x => mail.Bcc.Add(x));
 

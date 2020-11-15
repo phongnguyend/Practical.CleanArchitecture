@@ -1,4 +1,4 @@
-﻿dotnet tool install --global dotnet-ef --version="3.1"
+﻿dotnet tool install --global dotnet-ef --version="5.0"
 
 dotnet ef migrations add Init --context AdsDbContext -o Migrations/AdsDb
 dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ClassifiedAds.Application.EmailMessages.DTOs;
+﻿using ClassifiedAds.Application.EmailMessages.DTOs;
 using ClassifiedAds.Application.FileEntries.DTOs;
 using ClassifiedAds.Application.SmsMessages.DTOs;
 using ClassifiedAds.Domain.Identity;
@@ -38,8 +37,6 @@ namespace ClassifiedAds.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(Startup));
-
             services.Configure<AppSettings>(Configuration);
 
             services.AddClassifiedAdsMonitoringServices();

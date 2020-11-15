@@ -49,6 +49,11 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+        public static IMvcBuilder AddNotificationModule(this IMvcBuilder builder)
+        {
+            return builder.AddApplicationPart(Assembly.GetExecutingAssembly());
+        }
+
         public static void MigrateNotificationDb(this IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())

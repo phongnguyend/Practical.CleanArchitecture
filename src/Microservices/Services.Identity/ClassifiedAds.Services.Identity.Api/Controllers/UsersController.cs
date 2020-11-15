@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ClassifiedAds.Application;
+﻿using ClassifiedAds.Application;
 using ClassifiedAds.Infrastructure.Notification.Email;
 using ClassifiedAds.Services.Identity.Commands.EmailMessages;
 using ClassifiedAds.Services.Identity.Commands.Users;
@@ -27,18 +26,15 @@ namespace ClassifiedAds.Services.Identity.Controllers
     {
         private readonly Dispatcher _dispatcher;
         private readonly UserManager<User> _userManager;
-        private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
         public UsersController(Dispatcher dispatcher,
             UserManager<User> userManager,
             ILogger<UsersController> logger,
-            IMapper mapper,
             IConfiguration configuration)
         {
             _dispatcher = dispatcher;
             _userManager = userManager;
-            _mapper = mapper;
             _configuration = configuration;
         }
 
@@ -46,7 +42,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
         public ActionResult<IEnumerable<User>> Get()
         {
             var users = _dispatcher.Dispatch(new GetUsersQuery());
-            var model = _mapper.Map<List<UserDTO>>(users);
+            var model = users.ToDTOs();
             return Ok(model);
         }
 
@@ -56,7 +52,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
         public ActionResult<User> Get(Guid id)
         {
             var user = _dispatcher.Dispatch(new GetUserQuery { Id = id, AsNoTracking = true });
-            var model = _mapper.Map<UserDTO>(user);
+            var model = user.ToDTO();
             return Ok(model);
         }
 
@@ -82,7 +78,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
 
             _ = await _userManager.CreateAsync(user);
 
-            model = _mapper.Map<UserDTO>(user);
+            model = user.ToDTO();
             return Created($"/api/users/{model.Id}", model);
         }
 
@@ -108,7 +104,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
 
             _ = await _userManager.UpdateAsync(user);
 
-            model = _mapper.Map<UserDTO>(user);
+            model = user.ToDTO();
             return Ok(model);
         }
 

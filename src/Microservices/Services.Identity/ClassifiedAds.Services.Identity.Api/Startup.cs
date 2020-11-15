@@ -1,4 +1,3 @@
-using AutoMapper;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Services.Identity.Repositories;
 using IdentityServer4.AccessTokenValidation;
@@ -24,8 +23,6 @@ namespace ClassifiedAds.Services.Identity
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(IdentityDbContext));
-
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));

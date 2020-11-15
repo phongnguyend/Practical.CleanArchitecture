@@ -1,14 +1,35 @@
-﻿using AutoMapper;
-using ClassifiedAds.Services.Identity.Entities;
+﻿using ClassifiedAds.Services.Identity.Entities;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ClassifiedAds.Services.Identity.DTOs
 {
-    public class UserDTOMappingConfiguration : Profile
+    public static class UserDTOMappingConfiguration
     {
-        public UserDTOMappingConfiguration()
+        public static IEnumerable<UserDTO> ToDTOs(this IEnumerable<User> entities)
         {
-            CreateMap<User, UserDTO>();
+            return entities.Select(x => x.ToDTO());
         }
 
+        public static UserDTO ToDTO(this User entity)
+        {
+            return new UserDTO
+            {
+                Id = entity.Id,
+                UserName = entity.UserName,
+                NormalizedUserName = entity.NormalizedUserName,
+                Email = entity.Email,
+                NormalizedEmail = entity.NormalizedEmail,
+                EmailConfirmed = entity.EmailConfirmed,
+                PhoneNumber = entity.PhoneNumber,
+                PhoneNumberConfirmed = entity.PhoneNumberConfirmed,
+                TwoFactorEnabled = entity.TwoFactorEnabled,
+                ConcurrencyStamp = entity.ConcurrencyStamp,
+                SecurityStamp = entity.SecurityStamp,
+                LockoutEnabled = entity.LockoutEnabled,
+                LockoutEnd = entity.LockoutEnd,
+                AccessFailedCount = entity.AccessFailedCount,
+            };
+        }
     }
 }

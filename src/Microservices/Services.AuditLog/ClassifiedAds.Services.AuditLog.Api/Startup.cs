@@ -1,4 +1,3 @@
-using AutoMapper;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
@@ -22,8 +21,6 @@ namespace ClassifiedAds.Services.AuditLog
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(AuditLogModuleServiceCollectionExtensions));
-
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));

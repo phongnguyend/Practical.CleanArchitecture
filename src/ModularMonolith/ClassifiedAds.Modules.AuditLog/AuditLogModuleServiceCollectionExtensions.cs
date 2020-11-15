@@ -29,6 +29,11 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+        public static IMvcBuilder AddAuditLogModule(this IMvcBuilder builder)
+        {
+            return builder.AddApplicationPart(Assembly.GetExecutingAssembly());
+        }
+
         public static void MigrateAuditLogDb(this IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ClassifiedAds.Application;
+﻿using ClassifiedAds.Application;
 using ClassifiedAds.Modules.Identity.Commands.Roles;
 using ClassifiedAds.Modules.Identity.DTOs.Roles;
 using ClassifiedAds.Modules.Identity.Entities;
@@ -21,19 +20,17 @@ namespace ClassifiedAds.Modules.Identity.Controllers
     public class RolesController : ControllerBase
     {
         private readonly Dispatcher _dispatcher;
-        private readonly IMapper _mapper;
 
-        public RolesController(Dispatcher dispatcher, ILogger<RolesController> logger, IMapper mapper)
+        public RolesController(Dispatcher dispatcher, ILogger<RolesController> logger)
         {
             _dispatcher = dispatcher;
-            _mapper = mapper;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Role>> Get()
         {
             var roles = _dispatcher.Dispatch(new GetRolesQuery { AsNoTracking = true });
-            var model = _mapper.Map<List<RoleDTO>>(roles);
+            var model = roles.ToDTOs();
             return Ok(model);
         }
 
@@ -43,7 +40,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
         public ActionResult<Role> Get(Guid id)
         {
             var role = _dispatcher.Dispatch(new GetRoleQuery { Id = id, AsNoTracking = true });
-            var model = _mapper.Map<RoleDTO>(role);
+            var model = role.ToDTO();
             return Ok(model);
         }
 
@@ -60,7 +57,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
 
             _dispatcher.Dispatch(new AddUpdateRoleCommand { Role = role });
 
-            model = _mapper.Map<RoleDTO>(role);
+            model = role.ToDTO();
 
             return Created($"/api/roles/{model.Id}", model);
         }
@@ -78,7 +75,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
 
             _dispatcher.Dispatch(new AddUpdateRoleCommand { Role = role });
 
-            model = _mapper.Map<RoleDTO>(role);
+            model = role.ToDTO();
 
             return Ok(model);
         }

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ClassifiedAds.Application;
+﻿using ClassifiedAds.Application;
 using ClassifiedAds.Application.Users.Commands;
 using ClassifiedAds.Application.Users.Queries;
 using ClassifiedAds.CrossCuttingConcerns.OS;
@@ -27,20 +26,17 @@ namespace ClassifiedAds.WebAPI.Controllers
     {
         private readonly Dispatcher _dispatcher;
         private readonly UserManager<User> _userManager;
-        private readonly IMapper _mapper;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly AppSettings _appSettings;
 
         public UsersController(Dispatcher dispatcher,
             UserManager<User> userManager,
             ILogger<UsersController> logger,
-            IMapper mapper,
             IDateTimeProvider dateTimeProvider,
             IOptionsSnapshot<AppSettings> appSettings)
         {
             _dispatcher = dispatcher;
             _userManager = userManager;
-            _mapper = mapper;
             _dateTimeProvider = dateTimeProvider;
             _appSettings = appSettings.Value;
         }
@@ -49,7 +45,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         public ActionResult<IEnumerable<User>> Get()
         {
             var users = _dispatcher.Dispatch(new GetUsersQuery());
-            var model = _mapper.Map<List<UserModel>>(users);
+            var model = users.ToDTOs();
             return Ok(model);
         }
 
@@ -59,7 +55,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         public ActionResult<User> Get(Guid id)
         {
             var user = _dispatcher.Dispatch(new GetUserQuery { Id = id, AsNoTracking = true });
-            var model = _mapper.Map<UserModel>(user);
+            var model = user.ToDTO();
             return Ok(model);
         }
 
@@ -85,7 +81,7 @@ namespace ClassifiedAds.WebAPI.Controllers
 
             _ = await _userManager.CreateAsync(user);
 
-            model = _mapper.Map<UserModel>(user);
+            model = user.ToDTO();
             return Created($"/api/users/{model.Id}", model);
         }
 
@@ -111,7 +107,7 @@ namespace ClassifiedAds.WebAPI.Controllers
 
             _ = await _userManager.UpdateAsync(user);
 
-            model = _mapper.Map<UserModel>(user);
+            model = user.ToDTO();
             return Ok(model);
         }
 
