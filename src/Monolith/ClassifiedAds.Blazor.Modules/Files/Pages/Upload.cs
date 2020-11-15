@@ -2,6 +2,7 @@
 using ClassifiedAds.Blazor.Modules.Files.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,9 +18,14 @@ namespace ClassifiedAds.Blazor.Modules.Files.Pages
         public IJSRuntime JSRuntime { get; set; }
 
         [Inject]
+        public ILogger<Upload> Logger { get; set; }
+
+        [Inject]
         public FileService FileService { get; set; }
 
         public FileEntryModel File { get; set; } = new FileEntryModel();
+
+        public IBrowserFile BrowserFile { get; set; }
 
         public EditContext EditContext { get; set; }
 
@@ -31,9 +37,25 @@ namespace ClassifiedAds.Blazor.Modules.Files.Pages
 
         protected async Task HandleValidSubmit()
         {
-            var dotNetObj = DotNetObjectReference.Create(this);
-            await JSRuntime.InvokeVoidAsync("interop.uploadFile", FileService.GetUploadUrl(), await FileService.GetAccessToken(), File, dotNetObj);
+            if (BrowserFile != null)
+            {
+                Logger.LogWarning("Upload using InputFile + HttpClient.");
 
+                var buffer = new byte[BrowserFile.Size];
+                await BrowserFile.OpenReadStream().ReadAsync(buffer);
+
+                File.FileName = BrowserFile.Name;
+                var res = await FileService.UploadFile(File, buffer);
+
+                NavManager.NavigateTo($"/files/edit/{res.Id}");
+            }
+            else
+            {
+                Logger.LogWarning("Upload using JavaScript Interop.");
+
+                var dotNetObj = DotNetObjectReference.Create(this);
+                await JSRuntime.InvokeVoidAsync("interop.uploadFile", FileService.GetUploadUrl(), await FileService.GetAccessToken(), File, dotNetObj);
+            }
         }
 
         [JSInvokable]
@@ -42,16 +64,9 @@ namespace ClassifiedAds.Blazor.Modules.Files.Pages
             NavManager.NavigateTo($"/files/edit/{id}");
         }
 
-        private async Task OnInputFileChange(InputFileChangeEventArgs e)
+        private void OnInputFileChange(InputFileChangeEventArgs e)
         {
-            var file = e.File;
-            var buffer = new byte[file.Size];
-            await file.OpenReadStream().ReadAsync(buffer);
-
-            File.FileName = file.Name;
-            var res = await FileService.UploadFile(File, buffer);
-
-            NavManager.NavigateTo($"/files/edit/{res.Id}");
+            BrowserFile = e.File;
         }
     }
 

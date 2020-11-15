@@ -3,6 +3,7 @@ using ClassifiedAds.Blazor.Modules.Files.Components;
 using ClassifiedAds.Blazor.Modules.Files.Models;
 using ClassifiedAds.Blazor.Modules.Files.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,10 +16,13 @@ namespace ClassifiedAds.Blazor.Modules.Files.Pages
         public NavigationManager NavManager { get; set; }
 
         [Inject]
-        public FileService FileService { get; set; }
+        public IJSRuntime JSRuntime { get; set; }
 
         [Inject]
-        public IJSRuntime JSRuntime { get; set; }
+        public ILogger<List> Logger { get; set; }
+
+        [Inject]
+        public FileService FileService { get; set; }
 
         public List<FileEntryModel> Files { get; set; } = new List<FileEntryModel>();
 
@@ -56,8 +60,13 @@ namespace ClassifiedAds.Blazor.Modules.Files.Pages
 
         public async void ConfirmedDeleteFile()
         {
+            Logger.LogWarning($"Deleting File: {DeletingFile.Id}");
+
             await FileService.DeleteFile(DeletingFile.Id);
             DeleteDialog.Close();
+
+            Logger.LogWarning($"Deleted File: {DeletingFile.Id}");
+
             Files = await FileService.GetFiles();
             StateHasChanged();
         }
