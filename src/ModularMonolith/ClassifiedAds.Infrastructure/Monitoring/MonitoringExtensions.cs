@@ -1,11 +1,10 @@
 ﻿using App.Metrics;
 using App.Metrics.AspNetCore;
 using App.Metrics.Formatters.Prometheus;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -13,40 +12,30 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IWebHostBuilder UseClassifiedAdsMonitoringServices(this IWebHostBuilder hostBuilder)
         {
-            var metrics = AppMetrics.CreateDefaultBuilder()
-                  .OutputMetrics.AsPrometheusPlainText()
-                  .Build();
-
-            hostBuilder.UseMetrics(options =>
+            hostBuilder.UseMetrics((context, options) =>
             {
+                var metrics = AppMetrics.CreateDefaultBuilder()
+                .Configuration.Configure(metricsOptions =>
+                {
+                    context.Configuration.GetSection("AppMetrics:MetricsOptions").Bind(metricsOptions);
+                })
+                .OutputMetrics.AsPrometheusPlainText()
+                .Build();
+
                 options.EndpointOptions = endpointsOptions =>
                 {
+                    context.Configuration.GetSection("AppMetrics:MetricEndpointsOptions").Bind(endpointsOptions);
                     endpointsOptions.MetricsTextEndpointOutputFormatter = metrics.OutputMetricsFormatters.OfType<MetricsPrometheusTextOutputFormatter>().First();
                     endpointsOptions.MetricsEndpointOutputFormatter = metrics.OutputMetricsFormatters.OfType<MetricsPrometheusTextOutputFormatter>().First();
                 };
-            })
-                .UseMetricsWebTracking();
+
+                options.TrackingMiddlewareOptions = trackingMiddlewareOptions =>
+                {
+                    context.Configuration.GetSection("AppMetrics:MetricsWebTrackingOptions").Bind(trackingMiddlewareOptions);
+                };
+            });
 
             return hostBuilder;
-        }
-
-        public static IServiceCollection AddClassifiedAdsMonitoringServices(this IServiceCollection services)
-        {
-            // If using Kestrel:
-            services.Configure<KestrelServerOptions>(options =>
-            {
-                options.AllowSynchronousIO = true;
-            });
-
-            // If using IIS:
-            services.Configure<IISServerOptions>(options =>
-            {
-                options.AllowSynchronousIO = true;
-            });
-
-            services.AddMetricsTrackingMiddleware();
-
-            return services;
         }
 
         public static IMvcBuilder AddClassifiedAdsMonitoringServices(this IMvcBuilder mvcBuilder)
@@ -54,13 +43,6 @@ namespace Microsoft.Extensions.DependencyInjection
             mvcBuilder.AddMetrics();
 
             return mvcBuilder;
-        }
-
-        public static IApplicationBuilder UseClassifiedAdsMonitoringServices(this IApplicationBuilder app)
-        {
-            app.UseMetricsAllMiddleware();
-
-            return app;
         }
     }
 }

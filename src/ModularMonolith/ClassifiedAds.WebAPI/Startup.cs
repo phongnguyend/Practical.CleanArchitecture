@@ -40,8 +40,6 @@ namespace ClassifiedAds.WebAPI
         {
             services.Configure<AppSettings>(Configuration);
 
-            services.AddClassifiedAdsMonitoringServices();
-
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
@@ -157,8 +155,6 @@ namespace ClassifiedAds.WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseClassifiedAdsMonitoringServices();
 
             app.UseRouting();
 
