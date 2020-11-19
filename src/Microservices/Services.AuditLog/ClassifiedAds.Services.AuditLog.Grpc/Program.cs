@@ -1,3 +1,4 @@
+using ClassifiedAds.Infrastructure.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
@@ -15,6 +16,12 @@ namespace ClassifiedAds.Services.AuditLog.Grpc
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+
+                    webBuilder.UseClassifiedAdsLogger(configuration =>
+                    {
+                        return new LoggingOptions();
+                    });
+
                 });
     }
 }

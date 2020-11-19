@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Application",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Infrastructure", "Common\ClassifiedAds.Infrastructure\ClassifiedAds.Infrastructure.csproj", "{A49BC55E-93F3-480E-9388-16C788F27C58}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{22A9E6C7-CBC5-4F3C-9C97-93FF7F583458}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{22A9E6C7-CBC5-4F3C-9C97-93FF7F583458}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Services.AuditLog.Grpc", "Services.AuditLog\ClassifiedAds.Services.AuditLog.Grpc\ClassifiedAds.Services.AuditLog.Grpc.csproj", "{9C38349E-CAE0-42AA-8148-5000EF21A2C9}"
 EndProject

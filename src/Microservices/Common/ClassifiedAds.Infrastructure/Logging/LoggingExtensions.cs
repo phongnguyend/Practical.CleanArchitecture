@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.EventLog;
 using Serilog;
+using Serilog.Exceptions;
 using Serilog.Formatting.Json;
 using Serilog.Sinks.Elasticsearch;
 using Serilog.Sinks.File;
@@ -26,6 +27,8 @@ namespace ClassifiedAds.Infrastructure.Logging
 
             loggerConfiguration = loggerConfiguration
                 .MinimumLevel.Debug()
+                .Enrich.FromLogContext()
+                .Enrich.With<ActivityEnricher>()
                 .Enrich.WithMachineName()
                 .Enrich.WithEnvironmentUserName()
                 .Enrich.WithProperty("Assembly", assemblyName)
@@ -33,6 +36,7 @@ namespace ClassifiedAds.Infrastructure.Logging
                 .Enrich.WithProperty("EnvironmentName", env.EnvironmentName)
                 .Enrich.WithProperty("ContentRootPath", env.ContentRootPath)
                 .Enrich.WithProperty("WebRootPath", env.WebRootPath)
+                .Enrich.WithExceptionDetails()
                 .Filter.ByIncludingOnly((logEvent) =>
                 {
                     if (logEvent.Level >= options.File.MinimumLogEventLevel
@@ -54,7 +58,7 @@ namespace ClassifiedAds.Infrastructure.Logging
                     rollOnFileSizeLimit: true,
                     shared: true,
                     flushToDiskInterval: TimeSpan.FromSeconds(1),
-                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}",
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] [TraceId: {TraceId}] {Message:lj}{NewLine}{Exception}",
                     restrictedToMinimumLevel: options.File.MinimumLogEventLevel);
 
             if (options.Elasticsearch != null && options.Elasticsearch.IsEnabled)
@@ -125,6 +129,11 @@ namespace ClassifiedAds.Infrastructure.Logging
         {
             builder.ConfigureLogging((context, logging) =>
             {
+                logging.Configure(options =>
+                {
+                    // options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId | ActivityTrackingOptions.TraceId | ActivityTrackingOptions.ParentId;
+                });
+
                 logging.AddAzureWebAppDiagnostics();
 
                 logging.AddSerilog();

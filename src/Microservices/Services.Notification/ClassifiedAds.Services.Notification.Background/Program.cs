@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ClassifiedAds.Infrastructure.Logging;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace ClassifiedAds.Services.Notification.Background
 {
@@ -21,6 +16,12 @@ namespace ClassifiedAds.Services.Notification.Background
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+
+                    webBuilder.UseClassifiedAdsLogger(configuration =>
+                    {
+                        return new LoggingOptions();
+                    });
+
                 });
     }
 }

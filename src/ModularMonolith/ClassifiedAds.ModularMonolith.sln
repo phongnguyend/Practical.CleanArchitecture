@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.CrossCuttingC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.WebAPI", "ClassifiedAds.WebAPI\ClassifiedAds.WebAPI.csproj", "{F1C3F330-D7DE-4181-8ED9-66E6C620D5CD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{BBD032E9-D75E-4CD8-A23A-7234480435BE}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{BBD032E9-D75E-4CD8-A23A-7234480435BE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Migrator", "ClassifiedAds.Migrator\ClassifiedAds.Migrator.csproj", "{95943383-5C81-45B6-8876-4789C00A9255}"
 EndProject
