@@ -2,7 +2,7 @@
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 
-namespace ClassifiedAds.Infrastructure.Profiling.AzureApplicationInsights
+namespace ClassifiedAds.Infrastructure.Monitoring.AzureApplicationInsights
 {
     public class CustomTelemetryProcessor : ITelemetryProcessor
     {

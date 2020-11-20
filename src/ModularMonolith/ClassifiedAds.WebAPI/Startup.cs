@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Infrastructure.Notification;
+﻿using ClassifiedAds.Infrastructure.Monitoring;
+using ClassifiedAds.Infrastructure.Notification;
 using ClassifiedAds.Infrastructure.Notification.Email;
 using ClassifiedAds.Infrastructure.Notification.Sms;
 using ClassifiedAds.Infrastructure.Notification.Web;
@@ -49,7 +50,7 @@ namespace ClassifiedAds.WebAPI
                 .AddNotificationModule()
                 .AddProductModule()
                 .AddStorageModule()
-                .AddClassifiedAdsMonitoringServices();
+                .AddMonitoringServices(AppSettings.Monitoring);
 
             services.AddCors(options =>
             {
@@ -142,7 +143,7 @@ namespace ClassifiedAds.WebAPI
                 });
             });
 
-            services.AddClassifiedAdsProfiler();
+            services.AddMonitoringServices(AppSettings.Monitoring);
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentWebUser>();
@@ -180,7 +181,7 @@ namespace ClassifiedAds.WebAPI
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseClassifiedAdsProfiler();
+            app.UseMonitoringServices(AppSettings.Monitoring);
 
             app.UseEndpoints(endpoints =>
             {

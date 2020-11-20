@@ -5,6 +5,7 @@ using ClassifiedAds.Application.EmailMessages.DTOs;
 using ClassifiedAds.Application.SmsMessages.DTOs;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.IdentityServer.ConfigurationOptions;
+using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Persistence;
 using IdentityServer4;
 using Microsoft.AspNetCore.Builder;
@@ -45,6 +46,8 @@ namespace ClassifiedAds.IdentityServer
                 });
             }
 
+            services.AddMonitoringServices(AppSettings.Monitoring);
+
             services.AddControllersWithViews();
 
             services.AddCors();
@@ -70,8 +73,7 @@ namespace ClassifiedAds.IdentityServer
                 .PersistKeysToDbContext<AdsDbContext>()
                 .SetApplicationName("ClassifiedAds");
 
-            services.AddCaches(AppSettings.Caching)
-                    .AddClassifiedAdsProfiler(AppSettings.Monitoring);
+            services.AddCaches(AppSettings.Caching);
 
             var authenBuilder = services.AddAuthentication();
 
@@ -173,7 +175,7 @@ namespace ClassifiedAds.IdentityServer
             app.UseIdentityServer();
             app.UseAuthorization();
 
-            app.UseClassifiedAdsProfiler();
+            app.UseMonitoringServices(AppSettings.Monitoring);
 
             app.UseEndpoints(endpoints =>
             {

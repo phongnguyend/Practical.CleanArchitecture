@@ -1,48 +1,52 @@
-﻿using App.Metrics;
-using App.Metrics.AspNetCore;
-using App.Metrics.Formatters.Prometheus;
-using Microsoft.AspNetCore.Hosting;
+﻿using ClassifiedAds.Infrastructure.Monitoring.AppMetrics;
+using ClassifiedAds.Infrastructure.Monitoring.AzureApplicationInsights;
+using ClassifiedAds.Infrastructure.Monitoring.MiniProfiler;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace ClassifiedAds.Infrastructure.Monitoring
 {
     public static class MonitoringExtensions
     {
-        public static IWebHostBuilder UseClassifiedAdsMonitoringServices(this IWebHostBuilder hostBuilder)
+        public static IServiceCollection AddMonitoringServices(this IServiceCollection services, MonitoringOptions monitoringOptions = null)
         {
-            hostBuilder.UseMetrics((context, options) =>
+            if (monitoringOptions?.MiniProfiler?.IsEnabled ?? false)
             {
-                var metrics = AppMetrics.CreateDefaultBuilder()
-                .Configuration.Configure(metricsOptions =>
-                {
-                    context.Configuration.GetSection("AppMetrics:MetricsOptions").Bind(metricsOptions);
-                })
-                .OutputMetrics.AsPrometheusPlainText()
-                .Build();
+                services.AddMiniProfiler(monitoringOptions.MiniProfiler);
+            }
 
-                options.EndpointOptions = endpointsOptions =>
-                {
-                    context.Configuration.GetSection("AppMetrics:MetricEndpointsOptions").Bind(endpointsOptions);
-                    endpointsOptions.MetricsTextEndpointOutputFormatter = metrics.OutputMetricsFormatters.OfType<MetricsPrometheusTextOutputFormatter>().First();
-                    endpointsOptions.MetricsEndpointOutputFormatter = metrics.OutputMetricsFormatters.OfType<MetricsPrometheusTextOutputFormatter>().First();
-                };
+            if (monitoringOptions?.AzureApplicationInsights?.IsEnabled ?? false)
+            {
+                services.AddAzureApplicationInsights(monitoringOptions.AzureApplicationInsights);
+            }
 
-                options.TrackingMiddlewareOptions = trackingMiddlewareOptions =>
-                {
-                    context.Configuration.GetSection("AppMetrics:MetricsWebTrackingOptions").Bind(trackingMiddlewareOptions);
-                };
-            });
+            if (monitoringOptions?.AppMetrics?.IsEnabled ?? false)
+            {
+                services.AddAppMetrics(monitoringOptions.AppMetrics);
+            }
 
-            return hostBuilder;
+            return services;
         }
 
-        public static IMvcBuilder AddClassifiedAdsMonitoringServices(this IMvcBuilder mvcBuilder)
+        public static IMvcBuilder AddMonitoringServices(this IMvcBuilder mvcBuilder, MonitoringOptions monitoringOptions)
         {
-            mvcBuilder.AddMetrics();
+            if (monitoringOptions?.AppMetrics?.IsEnabled ?? false)
+            {
+                mvcBuilder.AddMetrics();
+            }
 
             return mvcBuilder;
+        }
+
+        public static IApplicationBuilder UseMonitoringServices(this IApplicationBuilder builder, MonitoringOptions monitoringOptions)
+        {
+            if (monitoringOptions?.MiniProfiler?.IsEnabled ?? false)
+            {
+                builder.UseMiniProfiler();
+            }
+
+            return builder;
         }
     }
 }

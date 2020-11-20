@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 using ClassifiedAds.IdentityServer.ConfigurationOptions;
+using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Notification;
 using ClassifiedAds.Infrastructure.Notification.Email;
 using ClassifiedAds.Infrastructure.Notification.Sms;
@@ -71,7 +72,7 @@ namespace ClassifiedAds.IdentityServer
                 .SetApplicationName("ClassifiedAds");
 
             services.AddCaches(AppSettings.Caching)
-                    .AddClassifiedAdsProfiler(AppSettings.Monitoring);
+                    .AddMonitoringServices(AppSettings.Monitoring);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -103,7 +104,7 @@ namespace ClassifiedAds.IdentityServer
             app.UseIdentityServer();
             app.UseAuthorization();
 
-            app.UseClassifiedAdsProfiler();
+            app.UseMonitoringServices(AppSettings.Monitoring);
 
             app.UseEndpoints(endpoints =>
             {

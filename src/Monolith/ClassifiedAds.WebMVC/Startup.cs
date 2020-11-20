@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Application.FileEntries.DTOs;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Infrastructure.Identity;
+using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.WebMVC.Authorization;
 using ClassifiedAds.WebMVC.ClaimsTransformations;
 using ClassifiedAds.WebMVC.ConfigurationOptions;
@@ -66,6 +67,8 @@ namespace ClassifiedAds.WebMVC
                 });
             }
 
+            services.AddMonitoringServices(AppSettings.Monitoring);
+
             services.AddControllersWithViews(setupAction =>
             {
                 setupAction.Filters.Add(typeof(CustomActionFilter));
@@ -125,8 +128,7 @@ namespace ClassifiedAds.WebMVC
             services.AddHttpClient(string.Empty)
                     .AddHttpMessageHandler<ProfilingHttpHandler>();
 
-            services.AddCaches(AppSettings.Caching)
-                    .AddClassifiedAdsProfiler(AppSettings.Monitoring);
+            services.AddCaches(AppSettings.Caching);
 
             var healthChecksBuilder = services.AddHealthChecks()
                 .AddSqlServer(connectionString: AppSettings.ConnectionStrings.ClassifiedAds,
@@ -204,7 +206,7 @@ namespace ClassifiedAds.WebMVC
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseClassifiedAdsProfiler();
+            app.UseMonitoringServices(AppSettings.Monitoring);
 
             app.UseHealthChecks("/healthcheck", new HealthCheckOptions
             {

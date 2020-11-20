@@ -3,7 +3,7 @@ using ClassifiedAds.Infrastructure.Caching;
 using ClassifiedAds.Infrastructure.Interceptors;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.MessageBrokers;
-using ClassifiedAds.Infrastructure.Profiling;
+using ClassifiedAds.Infrastructure.Monitoring;
 using System.Collections.Generic;
 
 namespace ClassifiedAds.IdentityServer.ConfigurationOptions

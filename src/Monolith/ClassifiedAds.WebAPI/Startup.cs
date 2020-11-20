@@ -3,6 +3,7 @@ using ClassifiedAds.Application.FileEntries.DTOs;
 using ClassifiedAds.Application.SmsMessages.DTOs;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Infrastructure.Identity;
+using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Persistence;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
@@ -39,10 +40,12 @@ namespace ClassifiedAds.WebAPI
         {
             services.Configure<AppSettings>(Configuration);
 
+            services.AddMonitoringServices(AppSettings.Monitoring);
+
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
-            }).AddClassifiedAdsMonitoringServices();
+            }).AddMonitoringServices(AppSettings.Monitoring);
 
             services.AddCors(options =>
             {
@@ -131,8 +134,7 @@ namespace ClassifiedAds.WebAPI
                 });
             });
 
-            services.AddCaches(AppSettings.Caching)
-                    .AddClassifiedAdsProfiler(AppSettings.Monitoring);
+            services.AddCaches(AppSettings.Caching);
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentWebUser>();
@@ -181,7 +183,7 @@ namespace ClassifiedAds.WebAPI
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseClassifiedAdsProfiler();
+            app.UseMonitoringServices(AppSettings.Monitoring);
 
             app.UseEndpoints(endpoints =>
             {

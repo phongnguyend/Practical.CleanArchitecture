@@ -1,66 +1,52 @@
-﻿using App.Metrics;
-using App.Metrics.AspNetCore;
-using App.Metrics.Formatters.Prometheus;
+﻿using ClassifiedAds.Infrastructure.Monitoring.AppMetrics;
+using ClassifiedAds.Infrastructure.Monitoring.AzureApplicationInsights;
+using ClassifiedAds.Infrastructure.Monitoring.MiniProfiler;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace ClassifiedAds.Infrastructure.Monitoring
 {
     public static class MonitoringExtensions
     {
-        public static IWebHostBuilder UseClassifiedAdsMonitoringServices(this IWebHostBuilder hostBuilder)
+        public static IServiceCollection AddMonitoringServices(this IServiceCollection services, MonitoringOptions monitoringOptions = null)
         {
-            var metrics = AppMetrics.CreateDefaultBuilder()
-                  .OutputMetrics.AsPrometheusPlainText()
-                  .Build();
-
-            hostBuilder.UseMetrics(options =>
+            if (monitoringOptions?.MiniProfiler?.IsEnabled ?? false)
             {
-                options.EndpointOptions = endpointsOptions =>
-                {
-                    endpointsOptions.MetricsTextEndpointOutputFormatter = metrics.OutputMetricsFormatters.OfType<MetricsPrometheusTextOutputFormatter>().First();
-                    endpointsOptions.MetricsEndpointOutputFormatter = metrics.OutputMetricsFormatters.OfType<MetricsPrometheusTextOutputFormatter>().First();
-                };
-            })
-                .UseMetricsWebTracking();
+                services.AddMiniProfiler(monitoringOptions.MiniProfiler);
+            }
 
-            return hostBuilder;
-        }
-
-        public static IServiceCollection AddClassifiedAdsMonitoringServices(this IServiceCollection services)
-        {
-            // If using Kestrel:
-            services.Configure<KestrelServerOptions>(options =>
+            if (monitoringOptions?.AzureApplicationInsights?.IsEnabled ?? false)
             {
-                options.AllowSynchronousIO = true;
-            });
+                services.AddAzureApplicationInsights(monitoringOptions.AzureApplicationInsights);
+            }
 
-            // If using IIS:
-            services.Configure<IISServerOptions>(options =>
+            if (monitoringOptions?.AppMetrics?.IsEnabled ?? false)
             {
-                options.AllowSynchronousIO = true;
-            });
-
-            services.AddMetricsTrackingMiddleware();
+                services.AddAppMetrics(monitoringOptions.AppMetrics);
+            }
 
             return services;
         }
 
-        public static IMvcBuilder AddClassifiedAdsMonitoringServices(this IMvcBuilder mvcBuilder)
+        public static IMvcBuilder AddMonitoringServices(this IMvcBuilder mvcBuilder, MonitoringOptions monitoringOptions)
         {
-            mvcBuilder.AddMetrics();
+            if (monitoringOptions?.AppMetrics?.IsEnabled ?? false)
+            {
+                mvcBuilder.AddMetrics();
+            }
 
             return mvcBuilder;
         }
 
-        public static IApplicationBuilder UseClassifiedAdsMonitoringServices(this IApplicationBuilder app)
+        public static IApplicationBuilder UseMonitoringServices(this IApplicationBuilder builder, MonitoringOptions monitoringOptions)
         {
-            app.UseMetricsAllMiddleware();
+            if (monitoringOptions?.MiniProfiler?.IsEnabled ?? false)
+            {
+                builder.UseMiniProfiler();
+            }
 
-            return app;
+            return builder;
         }
     }
 }
