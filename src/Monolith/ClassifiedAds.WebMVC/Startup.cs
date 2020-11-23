@@ -148,12 +148,11 @@ namespace ClassifiedAds.WebMVC
                     name: "Background Services Server",
                     failureStatus: HealthStatus.Degraded);
 
-            // TODO: .Net 5
-            //services.AddHealthChecksUI(setupSettings: setup =>
-            //{
-            //    setup.AddHealthCheckEndpoint("Basic Health Check", $"{AppSettings.CurrentUrl}/healthcheck");
-            //    setup.DisableDatabaseMigrations();
-            //}).AddInMemoryStorage();
+            services.AddHealthChecksUI(setupSettings: setup =>
+            {
+                setup.AddHealthCheckEndpoint("Basic Health Check", $"{AppSettings.CurrentUrl}/healthcheck");
+                setup.DisableDatabaseMigrations();
+            }).AddInMemoryStorage();
 
             services.AddHangfire(x =>
             {
@@ -220,8 +219,7 @@ namespace ClassifiedAds.WebMVC
                 },
             });
 
-            // TODO: .Net 5
-            //app.UseHealthChecksUI(); // /healthchecks-ui#/healthchecks
+            app.UseHealthChecksUI(); // /healthchecks-ui#/healthchecks
 
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {

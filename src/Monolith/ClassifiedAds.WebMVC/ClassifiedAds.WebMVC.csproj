@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.1.2" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="3.1.2" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="5.0.0-preview1" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="5.0.0-preview1" />
     <PackageReference Include="Hangfire" Version="1.7.17" />
     <PackageReference Include="IdentityModel" Version="4.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.0" />
