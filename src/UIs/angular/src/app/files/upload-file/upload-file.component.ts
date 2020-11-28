@@ -44,7 +44,7 @@ export class UploadFileComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     console.log("in onSubmit: ", form.value, this.file);
-    if (form.valid) {
+    if (form.valid && this.file.formFile) {
       this.fileService.uploadFile(this.file).subscribe(
         (result) => {
           console.log("success: ", result);

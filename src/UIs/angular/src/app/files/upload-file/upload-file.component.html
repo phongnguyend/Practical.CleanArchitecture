@@ -53,12 +53,9 @@
             type="file"
             name="formFile"
             class="form-control"
-            [(ngModel)]="file.formFile"
             required
-            #formFileField="ngModel"
-            (blur)="onBlur(formFileField)"
             (change)="handleFileInput($event.target.files)"
-            [class.is-invalid]="form.submitted && formFileField.invalid"
+            [class.is-invalid]="form.submitted && !file.formFile"
           />
           <span class="invalid-feedback">
             Select a file

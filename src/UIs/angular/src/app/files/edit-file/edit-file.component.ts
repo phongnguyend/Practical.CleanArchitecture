@@ -12,7 +12,15 @@ import { BsModalService } from "ngx-bootstrap";
   styleUrls: ["./edit-file.component.css"],
 })
 export class EditFileComponent implements OnInit {
-  file: IFile = null;
+  file: IFile = {
+    id: "00000000-0000-0000-0000-000000000000",
+    name: null,
+    description: null,
+    uploadedTime: null,
+    fileName: null,
+    size: 0,
+    formFile: null,
+  };
   postErrorMessage: string = "";
   postError = false;
   isDirty = false;
