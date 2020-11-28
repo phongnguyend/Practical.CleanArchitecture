@@ -165,7 +165,7 @@ class ViewUser extends Component {
   render() {
     const passwordErrors = this.props.postError?.response?.data
       ? this.props.postError?.response?.data?.map((error) => (
-          <li>{error.description}</li>
+          <li key={error.code}>{error.description}</li>
         ))
       : null;
 

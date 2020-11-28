@@ -6,6 +6,7 @@ const initialState = {
   file: {
     name: "",
     description: "",
+    fileName: "",
   },
   auditLogs: [],
   loading: false,
@@ -97,7 +98,7 @@ const reducer = (state = initialState, action) => {
       });
     case actionTypes.DELETE_FILE_SUCCESS:
       return updateObject(state, {
-        file: action.file,
+        file: initialState.file,
         loading: false,
         deleted: true,
       });

@@ -98,7 +98,7 @@ const reducer = (state = initialState, action) => {
       });
     case actionTypes.DELETE_PRODUCT_SUCCESS:
       return updateObject(state, {
-        product: action.product,
+        product: initialState.product,
         loading: false,
         deleted: true,
       });
