@@ -1,7 +1,5 @@
-using System;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using ClassifiedAds.Infrastructure.MessageBrokers;
-using ClassifiedAds.Infrastructure.Notification;
+using ClassifiedAds.Services.Notification.Api.ConfigurationOptions;
 using ClassifiedAds.Services.Notification.DTOs;
 using ClassifiedAds.Services.Notification.Services;
 using Microsoft.AspNetCore.Builder;
@@ -10,17 +8,23 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace ClassifiedAds.Services.Notification.Background
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+
+            AppSettings = new AppSettings();
+            Configuration.Bind(AppSettings);
         }
 
         public IConfiguration Configuration { get; }
+
+        private AppSettings AppSettings { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -29,13 +33,7 @@ namespace ClassifiedAds.Services.Notification.Background
             services.AddDateTimeProvider();
             services.AddApplicationServices();
 
-            var messageBrokerOptions = new MessageBrokerOptions();
-            var notificationOptions = new NotificationOptions();
-
-            Configuration.GetSection("MessageBroker").Bind(messageBrokerOptions);
-            Configuration.GetSection("Notification").Bind(notificationOptions);
-
-            services.AddNotificationModule(messageBrokerOptions, notificationOptions, Configuration.GetConnectionString("ClassifiedAds"));
+            services.AddNotificationModule(AppSettings.MessageBroker, AppSettings.Notification, AppSettings.ConnectionStrings.ClassifiedAds);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,3 +1,5 @@
+using ClassifiedAds.Infrastructure.DistributedTracing;
+using ClassifiedAds.Services.Identity.Api.ConfigurationOptions;
 using ClassifiedAds.Services.Identity.Grpc.Services;
 using ClassifiedAds.Services.Identity.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -12,12 +14,17 @@ namespace ClassifiedAds.Services.Identity.Grpc
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+
+            AppSettings = new AppSettings();
+            Configuration.Bind(AppSettings);
         }
 
         public IConfiguration Configuration { get; }
+
+        private AppSettings AppSettings { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -25,10 +32,12 @@ namespace ClassifiedAds.Services.Identity.Grpc
         {
             services.AddGrpc();
 
+            services.AddDistributedTracing(AppSettings.DistributedTracing);
+
             services.AddDateTimeProvider();
             services.AddApplicationServices();
 
-            services.AddIdentityModuleCore(Configuration.GetConnectionString("ClassifiedAds"));
+            services.AddIdentityModuleCore(AppSettings.ConnectionStrings.ClassifiedAds);
 
             services.AddDataProtection()
                     .PersistKeysToDbContext<IdentityDbContext>()
@@ -47,7 +56,7 @@ namespace ClassifiedAds.Services.Identity.Grpc
 
             app.UseEndpoints(endpoints =>
             {
-                GrpcEndpointRouteBuilderExtensions.MapGrpcService<UserService>(endpoints);
+                endpoints.MapGrpcService<UserService>();
 
                 endpoints.MapGet("/", async context =>
                 {

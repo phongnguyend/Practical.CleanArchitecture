@@ -1,4 +1,6 @@
+using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Web.Filters;
+using ClassifiedAds.Services.Identity.Api.ConfigurationOptions;
 using ClassifiedAds.Services.Identity.Repositories;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
@@ -15,9 +17,14 @@ namespace ClassifiedAds.Services.Identity
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+
+            AppSettings = new AppSettings();
+            Configuration.Bind(AppSettings);
         }
 
         public IConfiguration Configuration { get; }
+
+        private AppSettings AppSettings { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -36,10 +43,12 @@ namespace ClassifiedAds.Services.Identity
                     .AllowAnyHeader());
             });
 
+            services.AddDistributedTracing(AppSettings.DistributedTracing);
+
             services.AddDateTimeProvider();
             services.AddApplicationServices();
 
-            services.AddIdentityModuleCore(Configuration.GetConnectionString("ClassifiedAds"));
+            services.AddIdentityModuleCore(AppSettings.ConnectionStrings.ClassifiedAds);
 
             services.AddDataProtection()
                     .PersistKeysToDbContext<IdentityDbContext>()
@@ -48,9 +57,9 @@ namespace ClassifiedAds.Services.Identity
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                     .AddIdentityServerAuthentication(options =>
                     {
-                        options.Authority = Configuration["IdentityServerAuthentication:Authority"];
-                        options.ApiName = Configuration["IdentityServerAuthentication.ApiName"];
-                        options.RequireHttpsMetadata = Configuration["IdentityServerAuthentication.RequireHttpsMetadata"] == "true";
+                        options.Authority = AppSettings.IdentityServerAuthentication.Authority;
+                        options.ApiName = AppSettings.IdentityServerAuthentication.ApiName;
+                        options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
                     });
         }
 

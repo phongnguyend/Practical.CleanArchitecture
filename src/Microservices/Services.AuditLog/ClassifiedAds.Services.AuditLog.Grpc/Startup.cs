@@ -1,3 +1,5 @@
+using ClassifiedAds.Infrastructure.DistributedTracing;
+using ClassifiedAds.Services.AuditLog.Api.ConfigurationOptions;
 using ClassifiedAds.Services.Identity.Grpc.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,12 +12,17 @@ namespace ClassifiedAds.Services.AuditLog.Grpc
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+
+            AppSettings = new AppSettings();
+            Configuration.Bind(AppSettings);
         }
 
         public IConfiguration Configuration { get; }
+
+        private AppSettings AppSettings { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -23,10 +30,12 @@ namespace ClassifiedAds.Services.AuditLog.Grpc
         {
             services.AddGrpc();
 
+            services.AddDistributedTracing(AppSettings.DistributedTracing);
+
             services.AddDateTimeProvider();
             services.AddApplicationServices();
 
-            services.AddAuditLogModule(Configuration.GetConnectionString("ClassifiedAds"));
+            services.AddAuditLogModule(AppSettings.ConnectionStrings.ClassifiedAds);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,7 +50,7 @@ namespace ClassifiedAds.Services.AuditLog.Grpc
 
             app.UseEndpoints(endpoints =>
             {
-                GrpcEndpointRouteBuilderExtensions.MapGrpcService<AuditLogService>(endpoints);
+                endpoints.MapGrpcService<AuditLogService>();
 
                 endpoints.MapGet("/", async context =>
                 {

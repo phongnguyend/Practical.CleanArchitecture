@@ -1,7 +1,7 @@
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using ClassifiedAds.Infrastructure.MessageBrokers;
-using ClassifiedAds.Infrastructure.Storages;
+using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Web.Filters;
+using ClassifiedAds.Services.Storage.Api.ConfigurationOptions;
 using ClassifiedAds.Services.Storage.DTOs;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
@@ -19,9 +19,14 @@ namespace ClassifiedAds.Services.Storage
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+
+            AppSettings = new AppSettings();
+            Configuration.Bind(AppSettings);
         }
 
         public IConfiguration Configuration { get; }
+
+        private AppSettings AppSettings { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -40,23 +45,19 @@ namespace ClassifiedAds.Services.Storage
                     .AllowAnyHeader());
             });
 
+            services.AddDistributedTracing(AppSettings.DistributedTracing);
+
             services.AddDateTimeProvider();
             services.AddApplicationServices();
 
-            var storageOptions = new StorageOptions();
-            var messageBrokerOptions = new MessageBrokerOptions();
-
-            Configuration.GetSection("Storage").Bind(storageOptions);
-            Configuration.GetSection("MessageBroker").Bind(messageBrokerOptions);
-
-            services.AddStorageModule(storageOptions, messageBrokerOptions, Configuration.GetConnectionString("ClassifiedAds"));
+            services.AddStorageModule(AppSettings.Storage, AppSettings.MessageBroker, AppSettings.ConnectionStrings.ClassifiedAds);
 
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                     .AddIdentityServerAuthentication(options =>
                     {
-                        options.Authority = Configuration["IdentityServerAuthentication:Authority"];
-                        options.ApiName = Configuration["IdentityServerAuthentication.ApiName"];
-                        options.RequireHttpsMetadata = Configuration["IdentityServerAuthentication.RequireHttpsMetadata"] == "true";
+                        options.Authority = AppSettings.IdentityServerAuthentication.Authority;
+                        options.ApiName = AppSettings.IdentityServerAuthentication.ApiName;
+                        options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
                     });
         }
 
