@@ -1,6 +1,21 @@
 # Solution Structure
 ![alt text](/docs/imgs/code-solution-structure-modular-monolith.png)
 
+# Build & Run Locally using Tye
+
+- Install Tye
+  ```
+  dotnet tool install -g Microsoft.Tye --version "0.5.0-alpha.20555.1"
+  dotnet tool update -g Microsoft.Tye --version "0.5.0-alpha.20555.1"
+  ```
+  
+- Run
+  ```
+  tye run
+  ```
+  
+- Open Tye Dashboard: http://localhost:8000/
+
 # Build & Deploy to Kubernetes
 
 - Build
