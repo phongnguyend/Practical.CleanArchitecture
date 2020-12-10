@@ -1,13 +1,12 @@
-﻿@using ClassifiedAds.IdentityServer.Models.ApiResourceModels
-@model ScopeModel
+﻿@using ClassifiedAds.IdentityServer.Models.ApiScopeModels
+@model ApiScopeModel
 
 <div class="row">
     <div class="col-12">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a asp-controller="ApiResource" asp-action="Index">Api Resources</a></li>
-                <li class="breadcrumb-item"><a asp-controller="ApiResource" asp-action="Edit" asp-route-id="@Model.ApiResourceId">@Model.ApiResourceName</a></li>
-                <li class="breadcrumb-item"><a asp-controller="ApiResource" asp-action="Scopes" asp-route-id="@Model.ApiResourceId">Scopes</a></li>
+                <li class="breadcrumb-item"><a asp-controller="ApiScope" asp-action="Index">Api Scopes</a></li>
+                <li class="breadcrumb-item"><a asp-controller="ApiScope" asp-action="Edit" asp-route-id="@Model.Id">@Model.DisplayName</a></li>
 
                 @if (Model.Id != 0)
                 {
@@ -32,9 +31,6 @@
 
     <!--Hidden -->
     <input type="hidden" asp-for="Id" />
-
-    <!--Hidden -->
-    <input type="hidden" asp-for="ApiResourceId" />
 
     <div class="card mt-3">
         <h5 class="card-header">Scope</h5>

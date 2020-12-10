@@ -98,11 +98,9 @@ namespace ClassifiedAds.IdentityServer.Quickstart.Manage
             {
                 return View(model);
             }
-
             // Generate the token and send it
             var user = await GetCurrentUserAsync();
             var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, model.PhoneNumber);
-
             _dispatcher.Dispatch(new AddSmsMessageCommand
             {
                 SmsMessage = new SmsMessageDTO
@@ -111,7 +109,6 @@ namespace ClassifiedAds.IdentityServer.Quickstart.Manage
                     Message = "Your security code is: " + code,
                 },
             });
-
             return RedirectToAction(nameof(VerifyPhoneNumber), new { PhoneNumber = model.PhoneNumber });
         }
 

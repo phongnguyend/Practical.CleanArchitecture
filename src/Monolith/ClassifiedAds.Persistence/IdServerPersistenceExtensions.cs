@@ -85,6 +85,8 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
+                        RequirePkce = false,
+                        RequireConsent = true,
                     });
                 }
 
@@ -116,6 +118,8 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
+                        RequirePkce = false,
+                        RequireConsent = true,
                     });
                 }
 
@@ -147,6 +151,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
+                        RequireConsent = true,
                     });
                 }
 
@@ -181,6 +186,8 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
+                        RequirePkce = false,
+                        RequireConsent = true,
                     });
                 }
 
@@ -215,6 +222,8 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
+                        RequirePkce = false,
+                        RequireConsent = true,
                     });
                 }
 
@@ -249,6 +258,8 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
+                        RequirePkce = false,
+                        RequireConsent = true,
                     });
                 }
 
@@ -271,12 +282,25 @@ namespace Microsoft.Extensions.DependencyInjection
                     context.SaveChanges();
                 }
 
+                if (!context.ApiScopes.Any())
+                {
+                    var apiScopes = new List<ApiScope>()
+                    {
+                        new ApiScope("ClassifiedAds.WebAPI", "ClassifiedAds Web API"),
+                    };
+
+                    context.ApiScopes.AddRange(apiScopes.Select(x => x.ToEntity()));
+                    context.SaveChanges();
+                }
+
                 if (!context.ApiResources.Any())
                 {
                     var apiResources = new List<ApiResource>
                     {
-                        new ApiResource("ClassifiedAds.WebAPI", "ClassifiedAds Web API",
-                        new List<string>() { "role" }),
+                        new ApiResource("ClassifiedAds.WebAPI", "ClassifiedAds Web API", new[] { "role" })
+                        {
+                            Scopes = { "ClassifiedAds.WebAPI" },
+                        },
                     };
 
                     context.ApiResources.AddRange(apiResources.Select(x => x.ToEntity()));

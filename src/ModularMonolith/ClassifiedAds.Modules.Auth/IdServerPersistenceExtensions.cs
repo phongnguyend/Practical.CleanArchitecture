@@ -85,15 +85,17 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
+                        RequirePkce = false,
+                        RequireConsent = true,
                     });
                 }
 
-                if (!context.Clients.Any(x => x.ClientId == "ClassifiedAds.Blazor"))
+                if (!context.Clients.Any(x => x.ClientId == "ClassifiedAds.BlazorServerSide"))
                 {
                     clients.Add(new Client
                     {
-                        ClientId = "ClassifiedAds.Blazor",
-                        ClientName = "ClassifiedAds Blazor",
+                        ClientId = "ClassifiedAds.BlazorServerSide",
+                        ClientName = "ClassifiedAds BlazorServerSide",
                         AllowedGrantTypes = GrantTypes.Hybrid.Combines(GrantTypes.ResourceOwnerPassword),
                         RedirectUris =
                         {
@@ -116,6 +118,40 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
+                        RequirePkce = false,
+                        RequireConsent = true,
+                    });
+                }
+
+                if (!context.Clients.Any(x => x.ClientId == "ClassifiedAds.BlazorWebAssembly"))
+                {
+                    clients.Add(new Client
+                    {
+                        ClientId = "ClassifiedAds.BlazorWebAssembly",
+                        ClientName = "ClassifiedAds BlazorWebAssembly",
+                        AllowedGrantTypes = GrantTypes.Code,
+                        RequireClientSecret = false,
+                        RequirePkce = true,
+                        RedirectUris =
+                        {
+                            "https://localhost:44348/authentication/login-callback",
+                        },
+                        PostLogoutRedirectUris =
+                        {
+                            "https://localhost:44348/authentication/logout-callback",
+                        },
+                        AllowedScopes =
+                        {
+                            IdentityServerConstants.StandardScopes.OpenId,
+                            IdentityServerConstants.StandardScopes.Profile,
+                            "ClassifiedAds.WebAPI",
+                        },
+                        ClientSecrets =
+                        {
+                            new Secret("secret".Sha256()),
+                        },
+                        AllowOfflineAccess = true,
+                        RequireConsent = true,
                     });
                 }
 
@@ -150,6 +186,8 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
+                        RequirePkce = false,
+                        RequireConsent = true,
                     });
                 }
 
@@ -184,6 +222,8 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
+                        RequirePkce = false,
+                        RequireConsent = true,
                     });
                 }
 
@@ -218,6 +258,8 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
+                        RequirePkce = false,
+                        RequireConsent = true,
                     });
                 }
 
@@ -240,12 +282,25 @@ namespace Microsoft.Extensions.DependencyInjection
                     context.SaveChanges();
                 }
 
+                if (!context.ApiScopes.Any())
+                {
+                    var apiScopes = new List<ApiScope>()
+                    {
+                        new ApiScope("ClassifiedAds.WebAPI", "ClassifiedAds Web API"),
+                    };
+
+                    context.ApiScopes.AddRange(apiScopes.Select(x => x.ToEntity()));
+                    context.SaveChanges();
+                }
+
                 if (!context.ApiResources.Any())
                 {
                     var apiResources = new List<ApiResource>
                     {
-                        new ApiResource("ClassifiedAds.WebAPI", "ClassifiedAds Web API",
-                        new List<string>() { "role" }),
+                        new ApiResource("ClassifiedAds.WebAPI", "ClassifiedAds Web API", new[] { "role" })
+                        {
+                            Scopes = { "ClassifiedAds.WebAPI" },
+                        },
                     };
 
                     context.ApiResources.AddRange(apiResources.Select(x => x.ToEntity()));

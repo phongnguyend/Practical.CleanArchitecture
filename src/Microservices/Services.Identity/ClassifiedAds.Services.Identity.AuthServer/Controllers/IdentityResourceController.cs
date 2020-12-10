@@ -47,7 +47,7 @@ namespace ClassifiedAds.IdentityServer.Controllers
             {
                 identity = new IdentityResource
                 {
-                    UserClaims = new List<IdentityClaim>(),
+                    UserClaims = new List<IdentityResourceClaim>(),
                 };
                 _configurationDbContext.IdentityResources.Add(identity);
             }
@@ -65,7 +65,7 @@ namespace ClassifiedAds.IdentityServer.Controllers
             {
                 model.UserClaims = JsonConvert.DeserializeObject<List<string>>(model.UserClaimsItems);
 
-                identity.UserClaims.AddRange(model.UserClaims.Select(x => new IdentityClaim
+                identity.UserClaims.AddRange(model.UserClaims.Select(x => new IdentityResourceClaim
                 {
                     Type = x,
                 }));

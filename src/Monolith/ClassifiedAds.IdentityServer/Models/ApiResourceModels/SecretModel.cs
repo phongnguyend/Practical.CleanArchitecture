@@ -19,7 +19,7 @@ namespace ClassifiedAds.IdentityServer.Models.ApiResourceModels
         public string ApiResourceName { get; set; }
         public ApiResourceModel ApiResource { get; set; }
 
-        public static SecretModel FromEntity(ApiSecret secret)
+        public static SecretModel FromEntity(ApiResourceSecret secret)
         {
             return new SecretModel
             {

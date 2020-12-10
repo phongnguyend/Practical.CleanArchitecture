@@ -10,6 +10,8 @@ namespace ClassifiedAds.IdentityServer.Models.ApiResourceModels
     {
         public List<ScopeModel> Scopes { get; set; }
 
+        public List<ApiScope> ApiScopes { get; set; }
+
         public void UpdateEntity(ApiScope entity)
         {
 

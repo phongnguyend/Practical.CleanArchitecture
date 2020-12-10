@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ClassifiedAds.IdentityServer.Models.ApiResourceModels;
+﻿using ClassifiedAds.IdentityServer.Models.ApiResourceModels;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ClassifiedAds.IdentityServer.Controllers
 {
@@ -158,7 +157,7 @@ namespace ClassifiedAds.IdentityServer.Controllers
                 .Include(x => x.Secrets)
                 .FirstOrDefault(x => x.Id == model.ApiResourceId);
 
-            var secret = new ApiSecret
+            var secret = new ApiResourceSecret
             {
                 Created = DateTime.UtcNow,
             };
@@ -175,7 +174,7 @@ namespace ClassifiedAds.IdentityServer.Controllers
         [HttpGet]
         public IActionResult DeleteSecret(int id)
         {
-            var secret = _configurationDbContext.Set<ApiSecret>()
+            var secret = _configurationDbContext.Set<ApiResourceSecret>()
                 .Include(x => x.ApiResource)
                 .FirstOrDefault(x => x.Id == id);
             return View(SecretModel.FromEntity(secret));
@@ -199,64 +198,22 @@ namespace ClassifiedAds.IdentityServer.Controllers
             var api = _configurationDbContext.ApiResources
                 .Include(x => x.Scopes)
                 .FirstOrDefault(x => x.Id == id);
-            return View(ScopesModel.FromEntity(api));
-        }
 
-        public IActionResult EditScope(int apiId, int scopeId)
-        {
-            var api = _configurationDbContext.ApiResources
-                .Include("Scopes.UserClaims")
-                .FirstOrDefault(x => x.Id == apiId);
+            var apiScopes = _configurationDbContext.ApiScopes.ToList();
+            var model = ScopesModel.FromEntity(api);
+            model.ApiScopes = apiScopes;
 
-            if (scopeId != 0)
-            {
-                var scopeEntity = api.Scopes.FirstOrDefault(x => x.Id == scopeId);
-                return View(ScopeModel.FromEntity(scopeEntity));
-            }
-            else
-            {
-                return View(new ScopeModel
-                {
-                    ApiResourceId = api.Id,
-                    ApiResourceName = api.Name,
-                    ApiResource = api,
-                });
-            }
+            return View(model);
         }
 
         [HttpPost]
-        public IActionResult EditScope(ScopeModel model)
+        public IActionResult AddScope(ScopeModel model)
         {
             var api = _configurationDbContext.ApiResources
-                .Include("Scopes.UserClaims")
+                .Include(x => x.Scopes)
                 .FirstOrDefault(x => x.Id == model.ApiResourceId);
 
-            ApiScope scope;
-            if (model.Id == 0)
-            {
-                scope = new ApiScope
-                {
-                    UserClaims = new List<ApiScopeClaim>(),
-                };
-                api.Scopes.Add(scope);
-            }
-            else
-            {
-                scope = api.Scopes.FirstOrDefault(x => x.Id == model.Id);
-                scope.UserClaims.Clear();
-            }
-
-            model.UpdateEntity(scope);
-
-            if (!string.IsNullOrEmpty(model.UserClaimsItems))
-            {
-                var userClaims = JsonConvert.DeserializeObject<List<string>>(model.UserClaimsItems);
-
-                scope.UserClaims.AddRange(userClaims.Select(x => new ApiScopeClaim
-                {
-                    Type = x,
-                }));
-            }
+            api.Scopes.Add(new ApiResourceScope { Scope = model.Scope });
 
             _configurationDbContext.SaveChanges();
 
@@ -266,7 +223,7 @@ namespace ClassifiedAds.IdentityServer.Controllers
         [HttpGet]
         public IActionResult DeleteScope(int apiId, int scopeId)
         {
-            var scope = _configurationDbContext.Set<ApiScope>()
+            var scope = _configurationDbContext.Set<ApiResourceScope>()
                 .Include(x => x.ApiResource)
                 .FirstOrDefault(x => x.Id == scopeId);
             return View(ScopeModel.FromEntity(scope));

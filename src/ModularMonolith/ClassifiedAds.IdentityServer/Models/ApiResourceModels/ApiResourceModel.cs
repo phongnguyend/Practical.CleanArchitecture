@@ -13,8 +13,8 @@ namespace ClassifiedAds.IdentityServer.Models.ApiResourceModels
         public string Name { get; set; }
         public string DisplayName { get; set; }
         public string Description { get; set; }
-        public List<ApiSecret> Secrets { get; set; }
-        public List<ApiScope> Scopes { get; set; }
+        public List<ApiResourceSecret> Secrets { get; set; }
+        public List<ApiResourceScope> Scopes { get; set; }
         public List<ApiResourceClaim> UserClaims { get; set; }
         public string UserClaimsItems { get; set; }
         public List<ApiResourceProperty> Properties { get; set; }

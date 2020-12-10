@@ -1,4 +1,3 @@
-
 @model ConsentViewModel
 
 <div class="consent-container">
@@ -12,18 +11,16 @@
                 @Model.ClientName
                 <small>is requesting your permission</small>
             </h1>
+            <div>Uncheck the permissions you do not wish to grant.</div>
         </div>
     </div>
 
     <div class="row">
         <div class="col-sm-12">
-            @await Html.PartialAsync("_ValidationSummary")
+            <partial name="_ValidationSummary" />
 
             <form asp-action="Index" class="consent-form">
                 <input type="hidden" asp-for="ReturnUrl" />
-
-                <div>Uncheck the permissions you do not wish to grant.</div>
-
                 @if (Model.IdentityScopes.Any())
                 {
                     <div class="col-sm-12">
@@ -36,7 +33,7 @@
                                 <ul class="list-group">
                                     @foreach (var scope in Model.IdentityScopes)
                                     {
-                                        @await Html.PartialAsync("_ScopeListItem", scope)
+                                        <partial name="_ScopeListItem" model="@scope" />
                                     }
                                 </ul>
                             </div>
@@ -44,7 +41,7 @@
                     </div>
                 }
 
-                @if (Model.ResourceScopes.Any())
+                @if (Model.ApiScopes.Any())
                 {
                     <div class="col-sm-12">
                         <div class="card mt-3">
@@ -54,15 +51,27 @@
                             <div class="card-body">
 
                                 <ul class="list-group">
-                                    @foreach (var scope in Model.ResourceScopes)
+                                    @foreach (var scope in Model.ApiScopes)
                                     {
-                                        @await Html.PartialAsync("_ScopeListItem", scope)
+                                        <partial name="_ScopeListItem" model="scope" />
                                     }
                                 </ul>
                             </div>
                         </div>
                     </div>
                 }
+
+                <div class="col-sm-12">
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <span class="glyphicon glyphicon-tasks"></span>
+                            Description
+                        </div>
+                        <div class="card-body">
+                            <input class="form-control" placeholder="Description or name of device" asp-for="Description" autofocus>
+                        </div>
+                    </div>
+                </div>
 
                 @if (Model.AllowRememberConsent)
                 {
@@ -83,14 +92,13 @@
                 <div class="row ml-4 mr-4">
                     <div class="col-sm-9 mt-3">
                         <button name="button" id="btnYes" value="yes" class="btn btn-primary" autofocus>Yes, Allow</button>
-                        <button name="button" id="btnNo" value="no" class="btn">No, Do Not Allow</button>
+                        <button name="button" id="btnNo" value="no" class="btn btn-secondary">No, Do Not Allow</button>
                     </div>
-
                     <div class="col-sm-3 mt-3">
                         @if (Model.ClientUrl != null)
                         {
-                            <a class="btn btn-outline-primary" target="_blank" href="@Model.ClientUrl">
-                                <i class="fa fa-info-circle"></i>
+                            <a class="btn btn-outline-info" href="@Model.ClientUrl">
+                                <span class="glyphicon glyphicon-info-sign"></span>
                                 <strong>@Model.ClientName</strong>
                             </a>
                         }
