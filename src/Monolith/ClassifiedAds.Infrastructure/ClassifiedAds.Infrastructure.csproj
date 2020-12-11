@@ -22,6 +22,7 @@
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="5.0.0-preview1" />
     <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="5.0.0-preview1" />
     <PackageReference Include="AWSSDK.S3" Version="3.5.4" />
+    <PackageReference Include="Azure.Communication.Sms" Version="1.0.0-beta.3" />
     <PackageReference Include="Castle.Core" Version="4.4.1" />
     <PackageReference Include="Confluent.Kafka" Version="1.5.2" />
     <PackageReference Include="Dapper.StrongName" Version="2.0.35" />
@@ -53,6 +54,7 @@
     <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc1.1" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc1.1" />
     <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
+    <PackageReference Include="SendGrid" Version="9.21.2" />
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
     <PackageReference Include="Serilog.Enrichers.Environment" Version="2.1.3" />

@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Infrastructure.Notification.Email;
+using ClassifiedAds.Infrastructure.Notification.Email.SendGrid;
 using ClassifiedAds.Infrastructure.Notification.Email.SmtpClient;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -18,6 +19,12 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+        public static IServiceCollection AddSendGridEmailNotification(this IServiceCollection services, SendGridOptions options)
+        {
+            services.AddSingleton<IEmailNotification>(new SendGridEmailNotification(options));
+            return services;
+        }
+
         public static IServiceCollection AddEmailNotification(this IServiceCollection services, EmailOptions options)
         {
             if (options.UsedFake())
@@ -27,6 +34,10 @@ namespace Microsoft.Extensions.DependencyInjection
             else if (options.UsedSmtpClient())
             {
                 services.AddSmtpClientEmailNotification(options.SmtpClient);
+            }
+            else if (options.UsedSendGrid())
+            {
+                services.AddSendGridEmailNotification(options.SendGrid);
             }
 
             return services;

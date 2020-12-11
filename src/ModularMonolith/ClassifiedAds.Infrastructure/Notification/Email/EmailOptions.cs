@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Infrastructure.Notification.Email.SmtpClient;
+﻿using ClassifiedAds.Infrastructure.Notification.Email.SendGrid;
+using ClassifiedAds.Infrastructure.Notification.Email.SmtpClient;
 
 namespace ClassifiedAds.Infrastructure.Notification.Email
 {
@@ -8,6 +9,8 @@ namespace ClassifiedAds.Infrastructure.Notification.Email
 
         public SmtpClientOptions SmtpClient { get; set; }
 
+        public SendGridOptions SendGrid { get; set; }
+
         public bool UsedFake()
         {
             return Provider == "Fake";
@@ -16,6 +19,11 @@ namespace ClassifiedAds.Infrastructure.Notification.Email
         public bool UsedSmtpClient()
         {
             return Provider == "SmtpClient";
+        }
+
+        public bool UsedSendGrid()
+        {
+            return Provider == "SendGrid";
         }
     }
 }
