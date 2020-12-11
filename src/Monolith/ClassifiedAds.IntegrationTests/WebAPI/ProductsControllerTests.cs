@@ -1,10 +1,7 @@
-using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Domain.Entities;
-using IdentityModel.Client;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -12,88 +9,46 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
 {
     public class ProductsControllerTests : TestBase
     {
-        private static HttpClient _httpClient = new HttpClient();
-
         public ProductsControllerTests()
             : base()
         {
-            _httpClient.BaseAddress = new Uri(AppSettings.WebAPI.Endpoint);
             _httpClient.Timeout = new TimeSpan(0, 0, 30);
             _httpClient.DefaultRequestHeaders.Clear();
         }
 
         private async Task<List<Product>> GetProducts()
         {
-            var response = await _httpClient.GetAsync("api/products", HttpCompletionOption.ResponseHeadersRead);
-            response.EnsureSuccessStatusCode();
-            var products = await response.Content.ReadAs<List<Product>>();
+            var products = await GetAsync<List<Product>>("api/products");
             return products;
         }
 
-        private static async Task<Product> GetProductById(Guid id)
+        private async Task<Product> GetProductById(Guid id)
         {
-            var response = await _httpClient.GetAsync($"api/products/{id}", HttpCompletionOption.ResponseHeadersRead);
-            response.EnsureSuccessStatusCode();
-            var product = await response.Content.ReadAs<Product>();
+            var product = await GetAsync<Product>($"api/products/{id}");
             return product;
         }
 
-        private static async Task<Product> CreateProduct(Product product)
+        private async Task<Product> CreateProduct(Product product)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "api/products");
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            request.Content = product.AsJsonContent();
-
-            var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
-            response.EnsureSuccessStatusCode();
-            var createdProduct = await response.Content.ReadAs<Product>();
+            var createdProduct = await PostAsync<Product>("api/products", product);
             return createdProduct;
         }
 
-        private static async Task<Product> UpdateProduct(Guid id, Product product)
+        private async Task<Product> UpdateProduct(Guid id, Product product)
         {
-            var request = new HttpRequestMessage(HttpMethod.Put, $"api/products/{id}");
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            request.Content = product.AsJsonContent();
-
-            var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
-            response.EnsureSuccessStatusCode();
-            var updatedProduct = await response.Content.ReadAs<Product>();
+            var updatedProduct = await PutAsync<Product>($"api/products/{id}", product);
             return updatedProduct;
         }
 
-        private static async Task DeleteProduct(Guid id)
+        private async Task DeleteProduct(Guid id)
         {
-            var request = new HttpRequestMessage(HttpMethod.Delete, $"api/products/{id}");
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
-            response.EnsureSuccessStatusCode();
+            await DeleteAsync($"api/products/{id}");
         }
 
         [Fact]
         public async Task AllInOne()
         {
-            var metaDataResponse = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
-            {
-                Address = AppSettings.OpenIdConnect.Authority,
-                Policy = { RequireHttps = AppSettings.OpenIdConnect.RequireHttpsMetadata },
-            });
-
-            var tokenResponse = await _httpClient.RequestPasswordTokenAsync(new PasswordTokenRequest
-            {
-                Address = metaDataResponse.TokenEndpoint,
-                ClientId = AppSettings.OpenIdConnect.ClientId,
-                ClientSecret = AppSettings.OpenIdConnect.ClientSecret,
-                UserName = AppSettings.Login.UserName,
-                Password = AppSettings.Login.Password,
-                Scope = AppSettings.Login.Scope,
-            });
-
-            var token = tokenResponse.AccessToken;
-            _httpClient.UseBearerToken(token);
+            await GetTokenAsync();
 
             // POST
             var product = new Product
