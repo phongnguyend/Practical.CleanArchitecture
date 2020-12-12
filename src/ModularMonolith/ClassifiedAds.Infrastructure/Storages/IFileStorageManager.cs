@@ -5,7 +5,7 @@ namespace ClassifiedAds.Infrastructure.Storages
 {
     public interface IFileStorageManager
     {
-        void Create(FileEntryDTO fileEntry, MemoryStream stream);
+        void Create(FileEntryDTO fileEntry, Stream stream);
         byte[] Read(FileEntryDTO fileEntry);
         void Delete(FileEntryDTO fileEntry);
     }

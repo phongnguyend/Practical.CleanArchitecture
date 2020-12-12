@@ -39,6 +39,7 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             form.Add(fileContent, "formFile", file.FileName);
             form.Add(new StringContent(file.Name), "name");
             form.Add(new StringContent(file.Description), "description");
+            form.Add(new StringContent(file.Encrypted.ToString()), "encrypted");
 
             var response = await _httpClient.PostAsync($"api/files", form);
             response.EnsureSuccessStatusCode();
@@ -69,6 +70,7 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
                 Name = "Test",
                 Description = "Description",
                 FileName = "IntegrationTest.txt",
+                Encrypted = true,
             };
             FileEntry createdFile = await UploadFile(file);
             Assert.True(file.Id != createdFile.Id);

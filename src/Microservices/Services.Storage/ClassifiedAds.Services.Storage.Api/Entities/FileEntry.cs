@@ -18,6 +18,10 @@ namespace ClassifiedAds.Services.Storage.Entities
 
         public string FileLocation { get; set; }
 
+        public bool Encrypted { get; set; }
+
+        public string EncryptionKey { get; set; }
+
         public FileEntryDTO ToFileEntryDTO()
         {
             return new FileEntryDTO

@@ -15,5 +15,9 @@ namespace ClassifiedAds.Domain.Entities
         public string FileName { get; set; }
 
         public string FileLocation { get; set; }
+
+        public bool Encrypted { get; set; }
+
+        public string EncryptionKey { get; set; }
     }
 }

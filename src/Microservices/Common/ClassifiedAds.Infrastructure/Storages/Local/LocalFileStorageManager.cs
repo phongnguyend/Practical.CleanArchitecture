@@ -11,14 +11,14 @@ namespace ClassifiedAds.Infrastructure.Storages.Local
             _rootPath = rootPath;
         }
 
-        public void Create(FileEntryDTO fileEntry, MemoryStream stream)
+        public void Create(FileEntryDTO fileEntry, Stream stream)
         {
             var trustedFileNameForFileStorage = Path.GetRandomFileName();
             var filePath = Path.Combine(_rootPath, trustedFileNameForFileStorage);
 
             using (var fileStream = File.Create(filePath))
             {
-                stream.WriteTo(fileStream);
+                stream.CopyTo(fileStream);
             }
 
             fileEntry.FileLocation = trustedFileNameForFileStorage;

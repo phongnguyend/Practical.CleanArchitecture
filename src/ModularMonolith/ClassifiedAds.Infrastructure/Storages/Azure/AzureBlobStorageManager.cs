@@ -20,14 +20,13 @@ namespace ClassifiedAds.Infrastructure.Storages.Azure
             _container = blobClient.GetContainerReference(_containerName);
         }
 
-        public void Create(FileEntryDTO fileEntry, MemoryStream stream)
+        public void Create(FileEntryDTO fileEntry, Stream stream)
         {
             _container.CreateIfNotExistsAsync().GetAwaiter().GetResult();
 
             var name = fileEntry.Id.ToString();
             CloudBlockBlob blob = _container.GetBlockBlobReference(name);
-            var bytes = stream.ToArray();
-            blob.UploadFromByteArrayAsync(bytes, 0, bytes.Length).Wait();
+            blob.UploadFromStreamAsync(stream).Wait();
 
             fileEntry.FileLocation = name;
         }

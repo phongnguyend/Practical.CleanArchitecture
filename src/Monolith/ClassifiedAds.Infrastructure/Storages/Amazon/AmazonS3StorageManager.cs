@@ -19,7 +19,7 @@ namespace ClassifiedAds.Infrastructure.Storages.Amazon
             _bucketName = bucketName;
         }
 
-        public void Create(FileEntry fileEntry, MemoryStream stream)
+        public void Create(FileEntry fileEntry, Stream stream)
         {
             var fileTransferUtility = new TransferUtility(_client);
 

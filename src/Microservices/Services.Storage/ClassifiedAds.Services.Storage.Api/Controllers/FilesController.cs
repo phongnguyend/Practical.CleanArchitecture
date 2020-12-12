@@ -3,6 +3,8 @@ using ClassifiedAds.Infrastructure.Storages;
 using ClassifiedAds.Services.Storage.DTOs;
 using ClassifiedAds.Services.Storage.Entities;
 using ClassifiedAds.Services.Storage.Queries;
+using CryptographyHelper;
+using CryptographyHelper.SymmetricAlgorithms;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mime;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Storage.Controllers
@@ -49,16 +52,34 @@ namespace ClassifiedAds.Services.Storage.Controllers
                 Size = model.FormFile.Length,
                 UploadedTime = DateTime.Now,
                 FileName = model.FormFile.FileName,
+                Encrypted = model.Encrypted,
             };
 
             _dispatcher.Dispatch(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
 
             var fileEntryDTO = fileEntry.ToFileEntryDTO();
 
-            using (var stream = new MemoryStream())
+            if (model.Encrypted)
             {
-                await model.FormFile.CopyToAsync(stream);
-                _fileManager.Create(fileEntryDTO, stream);
+                var key = SymmetricCrypto.GenerateKey(16);
+                using (var inputStream = model.FormFile.OpenReadStream())
+                using (var encryptedStream = new MemoryStream(inputStream
+                        .UseAES(key)
+                        .WithCipher(CipherMode.ECB)
+                        .WithPadding(PaddingMode.PKCS7)
+                        .Encrypt()))
+                {
+                    _fileManager.Create(fileEntryDTO, encryptedStream);
+                }
+
+                fileEntry.EncryptionKey = key.ToBase64String();
+            }
+            else
+            {
+                using (var stream = model.FormFile.OpenReadStream())
+                {
+                    _fileManager.Create(fileEntryDTO, stream);
+                }
             }
 
             fileEntry.FileLocation = fileEntryDTO.FileLocation;
@@ -78,7 +99,16 @@ namespace ClassifiedAds.Services.Storage.Controllers
         public IActionResult Download(Guid id)
         {
             var fileEntry = _dispatcher.Dispatch(new GetEntityByIdQuery<FileEntry> { Id = id });
-            var content = _fileManager.Read(fileEntry.ToFileEntryDTO());
+
+            var rawData = _fileManager.Read(fileEntry.ToFileEntryDTO());
+            var content = fileEntry.Encrypted
+                ? rawData
+                .UseAES(fileEntry.EncryptionKey.FromBase64String())
+                .WithCipher(CipherMode.ECB)
+                .WithPadding(PaddingMode.PKCS7)
+                .Decrypt()
+                : rawData;
+
             return File(content, MediaTypeNames.Application.Octet, WebUtility.HtmlEncode(fileEntry.FileName));
         }
 
@@ -158,5 +188,7 @@ namespace ClassifiedAds.Services.Storage.Controllers
         [Required]
         [Display(Name = "File")]
         public IFormFile FormFile { get; set; }
+
+        public bool Encrypted { get; set; }
     }
 }

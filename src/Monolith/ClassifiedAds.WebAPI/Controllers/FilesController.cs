@@ -3,6 +3,8 @@ using ClassifiedAds.Application.AuditLogEntries.DTOs;
 using ClassifiedAds.Application.AuditLogEntries.Queries;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.Storages;
+using CryptographyHelper;
+using CryptographyHelper.SymmetricAlgorithms;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mime;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.WebAPI.Controllers
@@ -52,14 +55,32 @@ namespace ClassifiedAds.WebAPI.Controllers
                 Size = model.FormFile.Length,
                 UploadedTime = DateTime.Now,
                 FileName = model.FormFile.FileName,
+                Encrypted = model.Encrypted,
             };
 
             _dispatcher.Dispatch(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
 
-            using (var stream = new MemoryStream())
+            if (model.Encrypted)
             {
-                await model.FormFile.CopyToAsync(stream);
-                _fileManager.Create(fileEntry, stream);
+                var key = SymmetricCrypto.GenerateKey(16);
+                using (var inputStream = model.FormFile.OpenReadStream())
+                using (var encryptedStream = new MemoryStream(inputStream
+                        .UseAES(key)
+                        .WithCipher(CipherMode.ECB)
+                        .WithPadding(PaddingMode.PKCS7)
+                        .Encrypt()))
+                {
+                    _fileManager.Create(fileEntry, encryptedStream);
+                }
+
+                fileEntry.EncryptionKey = key.ToBase64String();
+            }
+            else
+            {
+                using (var stream = model.FormFile.OpenReadStream())
+                {
+                    _fileManager.Create(fileEntry, stream);
+                }
             }
 
             _dispatcher.Dispatch(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
@@ -77,7 +98,16 @@ namespace ClassifiedAds.WebAPI.Controllers
         public IActionResult Download(Guid id)
         {
             var fileEntry = _dispatcher.Dispatch(new GetEntityByIdQuery<FileEntry> { Id = id });
-            var content = _fileManager.Read(fileEntry);
+
+            var rawData = _fileManager.Read(fileEntry);
+            var content = fileEntry.Encrypted
+                ? rawData
+                .UseAES(fileEntry.EncryptionKey.FromBase64String())
+                .WithCipher(CipherMode.ECB)
+                .WithPadding(PaddingMode.PKCS7)
+                .Decrypt()
+                : rawData;
+
             return File(content, MediaTypeNames.Application.Octet, WebUtility.HtmlEncode(fileEntry.FileName));
         }
 
@@ -157,5 +187,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [Required]
         [Display(Name = "File")]
         public IFormFile FormFile { get; set; }
+
+        public bool Encrypted { get; set; }
     }
 }

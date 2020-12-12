@@ -7,7 +7,7 @@ namespace ClassifiedAds.Infrastructure.Storages.Fake
 {
     public class FakeStorageManager : IFileStorageManager
     {
-        public void Create(FileEntry fileEntry, MemoryStream stream)
+        public void Create(FileEntry fileEntry, Stream stream)
         {
             fileEntry.FileLocation = "Fake.txt";
         }
