@@ -174,6 +174,17 @@ az redis list-keys --resource-group ClassifiedAds_DEV \
                     --name classifiedads               
 ```
 
+- Create Azure SignalR Service
+```
+az signalr create --resource-group "ClassifiedAds_DEV" \
+                          --name "classifiedads" \
+                          --sku Standard_S1 \
+                          --unit-count 1 \
+                          --service-mode Default \
+                          --enable-message-logs True \
+                          --tags "Environment=Development" "Project=ClassifiedAds" "Department=SD"
+```
+
 - Create Azure Container Registry
 ```
 az acr create --resource-group "ClassifiedAds_DEV" \
@@ -182,6 +193,8 @@ az acr create --resource-group "ClassifiedAds_DEV" \
               --sku Basic \
               --admin-enabled true \
               --tags "Environment=Development" "Project=ClassifiedAds" "Department=SD"
+
+az acr login -n classifiedads
 ```
 
 - Create App Service Plan
