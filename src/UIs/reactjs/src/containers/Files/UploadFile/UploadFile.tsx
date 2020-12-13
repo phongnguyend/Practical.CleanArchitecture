@@ -1,14 +1,21 @@
 import React, { Component } from "react";
 import { NavLink, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { Modal, Button } from "react-bootstrap";
 
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
 
-class EditFile extends Component {
+type Props = {
+  resetFile: any,
+  file: any,
+  updateFile: any,
+  saveFile: any,
+  saved: any
+}
+
+class UploadFile extends Component<Props, any> {
   state = {
-    title: "Edit File",
+    title: "Upload File",
     controls: {
       name: {
         validation: {
@@ -36,17 +43,14 @@ class EditFile extends Component {
       },
     },
     valid: false,
+    formFile: null,
+    hasFile: false,
     submitted: false,
-    showAuditLogsModal: false,
     errorMessage: null,
   };
 
   componentDidMount() {
     this.props.resetFile();
-    const id = this.props.match?.params?.id;
-    if (id) {
-      this.props.fetchFile(id);
-    }
   }
 
   fieldChanged = (event) => {
@@ -101,14 +105,9 @@ class EditFile extends Component {
         isValid;
     }
 
-    if (isValid) {
+    if (isValid && this.state.hasFile) {
       this.props.saveFile(this.props.file);
     }
-  };
-
-  viewAuditLogs = () => {
-    this.props.fetchAuditLogs(this.props.file);
-    this.setState({ showAuditLogsModal: true });
   };
 
   formatDateTime = (value) => {
@@ -124,9 +123,7 @@ class EditFile extends Component {
         <div className="card-body">
           {this.state.errorMessage ? (
             <div
-              className="row"
-              hidden="!postError"
-              className="alert alert-danger"
+              className="row alert alert-danger"
             >
               {this.state.errorMessage}
             </div>
@@ -194,11 +191,17 @@ class EditFile extends Component {
               <div className="col-sm-10">
                 <input
                   id="formFile"
+                  type="file"
                   name="formFile"
-                  className="form-control"
-                  disabled
-                  value={this.props.file?.fileName}
+                  className={
+                    "form-control " +
+                    (this.state.submitted && !this.state.hasFile
+                      ? "is-invalid"
+                      : "")
+                  }
+                  onChange={this.handleFileInput}
                 />
+                <span className="invalid-feedback">Select a file</span>
               </div>
             </div>
             <div className="form-group row">
@@ -220,71 +223,14 @@ class EditFile extends Component {
           >
             <i className="fa fa-chevron-left"></i> Back
           </NavLink>
-          &nbsp;
-          <button
-            type="button"
-            className="btn btn-primary btn-secondary"
-            onClick={() => this.viewAuditLogs()}
-          >
-            View Audit Logs
-          </button>
         </div>
       </div>
     );
 
-    const auditLogRows = this.props.auditLogs?.map((auditLog) => (
-      <tr key={auditLog.id}>
-        <td>{this.formatDateTime(auditLog.createdDateTime)}</td>
-        <td>{auditLog.userName}</td>
-        <td>{auditLog.action}</td>
-        <td style={{ color: auditLog.highLight.name ? "red" : "" }}>
-          {auditLog.data.name}
-        </td>
-        <td style={{ color: auditLog.highLight.description ? "red" : "" }}>
-          {auditLog.data.description}
-        </td>
-        <td style={{ color: auditLog.highLight.fileName ? "red" : "" }}>
-          {auditLog.data.fileName}
-        </td>
-        <td style={{ color: auditLog.highLight.fileLocation ? "red" : "" }}>
-          {auditLog.data.fileLocation}
-        </td>
-      </tr>
-    ));
-    const auditLogsModal = (
-      <Modal
-        size="xl"
-        show={this.state.showAuditLogsModal}
-        onHide={() => this.setState({ showAuditLogsModal: false })}
-      >
-        <Modal.Body>
-          <div className="table-responsive">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Date Time</th>
-                  <th>User Name</th>
-                  <th>Action</th>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>File Name</th>
-                  <th>File Location</th>
-                </tr>
-              </thead>
-              <tbody>{auditLogRows}</tbody>
-            </table>
-          </div>
-        </Modal.Body>
-      </Modal>
-    );
-
     return this.state.submitted && this.props.saved ? (
-      <Redirect to={"/files"} />
+      <Redirect to={"/files/edit/" + this.props.file.id} />
     ) : (
-      <div>
-        {form}
-        {auditLogsModal}
-      </div>
+      form
     );
   }
 }
@@ -293,18 +239,15 @@ const mapStateToProps = (state) => {
   return {
     file: state.file.file,
     saved: state.file.saved,
-    auditLogs: state.file.auditLogs,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchFile: (id) => dispatch(actions.fetchFile(id)),
     updateFile: (file) => dispatch(actions.updateFile(file)),
     resetFile: () => dispatch(actions.resetFile()),
     saveFile: (file) => dispatch(actions.saveFile(file)),
-    fetchAuditLogs: (file) => dispatch(actions.fetchAuditLogs(file)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditFile);
+export default connect(mapStateToProps, mapDispatchToProps)(UploadFile);

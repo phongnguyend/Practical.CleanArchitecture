@@ -7,7 +7,7 @@ import logo from "../../../logo.svg";
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
 
-class ViewUser extends Component {
+class ViewUser extends Component<any, any> {
   state = {
     user: {
       userName: "",
@@ -184,7 +184,7 @@ class ViewUser extends Component {
             </div>
           ) : null}
           {this.props.postError && !passwordErrors ? (
-            <div class="row alert alert-danger">
+            <div className="row alert alert-danger">
               {this.props.postError?.response?.status}
             </div>
           ) : null}

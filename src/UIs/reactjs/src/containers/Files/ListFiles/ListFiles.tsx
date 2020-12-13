@@ -5,11 +5,30 @@ import { Modal, Button } from "react-bootstrap";
 
 import * as actions from "../actions";
 
-class ListFiles extends Component {
+type Props = {
+  downloadFile: any,
+  fetchFiles: any,
+  deleteFile: any,
+  files: any,
+  errorMessage: any,
+  fetchAuditLogs: any,
+  auditLogs: any,
+}
+
+type State = {
+  pageTitle: string,
+  showDeleteModal: boolean,
+  deletingFile: any,
+  showAuditLogsModal: boolean,
+}
+
+class ListFiles extends Component<Props, State> {
   state = {
     pageTitle: "Files",
     showDeleteModal: false,
-    deletingFile: null,
+    deletingFile: {
+      name: null
+    },
     showAuditLogsModal: false,
   };
 
@@ -27,12 +46,12 @@ class ListFiles extends Component {
   };
 
   deleteCanceled = () => {
-    this.setState({ showDeleteModal: false, deletingFile: null });
+    this.setState({ showDeleteModal: false, deletingFile: {} });
   };
 
   deleteConfirmed = () => {
     this.props.deleteFile(this.state.deletingFile);
-    this.setState({ showDeleteModal: false, deletingFile: null });
+    this.setState({ showDeleteModal: false, deletingFile: {} });
   };
 
   formatDateTime = (value) => {

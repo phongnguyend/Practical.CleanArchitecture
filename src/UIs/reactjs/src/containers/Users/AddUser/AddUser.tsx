@@ -7,7 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
 
-class AddUser extends Component {
+class AddUser extends Component<any, any> {
   state = {
     title: "Add User",
     controls: {
@@ -132,9 +132,7 @@ class AddUser extends Component {
         <div className="card-body">
           {this.state.errorMessage ? (
             <div
-              className="row"
-              hidden="!postError"
-              className="alert alert-danger"
+              className="row alert alert-danger"
             >
               {this.state.errorMessage}
             </div>

@@ -16,13 +16,13 @@ class OidcLoginRedirect extends Component {
           window.location.origin
         );
 
-        const returnUrl = localStorage.getItem("returnUrl");
+        let returnUrl = localStorage.getItem("returnUrl");
         if (returnUrl) {
           localStorage.removeItem("returnUrl");
-          window.location = returnUrl;
         } else {
-          window.location = "/";
+          returnUrl = "/";
         }
+        window.location.href = returnUrl;
       },
       error => {
         console.error(error);

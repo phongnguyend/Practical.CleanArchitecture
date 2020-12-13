@@ -3,6 +3,10 @@ import { UserManager, User, WebStorageStateStore } from "oidc-client";
 import env from "../../environments";
 
 class AuthService {
+  
+  _userManager:any;
+  _user:any;
+
   constructor() {
     var config = {
       authority: env.OpenIdConnect.Authority,

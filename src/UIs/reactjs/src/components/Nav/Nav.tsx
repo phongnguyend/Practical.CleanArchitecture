@@ -4,7 +4,11 @@ import { connect } from "react-redux";
 
 import classes from "./Nav.module.css";
 
-class Nav extends Component {
+type Props = {
+  authService: any
+}
+
+class Nav extends Component<Props> {
   render() {
     const pageTitle = "ClassifiedAds.React";
     return (

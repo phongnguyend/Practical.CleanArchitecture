@@ -6,7 +6,7 @@ import logo from "../../../logo.svg";
 import Star from "../../../components/Star/Star";
 import * as actions from "../actions";
 
-class ViewProduct extends Component {
+class ViewProduct extends Component<any, any> {
   state = {
     product: {
       name: "",

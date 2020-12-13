@@ -5,11 +5,13 @@ import { Modal, Button } from "react-bootstrap";
 
 import * as actions from "../actions";
 
-class ListUsers extends Component {
+class ListUsers extends Component<any, any> {
   state = {
     pageTitle: "Users",
     showDeleteModal: false,
-    deletingUser: null,
+    deletingUser: {
+      userName: null
+    },
   };
 
   deleteUser = (user) => {

@@ -5,55 +5,80 @@ import { connect } from "react-redux";
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
 
-class UploadFile extends Component {
+type Props = {
+  resetProduct: any,
+  match: any,
+  fetchProduct: any,
+  product: any,
+  saveProduct: any,
+  updateProduct: any,
+  saved: any
+}
+
+class AddProduct extends Component<Props, any> {
   state = {
-    title: "Upload File",
+    title: "Add Product",
     controls: {
       name: {
         validation: {
           required: true,
-          minLength: 3,
+          minLength: 3
         },
         error: {
           required: false,
-          minLength: false,
+          minLength: false
         },
         valid: false,
-        touched: false,
+        touched: false
+      },
+      code: {
+        validation: {
+          required: true,
+          maxLength: 10
+        },
+        error: {
+          required: false,
+          maxLength: false
+        },
+        valid: false,
+        touched: false
       },
       description: {
         validation: {
           required: true,
-          maxLength: 100,
+          maxLength: 100
         },
         error: {
           required: false,
-          maxLength: false,
+          maxLength: false
         },
         valid: false,
-        touched: false,
-      },
+        touched: false
+      }
     },
     valid: false,
-    formFile: null,
-    hasFile: false,
     submitted: false,
-    errorMessage: null,
+    errorMessage: null
   };
 
   componentDidMount() {
-    this.props.resetFile();
+    this.props.resetProduct();
+    const id = this.props.match?.params?.id;
+    if (id) {
+      this.setState({ title: "Edit Product" });
+      this.props.fetchProduct(id);
+    }
   }
 
-  fieldChanged = (event) => {
-    const file = {
-      ...this.props.file,
-      [event.target.name]: event.target.value,
+  fieldChanged = event => {
+    const product = {
+      ...this.props.product,
+      [event.target.name]: event.target.value
     };
 
     this.checkFieldValidity(event.target.name, event.target.value);
 
-    this.props.updateFile(file);
+    this.props.updateProduct(product);
   };
 
   checkFieldValidity = (name, value) => {
@@ -61,51 +86,35 @@ class UploadFile extends Component {
     const rules = control.validation;
     const validationRs = checkValidity(value, rules);
 
-    this.setState((preState) => {
+    this.setState(preState => {
       return {
         controls: {
           ...preState.controls,
           [name]: {
             ...preState.controls[name],
             error: validationRs,
-            valid: validationRs.isValid,
-          },
-        },
+            valid: validationRs.isValid
+          }
+        }
       };
     });
 
     return validationRs.isValid;
   };
 
-  handleFileInput = (event) => {
-    var formFile = event.target.files.item(0);
-    this.setState({ formFile: formFile, hasFile: !!formFile });
-    const file = {
-      ...this.props.file,
-      formFile: formFile,
-    };
-    this.props.updateFile(file);
-  };
-
-  onSubmit = (event) => {
+  onSubmit = event => {
     event.preventDefault();
     this.setState({ submitted: true });
     let isValid = true;
     for (let fieldName in this.state.controls) {
       isValid =
-        this.checkFieldValidity(fieldName, this.props.file[fieldName]) &&
+        this.checkFieldValidity(fieldName, this.props.product[fieldName]) &&
         isValid;
     }
 
-    if (isValid && this.state.hasFile) {
-      this.props.saveFile(this.props.file);
+    if (isValid) {
+      this.props.saveProduct(this.props.product);
     }
-  };
-
-  formatDateTime = (value) => {
-    if (!value) return value;
-    var date = new Date(value);
-    return date.toLocaleDateString() + " " + date.toLocaleTimeString();
   };
 
   render() {
@@ -115,9 +124,7 @@ class UploadFile extends Component {
         <div className="card-body">
           {this.state.errorMessage ? (
             <div
-              className="row"
-              hidden="!postError"
-              className="alert alert-danger"
+              className="row alert alert-danger"
             >
               {this.state.errorMessage}
             </div>
@@ -137,8 +144,8 @@ class UploadFile extends Component {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.file?.name}
-                  onChange={(event) => this.fieldChanged(event)}
+                  value={this.props.product?.name}
+                  onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
                   {this.state.controls["name"].error.required ? (
@@ -146,6 +153,33 @@ class UploadFile extends Component {
                   ) : null}
                   {this.state.controls["name"].error.minLength ? (
                     <span>The name must be longer than 3 characters.</span>
+                  ) : null}
+                </span>
+              </div>
+            </div>
+            <div className="form-group row">
+              <label htmlFor="code" className="col-sm-2 col-form-label">
+                Code
+              </label>
+              <div className="col-sm-10">
+                <input
+                  id="code"
+                  name="code"
+                  className={
+                    "form-control " +
+                    (this.state.submitted && !this.state.controls["code"].valid
+                      ? "is-invalid"
+                      : "")
+                  }
+                  value={this.props.product?.code}
+                  onChange={event => this.fieldChanged(event)}
+                />
+                <span className="invalid-feedback">
+                  {this.state.controls["code"].error.required ? (
+                    <span>Enter a code</span>
+                  ) : null}
+                  {this.state.controls["code"].error.maxLength ? (
+                    <span>The code must be less than 10 characters.</span>
                   ) : null}
                 </span>
               </div>
@@ -165,8 +199,8 @@ class UploadFile extends Component {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.file?.description}
-                  onChange={(event) => this.fieldChanged(event)}
+                  value={this.props.product?.description}
+                  onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
                   {this.state.controls["description"].error.required ? (
@@ -176,26 +210,6 @@ class UploadFile extends Component {
                     <span>The code must be less than 100 characters.</span>
                   ) : null}
                 </span>
-              </div>
-            </div>
-            <div className="form-group row">
-              <label htmlFor="formFile" className="col-sm-2 col-form-label">
-                File
-              </label>
-              <div className="col-sm-10">
-                <input
-                  id="formFile"
-                  type="file"
-                  name="formFile"
-                  className={
-                    "form-control " +
-                    (this.state.submitted && !this.state.hasFile
-                      ? "is-invalid"
-                      : "")
-                  }
-                  onChange={this.handleFileInput}
-                />
-                <span className="invalid-feedback">Select a file</span>
               </div>
             </div>
             <div className="form-group row">
@@ -212,46 +226,37 @@ class UploadFile extends Component {
         <div className="card-footer">
           <NavLink
             className="btn btn-outline-secondary"
-            to="/files"
+            to="/products"
             style={{ width: "80px" }}
           >
             <i className="fa fa-chevron-left"></i> Back
           </NavLink>
-          &nbsp;
-          {this.props.file?.id ? (
-            <button
-              type="button"
-              className="btn btn-primary btn-secondary"
-              onClick={() => this.viewAuditLogs()}
-            >
-              View Audit Logs
-            </button>
-          ) : null}
         </div>
       </div>
     );
 
     return this.state.submitted && this.props.saved ? (
-      <Redirect to={"/files/edit/" + this.props.file.id} />
+      <Redirect to={"/products/" + this.props.product.id} />
     ) : (
       form
     );
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    file: state.file.file,
-    saved: state.file.saved,
+    product: state.product.product,
+    saved: state.product.saved
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    updateFile: (file) => dispatch(actions.updateFile(file)),
-    resetFile: () => dispatch(actions.resetFile()),
-    saveFile: (file) => dispatch(actions.saveFile(file)),
+    fetchProduct: id => dispatch(actions.fetchProduct(id)),
+    updateProduct: product => dispatch(actions.updateProduct(product)),
+    resetProduct: () => dispatch(actions.resetProduct()),
+    saveProduct: product => dispatch(actions.saveProduct(product))
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UploadFile);
+export default connect(mapStateToProps, mapDispatchToProps)(AddProduct);

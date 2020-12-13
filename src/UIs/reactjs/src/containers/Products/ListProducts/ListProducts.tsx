@@ -7,12 +7,14 @@ import logo from "../../../logo.svg";
 import * as actions from "../actions";
 import Star from "../../../components/Star/Star";
 
-class ListProducts extends Component {
+class ListProducts extends Component<any, any> {
   state = {
     pageTitle: "Product List",
     showImage: false,
     showDeleteModal: false,
-    deletingProduct: null,
+    deletingProduct: {
+      name: null
+    },
     listFilter: "",
     showAuditLogsModal: false,
   };
