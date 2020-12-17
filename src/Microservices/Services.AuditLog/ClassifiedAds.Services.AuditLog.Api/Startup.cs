@@ -1,7 +1,7 @@
 using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Services.AuditLog.Api.ConfigurationOptions;
-using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -48,11 +48,11 @@ namespace ClassifiedAds.Services.AuditLog
 
             services.AddAuditLogModule(AppSettings.ConnectionStrings.ClassifiedAds);
 
-            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-                .AddIdentityServerAuthentication(options =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
                 {
                     options.Authority = AppSettings.IdentityServerAuthentication.Authority;
-                    options.ApiName = AppSettings.IdentityServerAuthentication.ApiName;
+                    options.Audience = AppSettings.IdentityServerAuthentication.ApiName;
                     options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
                 });
         }

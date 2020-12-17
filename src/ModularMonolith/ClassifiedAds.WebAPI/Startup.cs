@@ -8,7 +8,7 @@ using ClassifiedAds.Modules.Identity.Contracts.Services;
 using ClassifiedAds.Modules.Identity.Repositories;
 using ClassifiedAds.Modules.Identity.Services;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
-using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -90,11 +90,11 @@ namespace ClassifiedAds.WebAPI
                 .PersistKeysToDbContext<IdentityDbContext>()
                 .SetApplicationName("ClassifiedAds");
 
-            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-                .AddIdentityServerAuthentication(options =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
                 {
                     options.Authority = AppSettings.IdentityServerAuthentication.Authority;
-                    options.ApiName = AppSettings.IdentityServerAuthentication.ApiName;
+                    options.Audience = AppSettings.IdentityServerAuthentication.ApiName;
                     options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
                 });
 
