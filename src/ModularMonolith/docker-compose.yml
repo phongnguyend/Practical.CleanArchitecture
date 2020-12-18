@@ -23,8 +23,6 @@ services:
         build:
           context: .
           dockerfile: ./ClassifiedAds.Migrator/Dockerfile
-        volumes:
-            - D:\\ClassifiedAds.ModularMonolith\\Logs\\Migrator:/ClassifiedAds.ModularMonolith/logs
         depends_on:
           - db
         environment:
@@ -39,8 +37,6 @@ services:
           dockerfile: ./ClassifiedAds.IdentityServer/Dockerfile
         ports:
             - "9000:80"
-        volumes:
-            - D:\\ClassifiedAds.ModularMonolith\\Logs\\IdentityServer:/ClassifiedAds.ModularMonolith/logs
         depends_on:
           - db
           - migrator
@@ -60,9 +56,6 @@ services:
           dockerfile: ./ClassifiedAds.WebAPI/Dockerfile
         ports:
             - "9002:80"
-        volumes:
-            - D:\\ClassifiedAds.ModularMonolith\\Logs\\WebAPI:/ClassifiedAds.ModularMonolith/logs
-            - D:\\ClassifiedAds.ModularMonolith\\Files:/files
         depends_on:
           - db
           - migrator
@@ -83,8 +76,6 @@ services:
           dockerfile: ./ClassifiedAds.BackgroundServer/Dockerfile
         ports:
             - "9004:80"
-        volumes:
-            - D:\\ClassifiedAds.ModularMonolith\\Logs\\BackgroundServer:/ClassifiedAds.ModularMonolith/logs
         depends_on:
           - db
           - migrator
