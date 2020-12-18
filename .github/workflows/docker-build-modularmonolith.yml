@@ -13,11 +13,15 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
-
       - name: docker-compose build
         run: |
           cd src/ModularMonolith
           docker-compose build
+      - name: tag
+        run: |
+          docker tag classifiedads.modularmonolith.backgroundserver phongnguyend/classifiedads.modularmonolith.backgroundserver
+          docker tag classifiedads.modularmonolith.migrator phongnguyend/classifiedads.modularmonolith.migrator
+          docker tag classifiedads.modularmonolith.webapi phongnguyend/classifiedads.modularmonolith.webapi
+          docker tag classifiedads.modularmonolith.identityserver phongnguyend/classifiedads.modularmonolith.identityserver
