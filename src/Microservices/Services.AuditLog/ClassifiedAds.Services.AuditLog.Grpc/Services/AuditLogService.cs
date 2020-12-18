@@ -4,6 +4,7 @@ using ClassifiedAds.Services.AuditLog.Grpc;
 using ClassifiedAds.Services.AuditLog.Queries;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -12,6 +13,7 @@ using static ClassifiedAds.Services.AuditLog.Grpc.AuditLog;
 
 namespace ClassifiedAds.Services.Identity.Grpc.Services
 {
+    [Authorize]
     public class AuditLogService : AuditLogBase
     {
         private readonly ILogger<AuditLogService> _logger;

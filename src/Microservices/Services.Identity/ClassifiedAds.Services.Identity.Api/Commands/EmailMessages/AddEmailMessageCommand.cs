@@ -1,7 +1,11 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Infrastructure.Grpc;
 using ClassifiedAds.Infrastructure.Notification.Email;
+using Grpc.Core;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using static ClassifiedAds.Services.Notification.Grpc.Email;
 
 namespace ClassifiedAds.Services.Identity.Commands.EmailMessages
@@ -14,14 +18,22 @@ namespace ClassifiedAds.Services.Identity.Commands.EmailMessages
     public class AddEmailMessageCommandHandler : ICommandHandler<AddEmailMessageCommand>
     {
         private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AddEmailMessageCommandHandler(IConfiguration configuration)
+        public AddEmailMessageCommandHandler(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public void Handle(AddEmailMessageCommand command)
         {
+            var token = _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken).GetAwaiter().GetResult();
+            var headers = new Metadata
+            {
+                { "Authorization", $"Bearer {token}" },
+            };
+
             var client = new EmailClient(ChannelFactory.Create(_configuration["Services:Notification:Grpc"]));
             client.AddEmailMessage(new Notification.Grpc.AddEmailMessageRequest
             {
@@ -34,7 +46,7 @@ namespace ClassifiedAds.Services.Identity.Commands.EmailMessages
                     Subject = command.EmailMessage.Subject,
                     Body = command.EmailMessage.Body,
                 },
-            });
+            }, headers);
         }
     }
 }

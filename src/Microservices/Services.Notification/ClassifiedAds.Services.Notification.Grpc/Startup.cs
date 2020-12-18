@@ -1,6 +1,7 @@
 using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Services.Notification.Api.ConfigurationOptions;
 using ClassifiedAds.Services.Notification.Grpc.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -36,6 +37,15 @@ namespace ClassifiedAds.Services.Notification.Grpc
             services.AddApplicationServices();
 
             services.AddNotificationModule(AppSettings.MessageBroker, AppSettings.Notification, AppSettings.ConnectionStrings.ClassifiedAds);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = AppSettings.IdentityServerAuthentication.Authority;
+                    options.Audience = AppSettings.IdentityServerAuthentication.ApiName;
+                    options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
+                });
+            services.AddAuthorization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +57,9 @@ namespace ClassifiedAds.Services.Notification.Grpc
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

@@ -2,6 +2,7 @@ using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Services.Identity.Api.ConfigurationOptions;
 using ClassifiedAds.Services.Identity.Grpc.Services;
 using ClassifiedAds.Services.Identity.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -42,6 +43,15 @@ namespace ClassifiedAds.Services.Identity.Grpc
             services.AddDataProtection()
                     .PersistKeysToDbContext<IdentityDbContext>()
                     .SetApplicationName("ClassifiedAds");
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.Authority = AppSettings.IdentityServerAuthentication.Authority;
+                        options.Audience = AppSettings.IdentityServerAuthentication.ApiName;
+                        options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
+                    });
+            services.AddAuthorization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +63,9 @@ namespace ClassifiedAds.Services.Identity.Grpc
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

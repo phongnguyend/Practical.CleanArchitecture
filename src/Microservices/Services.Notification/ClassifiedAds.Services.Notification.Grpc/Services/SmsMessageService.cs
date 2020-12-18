@@ -1,11 +1,13 @@
 ﻿using ClassifiedAds.Application;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using static ClassifiedAds.Services.Notification.Grpc.Sms;
 
 namespace ClassifiedAds.Services.Notification.Grpc.Services
 {
+    [Authorize]
     public class SmsMessageService : SmsBase
     {
         private readonly ILogger<SmsMessageService> _logger;
@@ -17,6 +19,7 @@ namespace ClassifiedAds.Services.Notification.Grpc.Services
             _dispatcher = dispatcher;
         }
 
+        [AllowAnonymous]
         public override Task<AddSmsMessageResponse> AddSmsMessage(AddSmsMessageRequest request, ServerCallContext context)
         {
             var message = new Entities.SmsMessage

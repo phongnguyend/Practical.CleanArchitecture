@@ -1,11 +1,13 @@
 ﻿using ClassifiedAds.Application;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using static ClassifiedAds.Services.Notification.Grpc.Email;
 
 namespace ClassifiedAds.Services.Notification.Grpc.Services
 {
+    [Authorize]
     public class EmailMessageService : EmailBase
     {
         private readonly ILogger<EmailMessageService> _logger;
@@ -17,8 +19,11 @@ namespace ClassifiedAds.Services.Notification.Grpc.Services
             _dispatcher = dispatcher;
         }
 
+        [AllowAnonymous]
         public override Task<AddEmailMessageResponse> AddEmailMessage(AddEmailMessageRequest request, ServerCallContext context)
         {
+            /// var user = context.GetHttpContext().User;
+
             var message = new Entities.EmailMessage
             {
                 From = request.Message.From,

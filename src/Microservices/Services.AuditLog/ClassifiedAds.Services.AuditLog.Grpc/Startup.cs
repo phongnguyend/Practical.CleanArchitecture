@@ -1,6 +1,7 @@
 using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Services.AuditLog.Api.ConfigurationOptions;
 using ClassifiedAds.Services.Identity.Grpc.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -36,6 +37,15 @@ namespace ClassifiedAds.Services.AuditLog.Grpc
             services.AddApplicationServices();
 
             services.AddAuditLogModule(AppSettings.ConnectionStrings.ClassifiedAds);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.Authority = AppSettings.IdentityServerAuthentication.Authority;
+                        options.Audience = AppSettings.IdentityServerAuthentication.ApiName;
+                        options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
+                    });
+            services.AddAuthorization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +57,9 @@ namespace ClassifiedAds.Services.AuditLog.Grpc
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

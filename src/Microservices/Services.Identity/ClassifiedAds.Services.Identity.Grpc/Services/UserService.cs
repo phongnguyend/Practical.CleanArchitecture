@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Services.Identity.Queries;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Identity.Grpc.Services
 {
+    [Authorize]
     public class UserService : User.UserBase
     {
         private readonly ILogger<UserService> _logger;
