@@ -1,0 +1,23 @@
+name: Docker Build ModularMonolith
+
+on:
+  push:
+    branches:
+      - test
+    paths:
+      - 'src/ModularMonolith/**'
+
+env:
+  IMAGE_NAME: image
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: docker-compose build
+        run: |
+          cd src/ModularMonolith
+          docker-compose build
