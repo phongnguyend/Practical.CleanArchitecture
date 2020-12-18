@@ -13,11 +13,22 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
-
       - name: docker-compose build
         run: |
           cd src/Microservices
           docker-compose build
+      - name: tag
+        run: |
+          docker tag classifiedads.gateways.webapi phongnguyend/classifiedads.gateways.webapi
+          docker tag classifiedads.services.auditlog.api phongnguyend/classifiedads.services.auditlog.api
+          docker tag classifiedads.services.auditlog.grpc phongnguyend/classifiedads.services.auditlog.grpc
+          docker tag classifiedads.services.identity.api phongnguyend/classifiedads.services.identity.api
+          docker tag classifiedads.services.identity.authserver phongnguyend/classifiedads.services.identity.authserver
+          docker tag classifiedads.services.identity.grpc phongnguyend/classifiedads.services.identity.grpc
+          docker tag classifiedads.services.notification.api phongnguyend/classifiedads.services.notification.api
+          docker tag classifiedads.services.notification.background phongnguyend/classifiedads.services.notification.background
+          docker tag classifiedads.services.notification.grpc phongnguyend/classifiedads.services.notification.grpc
+          docker tag classifiedads.services.product.api phongnguyend/classifiedads.services.product.api
+          docker tag classifiedads.services.storage.api phongnguyend/classifiedads.services.storage.api
