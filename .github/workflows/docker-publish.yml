@@ -1,0 +1,21 @@
+name: Docker
+
+on:
+  push:
+    branches:
+      - test
+
+env:
+  IMAGE_NAME: image
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: docker-compose build
+        run: |
+          cd src/Microservices
+          docker-compose build
