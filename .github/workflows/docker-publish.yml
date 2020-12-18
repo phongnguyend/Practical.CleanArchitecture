@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - test
+    paths:
+      - 'src/Microservices/**'
 
 env:
   IMAGE_NAME: image
