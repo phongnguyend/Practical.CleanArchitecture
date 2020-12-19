@@ -1,0 +1,15 @@
+version: "3.6"
+services:
+    migrator:
+        volumes:
+            - D:\\ClassifiedAds.ModularMonolith\\Logs\\Migrator:/ClassifiedAds.ModularMonolith/logs
+    identityserver:
+        volumes:
+            - D:\\ClassifiedAds.ModularMonolith\\Logs\\IdentityServer:/ClassifiedAds.ModularMonolith/logs
+    webapi:
+        volumes:
+            - D:\\ClassifiedAds.ModularMonolith\\Logs\\WebAPI:/ClassifiedAds.ModularMonolith/logs
+            - D:\\ClassifiedAds.ModularMonolith\\Files:/files
+    backgroundserver:
+        volumes:
+            - D:\\ClassifiedAds.ModularMonolith\\Logs\\BackgroundServer:/ClassifiedAds.ModularMonolith/logs

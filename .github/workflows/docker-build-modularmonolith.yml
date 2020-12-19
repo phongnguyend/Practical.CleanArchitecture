@@ -1,0 +1,50 @@
+name: Docker Build Modular Monolith
+
+on:
+  push:
+    branches:
+      - build
+    paths:
+      - 'src/ModularMonolith/**'
+
+env:
+  IMAGE_NAME: image
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: docker-compose build
+        run: |
+          cd src/ModularMonolith
+          docker-compose build
+      - name: Log into Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+      - name: Tag and Push Images
+        run: |
+          REPO_NAME=docker.pkg.github.com/${{ github.repository }}
+          
+          # Change all uppercase to lowercase
+          REPO_NAME=$(echo $REPO_NAME | tr '[A-Z]' '[a-z]')
+          
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+          
+          echo VERSION=$VERSION
+          
+          docker tag classifiedads.modularmonolith.backgroundserver $REPO_NAME/classifiedads.modularmonolith.backgroundserver:$VERSION
+          docker tag classifiedads.modularmonolith.migrator $REPO_NAME/classifiedads.modularmonolith.migrator:$VERSION
+          docker tag classifiedads.modularmonolith.webapi $REPO_NAME/classifiedads.modularmonolith.webapi:$VERSION
+          docker tag classifiedads.modularmonolith.identityserver $REPO_NAME/classifiedads.modularmonolith.identityserver:$VERSION
+          
+          docker push $REPO_NAME/classifiedads.modularmonolith.backgroundserver:$VERSION
+          docker push $REPO_NAME/classifiedads.modularmonolith.migrator:$VERSION
+          docker push $REPO_NAME/classifiedads.modularmonolith.webapi:$VERSION
+          docker push $REPO_NAME/classifiedads.modularmonolith.identityserver:$VERSION

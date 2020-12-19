@@ -23,8 +23,6 @@ services:
         build:
           context: .
           dockerfile: ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Api/Dockerfile
-        volumes:
-            - D:\\ClassifiedAds.Microservices\\Logs\\AuditLog.Api:/ClassifiedAds.Microservices/logs
         depends_on:
           - db
         environment:
@@ -40,8 +38,6 @@ services:
         build:
           context: .
           dockerfile: ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/Dockerfile
-        volumes:
-            - D:\\ClassifiedAds.Microservices\\Logs\\AuditLog.Grpc:/ClassifiedAds.Microservices/logs
         depends_on:
           - db
         environment:
@@ -58,8 +54,6 @@ services:
         build:
           context: .
           dockerfile: ./Services.Identity/ClassifiedAds.Services.Identity.Api/Dockerfile
-        volumes:
-            - D:\\ClassifiedAds.Microservices\\Logs\\Identity.Api:/ClassifiedAds.Microservices/logs
         depends_on:
           - db
         environment:
@@ -77,8 +71,6 @@ services:
           dockerfile: ./Services.Identity/ClassifiedAds.Services.Identity.AuthServer/Dockerfile
         ports:
           - "9000:80"
-        volumes:
-            - D:\\ClassifiedAds.Microservices\\Logs\\Identity.AuthServer:/ClassifiedAds.Microservices/logs
         depends_on:
           - db
         environment:
@@ -97,8 +89,6 @@ services:
         build:
           context: .
           dockerfile: ./Services.Identity/ClassifiedAds.Services.Identity.Grpc/Dockerfile
-        volumes:
-            - D:\\ClassifiedAds.Microservices\\Logs\\Identity.Grpc:/ClassifiedAds.Microservices/logs
         depends_on:
           - db
         environment:
@@ -115,8 +105,6 @@ services:
         build:
           context: .
           dockerfile: ./Services.Notification/ClassifiedAds.Services.Notification.Api/Dockerfile
-        volumes:
-            - D:\\ClassifiedAds.Microservices\\Logs\\Notification.Api:/ClassifiedAds.Microservices/logs
         depends_on:
           - db
         environment:
@@ -134,8 +122,6 @@ services:
         build:
           context: .
           dockerfile: ./Services.Notification/ClassifiedAds.Services.Notification.Background/Dockerfile
-        volumes:
-            - D:\\ClassifiedAds.Microservices\\Logs\\Notification.Background:/ClassifiedAds.Microservices/logs
         depends_on:
           - db
         environment:
@@ -160,8 +146,6 @@ services:
         build:
           context: .
           dockerfile: ./Services.Notification/ClassifiedAds.Services.Notification.Grpc/Dockerfile
-        volumes:
-            - D:\\ClassifiedAds.Microservices\\Logs\\Notification.Grpc:/ClassifiedAds.Microservices/logs
         depends_on:
           - db
         environment:
@@ -180,8 +164,6 @@ services:
         build:
           context: .
           dockerfile: ./Services.Product/ClassifiedAds.Services.Product.Api/Dockerfile
-        volumes:
-            - D:\\ClassifiedAds.Microservices\\Logs\\Product.Api:/ClassifiedAds.Microservices/logs
         depends_on:
           - db
         environment:
@@ -197,9 +179,6 @@ services:
         build:
           context: .
           dockerfile: ./Services.Storage/ClassifiedAds.Services.Storage.Api/Dockerfile
-        volumes:
-            - D:\\ClassifiedAds.Microservices\\Logs\\Storage.Api:/ClassifiedAds.Microservices/logs
-            - D:\\ClassifiedAds.Microservices\\Files:/files
         depends_on:
           - db
         environment:
@@ -221,8 +200,6 @@ services:
           dockerfile: ./Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI/Dockerfile
         ports:
             - "9002:80"
-        volumes:
-            - D:\\ClassifiedAds.Microservices\\Logs\\WebAPI:/ClassifiedAds.Microservices/logs
         depends_on:
           - db
         environment:

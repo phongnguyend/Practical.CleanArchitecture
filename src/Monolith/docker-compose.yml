@@ -41,8 +41,6 @@ services:
         build:
           context: .
           dockerfile: ./ClassifiedAds.Migrator/Dockerfile
-        volumes:
-            - D:\\ClassifiedAds.Monolith\\Logs\\Migrator:/ClassifiedAds.Monolith/logs
         depends_on:
           - db
         environment:
@@ -57,8 +55,6 @@ services:
           dockerfile: ./ClassifiedAds.IdentityServer/Dockerfile
         ports:
             - "9000:80"
-        volumes:
-            - D:\\ClassifiedAds.Monolith\\Logs\\IdentityServer:/ClassifiedAds.Monolith/logs
         depends_on:
           - db
           - migrator
@@ -79,8 +75,6 @@ services:
           dockerfile: ./ClassifiedAds.NotificationServer/Dockerfile
         ports:
             - "9001:80"
-        volumes:
-            - D:\\ClassifiedAds.Monolith\\Logs\\NotificationServer:/ClassifiedAds.Monolith/logs
         depends_on:
           - db
           - migrator
@@ -94,9 +88,6 @@ services:
           dockerfile: ./ClassifiedAds.WebAPI/Dockerfile
         ports:
             - "9002:80"
-        volumes:
-            - D:\\ClassifiedAds.Monolith\\Logs\\WebAPI:/ClassifiedAds.Monolith/logs
-            - D:\\ClassifiedAds.Monolith\\Files:/files
         depends_on:
           - db
           - migrator
@@ -124,9 +115,6 @@ services:
           dockerfile: ./ClassifiedAds.WebMVC/Dockerfile
         ports:
             - "9003:80"
-        volumes:
-            - D:\\ClassifiedAds.Monolith\\Files:/files
-            - D:\\ClassifiedAds.Monolith\\Logs\\WebMVC:/ClassifiedAds.Monolith/logs
         depends_on:
           - db
           - migrator
@@ -170,8 +158,6 @@ services:
           dockerfile: ./ClassifiedAds.BlazorServerSide/Dockerfile
         ports:
             - "9008:80"
-        volumes:
-            - D:\\ClassifiedAds.Monolith\\Logs\\BlazorServerSide:/ClassifiedAds.Monolith/logs
         depends_on:
           - identityserver
           - webapi
@@ -191,8 +177,6 @@ services:
           dockerfile: ./ClassifiedAds.BackgroundServer/Dockerfile
         ports:
             - "9004:80"
-        volumes:
-            - D:\\ClassifiedAds.Monolith\\Logs\\BackgroundServer:/ClassifiedAds.Monolith/logs
         depends_on:
           - db
           - migrator
@@ -223,8 +207,6 @@ services:
           dockerfile: ./ClassifiedAds.GraphQL/Dockerfile
         ports:
             - "9006:80"
-        volumes:
-            - D:\\ClassifiedAds.Monolith\\Logs\\GraphQL:/ClassifiedAds.Monolith/logs
         depends_on:
           - webapi
         environment:

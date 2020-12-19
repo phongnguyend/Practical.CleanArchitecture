@@ -1,0 +1,64 @@
+name: Docker Build Microservices
+
+on:
+  push:
+    branches:
+      - build
+    paths:
+      - 'src/Microservices/**'
+
+env:
+  IMAGE_NAME: image
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: docker-compose build
+        run: |
+          cd src/Microservices
+          docker-compose build
+      - name: Log into Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+      - name: Tag and Push Images
+        run: |
+          REPO_NAME=docker.pkg.github.com/${{ github.repository }}
+          
+          # Change all uppercase to lowercase
+          REPO_NAME=$(echo $REPO_NAME | tr '[A-Z]' '[a-z]')
+          
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+          
+          echo VERSION=$VERSION
+          
+          docker tag classifiedads.gateways.webapi $REPO_NAME/classifiedads.gateways.webapi:$VERSION
+          docker tag classifiedads.services.auditlog.api $REPO_NAME/classifiedads.services.auditlog.api:$VERSION
+          docker tag classifiedads.services.auditlog.grpc $REPO_NAME/classifiedads.services.auditlog.grpc:$VERSION
+          docker tag classifiedads.services.identity.api $REPO_NAME/classifiedads.services.identity.api:$VERSION
+          docker tag classifiedads.services.identity.authserver $REPO_NAME/classifiedads.services.identity.authserver:$VERSION
+          docker tag classifiedads.services.identity.grpc $REPO_NAME/classifiedads.services.identity.grpc:$VERSION
+          docker tag classifiedads.services.notification.api $REPO_NAME/classifiedads.services.notification.api:$VERSION
+          docker tag classifiedads.services.notification.background $REPO_NAME/classifiedads.services.notification.background:$VERSION
+          docker tag classifiedads.services.notification.grpc $REPO_NAME/classifiedads.services.notification.grpc:$VERSION
+          docker tag classifiedads.services.product.api $REPO_NAME/classifiedads.services.product.api:$VERSION
+          docker tag classifiedads.services.storage.api $REPO_NAME/classifiedads.services.storage.api:$VERSION
+          
+          docker push $REPO_NAME/classifiedads.gateways.webapi:$VERSION
+          docker push $REPO_NAME/classifiedads.services.auditlog.api:$VERSION
+          docker push $REPO_NAME/classifiedads.services.auditlog.grpc:$VERSION
+          docker push $REPO_NAME/classifiedads.services.identity.api:$VERSION
+          docker push $REPO_NAME/classifiedads.services.identity.authserver:$VERSION
+          docker push $REPO_NAME/classifiedads.services.identity.grpc:$VERSION
+          docker push $REPO_NAME/classifiedads.services.notification.api:$VERSION
+          docker push $REPO_NAME/classifiedads.services.notification.background:$VERSION
+          docker push $REPO_NAME/classifiedads.services.notification.grpc:$VERSION
+          docker push $REPO_NAME/classifiedads.services.product.api:$VERSION
+          docker push $REPO_NAME/classifiedads.services.storage.api:$VERSION

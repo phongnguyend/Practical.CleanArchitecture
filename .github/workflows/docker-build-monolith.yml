@@ -1,0 +1,58 @@
+name: Docker Build Monolith
+
+on:
+  push:
+    branches:
+      - build
+    paths:
+      - 'src/Monolith/**'
+
+env:
+  IMAGE_NAME: image
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: docker-compose build
+        run: |
+          cd src/Monolith
+          docker-compose build
+      - name: Log into Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+      - name: Tag and Push Images
+        run: |
+          REPO_NAME=docker.pkg.github.com/${{ github.repository }}
+          
+          # Change all uppercase to lowercase
+          REPO_NAME=$(echo $REPO_NAME | tr '[A-Z]' '[a-z]')
+          
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+          
+          echo VERSION=$VERSION
+          
+          docker tag classifiedads.backgroundserver $REPO_NAME/classifiedads.backgroundserver:$VERSION
+          docker tag classifiedads.migrator $REPO_NAME/classifiedads.migrator:$VERSION
+          docker tag classifiedads.notificationserver $REPO_NAME/classifiedads.notificationserver:$VERSION
+          docker tag classifiedads.webapi $REPO_NAME/classifiedads.webapi:$VERSION
+          docker tag classifiedads.graphql $REPO_NAME/classifiedads.graphql:$VERSION
+          docker tag classifiedads.blazor $REPO_NAME/classifiedads.blazor:$VERSION
+          docker tag classifiedads.identityserver $REPO_NAME/classifiedads.identityserver:$VERSION
+          docker tag classifiedads.webmvc $REPO_NAME/classifiedads.webmvc:$VERSION
+          
+          docker push $REPO_NAME/classifiedads.backgroundserver:$VERSION
+          docker push $REPO_NAME/classifiedads.migrator:$VERSION
+          docker push $REPO_NAME/classifiedads.notificationserver:$VERSION
+          docker push $REPO_NAME/classifiedads.webapi:$VERSION
+          docker push $REPO_NAME/classifiedads.graphql:$VERSION
+          docker push $REPO_NAME/classifiedads.blazor:$VERSION
+          docker push $REPO_NAME/classifiedads.identityserver:$VERSION
+          docker push $REPO_NAME/classifiedads.webmvc:$VERSION
