@@ -21,11 +21,23 @@ jobs:
           docker-compose build
       - name: tag
         run: |
-          docker tag classifiedads.backgroundserver phongnguyend/classifiedads.backgroundserver
-          docker tag classifiedads.migrator phongnguyend/classifiedads.migrator
-          docker tag classifiedads.notificationserver phongnguyend/classifiedads.notificationserver
-          docker tag classifiedads.webapi phongnguyend/classifiedads.webapi
-          docker tag classifiedads.graphql phongnguyend/classifiedads.graphql
-          docker tag classifiedads.blazor phongnguyend/classifiedads.blazor
-          docker tag classifiedads.identityserver phongnguyend/classifiedads.identityserver
-          docker tag classifiedads.webmvc phongnguyend/classifiedads.webmvc
+          docker tag classifiedads.backgroundserver docker.pkg.github.com/${{ github.repository }}/classifiedads.backgroundserver
+          docker tag classifiedads.migrator docker.pkg.github.com/${{ github.repository }}/classifiedads.migrator
+          docker tag classifiedads.notificationserver docker.pkg.github.com/${{ github.repository }}/classifiedads.notificationserver
+          docker tag classifiedads.webapi docker.pkg.github.com/${{ github.repository }}/classifiedads.webapi
+          docker tag classifiedads.graphql docker.pkg.github.com/${{ github.repository }}/classifiedads.graphql
+          docker tag classifiedads.blazor docker.pkg.github.com/${{ github.repository }}/classifiedads.blazor
+          docker tag classifiedads.identityserver docker.pkg.github.com/${{ github.repository }}/classifiedads.identityserver
+          docker tag classifiedads.webmvc docker.pkg.github.com/${{ github.repository }}/classifiedads.webmvc
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+      - name: Push image
+        run: |
+          docker push docker.pkg.github.com/${{ github.repository }}/classifiedads.backgroundserver
+          docker push docker.pkg.github.com/${{ github.repository }}/classifiedads.migrator
+          docker push docker.pkg.github.com/${{ github.repository }}/classifiedads.notificationserver
+          docker push docker.pkg.github.com/${{ github.repository }}/classifiedads.webapi
+          docker push docker.pkg.github.com/${{ github.repository }}/classifiedads.graphql
+          docker push docker.pkg.github.com/${{ github.repository }}/classifiedads.blazor
+          docker push docker.pkg.github.com/${{ github.repository }}/classifiedads.identityserver
+          docker push docker.pkg.github.com/${{ github.repository }}/classifiedads.webmvc
