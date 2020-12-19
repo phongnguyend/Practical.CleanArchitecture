@@ -3,7 +3,7 @@ name: Docker Build Microservices
 on:
   push:
     branches:
-      - test
+      - build
     paths:
       - 'src/Microservices/**'
 
