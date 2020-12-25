@@ -20,5 +20,7 @@ namespace ClassifiedAds.Blazor.Modules.Files.Models
         public string FileName { get; set; }
 
         public string FileLocation { get; set; }
+
+        public bool Encrypted { get; set; }
     }
 }

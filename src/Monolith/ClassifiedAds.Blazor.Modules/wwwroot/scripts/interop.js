@@ -35,6 +35,7 @@ interop.uploadFile = function (url, token, file, dotNetObj) {
     formData.append("formFile", this.selectedFile);
     formData.append("name", file.name);
     formData.append("description", file.description);
+    formData.append("encrypted", file.encrypted);
 
     const promise = axios.post(url, formData, {
         headers: {

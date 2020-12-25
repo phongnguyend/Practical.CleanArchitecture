@@ -34,6 +34,7 @@ export function* saveFileSaga(action) {
       formData.append("formFile", action.file.formFile);
       formData.append("name", action.file.name);
       formData.append("description", action.file.description);
+      formData.append("encrypted", action.file.encrypted.toString());
     }
     const response = action.file.id
       ? yield axios.put(action.file.id, action.file)

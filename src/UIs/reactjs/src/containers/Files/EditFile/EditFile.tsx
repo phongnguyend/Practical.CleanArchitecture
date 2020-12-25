@@ -7,16 +7,16 @@ import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
 
 type Props = {
-  resetFile: any,
-  match: any,
-  file: any,
-  fetchFile: any,
-  updateFile: any,
-  saveFile: any,
-  fetchAuditLogs: any,
-  auditLogs: any,
-  saved: any
-}
+  resetFile: any;
+  match: any;
+  file: any;
+  fetchFile: any;
+  updateFile: any;
+  saveFile: any;
+  fetchAuditLogs: any;
+  auditLogs: any;
+  saved: any;
+};
 
 class EditFile extends Component<Props, any> {
   state = {
@@ -135,9 +135,7 @@ class EditFile extends Component<Props, any> {
         <div className="card-header">{this.state.title}</div>
         <div className="card-body">
           {this.state.errorMessage ? (
-            <div
-              className="row alert alert-danger"
-            >
+            <div className="row alert alert-danger">
               {this.state.errorMessage}
             </div>
           ) : null}
@@ -208,6 +206,20 @@ class EditFile extends Component<Props, any> {
                   className="form-control"
                   disabled
                   value={this.props.file?.fileName}
+                />
+              </div>
+            </div>
+            <div className="form-group row">
+              <label htmlFor="encrypted" className="col-sm-2 col-form-label">
+                Encrypted
+              </label>
+              <div className="col-sm-10">
+                <input
+                  type="checkbox"
+                  id="encrypted"
+                  name="encrypted"
+                  disabled
+                  checked={this.props.file?.encrypted}
                 />
               </div>
             </div>

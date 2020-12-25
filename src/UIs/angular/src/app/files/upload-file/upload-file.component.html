@@ -1,7 +1,5 @@
 <div class="card">
-  <div class="card-header">
-    Upload File
-  </div>
+  <div class="card-header">Upload File</div>
   <div class="card-body">
     <div class="row" [hidden]="!postError" class="alert alert-danger">
       {{ postErrorMessage }}
@@ -20,9 +18,7 @@
             (blur)="onBlur(nameField)"
             [class.is-invalid]="form.submitted && nameField.invalid"
           />
-          <span class="invalid-feedback">
-            Enter a name
-          </span>
+          <span class="invalid-feedback"> Enter a name </span>
         </div>
       </div>
       <div class="form-group row">
@@ -40,9 +36,7 @@
             (blur)="onBlur(descriptionField)"
             [class.is-invalid]="form.submitted && descriptionField.invalid"
           />
-          <span class="invalid-feedback">
-            Enter a description
-          </span>
+          <span class="invalid-feedback"> Enter a description </span>
         </div>
       </div>
       <div class="form-group row">
@@ -57,9 +51,18 @@
             (change)="handleFileInput($event.target.files)"
             [class.is-invalid]="form.submitted && !file.formFile"
           />
-          <span class="invalid-feedback">
-            Select a file
-          </span>
+          <span class="invalid-feedback"> Select a file </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="encrypted" class="col-sm-2 col-form-label">Encrypted</label>
+        <div class="col-sm-10">
+          <input
+            type="checkbox"
+            id="encrypted"
+            name="encrypted"
+            [(ngModel)]="file.encrypted"
+          />
         </div>
       </div>
       <div class="form-group row">
@@ -74,7 +77,7 @@
     <a
       class="btn btn-outline-secondary"
       [routerLink]="['/files']"
-      style="width: 80px;"
+      style="width: 80px"
     >
       <i class="fa fa-chevron-left"></i> Back
     </a>

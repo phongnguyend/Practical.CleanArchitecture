@@ -1,8 +1,10 @@
 <template>
   <div class="card">
-    <div class="card-header">{{title}}</div>
+    <div class="card-header">{{ title }}</div>
     <div class="card-body">
-      <div class="alert alert-danger" v-show="postError">{{ postErrorMessage }}</div>
+      <div class="alert alert-danger" v-show="postError">
+        {{ postErrorMessage }}
+      </div>
       <form @submit.prevent="onSubmit">
         <div class="form-group row">
           <label for="name" class="col-sm-2 col-form-label">Name</label>
@@ -12,30 +14,40 @@
               name="name"
               class="form-control"
               v-model="file.name"
-              :class="{'is-invalid': isSubmitted && $v.file.name.$invalid}"
+              :class="{ 'is-invalid': isSubmitted && $v.file.name.$invalid }"
               @input="$v.file.name.$touch()"
             />
-            {{$v.name}}
+            {{ $v.name }}
             <span class="invalid-feedback">
               <span v-if="!$v.file.name.required">Enter a name</span>
-              <span v-if="!$v.file.name.minLength">The name must be longer than 3 characters.</span>
+              <span v-if="!$v.file.name.minLength"
+                >The name must be longer than 3 characters.</span
+              >
             </span>
           </div>
         </div>
         <div class="form-group row">
-          <label for="description" class="col-sm-2 col-form-label">Description</label>
+          <label for="description" class="col-sm-2 col-form-label"
+            >Description</label
+          >
           <div class="col-sm-10">
             <input
               id="description"
               name="description"
               class="form-control"
               v-model="file.description"
-              :class=" {'is-invalid': isSubmitted && $v.file.description.$invalid}"
+              :class="{
+                'is-invalid': isSubmitted && $v.file.description.$invalid
+              }"
               @input="$v.file.description.$touch()"
             />
             <span class="invalid-feedback">
-              <span v-if="!$v.file.description.required">Enter a description</span>
-              <span v-if="!$v.file.description.maxLength">The code must be less than 100 characters.</span>
+              <span v-if="!$v.file.description.required"
+                >Enter a description</span
+              >
+              <span v-if="!$v.file.description.maxLength"
+                >The code must be less than 100 characters.</span
+              >
             </span>
           </div>
         </div>
@@ -47,12 +59,25 @@
               id="formFile"
               name="formFile"
               class="form-control"
-              :class=" {'is-invalid': isSubmitted && !hasFile}"
+              :class="{ 'is-invalid': isSubmitted && !hasFile }"
               @change="handleFileInput($event.target.files)"
             />
             <span class="invalid-feedback">
               <span>Select a file</span>
             </span>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="encrypted" class="col-sm-2 col-form-label"
+            >Encrypted</label
+          >
+          <div class="col-sm-10">
+            <input
+              type="checkbox"
+              id="encrypted"
+              name="encrypted"
+              v-model="file.encrypted"
+            />
           </div>
         </div>
         <div class="form-group row">
@@ -64,7 +89,11 @@
       </form>
     </div>
     <div class="card-footer">
-      <router-link class="btn btn-outline-secondary" to="/files" style="width:80px">
+      <router-link
+        class="btn btn-outline-secondary"
+        to="/files"
+        style="width:80px"
+      >
         <i class="fa fa-chevron-left"></i> Back
       </router-link>
     </div>
@@ -78,11 +107,11 @@ import axios from "./axios";
 export default {
   data() {
     return {
-      file: { name: "", description: "" },
+      file: { name: "", description: "", encrypted: false },
       postError: false,
       postErrorMessage: "",
       isSubmitted: false,
-      hasFile: false,
+      hasFile: false
     };
   },
   computed: {
@@ -91,16 +120,16 @@ export default {
     },
     id() {
       return this.$route.params.id;
-    },
+    }
   },
   validations: {
     file: {
       name: {
         required,
-        minLength: minLength(3),
+        minLength: minLength(3)
       },
-      description: { required, maxLength: maxLength(100) },
-    },
+      description: { required, maxLength: maxLength(100) }
+    }
   },
   methods: {
     handleFileInput(files) {
@@ -116,15 +145,16 @@ export default {
       formData.append("formFile", this.file.formFile);
       formData.append("name", this.file.name);
       formData.append("description", this.file.description);
+      formData.append("encrypted", this.file.encrypted.toString());
       const promise = axios.post("", formData);
 
-      promise.then((rs) => {
+      promise.then(rs => {
         const id = rs.data.id;
         this.$router.push("/files/edit/" + id);
       });
-    },
+    }
   },
-  created() {},
+  created() {}
 };
 </script>
 <style scoped>

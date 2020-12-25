@@ -100,7 +100,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             var fileEntry = _dispatcher.Dispatch(new GetEntityByIdQuery<FileEntry> { Id = id });
 
             var rawData = _fileManager.Read(fileEntry);
-            var content = fileEntry.Encrypted
+            var content = fileEntry.Encrypted && fileEntry.FileLocation != "Fake.txt"
                 ? rawData
                 .UseAES(fileEntry.EncryptionKey.FromBase64String())
                 .WithCipher(CipherMode.ECB)

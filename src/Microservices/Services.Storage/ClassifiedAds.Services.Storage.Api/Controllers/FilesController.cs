@@ -101,7 +101,7 @@ namespace ClassifiedAds.Services.Storage.Controllers
             var fileEntry = _dispatcher.Dispatch(new GetEntityByIdQuery<FileEntry> { Id = id });
 
             var rawData = _fileManager.Read(fileEntry.ToFileEntryDTO());
-            var content = fileEntry.Encrypted
+            var content = fileEntry.Encrypted && fileEntry.FileLocation != "Fake.txt"
                 ? rawData
                 .UseAES(fileEntry.EncryptionKey.FromBase64String())
                 .WithCipher(CipherMode.ECB)

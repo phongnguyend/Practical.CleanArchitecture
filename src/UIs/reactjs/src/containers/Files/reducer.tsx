@@ -7,6 +7,7 @@ const initialState = {
     name: "",
     description: "",
     fileName: "",
+    encrypted: false,
   },
   auditLogs: [],
   loading: false,

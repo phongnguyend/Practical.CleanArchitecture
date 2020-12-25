@@ -20,6 +20,7 @@ export class EditFileComponent implements OnInit {
     fileName: null,
     size: 0,
     formFile: null,
+    encrypted: false,
   };
   postErrorMessage: string = "";
   postError = false;

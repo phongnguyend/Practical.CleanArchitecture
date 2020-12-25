@@ -46,6 +46,7 @@ namespace ClassifiedAds.Blazor.Modules.Files.Services
             form.Add(fileContent, "formFile", fileEntryModel.FileName);
             form.Add(new StringContent(fileEntryModel.Name), "name");
             form.Add(new StringContent(fileEntryModel.Description), "description");
+            form.Add(new StringContent(fileEntryModel.Encrypted.ToString()), "encrypted");
 
             await SetBearerToken();
 

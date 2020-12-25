@@ -15,7 +15,7 @@ namespace ClassifiedAds.Infrastructure.Storages.Local
 
         public void Create(FileEntry fileEntry, Stream stream)
         {
-            var trustedFileNameForFileStorage = Path.GetRandomFileName();
+            var trustedFileNameForFileStorage = fileEntry.Id.ToString();
             var filePath = Path.Combine(_rootPath, trustedFileNameForFileStorage);
 
             using (var fileStream = File.Create(filePath))

@@ -6,4 +6,5 @@ export interface IFile {
   uploadedTime: Date;
   fileName: string;
   formFile: File;
+  encrypted: boolean;
 }

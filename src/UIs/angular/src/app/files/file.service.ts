@@ -32,6 +32,7 @@ export class FileService {
     formData.append("formFile", file.formFile);
     formData.append("name", file.name);
     formData.append("description", file.description);
+    formData.append("encrypted", file.encrypted.toString());
     return this.http
       .post<IFile>(this.fileUrl, formData)
       .pipe(catchError(this.handleError));

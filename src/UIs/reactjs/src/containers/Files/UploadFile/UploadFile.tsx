@@ -6,12 +6,12 @@ import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
 
 type Props = {
-  resetFile: any,
-  file: any,
-  updateFile: any,
-  saveFile: any,
-  saved: any
-}
+  resetFile: any;
+  file: any;
+  updateFile: any;
+  saveFile: any;
+  saved: any;
+};
 
 class UploadFile extends Component<Props, any> {
   state = {
@@ -54,18 +54,26 @@ class UploadFile extends Component<Props, any> {
   }
 
   fieldChanged = (event) => {
+    let value = event.target.value;
+
+    if (event.target.type == "checkbox") {
+      value = event.target.checked;
+    }
+
     const file = {
       ...this.props.file,
-      [event.target.name]: event.target.value,
+      [event.target.name]: value,
     };
 
-    this.checkFieldValidity(event.target.name, event.target.value);
+    this.checkFieldValidity(event.target.name, value);
 
     this.props.updateFile(file);
   };
 
   checkFieldValidity = (name, value) => {
     const control = this.state.controls[name];
+    if (!control) return true;
+
     const rules = control.validation;
     const validationRs = checkValidity(value, rules);
 
@@ -122,9 +130,7 @@ class UploadFile extends Component<Props, any> {
         <div className="card-header">{this.state.title}</div>
         <div className="card-body">
           {this.state.errorMessage ? (
-            <div
-              className="row alert alert-danger"
-            >
+            <div className="row alert alert-danger">
               {this.state.errorMessage}
             </div>
           ) : null}
@@ -202,6 +208,20 @@ class UploadFile extends Component<Props, any> {
                   onChange={this.handleFileInput}
                 />
                 <span className="invalid-feedback">Select a file</span>
+              </div>
+            </div>
+            <div className="form-group row">
+              <label htmlFor="encrypted" className="col-sm-2 col-form-label">
+                Encrypted
+              </label>
+              <div className="col-sm-10">
+                <input
+                  type="checkbox"
+                  id="encrypted"
+                  name="encrypted"
+                  checked={this.props.file?.encrypted}
+                  onChange={(event) => this.fieldChanged(event)}
+                />
               </div>
             </div>
             <div className="form-group row">
