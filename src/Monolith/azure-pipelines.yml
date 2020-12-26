@@ -1,0 +1,51 @@
+# Docker
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+  # Container registry service connection established during pipeline creation
+  azureSubscription: 'Visual Studio Enterprise – MPN(00000000-0000-0000-0000-000000000000)'
+  azureContainerRegistry: '{"loginServer":"classifiedads.azurecr.io", "id" : "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/ClassifiedAds_DEV/providers/Microsoft.ContainerRegistry/registries/classifiedads"}'
+  dockerComposeFile: 'src/Monolith/docker-compose.yml'
+  tag: '$(Build.BuildId)'
+  
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:  
+  - job: Build
+    displayName: Build and Push
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: DockerCompose@0
+      displayName: Build services
+      inputs:
+        containerregistrytype: 'Azure Container Registry'
+        azureSubscription: $(azureSubscription)
+        azureContainerRegistry: $(azureContainerRegistry)
+        dockerComposeFile: $(dockerComposeFile)
+        action: 'Build services'
+        projectName: $(Build.Repository.Name)
+        qualifyImageNames: true
+        additionalImageTags: $(Build.BuildId)
+    - task: DockerCompose@0
+      displayName: Push services
+      inputs:
+        containerregistrytype: 'Azure Container Registry'
+        azureSubscription: $(azureSubscription)
+        azureContainerRegistry: $(azureContainerRegistry)
+        dockerComposeFile: $(dockerComposeFile)
+        action: 'Push services'
+        projectName: $(Build.Repository.Name)
+        qualifyImageNames: true
+        additionalImageTags: $(Build.BuildId)
