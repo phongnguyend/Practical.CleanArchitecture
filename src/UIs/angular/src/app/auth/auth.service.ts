@@ -6,7 +6,7 @@ import { IUser } from "./user.model";
 import { environment } from "src/environments/environment";
 
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class AuthService {
   private _userManager: UserManager;
@@ -18,16 +18,16 @@ export class AuthService {
       client_id: environment.OpenIdConnect.ClientId,
       redirect_uri: `${environment.CurrentUrl}oidc-login-redirect`,
       scope: "openid profile ClassifiedAds.WebAPI",
-      response_type: "id_token token",
+      response_type: "code",
       post_logout_redirect_uri: `${environment.CurrentUrl}?postLogout=true`,
-      userStore: new WebStorageStateStore({ store: window.localStorage })
+      userStore: new WebStorageStateStore({ store: window.localStorage }),
     };
     this._userManager = new UserManager(config);
   }
 
   loadUser() {
     var promise = this._userManager.getUser();
-    promise.then(user => {
+    promise.then((user) => {
       if (user && !user.expired) {
         this._user = user;
       }
@@ -62,7 +62,7 @@ export class AuthService {
       id: this._user.profile.sub,
       userName: "phongnguyend",
       firstName: "Phong",
-      lastName: "Nguyen"
+      lastName: "Nguyen",
     };
   }
 
@@ -70,5 +70,5 @@ export class AuthService {
     return this.isLoggedIn();
   }
 
-  updateCurrentUser(firstName: string, lastName: string) { }
+  updateCurrentUser(firstName: string, lastName: string) {}
 }

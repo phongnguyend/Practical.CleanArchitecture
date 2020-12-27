@@ -2,7 +2,8 @@ import { UserManager, User, WebStorageStateStore } from "oidc-client";
 import React, { Component } from "react";
 
 var config = {
-  userStore: new WebStorageStateStore({ store: window.localStorage })
+  userStore: new WebStorageStateStore({ store: window.localStorage }),
+  response_mode: "query",
 };
 var mgr = new UserManager(config);
 
@@ -24,14 +25,14 @@ class OidcLoginRedirect extends Component {
         }
         window.location.href = returnUrl;
       },
-      error => {
+      (error) => {
         console.error(error);
       }
     );
   }
 
   render() {
-    return (<div>Loading ...</div>);
+    return <div>Loading ...</div>;
   }
 }
 

@@ -161,7 +161,9 @@ namespace Microsoft.Extensions.DependencyInjection
                     {
                         ClientId = "ClassifiedAds.Angular",
                         ClientName = "ClassifiedAds Angular",
-                        AllowedGrantTypes = GrantTypes.Implicit,
+                        AllowedGrantTypes = GrantTypes.Code,
+                        RequireClientSecret = false,
+                        RequirePkce = true,
                         AllowAccessTokensViaBrowser = true,
                         RedirectUris =
                         {
@@ -186,7 +188,6 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
-                        RequirePkce = false,
                         RequireConsent = true,
                     });
                 }
@@ -197,7 +198,9 @@ namespace Microsoft.Extensions.DependencyInjection
                     {
                         ClientId = "ClassifiedAds.React",
                         ClientName = "ClassifiedAds React",
-                        AllowedGrantTypes = GrantTypes.Implicit,
+                        AllowedGrantTypes = GrantTypes.Code,
+                        RequireClientSecret = false,
+                        RequirePkce = true,
                         AllowAccessTokensViaBrowser = true,
                         RedirectUris =
                         {
@@ -222,7 +225,6 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
-                        RequirePkce = false,
                         RequireConsent = true,
                     });
                 }
@@ -233,7 +235,9 @@ namespace Microsoft.Extensions.DependencyInjection
                     {
                         ClientId = "ClassifiedAds.Vue",
                         ClientName = "ClassifiedAds Vue",
-                        AllowedGrantTypes = GrantTypes.Implicit,
+                        AllowedGrantTypes = GrantTypes.Code,
+                        RequireClientSecret = false,
+                        RequirePkce = true,
                         AllowAccessTokensViaBrowser = true,
                         RedirectUris =
                         {
@@ -258,7 +262,6 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
-                        RequirePkce = false,
                         RequireConsent = true,
                     });
                 }
