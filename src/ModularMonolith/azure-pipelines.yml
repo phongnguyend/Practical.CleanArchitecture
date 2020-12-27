@@ -19,8 +19,23 @@ variables:
   vmImageName: 'ubuntu-latest'
 
 stages:
+- stage: WhiteSourceBolt
+  displayName: Build and Run WhiteSource Bolt
+  jobs:  
+  - job: WhiteSourceBolt
+    displayName: Build and Run WhiteSource Bolt
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'build'
+        projects: 'src/ModularMonolith/ClassifiedAds.ModularMonolith.sln'
+    - task: WhiteSource Bolt@20
+      inputs:
+        cwd: 'src/ModularMonolith/'
 - stage: Build
-  displayName: Build and push stage
+  displayName: Build and Push Docker Images
   jobs:  
   - job: Build
     displayName: Build and Push
