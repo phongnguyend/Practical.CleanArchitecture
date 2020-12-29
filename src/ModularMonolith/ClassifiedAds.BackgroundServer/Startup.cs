@@ -109,7 +109,7 @@ namespace ClassifiedAds.BackgroundServer
 
             var notification = serviceProvider.GetService<IWebNotification<SendTaskStatusMessage>>();
 
-            fileUploadedMessageQueueReceiver?.Receive(data =>
+            fileUploadedMessageQueueReceiver?.Receive((data, metaData) =>
             {
                 Thread.Sleep(5000); // simulate long running task
 
@@ -118,7 +118,7 @@ namespace ClassifiedAds.BackgroundServer
                 notification.Send(new SendTaskStatusMessage { Step = $"{AppSettings.MessageBroker.Provider} - File Uploaded", Message = message });
             });
 
-            fileDeletedMessageQueueReceiver?.Receive(data =>
+            fileDeletedMessageQueueReceiver?.Receive((data, metaData) =>
             {
                 Thread.Sleep(5000); // simulate long running task
 
@@ -129,7 +129,7 @@ namespace ClassifiedAds.BackgroundServer
 
             var emailMessageService = serviceProvider.GetService<EmailMessageService>();
 
-            emailMessageCreatedMessageQueueReceiver?.Receive(data =>
+            emailMessageCreatedMessageQueueReceiver?.Receive((data, metaData) =>
             {
                 string message = data.Id.ToString();
 
@@ -145,7 +145,7 @@ namespace ClassifiedAds.BackgroundServer
 
             var smsMessageService = serviceProvider.GetService<SmsMessageService>();
 
-            smsMessageCreatedMessageQueueReceiver?.Receive(data =>
+            smsMessageCreatedMessageQueueReceiver?.Receive((data, metaData) =>
             {
                 string message = data.Id.ToString();
 

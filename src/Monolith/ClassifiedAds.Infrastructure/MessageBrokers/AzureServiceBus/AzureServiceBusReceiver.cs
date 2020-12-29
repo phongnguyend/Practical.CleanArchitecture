@@ -21,7 +21,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus
             _queueClient = new QueueClient(_connectionString, _queueName);
         }
 
-        public void Receive(Action<T> action)
+        public void Receive(Action<T, MetaData> action)
         {
             var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
             {
@@ -31,8 +31,8 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus
 
             _queueClient.RegisterMessageHandler((Message message, CancellationToken token) =>
             {
-                var data = Encoding.UTF8.GetString(message.Body);
-                action(JsonConvert.DeserializeObject<T>(data));
+                var data = JsonConvert.DeserializeObject<Message<T>>(Encoding.UTF8.GetString(message.Body));
+                action(data.Data, data.MetaData);
                 return _queueClient.CompleteAsync(message.SystemProperties.LockToken);
             }, messageHandlerOptions);
         }

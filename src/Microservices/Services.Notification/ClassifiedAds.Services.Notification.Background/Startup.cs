@@ -64,7 +64,7 @@ namespace ClassifiedAds.Services.Notification.Background
 
             var emailMessageService = serviceProvider.GetService<EmailMessageService>();
 
-            emailMessageCreatedMessageQueueReceiver?.Receive(data =>
+            emailMessageCreatedMessageQueueReceiver?.Receive((data, metaData) =>
             {
                 string message = data.Id.ToString();
 
@@ -79,7 +79,7 @@ namespace ClassifiedAds.Services.Notification.Background
 
             var smsMessageService = serviceProvider.GetService<SmsMessageService>();
 
-            smsMessageCreatedMessageQueueReceiver?.Receive(data =>
+            smsMessageCreatedMessageQueueReceiver?.Receive((data, metaData) =>
             {
                 string message = data.Id.ToString();
 

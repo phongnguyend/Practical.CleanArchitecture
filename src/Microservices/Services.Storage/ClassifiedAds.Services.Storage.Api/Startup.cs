@@ -94,14 +94,14 @@ namespace ClassifiedAds.Services.Storage
             var fileUploadedMessageQueueReceiver = serviceProvider.GetService<IMessageReceiver<FileUploadedEvent>>();
             var fileDeletedMessageQueueReceiver = serviceProvider.GetService<IMessageReceiver<FileDeletedEvent>>();
 
-            fileUploadedMessageQueueReceiver?.Receive(data =>
+            fileUploadedMessageQueueReceiver?.Receive((data, metaData) =>
             {
                 Thread.Sleep(5000); // simulate long running task
 
                 string message = data.FileEntry.Id.ToString();
             });
 
-            fileDeletedMessageQueueReceiver?.Receive(data =>
+            fileDeletedMessageQueueReceiver?.Receive((data, metaData) =>
             {
                 Thread.Sleep(5000); // simulate long running task
 

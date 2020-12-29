@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.EventHubs;
+﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+using Microsoft.Azure.EventHubs;
 using Microsoft.Azure.EventHubs.Processor;
 using Newtonsoft.Json;
 using System;
@@ -10,9 +11,9 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventHub
 {
     public class EventProcessor<T> : IEventProcessor
     {
-        private readonly Action<T> _action;
+        private readonly Action<T, MetaData> _action;
 
-        public EventProcessor(Action<T> action)
+        public EventProcessor(Action<T, MetaData> action)
         {
             _action = action;
         }
@@ -41,7 +42,8 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventHub
             {
                 var data = Encoding.UTF8.GetString(eventData.Body.Array, eventData.Body.Offset, eventData.Body.Count);
                 Console.WriteLine($"Message received. Partition: '{context.PartitionId}', Data: '{data}'");
-                _action(JsonConvert.DeserializeObject<T>(data));
+                var message = JsonConvert.DeserializeObject<Message<T>>(data);
+                _action(message.Data, message.MetaData);
             }
 
             return context.CheckpointAsync();

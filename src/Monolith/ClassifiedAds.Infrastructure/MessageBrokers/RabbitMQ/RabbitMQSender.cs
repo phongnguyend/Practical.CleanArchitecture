@@ -24,12 +24,16 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
             _routingKey = options.RoutingKey;
         }
 
-        public void Send(T message)
+        public void Send(T message, MetaData metaData = null)
         {
             using (var connection = _connectionFactory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
+                var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new Message<T>
+                {
+                    Data = message,
+                    MetaData = metaData,
+                }));
                 var properties = channel.CreateBasicProperties();
                 properties.Persistent = true;
 

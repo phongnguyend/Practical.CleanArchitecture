@@ -17,15 +17,19 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus
             _topicName = topicName;
         }
 
-        public void Send(T message)
+        public void Send(T message, MetaData metaData = null)
         {
-            SendAsync(message).Wait();
+            SendAsync(message, metaData).Wait();
         }
 
-        private async Task SendAsync(T message)
+        private async Task SendAsync(T message, MetaData metaData)
         {
             var topicClient = new TopicClient(_connectionString, _topicName);
-            var bytes = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)));
+            var bytes = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new Message<T>
+            {
+                Data = message,
+                MetaData = metaData,
+            })));
             await topicClient.SendAsync(bytes);
         }
     }

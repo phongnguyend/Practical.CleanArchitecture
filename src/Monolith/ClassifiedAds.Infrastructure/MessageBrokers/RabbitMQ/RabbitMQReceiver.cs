@@ -36,7 +36,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
             // TODO: add log here
         }
 
-        public void Receive(Action<T> action)
+        public void Receive(Action<T, MetaData> action)
         {
             _channel = _connection.CreateModel();
 
@@ -56,8 +56,8 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
             consumer.Received += (model, ea) =>
             {
                 var body = Encoding.UTF8.GetString(ea.Body.Span);
-                var message = JsonConvert.DeserializeObject<T>(body);
-                action(message);
+                var message = JsonConvert.DeserializeObject<Message<T>>(body);
+                action(message.Data, message.MetaData);
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };
             _channel.BasicConsume(queue: _queueName,

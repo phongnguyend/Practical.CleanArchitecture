@@ -20,12 +20,12 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventGrid
             _topic = topic;
         }
 
-        public void Send(T message)
+        public void Send(T message, MetaData metaData = null)
         {
-            SendAsync(message).GetAwaiter().GetResult();
+            SendAsync(message, metaData).GetAwaiter().GetResult();
         }
 
-        private async Task SendAsync(T message)
+        private async Task SendAsync(T message, MetaData metaData)
         {
             TopicCredentials domainKeyCredentials = new TopicCredentials(_domainKey);
             EventGridClient client = new EventGridClient(domainKeyCredentials);
@@ -37,7 +37,11 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventGrid
                     Id = Guid.NewGuid().ToString(),
                     EventType = typeof(T).FullName,
                     Topic = _topic,
-                    Data = message,
+                    Data = new Message<T>
+                    {
+                        Data = message,
+                        MetaData = metaData,
+                    },
                     EventTime = DateTime.UtcNow,
                     Subject = "TEST",
                     DataVersion = "1.0",

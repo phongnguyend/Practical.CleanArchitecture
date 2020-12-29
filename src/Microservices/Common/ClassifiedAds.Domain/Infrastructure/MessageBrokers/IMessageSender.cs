@@ -2,6 +2,6 @@
 {
     public interface IMessageSender<T>
     {
-        void Send(T message);
+        void Send(T message, MetaData metaData = null);
     }
 }

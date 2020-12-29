@@ -18,12 +18,12 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
             _queueName = queueName;
         }
 
-        public void Receive(Action<T> action)
+        public void Receive(Action<T, MetaData> action)
         {
             Task.Factory.StartNew(() => ReceiveAsync(action));
         }
 
-        private async Task ReceiveAsync(Action<T> action)
+        private async Task ReceiveAsync(Action<T, MetaData> action)
         {
             var storageAccount = CloudStorageAccount.Parse(_connectionString);
             var queueClient = storageAccount.CreateCloudQueueClient();
@@ -37,8 +37,8 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
 
                 if (retrievedMessage != null)
                 {
-                    var message = JsonConvert.DeserializeObject<T>(retrievedMessage.AsString);
-                    action(message);
+                    var message = JsonConvert.DeserializeObject<Message<T>>(retrievedMessage.AsString);
+                    action(message.Data, message.MetaData);
                     await queue.DeleteMessageAsync(retrievedMessage);
                 }
                 else

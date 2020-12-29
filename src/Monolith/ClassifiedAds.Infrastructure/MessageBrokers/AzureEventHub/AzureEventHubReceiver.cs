@@ -30,12 +30,12 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventHub
             }
         }
 
-        public void Receive(Action<T> action)
+        public void Receive(Action<T, MetaData> action)
         {
             ReceiveAsync(action).GetAwaiter().GetResult();
         }
 
-        public async Task ReceiveAsync(Action<T> action)
+        public async Task ReceiveAsync(Action<T, MetaData> action)
         {
             _eventProcessorHost = new EventProcessorHost(
                              _eventHubName,

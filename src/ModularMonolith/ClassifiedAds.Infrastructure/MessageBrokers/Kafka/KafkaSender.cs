@@ -25,14 +25,21 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.Kafka
             _producer.Dispose();
         }
 
-        public void Send(T message)
+        public void Send(T message, MetaData metaData = null)
         {
-            SendAsync(message).Wait();
+            SendAsync(message, metaData).Wait();
         }
 
-        private async Task SendAsync(T message)
+        private async Task SendAsync(T message, MetaData metaData)
         {
-            _ = await _producer.ProduceAsync(_topic, new Message<Null, string> { Value = JsonConvert.SerializeObject(message) });
+            _ = await _producer.ProduceAsync(_topic, new Message<Null, string>
+            {
+                Value = JsonConvert.SerializeObject(new Message<T>
+                {
+                    Data = message,
+                    MetaData = metaData,
+                }),
+            });
         }
     }
 }

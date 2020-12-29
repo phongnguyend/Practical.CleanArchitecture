@@ -17,12 +17,12 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventHub
             _hubName = hubName;
         }
 
-        public void Send(T message)
+        public void Send(T message, MetaData metaData = null)
         {
-            SendAsync(message).GetAwaiter().GetResult();
+            SendAsync(message, metaData).GetAwaiter().GetResult();
         }
 
-        private async Task SendAsync(T message)
+        private async Task SendAsync(T message, MetaData metaData)
         {
             var connectionStringBuilder = new EventHubsConnectionStringBuilder(_connectionString)
             {
@@ -31,7 +31,11 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventHub
 
             var eventHubClient = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());
 
-            await eventHubClient.SendAsync(new EventData(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message))));
+            await eventHubClient.SendAsync(new EventData(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new Message<T>
+            {
+                Data = message,
+                MetaData = metaData,
+            }))));
 
             await eventHubClient.CloseAsync();
         }

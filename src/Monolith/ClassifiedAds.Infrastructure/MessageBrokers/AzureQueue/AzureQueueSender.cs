@@ -17,18 +17,22 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
             _queueName = queueName;
         }
 
-        public void Send(T message)
+        public void Send(T message, MetaData metaData = null)
         {
-            SendAsync(message).Wait();
+            SendAsync(message, metaData).Wait();
         }
 
-        private async Task SendAsync(T message)
+        private async Task SendAsync(T message, MetaData metaData)
         {
             var storageAccount = CloudStorageAccount.Parse(_connectionString);
             var queueClient = storageAccount.CreateCloudQueueClient();
             var queue = queueClient.GetQueueReference(_queueName);
             await queue.CreateIfNotExistsAsync();
-            var jsonMessage = new CloudQueueMessage(JsonConvert.SerializeObject(message));
+            var jsonMessage = new CloudQueueMessage(JsonConvert.SerializeObject(new Message<T>
+            {
+                Data = message,
+                MetaData = metaData,
+            }));
             await queue.AddMessageAsync(jsonMessage);
         }
     }

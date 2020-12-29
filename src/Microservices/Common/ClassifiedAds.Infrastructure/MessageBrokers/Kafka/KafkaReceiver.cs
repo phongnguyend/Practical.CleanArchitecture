@@ -29,7 +29,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.Kafka
             _consumer.Dispose();
         }
 
-        public void Receive(Action<T> action)
+        public void Receive(Action<T, MetaData> action)
         {
             CancellationTokenSource cts = new CancellationTokenSource();
             var cancellationToken = cts.Token;
@@ -48,7 +48,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.Kafka
             });
         }
 
-        private void StartReceiving(Action<T> action, CancellationToken cancellationToken)
+        private void StartReceiving(Action<T, MetaData> action, CancellationToken cancellationToken)
         {
             while (true)
             {
@@ -61,8 +61,8 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.Kafka
                         continue;
                     }
 
-                    var message = JsonConvert.DeserializeObject<T>(consumeResult.Value);
-                    action(message);
+                    var message = JsonConvert.DeserializeObject<Message<T>>(consumeResult.Message.Value);
+                    action(message.Data, message.MetaData);
                 }
                 catch (ConsumeException e)
                 {
