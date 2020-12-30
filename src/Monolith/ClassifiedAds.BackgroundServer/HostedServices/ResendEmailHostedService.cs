@@ -22,13 +22,16 @@ namespace ClassifiedAds.BackgroundServer.HostedServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await Task.Run(() => DoWork(stoppingToken));
+            _logger.LogDebug("ResendEmailService is starting.");
+            await DoWork(stoppingToken);
         }
 
         private async Task DoWork(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
+                _logger.LogDebug($"ResendEmail task doing background work.");
+
                 int rs = 0;
 
                 using (var scope = _services.CreateScope())
@@ -43,6 +46,8 @@ namespace ClassifiedAds.BackgroundServer.HostedServices
                     await Task.Delay(10000, stoppingToken);
                 }
             }
+
+            _logger.LogDebug($"ResendEmail background task is stopping.");
         }
     }
 }
