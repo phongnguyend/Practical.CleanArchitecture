@@ -1,0 +1,30 @@
+name: Static Code Analysis UIs 
+
+on:
+  push:
+    branches:
+      - master
+      - build
+    paths:
+      - 'src/UIs/**'
+  pull_request:
+    paths: 
+      - 'src/UIs/**'
+env:
+  ENV_NAME: ENV_VALUE
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: src/UIs/
+          args: >
+            -Dsonar.organization=phongnguyend
+            -Dsonar.projectKey=Practical.CleanArchitecture
