@@ -10,8 +10,7 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  azureSubscription: 'Visual Studio Enterprise – MPN(00000000-0000-0000-0000-000000000000)'
-  azureContainerRegistry: '{"loginServer":"classifiedads.azurecr.io", "id" : "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/ClassifiedAds_DEV/providers/Microsoft.ContainerRegistry/registries/classifiedads"}'
+  dockerRegistryEndpoint: 'classifiedads'
   dockerComposeFile: 'src/ModularMonolith/docker-compose.yml'
   tag: '$(Build.BuildId)'
   
@@ -19,6 +18,29 @@ variables:
   vmImageName: 'ubuntu-latest'
 
 stages:
+- stage: SonarCloud
+  displayName: SonarCloud
+  jobs:  
+  - job: SonarCloud
+    displayName: SonarCloud
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: SonarCloudPrepare@1
+      inputs:
+        SonarCloud: 'SonarCloud'
+        organization: 'phongnguyend'
+        scannerMode: 'MSBuild'
+        projectKey: 'Practical.CleanArchitecture'
+        projectName: 'Practical.CleanArchitecture'
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'build'
+        projects: 'src/ModularMonolith/ClassifiedAds.ModularMonolith.sln'
+    - task: SonarCloudAnalyze@1
+    - task: SonarCloudPublish@1
+      inputs:
+        pollingTimeoutSec: '300'
 - stage: WhiteSourceBolt
   displayName: Build and Run WhiteSource Bolt
   jobs:  
@@ -45,9 +67,8 @@ stages:
     - task: DockerCompose@0
       displayName: Build services
       inputs:
-        containerregistrytype: 'Azure Container Registry'
-        azureSubscription: $(azureSubscription)
-        azureContainerRegistry: $(azureContainerRegistry)
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: $(dockerRegistryEndpoint)
         dockerComposeFile: $(dockerComposeFile)
         action: 'Build services'
         projectName: $(Build.Repository.Name)
@@ -56,9 +77,8 @@ stages:
     - task: DockerCompose@0
       displayName: Push services
       inputs:
-        containerregistrytype: 'Azure Container Registry'
-        azureSubscription: $(azureSubscription)
-        azureContainerRegistry: $(azureContainerRegistry)
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: $(dockerRegistryEndpoint)
         dockerComposeFile: $(dockerComposeFile)
         action: 'Push services'
         projectName: $(Build.Repository.Name)
