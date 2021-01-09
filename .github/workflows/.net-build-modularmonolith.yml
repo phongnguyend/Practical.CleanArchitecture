@@ -1,0 +1,73 @@
+name: .Net Build Modular Monolith
+
+on:
+  push:
+    paths: 
+      - 'src/ModularMonolith/**'
+  pull_request:
+    paths: 
+      - 'src/ModularMonolith/**'
+
+jobs:
+  build:
+
+    defaults: 
+      run:
+        working-directory: src/ModularMonolith
+        
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.101
+    
+    - name: Build
+      run: dotnet build --configuration Release 
+    
+    - name: Publish ClassifiedAds.BackgroundServer
+      run: dotnet publish ClassifiedAds.BackgroundServer/*.csproj --configuration Release
+
+    - name: Publish ClassifiedAds.IdentityServer
+      run: dotnet publish ClassifiedAds.IdentityServer/*.csproj --configuration Release
+
+    - name: Publish ClassifiedAds.Migrator
+      run: dotnet publish ClassifiedAds.Migrator/*.csproj --configuration Release
+ 
+    - name: Publish ClassifiedAds.NotificationServer
+      run: dotnet publish ClassifiedAds.NotificationServer/*.csproj --configuration Release
+
+    - name: Publish ClassifiedAds.WebAPI
+      run: dotnet publish ClassifiedAds.WebAPI/*.csproj --configuration Release
+      
+    - name: Upload ClassifiedAds.BackgroundServer
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: ClassifiedAds.BackgroundServer
+        path: src/ModularMonolith/ClassifiedAds.BackgroundServer/bin/Release/net5.0/publish
+
+    - name: Upload ClassifiedAds.IdentityServer
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: ClassifiedAds.IdentityServer
+        path: src/ModularMonolith/ClassifiedAds.IdentityServer/bin/Release/net5.0/publish
+
+    - name: Upload ClassifiedAds.Migrator
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: ClassifiedAds.Migrator
+        path: src/ModularMonolith/ClassifiedAds.Migrator/bin/Release/net5.0/publish
+
+    - name: Upload ClassifiedAds.NotificationServer
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: ClassifiedAds.NotificationServer
+        path: src/ModularMonolith/ClassifiedAds.NotificationServer/bin/Release/net5.0/publish
+
+    - name: Upload ClassifiedAds.WebAPI
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: ClassifiedAds.WebAPI
+        path: src/ModularMonolith/ClassifiedAds.WebAPI/bin/Release/net5.0/publish
