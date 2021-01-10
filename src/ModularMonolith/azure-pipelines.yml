@@ -41,6 +41,7 @@ stages:
     - task: SonarCloudPublish@1
       inputs:
         pollingTimeoutSec: '300'
+
 - stage: WhiteSourceBolt
   displayName: Build and Run WhiteSource Bolt
   jobs:  
@@ -56,7 +57,40 @@ stages:
     - task: WhiteSource Bolt@20
       inputs:
         cwd: 'src/ModularMonolith/'
-- stage: Build
+
+- stage: DotNetBuild
+  displayName: .Net Build
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+      - task: DotNetCoreCLI@2
+        displayName: Build
+        inputs:
+          command: 'build'
+          arguments: '--configuration Release'
+          workingDirectory: 'src/ModularMonolith'
+      - task: DotNetCoreCLI@2
+        displayName: Publish
+        inputs:
+          command: 'publish'
+          publishWebProjects: false
+          projects: |
+            src/ModularMonolith/ClassifiedAds.BackgroundServer/*.csproj
+            src/ModularMonolith/ClassifiedAds.Migrator/*.csproj
+            src/ModularMonolith/ClassifiedAds.NotificationServer/*.csproj
+            src/ModularMonolith/ClassifiedAds.WebAPI/*.csproj
+            src/ModularMonolith/ClassifiedAds.IdentityServer/*.csproj
+          arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'ModularMonolith'
+          publishLocation: 'Container'
+
+- stage: DockerBuild
   displayName: Build and Push Docker Images
   jobs:  
   - job: Build

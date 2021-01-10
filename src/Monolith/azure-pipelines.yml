@@ -41,6 +41,7 @@ stages:
     - task: SonarCloudPublish@1
       inputs:
         pollingTimeoutSec: '300'
+
 - stage: WhiteSourceBolt
   displayName: Build and Run WhiteSource Bolt
   jobs:  
@@ -56,7 +57,44 @@ stages:
     - task: WhiteSource Bolt@20
       inputs:
         cwd: 'src/Monolith/'
-- stage: Build
+
+- stage: DotNetBuild
+  displayName: .Net Build
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+      - task: DotNetCoreCLI@2
+        displayName: Build
+        inputs:
+          command: 'build'
+          arguments: '--configuration Release'
+          workingDirectory: 'src/Monolith'
+      - task: DotNetCoreCLI@2
+        displayName: Publish
+        inputs:
+          command: 'publish'
+          publishWebProjects: false
+          projects: |
+            src/Monolith/ClassifiedAds.BackgroundServer/*.csproj
+            src/Monolith/ClassifiedAds.GraphQL/*.csproj
+            src/Monolith/ClassifiedAds.Migrator/*.csproj
+            src/Monolith/ClassifiedAds.NotificationServer/*.csproj
+            src/Monolith/ClassifiedAds.WebAPI/*.csproj
+            src/Monolith/ClassifiedAds.IdentityServer/*.csproj
+            src/Monolith/ClassifiedAds.WebMVC/*.csproj
+            src/Monolith/ClassifiedAds.BlazorServerSide/*.csproj
+            src/Monolith/ClassifiedAds.BlazorWebAssembly/*.csproj
+          arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'Monolith'
+          publishLocation: 'Container'
+
+- stage: DockerBuild
   displayName: Build and Push Docker Images
   jobs:  
   - job: Build

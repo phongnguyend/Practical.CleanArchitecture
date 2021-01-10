@@ -41,6 +41,7 @@ stages:
     - task: SonarCloudPublish@1
       inputs:
         pollingTimeoutSec: '300'
+
 - stage: WhiteSourceBolt
   displayName: Build and Run WhiteSource Bolt
   jobs:  
@@ -56,7 +57,42 @@ stages:
     - task: WhiteSource Bolt@20
       inputs:
         cwd: 'src/Microservices/'
-- stage: Build
+
+- stage: DotNetBuild
+  displayName: .Net Build
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+      - task: DotNetCoreCLI@2
+        displayName: Build
+        inputs:
+          command: 'build'
+          arguments: '--configuration Release'
+          workingDirectory: 'src/Microservices'
+      - task: DotNetCoreCLI@2
+        displayName: Publish
+        inputs:
+          command: 'publish'
+          publishWebProjects: false
+          projects: |
+            src/Microservices/Gateways.WebAPI/**/*.csproj
+            src/Microservices/Gateways.GraphQL/**/*.csproj
+            src/Microservices/Services.AuditLog/**/*.csproj
+            src/Microservices/Services.Identity/**/*.csproj
+            src/Microservices/Services.Notification/**/*.csproj
+            src/Microservices/Services.Product/**/*.csproj
+            src/Microservices/Services.Storage/**/*.csproj
+          arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'Microservices'
+          publishLocation: 'Container'
+
+- stage: DockerBuild
   displayName: Build and Push Docker Images
   jobs:  
   - job: Build
