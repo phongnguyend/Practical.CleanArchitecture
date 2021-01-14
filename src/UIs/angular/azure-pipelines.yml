@@ -1,0 +1,63 @@
+
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+  
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build
+  jobs:
+  - job: Build
+    displayName: Build Angular
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - checkout: self
+    - task: NodeTool@0
+      displayName: Use Node 12.x
+      inputs:
+        versionSpec: 12.x
+        checkLatest: true
+    - task: Npm@1
+      displayName: install @angular/cli
+      inputs:
+        command: custom
+        workingDir: src/UIs/angular
+        customCommand: install @angular/cli
+    - task: Npm@1
+      displayName: npm install
+      inputs:
+        workingDir: src/UIs/angular
+    - task: Npm@1
+      displayName: 'npm audit --audit-level=high'
+      inputs:
+        command: 'custom'
+        workingDir: 'src/UIs/angular'
+        customCommand: 'audit --audit-level=high'
+    - task: Npm@1
+      displayName: run build --prod
+      inputs:
+        command: custom
+        workingDir: src/UIs/angular
+        customCommand: run build --prod
+    - task: ArchiveFiles@2
+      displayName: Archive
+      inputs:
+        rootFolderOrFile: 'src/UIs/angular/dist/angular'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/angular.$(Build.BuildId).zip'
+        replaceExistingArchive: true
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Pipeline Artifact
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+        artifact: 'Angular'
+        publishLocation: 'pipeline'

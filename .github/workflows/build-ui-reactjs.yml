@@ -7,10 +7,10 @@ on:
       - build
       - actions
     paths:
-      - 'src/UIs/reactjs/**'
+      - "src/UIs/reactjs/**"
   pull_request:
-    paths: 
-      - 'src/UIs/reactjs/**'
+    paths:
+      - "src/UIs/reactjs/**"
 env:
   WORKING_DIRECTORY: ./src/UIs/reactjs/
 
@@ -18,13 +18,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
-      with:
-        node-version: '12'
-    - run: npm install
-      working-directory: ./src/UIs/reactjs/
-    - run: npm audit --audit-level=high
-      working-directory: ./src/UIs/reactjs/
-    - run: CI=false npm run build # Treating warnings as errors because process.env.CI = true.
-      working-directory: ./src/UIs/reactjs/
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "12"
+      - run: npm install
+        working-directory: ./src/UIs/reactjs/
+      - run: npm audit --audit-level=critical
+        working-directory: ./src/UIs/reactjs/
+      - run: CI=false npm run build # Treating warnings as errors because process.env.CI = true.
+        working-directory: ./src/UIs/reactjs/
+      - name: Upload ReactJs
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: ReactJs
+          path: ./src/UIs/reactjs/build

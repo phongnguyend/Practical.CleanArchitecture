@@ -27,7 +27,7 @@ class AuthService {
   };
 
   login = returnUrl => {
-    console.log("Return Url:", returnUrl);
+    //console.log("Return Url:", returnUrl);
     localStorage.setItem("returnUrl", returnUrl);
     return this._userManager.signinRedirect();
   };

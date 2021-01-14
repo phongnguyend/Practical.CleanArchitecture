@@ -1,25 +1,31 @@
 <template>
   <div class="card">
-    <div class="card-header">{{title}}</div>
+    <div class="card-header">{{ title }}</div>
     <div class="card-body">
-      <div class="alert alert-danger" v-show="postError">{{ postErrorMessage }}</div>
+      <div class="alert alert-danger" v-show="postError">
+        {{ postErrorMessage }}
+      </div>
       <form @submit.prevent="onSubmit">
         <div class="form-group row">
-          <label for="userName" class="col-sm-3 col-form-label">User Name</label>
+          <label for="userName" class="col-sm-3 col-form-label"
+            >User Name</label
+          >
           <div class="col-sm-9">
             <input
               id="userName"
               name="userName"
               class="form-control"
               v-model="user.userName"
-              :class="{'is-invalid': isSubmitted && $v.user.userName.$invalid}"
+              :class="{
+                'is-invalid': isSubmitted && $v.user.userName.$invalid
+              }"
               @input="$v.user.userName.$touch()"
             />
             <span class="invalid-feedback">
               <span v-if="!$v.user.userName.required">Enter an user name</span>
-              <span
-                v-if="!$v.user.userName.minLength"
-              >The user name must be longer than 3 characters.</span>
+              <span v-if="!$v.user.userName.minLength"
+                >The user name must be longer than 3 characters.</span
+              >
             </span>
           </div>
         </div>
@@ -31,17 +37,21 @@
               name="email"
               class="form-control"
               v-model="user.email"
-              :class="{'is-invalid': isSubmitted && $v.user.email.$invalid}"
+              :class="{ 'is-invalid': isSubmitted && $v.user.email.$invalid }"
               @input="$v.user.email.$touch()"
             />
             <span class="invalid-feedback">
               <span v-if="!$v.user.email.required">Enter an email</span>
-              <span v-if="!$v.user.email.minLength">The email must be longer than 3 characters.</span>
+              <span v-if="!$v.user.email.minLength"
+                >The email must be longer than 3 characters.</span
+              >
             </span>
           </div>
         </div>
         <div class="form-group row">
-          <label for="emailConfirmed" class="col-sm-3 col-form-label">Email Confirmed</label>
+          <label for="emailConfirmed" class="col-sm-3 col-form-label"
+            >Email Confirmed</label
+          >
           <div class="col-sm-9">
             <input
               type="checkbox"
@@ -52,7 +62,9 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="phoneNumber" class="col-sm-3 col-form-label">Phone Number</label>
+          <label for="phoneNumber" class="col-sm-3 col-form-label"
+            >Phone Number</label
+          >
           <div class="col-sm-9">
             <input
               id="phoneNumber"
@@ -64,7 +76,9 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="phoneNumberConfirmed" class="col-sm-3 col-form-label">Phone Number Confirmed</label>
+          <label for="phoneNumberConfirmed" class="col-sm-3 col-form-label"
+            >Phone Number Confirmed</label
+          >
           <div class="col-sm-9">
             <input
               type="checkbox"
@@ -75,7 +89,9 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="twoFactorEnabled" class="col-sm-3 col-form-label">Two Factor Enabled</label>
+          <label for="twoFactorEnabled" class="col-sm-3 col-form-label"
+            >Two Factor Enabled</label
+          >
           <div class="col-sm-9">
             <input
               type="checkbox"
@@ -86,7 +102,9 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="lockoutEnabled" class="col-sm-3 col-form-label">Lockout Enabled</label>
+          <label for="lockoutEnabled" class="col-sm-3 col-form-label"
+            >Lockout Enabled</label
+          >
           <div class="col-sm-9">
             <input
               type="checkbox"
@@ -97,7 +115,9 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="accessFailedCount" class="col-sm-3 col-form-label">Access Failed Count</label>
+          <label for="accessFailedCount" class="col-sm-3 col-form-label"
+            >Access Failed Count</label
+          >
           <div class="col-sm-9">
             <input
               type="number"
@@ -109,7 +129,9 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="lockoutEnd" class="col-sm-3 col-form-label">Lockout End</label>
+          <label for="lockoutEnd" class="col-sm-3 col-form-label"
+            >Lockout End</label
+          >
           <div class="col-sm-9">
             <b-form-datepicker
               id="example-datepicker"
@@ -119,7 +141,11 @@
               reset-button
               close-button
             ></b-form-datepicker>
-            <b-form-timepicker v-model="user.lockoutEndTime" now-button reset-button></b-form-timepicker>
+            <b-form-timepicker
+              v-model="user.lockoutEndTime"
+              now-button
+              reset-button
+            ></b-form-timepicker>
           </div>
         </div>
         <div class="form-group row">
@@ -131,7 +157,11 @@
       </form>
     </div>
     <div class="card-footer">
-      <router-link class="btn btn-outline-secondary" to="/users" style="width:80px">
+      <router-link
+        class="btn btn-outline-secondary"
+        to="/users"
+        style="width:80px"
+      >
         <i class="fa fa-chevron-left"></i> Back
       </router-link>
     </div>
@@ -149,7 +179,7 @@ export default {
       user: { userName: "", email: "" },
       postError: false,
       postErrorMessage: "",
-      isSubmitted: false,
+      isSubmitted: false
     };
   },
   computed: {
@@ -158,19 +188,19 @@ export default {
     },
     id() {
       return this.$route.params.id;
-    },
+    }
   },
   validations: {
     user: {
       userName: {
         required,
-        minLength: minLength(3),
+        minLength: minLength(3)
       },
       email: {
         required,
-        minLength: minLength(3),
-      },
-    },
+        minLength: minLength(3)
+      }
+    }
   },
   methods: {
     onSubmit() {
@@ -193,16 +223,16 @@ export default {
         ? axios.put(this.id, this.user)
         : axios.post("", this.user);
 
-      promise.then((rs) => {
+      promise.then(rs => {
         const id = this.id ? this.id : rs.data.id;
         this.$router.push("/users/" + id);
       });
-    },
+    }
   },
   created() {
     const id = this.$route.params.id;
     if (id) {
-      axios.get(id).then((rs) => {
+      axios.get(id).then(rs => {
         this.user = rs.data;
 
         if (this.user.lockoutEnd) {
@@ -213,20 +243,20 @@ export default {
             "-",
             ("0" + (lockoutEnd.getMonth() + 1)).slice(-2),
             "-",
-            ("0" + lockoutEnd.getDate()).slice(-2),
+            ("0" + lockoutEnd.getDate()).slice(-2)
           ].join("");
           this.user.lockoutEndTime = [
             ("0" + lockoutEnd.getHours()).slice(-2),
             ":",
             ("0" + lockoutEnd.getMinutes()).slice(-2),
             ":",
-            ("0" + lockoutEnd.getSeconds()).slice(-2),
+            ("0" + lockoutEnd.getSeconds()).slice(-2)
           ].join("");
-          console.log(this.user.lockoutEndTime);
+          //console.log(this.user.lockoutEndTime);
         }
       });
     }
-  },
+  }
 };
 </script>
 
