@@ -1,11 +1,16 @@
-﻿namespace ClassifiedAds.Infrastructure.Notification.Sms
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace ClassifiedAds.Infrastructure.Notification.Sms
 {
     public interface ISmsNotification
     {
-        void Send(SmsMessageDTO smsMessage);
+        void Send(ISmsMessage smsMessage);
+
+        Task SendAsync(ISmsMessage smsMessage, CancellationToken cancellationToken = default);
     }
 
-    public class SmsMessageDTO
+    public interface ISmsMessage
     {
         public string Message { get; set; }
 

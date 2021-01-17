@@ -66,7 +66,7 @@ namespace ClassifiedAds.Modules.Notification.Services
             {
                 try
                 {
-                    _smsNotification.Send(new SmsMessageDTO
+                    _smsNotification.Send(new DTOs.SmsMessageDTO
                     {
                         Message = smsMessage.Message,
                         PhoneNumber = smsMessage.PhoneNumber,

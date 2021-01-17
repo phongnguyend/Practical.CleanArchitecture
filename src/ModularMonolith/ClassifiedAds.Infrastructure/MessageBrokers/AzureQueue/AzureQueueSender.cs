@@ -2,6 +2,7 @@
 using Microsoft.Azure.Storage;
 using Microsoft.Azure.Storage.Queue;
 using Newtonsoft.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
@@ -22,7 +23,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
             SendAsync(message, metaData).Wait();
         }
 
-        private async Task SendAsync(T message, MetaData metaData)
+        public async Task SendAsync(T message, MetaData metaData, CancellationToken cancellationToken = default)
         {
             var storageAccount = CloudStorageAccount.Parse(_connectionString);
             var queueClient = storageAccount.CreateCloudQueueClient();
@@ -33,7 +34,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
                 Data = message,
                 MetaData = metaData,
             }));
-            await queue.AddMessageAsync(jsonMessage);
+            await queue.AddMessageAsync(jsonMessage, cancellationToken);
         }
     }
 }
