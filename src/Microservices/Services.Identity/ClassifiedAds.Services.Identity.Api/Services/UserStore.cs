@@ -2,6 +2,7 @@
 using ClassifiedAds.Services.Identity.Entities;
 using ClassifiedAds.Services.Identity.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,14 +33,13 @@ namespace ClassifiedAds.Services.Identity
 
         public void Dispose()
         {
-
         }
 
-        public Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
+        public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
         {
-            _userRepository.AddOrUpdate(user);
-            _unitOfWork.SaveChanges();
-            return Task.FromResult(IdentityResult.Success);
+            await _userRepository.AddOrUpdateAsync(user);
+            await _unitOfWork.SaveChangesAsync();
+            return IdentityResult.Success;
         }
 
         public Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
@@ -50,17 +50,17 @@ namespace ClassifiedAds.Services.Identity
 
         public Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefault(x => x.NormalizedEmail == normalizedEmail));
+            return _userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefaultAsync(x => x.NormalizedEmail == normalizedEmail);
         }
 
         public Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefault(x => x.Id == Guid.Parse(userId)));
+            return _userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefaultAsync(x => x.Id == Guid.Parse(userId));
         }
 
         public Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefault(x => x.NormalizedUserName == normalizedUserName));
+            return _userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefaultAsync(x => x.NormalizedUserName == normalizedUserName);
         }
 
         public Task<int> GetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
@@ -222,11 +222,11 @@ namespace ClassifiedAds.Services.Identity
             return Task.CompletedTask;
         }
 
-        public Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
+        public async Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
         {
-            _userRepository.AddOrUpdate(user);
-            _unitOfWork.SaveChanges();
-            return Task.FromResult(IdentityResult.Success);
+            await _userRepository.AddOrUpdateAsync(user);
+            await _unitOfWork.SaveChangesAsync();
+            return IdentityResult.Success;
         }
 
         private const string AuthenticatorStoreLoginProvider = "[AuthenticatorStore]";
@@ -240,7 +240,7 @@ namespace ClassifiedAds.Services.Identity
             return Task.FromResult(tokenEntity?.TokenValue);
         }
 
-        public Task SetTokenAsync(User user, string loginProvider, string name, string value, CancellationToken cancellationToken)
+        public async Task SetTokenAsync(User user, string loginProvider, string name, string value, CancellationToken cancellationToken)
         {
             var tokenEntity = user.Tokens.SingleOrDefault(
                     l => l.TokenName == name && l.LoginProvider == loginProvider);
@@ -259,9 +259,7 @@ namespace ClassifiedAds.Services.Identity
                 });
             }
 
-            _unitOfWork.SaveChanges();
-
-            return Task.FromResult(0);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public Task RemoveTokenAsync(User user, string loginProvider, string name, CancellationToken cancellationToken)
@@ -273,7 +271,7 @@ namespace ClassifiedAds.Services.Identity
                 user.Tokens.Remove(tokenEntity);
                 _unitOfWork.SaveChanges();
             }
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public Task SetAuthenticatorKeyAsync(User user, string key, CancellationToken cancellationToken)
@@ -302,6 +300,7 @@ namespace ClassifiedAds.Services.Identity
                 await ReplaceCodesAsync(user, updatedCodes, cancellationToken);
                 return true;
             }
+
             return false;
         }
 
@@ -312,6 +311,7 @@ namespace ClassifiedAds.Services.Identity
             {
                 return mergedCodes.Split(';').Length;
             }
+
             return 0;
         }
     }

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using ClassifiedAds.Domain.Infrastructure.Storages;
+using System;
 
 namespace ClassifiedAds.Domain.Entities
 {
-    public class FileEntry : AggregateRoot<Guid>
+    public class FileEntry : AggregateRoot<Guid>, IFileEntry
     {
         public string Name { get; set; }
 

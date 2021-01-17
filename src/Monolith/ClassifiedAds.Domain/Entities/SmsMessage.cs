@@ -1,8 +1,9 @@
-﻿using System;
+﻿using ClassifiedAds.Domain.Notification;
+using System;
 
 namespace ClassifiedAds.Domain.Entities
 {
-    public class SmsMessage : AggregateRoot<Guid>
+    public class SmsMessage : AggregateRoot<Guid>, ISmsMessage
     {
         public string Message { get; set; }
 

@@ -3,6 +3,7 @@ using Microsoft.Azure.EventGrid;
 using Microsoft.Azure.EventGrid.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventGrid
@@ -25,7 +26,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventGrid
             SendAsync(message, metaData).GetAwaiter().GetResult();
         }
 
-        private async Task SendAsync(T message, MetaData metaData)
+        public async Task SendAsync(T message, MetaData metaData, CancellationToken cancellationToken = default)
         {
             TopicCredentials domainKeyCredentials = new TopicCredentials(_domainKey);
             EventGridClient client = new EventGridClient(domainKeyCredentials);
@@ -48,7 +49,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventGrid
                 },
             };
 
-            await client.PublishEventsAsync(_domainEndpoint, events);
+            await client.PublishEventsAsync(_domainEndpoint, events, cancellationToken);
         }
     }
 }

@@ -1,8 +1,9 @@
-﻿using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Notification;
+﻿using ClassifiedAds.Domain.Notification;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.Notification.Email.SendGrid
 {
@@ -15,7 +16,12 @@ namespace ClassifiedAds.Infrastructure.Notification.Email.SendGrid
             _options = options;
         }
 
-        public void Send(EmailMessage emailMessage)
+        public void Send(IEmailMessage emailMessage)
+        {
+            SendAsync(emailMessage).GetAwaiter().GetResult();
+        }
+
+        public async Task SendAsync(IEmailMessage emailMessage, CancellationToken cancellationToken = default)
         {
             var client = new SendGridClient(_options.ApiKey);
             var from = new EmailAddress(!string.IsNullOrWhiteSpace(_options.OverrideFrom) ? _options.OverrideFrom : emailMessage.From);
@@ -26,7 +32,7 @@ namespace ClassifiedAds.Infrastructure.Notification.Email.SendGrid
                 .ToList();
 
             var msg = MailHelper.CreateSingleEmailToMultipleRecipients(from, tos, emailMessage.Subject, string.Empty, emailMessage.Body, showAllRecipients: true);
-            var response = client.SendEmailAsync(msg).GetAwaiter().GetResult();
+            var response = await client.SendEmailAsync(msg, cancellationToken);
         }
     }
 }

@@ -1,8 +1,9 @@
-﻿using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Infrastructure.Storages;
+﻿using ClassifiedAds.Domain.Infrastructure.Storages;
 using Microsoft.Azure.Storage;
 using Microsoft.Azure.Storage.Blob;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.Storages.Azure
 {
@@ -22,29 +23,44 @@ namespace ClassifiedAds.Infrastructure.Storages.Azure
             _container = blobClient.GetContainerReference(_containerName);
         }
 
-        public void Create(FileEntry fileEntry, Stream stream)
+        public void Create(IFileEntry fileEntry, Stream stream)
+        {
+            CreateAsync(fileEntry, stream).GetAwaiter().GetResult();
+        }
+
+        public async Task CreateAsync(IFileEntry fileEntry, Stream stream, CancellationToken cancellationToken = default)
         {
             _container.CreateIfNotExistsAsync().GetAwaiter().GetResult();
 
             var name = fileEntry.Id.ToString();
             CloudBlockBlob blob = _container.GetBlockBlobReference(name);
-            blob.UploadFromStreamAsync(stream).Wait();
+            await blob.UploadFromStreamAsync(stream);
 
             fileEntry.FileLocation = name;
         }
 
-        public void Delete(FileEntry fileEntry)
+        public void Delete(IFileEntry fileEntry)
         {
-            CloudBlockBlob blob = _container.GetBlockBlobReference(fileEntry.FileLocation);
-            blob.DeleteAsync().Wait();
+            DeleteAsync(fileEntry).GetAwaiter().GetResult();
         }
 
-        public byte[] Read(FileEntry fileEntry)
+        public async Task DeleteAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
+        {
+            CloudBlockBlob blob = _container.GetBlockBlobReference(fileEntry.FileLocation);
+            await blob.DeleteAsync();
+        }
+
+        public byte[] Read(IFileEntry fileEntry)
+        {
+            return ReadAsync(fileEntry).GetAwaiter().GetResult();
+        }
+
+        public async Task<byte[]> ReadAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
             CloudBlockBlob blob = _container.GetBlockBlobReference(fileEntry.FileLocation);
             using (var stream = new MemoryStream())
             {
-                blob.DownloadToStreamAsync(stream).Wait();
+                await blob.DownloadToStreamAsync(stream);
                 return stream.ToArray();
             }
         }

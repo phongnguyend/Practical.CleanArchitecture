@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Infrastructure.Storages;
+using ClassifiedAds.Services.Storage.DTOs;
 using System;
 
 namespace ClassifiedAds.Services.Storage.Entities

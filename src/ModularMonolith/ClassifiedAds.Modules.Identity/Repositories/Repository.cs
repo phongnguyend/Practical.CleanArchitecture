@@ -3,6 +3,8 @@ using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Identity.Repositories
 {
@@ -34,6 +36,19 @@ namespace ClassifiedAds.Modules.Identity.Repositories
             {
                 entity.CreatedDateTime = _dateTimeProvider.OffsetNow;
                 DbSet.Add(entity);
+            }
+            else
+            {
+                entity.UpdatedDateTime = _dateTimeProvider.OffsetNow;
+            }
+        }
+
+        public async Task AddOrUpdateAsync(T entity, CancellationToken cancellationToken = default)
+        {
+            if (entity.Id.Equals(default(TKey)))
+            {
+                entity.CreatedDateTime = _dateTimeProvider.OffsetNow;
+                await DbSet.AddAsync(entity, cancellationToken);
             }
             else
             {

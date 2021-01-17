@@ -1,4 +1,6 @@
-﻿using Twilio;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
 
@@ -13,11 +15,16 @@ namespace ClassifiedAds.Infrastructure.Notification.Sms.Twilio
             _options = options;
         }
 
-        public void Send(SmsMessageDTO smsMessage)
+        public void Send(ISmsMessage smsMessage)
+        {
+            SendAsync(smsMessage).GetAwaiter().GetResult();
+        }
+
+        public async Task SendAsync(ISmsMessage smsMessage, CancellationToken cancellationToken = default)
         {
             TwilioClient.Init(_options.AccountSId, _options.AuthToken);
 
-            var message = MessageResource.Create(
+            var message = await MessageResource.CreateAsync(
                 body: smsMessage.Message,
                 from: new PhoneNumber(_options.FromNumber),
                 to: new PhoneNumber(smsMessage.PhoneNumber));

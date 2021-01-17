@@ -1,16 +1,23 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.Storages
 {
     public interface IFileStorageManager
     {
-        void Create(FileEntryDTO fileEntry, Stream stream);
-        byte[] Read(FileEntryDTO fileEntry);
-        void Delete(FileEntryDTO fileEntry);
+        void Create(IFileEntry fileEntry, Stream stream);
+        Task CreateAsync(IFileEntry fileEntry, Stream stream, CancellationToken cancellationToken = default);
+
+        byte[] Read(IFileEntry fileEntry);
+        Task<byte[]> ReadAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default);
+
+        void Delete(IFileEntry fileEntry);
+        Task DeleteAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default);
     }
 
-    public class FileEntryDTO
+    public interface IFileEntry
     {
         public Guid Id { get; set; }
 

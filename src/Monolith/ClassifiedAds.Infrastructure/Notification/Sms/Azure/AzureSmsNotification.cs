@@ -1,7 +1,8 @@
 ﻿using Azure.Communication;
 using Azure.Communication.Sms;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Notification;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.Notification.Sms.Azure
 {
@@ -14,13 +15,19 @@ namespace ClassifiedAds.Infrastructure.Notification.Sms.Azure
             _options = options;
         }
 
-        public void Send(SmsMessage smsMessage)
+        public void Send(ISmsMessage smsMessage)
+        {
+            SendAsync(smsMessage).GetAwaiter().GetResult();
+        }
+
+        public async Task SendAsync(ISmsMessage smsMessage, CancellationToken cancellationToken = default)
         {
             var smsClient = new SmsClient(_options.ConnectionString);
-            var response = smsClient.Send(
+            var response = await smsClient.SendAsync(
                 from: new PhoneNumber(_options.FromNumber),
                 to: new PhoneNumber(smsMessage.PhoneNumber),
-                message: smsMessage.Message);
+                message: smsMessage.Message,
+                cancellationToken: cancellationToken);
 
             if (!string.IsNullOrWhiteSpace(response?.Value?.MessageId))
             {
