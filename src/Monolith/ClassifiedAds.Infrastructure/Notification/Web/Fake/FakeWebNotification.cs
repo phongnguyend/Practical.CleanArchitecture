@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Notification;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.Notification.Web.Fake
@@ -10,7 +11,7 @@ namespace ClassifiedAds.Infrastructure.Notification.Web.Fake
             // do nothing
         }
 
-        public Task SendAsync(T message)
+        public Task SendAsync(T message, CancellationToken cancellationToken = default)
         {
             // do nothing
             return Task.CompletedTask;

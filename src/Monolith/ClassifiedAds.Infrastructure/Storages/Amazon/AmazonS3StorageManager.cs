@@ -2,9 +2,10 @@
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.Storages;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.Storages.Amazon
 {
@@ -19,7 +20,12 @@ namespace ClassifiedAds.Infrastructure.Storages.Amazon
             _bucketName = bucketName;
         }
 
-        public void Create(FileEntry fileEntry, Stream stream)
+        public void Create(IFileEntry fileEntry, Stream stream)
+        {
+            CreateAsync(fileEntry, stream).GetAwaiter().GetResult();
+        }
+
+        public async Task CreateAsync(IFileEntry fileEntry, Stream stream, CancellationToken cancellationToken = default)
         {
             var fileTransferUtility = new TransferUtility(_client);
 
@@ -31,17 +37,27 @@ namespace ClassifiedAds.Infrastructure.Storages.Amazon
                 CannedACL = S3CannedACL.NoACL,
             };
 
-            fileTransferUtility.UploadAsync(uploadRequest).Wait();
+            await fileTransferUtility.UploadAsync(uploadRequest);
 
             fileEntry.FileLocation = fileEntry.Id.ToString();
         }
 
-        public void Delete(FileEntry fileEntry)
+        public void Delete(IFileEntry fileEntry)
         {
-            _client.DeleteObjectAsync(_bucketName, fileEntry.FileLocation).Wait();
+            DeleteAsync(fileEntry).GetAwaiter().GetResult();
         }
 
-        public byte[] Read(FileEntry fileEntry)
+        public async Task DeleteAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
+        {
+            await _client.DeleteObjectAsync(_bucketName, fileEntry.FileLocation);
+        }
+
+        public byte[] Read(IFileEntry fileEntry)
+        {
+            return ReadAsync(fileEntry).GetAwaiter().GetResult();
+        }
+
+        public async Task<byte[]> ReadAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
             var request = new GetObjectRequest
             {
@@ -49,7 +65,7 @@ namespace ClassifiedAds.Infrastructure.Storages.Amazon
                 Key = fileEntry.FileLocation,
             };
 
-            using (var response = _client.GetObjectAsync(request).GetAwaiter().GetResult())
+            using (var response = await _client.GetObjectAsync(request))
             using (var responseStream = response.ResponseStream)
             using (var reader = new MemoryStream())
             {
