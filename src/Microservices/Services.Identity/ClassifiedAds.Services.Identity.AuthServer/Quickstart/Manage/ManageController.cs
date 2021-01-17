@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.IdentityServer.Manage.Models;
-using ClassifiedAds.Infrastructure.Notification.Sms;
 using ClassifiedAds.Services.Identity.Commands.SmsMessages;
+using ClassifiedAds.Services.Identity.DTOs;
 using ClassifiedAds.Services.Identity.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

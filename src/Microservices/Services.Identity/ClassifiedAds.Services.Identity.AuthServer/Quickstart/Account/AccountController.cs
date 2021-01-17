@@ -1,11 +1,13 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using ClassifiedAds.Application;
 using ClassifiedAds.IdentityServer.Models;
-using ClassifiedAds.Infrastructure.Notification.Email;
 using ClassifiedAds.Services.Identity.Commands.EmailMessages;
+using ClassifiedAds.Services.Identity.DTOs;
 using ClassifiedAds.Services.Identity.Entities;
 using IdentityModel;
 using IdentityServer4;
@@ -20,9 +22,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace IdentityServerHost.Quickstart.UI
 {

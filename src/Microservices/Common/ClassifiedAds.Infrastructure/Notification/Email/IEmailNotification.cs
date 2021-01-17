@@ -1,11 +1,16 @@
-﻿namespace ClassifiedAds.Infrastructure.Notification.Email
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace ClassifiedAds.Infrastructure.Notification.Email
 {
     public interface IEmailNotification
     {
-        void Send(EmailMessageDTO emailMessage);
+        void Send(IEmailMessage emailMessage);
+
+        Task SendAsync(IEmailMessage emailMessage, CancellationToken cancellationToken = default);
     }
 
-    public class EmailMessageDTO
+    public interface IEmailMessage
     {
         public string From { get; set; }
 

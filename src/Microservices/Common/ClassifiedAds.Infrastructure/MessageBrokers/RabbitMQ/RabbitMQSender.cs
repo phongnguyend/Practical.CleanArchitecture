@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
 {
@@ -42,6 +44,12 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
                                      basicProperties: properties,
                                      body: body);
             }
+        }
+
+        public Task SendAsync(T message, MetaData metaData = null, CancellationToken cancellationToken = default)
+        {
+            Send(message, metaData);
+            return Task.CompletedTask;
         }
     }
 }

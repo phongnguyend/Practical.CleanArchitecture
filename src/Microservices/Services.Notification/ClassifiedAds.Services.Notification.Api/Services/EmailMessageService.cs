@@ -84,7 +84,7 @@ namespace ClassifiedAds.Services.Notification.Services
             {
                 try
                 {
-                    _emailNotification.Send(new Infrastructure.Notification.Email.EmailMessageDTO
+                    _emailNotification.Send(new EmailMessageDTO
                     {
                         From = emailMessage.From,
                         Tos = emailMessage.Tos,

@@ -2,6 +2,7 @@
 using Microsoft.Azure.ServiceBus;
 using Newtonsoft.Json;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus
@@ -22,7 +23,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus
             SendAsync(message, metaData).Wait();
         }
 
-        private async Task SendAsync(T message, MetaData metaData)
+        public async Task SendAsync(T message, MetaData metaData, CancellationToken cancellationToken = default)
         {
             var topicClient = new TopicClient(_connectionString, _topicName);
             var bytes = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new Message<T>

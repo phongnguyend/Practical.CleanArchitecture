@@ -1,8 +1,6 @@
-﻿using ClassifiedAds.Infrastructure.Notification.Email;
-
-namespace ClassifiedAds.Services.Notification.DTOs
+﻿namespace ClassifiedAds.Services.Identity.DTOs
 {
-    public class EmailMessageDTO : IEmailMessage
+    public class EmailMessageDTO
     {
         public string From { get; set; }
 
