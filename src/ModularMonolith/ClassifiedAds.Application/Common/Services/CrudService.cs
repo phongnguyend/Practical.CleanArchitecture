@@ -5,6 +5,7 @@ using ClassifiedAds.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application
 {
@@ -22,39 +23,39 @@ namespace ClassifiedAds.Application
             _domainEvents = domainEvents;
         }
 
-        public virtual void AddOrUpdate(T entity)
+        public Task<List<T>> GetAsync()
+        {
+            return _repository.ToListAsync(_repository.GetAll());
+        }
+
+        public Task<T> GetByIdAsync(Guid Id)
+        {
+            ValidationException.Requires(Id != Guid.Empty, "Invalid Id");
+            return _repository.FirstOrDefaultAsync(_repository.GetAll().Where(x => x.Id == Id));
+        }
+
+        public async Task AddOrUpdateAsync(T entity)
         {
             var adding = entity.Id.Equals(default);
 
-            _repository.AddOrUpdate(entity);
-            _unitOfWork.SaveChanges();
+            await _repository.AddOrUpdateAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
 
             if (adding)
             {
-                _domainEvents.Dispatch(new EntityCreatedEvent<T>(entity, DateTime.Now));
+                await _domainEvents.DispatchAsync(new EntityCreatedEvent<T>(entity, DateTime.UtcNow));
             }
             else
             {
-                _domainEvents.Dispatch(new EntityUpdatedEvent<T>(entity, DateTime.Now));
+                await _domainEvents.DispatchAsync(new EntityUpdatedEvent<T>(entity, DateTime.UtcNow));
             }
         }
 
-        public virtual IList<T> Get()
-        {
-            return _repository.GetAll().ToList();
-        }
-
-        public virtual T GetById(Guid Id)
-        {
-            ValidationException.Requires(Id != Guid.Empty, "Invalid Id");
-            return _repository.GetAll().FirstOrDefault(x => x.Id == Id);
-        }
-
-        public virtual void Delete(T entity)
+        public async Task DeleteAsync(T entity)
         {
             _repository.Delete(entity);
-            _unitOfWork.SaveChanges();
-            _domainEvents.Dispatch(new EntityDeletedEvent<T>(entity, DateTime.Now));
+            await _unitOfWork.SaveChangesAsync();
+            await _domainEvents.DispatchAsync(new EntityDeletedEvent<T>(entity, DateTime.UtcNow));
         }
     }
 }

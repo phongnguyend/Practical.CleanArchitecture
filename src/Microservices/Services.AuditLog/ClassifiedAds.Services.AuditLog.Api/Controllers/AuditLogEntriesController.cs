@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using ClassifiedAds.Application;
 using ClassifiedAds.Services.AuditLog.DTOs;
 using ClassifiedAds.Services.AuditLog.Queries;
@@ -21,9 +22,9 @@ namespace ClassifiedAds.Services.AuditLog.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<AuditLogEntryDTO>> Get()
+        public async Task<ActionResult<IEnumerable<AuditLogEntryDTO>>> Get()
         {
-            var logs = _dispatcher.Dispatch(new GetAuditEntriesQuery { });
+            var logs = await _dispatcher.DispatchAsync(new GetAuditEntriesQuery { });
             return Ok(logs);
         }
     }

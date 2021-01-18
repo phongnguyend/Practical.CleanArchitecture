@@ -23,46 +23,29 @@ namespace ClassifiedAds.Infrastructure.Storages.Azure
             _container = blobClient.GetContainerReference(_containerName);
         }
 
-        public void Create(IFileEntry fileEntry, Stream stream)
-        {
-            CreateAsync(fileEntry, stream).GetAwaiter().GetResult();
-        }
-
         public async Task CreateAsync(IFileEntry fileEntry, Stream stream, CancellationToken cancellationToken = default)
         {
-            _container.CreateIfNotExistsAsync().GetAwaiter().GetResult();
+            await _container.CreateIfNotExistsAsync(cancellationToken);
 
             var name = fileEntry.Id.ToString();
             CloudBlockBlob blob = _container.GetBlockBlobReference(name);
-            await blob.UploadFromStreamAsync(stream);
+            await blob.UploadFromStreamAsync(stream, cancellationToken);
 
             fileEntry.FileLocation = name;
-        }
-
-        public void Delete(IFileEntry fileEntry)
-        {
-            DeleteAsync(fileEntry).GetAwaiter().GetResult();
         }
 
         public async Task DeleteAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
             CloudBlockBlob blob = _container.GetBlockBlobReference(fileEntry.FileLocation);
-            await blob.DeleteAsync();
-        }
-
-        public byte[] Read(IFileEntry fileEntry)
-        {
-            return ReadAsync(fileEntry).GetAwaiter().GetResult();
+            await blob.DeleteAsync(cancellationToken);
         }
 
         public async Task<byte[]> ReadAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
             CloudBlockBlob blob = _container.GetBlockBlobReference(fileEntry.FileLocation);
-            using (var stream = new MemoryStream())
-            {
-                await blob.DownloadToStreamAsync(stream);
-                return stream.ToArray();
-            }
+            using var stream = new MemoryStream();
+            await blob.DownloadToStreamAsync(stream, cancellationToken);
+            return stream.ToArray();
         }
     }
 }

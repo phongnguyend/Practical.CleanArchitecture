@@ -37,7 +37,7 @@ namespace ClassifiedAds.Blazor.Modules.Products.Pages
             Products = await ProductService.GetProducts();
         }
 
-        protected async Task QuickAddProduct()
+        protected void QuickAddProduct()
         {
             NavManager.NavigateTo("/products/add");
         }

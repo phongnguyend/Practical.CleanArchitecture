@@ -10,6 +10,7 @@ using ClassifiedAds.Modules.Notification.Repositories;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Notification.Services
 {
@@ -36,9 +37,9 @@ namespace ClassifiedAds.Modules.Notification.Services
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public void CreateEmailMessage(Contracts.DTOs.EmailMessageDTO emailMessage)
+        public Task CreateEmailMessageAsync(EmailMessageDTO emailMessage)
         {
-            AddOrUpdate(new EmailMessage
+            return AddOrUpdateAsync(new EmailMessage
             {
                 From = emailMessage.From,
                 Tos = emailMessage.Tos,
@@ -49,7 +50,7 @@ namespace ClassifiedAds.Modules.Notification.Services
             });
         }
 
-        public int ResendEmailMessages()
+        public async Task<int> ResendEmailMessagesAsync()
         {
             var dateTime = _dateTimeProvider.OffsetNow.AddMinutes(-1);
 
@@ -62,12 +63,12 @@ namespace ClassifiedAds.Modules.Notification.Services
             {
                 foreach (var email in messages)
                 {
-                    _emailMessageCreatedEventSender.Send(new EmailMessageCreatedEvent { Id = email.Id });
+                    await _emailMessageCreatedEventSender.SendAsync(new EmailMessageCreatedEvent { Id = email.Id });
 
                     email.RetriedCount++;
 
-                    _repository.AddOrUpdate(email);
-                    _repository.UnitOfWork.SaveChanges();
+                    await _repository.AddOrUpdateAsync(email);
+                    await _repository.UnitOfWork.SaveChangesAsync();
                 }
             }
             else
@@ -78,14 +79,14 @@ namespace ClassifiedAds.Modules.Notification.Services
             return messages.Count;
         }
 
-        public void SendEmailMessage(Guid id)
+        public async Task SendEmailMessageAsync(Guid id)
         {
             var emailMessage = _repository.GetAll().FirstOrDefault(x => x.Id == id);
             if (emailMessage != null && !emailMessage.SentDateTime.HasValue)
             {
                 try
                 {
-                    _emailNotification.Send(new DTOs.EmailMessageDTO
+                    await _emailNotification.SendAsync(new DTOs.EmailMessageDTO
                     {
                         From = emailMessage.From,
                         Tos = emailMessage.Tos,

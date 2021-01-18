@@ -109,54 +109,54 @@ namespace ClassifiedAds.BackgroundServer
 
             var notification = serviceProvider.GetService<IWebNotification<SendTaskStatusMessage>>();
 
-            fileUploadedMessageQueueReceiver?.Receive((data, metaData) =>
+            fileUploadedMessageQueueReceiver?.Receive(async (data, metaData) =>
             {
                 Thread.Sleep(5000); // simulate long running task
 
                 string message = data.FileEntry.Id.ToString();
 
-                notification.Send(new SendTaskStatusMessage { Step = $"{AppSettings.MessageBroker.Provider} - File Uploaded", Message = message });
+                await notification.SendAsync(new SendTaskStatusMessage { Step = $"{AppSettings.MessageBroker.Provider} - File Uploaded", Message = message });
             });
 
-            fileDeletedMessageQueueReceiver?.Receive((data, metaData) =>
+            fileDeletedMessageQueueReceiver?.Receive(async (data, metaData) =>
             {
                 Thread.Sleep(5000); // simulate long running task
 
                 string message = data.FileEntry.Id.ToString();
 
-                notification.Send(new SendTaskStatusMessage { Step = $"{AppSettings.MessageBroker.Provider} - File Deleted", Message = message });
+                await notification.SendAsync(new SendTaskStatusMessage { Step = $"{AppSettings.MessageBroker.Provider} - File Deleted", Message = message });
             });
 
             var emailMessageService = serviceProvider.GetService<EmailMessageService>();
 
-            emailMessageCreatedMessageQueueReceiver?.Receive((data, metaData) =>
+            emailMessageCreatedMessageQueueReceiver?.Receive(async (data, metaData) =>
             {
                 string message = data.Id.ToString();
 
                 try
                 {
-                    emailMessageService.SendEmailMessage(data.Id);
+                    await emailMessageService.SendEmailMessageAsync(data.Id);
                 }
                 catch (Exception ex)
                 { }
 
-                notification.Send(new SendTaskStatusMessage { Step = $"Send Email", Message = message });
+                await notification.SendAsync(new SendTaskStatusMessage { Step = $"Send Email", Message = message });
             });
 
             var smsMessageService = serviceProvider.GetService<SmsMessageService>();
 
-            smsMessageCreatedMessageQueueReceiver?.Receive((data, metaData) =>
+            smsMessageCreatedMessageQueueReceiver?.Receive(async (data, metaData) =>
             {
                 string message = data.Id.ToString();
 
                 try
                 {
-                    smsMessageService.SendSmsMessage(data.Id);
+                    await smsMessageService.SendSmsMessageAsync(data.Id);
                 }
                 catch (Exception ex)
                 { }
 
-                notification.Send(new SendTaskStatusMessage { Step = $"Send Sms", Message = message });
+                await notification.SendAsync(new SendTaskStatusMessage { Step = $"Send Sms", Message = message });
             });
         }
     }

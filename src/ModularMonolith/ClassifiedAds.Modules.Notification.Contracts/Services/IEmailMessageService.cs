@@ -1,9 +1,10 @@
 ﻿using ClassifiedAds.Modules.Notification.Contracts.DTOs;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Notification.Contracts.Services
 {
     public interface IEmailMessageService
     {
-        void CreateEmailMessage(EmailMessageDTO emailMessage);
+        Task CreateEmailMessageAsync(EmailMessageDTO emailMessage);
     }
 }

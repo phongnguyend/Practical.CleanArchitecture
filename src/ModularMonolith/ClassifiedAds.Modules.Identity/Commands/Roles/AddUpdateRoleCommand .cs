@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Identity.Commands.Roles
 {
@@ -18,10 +19,10 @@ namespace ClassifiedAds.Modules.Identity.Commands.Roles
             _roleRepository = roleRepository;
         }
 
-        public void Handle(AddUpdateRoleCommand command)
+        public async Task HandleAsync(AddUpdateRoleCommand command)
         {
-            _roleRepository.AddOrUpdate(command.Role);
-            _roleRepository.UnitOfWork.SaveChanges();
+            await _roleRepository.AddOrUpdateAsync(command.Role);
+            await _roleRepository.UnitOfWork.SaveChangesAsync();
         }
     }
 }

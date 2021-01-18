@@ -7,6 +7,7 @@ using ClassifiedAds.Services.Storage.DTOs;
 using ClassifiedAds.Services.Storage.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Storage.EventHandlers
 {
@@ -19,7 +20,7 @@ namespace ClassifiedAds.Services.Storage.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public void Handle(EntityUpdatedEvent<FileEntry> domainEvent)
+        public async Task HandleAsync(EntityUpdatedEvent<FileEntry> domainEvent)
         {
             // Handle the event here and we can also forward to external systems
             using (var scope = _serviceProvider.CreateScope())
@@ -29,7 +30,7 @@ namespace ClassifiedAds.Services.Storage.EventHandlers
                 var currentUser = serviceProvider.GetService<ICurrentUser>();
                 var dispatcher = serviceProvider.GetService<Dispatcher>();
 
-                dispatcher.Dispatch(new AddAuditLogEntryCommand
+                await dispatcher.DispatchAsync(new AddAuditLogEntryCommand
                 {
                     AuditLogEntry = new AuditLogEntryDTO
                     {

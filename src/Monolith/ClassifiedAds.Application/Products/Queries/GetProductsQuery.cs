@@ -5,6 +5,7 @@ using ClassifiedAds.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.Products.Queries
 {
@@ -23,9 +24,9 @@ namespace ClassifiedAds.Application.Products.Queries
             _productRepository = productRepository;
         }
 
-        public List<Product> Handle(GetProductsQuery query)
+        public async Task<List<Product>> HandleAsync(GetProductsQuery query)
         {
-            return _productRepository.GetAll().ToList();
+            return await _productRepository.ToListAsync(_productRepository.GetAll());
         }
     }
 }

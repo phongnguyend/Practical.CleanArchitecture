@@ -5,8 +5,6 @@ namespace ClassifiedAds.Infrastructure.Notification.Sms
 {
     public interface ISmsNotification
     {
-        void Send(ISmsMessage smsMessage);
-
         Task SendAsync(ISmsMessage smsMessage, CancellationToken cancellationToken = default);
     }
 

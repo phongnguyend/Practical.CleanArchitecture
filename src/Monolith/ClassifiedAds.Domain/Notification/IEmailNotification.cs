@@ -5,8 +5,6 @@ namespace ClassifiedAds.Domain.Notification
 {
     public interface IEmailNotification
     {
-        void Send(IEmailMessage emailMessage);
-
         Task SendAsync(IEmailMessage emailMessage, CancellationToken cancellationToken = default);
     }
 

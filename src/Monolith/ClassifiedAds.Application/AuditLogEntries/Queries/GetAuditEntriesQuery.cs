@@ -2,6 +2,7 @@
 using ClassifiedAds.Domain.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.AuditLogEntries.Queries
 {
@@ -20,7 +21,7 @@ namespace ClassifiedAds.Application.AuditLogEntries.Queries
             _userRepository = userRepository;
         }
 
-        public List<AuditLogEntryDTO> Handle(GetAuditEntriesQuery query)
+        public async Task<List<AuditLogEntryDTO>> HandleAsync(GetAuditEntriesQuery query)
         {
             var auditLogs = _auditLogEntryRepository.Get(query);
             var users = _userRepository.GetAll();
@@ -37,7 +38,7 @@ namespace ClassifiedAds.Application.AuditLogEntries.Queries
                     UserName = y.UserName,
                 });
 
-            return rs.OrderByDescending(x => x.CreatedDateTime).ToList();
+            return await _userRepository.ToListAsync(rs.OrderByDescending(x => x.CreatedDateTime));
         }
     }
 }

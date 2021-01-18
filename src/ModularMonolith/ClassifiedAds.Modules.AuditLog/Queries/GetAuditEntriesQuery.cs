@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.AuditLog.Queries
 {
@@ -24,7 +25,7 @@ namespace ClassifiedAds.Modules.AuditLog.Queries
             _dispatcher = dispatcher;
         }
 
-        public List<AuditLogEntryDTO> Handle(GetAuditEntriesQuery queryOptions)
+        public async Task<List<AuditLogEntryDTO>> HandleAsync(GetAuditEntriesQuery queryOptions)
         {
             var query = _dbContext.Set<AuditLogEntry>() as IQueryable<AuditLogEntry>;
 
@@ -43,8 +44,8 @@ namespace ClassifiedAds.Modules.AuditLog.Queries
                 query = query.AsNoTracking();
             }
 
-            var auditLogs = query.ToList();
-            var users = _dispatcher.Dispatch(new GetUsersQuery());
+            var auditLogs = await query.ToListAsync();
+            var users = await _dispatcher.DispatchAsync(new GetUsersQuery());
 
             var rs = auditLogs.Join(users, x => x.UserId, y => y.Id,
                 (x, y) => new AuditLogEntryDTO

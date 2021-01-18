@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System.Threading.Tasks;
 using static ClassifiedAds.Services.Notification.Grpc.Sms;
 
 namespace ClassifiedAds.Services.Identity.Commands.SmsMessages
@@ -26,9 +27,9 @@ namespace ClassifiedAds.Services.Identity.Commands.SmsMessages
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public void Handle(AddSmsMessageCommand command)
+        public async Task HandleAsync(AddSmsMessageCommand command)
         {
-            var token = _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken).GetAwaiter().GetResult();
+            var token = await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
             var headers = new Metadata
             {
                 { "Authorization", $"Bearer {token}" },

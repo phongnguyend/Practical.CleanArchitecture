@@ -16,11 +16,6 @@ namespace ClassifiedAds.Infrastructure.Notification.Sms.Twilio
             _options = options;
         }
 
-        public void Send(ISmsMessage smsMessage)
-        {
-            SendAsync(smsMessage).GetAwaiter().GetResult();
-        }
-
         public async Task SendAsync(ISmsMessage smsMessage, CancellationToken cancellationToken = default)
         {
             TwilioClient.Init(_options.AccountSId, _options.AuthToken);

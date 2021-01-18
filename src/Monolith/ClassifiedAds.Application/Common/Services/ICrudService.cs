@@ -1,18 +1,19 @@
 ﻿using ClassifiedAds.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application
 {
     public interface ICrudService<T>
         where T : AggregateRoot<Guid>
     {
-        IList<T> Get();
+        Task<List<T>> GetAsync();
 
-        T GetById(Guid guid);
+        Task<T> GetByIdAsync(Guid guid);
 
-        void AddOrUpdate(T entity);
+        Task AddOrUpdateAsync(T entity);
 
-        void Delete(T entity);
+        Task DeleteAsync(T entity);
     }
 }

@@ -2,6 +2,7 @@
 using ClassifiedAds.Domain.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.Roles.Queries
 {
@@ -21,7 +22,7 @@ namespace ClassifiedAds.Application.Roles.Queries
             _roleRepository = roleRepository;
         }
 
-        public List<Role> Handle(GetRolesQuery query)
+        public async Task<List<Role>> HandleAsync(GetRolesQuery query)
         {
             var db = _roleRepository.Get(new RoleQueryOptions
             {
@@ -30,7 +31,7 @@ namespace ClassifiedAds.Application.Roles.Queries
                 AsNoTracking = query.AsNoTracking,
             });
 
-            return db.ToList();
+            return await _roleRepository.ToListAsync(db);
         }
     }
 }

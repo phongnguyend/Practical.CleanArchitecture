@@ -6,6 +6,7 @@ using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.FileEntries.EventHandlers
 {
@@ -20,14 +21,14 @@ namespace ClassifiedAds.Application.FileEntries.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public void Handle(EntityCreatedEvent<FileEntry> domainEvent)
+        public async Task HandleAsync(EntityCreatedEvent<FileEntry> domainEvent)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
                 var auditSerivce = scope.ServiceProvider.GetService<ICrudService<AuditLogEntry>>();
                 var currentUser = scope.ServiceProvider.GetService<ICurrentUser>();
 
-                auditSerivce.AddOrUpdate(new AuditLogEntry
+                await auditSerivce.AddOrUpdateAsync(new AuditLogEntry
                 {
                     UserId = currentUser.IsAuthenticated ? currentUser.UserId : Guid.Empty,
                     CreatedDateTime = domainEvent.EventDateTime,
@@ -38,7 +39,7 @@ namespace ClassifiedAds.Application.FileEntries.EventHandlers
             }
 
             // Forward to external systems
-            _fileUploadedEventSender.Send(new FileUploadedEvent
+            await _fileUploadedEventSender.SendAsync(new FileUploadedEvent
             {
                 FileEntry = domainEvent.Entity,
             });

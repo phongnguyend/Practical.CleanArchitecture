@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using static ClassifiedAds.Services.AuditLog.Grpc.AuditLog;
 
 namespace ClassifiedAds.Services.Storage.Queries
@@ -29,9 +30,9 @@ namespace ClassifiedAds.Services.Storage.Queries
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public List<AuditLogEntryDTO> Handle(GetAuditEntriesQuery queryOptions)
+        public async Task<List<AuditLogEntryDTO>> HandleAsync(GetAuditEntriesQuery queryOptions)
         {
-            var token = _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken).GetAwaiter().GetResult();
+            var token = await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
             var headers = new Metadata
             {
                 { "Authorization", $"Bearer {token}" },

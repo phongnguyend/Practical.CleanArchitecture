@@ -418,7 +418,7 @@ namespace IdentityServerHost.Quickstart.UI
             var confirmationEmail = Url.Action("ConfirmEmailAddress", "Account",
                 new { token = token, email = user.Email }, Request.Scheme);
 
-            _dispatcher.Dispatch(new AddEmailMessageCommand
+            await _dispatcher.DispatchAsync(new AddEmailMessageCommand
             {
                 EmailMessage = new EmailMessageDTO
                 {
@@ -471,7 +471,7 @@ namespace IdentityServerHost.Quickstart.UI
                     var resetUrl = Url.Action("ResetPassword", "Account",
                         new { token = token, email = user.Email }, Request.Scheme);
 
-                    _dispatcher.Dispatch(new AddEmailMessageCommand
+                    await _dispatcher.DispatchAsync(new AddEmailMessageCommand
                     {
                         EmailMessage = new EmailMessageDTO
                         {

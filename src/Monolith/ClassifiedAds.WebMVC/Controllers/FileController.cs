@@ -22,9 +22,9 @@ namespace ClassifiedAds.WebMVC.Controllers
             _fileManager = fileManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_dispatcher.Dispatch(new GetEntititesQuery<FileEntry>()));
+            return View(await _dispatcher.DispatchAsync(new GetEntititesQuery<FileEntry>()));
         }
 
         [HttpGet]
@@ -45,40 +45,40 @@ namespace ClassifiedAds.WebMVC.Controllers
                 FileName = model.FormFile.FileName,
             };
 
-            _dispatcher.Dispatch(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
+            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
 
             using (var stream = new MemoryStream())
             {
                 await model.FormFile.CopyToAsync(stream);
-                _fileManager.Create(fileEntry, stream);
+                await _fileManager.CreateAsync(fileEntry, stream);
             }
 
-            _dispatcher.Dispatch(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
+            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
 
             return View();
         }
 
-        public IActionResult Download(Guid id)
+        public async Task<IActionResult> Download(Guid id)
         {
-            var fileEntry = _dispatcher.Dispatch(new GetEntityByIdQuery<FileEntry> { Id = id });
-            var content = _fileManager.Read(fileEntry);
+            var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
+            var content = await _fileManager.ReadAsync(fileEntry);
             return File(content, MediaTypeNames.Application.Octet, WebUtility.HtmlEncode(fileEntry.FileName));
         }
 
         [HttpGet]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var fileEntry = _dispatcher.Dispatch(new GetEntityByIdQuery<FileEntry> { Id = id });
+            var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
             return View(fileEntry);
         }
 
         [HttpPost]
-        public IActionResult Delete(FileEntry model)
+        public async Task<IActionResult> Delete(FileEntry model)
         {
-            var fileEntry = _dispatcher.Dispatch(new GetEntityByIdQuery<FileEntry> { Id = model.Id });
+            var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = model.Id });
 
-            _dispatcher.Dispatch(new DeleteEntityCommand<FileEntry> { Entity = fileEntry });
-            _fileManager.Delete(fileEntry);
+            await _dispatcher.DispatchAsync(new DeleteEntityCommand<FileEntry> { Entity = fileEntry });
+            await _fileManager.DeleteAsync(fileEntry);
 
             return RedirectToAction(nameof(Index));
         }

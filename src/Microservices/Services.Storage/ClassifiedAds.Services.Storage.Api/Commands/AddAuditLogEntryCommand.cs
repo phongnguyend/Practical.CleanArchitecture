@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System.Threading.Tasks;
 using static ClassifiedAds.Services.AuditLog.Grpc.AuditLog;
 
 namespace ClassifiedAds.Services.Storage.Commands
@@ -27,9 +28,9 @@ namespace ClassifiedAds.Services.Storage.Commands
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public void Handle(AddAuditLogEntryCommand command)
+        public async Task HandleAsync(AddAuditLogEntryCommand command)
         {
-            var token = _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken).GetAwaiter().GetResult();
+            var token = await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
             var headers = new Metadata
             {
                 { "Authorization", $"Bearer {token}" },

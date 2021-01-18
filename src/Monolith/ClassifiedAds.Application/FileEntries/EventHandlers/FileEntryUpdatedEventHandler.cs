@@ -4,6 +4,7 @@ using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.FileEntries.EventHandlers
 {
@@ -16,7 +17,7 @@ namespace ClassifiedAds.Application.FileEntries.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public void Handle(EntityUpdatedEvent<FileEntry> domainEvent)
+        public async Task HandleAsync(EntityUpdatedEvent<FileEntry> domainEvent)
         {
             // Handle the event here and we can also forward to external systems
             using (var scope = _serviceProvider.CreateScope())
@@ -24,7 +25,7 @@ namespace ClassifiedAds.Application.FileEntries.EventHandlers
                 var auditSerivce = scope.ServiceProvider.GetService<ICrudService<AuditLogEntry>>();
                 var currentUser = scope.ServiceProvider.GetService<ICurrentUser>();
 
-                auditSerivce.AddOrUpdate(new AuditLogEntry
+                await auditSerivce.AddOrUpdateAsync(new AuditLogEntry
                 {
                     UserId = currentUser.IsAuthenticated ? currentUser.UserId : Guid.Empty,
                     CreatedDateTime = domainEvent.EventDateTime,

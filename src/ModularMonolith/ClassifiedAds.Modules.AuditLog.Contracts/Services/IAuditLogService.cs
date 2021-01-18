@@ -1,12 +1,13 @@
 ﻿using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.AuditLog.Contracts.Services
 {
     public interface IAuditLogService
     {
-        void AddOrUpdate(AuditLogEntryDTO auditLog);
+        Task AddOrUpdateAsync(AuditLogEntryDTO auditLog);
 
-        List<AuditLogEntryDTO> GetAuditLogEntries(AuditLogEntryQueryOptions query);
+        Task<List<AuditLogEntryDTO>> GetAuditLogEntriesAsync(AuditLogEntryQueryOptions query);
     }
 }

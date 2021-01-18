@@ -4,6 +4,7 @@ using ClassifiedAds.Modules.Identity.Contracts.Services;
 using ClassifiedAds.Modules.Identity.Queries.Roles;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Identity.Services
 {
@@ -16,15 +17,15 @@ namespace ClassifiedAds.Modules.Identity.Services
             _dispatcher = dispatcher;
         }
 
-        public List<UserDTO> GetUsers(UserQueryOptions query)
+        public async Task<List<UserDTO>> GetUsersAsync(UserQueryOptions query)
         {
-            var users = _dispatcher.Dispatch(new GetUsersQuery
+            var users = (await _dispatcher.DispatchAsync(new GetUsersQuery
             {
                 IncludeClaims = query.IncludeClaims,
                 IncludeUserRoles = query.IncludeUserRoles,
                 IncludeRoles = query.IncludeRoles,
                 AsNoTracking = query.AsNoTracking,
-            }).Select(x => new UserDTO
+            })).Select(x => new UserDTO
             {
                 Id = x.Id,
                 UserName = x.UserName,

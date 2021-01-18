@@ -1,9 +1,10 @@
 ﻿using ClassifiedAds.Services.AuditLog.DTOs;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.AuditLog.Services
 {
     public interface IAuditLogService
     {
-        void AddOrUpdate(AuditLogEntryDTO auditLog);
+        Task AddOrUpdateAsync(AuditLogEntryDTO auditLog);
     }
 }

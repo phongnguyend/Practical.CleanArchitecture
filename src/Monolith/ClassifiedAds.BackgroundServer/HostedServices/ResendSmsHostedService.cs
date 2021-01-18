@@ -38,7 +38,7 @@ namespace ClassifiedAds.BackgroundServer.HostedServices
                 {
                     var resendSmsTask = scope.ServiceProvider.GetRequiredService<SmsMessageService>();
 
-                    rs = resendSmsTask.ResendSmsMessage();
+                    rs = await resendSmsTask.ResendSmsMessageAsync();
                 }
 
                 if (rs == 0)

@@ -55,8 +55,8 @@ namespace ClassifiedAds.WebMVC.Controllers
             _logger.LogInformation("Test LogInformation");
             _logger.LogWarning("Test LogWarning");
 
-            var products1 = _dispatcher.Dispatch(new GetProductsQuery());
-            var products2 = _productService.Get().ToList();
+            var products1 = await _dispatcher.DispatchAsync(new GetProductsQuery());
+            var products2 = await _productService.GetAsync();
 
             var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
 

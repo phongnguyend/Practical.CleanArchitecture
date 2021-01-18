@@ -101,7 +101,7 @@ namespace ClassifiedAds.IdentityServer.Quickstart.Manage
             // Generate the token and send it
             var user = await GetCurrentUserAsync();
             var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, model.PhoneNumber);
-            _dispatcher.Dispatch(new AddSmsMessageCommand
+            await _dispatcher.DispatchAsync(new AddSmsMessageCommand
             {
                 SmsMessage = new SmsMessageDTO
                 {

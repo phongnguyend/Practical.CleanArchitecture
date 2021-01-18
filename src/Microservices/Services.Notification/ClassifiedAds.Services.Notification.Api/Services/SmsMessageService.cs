@@ -6,6 +6,7 @@ using ClassifiedAds.Services.Notification.Repositories;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Notification.Services
 {
@@ -30,7 +31,7 @@ namespace ClassifiedAds.Services.Notification.Services
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public int ResendSmsMessage()
+        public async Task<int> ResendSmsMessageAsync()
         {
             var dateTime = _dateTimeProvider.OffsetNow.AddMinutes(-1);
 
@@ -43,12 +44,12 @@ namespace ClassifiedAds.Services.Notification.Services
             {
                 foreach (var sms in messages)
                 {
-                    _smsMessageCreatedEventSender.Send(new SmsMessageCreatedEvent { Id = sms.Id });
+                    await _smsMessageCreatedEventSender.SendAsync(new SmsMessageCreatedEvent { Id = sms.Id });
 
                     sms.RetriedCount++;
 
-                    _repository.AddOrUpdate(sms);
-                    _repository.UnitOfWork.SaveChanges();
+                    await _repository.AddOrUpdateAsync(sms);
+                    await _repository.UnitOfWork.SaveChangesAsync();
                 }
             }
             else
@@ -59,14 +60,14 @@ namespace ClassifiedAds.Services.Notification.Services
             return messages.Count;
         }
 
-        public void SendSmsMessage(Guid id)
+        public async Task SendSmsMessageAsync(Guid id)
         {
             var smsMessage = _repository.GetAll().FirstOrDefault(x => x.Id == id);
             if (smsMessage != null && !smsMessage.SentDateTime.HasValue)
             {
                 try
                 {
-                    _smsNotification.Send(new SmsMessageDTO
+                    await _smsNotification.SendAsync(new SmsMessageDTO
                     {
                         Message = smsMessage.Message,
                         PhoneNumber = smsMessage.PhoneNumber,
