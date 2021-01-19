@@ -38,7 +38,7 @@ namespace ClassifiedAds.BackgroundServer.HostedServices
                 {
                     var resendEmailTask = scope.ServiceProvider.GetRequiredService<EmailMessageService>();
 
-                    rs = resendEmailTask.ResendEmailMessages();
+                    rs = await resendEmailTask.ResendEmailMessagesAsync();
                 }
 
                 if (rs == 0)

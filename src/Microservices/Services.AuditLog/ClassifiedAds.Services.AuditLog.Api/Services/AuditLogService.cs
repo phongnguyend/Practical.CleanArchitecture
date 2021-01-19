@@ -4,6 +4,7 @@ using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Services.AuditLog.DTOs;
 using ClassifiedAds.Services.AuditLog.Entities;
 using System;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.AuditLog.Services
 {
@@ -17,9 +18,9 @@ namespace ClassifiedAds.Services.AuditLog.Services
             _dispatcher = dispatcher;
         }
 
-        public void AddOrUpdate(AuditLogEntryDTO dto)
+        public Task AddOrUpdateAsync(AuditLogEntryDTO dto)
         {
-            AddOrUpdate(new AuditLogEntry
+            return AddOrUpdateAsync(new AuditLogEntry
             {
                 UserId = dto.UserId,
                 CreatedDateTime = dto.CreatedDateTime,

@@ -3,6 +3,7 @@ using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.Products.Queries
 {
@@ -21,9 +22,9 @@ namespace ClassifiedAds.Application.Products.Queries
             _productRepository = productRepository;
         }
 
-        public Product Handle(GetProductQuery query)
+        public async Task<Product> HandleAsync(GetProductQuery query)
         {
-            var product = _productRepository.GetAll().FirstOrDefault(x => x.Id == query.Id);
+            var product = await _productRepository.FirstOrDefaultAsync(_productRepository.GetAll().Where(x => x.Id == query.Id));
 
             if (query.ThrowNotFoundIfNull && product == null)
             {

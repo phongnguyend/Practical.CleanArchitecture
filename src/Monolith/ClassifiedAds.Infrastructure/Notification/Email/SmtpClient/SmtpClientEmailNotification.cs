@@ -15,11 +15,6 @@ namespace ClassifiedAds.Infrastructure.Notification.Email.SmtpClient
             _options = options;
         }
 
-        public void Send(IEmailMessage emailMessage)
-        {
-            SendAsync(emailMessage).GetAwaiter().GetResult();
-        }
-
         public async Task SendAsync(IEmailMessage emailMessage, CancellationToken cancellationToken = default)
         {
             var mail = new MailMessage();

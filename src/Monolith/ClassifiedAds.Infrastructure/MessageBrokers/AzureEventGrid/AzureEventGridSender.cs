@@ -21,11 +21,6 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventGrid
             _topic = topic;
         }
 
-        public void Send(T message, MetaData metaData = null)
-        {
-            SendAsync(message, metaData).GetAwaiter().GetResult();
-        }
-
         public async Task SendAsync(T message, MetaData metaData, CancellationToken cancellationToken = default)
         {
             TopicCredentials domainKeyCredentials = new TopicCredentials(_domainKey);

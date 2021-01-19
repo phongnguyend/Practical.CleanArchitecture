@@ -21,9 +21,9 @@ namespace ClassifiedAds.Services.Identity.Grpc.Services
             _dispatcher = dispatcher;
         }
 
-        public override Task<GetUsersResponse> GetUsers(GetUsersRequest request, ServerCallContext context)
+        public override async Task<GetUsersResponse> GetUsers(GetUsersRequest request, ServerCallContext context)
         {
-            var users = _dispatcher.Dispatch(new GetUsersQuery()).Select(x => new UserMessage
+            var users = (await _dispatcher.DispatchAsync(new GetUsersQuery())).Select(x => new UserMessage
             {
                 Id = x.Id.ToString(),
                 UserName = x.UserName,
@@ -32,12 +32,12 @@ namespace ClassifiedAds.Services.Identity.Grpc.Services
 
             var rp = new GetUsersResponse();
             rp.Users.AddRange(users);
-            return Task.FromResult(rp);
+            return rp;
         }
 
-        public override Task<GetUserResponse> GetUser(GetUserRequest request, ServerCallContext context)
+        public override async Task<GetUserResponse> GetUser(GetUserRequest request, ServerCallContext context)
         {
-            var user = _dispatcher.Dispatch(new GetUserQuery { Id = Guid.Parse(request.Id), AsNoTracking = true });
+            var user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = Guid.Parse(request.Id), AsNoTracking = true });
 
             var response = new GetUserResponse
             {
@@ -49,7 +49,7 @@ namespace ClassifiedAds.Services.Identity.Grpc.Services
                 } : null
             };
 
-            return Task.FromResult(response);
+            return response;
         }
     }
 }

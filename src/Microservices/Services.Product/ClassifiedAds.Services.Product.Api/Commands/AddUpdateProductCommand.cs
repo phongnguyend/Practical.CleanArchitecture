@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Application;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Product.Commands
 {
@@ -16,9 +17,9 @@ namespace ClassifiedAds.Services.Product.Commands
             _productService = productService;
         }
 
-        public void Handle(AddUpdateProductCommand command)
+        public async Task HandleAsync(AddUpdateProductCommand command)
         {
-            _productService.AddOrUpdate(command.Product);
+            await _productService.AddOrUpdateAsync(command.Product);
         }
     }
 }

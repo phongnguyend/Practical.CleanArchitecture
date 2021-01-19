@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Product.Controllers
 {
@@ -29,10 +30,10 @@ namespace ClassifiedAds.Services.Product.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Entities.Product>> Get()
+        public async Task<ActionResult<IEnumerable<Entities.Product>>> Get()
         {
             _logger.LogInformation("Getting all products");
-            var products = _dispatcher.Dispatch(new GetProductsQuery());
+            var products = await _dispatcher.DispatchAsync(new GetProductsQuery());
             var model = products.ToDTOs();
             return Ok(model);
         }
@@ -40,9 +41,9 @@ namespace ClassifiedAds.Services.Product.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Entities.Product> Get(Guid id)
+        public async Task<ActionResult<Entities.Product>> Get(Guid id)
         {
-            var product = _dispatcher.Dispatch(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
+            var product = await _dispatcher.DispatchAsync(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
             var model = product.ToDTO();
             return Ok(model);
         }
@@ -50,10 +51,10 @@ namespace ClassifiedAds.Services.Product.Controllers
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public ActionResult<Entities.Product> Post([FromBody] ProductDTO model)
+        public async Task<ActionResult<Entities.Product>> Post([FromBody] ProductDTO model)
         {
             var product = model.ToEntity();
-            _dispatcher.Dispatch(new AddUpdateProductCommand { Product = product });
+            await _dispatcher.DispatchAsync(new AddUpdateProductCommand { Product = product });
             model = product.ToDTO();
             return Created($"/api/products/{model.Id}", model);
         }
@@ -62,15 +63,15 @@ namespace ClassifiedAds.Services.Product.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Put(Guid id, [FromBody] ProductDTO model)
+        public async Task<ActionResult> Put(Guid id, [FromBody] ProductDTO model)
         {
-            var product = _dispatcher.Dispatch(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
+            var product = await _dispatcher.DispatchAsync(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
 
             product.Code = model.Code;
             product.Name = model.Name;
             product.Description = model.Description;
 
-            _dispatcher.Dispatch(new AddUpdateProductCommand { Product = product });
+            await _dispatcher.DispatchAsync(new AddUpdateProductCommand { Product = product });
 
             model = product.ToDTO();
 
@@ -80,19 +81,19 @@ namespace ClassifiedAds.Services.Product.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Delete(Guid id)
+        public async Task<ActionResult> Delete(Guid id)
         {
-            var product = _dispatcher.Dispatch(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
+            var product = await _dispatcher.DispatchAsync(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
 
-            _dispatcher.Dispatch(new DeleteProductCommand { Product = product });
+            await _dispatcher.DispatchAsync(new DeleteProductCommand { Product = product });
 
             return Ok();
         }
 
         [HttpGet("{id}/auditlogs")]
-        public ActionResult<IEnumerable<AuditLogEntryDTO>> GetAuditLogs(Guid id)
+        public async Task<ActionResult<IEnumerable<AuditLogEntryDTO>>> GetAuditLogs(Guid id)
         {
-            var logs = _dispatcher.Dispatch(new GetAuditEntriesQuery { ObjectId = id.ToString() });
+            var logs = await _dispatcher.DispatchAsync(new GetAuditEntriesQuery { ObjectId = id.ToString() });
 
             List<dynamic> entries = new List<dynamic>();
             ProductDTO previous = null;

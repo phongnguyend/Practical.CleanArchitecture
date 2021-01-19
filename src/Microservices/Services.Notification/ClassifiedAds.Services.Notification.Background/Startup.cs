@@ -64,13 +64,13 @@ namespace ClassifiedAds.Services.Notification.Background
 
             var emailMessageService = serviceProvider.GetService<EmailMessageService>();
 
-            emailMessageCreatedMessageQueueReceiver?.Receive((data, metaData) =>
+            emailMessageCreatedMessageQueueReceiver?.Receive(async (data, metaData) =>
             {
                 string message = data.Id.ToString();
 
                 try
                 {
-                    emailMessageService.SendEmailMessage(data.Id);
+                    await emailMessageService.SendEmailMessageAsync(data.Id);
                 }
                 catch (Exception ex)
                 { }
@@ -79,13 +79,13 @@ namespace ClassifiedAds.Services.Notification.Background
 
             var smsMessageService = serviceProvider.GetService<SmsMessageService>();
 
-            smsMessageCreatedMessageQueueReceiver?.Receive((data, metaData) =>
+            smsMessageCreatedMessageQueueReceiver?.Receive(async (data, metaData) =>
             {
                 string message = data.Id.ToString();
 
                 try
                 {
-                    smsMessageService.SendSmsMessage(data.Id);
+                    await smsMessageService.SendSmsMessageAsync(data.Id);
                 }
                 catch (Exception ex)
                 { }

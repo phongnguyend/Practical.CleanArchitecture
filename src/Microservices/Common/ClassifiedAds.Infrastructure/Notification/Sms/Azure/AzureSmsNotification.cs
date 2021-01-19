@@ -14,11 +14,6 @@ namespace ClassifiedAds.Infrastructure.Notification.Sms.Azure
             _options = options;
         }
 
-        public void Send(ISmsMessage smsMessage)
-        {
-            SendAsync(smsMessage).GetAwaiter().GetResult();
-        }
-
         public async Task SendAsync(ISmsMessage smsMessage, CancellationToken cancellationToken = default)
         {
             var smsClient = new SmsClient(_options.ConnectionString);

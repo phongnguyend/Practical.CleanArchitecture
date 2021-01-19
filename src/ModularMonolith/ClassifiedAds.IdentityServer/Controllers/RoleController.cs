@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using ClassifiedAds.Application;
 using ClassifiedAds.IdentityServer.Models.RoleModels;
 using ClassifiedAds.Modules.Identity.Commands.Roles;
@@ -18,13 +19,13 @@ namespace ClassifiedAds.IdentityServer.Controllers
             _dispatcher = dispatcher;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var roles = _dispatcher.Dispatch(new GetRolesQuery { AsNoTracking = true });
+            var roles = await _dispatcher.DispatchAsync(new GetRolesQuery { AsNoTracking = true });
             return View(roles);
         }
 
-        public IActionResult Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid id)
         {
             Role role;
             if (id == Guid.Empty)
@@ -33,7 +34,7 @@ namespace ClassifiedAds.IdentityServer.Controllers
             }
             else
             {
-                role = _dispatcher.Dispatch(new GetRoleQuery { Id = id, AsNoTracking = true });
+                role = await _dispatcher.DispatchAsync(new GetRoleQuery { Id = id, AsNoTracking = true });
             }
 
             var model = role;
@@ -42,7 +43,7 @@ namespace ClassifiedAds.IdentityServer.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Role model)
+        public async Task<IActionResult> Edit(Role model)
         {
             Role role;
 
@@ -54,45 +55,45 @@ namespace ClassifiedAds.IdentityServer.Controllers
                     NormalizedName = model.Name.ToUpper(),
                 };
 
-                _dispatcher.Dispatch(new AddUpdateRoleCommand { Role = role });
+                await _dispatcher.DispatchAsync(new AddUpdateRoleCommand { Role = role });
             }
             else
             {
-                role = _dispatcher.Dispatch(new GetRoleQuery { Id = model.Id });
+                role = await _dispatcher.DispatchAsync(new GetRoleQuery { Id = model.Id });
                 role.Name = model.Name;
                 role.NormalizedName = model.Name.ToUpper();
-                _dispatcher.Dispatch(new AddUpdateRoleCommand { Role = role });
+                await _dispatcher.DispatchAsync(new AddUpdateRoleCommand { Role = role });
             }
 
             return RedirectToAction(nameof(Edit), new { role.Id });
         }
 
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var role = _dispatcher.Dispatch(new GetRoleQuery { Id = id, AsNoTracking = true });
+            var role = await _dispatcher.DispatchAsync(new GetRoleQuery { Id = id, AsNoTracking = true });
             return View(role);
         }
 
         [HttpPost]
-        public IActionResult Delete(Role model)
+        public async Task<IActionResult> Delete(Role model)
         {
-            var role = _dispatcher.Dispatch(new GetRoleQuery { Id = model.Id });
-            _dispatcher.Dispatch(new DeleteRoleCommand { Role = role });
+            var role = await _dispatcher.DispatchAsync(new GetRoleQuery { Id = model.Id });
+            await _dispatcher.DispatchAsync(new DeleteRoleCommand { Role = role });
 
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Claims(Guid id)
+        public async Task<IActionResult> Claims(Guid id)
         {
-            var role = _dispatcher.Dispatch(new GetRoleQuery { Id = id, IncludeClaims = true, AsNoTracking = true });
+            var role = await _dispatcher.DispatchAsync(new GetRoleQuery { Id = id, IncludeClaims = true, AsNoTracking = true });
 
             return View(ClaimsModel.FromEntity(role));
         }
 
         [HttpPost]
-        public IActionResult Claims(ClaimModel model)
+        public async Task<IActionResult> Claims(ClaimModel model)
         {
-            var role = _dispatcher.Dispatch(new GetRoleQuery { Id = model.Role.Id, IncludeClaims = true });
+            var role = await _dispatcher.DispatchAsync(new GetRoleQuery { Id = model.Role.Id, IncludeClaims = true });
 
             var claim = new RoleClaim
             {
@@ -100,34 +101,34 @@ namespace ClassifiedAds.IdentityServer.Controllers
                 Value = model.Value,
             };
 
-            _dispatcher.Dispatch(new AddClaimCommand { Role = role, Claim = claim });
+            await _dispatcher.DispatchAsync(new AddClaimCommand { Role = role, Claim = claim });
 
             return RedirectToAction(nameof(Claims), new { id = role.Id });
         }
 
-        public IActionResult DeleteClaim(Guid roleId, Guid claimId)
+        public async Task<IActionResult> DeleteClaim(Guid roleId, Guid claimId)
         {
-            var role = _dispatcher.Dispatch(new GetRoleQuery { Id = roleId, IncludeClaims = true, AsNoTracking = true });
+            var role = await _dispatcher.DispatchAsync(new GetRoleQuery { Id = roleId, IncludeClaims = true, AsNoTracking = true });
             var claim = role.Claims.FirstOrDefault(x => x.Id == claimId);
 
             return View(ClaimModel.FromEntity(claim));
         }
 
         [HttpPost]
-        public IActionResult DeleteClaim(ClaimModel model)
+        public async Task<IActionResult> DeleteClaim(ClaimModel model)
         {
-            var role = _dispatcher.Dispatch(new GetRoleQuery { Id = model.Role.Id, IncludeClaims = true });
+            var role = await _dispatcher.DispatchAsync(new GetRoleQuery { Id = model.Role.Id, IncludeClaims = true });
 
             var claim = role.Claims.FirstOrDefault(x => x.Id == model.Id);
 
-            _dispatcher.Dispatch(new DeleteClaimCommand { Role = role, Claim = claim });
+            await _dispatcher.DispatchAsync(new DeleteClaimCommand { Role = role, Claim = claim });
 
             return RedirectToAction(nameof(Claims), new { id = role.Id });
         }
 
-        public IActionResult Users(Guid id)
+        public async Task<IActionResult> Users(Guid id)
         {
-            var role = _dispatcher.Dispatch(new GetRoleQuery { Id = id, IncludeUsers = true, AsNoTracking = true });
+            var role = await _dispatcher.DispatchAsync(new GetRoleQuery { Id = id, IncludeUsers = true, AsNoTracking = true });
 
             var users = role.UserRoles.Select(x => x.User).ToList();
             var model = new UsersModel

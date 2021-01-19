@@ -18,11 +18,6 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
             _queueName = queueName;
         }
 
-        public void Send(T message, MetaData metaData = null)
-        {
-            SendAsync(message, metaData).Wait();
-        }
-
         public async Task SendAsync(T message, MetaData metaData, CancellationToken cancellationToken = default)
         {
             var storageAccount = CloudStorageAccount.Parse(_connectionString);

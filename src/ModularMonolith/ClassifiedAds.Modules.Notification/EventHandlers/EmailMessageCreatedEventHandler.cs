@@ -2,6 +2,7 @@
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Modules.Notification.Contracts.DTOs;
 using ClassifiedAds.Modules.Notification.Entities;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Notification.EventHandlers
 {
@@ -14,10 +15,10 @@ namespace ClassifiedAds.Modules.Notification.EventHandlers
             _emailMessageCreatedEventSender = emailMessageCreatedEventSender;
         }
 
-        public void Handle(EntityCreatedEvent<EmailMessage> domainEvent)
+        public async Task HandleAsync(EntityCreatedEvent<EmailMessage> domainEvent)
         {
             // Handle the event here and we can also forward to external systems
-            _emailMessageCreatedEventSender.Send(new EmailMessageCreatedEvent { Id = domainEvent.Entity.Id });
+            await _emailMessageCreatedEventSender.SendAsync(new EmailMessageCreatedEvent { Id = domainEvent.Entity.Id });
         }
     }
 }

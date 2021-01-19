@@ -99,7 +99,7 @@ namespace ClassifiedAds.IdentityServer.Quickstart.Manage
             // Generate the token and send it
             var user = await GetCurrentUserAsync();
             var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, model.PhoneNumber);
-            _dispatcher.Dispatch(new AddOrUpdateEntityCommand<SmsMessage>(new SmsMessage
+            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<SmsMessage>(new SmsMessage
             {
                 PhoneNumber = model.PhoneNumber,
                 Message = "Your security code is: " + code,

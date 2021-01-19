@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,10 +13,14 @@ namespace ClassifiedAds.Domain.Repositories
 
         IQueryable<TEntity> GetAll();
 
-        void AddOrUpdate(TEntity entity);
-
         Task AddOrUpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
 
         void Delete(TEntity entity);
+
+        Task<T> FirstOrDefaultAsync<T>(IQueryable<T> query);
+
+        Task<T> SingleOrDefaultAsync<T>(IQueryable<T> query);
+
+        Task<List<T>> ToListAsync<T>(IQueryable<T> query);
     }
 }

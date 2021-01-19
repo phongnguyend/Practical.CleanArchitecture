@@ -42,9 +42,9 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<User>> Get()
+        public async Task<ActionResult<IEnumerable<User>>> Get()
         {
-            var users = _dispatcher.Dispatch(new GetUsersQuery());
+            var users = await _dispatcher.DispatchAsync(new GetUsersQuery());
             var model = users.ToDTOs();
             return Ok(model);
         }
@@ -52,9 +52,9 @@ namespace ClassifiedAds.WebAPI.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<User> Get(Guid id)
+        public async Task<ActionResult<User>> Get(Guid id)
         {
-            var user = _dispatcher.Dispatch(new GetUserQuery { Id = id, AsNoTracking = true });
+            var user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = id, AsNoTracking = true });
             var model = user.ToDTO();
             return Ok(model);
         }
@@ -91,7 +91,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Put(Guid id, [FromBody] UserModel model)
         {
-            User user = _dispatcher.Dispatch(new GetUserQuery { Id = id });
+            User user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = id });
 
             user.UserName = model.UserName;
             user.NormalizedUserName = model.UserName.ToUpper();
@@ -117,7 +117,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> SetPassword(Guid id, [FromBody] UserModel model)
         {
-            User user = _dispatcher.Dispatch(new GetUserQuery { Id = id });
+            User user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = id });
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var rs = await _userManager.ResetPasswordAsync(user, token, model.Password);
@@ -133,10 +133,10 @@ namespace ClassifiedAds.WebAPI.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Delete(Guid id)
+        public async Task<ActionResult> Delete(Guid id)
         {
-            var user = _dispatcher.Dispatch(new GetUserQuery { Id = id });
-            _dispatcher.Dispatch(new DeleteUserCommand { User = user });
+            var user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = id });
+            await _dispatcher.DispatchAsync(new DeleteUserCommand { User = user });
 
             return Ok();
         }
@@ -144,14 +144,14 @@ namespace ClassifiedAds.WebAPI.Controllers
         [HttpPost("{id}/passwordresetemail")]
         public async Task<ActionResult> SendResetPasswordEmail(Guid id)
         {
-            User user = _dispatcher.Dispatch(new GetUserQuery { Id = id });
+            User user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = id });
 
             if (user != null)
             {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var resetUrl = $"{_appSettings.IdentityServerAuthentication.Authority}/Account/ResetPassword?token={HttpUtility.UrlEncode(token)}&email={user.Email}";
 
-                _dispatcher.Dispatch(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
+                await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
                 {
                     From = "phong@gmail.com",
                     Tos = user.Email,
@@ -170,7 +170,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [HttpPost("{id}/emailaddressconfirmation")]
         public async Task<ActionResult> SendConfirmationEmailAddressEmail(Guid id)
         {
-            User user = _dispatcher.Dispatch(new GetUserQuery { Id = id });
+            User user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = id });
 
             if (user != null)
             {
@@ -178,7 +178,7 @@ namespace ClassifiedAds.WebAPI.Controllers
 
                 var confirmationEmail = $"{_appSettings.IdentityServerAuthentication.Authority}/Account/ConfirmEmailAddress?token={HttpUtility.UrlEncode(token)}&email={user.Email}";
 
-                _dispatcher.Dispatch(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
+                await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
                 {
                     From = "phong@gmail.com",
                     Tos = user.Email,

@@ -19,11 +19,6 @@ namespace ClassifiedAds.Infrastructure.Notification.Web.SignalR
             _eventName = eventName;
         }
 
-        public void Send(T message)
-        {
-            SendAsync(message).GetAwaiter().GetResult();
-        }
-
         public async Task SendAsync(T message, CancellationToken cancellationToken = default)
         {
             HubConnection connection;
@@ -44,7 +39,7 @@ namespace ClassifiedAds.Infrastructure.Notification.Web.SignalR
 
                 if (connection.State != HubConnectionState.Connected)
                 {
-                    connection.StartAsync().GetAwaiter().GetResult();
+                    connection.StartAsync(cancellationToken).GetAwaiter().GetResult();
                 }
             }
 

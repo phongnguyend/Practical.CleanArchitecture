@@ -172,7 +172,7 @@ namespace IdentityServerHost.Quickstart.UI
                     }
                 }
 
-                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.Client.ClientId));
+                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId: context?.Client.ClientId));
                 ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
             }
 
@@ -181,7 +181,7 @@ namespace IdentityServerHost.Quickstart.UI
             return View(vm);
         }
 
-        
+
         /// <summary>
         /// Show logout page
         /// </summary>
@@ -417,7 +417,7 @@ namespace IdentityServerHost.Quickstart.UI
             var confirmationEmail = Url.Action("ConfirmEmailAddress", "Account",
                 new { token = token, email = user.Email }, Request.Scheme);
 
-            _dispatcher.Dispatch(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
+            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
             {
                 From = "phong@gmail.com",
                 Tos = user.Email,
@@ -468,7 +468,7 @@ namespace IdentityServerHost.Quickstart.UI
                     var resetUrl = Url.Action("ResetPassword", "Account",
                         new { token = token, email = user.Email }, Request.Scheme);
 
-                    _dispatcher.Dispatch(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
+                    await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
                     {
                         From = "phong@gmail.com",
                         Tos = user.Email,

@@ -27,9 +27,9 @@ namespace ClassifiedAds.Services.Identity.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Role>> Get()
+        public async Task<ActionResult<IEnumerable<Role>>> Get()
         {
-            var roles = _dispatcher.Dispatch(new GetRolesQuery { AsNoTracking = true });
+            var roles = await _dispatcher.DispatchAsync(new GetRolesQuery { AsNoTracking = true });
             var model = roles.ToDTOs();
             return Ok(model);
         }
@@ -37,9 +37,9 @@ namespace ClassifiedAds.Services.Identity.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Role> Get(Guid id)
+        public async Task<ActionResult<Role>> Get(Guid id)
         {
-            var role = _dispatcher.Dispatch(new GetRoleQuery { Id = id, AsNoTracking = true });
+            var role = await _dispatcher.DispatchAsync(new GetRoleQuery { Id = id, AsNoTracking = true });
             var model = role.ToDTO();
             return Ok(model);
         }
@@ -55,7 +55,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
                 NormalizedName = model.Name.ToUpper(),
             };
 
-            _dispatcher.Dispatch(new AddUpdateRoleCommand { Role = role });
+            await _dispatcher.DispatchAsync(new AddUpdateRoleCommand { Role = role });
 
             model = role.ToDTO();
 
@@ -68,12 +68,12 @@ namespace ClassifiedAds.Services.Identity.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Put(Guid id, [FromBody] RoleDTO model)
         {
-            var role = _dispatcher.Dispatch(new GetRoleQuery { Id = id });
+            var role = await _dispatcher.DispatchAsync(new GetRoleQuery { Id = id });
 
             role.Name = model.Name;
             role.NormalizedName = model.Name.ToUpper();
 
-            _dispatcher.Dispatch(new AddUpdateRoleCommand { Role = role });
+            await _dispatcher.DispatchAsync(new AddUpdateRoleCommand { Role = role });
 
             model = role.ToDTO();
 
@@ -83,10 +83,10 @@ namespace ClassifiedAds.Services.Identity.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Delete(Guid id)
+        public async Task<ActionResult> Delete(Guid id)
         {
-            var role = _dispatcher.Dispatch(new GetRoleQuery { Id = id });
-            _dispatcher.Dispatch(new DeleteRoleCommand { Role = role });
+            var role = await _dispatcher.DispatchAsync(new GetRoleQuery { Id = id });
+            await _dispatcher.DispatchAsync(new DeleteRoleCommand { Role = role });
 
             return Ok();
         }

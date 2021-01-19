@@ -20,7 +20,7 @@ namespace ClassifiedAds.Services.Notification.Grpc.Services
         }
 
         [AllowAnonymous]
-        public override Task<AddEmailMessageResponse> AddEmailMessage(AddEmailMessageRequest request, ServerCallContext context)
+        public override async Task<AddEmailMessageResponse> AddEmailMessage(AddEmailMessageRequest request, ServerCallContext context)
         {
             /// var user = context.GetHttpContext().User;
 
@@ -34,7 +34,7 @@ namespace ClassifiedAds.Services.Notification.Grpc.Services
                 Body = request.Message.Body,
             };
 
-            _dispatcher.Dispatch(new AddOrUpdateEntityCommand<Entities.EmailMessage>(message));
+            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<Entities.EmailMessage>(message));
 
             var response = new AddEmailMessageResponse
             {
@@ -43,7 +43,7 @@ namespace ClassifiedAds.Services.Notification.Grpc.Services
 
             response.Message.Id = message.Id.ToString();
 
-            return Task.FromResult(response);
+            return response;
         }
     }
 }

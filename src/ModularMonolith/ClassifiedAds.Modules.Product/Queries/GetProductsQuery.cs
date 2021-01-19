@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Modules.Product.Repositories;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Product.Queries
 {
@@ -18,9 +18,9 @@ namespace ClassifiedAds.Modules.Product.Queries
             _productRepository = productRepository;
         }
 
-        public List<Entities.Product> Handle(GetProductsQuery query)
+        public Task<List<Entities.Product>> HandleAsync(GetProductsQuery query)
         {
-            return _productRepository.GetAll().ToList();
+            return _productRepository.ToListAsync(_productRepository.GetAll());
         }
     }
 }

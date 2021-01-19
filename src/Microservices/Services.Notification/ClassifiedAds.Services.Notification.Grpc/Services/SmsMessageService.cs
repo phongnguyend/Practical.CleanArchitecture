@@ -20,7 +20,7 @@ namespace ClassifiedAds.Services.Notification.Grpc.Services
         }
 
         [AllowAnonymous]
-        public override Task<AddSmsMessageResponse> AddSmsMessage(AddSmsMessageRequest request, ServerCallContext context)
+        public override async Task<AddSmsMessageResponse> AddSmsMessage(AddSmsMessageRequest request, ServerCallContext context)
         {
             var message = new Entities.SmsMessage
             {
@@ -28,7 +28,7 @@ namespace ClassifiedAds.Services.Notification.Grpc.Services
                 PhoneNumber = request.Message.PhoneNumber,
             };
 
-            _dispatcher.Dispatch(new AddOrUpdateEntityCommand<Entities.SmsMessage>(message));
+            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<Entities.SmsMessage>(message));
 
             var response = new AddSmsMessageResponse
             {
@@ -37,7 +37,7 @@ namespace ClassifiedAds.Services.Notification.Grpc.Services
 
             response.Message.Id = message.Id.ToString();
 
-            return Task.FromResult(response);
+            return response;
         }
     }
 }

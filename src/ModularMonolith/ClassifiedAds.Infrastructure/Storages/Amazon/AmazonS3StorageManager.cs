@@ -19,11 +19,6 @@ namespace ClassifiedAds.Infrastructure.Storages.Amazon
             _bucketName = bucketName;
         }
 
-        public void Create(IFileEntry fileEntry, Stream stream)
-        {
-            CreateAsync(fileEntry, stream).GetAwaiter().GetResult();
-        }
-
         public async Task CreateAsync(IFileEntry fileEntry, Stream stream, CancellationToken cancellationToken = default)
         {
             var fileTransferUtility = new TransferUtility(_client);
@@ -36,24 +31,14 @@ namespace ClassifiedAds.Infrastructure.Storages.Amazon
                 CannedACL = S3CannedACL.NoACL,
             };
 
-            await fileTransferUtility.UploadAsync(uploadRequest);
+            await fileTransferUtility.UploadAsync(uploadRequest, cancellationToken);
 
             fileEntry.FileLocation = fileEntry.Id.ToString();
         }
 
-        public void Delete(IFileEntry fileEntry)
-        {
-            DeleteAsync(fileEntry).GetAwaiter().GetResult();
-        }
-
         public async Task DeleteAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
-            await _client.DeleteObjectAsync(_bucketName, fileEntry.FileLocation);
-        }
-
-        public byte[] Read(IFileEntry fileEntry)
-        {
-            return ReadAsync(fileEntry).GetAwaiter().GetResult();
+            await _client.DeleteObjectAsync(_bucketName, fileEntry.FileLocation, cancellationToken);
         }
 
         public async Task<byte[]> ReadAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
@@ -64,13 +49,11 @@ namespace ClassifiedAds.Infrastructure.Storages.Amazon
                 Key = fileEntry.FileLocation,
             };
 
-            using (var response = await _client.GetObjectAsync(request))
-            using (var responseStream = response.ResponseStream)
-            using (var reader = new MemoryStream())
-            {
-                responseStream.CopyTo(reader);
-                return reader.ToArray();
-            }
+            using var response = await _client.GetObjectAsync(request, cancellationToken);
+            using var responseStream = response.ResponseStream;
+            using var reader = new MemoryStream();
+            await responseStream.CopyToAsync(reader, cancellationToken);
+            return reader.ToArray();
         }
     }
 }

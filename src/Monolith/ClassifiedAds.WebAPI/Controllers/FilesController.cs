@@ -40,9 +40,9 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<FileEntry>> Get()
+        public async Task<ActionResult<IEnumerable<FileEntry>>> Get()
         {
-            return Ok(_dispatcher.Dispatch(new GetEntititesQuery<FileEntry>()));
+            return Ok(await _dispatcher.DispatchAsync(new GetEntititesQuery<FileEntry>()));
         }
 
         [HttpPost]
@@ -58,7 +58,7 @@ namespace ClassifiedAds.WebAPI.Controllers
                 Encrypted = model.Encrypted,
             };
 
-            _dispatcher.Dispatch(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
+            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
 
             if (model.Encrypted)
             {
@@ -70,7 +70,7 @@ namespace ClassifiedAds.WebAPI.Controllers
                         .WithPadding(PaddingMode.PKCS7)
                         .Encrypt()))
                 {
-                    _fileManager.Create(fileEntry, encryptedStream);
+                    await _fileManager.CreateAsync(fileEntry, encryptedStream);
                 }
 
                 fileEntry.EncryptionKey = key.ToBase64String();
@@ -79,27 +79,27 @@ namespace ClassifiedAds.WebAPI.Controllers
             {
                 using (var stream = model.FormFile.OpenReadStream())
                 {
-                    _fileManager.Create(fileEntry, stream);
+                    await _fileManager.CreateAsync(fileEntry, stream);
                 }
             }
 
-            _dispatcher.Dispatch(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
+            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
 
             return Ok(fileEntry);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<IEnumerable<FileEntry>> Get(Guid id)
+        public async Task<ActionResult<IEnumerable<FileEntry>>> Get(Guid id)
         {
-            return Ok(_dispatcher.Dispatch(new GetEntityByIdQuery<FileEntry> { Id = id }));
+            return Ok(await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id }));
         }
 
         [HttpGet("{id}/download")]
-        public IActionResult Download(Guid id)
+        public async Task<IActionResult> Download(Guid id)
         {
-            var fileEntry = _dispatcher.Dispatch(new GetEntityByIdQuery<FileEntry> { Id = id });
+            var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
 
-            var rawData = _fileManager.Read(fileEntry);
+            var rawData = await _fileManager.ReadAsync(fileEntry);
             var content = fileEntry.Encrypted && fileEntry.FileLocation != "Fake.txt"
                 ? rawData
                 .UseAES(fileEntry.EncryptionKey.FromBase64String())
@@ -115,33 +115,33 @@ namespace ClassifiedAds.WebAPI.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Put(Guid id, [FromBody] FileEntry model)
+        public async Task<ActionResult> Put(Guid id, [FromBody] FileEntry model)
         {
-            var fileEntry = _dispatcher.Dispatch(new GetEntityByIdQuery<FileEntry> { Id = id, ThrowNotFoundIfNull = true });
+            var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id, ThrowNotFoundIfNull = true });
 
             fileEntry.Name = model.Name;
             fileEntry.Description = model.Description;
 
-            _dispatcher.Dispatch(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
+            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
 
             return Ok(model);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var fileEntry = _dispatcher.Dispatch(new GetEntityByIdQuery<FileEntry> { Id = id });
+            var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
 
-            _dispatcher.Dispatch(new DeleteEntityCommand<FileEntry> { Entity = fileEntry });
-            _fileManager.Delete(fileEntry);
+            await _dispatcher.DispatchAsync(new DeleteEntityCommand<FileEntry> { Entity = fileEntry });
+            await _fileManager.DeleteAsync(fileEntry);
 
             return Ok();
         }
 
         [HttpGet("{id}/auditlogs")]
-        public ActionResult<IEnumerable<AuditLogEntryDTO>> GetAuditLogs(Guid id)
+        public async Task<ActionResult<IEnumerable<AuditLogEntryDTO>>> GetAuditLogs(Guid id)
         {
-            var logs = _dispatcher.Dispatch(new GetAuditEntriesQuery { ObjectId = id.ToString() });
+            var logs = await _dispatcher.DispatchAsync(new GetAuditEntriesQuery { ObjectId = id.ToString() });
 
             List<dynamic> entries = new List<dynamic>();
             FileEntry previous = null;

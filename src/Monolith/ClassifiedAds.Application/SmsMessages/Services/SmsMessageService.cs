@@ -6,6 +6,7 @@ using ClassifiedAds.Domain.Repositories;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.SmsMessages.Services
 {
@@ -30,7 +31,7 @@ namespace ClassifiedAds.Application.SmsMessages.Services
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public int ResendSmsMessage()
+        public async Task<int> ResendSmsMessageAsync()
         {
             var dateTime = _dateTimeProvider.OffsetNow.AddMinutes(-1);
 
@@ -43,7 +44,7 @@ namespace ClassifiedAds.Application.SmsMessages.Services
             {
                 foreach (var sms in messages)
                 {
-                    _smsMessageCreatedEventSender.Send(new SmsMessageCreatedEvent { Id = sms.Id });
+                    await _smsMessageCreatedEventSender.SendAsync(new SmsMessageCreatedEvent { Id = sms.Id });
                     _repository.IncreaseRetry(sms.Id);
                 }
             }
@@ -55,14 +56,14 @@ namespace ClassifiedAds.Application.SmsMessages.Services
             return messages.Count;
         }
 
-        public void SendSmsMessage(Guid id)
+        public async Task SendSmsMessageAsync(Guid id)
         {
             var smsMessage = _repository.GetAll().FirstOrDefault(x => x.Id == id);
             if (smsMessage != null && !smsMessage.SentDateTime.HasValue)
             {
                 try
                 {
-                    _smsNotification.Send(smsMessage);
+                    await _smsNotification.SendAsync(smsMessage);
                     _repository.UpdateSent(smsMessage.Id);
                 }
                 catch (Exception ex)

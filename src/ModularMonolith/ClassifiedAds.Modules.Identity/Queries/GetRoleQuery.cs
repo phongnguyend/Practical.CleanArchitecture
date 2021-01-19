@@ -3,6 +3,7 @@ using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Identity.Queries.Roles
 {
@@ -24,7 +25,7 @@ namespace ClassifiedAds.Modules.Identity.Queries.Roles
             _roleRepository = roleRepository;
         }
 
-        public Role Handle(GetRoleQuery query)
+        public Task<Role> HandleAsync(GetRoleQuery query)
         {
             var db = _roleRepository.Get(new RoleQueryOptions
             {
@@ -34,7 +35,7 @@ namespace ClassifiedAds.Modules.Identity.Queries.Roles
                 AsNoTracking = query.AsNoTracking,
             });
 
-            return db.FirstOrDefault(x => x.Id == query.Id);
+            return _roleRepository.FirstOrDefaultAsync(db.Where(x => x.Id == query.Id));
         }
     }
 }

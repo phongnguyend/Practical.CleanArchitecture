@@ -4,6 +4,7 @@ using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Identity.Queries.Roles
 {
@@ -25,7 +26,7 @@ namespace ClassifiedAds.Modules.Identity.Queries.Roles
             _userRepository = userRepository;
         }
 
-        public User Handle(GetUserQuery query)
+        public Task<User> HandleAsync(GetUserQuery query)
         {
             var db = _userRepository.Get(new UserQueryOptions
             {
@@ -35,7 +36,7 @@ namespace ClassifiedAds.Modules.Identity.Queries.Roles
                 AsNoTracking = query.AsNoTracking,
             });
 
-            return db.FirstOrDefault(x => x.Id == query.Id);
+            return _userRepository.FirstOrDefaultAsync(db.Where(x => x.Id == query.Id));
         }
     }
 }

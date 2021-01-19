@@ -6,6 +6,7 @@ using ClassifiedAds.Domain.Repositories;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.EmailMessages.Services
 {
@@ -31,7 +32,7 @@ namespace ClassifiedAds.Application.EmailMessages.Services
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public int ResendEmailMessages()
+        public async Task<int> ResendEmailMessagesAsync()
         {
             var dateTime = _dateTimeProvider.OffsetNow.AddMinutes(-1);
 
@@ -44,7 +45,7 @@ namespace ClassifiedAds.Application.EmailMessages.Services
             {
                 foreach (var email in messages)
                 {
-                    _emailMessageCreatedEventSender.Send(new EmailMessageCreatedEvent { Id = email.Id });
+                    await _emailMessageCreatedEventSender.SendAsync(new EmailMessageCreatedEvent { Id = email.Id });
 
                     _repository.IncreaseRetry(email.Id);
                 }
@@ -57,14 +58,14 @@ namespace ClassifiedAds.Application.EmailMessages.Services
             return messages.Count;
         }
 
-        public void SendEmailMessage(Guid id)
+        public async Task SendEmailMessageAsync(Guid id)
         {
             var emailMessage = _repository.GetAll().FirstOrDefault(x => x.Id == id);
             if (emailMessage != null && !emailMessage.SentDateTime.HasValue)
             {
                 try
                 {
-                    _emailNotification.Send(emailMessage);
+                    await _emailNotification.SendAsync(emailMessage);
                     _repository.UpdateSent(emailMessage.Id);
                 }
                 catch (Exception ex)

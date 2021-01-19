@@ -25,7 +25,7 @@ namespace ClassifiedAds.Services.Identity.Grpc.Services
             _dispatcher = dispatcher;
         }
 
-        public override Task<AddAuditLogEntryResponse> AddAuditLogEntry(AddAuditLogEntryRequest request, ServerCallContext context)
+        public override async Task<AddAuditLogEntryResponse> AddAuditLogEntry(AddAuditLogEntryRequest request, ServerCallContext context)
         {
             var entry = new AuditLogEntry
             {
@@ -36,7 +36,7 @@ namespace ClassifiedAds.Services.Identity.Grpc.Services
                 CreatedDateTime = request.Entry.CreatedDateTime.ToDateTimeOffset(),
             };
 
-            _dispatcher.Dispatch(new AddOrUpdateEntityCommand<AuditLogEntry>(entry));
+            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<AuditLogEntry>(entry));
 
             var response = new AddAuditLogEntryResponse
             {
@@ -51,12 +51,12 @@ namespace ClassifiedAds.Services.Identity.Grpc.Services
                 }
             };
 
-            return Task.FromResult(response);
+            return response;
         }
 
-        public override Task<GetAuditLogEntriesResponse> GetAuditLogEntries(GetAuditLogEntriesRequest request, ServerCallContext context)
+        public override async Task<GetAuditLogEntriesResponse> GetAuditLogEntries(GetAuditLogEntriesRequest request, ServerCallContext context)
         {
-            var entries = _dispatcher.Dispatch(new GetAuditEntriesQuery { ObjectId = request.ObjectId })
+            var entries = (await _dispatcher.DispatchAsync(new GetAuditEntriesQuery { ObjectId = request.ObjectId }))
                 .Select(x => new AuditLogEntryMessage
                 {
                     Id = x.Id.ToString(),
@@ -70,7 +70,7 @@ namespace ClassifiedAds.Services.Identity.Grpc.Services
 
             var rp = new GetAuditLogEntriesResponse();
             rp.Entries.AddRange(entries);
-            return Task.FromResult(rp);
+            return rp;
         }
     }
 }

@@ -7,6 +7,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace ClassifiedAds.UnitTests.Application.Services
@@ -24,39 +25,41 @@ namespace ClassifiedAds.UnitTests.Application.Services
         }
 
         [Fact]
-        public void GetUserById_ThereIsNoUser_ReturnNull()
+        public async Task GetUserById_ThereIsNoUser_ReturnNull()
         {
             // Arrange
             var users = new List<User>();
             _userRepository.Setup(x => x.GetAll()).Returns(users.AsQueryable());
 
             // Act
-            var user = _userService.GetById(Guid.NewGuid());
+            var user = await _userService.GetByIdAsync(Guid.NewGuid());
 
             // Assert
             Assert.Null(user);
         }
 
         [Fact]
-        public void GetUserById_InvalidId_ThrowException()
+        public async Task GetUserById_InvalidId_ThrowException()
         {
             // Arrange
             var userId = Guid.Empty;
 
             // Act && Assert
-            Assert.Throws<ValidationException>(() => _userService.GetById(userId));
+            await Assert.ThrowsAsync<ValidationException>(async () => await _userService.GetByIdAsync(userId));
         }
 
         [Fact]
-        public void GetUserById_ThereIsUser_ReturnOne()
+        public async Task GetUserById_ThereIsUser_ReturnOne()
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var users = new List<User> { new User { Id = userId, UserName = "XXX" } };
-            _userRepository.Setup(x => x.GetAll()).Returns(users.AsQueryable());
+            var users = new List<User> { new User { Id = userId, UserName = "XXX" } }.AsQueryable();
+            _userRepository.Setup(x => x.GetAll()).Returns(users);
+            _userRepository.Setup(x => x.FirstOrDefaultAsync(It.IsAny<IQueryable<User>>()))
+                .Returns(Task.FromResult(users.FirstOrDefault(x => x.Id == userId)));
 
             // Act
-            var user = _userService.GetById(userId);
+            var user = await _userService.GetByIdAsync(userId);
 
             // Assert
             Assert.Equal(userId, user.Id);

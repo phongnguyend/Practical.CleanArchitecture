@@ -7,6 +7,7 @@ using ClassifiedAds.Modules.AuditLog.Entities;
 using ClassifiedAds.Modules.AuditLog.Queries;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.AuditLog.Services
 {
@@ -20,9 +21,9 @@ namespace ClassifiedAds.Modules.AuditLog.Services
             _dispatcher = dispatcher;
         }
 
-        public void AddOrUpdate(AuditLogEntryDTO dto)
+        public async Task AddOrUpdateAsync(AuditLogEntryDTO dto)
         {
-            AddOrUpdate(new AuditLogEntry
+            await AddOrUpdateAsync(new AuditLogEntry
             {
                 UserId = dto.UserId,
                 CreatedDateTime = dto.CreatedDateTime,
@@ -32,9 +33,9 @@ namespace ClassifiedAds.Modules.AuditLog.Services
             });
         }
 
-        public List<AuditLogEntryDTO> GetAuditLogEntries(AuditLogEntryQueryOptions query)
+        public async Task<List<AuditLogEntryDTO>> GetAuditLogEntriesAsync(AuditLogEntryQueryOptions query)
         {
-            var logs = _dispatcher.Dispatch(new GetAuditEntriesQuery
+            var logs = await _dispatcher.DispatchAsync(new GetAuditEntriesQuery
             {
                 UserId = query.UserId,
                 ObjectId = query.ObjectId,

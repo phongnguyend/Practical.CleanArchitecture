@@ -3,6 +3,7 @@ using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application
 {
@@ -23,9 +24,9 @@ namespace ClassifiedAds.Application
             _repository = repository;
         }
 
-        public TEntity Handle(GetEntityByIdQuery<TEntity> query)
+        public async Task<TEntity> HandleAsync(GetEntityByIdQuery<TEntity> query)
         {
-            var entity = _repository.GetAll().FirstOrDefault(x => x.Id == query.Id);
+            var entity = await _repository.FirstOrDefaultAsync(_repository.GetAll().Where(x => x.Id == query.Id));
 
             if (query.ThrowNotFoundIfNull && entity == null)
             {

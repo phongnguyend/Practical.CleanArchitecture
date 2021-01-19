@@ -5,6 +5,7 @@ using ClassifiedAds.Modules.AuditLog.Contracts.Services;
 using ClassifiedAds.Modules.Identity.Contracts.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Product.EventHandlers
 {
@@ -17,16 +18,16 @@ namespace ClassifiedAds.Modules.Product.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public void Handle(EntityCreatedEvent<Entities.Product> domainEvent)
+        public async Task HandleAsync(EntityCreatedEvent<Entities.Product> domainEvent)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
                 var auditSerivce = scope.ServiceProvider.GetService<IAuditLogService>();
                 var currentUser = scope.ServiceProvider.GetService<ICurrentUser>();
 
-                auditSerivce.AddOrUpdate(new AuditLogEntryDTO
+                await auditSerivce.AddOrUpdateAsync(new AuditLogEntryDTO
                 {
-                    UserId = currentUser.IsAuthenticated ? currentUser.UserId: Guid.Empty,
+                    UserId = currentUser.IsAuthenticated ? currentUser.UserId : Guid.Empty,
                     CreatedDateTime = domainEvent.EventDateTime,
                     Action = "CREATED_PRODUCT",
                     ObjectId = domainEvent.Entity.Id.ToString(),

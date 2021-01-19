@@ -30,16 +30,16 @@ namespace ClassifiedAds.IdentityServer.Controllers
             logger.LogInformation("UserController");
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var users = _dispatcher.Dispatch(new GetUsersQuery { AsNoTracking = true });
+            var users = await _dispatcher.DispatchAsync(new GetUsersQuery { AsNoTracking = true });
             return View(users);
         }
 
-        public IActionResult Profile(Guid id)
+        public async Task<IActionResult> Profile(Guid id)
         {
             var user = id != Guid.Empty
-                ? _dispatcher.Dispatch(new GetUserQuery { Id = id, AsNoTracking = true })
+                ? await _dispatcher.DispatchAsync(new GetUserQuery { Id = id, AsNoTracking = true })
                 : new User();
             return View(user);
         }
@@ -50,7 +50,7 @@ namespace ClassifiedAds.IdentityServer.Controllers
             User user;
             if (model.Id != Guid.Empty)
             {
-                user = _dispatcher.Dispatch(new GetUserQuery { Id = model.Id });
+                user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = model.Id });
             }
             else
             {
@@ -76,23 +76,23 @@ namespace ClassifiedAds.IdentityServer.Controllers
             return RedirectToAction(nameof(Profile), new { user.Id });
         }
 
-        public IActionResult ChangePassword(Guid id)
+        public async Task<IActionResult> ChangePassword(Guid id)
         {
-            var user = _dispatcher.Dispatch(new GetUserQuery { Id = id, AsNoTracking = true });
+            var user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = id, AsNoTracking = true });
             return View(ChangePasswordModel.FromEntity(user));
         }
 
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var user = _dispatcher.Dispatch(new GetUserQuery { Id = id, AsNoTracking = true });
+            var user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = id, AsNoTracking = true });
             return View(user);
         }
 
         [HttpPost]
-        public IActionResult Delete(User model)
+        public async Task<IActionResult> Delete(User model)
         {
-            var user = _dispatcher.Dispatch(new GetUserQuery { Id = model.Id });
-            _dispatcher.Dispatch(new DeleteUserCommand { User = user });
+            var user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = model.Id });
+            await _dispatcher.DispatchAsync(new DeleteUserCommand { User = user });
             return RedirectToAction(nameof(Index));
         }
 
@@ -104,7 +104,7 @@ namespace ClassifiedAds.IdentityServer.Controllers
                 return View(model);
             }
 
-            var user = _dispatcher.Dispatch(new GetUserQuery { Id = model.Id });
+            var user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = model.Id });
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var rs = await _userManager.ResetPasswordAsync(user, token, model.ConfirmPassword);
 
@@ -121,17 +121,17 @@ namespace ClassifiedAds.IdentityServer.Controllers
             return View(ChangePasswordModel.FromEntity(user));
         }
 
-        public IActionResult Claims(Guid id)
+        public async Task<IActionResult> Claims(Guid id)
         {
-            var user = _dispatcher.Dispatch(new GetUserQuery { Id = id, IncludeClaims = true, AsNoTracking = true });
+            var user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = id, IncludeClaims = true, AsNoTracking = true });
             return View(ClaimsModel.FromEntity(user));
         }
 
         [HttpPost]
-        public IActionResult Claims(ClaimModel model)
+        public async Task<IActionResult> Claims(ClaimModel model)
         {
-            var user = _dispatcher.Dispatch(new GetUserQuery { Id = model.User.Id, IncludeClaims = true });
-            _dispatcher.Dispatch(new AddClaimCommand
+            var user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = model.User.Id, IncludeClaims = true });
+            await _dispatcher.DispatchAsync(new AddClaimCommand
             {
                 User = user,
                 Claim = new UserClaim
@@ -144,22 +144,22 @@ namespace ClassifiedAds.IdentityServer.Controllers
             return RedirectToAction(nameof(Claims), new { id = user.Id });
         }
 
-        public IActionResult DeleteClaim(Guid userId, Guid claimId)
+        public async Task<IActionResult> DeleteClaim(Guid userId, Guid claimId)
         {
-            var user = _dispatcher.Dispatch(new GetUserQuery { Id = userId, IncludeClaims = true, AsNoTracking = true });
+            var user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = userId, IncludeClaims = true, AsNoTracking = true });
             var claim = user.Claims.FirstOrDefault(x => x.Id == claimId);
 
             return View(ClaimModel.FromEntity(claim));
         }
 
         [HttpPost]
-        public IActionResult DeleteClaim(ClaimModel model)
+        public async Task<IActionResult> DeleteClaim(ClaimModel model)
         {
-            var user = _dispatcher.Dispatch(new GetUserQuery { Id = model.User.Id, IncludeClaims = true });
+            var user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = model.User.Id, IncludeClaims = true });
 
             var claim = user.Claims.FirstOrDefault(x => x.Id == model.Id);
 
-            _dispatcher.Dispatch(new DeleteClaimCommand
+            await _dispatcher.DispatchAsync(new DeleteClaimCommand
             {
                 User = user,
                 Claim = claim,
@@ -168,11 +168,11 @@ namespace ClassifiedAds.IdentityServer.Controllers
             return RedirectToAction(nameof(Claims), new { id = user.Id });
         }
 
-        public IActionResult Roles(Guid id)
+        public async Task<IActionResult> Roles(Guid id)
         {
-            var user = _dispatcher.Dispatch(new GetUserQuery { Id = id, IncludeRoles = true, AsNoTracking = true });
+            var user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = id, IncludeRoles = true, AsNoTracking = true });
 
-            var roles = _dispatcher.Dispatch(new GetRolesQuery { AsNoTracking = true });
+            var roles = await _dispatcher.DispatchAsync(new GetRolesQuery { AsNoTracking = true });
 
             var model = new RolesModel
             {
@@ -185,11 +185,11 @@ namespace ClassifiedAds.IdentityServer.Controllers
         }
 
         [HttpPost]
-        public IActionResult Roles(RolesModel model)
+        public async Task<IActionResult> Roles(RolesModel model)
         {
-            var user = _dispatcher.Dispatch(new GetUserQuery { Id = model.User.Id, IncludeUserRoles = true });
+            var user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = model.User.Id, IncludeUserRoles = true });
 
-            _dispatcher.Dispatch(new AddRoleCommand
+            await _dispatcher.DispatchAsync(new AddRoleCommand
             {
                 User = user,
                 Role = new UserRole
@@ -201,9 +201,9 @@ namespace ClassifiedAds.IdentityServer.Controllers
             return RedirectToAction(nameof(Roles), new { model.User.Id });
         }
 
-        public IActionResult DeleteRole(Guid id, Guid roleId)
+        public async Task<IActionResult> DeleteRole(Guid id, Guid roleId)
         {
-            var user = _dispatcher.Dispatch(new GetUserQuery { Id = id, IncludeRoles = true, AsNoTracking = true });
+            var user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = id, IncludeRoles = true, AsNoTracking = true });
             var role = user.UserRoles.FirstOrDefault(x => x.RoleId == roleId);
             var model = new RoleModel { User = user, Role = role.Role };
 
@@ -211,13 +211,13 @@ namespace ClassifiedAds.IdentityServer.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteRole(RoleModel model)
+        public async Task<IActionResult> DeleteRole(RoleModel model)
         {
-            var user = _dispatcher.Dispatch(new GetUserQuery { Id = model.User.Id, IncludeUserRoles = true });
+            var user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = model.User.Id, IncludeUserRoles = true });
 
             var role = user.UserRoles.FirstOrDefault(x => x.RoleId == model.Role.Id);
 
-            _dispatcher.Dispatch(new DeleteRoleCommand
+            await _dispatcher.DispatchAsync(new DeleteRoleCommand
             {
                 User = user,
                 Role = role,

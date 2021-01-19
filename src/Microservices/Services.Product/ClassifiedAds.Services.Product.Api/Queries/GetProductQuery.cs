@@ -3,6 +3,7 @@ using ClassifiedAds.CrossCuttingConcerns.Exceptions;
 using ClassifiedAds.Services.Product.Repositories;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Product.Queries
 {
@@ -21,9 +22,9 @@ namespace ClassifiedAds.Services.Product.Queries
             _productRepository = productRepository;
         }
 
-        public Entities.Product Handle(GetProductQuery query)
+        public async Task<Entities.Product> HandleAsync(GetProductQuery query)
         {
-            var product = _productRepository.GetAll().FirstOrDefault(x => x.Id == query.Id);
+            var product = await _productRepository.FirstOrDefaultAsync(_productRepository.GetAll().Where(x => x.Id == query.Id));
 
             if (query.ThrowNotFoundIfNull && product == null)
             {

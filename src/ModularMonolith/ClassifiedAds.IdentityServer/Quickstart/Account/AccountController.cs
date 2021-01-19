@@ -418,7 +418,7 @@ namespace IdentityServerHost.Quickstart.UI
             var confirmationEmail = Url.Action("ConfirmEmailAddress", "Account",
                 new { token = token, email = user.Email }, Request.Scheme);
 
-            _dispatcher.Dispatch(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
+            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
             {
                 From = "phong@gmail.com",
                 Tos = user.Email,
@@ -469,7 +469,7 @@ namespace IdentityServerHost.Quickstart.UI
                     var resetUrl = Url.Action("ResetPassword", "Account",
                         new { token = token, email = user.Email }, Request.Scheme);
 
-                    _dispatcher.Dispatch(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
+                    await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
                     {
                         From = "phong@gmail.com",
                         Tos = user.Email,

@@ -26,11 +26,12 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
             _routingKey = options.RoutingKey;
         }
 
-        public void Send(T message, MetaData metaData = null)
+        public async Task SendAsync(T message, MetaData metaData = null, CancellationToken cancellationToken = default)
         {
-            using (var connection = _connectionFactory.CreateConnection())
-            using (var channel = connection.CreateModel())
+            await Task.Run(() =>
             {
+                using var connection = _connectionFactory.CreateConnection();
+                using var channel = connection.CreateModel();
                 var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new Message<T>
                 {
                     Data = message,
@@ -43,13 +44,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
                                      routingKey: _routingKey,
                                      basicProperties: properties,
                                      body: body);
-            }
-        }
-
-        public Task SendAsync(T message, MetaData metaData = null, CancellationToken cancellationToken = default)
-        {
-            Send(message, metaData);
-            return Task.CompletedTask;
+            }, cancellationToken);
         }
     }
 }

@@ -14,11 +14,6 @@ namespace ClassifiedAds.Infrastructure.Storages.Local
             _rootPath = rootPath;
         }
 
-        public void Create(IFileEntry fileEntry, Stream stream)
-        {
-            CreateAsync(fileEntry, stream).GetAwaiter().GetResult();
-        }
-
         public async Task CreateAsync(IFileEntry fileEntry, Stream stream, CancellationToken cancellationToken = default)
         {
             var trustedFileNameForFileStorage = fileEntry.Id.ToString();
@@ -32,29 +27,21 @@ namespace ClassifiedAds.Infrastructure.Storages.Local
             fileEntry.FileLocation = trustedFileNameForFileStorage;
         }
 
-        public void Delete(IFileEntry fileEntry)
+        public async Task DeleteAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
-            var path = Path.Combine(_rootPath, fileEntry.FileLocation);
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
-        }
-
-        public Task DeleteAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
-        {
-            Delete(fileEntry);
-            return Task.CompletedTask;
-        }
-
-        public byte[] Read(IFileEntry fileEntry)
-        {
-            return ReadAsync(fileEntry).GetAwaiter().GetResult();
+            await Task.Run(() =>
+             {
+                 var path = Path.Combine(_rootPath, fileEntry.FileLocation);
+                 if (File.Exists(path))
+                 {
+                     File.Delete(path);
+                 }
+             }, cancellationToken);
         }
 
         public Task<byte[]> ReadAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
-            return File.ReadAllBytesAsync(Path.Combine(_rootPath, fileEntry.FileLocation));
+            return File.ReadAllBytesAsync(Path.Combine(_rootPath, fileEntry.FileLocation), cancellationToken);
         }
     }
 }
