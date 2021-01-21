@@ -33,8 +33,14 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
 
         private async Task<Product> CreateProductAsync(Product product)
         {
-            var createdProduct = await PostAsync<Product>("api/products", product);
-            return createdProduct;
+            var policy = Policy.Handle<Exception>().RetryAsync(5);
+
+            return await policy.ExecuteAsync(async () =>
+             {
+                 var createdProduct = await PostAsync<Product>("api/products", product);
+                 return createdProduct;
+             });
+
         }
 
         private async Task<Product> UpdateProductAsync(Guid id, Product product)
