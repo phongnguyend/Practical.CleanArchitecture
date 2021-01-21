@@ -13,7 +13,7 @@ namespace ClassifiedAds.Blazor.Modules.AuditLogs.Services
         {
         }
 
-        public async Task<List<AuditLogEntryDTO>> GetAuditLogs()
+        public async Task<List<AuditLogEntryDTO>> GetAuditLogsAsync()
         {
             var logs = await GetAsync<List<AuditLogEntryDTO>>("api/auditLogEntries");
             return logs;

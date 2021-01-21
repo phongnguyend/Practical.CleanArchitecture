@@ -26,19 +26,19 @@ namespace ClassifiedAds.Blazor.Modules.Files.Services
             return $"{_httpClient.BaseAddress.AbsoluteUri.Trim('/')}/api/files";
         }
 
-        public async Task<List<FileEntryModel>> GetFiles()
+        public async Task<List<FileEntryModel>> GetFilesAsync()
         {
             var files = await GetAsync<List<FileEntryModel>>("api/files");
             return files;
         }
 
-        public async Task<FileEntryModel> GetFileById(Guid id)
+        public async Task<FileEntryModel> GetFileByIdAsync(Guid id)
         {
             var file = await GetAsync<FileEntryModel>($"api/files/{id}");
             return file;
         }
 
-        public async Task<FileEntryModel> UploadFile(FileEntryModel fileEntryModel, byte[] bytes)
+        public async Task<FileEntryModel> UploadFileAsync(FileEntryModel fileEntryModel, byte[] bytes)
         {
             using var form = new MultipartFormDataContent();
             using var fileContent = new ByteArrayContent(bytes);
@@ -57,18 +57,18 @@ namespace ClassifiedAds.Blazor.Modules.Files.Services
             return result;
         }
 
-        public async Task<FileEntryModel> UpdateFile(Guid id, FileEntryModel file)
+        public async Task<FileEntryModel> UpdateFileAsync(Guid id, FileEntryModel file)
         {
             var updatedFile = await PutAsync<FileEntryModel>($"api/files/{id}", file);
             return updatedFile;
         }
 
-        public async Task DeleteFile(Guid id)
+        public async Task DeleteFileAsync(Guid id)
         {
             await DeleteAsync($"api/files/{id}");
         }
 
-        public async Task<List<FileEntryAuditLogModel>> GetAuditLogs(Guid id)
+        public async Task<List<FileEntryAuditLogModel>> GetAuditLogsAsync(Guid id)
         {
             var auditLogs = await GetAsync<List<FileEntryAuditLogModel>>($"api/files/{id}/auditlogs");
             return auditLogs;

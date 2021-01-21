@@ -24,18 +24,18 @@ namespace ClassifiedAds.Blazor.Modules.Files.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            File = await FileService.GetFileById(Id);
+            File = await FileService.GetFileByIdAsync(Id);
         }
 
         protected async Task ViewAuditLogs()
         {
-            var logs = await FileService.GetAuditLogs(File.Id);
+            var logs = await FileService.GetAuditLogsAsync(File.Id);
             AuditLogsDialog.Show(logs);
         }
 
         protected async Task HandleValidSubmit()
         {
-            await FileService.UpdateFile(File.Id, File);
+            await FileService.UpdateFileAsync(File.Id, File);
             NavManager.NavigateTo("/files");
         }
     }

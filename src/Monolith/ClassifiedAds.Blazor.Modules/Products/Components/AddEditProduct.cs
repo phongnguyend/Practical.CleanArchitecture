@@ -39,7 +39,7 @@ namespace ClassifiedAds.Blazor.Modules.Products.Components
 
         protected async Task HandleValidSubmit()
         {
-            await (Product.Id == Guid.Empty ? ProductService.CreateProduct(Product) : ProductService.UpdateProduct(Product.Id, Product));
+            await (Product.Id == Guid.Empty ? ProductService.CreateProductAsync(Product) : ProductService.UpdateProductAsync(Product.Id, Product));
             NavManager.NavigateTo("/products");
         }
     }

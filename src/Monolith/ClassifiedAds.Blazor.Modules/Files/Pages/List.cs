@@ -34,7 +34,7 @@ namespace ClassifiedAds.Blazor.Modules.Files.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Files = await FileService.GetFiles();
+            Files = await FileService.GetFilesAsync();
         }
         protected async Task Download(FileEntryModel file)
         {
@@ -47,7 +47,7 @@ namespace ClassifiedAds.Blazor.Modules.Files.Pages
 
         protected async Task ViewAuditLogs(FileEntryModel file)
         {
-            var logs = await FileService.GetAuditLogs(file.Id);
+            var logs = await FileService.GetAuditLogsAsync(file.Id);
             await JSRuntime.Table(logs);
             AuditLogsDialog.Show(logs);
         }
@@ -62,12 +62,12 @@ namespace ClassifiedAds.Blazor.Modules.Files.Pages
         {
             Logger.LogWarning($"Deleting File: {DeletingFile.Id}");
 
-            await FileService.DeleteFile(DeletingFile.Id);
+            await FileService.DeleteFileAsync(DeletingFile.Id);
             DeleteDialog.Close();
 
             Logger.LogWarning($"Deleted File: {DeletingFile.Id}");
 
-            Files = await FileService.GetFiles();
+            Files = await FileService.GetFilesAsync();
             StateHasChanged();
         }
     }

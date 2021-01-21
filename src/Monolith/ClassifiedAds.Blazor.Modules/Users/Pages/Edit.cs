@@ -21,7 +21,7 @@ namespace ClassifiedAds.Blazor.Modules.Users.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            User = await UserService.GetUserById(Id);
+            User = await UserService.GetUserByIdAsync(Id);
         }
     }
 }

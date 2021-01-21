@@ -14,46 +14,46 @@ namespace ClassifiedAds.Blazor.Modules.Users.Services
         {
         }
 
-        public async Task<List<UserModel>> GetUsers()
+        public async Task<List<UserModel>> GetUsersAsync()
         {
             var users = await GetAsync<List<UserModel>>("api/users");
             return users;
         }
 
-        public async Task<UserModel> GetUserById(Guid id)
+        public async Task<UserModel> GetUserByIdAsync(Guid id)
         {
             var user = await GetAsync<UserModel>($"api/users/{id}");
             return user;
         }
 
-        public async Task<UserModel> CreateUser(UserModel product)
+        public async Task<UserModel> CreateUserAsync(UserModel product)
         {
             var createdUser = await PostAsync<UserModel>("api/users", product);
             return createdUser;
         }
 
-        public async Task<UserModel> UpdateUser(Guid id, UserModel product)
+        public async Task<UserModel> UpdateUserAsync(Guid id, UserModel product)
         {
             var updatedUser = await PutAsync<UserModel>($"api/users/{id}", product);
             return updatedUser;
         }
 
-        public async Task DeleteUser(Guid id)
+        public async Task DeleteUserAsync(Guid id)
         {
             await DeleteAsync($"api/users/{id}");
         }
 
-        public async Task SetPassword(SetPasswordModel model)
+        public async Task SetPasswordAsync(SetPasswordModel model)
         {
             await PutAsync<string>($"api/users/{model.Id}/password", model);
         }
 
-        public async Task SendPasswordResetEmail(Guid id)
+        public async Task SendPasswordResetEmailAsync(Guid id)
         {
             await PostAsync<string>($"api/users/{id}/passwordresetemail");
         }
 
-        public async Task SendEmailAddressConfirmationEmail(Guid id)
+        public async Task SendEmailAddressConfirmationEmailAsync(Guid id)
         {
             await PostAsync<string>($"api/users/{id}/emailaddressconfirmation");
         }

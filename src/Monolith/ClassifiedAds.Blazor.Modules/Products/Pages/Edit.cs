@@ -29,7 +29,7 @@ namespace ClassifiedAds.Blazor.Modules.Products.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Product = await ProductService.GetProductById(ProductId);
+            Product = await ProductService.GetProductByIdAsync(ProductId);
         }
     }
 }

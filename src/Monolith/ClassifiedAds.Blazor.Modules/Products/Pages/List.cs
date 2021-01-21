@@ -34,7 +34,7 @@ namespace ClassifiedAds.Blazor.Modules.Products.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Products = await ProductService.GetProducts();
+            Products = await ProductService.GetProductsAsync();
         }
 
         protected void QuickAddProduct()
@@ -50,7 +50,7 @@ namespace ClassifiedAds.Blazor.Modules.Products.Pages
 
         protected async Task ViewAuditLogs(ProductModel product)
         {
-            var logs = await ProductService.GetAuditLogs(product.Id);
+            var logs = await ProductService.GetAuditLogsAsync(product.Id);
             AuditLogsDialog.Show(logs);
         }
 
@@ -62,9 +62,9 @@ namespace ClassifiedAds.Blazor.Modules.Products.Pages
 
         public async void ConfirmedDeleteProduct()
         {
-            await ProductService.DeleteProduct(DeletingProduct.Id);
+            await ProductService.DeleteProductAsync(DeletingProduct.Id);
             DeleteDialog.Close();
-            Products = await ProductService.GetProducts();
+            Products = await ProductService.GetProductsAsync();
             StateHasChanged();
         }
     }

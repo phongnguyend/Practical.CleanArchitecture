@@ -1,6 +1,9 @@
+using ClassifiedAds.Application.AuditLogEntries.DTOs;
 using ClassifiedAds.Domain.Entities;
+using Polly;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
@@ -16,33 +19,39 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             _httpClient.DefaultRequestHeaders.Clear();
         }
 
-        private async Task<List<Product>> GetProducts()
+        private async Task<List<Product>> GetProductsAsync()
         {
             var products = await GetAsync<List<Product>>("api/products");
             return products;
         }
 
-        private async Task<Product> GetProductById(Guid id)
+        private async Task<Product> GetProductByIdAsync(Guid id)
         {
             var product = await GetAsync<Product>($"api/products/{id}");
             return product;
         }
 
-        private async Task<Product> CreateProduct(Product product)
+        private async Task<Product> CreateProductAsync(Product product)
         {
             var createdProduct = await PostAsync<Product>("api/products", product);
             return createdProduct;
         }
 
-        private async Task<Product> UpdateProduct(Guid id, Product product)
+        private async Task<Product> UpdateProductAsync(Guid id, Product product)
         {
             var updatedProduct = await PutAsync<Product>($"api/products/{id}", product);
             return updatedProduct;
         }
 
-        private async Task DeleteProduct(Guid id)
+        private async Task DeleteProductAsync(Guid id)
         {
             await DeleteAsync($"api/products/{id}");
+        }
+
+        public async Task<List<AuditLogEntryDTO>> GetAuditLogsAsync(Guid id)
+        {
+            var auditLogs = await GetAsync<List<AuditLogEntryDTO>>($"api/products/{id}/auditlogs");
+            return auditLogs;
         }
 
         [Fact]
@@ -57,18 +66,22 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
                 Code = "TEST",
                 Description = "Description",
             };
-            Product createdProduct = await CreateProduct(product);
+            Product createdProduct = await CreateProductAsync(product);
             Assert.True(product.Id != createdProduct.Id);
             Assert.Equal(product.Name, createdProduct.Name);
             Assert.Equal(product.Code, createdProduct.Code);
             Assert.Equal(product.Description, createdProduct.Description);
 
+            var auditLogs = await GetAuditLogsAsync(createdProduct.Id);
+            Assert.Single(auditLogs);
+            Assert.Contains(auditLogs, x => x.Action == "CREATED");
+
             // GET
-            var products = await GetProducts();
+            var products = await GetProductsAsync();
             Assert.True(products.Count > 0);
 
             // GET ONE
-            var refreshedProduct = await GetProductById(createdProduct.Id);
+            var refreshedProduct = await GetProductByIdAsync(createdProduct.Id);
             Assert.Equal(refreshedProduct.Id, createdProduct.Id);
             Assert.Equal(refreshedProduct.Name, createdProduct.Name);
             Assert.Equal(refreshedProduct.Code, createdProduct.Code);
@@ -76,15 +89,20 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
 
             // PUT
             refreshedProduct.Name = "Test 2";
-            var updatedProduct = await UpdateProduct(refreshedProduct.Id, refreshedProduct);
+            var updatedProduct = await UpdateProductAsync(refreshedProduct.Id, refreshedProduct);
             Assert.Equal(refreshedProduct.Id, updatedProduct.Id);
             Assert.Equal("Test 2", updatedProduct.Name);
             Assert.Equal(refreshedProduct.Code, updatedProduct.Code);
             Assert.Equal(refreshedProduct.Description, updatedProduct.Description);
 
+            auditLogs = await GetAuditLogsAsync(createdProduct.Id);
+            Assert.Equal(2, auditLogs.Count);
+            Assert.Single(auditLogs, x => x.Action == "CREATED");
+            Assert.Equal(1, auditLogs.Count(x => x.Action == "UPDATED"));
+
             // DELETE
-            await DeleteProduct(createdProduct.Id);
-            await Assert.ThrowsAsync<HttpRequestException>(async () => await GetProductById(createdProduct.Id));
+            await DeleteProductAsync(createdProduct.Id);
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await GetProductByIdAsync(createdProduct.Id));
         }
 
     }

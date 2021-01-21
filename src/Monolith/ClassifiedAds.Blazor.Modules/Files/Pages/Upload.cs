@@ -45,7 +45,7 @@ namespace ClassifiedAds.Blazor.Modules.Files.Pages
                 await BrowserFile.OpenReadStream().ReadAsync(buffer);
 
                 File.FileName = BrowserFile.Name;
-                var res = await FileService.UploadFile(File, buffer);
+                var res = await FileService.UploadFileAsync(File, buffer);
 
                 NavManager.NavigateTo($"/files/edit/{res.Id}");
             }

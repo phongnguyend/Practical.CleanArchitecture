@@ -20,7 +20,7 @@ namespace ClassifiedAds.Blazor.Modules.Users.Components
 
         protected async Task HandleValidSubmit()
         {
-            var user = await (User.Id == Guid.Empty ? UserService.CreateUser(User) : UserService.UpdateUser(User.Id, User));
+            var user = await (User.Id == Guid.Empty ? UserService.CreateUserAsync(User) : UserService.UpdateUserAsync(User.Id, User));
             NavManager.NavigateTo($"/users/{user.Id}");
         }
     }

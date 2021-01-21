@@ -15,7 +15,7 @@ namespace ClassifiedAds.Blazor.Modules.AuditLogs.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            AuditLogs = await AuditLogService.GetAuditLogs();
+            AuditLogs = await AuditLogService.GetAuditLogsAsync();
         }
     }
 }

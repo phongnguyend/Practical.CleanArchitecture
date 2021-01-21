@@ -28,12 +28,12 @@ namespace ClassifiedAds.Blazor.Modules.Products.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Product = await ProductService.GetProductById(ProductId);
+            Product = await ProductService.GetProductByIdAsync(ProductId);
         }
 
         protected async Task ViewAuditLogs()
         {
-            var logs = await ProductService.GetAuditLogs(Product.Id);
+            var logs = await ProductService.GetAuditLogsAsync(Product.Id);
             AuditLogsDialog.Show(logs);
         }
     }

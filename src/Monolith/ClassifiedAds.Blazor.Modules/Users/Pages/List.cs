@@ -23,7 +23,7 @@ namespace ClassifiedAds.Blazor.Modules.Users.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Users = await UserService.GetUsers();
+            Users = await UserService.GetUsersAsync();
         }
 
         protected void DeleteUser(UserModel user)
@@ -34,9 +34,9 @@ namespace ClassifiedAds.Blazor.Modules.Users.Pages
 
         public async void ConfirmedDeleteUser()
         {
-            await UserService.DeleteUser(DeletingUser.Id);
+            await UserService.DeleteUserAsync(DeletingUser.Id);
             DeleteDialog.Close();
-            Users = await UserService.GetUsers();
+            Users = await UserService.GetUsersAsync();
             StateHasChanged();
         }
     }

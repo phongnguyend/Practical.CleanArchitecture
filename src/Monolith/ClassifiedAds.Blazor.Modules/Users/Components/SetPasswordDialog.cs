@@ -33,7 +33,7 @@ namespace ClassifiedAds.Blazor.Modules.Users.Components
 
         protected async Task HandleValidSubmit()
         {
-            await UserService.SetPassword(SetPasswordModel);
+            await UserService.SetPasswordAsync(SetPasswordModel);
             Close();
         }
     }

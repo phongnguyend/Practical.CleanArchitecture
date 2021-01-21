@@ -29,18 +29,18 @@ namespace ClassifiedAds.Blazor.Modules.Users.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            User = await UserService.GetUserById(Id);
+            User = await UserService.GetUserByIdAsync(Id);
         }
 
         protected async void ConfirmedSendPasswordResetEmail(bool confirmed)
         {
-            await UserService.SendPasswordResetEmail(User.Id);
+            await UserService.SendPasswordResetEmailAsync(User.Id);
             SendPasswordResetEmailDialog.Close();
         }
 
         protected async void ConfirmedSendEmailAddressConfirmation(bool confirmed)
         {
-            await UserService.SendEmailAddressConfirmationEmail(User.Id);
+            await UserService.SendEmailAddressConfirmationEmailAsync(User.Id);
             SendEmailAddressConfirmationEmailDialog.Close();
         }
     }
