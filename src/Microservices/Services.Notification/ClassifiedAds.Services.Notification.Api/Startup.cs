@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Polly;
+using System;
 
 namespace ClassifiedAds.Services.Notification
 {
@@ -60,7 +62,16 @@ namespace ClassifiedAds.Services.Notification
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.MigrateNotificationDb();
+            Policy.Handle<Exception>().WaitAndRetry(new[]
+            {
+                TimeSpan.FromSeconds(10),
+                TimeSpan.FromSeconds(20),
+                TimeSpan.FromSeconds(30),
+            })
+            .Execute(() =>
+            {
+                app.MigrateNotificationDb();
+            });
 
             if (env.IsDevelopment())
             {

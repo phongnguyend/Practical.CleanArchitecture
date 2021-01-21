@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
+using System;
 using System.Reflection;
 
 namespace ClassifiedAds.Migrator
@@ -45,9 +47,18 @@ namespace ClassifiedAds.Migrator
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.MigrateAdsDb();
-            app.MigrateIdServerDb();
-            app.MigrateMiniProfilerDb();
+            Policy.Handle<Exception>().WaitAndRetry(new[]
+            {
+                TimeSpan.FromSeconds(10),
+                TimeSpan.FromSeconds(20),
+                TimeSpan.FromSeconds(30),
+            })
+            .Execute(() =>
+            {
+                app.MigrateAdsDb();
+                app.MigrateIdServerDb();
+                app.MigrateMiniProfilerDb();
+            });
         }
     }
 }

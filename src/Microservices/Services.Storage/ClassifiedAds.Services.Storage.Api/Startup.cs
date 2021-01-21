@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Polly;
 using System;
 using System.Threading;
 
@@ -67,7 +68,16 @@ namespace ClassifiedAds.Services.Storage
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.MigrateStorageDb();
+            Policy.Handle<Exception>().WaitAndRetry(new[]
+            {
+                TimeSpan.FromSeconds(10),
+                TimeSpan.FromSeconds(20),
+                TimeSpan.FromSeconds(30),
+            })
+            .Execute(() =>
+            {
+                app.MigrateStorageDb();
+            });
 
             if (env.IsDevelopment())
             {
