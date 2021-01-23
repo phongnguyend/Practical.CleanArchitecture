@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace ClassifiedAds.Modules.Identity.DTOs.Roles
+namespace ClassifiedAds.Modules.Identity.Models
 {
-    public class RoleDTO
+    public class RoleModel
     {
         public Guid Id { get; set; }
 

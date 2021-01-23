@@ -1,9 +1,9 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.Infrastructure.Notification.Email;
 using ClassifiedAds.Services.Identity.Commands.EmailMessages;
 using ClassifiedAds.Services.Identity.Commands.Users;
 using ClassifiedAds.Services.Identity.DTOs;
 using ClassifiedAds.Services.Identity.Entities;
+using ClassifiedAds.Services.Identity.Models;
 using ClassifiedAds.Services.Identity.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -42,7 +42,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
         public async Task<ActionResult<IEnumerable<User>>> Get()
         {
             var users = await _dispatcher.DispatchAsync(new GetUsersQuery());
-            var model = users.ToDTOs();
+            var model = users.ToModels();
             return Ok(model);
         }
 
@@ -52,14 +52,14 @@ namespace ClassifiedAds.Services.Identity.Controllers
         public async Task<ActionResult<User>> Get(Guid id)
         {
             var user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = id, AsNoTracking = true });
-            var model = user.ToDTO();
+            var model = user.ToModel();
             return Ok(model);
         }
 
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<User>> Post([FromBody] UserDTO model)
+        public async Task<ActionResult<User>> Post([FromBody] UserModel model)
         {
             User user = new User
             {
@@ -78,7 +78,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
 
             _ = await _userManager.CreateAsync(user);
 
-            model = user.ToDTO();
+            model = user.ToModel();
             return Created($"/api/users/{model.Id}", model);
         }
 
@@ -86,7 +86,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Put(Guid id, [FromBody] UserDTO model)
+        public async Task<ActionResult> Put(Guid id, [FromBody] UserModel model)
         {
             User user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = id });
 
@@ -104,7 +104,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
 
             _ = await _userManager.UpdateAsync(user);
 
-            model = user.ToDTO();
+            model = user.ToModel();
             return Ok(model);
         }
 
@@ -112,7 +112,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> SetPassword(Guid id, [FromBody] UserDTO model)
+        public async Task<ActionResult> SetPassword(Guid id, [FromBody] UserModel model)
         {
             User user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = id });
 

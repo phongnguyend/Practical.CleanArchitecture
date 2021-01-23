@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace ClassifiedAds.Services.Identity.DTOs
+namespace ClassifiedAds.Services.Identity.Models
 {
-    public class UserDTO
+    public class UserModel
     {
         public Guid Id { get; set; }
 

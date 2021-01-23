@@ -2,6 +2,7 @@
 using ClassifiedAds.Infrastructure.Storages;
 using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
 using ClassifiedAds.Modules.Storage.Entities;
+using ClassifiedAds.Modules.Storage.Models;
 using ClassifiedAds.Modules.Storage.Queries;
 using CryptographyHelper;
 using CryptographyHelper.SymmetricAlgorithms;
@@ -37,13 +38,14 @@ namespace ClassifiedAds.Modules.Storage.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FileEntry>>> Get()
+        public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get()
         {
-            return Ok(await _dispatcher.DispatchAsync(new GetEntititesQuery<FileEntry>()));
+            var fileEntries = await _dispatcher.DispatchAsync(new GetEntititesQuery<FileEntry>());
+            return Ok(fileEntries.ToModels());
         }
 
         [HttpPost]
-        public async Task<ActionResult<FileEntry>> Upload([FromForm] UploadFile model)
+        public async Task<ActionResult<FileEntryModel>> Upload([FromForm] UploadFile model)
         {
             var fileEntry = new FileEntry
             {
@@ -57,7 +59,7 @@ namespace ClassifiedAds.Modules.Storage.Controllers
 
             await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
 
-            var fileEntryDTO = fileEntry.ToFileEntryDTO();
+            var fileEntryDTO = fileEntry.ToModel();
 
             if (model.Encrypted)
             {
@@ -86,13 +88,14 @@ namespace ClassifiedAds.Modules.Storage.Controllers
 
             await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
 
-            return Ok(fileEntry);
+            return Ok(fileEntry.ToModel());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<FileEntry>>> Get(Guid id)
+        public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get(Guid id)
         {
-            return Ok(await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id }));
+            var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
+            return Ok(fileEntry.ToModel());
         }
 
         [HttpGet("{id}/download")]
@@ -100,7 +103,7 @@ namespace ClassifiedAds.Modules.Storage.Controllers
         {
             var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
 
-            var rawData = await _fileManager.ReadAsync(fileEntry.ToFileEntryDTO());
+            var rawData = await _fileManager.ReadAsync(fileEntry.ToModel());
             var content = fileEntry.Encrypted && fileEntry.FileLocation != "Fake.txt"
                 ? rawData
                 .UseAES(fileEntry.EncryptionKey.FromBase64String())
@@ -116,7 +119,7 @@ namespace ClassifiedAds.Modules.Storage.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Put(Guid id, [FromBody] FileEntry model)
+        public async Task<ActionResult> Put(Guid id, [FromBody] FileEntryModel model)
         {
             var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id, ThrowNotFoundIfNull = true });
 
@@ -134,7 +137,7 @@ namespace ClassifiedAds.Modules.Storage.Controllers
             var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
 
             await _dispatcher.DispatchAsync(new DeleteEntityCommand<FileEntry> { Entity = fileEntry });
-            await _fileManager.DeleteAsync(fileEntry.ToFileEntryDTO());
+            await _fileManager.DeleteAsync(fileEntry.ToModel());
 
             return Ok();
         }

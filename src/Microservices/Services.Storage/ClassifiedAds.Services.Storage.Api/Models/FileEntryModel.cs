@@ -1,10 +1,12 @@
-﻿using ClassifiedAds.Domain.Entities;
+﻿using ClassifiedAds.Infrastructure.Storages;
 using System;
 
-namespace ClassifiedAds.Modules.Storage.Entities
+namespace ClassifiedAds.Services.Storage.Models
 {
-    public class FileEntry : AggregateRoot<Guid>
+    public class FileEntryModel : IFileEntry
     {
+        public Guid Id { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -18,7 +20,5 @@ namespace ClassifiedAds.Modules.Storage.Entities
         public string FileLocation { get; set; }
 
         public bool Encrypted { get; set; }
-
-        public string EncryptionKey { get; set; }
     }
 }

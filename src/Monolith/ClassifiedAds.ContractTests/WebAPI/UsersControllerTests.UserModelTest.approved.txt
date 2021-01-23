@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "UserModel",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "Id": {
+      "type": "string",
+      "format": "guid"
+    },
+    "UserName": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "NormalizedUserName": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "Email": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "NormalizedEmail": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "EmailConfirmed": {
+      "type": "boolean"
+    },
+    "PhoneNumber": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "PhoneNumberConfirmed": {
+      "type": "boolean"
+    },
+    "TwoFactorEnabled": {
+      "type": "boolean"
+    },
+    "ConcurrencyStamp": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "SecurityStamp": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "LockoutEnabled": {
+      "type": "boolean"
+    },
+    "LockoutEnd": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "AccessFailedCount": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "Password": {
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  }
+}

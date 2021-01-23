@@ -1,17 +1,16 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassifiedAds.WebAPI.Models.Products
+namespace ClassifiedAds.Services.Product.Models
 {
     public static class ProductModelMappingConfiguration
     {
-        public static IEnumerable<ProductModel> ToModels(this IEnumerable<Product> entities)
+        public static IEnumerable<ProductModel> ToModels(this IEnumerable<Entities.Product> entities)
         {
             return entities.Select(x => x.ToModel());
         }
 
-        public static ProductModel ToModel(this Product entity)
+        public static ProductModel ToModel(this Entities.Product entity)
         {
             if (entity == null)
             {
@@ -27,9 +26,9 @@ namespace ClassifiedAds.WebAPI.Models.Products
             };
         }
 
-        public static Product ToEntity(this ProductModel model)
+        public static Entities.Product ToEntity(this ProductModel model)
         {
-            return new Product
+            return new Entities.Product
             {
                 Id = model.Id,
                 Code = model.Code,

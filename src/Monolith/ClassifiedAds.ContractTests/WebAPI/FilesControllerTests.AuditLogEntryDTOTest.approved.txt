@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "AuditLogEntryDTO",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "Id": {
+      "type": "string",
+      "format": "guid"
+    },
+    "UserId": {
+      "type": "string",
+      "format": "guid"
+    },
+    "UserName": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "Action": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "ObjectId": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "Log": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "CreatedDateTime": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

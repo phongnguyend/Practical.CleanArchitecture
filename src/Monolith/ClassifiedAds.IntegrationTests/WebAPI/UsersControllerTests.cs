@@ -114,7 +114,7 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
 
             // DELETE
             await DeleteUserAsync(createdUser.Id);
-            await Assert.ThrowsAsync<HttpRequestException>(async () => await GetUserByIdAsync(createdUser.Id));
+            Assert.Null(await GetUserByIdAsync(createdUser.Id));
         }
     }
 

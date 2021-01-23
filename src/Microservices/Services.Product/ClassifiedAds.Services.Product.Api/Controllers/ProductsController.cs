@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Services.Product.Commands;
 using ClassifiedAds.Services.Product.DTOs;
+using ClassifiedAds.Services.Product.Models;
 using ClassifiedAds.Services.Product.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -34,7 +35,7 @@ namespace ClassifiedAds.Services.Product.Controllers
         {
             _logger.LogInformation("Getting all products");
             var products = await _dispatcher.DispatchAsync(new GetProductsQuery());
-            var model = products.ToDTOs();
+            var model = products.ToModels();
             return Ok(model);
         }
 
@@ -44,18 +45,18 @@ namespace ClassifiedAds.Services.Product.Controllers
         public async Task<ActionResult<Entities.Product>> Get(Guid id)
         {
             var product = await _dispatcher.DispatchAsync(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
-            var model = product.ToDTO();
+            var model = product.ToModel();
             return Ok(model);
         }
 
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<Entities.Product>> Post([FromBody] ProductDTO model)
+        public async Task<ActionResult<Entities.Product>> Post([FromBody] ProductModel model)
         {
             var product = model.ToEntity();
             await _dispatcher.DispatchAsync(new AddUpdateProductCommand { Product = product });
-            model = product.ToDTO();
+            model = product.ToModel();
             return Created($"/api/products/{model.Id}", model);
         }
 
@@ -63,7 +64,7 @@ namespace ClassifiedAds.Services.Product.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Put(Guid id, [FromBody] ProductDTO model)
+        public async Task<ActionResult> Put(Guid id, [FromBody] ProductModel model)
         {
             var product = await _dispatcher.DispatchAsync(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
 
@@ -73,7 +74,7 @@ namespace ClassifiedAds.Services.Product.Controllers
 
             await _dispatcher.DispatchAsync(new AddUpdateProductCommand { Product = product });
 
-            model = product.ToDTO();
+            model = product.ToModel();
 
             return Ok(model);
         }
@@ -96,10 +97,10 @@ namespace ClassifiedAds.Services.Product.Controllers
             var logs = await _dispatcher.DispatchAsync(new GetAuditEntriesQuery { ObjectId = id.ToString() });
 
             List<dynamic> entries = new List<dynamic>();
-            ProductDTO previous = null;
+            ProductModel previous = null;
             foreach (var log in logs.OrderBy(x => x.CreatedDateTime))
             {
-                var data = JsonConvert.DeserializeObject<ProductDTO>(log.Log);
+                var data = JsonConvert.DeserializeObject<ProductModel>(log.Log);
                 var highLight = new
                 {
                     Code = previous != null && data.Code != previous.Code,

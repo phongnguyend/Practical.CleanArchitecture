@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "RoleModel",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "Id": {
+      "type": "string",
+      "format": "guid"
+    },
+    "Name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "NormalizedName": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "ConcurrencyStamp": {
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  }
+}

@@ -1,8 +1,8 @@
-﻿using ClassifiedAds.Domain.Entities;
+﻿using ClassifiedAds.Services.Identity.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassifiedAds.WebAPI.Models.Roles
+namespace ClassifiedAds.Services.Identity.Models
 {
     public static class RoleModelMappingConfiguration
     {

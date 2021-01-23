@@ -45,7 +45,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         public async Task<ActionResult<IEnumerable<User>>> Get()
         {
             var users = await _dispatcher.DispatchAsync(new GetUsersQuery());
-            var model = users.ToDTOs();
+            var model = users.ToModels();
             return Ok(model);
         }
 
@@ -55,7 +55,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         public async Task<ActionResult<User>> Get(Guid id)
         {
             var user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = id, AsNoTracking = true });
-            var model = user.ToDTO();
+            var model = user.ToModel();
             return Ok(model);
         }
 
@@ -81,7 +81,7 @@ namespace ClassifiedAds.WebAPI.Controllers
 
             _ = await _userManager.CreateAsync(user);
 
-            model = user.ToDTO();
+            model = user.ToModel();
             return Created($"/api/users/{model.Id}", model);
         }
 
@@ -107,7 +107,7 @@ namespace ClassifiedAds.WebAPI.Controllers
 
             _ = await _userManager.UpdateAsync(user);
 
-            model = user.ToDTO();
+            model = user.ToModel();
             return Ok(model);
         }
 

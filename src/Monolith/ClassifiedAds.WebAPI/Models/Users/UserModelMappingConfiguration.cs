@@ -6,13 +6,18 @@ namespace ClassifiedAds.WebAPI.Models.Users
 {
     public static class UserModelMappingConfiguration
     {
-        public static IEnumerable<UserModel> ToDTOs(this IEnumerable<User> entities)
+        public static IEnumerable<UserModel> ToModels(this IEnumerable<User> entities)
         {
-            return entities.Select(x => x.ToDTO());
+            return entities.Select(x => x.ToModel());
         }
 
-        public static UserModel ToDTO(this User entity)
+        public static UserModel ToModel(this User entity)
         {
+            if (entity == null)
+            {
+                return null;
+            }
+
             return new UserModel
             {
                 Id = entity.Id,
@@ -31,6 +36,5 @@ namespace ClassifiedAds.WebAPI.Models.Users
                 AccessFailedCount = entity.AccessFailedCount,
             };
         }
-
     }
 }

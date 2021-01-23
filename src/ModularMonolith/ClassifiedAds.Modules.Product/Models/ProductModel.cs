@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace ClassifiedAds.Services.Product.DTOs
+namespace ClassifiedAds.Modules.Product.Models
 {
-    public class ProductDTO
+    public class ProductModel
     {
         public Guid Id { get; set; }
 

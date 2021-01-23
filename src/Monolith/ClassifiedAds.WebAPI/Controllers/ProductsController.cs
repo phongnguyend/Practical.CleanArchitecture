@@ -38,7 +38,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         {
             _logger.LogInformation("Getting all products");
             var products = await _dispatcher.DispatchAsync(new GetProductsQuery());
-            var model = products.ToDTOs();
+            var model = products.ToModels();
             return Ok(model);
         }
 
@@ -48,7 +48,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         public async Task<ActionResult<Product>> Get(Guid id)
         {
             var product = await _dispatcher.DispatchAsync(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
-            var model = product.ToDTO();
+            var model = product.ToModel();
             return Ok(model);
         }
 
@@ -59,7 +59,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         {
             var product = model.ToEntity();
             await _dispatcher.DispatchAsync(new AddUpdateProductCommand { Product = product });
-            model = product.ToDTO();
+            model = product.ToModel();
             return Created($"/api/products/{model.Id}", model);
         }
 
@@ -77,7 +77,7 @@ namespace ClassifiedAds.WebAPI.Controllers
 
             await _dispatcher.DispatchAsync(new AddUpdateProductCommand { Product = product });
 
-            model = product.ToDTO();
+            model = product.ToModel();
 
             return Ok(model);
         }

@@ -3,6 +3,7 @@ using ClassifiedAds.Application.AuditLogEntries.DTOs;
 using ClassifiedAds.Application.AuditLogEntries.Queries;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.Storages;
+using ClassifiedAds.WebAPI.Models.Files;
 using CryptographyHelper;
 using CryptographyHelper.SymmetricAlgorithms;
 using Microsoft.AspNetCore.Authorization;
@@ -40,13 +41,14 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FileEntry>>> Get()
+        public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get()
         {
-            return Ok(await _dispatcher.DispatchAsync(new GetEntititesQuery<FileEntry>()));
+            var fileEntries = await _dispatcher.DispatchAsync(new GetEntititesQuery<FileEntry>());
+            return Ok(fileEntries.ToModels());
         }
 
         [HttpPost]
-        public async Task<ActionResult<FileEntry>> Upload([FromForm] UploadFile model)
+        public async Task<ActionResult<FileEntryModel>> Upload([FromForm] UploadFile model)
         {
             var fileEntry = new FileEntry
             {
@@ -85,13 +87,14 @@ namespace ClassifiedAds.WebAPI.Controllers
 
             await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
 
-            return Ok(fileEntry);
+            return Ok(fileEntry.ToModel());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<FileEntry>>> Get(Guid id)
+        public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get(Guid id)
         {
-            return Ok(await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id }));
+            var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
+            return Ok(fileEntry.ToModel());
         }
 
         [HttpGet("{id}/download")]
@@ -115,7 +118,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Put(Guid id, [FromBody] FileEntry model)
+        public async Task<ActionResult> Put(Guid id, [FromBody] FileEntryModel model)
         {
             var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id, ThrowNotFoundIfNull = true });
 

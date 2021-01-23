@@ -2,18 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassifiedAds.Services.Identity.DTOs
+namespace ClassifiedAds.Services.Identity.Models
 {
-    public static class UserDTOMappingConfiguration
+    public static class UserModelMappingConfiguration
     {
-        public static IEnumerable<UserDTO> ToDTOs(this IEnumerable<User> entities)
+        public static IEnumerable<UserModel> ToModels(this IEnumerable<User> entities)
         {
-            return entities.Select(x => x.ToDTO());
+            return entities.Select(x => x.ToModel());
         }
 
-        public static UserDTO ToDTO(this User entity)
+        public static UserModel ToModel(this User entity)
         {
-            return new UserDTO
+            if (entity == null)
+            {
+                return null;
+            }
+
+            return new UserModel
             {
                 Id = entity.Id,
                 UserName = entity.UserName,

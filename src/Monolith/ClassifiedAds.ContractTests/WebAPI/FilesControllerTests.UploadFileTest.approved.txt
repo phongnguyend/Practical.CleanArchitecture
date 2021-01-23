@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "UploadFile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "FormFile"
+  ],
+  "properties": {
+    "Name": {
+      "title": "Name",
+      "type": [
+        "null",
+        "string"
+      ],
+      "maxLength": 50,
+      "minLength": 0
+    },
+    "Description": {
+      "title": "Description",
+      "type": [
+        "null",
+        "string"
+      ],
+      "maxLength": 50,
+      "minLength": 0
+    },
+    "FormFile": {
+      "title": "File",
+      "type": "string",
+      "format": "binary",
+      "minLength": 1
+    },
+    "Encrypted": {
+      "type": "boolean"
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "FileEntryModel",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "Id": {
+      "type": "string",
+      "format": "guid"
+    },
+    "Name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "Description": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "Size": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "UploadedTime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "FileName": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "FileLocation": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "Encrypted": {
+      "type": "boolean"
+    }
+  }
+}

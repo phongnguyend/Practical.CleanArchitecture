@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.Application.AuditLogEntries.DTOs;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
-using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.WebAPI.Models.Files;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,19 +21,19 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             _httpClient.DefaultRequestHeaders.Clear();
         }
 
-        private async Task<List<FileEntry>> GetFilesAsync()
+        private async Task<List<FileEntryModel>> GetFilesAsync()
         {
-            var files = await GetAsync<List<FileEntry>>("api/files");
+            var files = await GetAsync<List<FileEntryModel>>("api/files");
             return files;
         }
 
-        private async Task<FileEntry> GetFileByIdAsync(Guid id)
+        private async Task<FileEntryModel> GetFileByIdAsync(Guid id)
         {
-            var file = await GetAsync<FileEntry>($"api/files/{id}");
+            var file = await GetAsync<FileEntryModel>($"api/files/{id}");
             return file;
         }
 
-        private async Task<FileEntry> UploadFileAsync(FileEntry file)
+        private async Task<FileEntryModel> UploadFileAsync(FileEntryModel file)
         {
             using var form = new MultipartFormDataContent();
             using var fileContent = new ByteArrayContent(Encoding.UTF8.GetBytes("Test"));
@@ -46,13 +46,13 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             var response = await _httpClient.PostAsync($"api/files", form);
             response.EnsureSuccessStatusCode();
 
-            var createdFile = await response.Content.ReadAs<FileEntry>();
+            var createdFile = await response.Content.ReadAs<FileEntryModel>();
             return createdFile;
         }
 
-        private async Task<FileEntry> UpdateFileAsync(Guid id, FileEntry file)
+        private async Task<FileEntryModel> UpdateFileAsync(Guid id, FileEntryModel file)
         {
-            var updatedProduct = await PutAsync<FileEntry>($"api/files/{id}", file);
+            var updatedProduct = await PutAsync<FileEntryModel>($"api/files/{id}", file);
             return updatedProduct;
         }
 
@@ -73,14 +73,14 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             await GetTokenAsync();
 
             // POST
-            var file = new FileEntry
+            var file = new FileEntryModel
             {
                 Name = "Test",
                 Description = "Description",
                 FileName = "IntegrationTest.txt",
                 Encrypted = true,
             };
-            FileEntry createdFile = await UploadFileAsync(file);
+            FileEntryModel createdFile = await UploadFileAsync(file);
             Assert.True(file.Id != createdFile.Id);
             Assert.Equal(file.Name, createdFile.Name);
             Assert.Equal(file.Description, createdFile.Description);

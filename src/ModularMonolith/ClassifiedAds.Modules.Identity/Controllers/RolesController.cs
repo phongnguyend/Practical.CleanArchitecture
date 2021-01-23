@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Modules.Identity.Commands.Roles;
-using ClassifiedAds.Modules.Identity.DTOs.Roles;
 using ClassifiedAds.Modules.Identity.Entities;
+using ClassifiedAds.Modules.Identity.Models;
 using ClassifiedAds.Modules.Identity.Queries.Roles;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -30,7 +30,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
         public async Task<ActionResult<IEnumerable<Role>>> Get()
         {
             var roles = await _dispatcher.DispatchAsync(new GetRolesQuery { AsNoTracking = true });
-            var model = roles.ToDTOs();
+            var model = roles.ToModels();
             return Ok(model);
         }
 
@@ -40,14 +40,14 @@ namespace ClassifiedAds.Modules.Identity.Controllers
         public async Task<ActionResult<Role>> Get(Guid id)
         {
             var role = await _dispatcher.DispatchAsync(new GetRoleQuery { Id = id, AsNoTracking = true });
-            var model = role.ToDTO();
+            var model = role.ToModel();
             return Ok(model);
         }
 
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<Role>> Post([FromBody] RoleDTO model)
+        public async Task<ActionResult<Role>> Post([FromBody] RoleModel model)
         {
             var role = new Role
             {
@@ -57,7 +57,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
 
             await _dispatcher.DispatchAsync(new AddUpdateRoleCommand { Role = role });
 
-            model = role.ToDTO();
+            model = role.ToModel();
 
             return Created($"/api/roles/{model.Id}", model);
         }
@@ -66,7 +66,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Put(Guid id, [FromBody] RoleDTO model)
+        public async Task<ActionResult> Put(Guid id, [FromBody] RoleModel model)
         {
             var role = await _dispatcher.DispatchAsync(new GetRoleQuery { Id = id });
 
@@ -75,7 +75,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
 
             await _dispatcher.DispatchAsync(new AddUpdateRoleCommand { Role = role });
 
-            model = role.ToDTO();
+            model = role.ToModel();
 
             return Ok(model);
         }

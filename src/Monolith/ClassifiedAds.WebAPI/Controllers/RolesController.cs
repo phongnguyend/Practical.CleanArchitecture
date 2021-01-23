@@ -30,7 +30,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         public async Task<ActionResult<IEnumerable<Role>>> Get()
         {
             var roles = await _dispatcher.DispatchAsync(new GetRolesQuery { AsNoTracking = true });
-            var model = roles.ToDTOs();
+            var model = roles.ToModels();
             return Ok(model);
         }
 
@@ -40,7 +40,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         public async Task<ActionResult<Role>> Get(Guid id)
         {
             var role = await _dispatcher.DispatchAsync(new GetRoleQuery { Id = id, AsNoTracking = true });
-            var model = role.ToDTO();
+            var model = role.ToModel();
             return Ok(model);
         }
 
@@ -57,7 +57,7 @@ namespace ClassifiedAds.WebAPI.Controllers
 
             await _dispatcher.DispatchAsync(new AddUpdateRoleCommand { Role = role });
 
-            model = role.ToDTO();
+            model = role.ToModel();
 
             return Created($"/api/roles/{model.Id}", model);
         }
@@ -75,7 +75,7 @@ namespace ClassifiedAds.WebAPI.Controllers
 
             await _dispatcher.DispatchAsync(new AddUpdateRoleCommand { Role = role });
 
-            model = role.ToDTO();
+            model = role.ToModel();
 
             return Ok(model);
         }
