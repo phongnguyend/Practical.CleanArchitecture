@@ -1,5 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using Dapper;
+﻿using Dapper;
 using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
@@ -8,20 +7,27 @@ namespace ClassifiedAds.Infrastructure.Configuration
 {
     public class SqlConfigurationProvider : ConfigurationProvider
     {
-        private readonly string _connectionString;
+        private readonly SqlServerOptions _options;
 
-        public SqlConfigurationProvider(string connectionString)
+        public SqlConfigurationProvider(SqlServerOptions options)
         {
-            _connectionString = connectionString;
+            _options = options;
         }
 
         public override void Load()
         {
-            using (var conn = new SqlConnection(_connectionString))
+            using (var conn = new SqlConnection(_options.ConnectionString))
             {
                 conn.Open();
-                Data = conn.Query<ConfigurationEntry>("select * from ConfigurationEntries").ToDictionary(c => c.Key, c => c.Value);
+                Data = conn.Query<ConfigurationEntry>(_options.SqlQuery).ToDictionary(c => c.Key, c => c.Value);
             }
         }
+    }
+
+    public class ConfigurationEntry
+    {
+        public string Key { get; set; }
+
+        public string Value { get; set; }
     }
 }

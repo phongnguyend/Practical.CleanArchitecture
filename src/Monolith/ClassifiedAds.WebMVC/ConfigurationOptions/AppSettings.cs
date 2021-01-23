@@ -34,7 +34,7 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
 
         public string CurrentUrl { get; set; }
 
-        public ConfigurationSourcesOptions ConfigurationSources { get; set; }
+        public ConfigurationProviders ConfigurationProviders { get; set; }
 
         public StorageOptions Storage { get; set; }
 

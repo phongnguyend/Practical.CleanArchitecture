@@ -7,9 +7,9 @@ namespace ClassifiedAds.Infrastructure.Configuration
 {
     public class SqlConfigurationProvider : ConfigurationProvider
     {
-        private readonly SqlServerSourceOptions _options;
+        private readonly SqlServerOptions _options;
 
-        public SqlConfigurationProvider(SqlServerSourceOptions options)
+        public SqlConfigurationProvider(SqlServerOptions options)
         {
             _options = options;
         }

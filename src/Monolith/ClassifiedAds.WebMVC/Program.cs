@@ -30,20 +30,7 @@ namespace ClassifiedAds.WebMVC
                         NetworkPortCheck.Wait(appSettings.CheckDependency.Host, 5);
                     }
 
-                    if (appSettings?.ConfigurationSources?.SqlServer?.IsEnabled ?? false)
-                    {
-                        builder.AddSqlConfigurationVariables(appSettings.ConfigurationSources.SqlServer);
-                    }
-
-                    if (ctx.HostingEnvironment.IsDevelopment())
-                    {
-                        return;
-                    }
-
-                    if (appSettings?.ConfigurationSources?.AzureKeyVault?.IsEnabled ?? false)
-                    {
-                        builder.AddAzureKeyVault(appSettings.ConfigurationSources.AzureKeyVault.VaultName);
-                    }
+                    builder.AddAppConfiguration(appSettings.ConfigurationProviders);
                 })
                 .UseClassifiedAdsLogger(configuration =>
                 {

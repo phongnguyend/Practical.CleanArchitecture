@@ -4,16 +4,16 @@ namespace ClassifiedAds.Infrastructure.Configuration
 {
     public class SqlConfigurationSource : IConfigurationSource
     {
-        private readonly string _connectionString;
+        private readonly SqlServerOptions _options;
 
-        public SqlConfigurationSource(string connectionString)
+        public SqlConfigurationSource(SqlServerOptions options)
         {
-            _connectionString = connectionString;
+            _options = options;
         }
 
         public IConfigurationProvider Build(IConfigurationBuilder builder)
         {
-            return new SqlConfigurationProvider(_connectionString);
+            return new SqlConfigurationProvider(_options);
         }
     }
 }
