@@ -7,6 +7,7 @@ using ClassifiedAds.Services.Storage.DTOs;
 using ClassifiedAds.Services.Storage.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Storage.EventHandlers
@@ -20,7 +21,7 @@ namespace ClassifiedAds.Services.Storage.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public async Task HandleAsync(EntityUpdatedEvent<FileEntry> domainEvent)
+        public async Task HandleAsync(EntityUpdatedEvent<FileEntry> domainEvent, CancellationToken cancellationToken = default)
         {
             // Handle the event here and we can also forward to external systems
             using (var scope = _serviceProvider.CreateScope())

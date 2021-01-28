@@ -4,6 +4,7 @@ using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.FileEntries.EventHandlers
@@ -17,7 +18,7 @@ namespace ClassifiedAds.Application.FileEntries.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public async Task HandleAsync(EntityUpdatedEvent<FileEntry> domainEvent)
+        public async Task HandleAsync(EntityUpdatedEvent<FileEntry> domainEvent, CancellationToken cancellationToken = default)
         {
             // Handle the event here and we can also forward to external systems
             using (var scope = _serviceProvider.CreateScope())
