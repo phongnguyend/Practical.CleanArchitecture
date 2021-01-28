@@ -6,6 +6,7 @@ using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Identity.Queries.Roles
@@ -25,7 +26,7 @@ namespace ClassifiedAds.Modules.Identity.Queries.Roles
             _userRepository = userRepository;
         }
 
-        public Task<List<User>> HandleAsync(GetUsersQuery query)
+        public Task<List<User>> HandleAsync(GetUsersQuery query, CancellationToken cancellationToken = default)
         {
             var db = _userRepository.Get(new UserQueryOptions
             {

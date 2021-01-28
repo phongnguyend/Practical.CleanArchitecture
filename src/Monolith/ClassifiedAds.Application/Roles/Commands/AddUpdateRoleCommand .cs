@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.Roles.Commands
@@ -18,7 +19,7 @@ namespace ClassifiedAds.Application.Roles.Commands
             _roleRepository = roleRepository;
         }
 
-        public async Task HandleAsync(AddUpdateRoleCommand command)
+        public async Task HandleAsync(AddUpdateRoleCommand command, CancellationToken cancellationToken = default)
         {
             await _roleRepository.AddOrUpdateAsync(command.Role);
             await _roleRepository.UnitOfWork.SaveChangesAsync();

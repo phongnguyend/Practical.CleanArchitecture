@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.Roles.Commands
@@ -19,7 +20,7 @@ namespace ClassifiedAds.Application.Roles.Commands
             _roleRepository = roleRepository;
         }
 
-        public async Task HandleAsync(DeleteClaimCommand command)
+        public async Task HandleAsync(DeleteClaimCommand command, CancellationToken cancellationToken = default)
         {
             command.Role.Claims.Remove(command.Claim);
             await _roleRepository.UnitOfWork.SaveChangesAsync();

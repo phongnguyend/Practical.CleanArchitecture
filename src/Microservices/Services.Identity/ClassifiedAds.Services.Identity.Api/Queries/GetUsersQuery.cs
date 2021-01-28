@@ -4,6 +4,7 @@ using ClassifiedAds.Application.Decorators.DatabaseRetry;
 using ClassifiedAds.Services.Identity.Entities;
 using ClassifiedAds.Services.Identity.Repositories;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Identity.Queries
@@ -27,7 +28,7 @@ namespace ClassifiedAds.Services.Identity.Queries
             _userRepository = userRepository;
         }
 
-        public Task<List<User>> HandleAsync(GetUsersQuery query)
+        public Task<List<User>> HandleAsync(GetUsersQuery query, CancellationToken cancellationToken = default)
         {
             var db = _userRepository.Get(new UserQueryOptions
             {

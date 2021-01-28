@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.Users.Commands
@@ -19,7 +20,7 @@ namespace ClassifiedAds.Application.Users.Commands
             _userRepository = userRepository;
         }
 
-        public async Task HandleAsync(AddClaimCommand command)
+        public async Task HandleAsync(AddClaimCommand command, CancellationToken cancellationToken = default)
         {
             command.User.Claims.Add(command.Claim);
             await _userRepository.AddOrUpdateAsync(command.User);

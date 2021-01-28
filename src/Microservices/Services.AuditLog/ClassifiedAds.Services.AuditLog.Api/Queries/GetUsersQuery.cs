@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.AuditLog.Queries
@@ -33,7 +34,7 @@ namespace ClassifiedAds.Services.AuditLog.Queries
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<List<UserDTO>> HandleAsync(GetUsersQuery query)
+        public async Task<List<UserDTO>> HandleAsync(GetUsersQuery query, CancellationToken cancellationToken = default)
         {
             var token = await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
             var headers = new Metadata

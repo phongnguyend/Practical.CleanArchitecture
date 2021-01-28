@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Services.Identity.Entities;
 using ClassifiedAds.Services.Identity.Repositories;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Identity.Commands.Users
@@ -20,11 +21,11 @@ namespace ClassifiedAds.Services.Identity.Commands.Users
             _userRepository = userRepository;
         }
 
-        public async Task HandleAsync(AddRoleCommand command)
+        public async Task HandleAsync(AddRoleCommand command, CancellationToken cancellationToken = default)
         {
             command.User.UserRoles.Add(command.Role);
             await _userRepository.AddOrUpdateAsync(command.User);
-            await _userRepository.UnitOfWork.SaveChangesAsync();
+            await _userRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

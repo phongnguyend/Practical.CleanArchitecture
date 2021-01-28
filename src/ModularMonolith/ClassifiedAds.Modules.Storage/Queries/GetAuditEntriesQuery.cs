@@ -2,6 +2,7 @@
 using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
 using ClassifiedAds.Modules.AuditLog.Contracts.Services;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Storage.Queries
@@ -19,7 +20,7 @@ namespace ClassifiedAds.Modules.Storage.Queries
             _auditLogService = auditLogService;
         }
 
-        public Task<List<AuditLogEntryDTO>> HandleAsync(GetAuditEntriesQuery query)
+        public Task<List<AuditLogEntryDTO>> HandleAsync(GetAuditEntriesQuery query, CancellationToken cancellationToken = default)
         {
             return _auditLogService.GetAuditLogEntriesAsync(query);
         }
