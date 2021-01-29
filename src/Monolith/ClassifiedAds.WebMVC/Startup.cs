@@ -104,7 +104,7 @@ namespace ClassifiedAds.WebMVC
                 options.Authority = AppSettings.OpenIdConnect.Authority;
                 options.ClientId = AppSettings.OpenIdConnect.ClientId;
                 options.ClientSecret = AppSettings.OpenIdConnect.ClientSecret;
-                options.ResponseType = "code id_token";
+                options.ResponseType = "code";
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
                 options.Scope.Add("ClassifiedAds.WebAPI");
