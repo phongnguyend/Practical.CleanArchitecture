@@ -8,6 +8,7 @@ using ClassifiedAds.Modules.Storage.DTOs;
 using ClassifiedAds.Modules.Storage.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Storage.EventHandlers
@@ -21,7 +22,7 @@ namespace ClassifiedAds.Modules.Storage.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public async Task HandleAsync(EntityDeletedEvent<FileEntry> domainEvent)
+        public async Task HandleAsync(EntityDeletedEvent<FileEntry> domainEvent, CancellationToken cancellationToken = default)
         {
             using (var scope = _serviceProvider.CreateScope())
             {

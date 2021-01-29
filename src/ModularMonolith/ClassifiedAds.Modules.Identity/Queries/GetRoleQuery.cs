@@ -3,6 +3,7 @@ using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Identity.Queries.Roles
@@ -25,7 +26,7 @@ namespace ClassifiedAds.Modules.Identity.Queries.Roles
             _roleRepository = roleRepository;
         }
 
-        public Task<Role> HandleAsync(GetRoleQuery query)
+        public Task<Role> HandleAsync(GetRoleQuery query, CancellationToken cancellationToken = default)
         {
             var db = _roleRepository.Get(new RoleQueryOptions
             {

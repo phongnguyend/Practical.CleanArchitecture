@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.Decorators.DatabaseRetry
 {
@@ -14,10 +15,10 @@ namespace ClassifiedAds.Application.Decorators.DatabaseRetry
             _handler = handler;
         }
 
-        public async Task<TResult> HandleAsync(TQuery query)
+        public async Task<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
         {
             Task<TResult> result = default;
-            await WrapExecutionAsync(() => result = _handler.HandleAsync(query));
+            await WrapExecutionAsync(() => result = _handler.HandleAsync(query, cancellationToken));
             return await result;
         }
     }

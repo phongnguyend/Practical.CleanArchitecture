@@ -2,6 +2,7 @@
 using ClassifiedAds.Domain.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application
@@ -21,7 +22,7 @@ namespace ClassifiedAds.Application
             _repository = repository;
         }
 
-        public Task<List<TEntity>> HandleAsync(GetEntititesQuery<TEntity> query)
+        public Task<List<TEntity>> HandleAsync(GetEntititesQuery<TEntity> query, CancellationToken cancellationToken = default)
         {
             return _repository.ToListAsync(_repository.GetAll());
         }

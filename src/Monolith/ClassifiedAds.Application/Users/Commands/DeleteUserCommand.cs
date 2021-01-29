@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.Users.Commands
@@ -18,7 +19,7 @@ namespace ClassifiedAds.Application.Users.Commands
             _userRepository = userRepository;
         }
 
-        public async Task HandleAsync(DeleteUserCommand command)
+        public async Task HandleAsync(DeleteUserCommand command, CancellationToken cancellationToken = default)
         {
             _userRepository.Delete(command.User);
             await _userRepository.UnitOfWork.SaveChangesAsync();

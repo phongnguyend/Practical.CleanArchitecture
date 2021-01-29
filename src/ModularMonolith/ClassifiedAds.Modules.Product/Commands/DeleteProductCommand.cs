@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Application;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Product.Commands
@@ -17,7 +18,7 @@ namespace ClassifiedAds.Modules.Product.Commands
             _productService = productService;
         }
 
-        public async Task HandleAsync(DeleteProductCommand command)
+        public async Task HandleAsync(DeleteProductCommand command, CancellationToken cancellationToken = default)
         {
             await _productService.DeleteAsync(command.Product);
         }

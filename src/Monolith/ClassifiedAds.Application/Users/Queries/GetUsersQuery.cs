@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.Users.Queries
@@ -22,7 +23,7 @@ namespace ClassifiedAds.Application.Users.Queries
             _userRepository = userRepository;
         }
 
-        public async Task<List<User>> HandleAsync(GetUsersQuery query)
+        public async Task<List<User>> HandleAsync(GetUsersQuery query, CancellationToken cancellationToken = default)
         {
             var db = _userRepository.Get(new UserQueryOptions
             {

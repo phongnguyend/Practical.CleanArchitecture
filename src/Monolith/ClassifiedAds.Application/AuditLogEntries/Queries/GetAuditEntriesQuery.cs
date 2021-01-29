@@ -2,6 +2,7 @@
 using ClassifiedAds.Domain.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.AuditLogEntries.Queries
@@ -21,7 +22,7 @@ namespace ClassifiedAds.Application.AuditLogEntries.Queries
             _userRepository = userRepository;
         }
 
-        public async Task<List<AuditLogEntryDTO>> HandleAsync(GetAuditEntriesQuery query)
+        public async Task<List<AuditLogEntryDTO>> HandleAsync(GetAuditEntriesQuery query, CancellationToken cancellationToken = default)
         {
             var auditLogs = _auditLogEntryRepository.Get(query);
             var users = _userRepository.GetAll();

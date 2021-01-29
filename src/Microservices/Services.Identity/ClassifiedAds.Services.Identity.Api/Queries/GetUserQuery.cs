@@ -3,6 +3,7 @@ using ClassifiedAds.Services.Identity.Entities;
 using ClassifiedAds.Services.Identity.Repositories;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Identity.Queries
@@ -25,7 +26,7 @@ namespace ClassifiedAds.Services.Identity.Queries
             _userRepository = userRepository;
         }
 
-        public Task<User> HandleAsync(GetUserQuery query)
+        public Task<User> HandleAsync(GetUserQuery query, CancellationToken cancellationToken = default)
         {
             var db = _userRepository.Get(new UserQueryOptions
             {

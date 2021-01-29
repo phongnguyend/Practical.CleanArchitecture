@@ -2,6 +2,7 @@
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.SmsMessages.Events
@@ -15,7 +16,7 @@ namespace ClassifiedAds.Application.SmsMessages.Events
             _smsMessageCreatedEventSender = smsMessageCreatedEventSender;
         }
 
-        public async Task HandleAsync(EntityCreatedEvent<SmsMessage> domainEvent)
+        public async Task HandleAsync(EntityCreatedEvent<SmsMessage> domainEvent, CancellationToken cancellationToken = default)
         {
             // Handle the event here and we can also forward to external systems
             await _smsMessageCreatedEventSender.SendAsync(new SmsMessageCreatedEvent { Id = domainEvent.Entity.Id });

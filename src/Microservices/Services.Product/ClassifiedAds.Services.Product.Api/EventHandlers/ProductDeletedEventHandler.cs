@@ -6,6 +6,7 @@ using ClassifiedAds.Services.Product.Commands;
 using ClassifiedAds.Services.Product.DTOs;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Product.EventHandlers
@@ -19,7 +20,7 @@ namespace ClassifiedAds.Services.Product.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public async Task HandleAsync(EntityDeletedEvent<Entities.Product> domainEvent)
+        public async Task HandleAsync(EntityDeletedEvent<Entities.Product> domainEvent, CancellationToken cancellationToken = default)
         {
             using (var scope = _serviceProvider.CreateScope())
             {

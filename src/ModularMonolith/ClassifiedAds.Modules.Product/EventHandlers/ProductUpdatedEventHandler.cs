@@ -5,6 +5,7 @@ using ClassifiedAds.Modules.AuditLog.Contracts.Services;
 using ClassifiedAds.Modules.Identity.Contracts.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Product.EventHandlers
@@ -18,7 +19,7 @@ namespace ClassifiedAds.Modules.Product.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public async Task HandleAsync(EntityUpdatedEvent<Entities.Product> domainEvent)
+        public async Task HandleAsync(EntityUpdatedEvent<Entities.Product> domainEvent, CancellationToken cancellationToken = default)
         {
             using (var scope = _serviceProvider.CreateScope())
             {

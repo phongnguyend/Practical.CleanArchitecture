@@ -6,6 +6,7 @@ using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.FileEntries.EventHandlers
@@ -21,7 +22,7 @@ namespace ClassifiedAds.Application.FileEntries.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public async Task HandleAsync(EntityCreatedEvent<FileEntry> domainEvent)
+        public async Task HandleAsync(EntityCreatedEvent<FileEntry> domainEvent, CancellationToken cancellationToken = default)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
