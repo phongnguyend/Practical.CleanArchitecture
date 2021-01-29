@@ -14,8 +14,9 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.Tokens.EmailConfirmationTokenProvider = "EmailConfirmation";
             })
                     .AddUserManager<UserManager<User>>()
-                    .AddDefaultTokenProviders()
-                    .AddTokenProvider<EmailConfirmationTokenProvider<User>>("EmailConfirmation");
+                    .AddTokenProviders()
+                    .AddPasswordValidators();
+
             services.AddTransient<IUserStore<User>, UserStore>();
             services.AddTransient<IRoleStore<Role>, RoleStore>();
 
@@ -36,14 +37,33 @@ namespace Microsoft.Extensions.DependencyInjection
                         options.Tokens.EmailConfirmationTokenProvider = "EmailConfirmation";
                     })
                     .AddUserManager<UserManager<User>>()
-                    .AddDefaultTokenProviders()
-                    .AddTokenProvider<EmailConfirmationTokenProvider<User>>("EmailConfirmation");
+                    .AddTokenProviders()
+                    .AddPasswordValidators();
+
             services.AddTransient<IUserStore<User>, UserStore>();
             services.AddTransient<IRoleStore<Role>, RoleStore>();
 
             ConfigureOptions(services);
 
             return services;
+        }
+
+        private static IdentityBuilder AddTokenProviders(this IdentityBuilder identityBuilder)
+        {
+            identityBuilder
+                .AddDefaultTokenProviders()
+                .AddTokenProvider<EmailConfirmationTokenProvider<User>>("EmailConfirmation");
+
+            return identityBuilder;
+        }
+
+        private static IdentityBuilder AddPasswordValidators(this IdentityBuilder identityBuilder)
+        {
+            identityBuilder
+                .AddPasswordValidator<WeakPasswordValidator>()
+                .AddPasswordValidator<HistoricalPasswordValidator>();
+
+            return identityBuilder;
         }
 
         private static void ConfigureOptions(IServiceCollection services)

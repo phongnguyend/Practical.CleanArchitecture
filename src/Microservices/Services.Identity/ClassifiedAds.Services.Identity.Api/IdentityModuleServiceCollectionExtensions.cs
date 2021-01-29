@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Services.Identity;
 using ClassifiedAds.Services.Identity.Entities;
+using ClassifiedAds.Services.Identity.PasswordValidators;
 using ClassifiedAds.Services.Identity.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -28,8 +29,9 @@ namespace Microsoft.Extensions.DependencyInjection
                         options.Tokens.EmailConfirmationTokenProvider = "EmailConfirmation";
                     })
                     .AddUserManager<UserManager<User>>()
-                    .AddDefaultTokenProviders()
-                    .AddTokenProvider<EmailConfirmationTokenProvider<User>>("EmailConfirmation");
+                    .AddTokenProviders()
+                    .AddPasswordValidators();
+
             services.AddTransient<IUserStore<User>, UserStore>();
             services.AddTransient<IRoleStore<Role>, RoleStore>();
 
@@ -62,8 +64,9 @@ namespace Microsoft.Extensions.DependencyInjection
                         options.Tokens.EmailConfirmationTokenProvider = "EmailConfirmation";
                     })
                     .AddUserManager<UserManager<User>>()
-                    .AddDefaultTokenProviders()
-                    .AddTokenProvider<EmailConfirmationTokenProvider<User>>("EmailConfirmation");
+                    .AddTokenProviders()
+                    .AddPasswordValidators();
+
             services.AddTransient<IUserStore<User>, UserStore>();
             services.AddTransient<IRoleStore<Role>, RoleStore>();
 
@@ -72,6 +75,24 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
             return services;
+        }
+
+        private static IdentityBuilder AddTokenProviders(this IdentityBuilder identityBuilder)
+        {
+            identityBuilder
+                .AddDefaultTokenProviders()
+                .AddTokenProvider<EmailConfirmationTokenProvider<User>>("EmailConfirmation");
+
+            return identityBuilder;
+        }
+
+        private static IdentityBuilder AddPasswordValidators(this IdentityBuilder identityBuilder)
+        {
+            identityBuilder
+                .AddPasswordValidator<WeakPasswordValidator>()
+                .AddPasswordValidator<HistoricalPasswordValidator>();
+
+            return identityBuilder;
         }
 
         private static void ConfigureOptions(IServiceCollection services)
