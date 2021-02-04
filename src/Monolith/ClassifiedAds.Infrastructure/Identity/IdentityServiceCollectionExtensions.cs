@@ -9,11 +9,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddIdentity(this IServiceCollection services)
         {
-            services.AddIdentity<User, Role>(options =>
-            {
-                options.Tokens.EmailConfirmationTokenProvider = "EmailConfirmation";
-            })
-                    .AddUserManager<UserManager<User>>()
+            services.AddIdentity<User, Role>()
                     .AddTokenProviders()
                     .AddPasswordValidators();
 
@@ -32,11 +28,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddIdentityCore(this IServiceCollection services)
         {
-            services.AddIdentityCore<User>(options =>
-                    {
-                        options.Tokens.EmailConfirmationTokenProvider = "EmailConfirmation";
-                    })
-                    .AddUserManager<UserManager<User>>()
+            services.AddIdentityCore<User>()
                     .AddTokenProviders()
                     .AddPasswordValidators();
 
@@ -80,6 +72,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.Configure<IdentityOptions>(options =>
             {
+                options.Tokens.EmailConfirmationTokenProvider = "EmailConfirmation";
+
                 // Default Lockout settings.
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 5;
