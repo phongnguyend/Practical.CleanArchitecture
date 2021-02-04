@@ -1,7 +1,6 @@
 ﻿using ApprovalTests;
 using ApprovalTests.Reporters;
 using ClassifiedAds.Application.AuditLogEntries.DTOs;
-using ClassifiedAds.WebAPI.Controllers;
 using ClassifiedAds.WebAPI.Models.Files;
 using NJsonSchema;
 using Xunit;
@@ -21,7 +20,7 @@ namespace ClassifiedAds.ContractTests.WebAPI
         [Fact]
         public void UploadFileTest()
         {
-            var schema = JsonSchema.FromType<UploadFile>().ToJson();
+            var schema = JsonSchema.FromType<UploadFileModel>().ToJson();
             Approvals.Verify(schema);
         }
 

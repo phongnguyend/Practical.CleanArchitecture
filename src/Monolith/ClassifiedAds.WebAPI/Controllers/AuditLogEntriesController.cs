@@ -1,6 +1,8 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Application.AuditLogEntries.DTOs;
 using ClassifiedAds.Application.AuditLogEntries.Queries;
+using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
+using ClassifiedAds.WebAPI.Authorization.Policies.AuditLogs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -21,6 +23,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             _dispatcher = dispatcher;
         }
 
+        [AuthorizePolicy(typeof(GetAuditLogsPolicy))]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AuditLogEntryDTO>>> Get()
         {

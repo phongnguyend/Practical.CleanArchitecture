@@ -34,6 +34,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddMessageBusSender<FileUploadedEvent>(messageBrokerOptions);
             services.AddMessageBusSender<FileDeletedEvent>(messageBrokerOptions);
 
+            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
+
             return services;
         }
 
