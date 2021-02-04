@@ -25,6 +25,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
+            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
+
             return services;
         }
 

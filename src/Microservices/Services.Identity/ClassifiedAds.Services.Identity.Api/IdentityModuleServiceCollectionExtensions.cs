@@ -119,6 +119,8 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 option.IterationCount = 10000;
             });
+
+            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
         }
 
         public static void MigrateIdentityDb(this IApplicationBuilder app)

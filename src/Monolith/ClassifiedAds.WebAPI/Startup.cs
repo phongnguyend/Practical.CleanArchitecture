@@ -19,6 +19,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace ClassifiedAds.WebAPI
 {
@@ -88,6 +89,8 @@ namespace ClassifiedAds.WebAPI
                     options.Audience = AppSettings.IdentityServerAuthentication.ApiName;
                     options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
                 });
+
+            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
 
             services.AddSwaggerGen(setupAction =>
             {

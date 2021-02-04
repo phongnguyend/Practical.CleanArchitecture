@@ -1,4 +1,6 @@
 ﻿using ClassifiedAds.Application;
+using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
+using ClassifiedAds.Services.Identity.Authorization.Policies.Roles;
 using ClassifiedAds.Services.Identity.Commands.Roles;
 using ClassifiedAds.Services.Identity.Entities;
 using ClassifiedAds.Services.Identity.Models;
@@ -26,6 +28,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
             _dispatcher = dispatcher;
         }
 
+        [AuthorizePolicy(typeof(GetRolesPolicy))]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Role>>> Get()
         {
@@ -34,6 +37,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
             return Ok(model);
         }
 
+        [AuthorizePolicy(typeof(GetRolePolicy))]
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -44,6 +48,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
             return Ok(model);
         }
 
+        [AuthorizePolicy(typeof(AddRolePolicy))]
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -62,6 +67,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
             return Created($"/api/roles/{model.Id}", model);
         }
 
+        [AuthorizePolicy(typeof(UpdateRolePolicy))]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -80,6 +86,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
             return Ok(model);
         }
 
+        [AuthorizePolicy(typeof(DeleteRolePolicy))]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

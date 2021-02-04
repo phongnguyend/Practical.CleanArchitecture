@@ -123,6 +123,8 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 option.IterationCount = 10000;
             });
+
+            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
         }
 
         public static IMvcBuilder AddIdentityModule(this IMvcBuilder builder)

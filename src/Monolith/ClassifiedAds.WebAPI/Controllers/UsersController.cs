@@ -3,6 +3,8 @@ using ClassifiedAds.Application.Users.Commands;
 using ClassifiedAds.Application.Users.Queries;
 using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
+using ClassifiedAds.WebAPI.Authorization.Policies.Users;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
 using ClassifiedAds.WebAPI.Models.Users;
 using Microsoft.AspNetCore.Authorization;
@@ -41,6 +43,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             _appSettings = appSettings.Value;
         }
 
+        [AuthorizePolicy(typeof(GetUsersPolicy))]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> Get()
         {
@@ -49,6 +52,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
+        [AuthorizePolicy(typeof(GetUserPolicy))]
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -59,6 +63,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
+        [AuthorizePolicy(typeof(AddUserPolicy))]
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -85,6 +90,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Created($"/api/users/{model.Id}", model);
         }
 
+        [AuthorizePolicy(typeof(UpdateUserPolicy))]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -111,6 +117,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
+        [AuthorizePolicy(typeof(SetPasswordPolicy))]
         [HttpPut("{id}/password")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -130,6 +137,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return BadRequest(rs.Errors);
         }
 
+        [AuthorizePolicy(typeof(DeleteUserPolicy))]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -141,6 +149,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok();
         }
 
+        [AuthorizePolicy(typeof(SendResetPasswordEmailPolicy))]
         [HttpPost("{id}/passwordresetemail")]
         public async Task<ActionResult> SendResetPasswordEmail(Guid id)
         {
@@ -167,6 +176,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok();
         }
 
+        [AuthorizePolicy(typeof(SendConfirmationEmailAddressEmailPolicy))]
         [HttpPost("{id}/emailaddressconfirmation")]
         public async Task<ActionResult> SendConfirmationEmailAddressEmail(Guid id)
         {

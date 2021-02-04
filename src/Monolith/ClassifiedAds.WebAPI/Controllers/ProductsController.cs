@@ -5,6 +5,8 @@ using ClassifiedAds.Application.Products.Commands;
 using ClassifiedAds.Application.Products.DTOs;
 using ClassifiedAds.Application.Products.Queries;
 using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
+using ClassifiedAds.WebAPI.Authorization.Policies.Products;
 using ClassifiedAds.WebAPI.Models.Products;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -33,6 +35,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             _logger = logger;
         }
 
+        [AuthorizePolicy(typeof(GetProductsPolicy))]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> Get()
         {
@@ -42,6 +45,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
+        [AuthorizePolicy(typeof(GetProductPolicy))]
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -52,6 +56,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
+        [AuthorizePolicy(typeof(AddProductPolicy))]
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -63,6 +68,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Created($"/api/products/{model.Id}", model);
         }
 
+        [AuthorizePolicy(typeof(UpdateProductPolicy))]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -82,6 +88,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
+        [AuthorizePolicy(typeof(DeleteProductPolicy))]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -94,6 +101,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok();
         }
 
+        [AuthorizePolicy(typeof(GetProductAuditLogsPolicy))]
         [HttpGet("{id}/auditlogs")]
         public async Task<ActionResult<IEnumerable<AuditLogEntryDTO>>> GetAuditLogs(Guid id)
         {

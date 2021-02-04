@@ -1,6 +1,8 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Infrastructure.Storages;
+using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
 using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
+using ClassifiedAds.Modules.Storage.Authorization.Policies.Files;
 using ClassifiedAds.Modules.Storage.Entities;
 using ClassifiedAds.Modules.Storage.Models;
 using ClassifiedAds.Modules.Storage.Queries;
@@ -12,7 +14,6 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -37,6 +38,7 @@ namespace ClassifiedAds.Modules.Storage.Controllers
             _fileManager = fileManager;
         }
 
+        [AuthorizePolicy(typeof(GetFilesPolicy))]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get()
         {
@@ -44,8 +46,9 @@ namespace ClassifiedAds.Modules.Storage.Controllers
             return Ok(fileEntries.ToModels());
         }
 
+        [AuthorizePolicy(typeof(UploadFilePolicy))]
         [HttpPost]
-        public async Task<ActionResult<FileEntryModel>> Upload([FromForm] UploadFile model)
+        public async Task<ActionResult<FileEntryModel>> Upload([FromForm] UploadFileModel model)
         {
             var fileEntry = new FileEntry
             {
@@ -91,6 +94,7 @@ namespace ClassifiedAds.Modules.Storage.Controllers
             return Ok(fileEntry.ToModel());
         }
 
+        [AuthorizePolicy(typeof(GetFilePolicy))]
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get(Guid id)
         {
@@ -98,6 +102,7 @@ namespace ClassifiedAds.Modules.Storage.Controllers
             return Ok(fileEntry.ToModel());
         }
 
+        [AuthorizePolicy(typeof(DownloadFilePolicy))]
         [HttpGet("{id}/download")]
         public async Task<IActionResult> Download(Guid id)
         {
@@ -115,6 +120,7 @@ namespace ClassifiedAds.Modules.Storage.Controllers
             return File(content, MediaTypeNames.Application.Octet, WebUtility.HtmlEncode(fileEntry.FileName));
         }
 
+        [AuthorizePolicy(typeof(UpdateFilePolicy))]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -131,6 +137,7 @@ namespace ClassifiedAds.Modules.Storage.Controllers
             return Ok(model);
         }
 
+        [AuthorizePolicy(typeof(DeleteFilePolicy))]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -142,6 +149,7 @@ namespace ClassifiedAds.Modules.Storage.Controllers
             return Ok();
         }
 
+        [AuthorizePolicy(typeof(GetFileAuditLogsPolicy))]
         [HttpGet("{id}/auditlogs")]
         public async Task<ActionResult<IEnumerable<AuditLogEntryDTO>>> GetAuditLogs(Guid id)
         {
@@ -176,22 +184,5 @@ namespace ClassifiedAds.Modules.Storage.Controllers
 
             return Ok(entries.OrderByDescending(x => x.CreatedDateTime));
         }
-    }
-
-    public class UploadFile
-    {
-        [Display(Name = "Name")]
-        [StringLength(50, MinimumLength = 0)]
-        public string Name { get; set; }
-
-        [Display(Name = "Description")]
-        [StringLength(50, MinimumLength = 0)]
-        public string Description { get; set; }
-
-        [Required]
-        [Display(Name = "File")]
-        public IFormFile FormFile { get; set; }
-
-        public bool Encrypted { get; set; }
     }
 }

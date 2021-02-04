@@ -3,6 +3,8 @@ using ClassifiedAds.Application.AuditLogEntries.DTOs;
 using ClassifiedAds.Application.AuditLogEntries.Queries;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.Storages;
+using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
+using ClassifiedAds.WebAPI.Authorization.Policies.Files;
 using ClassifiedAds.WebAPI.Models.Files;
 using CryptographyHelper;
 using CryptographyHelper.SymmetricAlgorithms;
@@ -13,7 +15,6 @@ using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -40,6 +41,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             _memoryCache = memoryCache;
         }
 
+        [AuthorizePolicy(typeof(GetFilesPolicy))]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get()
         {
@@ -47,8 +49,9 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(fileEntries.ToModels());
         }
 
+        [AuthorizePolicy(typeof(UploadFilePolicy))]
         [HttpPost]
-        public async Task<ActionResult<FileEntryModel>> Upload([FromForm] UploadFile model)
+        public async Task<ActionResult<FileEntryModel>> Upload([FromForm] UploadFileModel model)
         {
             var fileEntry = new FileEntry
             {
@@ -90,6 +93,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(fileEntry.ToModel());
         }
 
+        [AuthorizePolicy(typeof(GetFilePolicy))]
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get(Guid id)
         {
@@ -97,6 +101,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(fileEntry.ToModel());
         }
 
+        [AuthorizePolicy(typeof(DownloadFilePolicy))]
         [HttpGet("{id}/download")]
         public async Task<IActionResult> Download(Guid id)
         {
@@ -114,6 +119,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return File(content, MediaTypeNames.Application.Octet, WebUtility.HtmlEncode(fileEntry.FileName));
         }
 
+        [AuthorizePolicy(typeof(UpdateFilePolicy))]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -130,6 +136,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
+        [AuthorizePolicy(typeof(DeleteFilePolicy))]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -141,6 +148,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok();
         }
 
+        [AuthorizePolicy(typeof(GetFileAuditLogsPolicy))]
         [HttpGet("{id}/auditlogs")]
         public async Task<ActionResult<IEnumerable<AuditLogEntryDTO>>> GetAuditLogs(Guid id)
         {
@@ -175,22 +183,5 @@ namespace ClassifiedAds.WebAPI.Controllers
 
             return Ok(entries.OrderByDescending(x => x.CreatedDateTime));
         }
-    }
-
-    public class UploadFile
-    {
-        [Display(Name = "Name")]
-        [StringLength(50, MinimumLength = 0)]
-        public string Name { get; set; }
-
-        [Display(Name = "Description")]
-        [StringLength(50, MinimumLength = 0)]
-        public string Description { get; set; }
-
-        [Required]
-        [Display(Name = "File")]
-        public IFormFile FormFile { get; set; }
-
-        public bool Encrypted { get; set; }
     }
 }
