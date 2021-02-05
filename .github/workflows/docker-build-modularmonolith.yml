@@ -3,6 +3,7 @@ name: Docker Build Modular Monolith
 on:
   push:
     branches:
+      - master
       - build
     paths:
       - 'src/ModularMonolith/**'

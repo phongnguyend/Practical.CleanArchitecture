@@ -3,6 +3,7 @@ name: Docker Build Monolith
 on:
   push:
     branches:
+      - master
       - build
     paths:
       - 'src/Monolith/**'
