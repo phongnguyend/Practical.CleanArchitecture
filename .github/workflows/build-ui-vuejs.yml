@@ -2,10 +2,6 @@ name: Build UI VueJs
 
 on:
   push:
-    branches:
-      - master
-      - build
-      - actions
     paths:
       - "src/UIs/vuejs/**"
   pull_request:

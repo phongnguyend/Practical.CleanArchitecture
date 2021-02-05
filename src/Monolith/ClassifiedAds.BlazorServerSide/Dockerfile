@@ -3,10 +3,12 @@ WORKDIR /ClassifiedAds.Monolith
 
 # Copy csproj and restore as distinct layers
 COPY ./ClassifiedAds.Application/*.csproj ./ClassifiedAds.Application/
+COPY ./ClassifiedAds.ArchTests/*.csproj ./ClassifiedAds.ArchTests/
 COPY ./ClassifiedAds.BackgroundServer/*.csproj ./ClassifiedAds.BackgroundServer/
 COPY ./ClassifiedAds.Blazor.Modules/*.csproj ./ClassifiedAds.Blazor.Modules/
 COPY ./ClassifiedAds.BlazorServerSide/*.csproj ./ClassifiedAds.BlazorServerSide/
 COPY ./ClassifiedAds.BlazorWebAssembly/*.csproj ./ClassifiedAds.BlazorWebAssembly/
+COPY ./ClassifiedAds.ContractTests/*.csproj ./ClassifiedAds.ContractTests/
 COPY ./ClassifiedAds.CrossCuttingConcerns/*.csproj ./ClassifiedAds.CrossCuttingConcerns/
 COPY ./ClassifiedAds.Domain/*.csproj ./ClassifiedAds.Domain/
 COPY ./ClassifiedAds.EndToEndTests/*.csproj ./ClassifiedAds.EndToEndTests/
