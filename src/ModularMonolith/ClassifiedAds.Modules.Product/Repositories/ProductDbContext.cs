@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Data;
 using System.Reflection;
 using System.Threading;
@@ -17,14 +18,16 @@ namespace ClassifiedAds.Modules.Product.Repositories
         {
         }
 
-        public void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+        public IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
             _dbContextTransaction = Database.BeginTransaction(isolationLevel);
+            return _dbContextTransaction;
         }
 
-        public async Task BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, CancellationToken cancellationToken = default)
+        public async Task<IDisposable> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, CancellationToken cancellationToken = default)
         {
             _dbContextTransaction = await Database.BeginTransactionAsync(isolationLevel, cancellationToken);
+            return _dbContextTransaction;
         }
 
         public void CommitTransaction()
