@@ -2,7 +2,12 @@
   <div class="card">
     <div class="card-header">
       {{ pageTitle }}
-      <router-link class="btn btn-primary" style="float: right;" to="/products/add">Add Product</router-link>
+      <router-link
+        class="btn btn-primary"
+        style="float: right;"
+        to="/products/add"
+        >Add Product</router-link
+      >
     </div>
     <div class="card-body">
       <div class="row">
@@ -21,10 +26,9 @@
           <thead>
             <tr>
               <th>
-                <button
-                  class="btn btn-primary"
-                  @click="toggleImage"
-                >{{ showImage ? "Hide" : "Show" }} Image</button>
+                <button class="btn btn-primary" @click="toggleImage">
+                  {{ showImage ? "Hide" : "Show" }} Image
+                </button>
               </th>
               <th>Product</th>
               <th>Code</th>
@@ -39,13 +43,20 @@
               <td>
                 <img
                   v-if="showImage"
-                  :src="product.imageUrl || '/img/icons/android-chrome-192x192.png'"
+                  :src="
+                    product.imageUrl || '/img/icons/android-chrome-192x192.png'
+                  "
                   :title="product.name"
-                  :style="{width: imageWidth + 'px', margin: imageMargin+'px'}"
+                  :style="{
+                    width: imageWidth + 'px',
+                    margin: imageMargin + 'px'
+                  }"
                 />
               </td>
               <td>
-                <router-link :to="'/products/'+ product.id">{{ product.name }}</router-link>
+                <router-link :to="'/products/' + product.id">{{
+                  product.name
+                }}</router-link>
               </td>
               <td>{{ product.code | uppercase }}</td>
               <td>{{ product.description }}</td>
@@ -57,28 +68,38 @@
                 ></app-star>
               </td>
               <td>
-                <router-link class="btn btn-primary" :to="'/products/edit/'+ product.id">Edit</router-link>&nbsp;
+                <router-link
+                  class="btn btn-primary"
+                  :to="'/products/edit/' + product.id"
+                  >Edit</router-link
+                >&nbsp;
                 <button
                   type="button"
                   class="btn btn-primary btn-secondary"
                   @click="viewAuditLogs(product)"
-                >View Audit Logs</button>&nbsp;
+                >
+                  View Audit Logs</button
+                >&nbsp;
                 <button
                   type="button"
                   class="btn btn-primary btn-danger"
                   @click="deleteProduct(product)"
-                >Delete</button>
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-    <div v-if="errorMessage" class="alert alert-danger">Error: {{ errorMessage }}</div>
+    <div v-if="errorMessage" class="alert alert-danger">
+      Error: {{ errorMessage }}
+    </div>
     <b-modal id="modal-delete" title="Delete Product" @ok="deleteConfirmed">
       <p class="my-4">
         Are you sure you want to delete:
-        <strong>{{selectedProduct.name}}</strong>
+        <strong>{{ selectedProduct.name }}</strong>
       </p>
     </b-modal>
     <b-modal id="modal-audit-logs" hide-footer hide-header size="xl">
@@ -96,14 +117,20 @@
           </thead>
           <tbody>
             <tr v-for="auditLog in auditLogs" :key="auditLog.id">
-              <td>{{ auditLog.createdDateTime | formatedDateTime}}</td>
+              <td>{{ auditLog.createdDateTime | formatedDateTime }}</td>
               <td>{{ auditLog.userName }}</td>
               <td>{{ auditLog.action }}</td>
-              <td :style="{color: auditLog.highLight.code ? 'red' : ''}">{{ auditLog.data.code }}</td>
-              <td :style="{color: auditLog.highLight.name ? 'red' : ''}">{{ auditLog.data.name }}</td>
+              <td :style="{ color: auditLog.highLight.code ? 'red' : '' }">
+                {{ auditLog.data.code }}
+              </td>
+              <td :style="{ color: auditLog.highLight.name ? 'red' : '' }">
+                {{ auditLog.data.name }}
+              </td>
               <td
-                :style="{color: auditLog.highLight.description ? 'red' : ''}"
-              >{{ auditLog.data.description }}</td>
+                :style="{ color: auditLog.highLight.description ? 'red' : '' }"
+              >
+                {{ auditLog.data.description }}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -112,13 +139,15 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import axios from "./axios";
 
 import logo from "../../assets/logo.png";
 import Star from "../../components/Star.vue";
+import { IProduct } from "./Product";
 
-export default {
+export default Vue.extend({
   data() {
     return {
       pageTitle: "Product List",
@@ -126,71 +155,71 @@ export default {
       imageWidth: 50,
       imageMargin: 2,
       logo: logo,
-      products: [],
+      products: [] as IProduct[],
       auditLogs: [],
-      selectedProduct: {},
+      selectedProduct: {} as IProduct,
       listFilter: "",
-      errorMessage: "",
+      errorMessage: ""
     };
   },
   computed: {
-    filteredProducts() {
+    filteredProducts(): IProduct[] {
       if (this.listFilter) {
         return this.products.filter(
-          (product) =>
+          product =>
             product.name
               .toLocaleLowerCase()
               .indexOf(this.listFilter.toLocaleLowerCase()) !== -1
         );
       }
       return this.products;
-    },
+    }
   },
   methods: {
     toggleImage() {
       this.showImage = !this.showImage;
     },
-    onRatingClicked(event) {
+    onRatingClicked(event: Event) {
       this.pageTitle = "Product List: " + event;
     },
     loadProducts() {
-      axios.get("").then((rs) => {
+      axios.get("").then(rs => {
         this.products = rs.data;
       });
     },
-    deleteProduct(product) {
+    deleteProduct(product: IProduct) {
       this.selectedProduct = product;
       this.$bvModal.show("modal-delete");
     },
     deleteConfirmed() {
-      axios.delete(this.selectedProduct.id).then((rs) => {
+      axios.delete(this.selectedProduct.id).then(rs => {
         this.loadProducts();
       });
     },
-    viewAuditLogs(product) {
-      axios.get(product.id + "/auditLogs").then((rs) => {
+    viewAuditLogs(product: IProduct) {
+      axios.get(product.id + "/auditLogs").then(rs => {
         this.auditLogs = rs.data;
         this.$bvModal.show("modal-audit-logs");
       });
-    },
+    }
   },
   components: {
-    appStar: Star,
+    appStar: Star
   },
   filters: {
-    lowercase: function (value) {
+    lowercase: function(value: string) {
       return value.toLowerCase();
     },
-    formatedDateTime: function (value) {
+    formatedDateTime: function(value: string) {
       if (!value) return value;
       var date = new Date(value);
       return date.toLocaleDateString() + " " + date.toLocaleTimeString();
-    },
+    }
   },
   created() {
     this.loadProducts();
-  },
-};
+  }
+});
 </script>
 
 <style scoped>

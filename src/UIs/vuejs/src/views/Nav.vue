@@ -3,19 +3,29 @@
     <a class="navbar-brand" href="/">{{ pageTitle | appendVersion }}</a>
     <ul class="nav nav-pills">
       <li>
-        <router-link class="nav-link" to="/" active-class="active" exact>Home</router-link>
+        <router-link class="nav-link" to="/" active-class="active" exact
+          >Home</router-link
+        >
       </li>
       <li>
-        <router-link class="nav-link" to="/files" active-class="active">Files</router-link>
+        <router-link class="nav-link" to="/files" active-class="active"
+          >Files</router-link
+        >
       </li>
       <li>
-        <router-link class="nav-link" to="/products" active-class="active">Products</router-link>
+        <router-link class="nav-link" to="/products" active-class="active"
+          >Products</router-link
+        >
       </li>
       <li>
-        <router-link class="nav-link" to="/users" active-class="active">Users</router-link>
+        <router-link class="nav-link" to="/users" active-class="active"
+          >Users</router-link
+        >
       </li>
       <li>
-        <router-link class="nav-link" to="/auditlogs" active-class="active">Audit Logs</router-link>
+        <router-link class="nav-link" to="/auditlogs" active-class="active"
+          >Audit Logs</router-link
+        >
       </li>
       <li v-if="!isAuthenticated">
         <a class="nav-link" @click="login" href="javascript:void(0)">Login</a>
@@ -27,15 +37,16 @@
   </nav>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+export default Vue.extend({
   data() {
     return { pageTitle: "ClassifiedAds.Vue" };
   },
   computed: {
-    isAuthenticated() {
+    isAuthenticated(): boolean {
       return this.$store.state.authService.isAuthenticated();
-    },
+    }
   },
   methods: {
     login() {
@@ -43,9 +54,9 @@ export default {
     },
     logout() {
       this.$store.state.authService.logout();
-    },
-  },
-};
+    }
+  }
+});
 </script>
 
 <style scoped>

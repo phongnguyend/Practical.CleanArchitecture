@@ -32,7 +32,7 @@
         <div class="col-md-4">
           <img
             class="center-block img-responsive"
-            :style="{width: '200px', margin: '2px'}"
+            :style="{ width: '200px', margin: '2px' }"
             :src="product.imageUrl || '/img/icons/android-chrome-192x192.png'"
             :title="product.name"
           />
@@ -41,26 +41,34 @@
     </div>
 
     <div class="card-footer">
-      <button class="btn btn-outline-secondary" @click="onBack" style="width:80px">
+      <button
+        class="btn btn-outline-secondary"
+        @click="onBack"
+        style="width:80px"
+      >
         <i class="fa fa-chevron-left"></i> Back
       </button>
       &nbsp;
-      <router-link class="btn btn-primary" :to="'/products/edit/'+ product.id">Edit</router-link>
+      <router-link class="btn btn-primary" :to="'/products/edit/' + product.id"
+        >Edit</router-link
+      >
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import axios from "./axios";
 
 import Star from "../../components/Star.vue";
+import { IProduct } from "./Product";
 
-export default {
+export default Vue.extend({
   data() {
     return {
       pageTitle: "Product Detail",
       errorMessage: "",
-      product: {}
+      product: {} as IProduct
     };
   },
   methods: {
@@ -77,5 +85,5 @@ export default {
       this.product = rs.data;
     });
   }
-};
+});
 </script>

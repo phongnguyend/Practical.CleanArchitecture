@@ -3,6 +3,9 @@ import { UserManager, User, WebStorageStateStore } from "oidc-client";
 import env from "../../environments";
 
 class AuthService {
+  _userManager: UserManager;
+  _user?: User;
+
   constructor() {
     var config = {
       authority: env.OpenIdConnect.Authority,
@@ -26,7 +29,7 @@ class AuthService {
     return promise;
   };
 
-  login = returnUrl => {
+  login = (returnUrl: string) => {
     //console.log("Return Url:", returnUrl);
     localStorage.setItem("returnUrl", returnUrl);
     return this._userManager.signinRedirect();
@@ -50,7 +53,7 @@ class AuthService {
 
   getCurrentUser = () => {
     return {
-      id: this._user.profile.sub,
+      id: this._user?.profile.sub,
       userName: "phongnguyend",
       firstName: "Phong",
       lastName: "Nguyen"
