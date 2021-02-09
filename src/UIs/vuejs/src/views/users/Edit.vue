@@ -168,25 +168,41 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 import axios from "./axios";
 
-export default {
+interface IEditUser {
+  id: string;
+  userName: string;
+  email: string;
+  emailConfirmed: boolean;
+  phoneNumber: string;
+  phoneNumberConfirmed: boolean;
+  twoFactorEnabled: boolean;
+  lockoutEnabled: boolean;
+  lockoutEnd?: Date;
+  accessFailedCount: number;
+  lockoutEndDate: string;
+  lockoutEndTime: string;
+}
+
+export default Vue.extend({
   data() {
     return {
-      user: { userName: "", email: "" },
+      user: { userName: "", email: "" } as IEditUser,
       postError: false,
       postErrorMessage: "",
       isSubmitted: false
     };
   },
   computed: {
-    title() {
+    title(): string {
       return this.$route.params.id ? "Edit User" : "Add User";
     },
-    id() {
+    id(): string {
       return this.$route.params.id;
     }
   },
@@ -209,14 +225,18 @@ export default {
         return;
       }
 
-      this.user.lockoutEnd = this.user.lockoutEndDate;
+      this.user.lockoutEnd = new Date(this.user.lockoutEndDate);
       if (this.user.lockoutEndDate && this.user.lockoutEndTime) {
-        this.user.lockoutEnd += "T" + this.user.lockoutEndTime;
+        this.user.lockoutEnd = new Date(
+          this.user.lockoutEndDate + "T" + this.user.lockoutEndTime
+        );
       }
 
-      this.user.lockoutEnd = this.user.lockoutEnd ? this.user.lockoutEnd : null;
+      this.user.lockoutEnd = this.user.lockoutEnd
+        ? this.user.lockoutEnd
+        : undefined;
       this.user.accessFailedCount = this.user.accessFailedCount
-        ? parseInt(this.user.accessFailedCount)
+        ? this.user.accessFailedCount
         : 0;
 
       const promise = this.id
@@ -257,7 +277,7 @@ export default {
       });
     }
   }
-};
+});
 </script>
 
 <style scoped>

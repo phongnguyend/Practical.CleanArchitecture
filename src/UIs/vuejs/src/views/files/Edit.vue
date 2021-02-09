@@ -143,15 +143,18 @@
     </b-modal>
   </div>
 </template>
-<script>
+
+<script lang="ts">
+import Vue from "vue";
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 import axios from "./axios";
+import { IFile } from "./File";
 
-export default {
+export default Vue.extend({
   data() {
     return {
-      file: { name: "", description: "" },
+      file: { name: "", description: "" } as IFile,
       auditLogs: [],
       postError: false,
       postErrorMessage: "",
@@ -192,11 +195,18 @@ export default {
         this.$router.push("/files");
       });
     },
-    viewAuditLogs(file) {
+    viewAuditLogs(file: IFile) {
       axios.get(file.id + "/auditLogs").then(rs => {
         this.auditLogs = rs.data;
         this.$bvModal.show("modal-audit-logs");
       });
+    }
+  },
+  filters: {
+    formatedDateTime: function(value: string) {
+      if (!value) return value;
+      var date = new Date(value);
+      return date.toLocaleDateString() + " " + date.toLocaleTimeString();
     }
   },
   created() {
@@ -207,8 +217,9 @@ export default {
       });
     }
   }
-};
+});
 </script>
+
 <style scoped>
 .field-error {
   border: 1px solid red;

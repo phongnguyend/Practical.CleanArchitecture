@@ -46,7 +46,7 @@
         <div class="col-md-4">
           <img
             class="center-block img-responsive"
-            :style="{width: '200px', margin: '2px'}"
+            :style="{ width: '200px', margin: '2px' }"
             :src="'/img/icons/android-chrome-192x192.png'"
             :title="user.userName"
           />
@@ -55,22 +55,38 @@
     </div>
 
     <div class="card-footer">
-      <button class="btn btn-outline-secondary" @click="onBack" style="width: 80px">
+      <button
+        class="btn btn-outline-secondary"
+        @click="onBack"
+        style="width: 80px"
+      >
         <i class="fa fa-chevron-left"></i> Back
       </button>
       &nbsp;
-      <router-link class="btn btn-primary" :to="'/users/edit/'+ user.id">Edit</router-link>&nbsp;
-      <button type="button" class="btn btn-secondary" @click="setPasswordModal()">Set Password</button>&nbsp;
+      <router-link class="btn btn-primary" :to="'/users/edit/' + user.id"
+        >Edit</router-link
+      >&nbsp;
+      <button
+        type="button"
+        class="btn btn-secondary"
+        @click="setPasswordModal()"
+      >
+        Set Password</button
+      >&nbsp;
       <button
         type="button"
         class="btn btn-secondary"
         @click="sendPasswordResetEmailModal()"
-      >Send Password Reset Email</button>&nbsp;
+      >
+        Send Password Reset Email</button
+      >&nbsp;
       <button
         type="button"
         class="btn btn-secondary"
         @click="sendEmailAddressConfirmationEmailModal()"
-      >Send Email Address Confirmation Email</button>
+      >
+        Send Email Address Confirmation Email
+      </button>
     </div>
 
     <b-modal id="modal-set-password" title="Set Password" :hide-footer="true">
@@ -79,10 +95,14 @@
         v-show="passwordValidationErrors && passwordValidationErrors.length"
       >
         <ul>
-          <li v-for="error in passwordValidationErrors" :key="error.code">{{ error.description }}</li>
+          <li v-for="error in passwordValidationErrors" :key="error.code">
+            {{ error.description }}
+          </li>
         </ul>
       </div>
-      <div class="row alert alert-danger" v-show="postErrorMessage">{{ postErrorMessage }}</div>
+      <div class="row alert alert-danger" v-show="postErrorMessage">
+        {{ postErrorMessage }}
+      </div>
       <form @submit.prevent="confirmSetPassword">
         <div class="form-group row">
           <label class="col-sm-4 col-form-label">User Name</label>
@@ -98,14 +118,19 @@
               class="form-control"
               required
               v-model="setPasswordModel.password"
-              :class="{'is-invalid': isSubmitted && $v.setPasswordModel.password.$invalid}"
+              :class="{
+                'is-invalid':
+                  isSubmitted && $v.setPasswordModel.password.$invalid
+              }"
               @input="$v.setPasswordModel.password.$touch()"
             />
             <span class="invalid-feedback">Enter a password</span>
           </div>
         </div>
         <div class="form-group row">
-          <label for="confirmPassword" class="col-sm-4 col-form-label">Confirm Password</label>
+          <label for="confirmPassword" class="col-sm-4 col-form-label"
+            >Confirm Password</label
+          >
           <div class="col-sm-8">
             <input
               type="password"
@@ -113,9 +138,15 @@
               name="confirmPassword"
               class="form-control"
               v-model="setPasswordModel.confirmPassword"
-              :class="{'is-invalid': isSubmitted && setPasswordModel.confirmPassword != setPasswordModel.password}"
+              :class="{
+                'is-invalid':
+                  isSubmitted &&
+                  setPasswordModel.confirmPassword != setPasswordModel.password
+              }"
             />
-            <span class="invalid-feedback">Confirm Password does not match</span>
+            <span class="invalid-feedback"
+              >Confirm Password does not match</span
+            >
           </div>
         </div>
         <div class="form-group row">
@@ -151,11 +182,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import { required } from "vuelidate/lib/validators";
 import axios from "./axios";
+import { IUser } from "./User";
 
-export default {
+export default Vue.extend({
   data() {
     return {
       errorMessage: "",
@@ -163,15 +196,15 @@ export default {
       setPasswordModel: { password: null, confirmPassword: null },
       isSubmitted: false,
       passwordValidationErrors: [],
-      user: {},
+      user: {} as IUser
     };
   },
   validations: {
     setPasswordModel: {
       password: {
-        required,
-      },
-    },
+        required
+      }
+    }
   },
   methods: {
     onBack() {
@@ -193,16 +226,16 @@ export default {
       axios
         .put(this.user.id + "/password", {
           id: this.user.id,
-          password: this.setPasswordModel.password,
+          password: this.setPasswordModel.password
         })
-        .then((rs) => {
-          this.setPasswordModel = {};
+        .then(rs => {
+          this.setPasswordModel = { password: null, confirmPassword: null };
           this.isSubmitted = false;
           this.passwordValidationErrors = [];
           this.postErrorMessage = "";
           this.$bvModal.hide("modal-set-password");
         })
-        .catch((error) => {
+        .catch(error => {
           if (error?.response?.status == 400) {
             this.passwordValidationErrors = error.response.data;
           } else {
@@ -216,9 +249,9 @@ export default {
     confirmSendPasswordResetEmail() {
       axios
         .post(this.user.id + "/passwordresetemail", {
-          id: this.user.id,
+          id: this.user.id
         })
-        .then((rs) => {
+        .then(rs => {
           this.$bvModal.hide("modal-send-password-reset-email");
         });
     },
@@ -228,21 +261,21 @@ export default {
     confirmSendEmailAddressConfirmationEmail() {
       axios
         .post(this.user.id + "/emailaddressconfirmation", {
-          id: this.user.id,
+          id: this.user.id
         })
-        .then((rs) => {
+        .then(rs => {
           this.$bvModal.hide("modal-send-email-address-confirmation-email");
         });
-    },
+    }
   },
   components: {},
   created() {
     const id = this.$route.params.id;
-    axios.get(id).then((rs) => {
+    axios.get(id).then(rs => {
       this.user = rs.data;
     });
-  },
-};
+  }
+});
 </script>
 
 <style scoped>

@@ -14,7 +14,7 @@
           </thead>
           <tbody>
             <tr v-for="auditLog in auditLogs" :key="auditLog.id">
-              <td>{{ auditLog.createdDateTime | formatedDateTime}}</td>
+              <td>{{ auditLog.createdDateTime | formatedDateTime }}</td>
               <td>{{ auditLog.userName }}</td>
               <td>{{ auditLog.action }}</td>
               <td>{{ auditLog.log }}</td>
@@ -26,40 +26,42 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import axios from "./axios";
+import { IAuditLogEntry } from "./AuditLog";
 
-export default {
+export default Vue.extend({
   data() {
     return {
       pageTitle: "Audit Logs",
-      auditLogs: [],
-      errorMessage: "",
+      auditLogs: [] as IAuditLogEntry[],
+      errorMessage: ""
     };
   },
   computed: {},
   methods: {
     loadAuditLogs() {
-      axios.get("").then((rs) => {
+      axios.get("").then(rs => {
         this.auditLogs = rs.data;
       });
-    },
+    }
   },
   components: {},
   filters: {
-    lowercase: function (value) {
+    lowercase: function(value: string) {
       return value.toLowerCase();
     },
-    formatedDateTime: function (value) {
+    formatedDateTime: function(value: string) {
       if (!value) return value;
       var date = new Date(value);
       return date.toLocaleDateString() + " " + date.toLocaleTimeString();
-    },
+    }
   },
   created() {
     this.loadAuditLogs();
-  },
-};
+  }
+});
 </script>
 
 <style scoped>

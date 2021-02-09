@@ -99,15 +99,18 @@
     </div>
   </div>
 </template>
-<script>
+
+<script lang="ts">
+import Vue from "vue";
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 import axios from "./axios";
+import { IFile } from "./File";
 
-export default {
+export default Vue.extend({
   data() {
     return {
-      file: { name: "", description: "", encrypted: false },
+      file: { name: "", description: "", encrypted: false } as IFile,
       postError: false,
       postErrorMessage: "",
       isSubmitted: false,
@@ -132,7 +135,7 @@ export default {
     }
   },
   methods: {
-    handleFileInput(files) {
+    handleFileInput(files: any) {
       this.file.formFile = files.item(0);
       this.hasFile = !!this.file.formFile;
     },
@@ -155,8 +158,9 @@ export default {
     }
   },
   created() {}
-};
+});
 </script>
+
 <style scoped>
 .field-error {
   border: 1px solid red;
