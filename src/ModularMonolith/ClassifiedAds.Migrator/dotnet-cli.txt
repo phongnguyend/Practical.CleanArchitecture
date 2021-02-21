@@ -1,4 +1,6 @@
-﻿dotnet tool install --global dotnet-ef --version="5.0"
+﻿https://docs.microsoft.com/en-us/ef/core/cli/dotnet
+
+dotnet tool install --global dotnet-ef --version="5.0"
 
 dotnet ef migrations add Init --context AuditLogDbContext -o Migrations/AuditLogDb
 dotnet ef migrations add Init --context IdentityDbContext -o Migrations/IdentityDb
@@ -15,6 +17,14 @@ dotnet ef migrations script --context ProductDbContext
 dotnet ef migrations script --context StorageDbContext
 dotnet ef migrations script --context ConfigurationDbContext
 dotnet ef migrations script --context PersistedGrantDbContext
+
+dotnet ef dbcontext script --context AuditLogDbContext
+dotnet ef dbcontext script --context IdentityDbContext
+dotnet ef dbcontext script --context NotificationDbContext
+dotnet ef dbcontext script --context ProductDbContext
+dotnet ef dbcontext script --context StorageDbContext
+dotnet ef dbcontext script --context ConfigurationDbContext
+dotnet ef dbcontext script --context PersistedGrantDbContext
 
 dotnet ef database update --context AuditLogDbContext
 dotnet ef database update --context IdentityDbContext

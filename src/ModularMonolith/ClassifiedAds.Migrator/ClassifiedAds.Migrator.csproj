@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="DbUp\MiniProfiler\0001-CreateTables.sql" />
+    <EmbeddedResource Include="DbUp\SqlServerDistributedCache\0001-CreateTables.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Scripts\Functions\" />
     <Folder Include="Scripts\Indexes\" />
     <Folder Include="Scripts\Types\" />
@@ -15,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="dbup" Version="4.5.0" />
     <PackageReference Include="Polly" Version="7.2.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>

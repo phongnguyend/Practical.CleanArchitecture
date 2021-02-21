@@ -25,11 +25,9 @@
       dotnet ef migrations add Init --context AdsDbContext -o Migrations/AdsDb
       dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
       dotnet ef migrations add Init --context PersistedGrantDbContext -o Migrations/PersistedGrantDb
-      dotnet ef migrations add Init --context MiniProfilerDbContext -o Migrations/MiniProfilerDb
       dotnet ef database update --context AdsDbContext
       dotnet ef database update --context ConfigurationDbContext
       dotnet ef database update --context PersistedGrantDbContext
-      dotnet ef database update --context MiniProfilerDbContext
       ```
   + Option 2: Using Package Manager Console:
     + Set **ClassifiedAds.Migrator** as StartUp Project
@@ -39,11 +37,9 @@
       Add-Migration -Context AdsDbContext Init -OutputDir Migrations/AdsDb
       Add-Migration -Context ConfigurationDbContext Init -OutputDir Migrations/ConfigurationDb
       Add-Migration -Context PersistedGrantDbContext Init -OutputDir Migrations/PersistedGrantDb
-      Add-Migration -Context MiniProfilerDbContext Init -OutputDir Migrations/MiniProfilerDb
       Update-Database -Context AdsDbContext
       Update-Database -Context ConfigurationDbContext
       Update-Database -Context PersistedGrantDbContext
-      Update-Database -Context MiniProfilerDbContext
       ```  
 
 # Build & Run Locally using Tye

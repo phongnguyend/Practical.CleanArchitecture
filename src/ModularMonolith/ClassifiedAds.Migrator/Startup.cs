@@ -5,6 +5,7 @@ using ClassifiedAds.Infrastructure.Notification.Email;
 using ClassifiedAds.Infrastructure.Notification.Sms;
 using ClassifiedAds.Infrastructure.Notification.Web;
 using ClassifiedAds.Infrastructure.Storages;
+using DbUp;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -79,6 +80,19 @@ namespace ClassifiedAds.Migrator
                 app.MigrateProductDb();
                 app.MigrateStorageDb();
                 app.MigrateIdServerDb();
+
+                var upgrader = DeployChanges.To
+                .SqlDatabase(Configuration.GetConnectionString("ClassifiedAds"))
+                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+                .LogToConsole()
+                .Build();
+
+                var result = upgrader.PerformUpgrade();
+
+                if (!result.Successful)
+                {
+                    throw result.Error;
+                }
             });
 
         }

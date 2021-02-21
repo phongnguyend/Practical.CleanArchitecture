@@ -1,14 +1,21 @@
-﻿Add-Migration -Context AdsDbContext Init -OutputDir Migrations/AdsDb
+﻿https://docs.microsoft.com/en-us/ef/core/cli/powershell
+
+Add-Migration -Context AdsDbContext Init -OutputDir Migrations/AdsDb
 Add-Migration -Context ConfigurationDbContext Init -OutputDir Migrations/ConfigurationDb
 Add-Migration -Context PersistedGrantDbContext Init -OutputDir Migrations/PersistedGrantDb
-Add-Migration -Context MiniProfilerDbContext Init -OutputDir Migrations/MiniProfilerDb
 
 Remove-Migration -Context AdsDbContext
 Remove-Migration -Context AdsDbContext -Force
 Remove-Migration -Context MiniProfilerDbContext
-Remove-Migration -Context MiniProfilerDbContext -Force
 
 Update-Database -Context AdsDbContext
 Update-Database -Context ConfigurationDbContext
 Update-Database -Context PersistedGrantDbContext
-Update-Database -Context MiniProfilerDbContext
+
+Script-DbContext -Context AdsDbContext
+Script-DbContext -Context ConfigurationDbContext
+Script-DbContext -Context PersistedGrantDbContext
+
+Script-Migration -Context AdsDbContext
+Script-Migration -Context ConfigurationDbContext
+Script-Migration -Context PersistedGrantDbContext
