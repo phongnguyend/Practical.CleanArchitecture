@@ -9,6 +9,7 @@
   | -------- | ------------------ | ----------------- | ------- |
   | Services.AuditLog.Api | [appsettings.json](Services.AuditLog/ClassifiedAds.Services.AuditLog.Api/appsettings.json) | ConnectionStrings:ClassifiedAds | AuditLog
   | Services.AuditLog.Grpc | [appsettings.json](Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/appsettings.json) | ConnectionStrings:ClassifiedAds | AuditLog
+  | Services.Configuration.Api | [appsettings.json](Services.Configuration/ClassifiedAds.Services.Configuration.Api/appsettings.json) | ConnectionStrings:ClassifiedAds | Configuration
   | Services.Identity.Api | [appsettings.json](Services.Identity/ClassifiedAds.Services.Identity.Api/appsettings.json) | ConnectionStrings:ClassifiedAds | Identity
   | Services.Identity.AuthServer | [appsettings.json](Services.Identity/ClassifiedAds.Services.Identity.AuthServer/appsettings.json) | ConnectionStrings:ClassifiedAds | Identity
   | Services.Identity.Grpc | [appsettings.json](Services.Identity/ClassifiedAds.Services.Identity.Grpc/appsettings.json) | ConnectionStrings:ClassifiedAds | Identity
@@ -29,6 +30,11 @@
       ```
       dotnet ef migrations add Init --context AuditLogDbContext -o Migrations/AuditLogDb
       dotnet ef database update --context AuditLogDbContext
+      ```
+    + Navigate to [Configuration.Api](Services.Configuration/ClassifiedAds.Services.Configuration.Api/) and run these commands:
+      ```
+      dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
+      dotnet ef database update --context ConfigurationDbContext
       ```
     + Navigate to [Identity.Api](Services.Identity/ClassifiedAds.Services.Identity.Api/) and run these commands:
       ```
@@ -63,6 +69,11 @@
       ```
       Add-Migration -Context AuditLogDbContext Init -OutputDir Migrations/AuditLogDb
       Update-Database -Context AuditLogDbContext
+      ```
+	+ Select **Configuration.Api** as Default Project and run these commands:
+      ```
+      Add-Migration -Context ConfigurationDbContext Init -OutputDir Migrations/ConfigurationDb
+      Update-Database -Context ConfigurationDbContext
       ```
 	+ Select **Identity.Api** as Default Project and run these commands:
       ```
@@ -119,6 +130,7 @@
   docker tag classifiedads.gateways.webapi phongnguyend/classifiedads.gateways.webapi
   docker tag classifiedads.services.auditlog.api phongnguyend/classifiedads.services.auditlog.api
   docker tag classifiedads.services.auditlog.grpc phongnguyend/classifiedads.services.auditlog.grpc
+  docker tag classifiedads.services.configuration.api phongnguyend/classifiedads.services.configuration.api
   docker tag classifiedads.services.identity.api phongnguyend/classifiedads.services.identity.api
   docker tag classifiedads.services.identity.authserver phongnguyend/classifiedads.services.identity.authserver
   docker tag classifiedads.services.identity.grpc phongnguyend/classifiedads.services.identity.grpc
@@ -134,6 +146,7 @@
   docker push phongnguyend/classifiedads.gateways.webapi
   docker push phongnguyend/classifiedads.services.auditlog.api
   docker push phongnguyend/classifiedads.services.auditlog.grpc
+  docker push phongnguyend/classifiedads.services.configuration.api
   docker push phongnguyend/classifiedads.services.identity.api
   docker push phongnguyend/classifiedads.services.identity.authserver
   docker push phongnguyend/classifiedads.services.identity.grpc

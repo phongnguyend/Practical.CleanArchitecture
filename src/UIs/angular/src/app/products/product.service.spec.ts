@@ -2,11 +2,12 @@ import { TestBed } from "@angular/core/testing";
 import {
   HttpClientTestingModule,
   HttpTestingController,
-  TestRequest
+  TestRequest,
 } from "@angular/common/http/testing";
 import { ProductService } from "./product.service";
 import { IProduct } from "./product";
 import { environment } from "src/environments/environment";
+import { GuidEmpty } from "../shared/constants";
 
 describe("ProductService Tests", () => {
   let productService: ProductService;
@@ -14,41 +15,41 @@ describe("ProductService Tests", () => {
 
   let testProducts: IProduct[] = [
     {
-      id: "00000000-0000-0000-0000-000000000000",
+      id: GuidEmpty,
       name: null,
       code: null,
       description: null,
       imageUrl: null,
       price: null,
       releaseDate: null,
-      starRating: null
+      starRating: null,
     },
     {
-      id: "00000000-0000-0000-0000-000000000000",
+      id: GuidEmpty,
       name: null,
       code: null,
       description: null,
       imageUrl: null,
       price: null,
       releaseDate: null,
-      starRating: null
+      starRating: null,
     },
     {
-      id: "00000000-0000-0000-0000-000000000000",
+      id: GuidEmpty,
       name: null,
       code: null,
       description: null,
       imageUrl: null,
       price: null,
       releaseDate: null,
-      starRating: null
-    }
+      starRating: null,
+    },
   ];
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [ProductService]
+      providers: [ProductService],
     });
 
     productService = TestBed.get(ProductService);

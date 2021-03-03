@@ -1,8 +1,7 @@
 ﻿using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Identity;
-using ClassifiedAds.Infrastructure.MessageBrokers;
-using ClassifiedAds.Infrastructure.Storages;
+using ClassifiedAds.Services.Storage.ConfigurationOptions;
 using ClassifiedAds.Services.Storage.DTOs;
 using ClassifiedAds.Services.Storage.Entities;
 using ClassifiedAds.Services.Storage.Repositories;
@@ -16,13 +15,13 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class StorageModuleServiceCollectionExtensions
     {
-        public static IServiceCollection AddStorageModule(this IServiceCollection services, StorageOptions storageOptions, MessageBrokerOptions messageBrokerOptions, string connectionString, string migrationsAssembly = "")
+        public static IServiceCollection AddStorageModule(this IServiceCollection services, AppSettings appSettings)
         {
-            services.AddDbContext<StorageDbContext>(options => options.UseSqlServer(connectionString, sql =>
+            services.AddDbContext<StorageDbContext>(options => options.UseSqlServer(appSettings.ConnectionStrings.ClassifiedAds, sql =>
             {
-                if (!string.IsNullOrEmpty(migrationsAssembly))
+                if (!string.IsNullOrEmpty(appSettings.ConnectionStrings.MigrationsAssembly))
                 {
-                    sql.MigrationsAssembly(migrationsAssembly);
+                    sql.MigrationsAssembly(appSettings.ConnectionStrings.MigrationsAssembly);
                 }
             }))
                 .AddScoped<IRepository<FileEntry, Guid>, Repository<FileEntry, Guid>>();
@@ -36,12 +35,12 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentWebUser>();
 
-            services.AddStorageManager(storageOptions);
+            services.AddStorageManager(appSettings.Storage);
 
-            services.AddMessageBusSender<FileUploadedEvent>(messageBrokerOptions)
-                    .AddMessageBusSender<FileDeletedEvent>(messageBrokerOptions)
-                    .AddMessageBusReceiver<FileUploadedEvent>(messageBrokerOptions)
-                    .AddMessageBusReceiver<FileDeletedEvent>(messageBrokerOptions);
+            services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker)
+                    .AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker)
+                    .AddMessageBusReceiver<FileUploadedEvent>(appSettings.MessageBroker)
+                    .AddMessageBusReceiver<FileDeletedEvent>(appSettings.MessageBroker);
 
             return services;
         }

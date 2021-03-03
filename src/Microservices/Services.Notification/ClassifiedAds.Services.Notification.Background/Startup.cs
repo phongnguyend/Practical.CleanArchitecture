@@ -1,5 +1,5 @@
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using ClassifiedAds.Services.Notification.Api.ConfigurationOptions;
+using ClassifiedAds.Services.Notification.ConfigurationOptions;
 using ClassifiedAds.Services.Notification.DTOs;
 using ClassifiedAds.Services.Notification.Services;
 using Microsoft.AspNetCore.Builder;
@@ -33,7 +33,7 @@ namespace ClassifiedAds.Services.Notification.Background
             services.AddDateTimeProvider();
             services.AddApplicationServices();
 
-            services.AddNotificationModule(AppSettings.MessageBroker, AppSettings.Notification, AppSettings.ConnectionStrings.ClassifiedAds);
+            services.AddNotificationModule(AppSettings);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

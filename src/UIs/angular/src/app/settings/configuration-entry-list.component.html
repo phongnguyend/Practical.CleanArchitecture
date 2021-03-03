@@ -1,0 +1,155 @@
+<div class="card">
+  <div class="card-header">
+    Settings
+    <button
+      class="btn btn-primary"
+      style="float: right"
+      (click)="addEntry(addupdatetemplate)"
+    >
+      Add
+    </button>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table
+        class="table"
+        *ngIf="configurationEntries && configurationEntries.length"
+      >
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Value</th>
+            <th>Description</th>
+            <th>Updated Time</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let entry of configurationEntries">
+            <td>{{ entry.key }}</td>
+            <td>{{ entry.isSensitive ? "******" : entry.value }}</td>
+            <td>{{ entry.description }}</td>
+            <td>{{ entry.updatedDateTime | date: "dd/MM/yyyy hh:mm:ss" }}</td>
+            <td>
+              <button
+                class="btn btn-primary"
+                (click)="updateEntry(addupdatetemplate, entry)"
+              >
+                Edit
+              </button>
+              &nbsp;
+              <button
+                type="button"
+                class="btn btn-primary btn-danger"
+                (click)="deleteEntry(deletetemplate, entry)"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div *ngIf="errorMessage" class="alert alert-danger">
+  Error: {{ errorMessage }}
+</div>
+
+<ng-template #deletetemplate>
+  <div class="modal-body text-center">
+    <p>
+      Are you sure you want to delete
+      <strong> {{ selectedEntry.key }}</strong>
+    </p>
+    <button type="button" class="btn btn-primary" (click)="confirmDelete()">
+      Yes
+    </button>
+    <button type="button" class="btn btn-default" (click)="cancelDelete()">
+      No
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #addupdatetemplate>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">
+      {{ selectedEntry.id == GuidEmpty ? "Add" : "Update" }}
+    </h4>
+    <button
+      type="button"
+      class="close pull-right"
+      aria-label="Close"
+      (click)="addUpdateModalRef.hide()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #form="ngForm" (ngSubmit)="confirmAddUpdate(form)">
+      <div class="form-group row">
+        <label for="key" class="col-sm-3 col-form-label">Key</label>
+        <div class="col-sm-9">
+          <input
+            id="key"
+            name="key"
+            class="form-control"
+            required
+            [(ngModel)]="selectedEntry.key"
+            #keyField="ngModel"
+            [class.is-invalid]="form.submitted && keyField.invalid"
+          />
+          <span class="invalid-feedback"> Enter a key </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="value" class="col-sm-3 col-form-label">Value</label>
+        <div class="col-sm-9">
+          <input
+            id="value"
+            name="value"
+            class="form-control"
+            required
+            [(ngModel)]="selectedEntry.value"
+            #valueField="ngModel"
+            [class.is-invalid]="form.submitted && valueField.invalid"
+          />
+          <span class="invalid-feedback"> Enter a value </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="description" class="col-sm-3 col-form-label"
+          >Description</label
+        >
+        <div class="col-sm-9">
+          <input
+            id="description"
+            name="description"
+            class="form-control"
+            [(ngModel)]="selectedEntry.description"
+            #descriptionField="ngModel"
+            [class.is-invalid]="form.submitted && descriptionField.invalid"
+          />
+          <span class="invalid-feedback"> Enter a description </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="sensitive" class="col-sm-3 col-form-label">Sensitive</label>
+        <div class="col-sm-9">
+          <input
+            type="checkbox"
+            id="sensitive"
+            name="sensitive"
+            [(ngModel)]="selectedEntry.isSensitive"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9">
+          <button class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>

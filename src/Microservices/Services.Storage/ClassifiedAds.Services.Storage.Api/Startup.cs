@@ -1,7 +1,7 @@
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Web.Filters;
-using ClassifiedAds.Services.Storage.Api.ConfigurationOptions;
+using ClassifiedAds.Services.Storage.ConfigurationOptions;
 using ClassifiedAds.Services.Storage.DTOs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -52,7 +52,7 @@ namespace ClassifiedAds.Services.Storage
             services.AddDateTimeProvider();
             services.AddApplicationServices();
 
-            services.AddStorageModule(AppSettings.Storage, AppSettings.MessageBroker, AppSettings.ConnectionStrings.ClassifiedAds);
+            services.AddStorageModule(AppSettings);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>

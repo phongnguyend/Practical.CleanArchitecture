@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name}}-configuration-api
+  name: {{ .Release.Name}}-configuration-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name}}-configuration-api
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name}}-configuration-api
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name}}-shared
+        - configMapRef:
+            name: {{ .Release.Name}}-configuration
+        image: phongnguyend/classifiedads.services.configuration.api
+        name: {{ .Release.Name}}-configuration-api
+        resources: {}
+      restartPolicy: Always
+status: {}

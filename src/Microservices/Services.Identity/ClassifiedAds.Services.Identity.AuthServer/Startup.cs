@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
-using ClassifiedAds.IdentityServer.ConfigurationOptions;
+﻿using ClassifiedAds.IdentityServer.ConfigurationOptions;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Services.Identity.Entities;
 using ClassifiedAds.Services.Identity.Repositories;
@@ -10,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Reflection;
 
 namespace ClassifiedAds.IdentityServer
 {
@@ -48,11 +47,11 @@ namespace ClassifiedAds.IdentityServer
 
             services.AddDateTimeProvider();
 
-            services.AddIdentityModule(AppSettings.ConnectionStrings.ClassifiedAds)
+            services.AddIdentityModule(AppSettings)
                     .AddApplicationServices();
 
             services.AddIdentityServer()
-                    .AddSigningCredential(new X509Certificate2(Configuration["Certificates:Default:Path"], Configuration["Certificates:Default:Password"]))
+                    .AddSigningCredential(AppSettings.Certificates.Default.FindCertificate())
                     .AddAspNetIdentity<User>()
                     .AddTokenProviderModule(AppSettings.ConnectionStrings.ClassifiedAds, typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
 

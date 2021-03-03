@@ -1,0 +1,55 @@
+﻿@page "/settings"
+@attribute [Authorize]
+
+@using ClassifiedAds.Blazor.Modules.Settings.Components
+
+<div class="card">
+    <div class="card-header">
+        Settings
+        <button class="btn btn-primary"
+                style="float: right;"
+                @onclick="@(()=> AddSetting())">
+            Add
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                        <th>Description</th>
+                        <th>Updated Time</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var entry in ConfigurationEntries)
+                    {
+                        <tr>
+                            <td>@entry.Key</td>
+                            <td>@(entry.IsSensitive ? "******": entry.Value)</td>
+                            <td>@entry.Description</td>
+                            <td>@entry.UpdatedDateTime</td>
+                            <td>
+                                <button @onclick="(()=> EditSetting(entry))" class="btn btn-primary" title="Edit">Edit</button>
+                                &nbsp;
+                                <button @onclick="(()=> DeleteSetting(entry))" class="btn btn-danger" title="Delete">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<ConfirmDialog @ref="DeleteDialog" Title="Delete Setting" YesText="Yes" NoText="No" ConfirmEventCallback="ConfirmedDeleteSetting">
+    <Message>
+        Are you sure you want to delete entry: <strong>@DeletingConfigurationEntry.Key</strong>
+    </Message>
+</ConfirmDialog>
+<AddEditDialog @ref="AddEditDialog" ConfirmEventCallback="ConfirmedAddEdit">
+</AddEditDialog>

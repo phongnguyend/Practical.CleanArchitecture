@@ -1,0 +1,59 @@
+﻿
+@if (ShowDialog)
+{
+    <div class="modal fade show d-block" id="exampleModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titleLabel">@Title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="ConfigurationEntry" OnValidSubmit="HandleValidSubmit">
+
+                        <DataAnnotationsValidator />
+
+                        <div class="form-group row">
+                            <label for="key" class="col-sm-3 col-form-label">Key </label>
+                            <div class="col-sm-9">
+                                <InputText id="key" class="form-control" @bind-Value="ConfigurationEntry.Key" placeholder="Enter Key"></InputText>
+                                <ValidationMessage For="@(() => ConfigurationEntry.Key)" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="value" class="col-sm-3 col-form-label">Value </label>
+                            <div class="col-sm-9">
+                                <InputText id="value" class="form-control" @bind-Value="ConfigurationEntry.Value" placeholder="Enter Value"></InputText>
+                                <ValidationMessage For="@(() => ConfigurationEntry.Value)" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="description" class="col-sm-3 col-form-label">Description </label>
+                            <div class="col-sm-9">
+                                <InputText id="description" class="form-control" @bind-Value="ConfigurationEntry.Description" placeholder="Enter Description"></InputText>
+                                <ValidationMessage For="@(() => ConfigurationEntry.Description)" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="sensitive" class="col-sm-3 col-form-label">Sensitive</label>
+                            <div class="col-sm-9">
+                                <InputCheckbox id="sensitive" @bind-Value="ConfigurationEntry.IsSensitive" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                                <a class="btn btn-outline-primary" @onclick="@Close">Cancel</a>
+                            </div>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}

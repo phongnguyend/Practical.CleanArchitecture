@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: configuration-api
+  name: configuration-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: configuration-api
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: configuration-api
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        envFrom:
+        - configMapRef:
+            name: shared
+        - configMapRef:
+            name: configuration
+        image: phongnguyend/classifiedads.services.configuration.api
+        name: configuration-api
+        resources: {}
+      restartPolicy: Always
+status: {}

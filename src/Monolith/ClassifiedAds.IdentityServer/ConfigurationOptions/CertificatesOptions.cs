@@ -1,7 +1,9 @@
-﻿namespace ClassifiedAds.IdentityServer.ConfigurationOptions
+﻿using CryptographyHelper.Certificates;
+
+namespace ClassifiedAds.IdentityServer.ConfigurationOptions
 {
     public class CertificatesOptions
     {
-        public CertificateOptions Default { get; set; }
+        public CertificateOption Default { get; set; }
     }
 }

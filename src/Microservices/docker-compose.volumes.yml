@@ -6,6 +6,9 @@ services:
     auditlog-grpc:
         volumes:
             - D:\\ClassifiedAds.Microservices\\Logs\\AuditLog.Grpc:/ClassifiedAds.Microservices/logs
+    configuration-api:
+        volumes:
+            - D:\\ClassifiedAds.Microservices\\Logs\\Configuration.Api:/ClassifiedAds.Microservices/logs
     identity-api:
         volumes:
             - D:\\ClassifiedAds.Microservices\\Logs\\Identity.Api:/ClassifiedAds.Microservices/logs

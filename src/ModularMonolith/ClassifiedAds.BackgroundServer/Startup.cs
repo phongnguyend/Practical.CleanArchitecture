@@ -68,8 +68,16 @@ namespace ClassifiedAds.BackgroundServer
 
             services.AddDateTimeProvider();
 
-            services.AddNotificationModule(AppSettings.MessageBroker, AppSettings.Notification, AppSettings.ConnectionStrings.ClassifiedAds)
-                    .AddApplicationServices();
+            services.AddNotificationModule(new Modules.Notification.ConfigurationOptions.NotificationModuleOptions
+            {
+                ConnectionStrings = new Modules.Notification.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
+                },
+                MessageBroker = AppSettings.MessageBroker,
+                Notification = AppSettings.Notification,
+            })
+                .AddApplicationServices();
 
             services.AddMessageBusReceiver<FileUploadedEvent>(AppSettings.MessageBroker);
             services.AddMessageBusReceiver<FileDeletedEvent>(AppSettings.MessageBroker);

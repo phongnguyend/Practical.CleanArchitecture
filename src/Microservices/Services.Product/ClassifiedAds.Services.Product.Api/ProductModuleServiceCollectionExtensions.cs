@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Identity;
+using ClassifiedAds.Services.Product.ConfigurationOptions;
 using ClassifiedAds.Services.Product.Entities;
 using ClassifiedAds.Services.Product.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -13,13 +14,13 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ProductModuleServiceCollectionExtensions
     {
-        public static IServiceCollection AddProductModule(this IServiceCollection services, string connectionString, string migrationsAssembly = "")
+        public static IServiceCollection AddProductModule(this IServiceCollection services, AppSettings appSettings)
         {
-            services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(connectionString, sql =>
+            services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(appSettings.ConnectionStrings.ClassifiedAds, sql =>
             {
-                if (!string.IsNullOrEmpty(migrationsAssembly))
+                if (!string.IsNullOrEmpty(appSettings.ConnectionStrings.MigrationsAssembly))
                 {
-                    sql.MigrationsAssembly(migrationsAssembly);
+                    sql.MigrationsAssembly(appSettings.ConnectionStrings.MigrationsAssembly);
                 }
             }));
 

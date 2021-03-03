@@ -22,19 +22,22 @@
     + Navigate to [ClassifiedAds.Migrator](ClassifiedAds.Migrator/) and run these commands:
       ```
       dotnet ef migrations add Init --context AuditLogDbContext -o Migrations/AuditLogDb
+      dotnet ef migrations add Init --context ClassifiedAds.Modules.Configuration.Repositories.ConfigurationDbContext -o Migrations/ConfigurationDb
       dotnet ef migrations add Init --context IdentityDbContext -o Migrations/IdentityDb
       dotnet ef migrations add Init --context NotificationDbContext -o Migrations/NotificationDb
       dotnet ef migrations add Init --context ProductDbContext -o Migrations/ProductDb
       dotnet ef migrations add Init --context StorageDbContext -o Migrations/StorageDb
-      dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
-      dotnet ef migrations add Init --context PersistedGrantDbContext -o Migrations/PersistedGrantDb
+      dotnet ef migrations add Init --context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext -o Migrations/Id4ConfigurationDb
+      dotnet ef migrations add Init --context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext -o Migrations/Id4PersistedGrantDb
       dotnet ef database update --context AuditLogDbContext
+      dotnet ef database update --context ClassifiedAds.Modules.Configuration.Repositories.ConfigurationDbContext
       dotnet ef database update --context IdentityDbContext
       dotnet ef database update --context NotificationDbContext
       dotnet ef database update --context ProductDbContext
       dotnet ef database update --context StorageDbContext
-      dotnet ef database update --context ConfigurationDbContext
-      dotnet ef database update --context PersistedGrantDbContext
+      dotnet ef database update --context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext
+      dotnet ef database update --context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext
+
       ```
   + Option 2: Using Package Manager Console:
     + Set **ClassifiedAds.Migrator** as StartUp Project
@@ -42,19 +45,22 @@
     + Run these commands:
       ```
       Add-Migration -Context AuditLogDbContext Init -OutputDir Migrations/AuditLogDb
+      Add-Migration -Context ClassifiedAds.Modules.Configuration.Repositories.ConfigurationDbContext Init -OutputDir Migrations/ConfigurationDb
       Add-Migration -Context IdentityDbContext Init -OutputDir Migrations/IdentityDb
       Add-Migration -Context NotificationDbContext Init -OutputDir Migrations/NotificationDb
       Add-Migration -Context ProductDbContext Init -OutputDir Migrations/ProductDb
       Add-Migration -Context StorageDbContext Init -OutputDir Migrations/StorageDb
-      Add-Migration -Context ConfigurationDbContext Init -OutputDir Migrations/ConfigurationDb
-      Add-Migration -Context PersistedGrantDbContext Init -OutputDir Migrations/PersistedGrantDb
+      Add-Migration -Context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext Init -OutputDir Migrations/Id4ConfigurationDb
+      Add-Migration -Context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext Init -OutputDir Migrations/Id4PersistedGrantDb
       Update-Database -Context AuditLogDbContext
+      Update-Database -Context ClassifiedAds.Modules.Configuration.Repositories.ConfigurationDbContext
       Update-Database -Context IdentityDbContext
       Update-Database -Context NotificationDbContext
       Update-Database -Context ProductDbContext
       Update-Database -Context StorageDbContext
-      Update-Database -Context ConfigurationDbContext
-      Update-Database -Context PersistedGrantDbContext
+      Update-Database -Context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext
+      Update-Database -Context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext
+
       ```  
 
 # Build & Run Locally using Tye

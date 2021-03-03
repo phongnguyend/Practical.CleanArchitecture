@@ -3,6 +3,7 @@ import { IUser } from "../user";
 import { UserService } from "../user.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { NgModel, NgForm } from "@angular/forms";
+import { GuidEmpty } from "src/app/shared/constants";
 
 @Component({
   selector: "app-add-edit-user",
@@ -12,7 +13,7 @@ import { NgModel, NgForm } from "@angular/forms";
 export class AddEditUserComponent implements OnInit {
   formMode: string = "add";
   user: IUser = {
-    id: "00000000-0000-0000-0000-000000000000",
+    id: GuidEmpty,
     userName: null,
     email: null,
     emailConfirmed: false,

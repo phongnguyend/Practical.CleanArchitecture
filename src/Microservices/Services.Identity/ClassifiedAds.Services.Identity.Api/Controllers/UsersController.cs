@@ -119,7 +119,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> SetPassword(Guid id, [FromBody] UserModel model)
+        public async Task<ActionResult> SetPassword(Guid id, [FromBody] SetPasswordModel model)
         {
             User user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = id });
 

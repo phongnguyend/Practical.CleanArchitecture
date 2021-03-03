@@ -4,6 +4,8 @@ using ClassifiedAds.Infrastructure.Notification.Email;
 using ClassifiedAds.Infrastructure.Notification.Sms;
 using ClassifiedAds.Infrastructure.Notification.Web;
 using ClassifiedAds.Infrastructure.Web.Filters;
+using ClassifiedAds.Modules.Configuration.ConfigurationOptions;
+using ClassifiedAds.Modules.Identity.ConfigurationOptions;
 using ClassifiedAds.Modules.Identity.Contracts.Services;
 using ClassifiedAds.Modules.Identity.Repositories;
 using ClassifiedAds.Modules.Identity.Services;
@@ -46,6 +48,7 @@ namespace ClassifiedAds.WebAPI
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
             })
                 .AddAuditLogModule()
+                .AddConfigurationModule()
                 .AddIdentityModule()
                 .AddNotificationModule()
                 .AddProductModule()
@@ -79,12 +82,58 @@ namespace ClassifiedAds.WebAPI
                 Web = new WebOptions { Provider = "Fake" },
             };
 
-            services.AddAuditLogModule(AppSettings.ConnectionStrings.ClassifiedAds)
-                    .AddIdentityModuleCore(AppSettings.ConnectionStrings.ClassifiedAds)
-                    .AddNotificationModule(AppSettings.MessageBroker, notificationOptions, AppSettings.ConnectionStrings.ClassifiedAds)
-                    .AddProductModule(AppSettings.ConnectionStrings.ClassifiedAds)
-                    .AddStorageModule(AppSettings.Storage, AppSettings.MessageBroker, AppSettings.ConnectionStrings.ClassifiedAds)
-                    .AddApplicationServices();
+            services.AddAuditLogModule(new Modules.AuditLog.ConfigurationOptions.AuditLogModuleOptions
+            {
+                ConnectionStrings = new Modules.AuditLog.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
+                },
+            })
+            .AddConfigurationModule(new ConfigurationModuleOptions
+            {
+                ConnectionStrings = new Modules.Configuration.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
+                },
+                Certificates = AppSettings.ConfigurationModule.Certificates,
+            })
+            .AddIdentityModuleCore(new IdentityModuleOptions
+            {
+                ConnectionStrings = new Modules.Identity.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
+                },
+                IdentityServerAuthentication = new Modules.Identity.ConfigurationOptions.IdentityServerAuthentication
+                {
+                    Authority = AppSettings.IdentityServerAuthentication.Authority,
+                },
+            })
+            .AddNotificationModule(new Modules.Notification.ConfigurationOptions.NotificationModuleOptions
+            {
+                ConnectionStrings = new Modules.Notification.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
+                },
+                MessageBroker = AppSettings.MessageBroker,
+                Notification = notificationOptions,
+            })
+            .AddProductModule(new Modules.Product.ConfigurationOptions.ProductModuleOptions
+            {
+                ConnectionStrings = new Modules.Product.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
+                },
+            })
+            .AddStorageModule(new Modules.Storage.ConfigurationOptions.StorageModuleOptions
+            {
+                ConnectionStrings = new Modules.Storage.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
+                },
+                Storage = AppSettings.Storage,
+                MessageBroker = AppSettings.MessageBroker,
+            })
+            .AddApplicationServices();
 
             services.AddDataProtection()
                 .PersistKeysToDbContext<IdentityDbContext>()

@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Services.Identity;
+using ClassifiedAds.Services.Identity.ConfigurationOptions;
 using ClassifiedAds.Services.Identity.Entities;
 using ClassifiedAds.Services.Identity.PasswordValidators;
 using ClassifiedAds.Services.Identity.Repositories;
@@ -12,13 +13,13 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class IdentityModuleServiceCollectionExtensions
     {
-        public static IServiceCollection AddIdentityModule(this IServiceCollection services, string connectionString, string migrationsAssembly = "")
+        public static IServiceCollection AddIdentityModule(this IServiceCollection services, AppSettings appSettings)
         {
-            services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(connectionString, sql =>
+            services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(appSettings.ConnectionStrings.ClassifiedAds, sql =>
             {
-                if (!string.IsNullOrEmpty(migrationsAssembly))
+                if (!string.IsNullOrEmpty(appSettings.ConnectionStrings.MigrationsAssembly))
                 {
-                    sql.MigrationsAssembly(migrationsAssembly);
+                    sql.MigrationsAssembly(appSettings.ConnectionStrings.MigrationsAssembly);
                 }
             }))
                 .AddScoped(typeof(IUserRepository), typeof(UserRepository))
@@ -43,13 +44,13 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        public static IServiceCollection AddIdentityModuleCore(this IServiceCollection services, string connectionString, string migrationsAssembly = "")
+        public static IServiceCollection AddIdentityModuleCore(this IServiceCollection services, AppSettings appSettings)
         {
-            services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(connectionString, sql =>
+            services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(appSettings.ConnectionStrings.ClassifiedAds, sql =>
             {
-                if (!string.IsNullOrEmpty(migrationsAssembly))
+                if (!string.IsNullOrEmpty(appSettings.ConnectionStrings.MigrationsAssembly))
                 {
-                    sql.MigrationsAssembly(migrationsAssembly);
+                    sql.MigrationsAssembly(appSettings.ConnectionStrings.MigrationsAssembly);
                 }
             }))
                 .AddScoped(typeof(IUserRepository), typeof(UserRepository))

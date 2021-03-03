@@ -1,12 +1,13 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using ClassifiedAds.IdentityServer.ConfigurationOptions;
+﻿using ClassifiedAds.IdentityServer.ConfigurationOptions;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Notification;
 using ClassifiedAds.Infrastructure.Notification.Email;
 using ClassifiedAds.Infrastructure.Notification.Sms;
 using ClassifiedAds.Infrastructure.Notification.Web;
+using ClassifiedAds.Modules.Identity.ConfigurationOptions;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
+using ClassifiedAds.Modules.Notification.ConfigurationOptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -58,12 +59,26 @@ namespace ClassifiedAds.IdentityServer
                 Web = new WebOptions { Provider = "Fake" },
             };
 
-            services.AddIdentityModule(AppSettings.ConnectionStrings.ClassifiedAds)
-                    .AddNotificationModule(AppSettings.MessageBroker, notificationOptions, AppSettings.ConnectionStrings.ClassifiedAds)
+            services.AddIdentityModule(new IdentityModuleOptions
+                    {
+                        ConnectionStrings = new Modules.Identity.ConfigurationOptions.ConnectionStringsOptions
+                        {
+                            Default = AppSettings.ConnectionStrings.ClassifiedAds,
+                        },
+                    })
+                    .AddNotificationModule(new NotificationModuleOptions
+                    {
+                        ConnectionStrings = new Modules.Notification.ConfigurationOptions.ConnectionStringsOptions
+                        {
+                            Default = AppSettings.ConnectionStrings.ClassifiedAds,
+                        },
+                        MessageBroker = AppSettings.MessageBroker,
+                        Notification = notificationOptions,
+                    })
                     .AddApplicationServices();
 
             services.AddIdentityServer()
-                    .AddSigningCredential(new X509Certificate2(Configuration["Certificates:Default:Path"], Configuration["Certificates:Default:Password"]))
+                    .AddSigningCredential(AppSettings.Certificates.Default.FindCertificate())
                     .AddAspNetIdentity<User>()
                     .AddTokenProviderModule(AppSettings.ConnectionStrings.ClassifiedAds);
 

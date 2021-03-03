@@ -8,6 +8,11 @@
         >
       </li>
       <li>
+        <router-link class="nav-link" to="/settings" active-class="active"
+          >Settings</router-link
+        >
+      </li>
+      <li>
         <router-link class="nav-link" to="/files" active-class="active"
           >Files</router-link
         >

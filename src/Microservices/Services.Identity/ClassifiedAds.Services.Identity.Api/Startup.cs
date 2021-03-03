@@ -1,6 +1,6 @@
 using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Web.Filters;
-using ClassifiedAds.Services.Identity.Api.ConfigurationOptions;
+using ClassifiedAds.Services.Identity.ConfigurationOptions;
 using ClassifiedAds.Services.Identity.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -51,7 +51,7 @@ namespace ClassifiedAds.Services.Identity
             services.AddDateTimeProvider();
             services.AddApplicationServices();
 
-            services.AddIdentityModuleCore(AppSettings.ConnectionStrings.ClassifiedAds);
+            services.AddIdentityModuleCore(AppSettings);
 
             services.AddDataProtection()
                     .PersistKeysToDbContext<IdentityDbContext>()

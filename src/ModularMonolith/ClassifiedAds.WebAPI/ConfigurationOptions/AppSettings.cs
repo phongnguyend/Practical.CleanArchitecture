@@ -4,6 +4,7 @@ using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Storages;
+using ClassifiedAds.Modules.Configuration.ConfigurationOptions;
 using System.Collections.Generic;
 
 namespace ClassifiedAds.WebAPI.ConfigurationOptions
@@ -31,5 +32,7 @@ namespace ClassifiedAds.WebAPI.ConfigurationOptions
         public Dictionary<string, string> SecurityHeaders { get; set; }
 
         public InterceptorsOptions Interceptors { get; set; }
+
+        public ConfigurationModuleOptions ConfigurationModule { get; set; }
     }
 }

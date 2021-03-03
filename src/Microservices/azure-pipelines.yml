@@ -81,6 +81,7 @@ stages:
             src/Microservices/Gateways.WebAPI/**/*.csproj
             src/Microservices/Gateways.GraphQL/**/*.csproj
             src/Microservices/Services.AuditLog/**/*.csproj
+            src/Microservices/Services.Configuration/**/*.csproj
             src/Microservices/Services.Identity/**/*.csproj
             src/Microservices/Services.Notification/**/*.csproj
             src/Microservices/Services.Product/**/*.csproj

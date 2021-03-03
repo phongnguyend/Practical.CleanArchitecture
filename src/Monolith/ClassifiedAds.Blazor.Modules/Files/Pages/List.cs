@@ -36,6 +36,7 @@ namespace ClassifiedAds.Blazor.Modules.Files.Pages
         {
             Files = await FileService.GetFilesAsync();
         }
+
         protected async Task Download(FileEntryModel file)
         {
             var token = await FileService.GetAccessToken();
@@ -43,7 +44,6 @@ namespace ClassifiedAds.Blazor.Modules.Files.Pages
             await JSRuntime.Log(file);
             await JSRuntime.InvokeVoidAsync("interop.downloadFile", FileService.GetDownloadUrl(file.Id), token, file.FileName);
         }
-
 
         protected async Task ViewAuditLogs(FileEntryModel file)
         {

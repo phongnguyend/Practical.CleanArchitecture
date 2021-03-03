@@ -15,6 +15,11 @@ services:
   bindings:
   - protocol: https
     port: 5002
+- name: configuration-api
+  project: ./Services.Configuration/ClassifiedAds.Services.Configuration.Api/ClassifiedAds.Services.Configuration.Api.csproj
+  bindings:
+  - protocol: https
+    port: 44301
 - name: identity-api
   project: ./Services.Identity/ClassifiedAds.Services.Identity.Api/ClassifiedAds.Services.Identity.Api.csproj
   bindings:

@@ -5,6 +5,8 @@ using ClassifiedAds.Infrastructure.Notification.Email;
 using ClassifiedAds.Infrastructure.Notification.Sms;
 using ClassifiedAds.Infrastructure.Notification.Web;
 using ClassifiedAds.Infrastructure.Storages;
+using ClassifiedAds.Modules.Configuration.ConfigurationOptions;
+using ClassifiedAds.Modules.Identity.ConfigurationOptions;
 using DbUp;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,7 +38,11 @@ namespace ClassifiedAds.Migrator
 
             services.AddDateTimeProvider();
 
-            var messageBrokerOptions = new MessageBrokerOptions { Provider = "Fake" };
+            var messageBrokerOptions = new MessageBrokerOptions
+            {
+                Provider = "Fake",
+            };
+
             var notificationOptions = new NotificationOptions
             {
                 Email = new EmailOptions { Provider = "Fake" },
@@ -44,19 +50,59 @@ namespace ClassifiedAds.Migrator
                 Web = new WebOptions { Provider = "Fake" },
             };
 
-            services.AddAuditLogModule(Configuration["ConnectionStrings:ClassifiedAds"],
-                typeof(Startup).GetTypeInfo().Assembly.GetName().Name)
-                .AddIdentityModule(Configuration["ConnectionStrings:ClassifiedAds"],
-                typeof(Startup).GetTypeInfo().Assembly.GetName().Name)
-                .AddNotificationModule(messageBrokerOptions, notificationOptions, Configuration["ConnectionStrings:ClassifiedAds"],
-                typeof(Startup).GetTypeInfo().Assembly.GetName().Name)
-                .AddProductModule(Configuration["ConnectionStrings:ClassifiedAds"],
-                typeof(Startup).GetTypeInfo().Assembly.GetName().Name)
-                .AddStorageModule(new StorageOptions(),
-                messageBrokerOptions,
-                Configuration["ConnectionStrings:ClassifiedAds"],
-                typeof(Startup).GetTypeInfo().Assembly.GetName().Name)
-                .AddApplicationServices();
+            services.AddAuditLogModule(new Modules.AuditLog.ConfigurationOptions.AuditLogModuleOptions
+            {
+                ConnectionStrings = new Modules.AuditLog.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = Configuration["ConnectionStrings:ClassifiedAds"],
+                    MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name,
+                },
+            })
+            .AddConfigurationModule(new ConfigurationModuleOptions
+            {
+                ConnectionStrings = new Modules.Configuration.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = Configuration["ConnectionStrings:ClassifiedAds"],
+                    MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name,
+                },
+            })
+            .AddIdentityModule(new IdentityModuleOptions
+            {
+                ConnectionStrings = new Modules.Identity.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = Configuration["ConnectionStrings:ClassifiedAds"],
+                    MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name,
+                },
+            })
+            .AddNotificationModule(new Modules.Notification.ConfigurationOptions.NotificationModuleOptions
+            {
+                ConnectionStrings = new Modules.Notification.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = Configuration["ConnectionStrings:ClassifiedAds"],
+                    MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name,
+                },
+                MessageBroker = messageBrokerOptions,
+                Notification = notificationOptions,
+            })
+            .AddProductModule(new Modules.Product.ConfigurationOptions.ProductModuleOptions
+            {
+                ConnectionStrings = new Modules.Product.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = Configuration["ConnectionStrings:ClassifiedAds"],
+                    MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name,
+                },
+            })
+            .AddStorageModule(new Modules.Storage.ConfigurationOptions.StorageModuleOptions
+            {
+                ConnectionStrings = new Modules.Storage.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = Configuration["ConnectionStrings:ClassifiedAds"],
+                    MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name,
+                },
+                Storage = new StorageOptions(),
+                MessageBroker = messageBrokerOptions,
+            })
+            .AddApplicationServices();
 
             services.AddIdentityServer()
                 .AddTokenProviderModule(Configuration.GetConnectionString("ClassifiedAds"),
@@ -75,6 +121,7 @@ namespace ClassifiedAds.Migrator
             .Execute(() =>
             {
                 app.MigrateAuditLogDb();
+                app.MigrateConfigurationDb();
                 app.MigrateIdentityDb();
                 app.MigrateNotificationDb();
                 app.MigrateProductDb();

@@ -3,6 +3,7 @@ using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
 using ClassifiedAds.Modules.Identity.Authorization.Policies.Users;
 using ClassifiedAds.Modules.Identity.Commands.Users;
+using ClassifiedAds.Modules.Identity.ConfigurationOptions;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Models;
 using ClassifiedAds.Modules.Identity.Queries.Roles;
@@ -12,8 +13,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -31,20 +32,20 @@ namespace ClassifiedAds.Modules.Identity.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IEmailMessageService _emailMessageService;
-        private readonly IConfiguration _configuration;
+        private readonly IdentityModuleOptions _moduleOptions;
 
         public UsersController(Dispatcher dispatcher,
             UserManager<User> userManager,
             ILogger<UsersController> logger,
             IDateTimeProvider dateTimeProvider,
             IEmailMessageService emailMessageService,
-            IConfiguration configuration)
+            IOptionsSnapshot<IdentityModuleOptions> moduleOptions)
         {
             _dispatcher = dispatcher;
             _userManager = userManager;
             _dateTimeProvider = dateTimeProvider;
             _emailMessageService = emailMessageService;
-            _configuration = configuration;
+            _moduleOptions = moduleOptions.Value;
         }
 
         [AuthorizePolicy(typeof(GetUsersPolicy))]
@@ -126,7 +127,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> SetPassword(Guid id, [FromBody] UserModel model)
+        public async Task<ActionResult> SetPassword(Guid id, [FromBody] SetPasswordModel model)
         {
             User user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = id });
 
@@ -162,7 +163,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
             if (user != null)
             {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var resetUrl = $"{_configuration["IdentityServerAuthentication:Authority"]}/Account/ResetPassword?token={HttpUtility.UrlEncode(token)}&email={user.Email}";
+                var resetUrl = $"{_moduleOptions.IdentityServerAuthentication.Authority}/Account/ResetPassword?token={HttpUtility.UrlEncode(token)}&email={user.Email}";
 
                 await _emailMessageService.CreateEmailMessageAsync(new EmailMessageDTO
                 {
@@ -190,7 +191,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
             {
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                var confirmationEmail = $"{_configuration["IdentityServerAuthentication:Authority"]}/Account/ConfirmEmailAddress?token={HttpUtility.UrlEncode(token)}&email={user.Email}";
+                var confirmationEmail = $"{_moduleOptions.IdentityServerAuthentication.Authority}/Account/ConfirmEmailAddress?token={HttpUtility.UrlEncode(token)}&email={user.Email}";
 
                 await _emailMessageService.CreateEmailMessageAsync(new EmailMessageDTO
                 {

@@ -110,6 +110,5 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             await DeleteProductAsync(createdProduct.Id);
             await Assert.ThrowsAsync<HttpRequestException>(async () => await GetProductByIdAsync(createdProduct.Id));
         }
-
     }
 }

@@ -1,7 +1,6 @@
 ﻿using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Infrastructure.MessageBrokers;
-using ClassifiedAds.Infrastructure.Storages;
+using ClassifiedAds.Modules.Storage.ConfigurationOptions;
 using ClassifiedAds.Modules.Storage.DTOs;
 using ClassifiedAds.Modules.Storage.Entities;
 using ClassifiedAds.Modules.Storage.Repositories;
@@ -14,13 +13,20 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class StorageModuleServiceCollectionExtensions
     {
-        public static IServiceCollection AddStorageModule(this IServiceCollection services, StorageOptions storageOptions, MessageBrokerOptions messageBrokerOptions, string connectionString, string migrationsAssembly = "")
+        public static IServiceCollection AddStorageModule(this IServiceCollection services, StorageModuleOptions moduleOptions)
         {
-            services.AddDbContext<StorageDbContext>(options => options.UseSqlServer(connectionString, sql =>
+            services.Configure<StorageModuleOptions>(op =>
             {
-                if (!string.IsNullOrEmpty(migrationsAssembly))
+                op.ConnectionStrings = moduleOptions.ConnectionStrings;
+                op.Storage = moduleOptions.Storage;
+                op.MessageBroker = moduleOptions.MessageBroker;
+            });
+
+            services.AddDbContext<StorageDbContext>(options => options.UseSqlServer(moduleOptions.ConnectionStrings.Default, sql =>
+            {
+                if (!string.IsNullOrEmpty(moduleOptions.ConnectionStrings.MigrationsAssembly))
                 {
-                    sql.MigrationsAssembly(migrationsAssembly);
+                    sql.MigrationsAssembly(moduleOptions.ConnectionStrings.MigrationsAssembly);
                 }
             }))
                 .AddScoped<IRepository<FileEntry, Guid>, Repository<FileEntry, Guid>>();
@@ -29,10 +35,10 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
-            services.AddStorageManager(storageOptions);
+            services.AddStorageManager(moduleOptions.Storage);
 
-            services.AddMessageBusSender<FileUploadedEvent>(messageBrokerOptions);
-            services.AddMessageBusSender<FileDeletedEvent>(messageBrokerOptions);
+            services.AddMessageBusSender<FileUploadedEvent>(moduleOptions.MessageBroker);
+            services.AddMessageBusSender<FileDeletedEvent>(moduleOptions.MessageBroker);
 
             services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
 

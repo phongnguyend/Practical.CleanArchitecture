@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Modules.Identity;
+using ClassifiedAds.Modules.Identity.ConfigurationOptions;
 using ClassifiedAds.Modules.Identity.Contracts.Services;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.PasswordValidators;
@@ -14,13 +15,19 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class IdentityModuleServiceCollectionExtensions
     {
-        public static IServiceCollection AddIdentityModule(this IServiceCollection services, string connectionString, string migrationsAssembly = "")
+        public static IServiceCollection AddIdentityModule(this IServiceCollection services, IdentityModuleOptions moduleOptions)
         {
-            services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(connectionString, sql =>
+            services.Configure<IdentityModuleOptions>(op =>
             {
-                if (!string.IsNullOrEmpty(migrationsAssembly))
+                op.ConnectionStrings = moduleOptions.ConnectionStrings;
+                op.IdentityServerAuthentication = moduleOptions.IdentityServerAuthentication;
+            });
+
+            services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(moduleOptions.ConnectionStrings.Default, sql =>
+            {
+                if (!string.IsNullOrEmpty(moduleOptions.ConnectionStrings.MigrationsAssembly))
                 {
-                    sql.MigrationsAssembly(migrationsAssembly);
+                    sql.MigrationsAssembly(moduleOptions.ConnectionStrings.MigrationsAssembly);
                 }
             }))
                 .AddScoped(typeof(IUserRepository), typeof(UserRepository))
@@ -46,13 +53,19 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        public static IServiceCollection AddIdentityModuleCore(this IServiceCollection services, string connectionString, string migrationsAssembly = "")
+        public static IServiceCollection AddIdentityModuleCore(this IServiceCollection services, IdentityModuleOptions moduleOptions)
         {
-            services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(connectionString, sql =>
+            services.Configure<IdentityModuleOptions>(op =>
             {
-                if (!string.IsNullOrEmpty(migrationsAssembly))
+                op.ConnectionStrings = moduleOptions.ConnectionStrings;
+                op.IdentityServerAuthentication = moduleOptions.IdentityServerAuthentication;
+            });
+
+            services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(moduleOptions.ConnectionStrings.Default, sql =>
+            {
+                if (!string.IsNullOrEmpty(moduleOptions.ConnectionStrings.MigrationsAssembly))
                 {
-                    sql.MigrationsAssembly(migrationsAssembly);
+                    sql.MigrationsAssembly(moduleOptions.ConnectionStrings.MigrationsAssembly);
                 }
             }))
                 .AddScoped(typeof(IUserRepository), typeof(UserRepository))

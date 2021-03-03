@@ -12,6 +12,7 @@ import { CoreModule } from "./core/core.module";
 import { AuditLogModule } from "./auditlogs/audit-log.module";
 import { FileModule } from "./files/file.module";
 import { UserModule } from "./users/user.module";
+import { SettingModule } from "./settings/setting.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,6 +20,7 @@ import { UserModule } from "./users/user.module";
     BrowserModule,
     SharedModule,
     CoreModule,
+    SettingModule,
     AuditLogModule,
     ProductModule,
     FileModule,
