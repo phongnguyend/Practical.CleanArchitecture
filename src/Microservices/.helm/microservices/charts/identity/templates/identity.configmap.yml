@@ -4,6 +4,6 @@ metadata:
   name: {{ .Release.Name}}-identity
 data:
   ASPNETCORE_ENVIRONMENT: "Development"
-  ConnectionStrings__ClassifiedAds: "Server={{ .Release.Name}}-db;Database=ClassifiedAds.Microservices;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+  ConnectionStrings__ClassifiedAds: "Server={{ .Release.Name}}-db;Database=ClassifiedAds.Microservices.Identity;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
   MessageBroker__Provider: "RabbitMQ"
   MessageBroker__RabbitMQ__HostName: "{{ .Release.Name}}-rabbitmq"

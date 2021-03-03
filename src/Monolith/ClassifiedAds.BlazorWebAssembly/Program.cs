@@ -2,6 +2,7 @@ using ClassifiedAds.Blazor.Modules.AuditLogs.Services;
 using ClassifiedAds.Blazor.Modules.Core.Services;
 using ClassifiedAds.Blazor.Modules.Files.Services;
 using ClassifiedAds.Blazor.Modules.Products.Services;
+using ClassifiedAds.Blazor.Modules.Settings.Services;
 using ClassifiedAds.Blazor.Modules.Users.Services;
 using ClassifiedAds.BlazorWebAssembly.ConfigurationOptions;
 using ClassifiedAds.BlazorWebAssembly.Services;
@@ -45,6 +46,21 @@ namespace ClassifiedAds.BlazorWebAssembly
             builder.Services.AddScoped<TokenProvider>();
 
             builder.Services.AddHttpClient<FileService, FileService>(client =>
+            {
+                client.BaseAddress = new Uri(appSettings.ResourceServer.Endpoint);
+                client.Timeout = new TimeSpan(0, 0, 30);
+                client.DefaultRequestHeaders.Clear();
+            })
+            .AddHttpMessageHandler(sp =>
+            {
+                var handler = sp.GetService<AuthorizationMessageHandler>()
+                .ConfigureHandler(
+                    authorizedUrls: new[] { appSettings.ResourceServer.Endpoint }
+                 );
+                return handler;
+            });
+
+            builder.Services.AddHttpClient<ConfigurationEntryService, ConfigurationEntryService>(client =>
             {
                 client.BaseAddress = new Uri(appSettings.ResourceServer.Endpoint);
                 client.Timeout = new TimeSpan(0, 0, 30);

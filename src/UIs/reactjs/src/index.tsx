@@ -13,6 +13,8 @@ import AuthService from "./containers/Auth/authService";
 import authReducer from "./containers/Auth/reducer";
 import auditLogReducer from "./containers/AuditLogs/reducer";
 import { watchAuditLog } from "./containers/AuditLogs/sagas";
+import configurationEntryReducer from "./containers/Settings/reducer";
+import { watchConfigurationEntry } from "./containers/Settings/sagas";
 import fileReducer from "./containers/Files/reducer";
 import { watchFile } from "./containers/Files/sagas";
 import productReducer from "./containers/Products/reducer";
@@ -22,11 +24,12 @@ import { watchUser } from "./containers/Users/sagas";
 
 const composeEnhancers =
   (process.env.NODE_ENV === "development"
-    ? window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__']
+    ? window["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"]
     : null) || compose;
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  configurationEntry: configurationEntryReducer,
   file: fileReducer,
   product: productReducer,
   user: userReducer,
@@ -40,6 +43,7 @@ const store = createStore(
   composeEnhancers(applyMiddleware(sagaMiddleware))
 );
 
+sagaMiddleware.run(watchConfigurationEntry);
 sagaMiddleware.run(watchFile);
 sagaMiddleware.run(watchProduct);
 sagaMiddleware.run(watchUser);

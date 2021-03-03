@@ -4,4 +4,4 @@ metadata:
   name: auditlog
 data:
   ASPNETCORE_ENVIRONMENT: "Development"
-  ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+  ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices.AuditLog;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"

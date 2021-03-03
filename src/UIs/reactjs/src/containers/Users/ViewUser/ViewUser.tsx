@@ -250,10 +250,7 @@ class ViewUser extends Component<any, any> {
               </div>
             </div>
             <div className="form-group row">
-              <label
-                htmlFor="description"
-                className="col-sm-4 col-form-label"
-              ></label>
+              <label className="col-sm-4 col-form-label"></label>
               <div className="col-sm-8">
                 <button className="btn btn-primary">Save</button>
               </div>

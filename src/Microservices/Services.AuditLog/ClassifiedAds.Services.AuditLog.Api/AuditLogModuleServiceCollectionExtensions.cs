@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Services.AuditLog.ConfigurationOptions;
 using ClassifiedAds.Services.AuditLog.Entities;
 using ClassifiedAds.Services.AuditLog.Repositories;
 using ClassifiedAds.Services.AuditLog.Services;
@@ -11,13 +12,13 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class AuditLogModuleServiceCollectionExtensions
     {
-        public static IServiceCollection AddAuditLogModule(this IServiceCollection services, string connectionString, string migrationsAssembly = "")
+        public static IServiceCollection AddAuditLogModule(this IServiceCollection services, AppSettings appSettings)
         {
-            services.AddDbContext<AuditLogDbContext>(options => options.UseSqlServer(connectionString, sql =>
+            services.AddDbContext<AuditLogDbContext>(options => options.UseSqlServer(appSettings.ConnectionStrings.ClassifiedAds, sql =>
             {
-                if (!string.IsNullOrEmpty(migrationsAssembly))
+                if (!string.IsNullOrEmpty(appSettings.ConnectionStrings.MigrationsAssembly))
                 {
-                    sql.MigrationsAssembly(migrationsAssembly);
+                    sql.MigrationsAssembly(appSettings.ConnectionStrings.MigrationsAssembly);
                 }
             }))
                 .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>()

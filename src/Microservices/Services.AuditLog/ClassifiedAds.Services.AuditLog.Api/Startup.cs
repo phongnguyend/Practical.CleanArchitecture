@@ -1,6 +1,6 @@
 using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Web.Filters;
-using ClassifiedAds.Services.AuditLog.Api.ConfigurationOptions;
+using ClassifiedAds.Services.AuditLog.ConfigurationOptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -49,7 +49,7 @@ namespace ClassifiedAds.Services.AuditLog
             services.AddDateTimeProvider();
             services.AddApplicationServices();
 
-            services.AddAuditLogModule(AppSettings.ConnectionStrings.ClassifiedAds);
+            services.AddAuditLogModule(AppSettings);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

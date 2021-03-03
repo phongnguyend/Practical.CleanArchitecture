@@ -31,5 +31,7 @@ namespace ClassifiedAds.WebAPI.ConfigurationOptions
         public Dictionary<string, string> SecurityHeaders { get; set; }
 
         public InterceptorsOptions Interceptors { get; set; }
+
+        public CertificatesOptions Certificates { get; set; }
     }
 }

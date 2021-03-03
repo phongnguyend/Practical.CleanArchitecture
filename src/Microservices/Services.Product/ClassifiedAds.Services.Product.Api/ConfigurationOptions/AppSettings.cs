@@ -6,7 +6,7 @@ using ClassifiedAds.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Storages;
 
-namespace ClassifiedAds.Services.Product.Api.ConfigurationOptions
+namespace ClassifiedAds.Services.Product.ConfigurationOptions
 {
     public class AppSettings
     {
@@ -32,6 +32,8 @@ namespace ClassifiedAds.Services.Product.Api.ConfigurationOptions
     public class ConnectionStrings
     {
         public string ClassifiedAds { get; set; }
+
+        public string MigrationsAssembly { get; set; }
     }
 
     public class IdentityServerAuthentication

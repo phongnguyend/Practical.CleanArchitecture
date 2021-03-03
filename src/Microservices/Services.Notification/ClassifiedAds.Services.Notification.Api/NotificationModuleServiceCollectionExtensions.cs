@@ -1,7 +1,6 @@
 ﻿using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Infrastructure.MessageBrokers;
-using ClassifiedAds.Infrastructure.Notification;
+using ClassifiedAds.Services.Notification.ConfigurationOptions;
 using ClassifiedAds.Services.Notification.DTOs;
 using ClassifiedAds.Services.Notification.Entities;
 using ClassifiedAds.Services.Notification.Repositories;
@@ -15,14 +14,14 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class NotificationModuleServiceCollectionExtensions
     {
-        public static IServiceCollection AddNotificationModule(this IServiceCollection services, MessageBrokerOptions messageBrokerOptions, NotificationOptions notificationOptions, string connectionString, string migrationsAssembly = "")
+        public static IServiceCollection AddNotificationModule(this IServiceCollection services, AppSettings appSettings)
         {
             services
-                .AddDbContext<NotificationDbContext>(options => options.UseSqlServer(connectionString, sql =>
+                .AddDbContext<NotificationDbContext>(options => options.UseSqlServer(appSettings.ConnectionStrings.ClassifiedAds, sql =>
                 {
-                    if (!string.IsNullOrEmpty(migrationsAssembly))
+                    if (!string.IsNullOrEmpty(appSettings.ConnectionStrings.MigrationsAssembly))
                     {
-                        sql.MigrationsAssembly(migrationsAssembly);
+                        sql.MigrationsAssembly(appSettings.ConnectionStrings.MigrationsAssembly);
                     }
                 }))
                 .AddScoped<IRepository<EmailMessage, Guid>, Repository<EmailMessage, Guid>>()
@@ -40,12 +39,12 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
             services
-                .AddMessageBusSender<EmailMessageCreatedEvent>(messageBrokerOptions)
-                .AddMessageBusSender<SmsMessageCreatedEvent>(messageBrokerOptions)
-                .AddMessageBusReceiver<EmailMessageCreatedEvent>(messageBrokerOptions)
-                .AddMessageBusReceiver<SmsMessageCreatedEvent>(messageBrokerOptions);
+                .AddMessageBusSender<EmailMessageCreatedEvent>(appSettings.MessageBroker)
+                .AddMessageBusSender<SmsMessageCreatedEvent>(appSettings.MessageBroker)
+                .AddMessageBusReceiver<EmailMessageCreatedEvent>(appSettings.MessageBroker)
+                .AddMessageBusReceiver<SmsMessageCreatedEvent>(appSettings.MessageBroker);
 
-            services.AddNotificationServices(notificationOptions);
+            services.AddNotificationServices(appSettings.Notification);
 
             return services;
         }

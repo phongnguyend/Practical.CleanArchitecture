@@ -48,3 +48,5 @@ docker push phongnguyend/classifiedads.services.product.api
 docker tag classifiedads.services.storage.api phongnguyend/classifiedads.services.storage.api
 docker push phongnguyend/classifiedads.services.storage.api
 
+--- ---
+docker-compose -f docker-compose.yml -f docker-compose.volumes.yml up

@@ -5,6 +5,7 @@ import { IFile } from "../file";
 import { NgModel, NgForm } from "@angular/forms";
 import { IAuditLogEntry } from "src/app/auditlogs/audit-log";
 import { BsModalService } from "ngx-bootstrap";
+import { GuidEmpty } from "src/app/shared/constants";
 
 @Component({
   selector: "app-edit-file",
@@ -13,7 +14,7 @@ import { BsModalService } from "ngx-bootstrap";
 })
 export class EditFileComponent implements OnInit {
   file: IFile = {
-    id: "00000000-0000-0000-0000-000000000000",
+    id: GuidEmpty,
     name: null,
     description: null,
     uploadedTime: null,

@@ -4,6 +4,7 @@
 /src/Monolith/ClassifiedAds.Migrator/Migrations/
 /src/ModularMonolith/ClassifiedAds.Migrator/Migrations/
 /src/Microservices/Services.AuditLog/ClassifiedAds.Services.AuditLog.Api/Migrations/
+/src/Microservices/Services.Configuration/ClassifiedAds.Services.Configuration.Api/Migrations/
 /src/Microservices/Services.Identity/ClassifiedAds.Services.Identity.Api/Migrations/
 /src/Microservices/Services.Identity/ClassifiedAds.Services.Identity.AuthServer/Migrations/
 /src/Microservices/Services.Notification/ClassifiedAds.Services.Notification.Api/Migrations/

@@ -1,6 +1,6 @@
 using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Web.Filters;
-using ClassifiedAds.Services.Product.Api.ConfigurationOptions;
+using ClassifiedAds.Services.Product.ConfigurationOptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -49,7 +49,7 @@ namespace ClassifiedAds.Services.Product
             services.AddDateTimeProvider();
             services.AddApplicationServices();
 
-            services.AddProductModule(AppSettings.ConnectionStrings.ClassifiedAds);
+            services.AddProductModule(AppSettings);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>

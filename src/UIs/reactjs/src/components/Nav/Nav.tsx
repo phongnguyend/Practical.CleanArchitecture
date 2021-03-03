@@ -5,8 +5,8 @@ import { connect } from "react-redux";
 import classes from "./Nav.module.css";
 
 type Props = {
-  authService: any
-}
+  authService: any;
+};
 
 class Nav extends Component<Props> {
   render() {
@@ -22,6 +22,11 @@ class Nav extends Component<Props> {
           <li>
             <NavLink className="nav-link" to="/home">
               Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink className="nav-link" to="/settings">
+              Settings
             </NavLink>
           </li>
           <li>

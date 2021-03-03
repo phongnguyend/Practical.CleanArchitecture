@@ -1,5 +1,5 @@
 using ClassifiedAds.Infrastructure.DistributedTracing;
-using ClassifiedAds.Services.Notification.Api.ConfigurationOptions;
+using ClassifiedAds.Services.Notification.ConfigurationOptions;
 using ClassifiedAds.Services.Notification.Grpc.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -36,7 +36,7 @@ namespace ClassifiedAds.Services.Notification.Grpc
             services.AddDateTimeProvider();
             services.AddApplicationServices();
 
-            services.AddNotificationModule(AppSettings.MessageBroker, AppSettings.Notification, AppSettings.ConnectionStrings.ClassifiedAds);
+            services.AddNotificationModule(AppSettings);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

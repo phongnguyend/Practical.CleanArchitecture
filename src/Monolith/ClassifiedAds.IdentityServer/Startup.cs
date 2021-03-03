@@ -1,7 +1,4 @@
-﻿using System;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using ClassifiedAds.Application.EmailMessages.DTOs;
+﻿using ClassifiedAds.Application.EmailMessages.DTOs;
 using ClassifiedAds.Application.SmsMessages.DTOs;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.IdentityServer.ConfigurationOptions;
@@ -14,6 +11,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.IdentityServer
 {
@@ -65,7 +64,7 @@ namespace ClassifiedAds.IdentityServer
                     .AddIdentity();
 
             services.AddIdentityServer()
-                    .AddSigningCredential(new X509Certificate2(AppSettings.Certificates.Default.Path, AppSettings.Certificates.Default.Password))
+                    .AddSigningCredential(AppSettings.Certificates.Default.FindCertificate())
                     .AddAspNetIdentity<User>()
                     .AddIdServerPersistence(AppSettings.ConnectionStrings.ClassifiedAds);
 

@@ -3,21 +3,22 @@ import { IProduct } from "../product";
 import { NgModel, NgForm } from "@angular/forms";
 import { ProductService } from "../product.service";
 import { Router } from "@angular/router";
+import { GuidEmpty } from "src/app/shared/constants";
 
 @Component({
   templateUrl: "./add-product.component.html",
-  styleUrls: ["./add-product.component.css"]
+  styleUrls: ["./add-product.component.css"],
 })
 export class AddProductComponent implements OnInit {
   product: IProduct = {
-    id: "00000000-0000-0000-0000-000000000000",
+    id: GuidEmpty,
     name: null,
     code: null,
     description: null,
     imageUrl: null,
     price: null,
     releaseDate: null,
-    starRating: null
+    starRating: null,
   };
   postErrorMessage: string = "";
   postError = false;
@@ -39,12 +40,12 @@ export class AddProductComponent implements OnInit {
 
     if (form.valid) {
       this.productService.addProduct(this.product).subscribe(
-        result => {
+        (result) => {
           console.log("success: ", result);
           this.isDirty = false;
           this.router.navigate(["/products", result.id]);
         },
-        error => this.onHttpError(error)
+        (error) => this.onHttpError(error)
       );
     } else {
       this.postError = true;

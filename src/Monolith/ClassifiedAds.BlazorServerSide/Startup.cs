@@ -2,6 +2,7 @@ using ClassifiedAds.Blazor.Modules.AuditLogs.Services;
 using ClassifiedAds.Blazor.Modules.Core.Services;
 using ClassifiedAds.Blazor.Modules.Files.Services;
 using ClassifiedAds.Blazor.Modules.Products.Services;
+using ClassifiedAds.Blazor.Modules.Settings.Services;
 using ClassifiedAds.Blazor.Modules.Users.Services;
 using ClassifiedAds.BlazorServerSide.ConfigurationOptions;
 using ClassifiedAds.BlazorServerSide.Services;
@@ -13,7 +14,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Net.Http;
 
 namespace ClassifiedAds.BlazorServerSide
 {
@@ -59,6 +59,12 @@ namespace ClassifiedAds.BlazorServerSide
             services.AddScoped<ITokenManager, TokenManager>();
             services.AddScoped<TokenProvider>();
             services.AddHttpClient<FileService, FileService>(client =>
+            {
+                client.BaseAddress = new Uri(AppSettings.ResourceServer.Endpoint);
+                client.Timeout = new TimeSpan(0, 0, 30);
+                client.DefaultRequestHeaders.Clear();
+            });
+            services.AddHttpClient<ConfigurationEntryService, ConfigurationEntryService>(client =>
             {
                 client.BaseAddress = new Uri(AppSettings.ResourceServer.Endpoint);
                 client.Timeout = new TimeSpan(0, 0, 30);

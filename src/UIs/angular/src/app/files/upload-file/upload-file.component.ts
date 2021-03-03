@@ -3,6 +3,7 @@ import { IFile } from "../file";
 import { Router, ActivatedRoute } from "@angular/router";
 import { FileService } from "../file.service";
 import { NgModel, NgForm } from "@angular/forms";
+import { GuidEmpty } from "src/app/shared/constants";
 
 @Component({
   selector: "app-upload-file",
@@ -11,7 +12,7 @@ import { NgModel, NgForm } from "@angular/forms";
 })
 export class UploadFileComponent implements OnInit {
   file: IFile = {
-    id: "00000000-0000-0000-0000-000000000000",
+    id: GuidEmpty,
     name: null,
     description: null,
     uploadedTime: null,
