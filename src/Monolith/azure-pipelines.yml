@@ -66,12 +66,50 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
+      - task: UseDotNet@2
+        displayName: Use .Net 5.0.200
+        inputs:
+          packageType: 'sdk'
+          version: '5.0.200'
+      - task: DotNetCoreCLI@2
+        displayName: dotnet restore
+        inputs:
+          command: 'restore'
+          projects: 'src/Monolith/ClassifiedAds.Monolith.sln'
+          feedsToUse: 'select'
+      - task: DotNetCoreCLI@2
+        displayName: dotnet list package --vulnerable
+        inputs:
+          command: 'custom'
+          custom: 'list'
+          arguments: 'package --vulnerable'
+          workingDirectory: 'src/Monolith'
       - task: DotNetCoreCLI@2
         displayName: Build
         inputs:
           command: 'build'
           arguments: '--configuration Release'
           workingDirectory: 'src/Monolith'
+      - task: DotNetCoreCLI@2
+        displayName: Test
+        inputs:
+          command: 'test'
+          projects: |
+            src/Monolith/ClassifiedAds.ArchTests/*.csproj
+            src/Monolith/ClassifiedAds.ContractTests/*.csproj
+            src/Monolith/ClassifiedAds.UnitTests/*.csproj
+          arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+      - task: reportgenerator@4
+        displayName: Generate Test Report
+        inputs:
+          reports: '$(Build.SourcesDirectory)/**/*.cobertura.xml'
+          targetdir: '$(Build.SourcesDirectory)/CoverageResults'
+          assemblyfilters: '+ClassifiedAds.Application;+ClassifiedAds.Domain'
+      - task: PublishCodeCoverageResults@1
+        displayName: 'Publish Code Coverage'
+        inputs:
+          codeCoverageTool: Cobertura
+          summaryFileLocation: '$(Build.SourcesDirectory)/CoverageResults/Cobertura.xml'
       - task: DotNetCoreCLI@2
         displayName: Publish
         inputs:
