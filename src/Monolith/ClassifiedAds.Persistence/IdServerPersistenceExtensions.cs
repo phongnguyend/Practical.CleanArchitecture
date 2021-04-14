@@ -81,7 +81,6 @@ namespace Microsoft.Extensions.DependencyInjection
                         {
                             new Secret("secret".Sha256()),
                         },
-                        AllowOfflineAccess = true,
                         RequireConsent = false,
                     });
                 }

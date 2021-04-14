@@ -136,7 +136,6 @@ namespace ClassifiedAds.WebAPI
                                 { "openid", "OpenId" },
                                 { "profile", "Profile" },
                                 { "ClassifiedAds.WebAPI", "ClassifiedAds WebAPI" },
-                                { "offline_access", "Offline Access" },
                             },
                         },
                     },

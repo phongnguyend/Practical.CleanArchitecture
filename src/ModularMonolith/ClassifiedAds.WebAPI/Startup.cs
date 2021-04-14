@@ -169,12 +169,31 @@ namespace ClassifiedAds.WebAPI
                         },
                     });
 
-                setupAction.AddSecurityDefinition("bearer", new OpenApiSecurityScheme()
+                setupAction.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
                     Type = SecuritySchemeType.Http,
-                    Scheme = "bearer",
+                    Scheme = "Bearer",
                     BearerFormat = "JWT",
                     Description = "Input your Bearer token to access this API",
+                });
+
+                setupAction.AddSecurityDefinition("Oidc", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
+                    {
+                        AuthorizationCode = new OpenApiOAuthFlow
+                        {
+                            TokenUrl = new Uri(AppSettings.IdentityServerAuthentication.Authority + "/connect/token", UriKind.Absolute),
+                            AuthorizationUrl = new Uri(AppSettings.IdentityServerAuthentication.Authority + "/connect/authorize", UriKind.Absolute),
+                            Scopes = new Dictionary<string, string>
+                            {
+                                { "openid", "OpenId" },
+                                { "profile", "Profile" },
+                                { "ClassifiedAds.WebAPI", "ClassifiedAds WebAPI" },
+                            },
+                        },
+                    },
                 });
 
                 setupAction.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -185,7 +204,17 @@ namespace ClassifiedAds.WebAPI
                             Reference = new OpenApiReference
                             {
                                 Type = ReferenceType.SecurityScheme,
-                                Id = "bearer",
+                                Id = "Oidc",
+                            },
+                        }, new List<string>()
+                    },
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer",
                             },
                         }, new List<string>()
                     },
@@ -214,6 +243,10 @@ namespace ClassifiedAds.WebAPI
 
             app.UseSwaggerUI(setupAction =>
             {
+                setupAction.OAuthClientId("Swagger");
+                setupAction.OAuthClientSecret("secret");
+                setupAction.OAuthUsePkce();
+
                 setupAction.SwaggerEndpoint(
                     "/swagger/ClassifiedAds/swagger.json",
                     "ClassifiedAds API");
