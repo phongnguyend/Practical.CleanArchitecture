@@ -48,6 +48,7 @@ az sql db create --resource-group "ClassifiedAds_DEV" \
                  --name "classifiedadsdevdb" \
                  --server  "classifiedadsdev" \
                  --service-objective Basic \
+                 --backup-storage-redundancy Local \
                  --tags "Environment=Development" "Project=ClassifiedAds" "Department=SD"
 ```
 
