@@ -128,7 +128,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.Configure<PasswordHasherOptions>(option =>
             {
-                option.IterationCount = 10000;
+                // option.IterationCount = 10000;
+                // option.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2;
             });
 
             services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
