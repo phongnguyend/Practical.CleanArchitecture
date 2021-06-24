@@ -63,7 +63,11 @@ namespace ClassifiedAds.IdentityServer
                     .ConfigureInterceptors()
                     .AddIdentity();
 
-            services.AddIdentityServer()
+            services.AddIdentityServer(options =>
+                    {
+                        options.InputLengthRestrictions.Password = int.MaxValue;
+                        options.InputLengthRestrictions.UserName = int.MaxValue;
+                    })
                     .AddSigningCredential(AppSettings.Certificates.Default.FindCertificate())
                     .AddAspNetIdentity<User>()
                     .AddIdServerPersistence(AppSettings.ConnectionStrings.ClassifiedAds);
