@@ -33,4 +33,15 @@
     <ProjectReference Include="..\..\Common\ClassifiedAds.Infrastructure\ClassifiedAds.Infrastructure.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <PreserveCompilationReferences>true</PreserveCompilationReferences>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Content Update="Templates\ProductList.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

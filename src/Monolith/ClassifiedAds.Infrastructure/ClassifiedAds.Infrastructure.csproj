@@ -30,6 +30,7 @@
     <PackageReference Include="Confluent.Kafka" Version="1.5.2" />
     <PackageReference Include="CryptographyHelper" Version="1.0.0-beta4" />
     <PackageReference Include="Dapper.StrongName" Version="2.0.35" />
+    <PackageReference Include="DinkToPdf" Version="1.0.8" />
     <PackageReference Include="IdentityModel" Version="4.4.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.16.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.0" />
@@ -58,7 +59,9 @@
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc1.1" />
     <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc1.1" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc1.1" />
+    <PackageReference Include="PuppeteerSharp" Version="4.0.0" />
     <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
+    <PackageReference Include="RazorLight" Version="2.0.0-rc.3" />
     <PackageReference Include="SendGrid" Version="9.21.2" />
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
@@ -75,6 +78,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ClassifiedAds.Domain\ClassifiedAds.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ContentWithTargetPath Include="..\libs\libwkhtmltox\libwkhtmltox-0.12.4-x64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>libwkhtmltox.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="..\libs\libwkhtmltox\libwkhtmltox-0.12.4-x64.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>libwkhtmltox.so</TargetPath>
+    </ContentWithTargetPath>
   </ItemGroup>
 
 </Project>

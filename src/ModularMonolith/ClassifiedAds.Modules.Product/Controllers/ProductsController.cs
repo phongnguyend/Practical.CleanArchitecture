@@ -1,4 +1,6 @@
 ﻿using ClassifiedAds.Application;
+using ClassifiedAds.CrossCuttingConcerns.HtmlGenerator;
+using ClassifiedAds.CrossCuttingConcerns.PdfConverter;
 using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
 using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
 using ClassifiedAds.Modules.Product.Authorization.Policies.Products;
@@ -12,7 +14,9 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Product.Controllers
@@ -25,11 +29,17 @@ namespace ClassifiedAds.Modules.Product.Controllers
     {
         private readonly Dispatcher _dispatcher;
         private readonly ILogger _logger;
+        private readonly IHtmlGenerator _htmlGenerator;
+        private readonly IPdfConverter _pdfConverter;
 
-        public ProductsController(Dispatcher dispatcher, ILogger<ProductsController> logger)
+        public ProductsController(Dispatcher dispatcher, ILogger<ProductsController> logger,
+            IHtmlGenerator htmlGenerator,
+            IPdfConverter pdfConverter)
         {
             _dispatcher = dispatcher;
             _logger = logger;
+            _htmlGenerator = htmlGenerator;
+            _pdfConverter = pdfConverter;
         }
 
         [AuthorizePolicy(typeof(GetProductsPolicy))]
@@ -131,6 +141,19 @@ namespace ClassifiedAds.Modules.Product.Controllers
             }
 
             return Ok(entries.OrderByDescending(x => x.CreatedDateTime));
+        }
+
+        [HttpGet("exportaspdf")]
+        public async Task<IActionResult> ExportAsPdf()
+        {
+            var products = await _dispatcher.DispatchAsync(new GetProductsQuery());
+            var model = products.ToModels();
+
+            var template = Path.Combine(Environment.CurrentDirectory, $"Templates/ProductList.cshtml");
+            var html = await _htmlGenerator.GenerateAsync(template, model);
+            var pdf = await _pdfConverter.ConvertAsync(html);
+
+            return File(pdf, MediaTypeNames.Application.Octet, "Products.pdf");
         }
     }
 }

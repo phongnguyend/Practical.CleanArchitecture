@@ -172,6 +172,8 @@ namespace ClassifiedAds.WebAPI
             services.AddScoped<ICurrentUser, CurrentWebUser>();
 
             services.AddStorageManager(AppSettings.Storage);
+            services.AddHtmlGenerator();
+            services.AddDinkToPdfConverter();
 
             services.AddMessageBusSender<FileUploadedEvent>(AppSettings.MessageBroker);
             services.AddMessageBusSender<FileDeletedEvent>(AppSettings.MessageBroker);

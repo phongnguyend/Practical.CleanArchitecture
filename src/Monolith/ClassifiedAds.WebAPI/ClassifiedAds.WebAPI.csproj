@@ -25,6 +25,17 @@
     <ProjectReference Include="..\ClassifiedAds.Persistence\ClassifiedAds.Persistence.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <PreserveCompilationReferences>true</PreserveCompilationReferences>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Content Update="Templates\ProductList.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
   <ItemGroup>
     <None Update="Certs\classifiedads.secretsencryption.pfx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

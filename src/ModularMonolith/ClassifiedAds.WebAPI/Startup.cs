@@ -135,6 +135,9 @@ namespace ClassifiedAds.WebAPI
             })
             .AddApplicationServices();
 
+            services.AddHtmlGenerator();
+            services.AddDinkToPdfConverter();
+
             services.AddDataProtection()
                 .PersistKeysToDbContext<IdentityDbContext>()
                 .SetApplicationName("ClassifiedAds");

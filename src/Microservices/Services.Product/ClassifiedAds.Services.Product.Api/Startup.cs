@@ -49,6 +49,9 @@ namespace ClassifiedAds.Services.Product
             services.AddDateTimeProvider();
             services.AddApplicationServices();
 
+            services.AddHtmlGenerator();
+            services.AddDinkToPdfConverter();
+
             services.AddProductModule(AppSettings);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
