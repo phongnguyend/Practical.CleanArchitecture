@@ -2,12 +2,15 @@
   <div class="card">
     <div class="card-header">
       {{ pageTitle }}
-      <router-link
-        class="btn btn-primary"
-        style="float: right;"
-        to="/products/add"
-        >Add Product</router-link
-      >
+      <div style="float: right">
+        <button type="button" class="btn btn-secondary" @click="exportAsPdf">
+          Export as Pdf
+        </button>
+        &nbsp;
+        <router-link class="btn btn-primary" to="/products/add"
+          >Add Product</router-link
+        >
+      </div>
     </div>
     <div class="card-body">
       <div class="row">
@@ -200,6 +203,16 @@ export default Vue.extend({
       axios.get(product.id + "/auditLogs").then(rs => {
         this.auditLogs = rs.data;
         this.$bvModal.show("modal-audit-logs");
+      });
+    },
+    exportAsPdf() {
+      axios.get("/ExportAsPdf", { responseType: "blob" }).then(rs => {
+        const url = window.URL.createObjectURL(rs.data);
+        const element = document.createElement("a");
+        element.href = url;
+        element.download = "Products.pdf";
+        document.body.appendChild(element);
+        element.click();
       });
     }
   },

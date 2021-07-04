@@ -6,6 +6,7 @@ import { Modal, Button } from "react-bootstrap";
 import logo from "../../../logo.svg";
 import * as actions from "../actions";
 import Star from "../../../components/Star/Star";
+import axios from "../axios";
 
 class ListProducts extends Component<any, any> {
   state = {
@@ -13,7 +14,7 @@ class ListProducts extends Component<any, any> {
     showImage: false,
     showDeleteModal: false,
     deletingProduct: {
-      name: null
+      name: null,
     },
     listFilter: "",
     showAuditLogsModal: false,
@@ -42,6 +43,17 @@ class ListProducts extends Component<any, any> {
   viewAuditLogs = (product) => {
     this.props.fetchAuditLogs(product);
     this.setState({ showAuditLogsModal: true });
+  };
+
+  exportAsPdf = () => {
+    axios.get("/ExportAsPdf", { responseType: "blob" }).then((rs) => {
+      const url = window.URL.createObjectURL(rs.data);
+      const element = document.createElement("a");
+      element.href = url;
+      element.download = "Products.pdf";
+      document.body.appendChild(element);
+      element.click();
+    });
   };
 
   deleteProduct = (product) => {
@@ -209,13 +221,19 @@ class ListProducts extends Component<any, any> {
         <div className="card">
           <div className="card-header">
             {this.state.pageTitle}
-            <NavLink
-              className="btn btn-primary"
-              style={{ float: "right" }}
-              to="/products/add"
-            >
-              Add Product
-            </NavLink>
+            <div style={{ float: "right" }}>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={this.exportAsPdf}
+              >
+                Export as Pdf
+              </button>
+              &nbsp;
+              <NavLink className="btn btn-primary" to="/products/add">
+                Add Product
+              </NavLink>
+            </div>
           </div>
           <div className="card-body">
             <div className="row">

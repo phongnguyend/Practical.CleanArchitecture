@@ -9,5 +9,7 @@
         public ResourceServer GraphQL { get; set; }
 
         public LoginOptions Login { get; set; }
+
+        public string DownloadsFolder { get; set; }
     }
 }

@@ -1,14 +1,19 @@
 <div class="card">
   <div class="card-header">
     {{ pageTitle }}
-    <a
-      class="btn btn-primary"
-      style="float: right;"
-      routerLinkActive="active"
-      [routerLink]="['/products/add']"
-    >
-      Add Product
-    </a>
+    <div style="float: right">
+      <button type="button" class="btn btn-secondary" (click)="exportAsPdf()">
+        Export as Pdf
+      </button>
+      &nbsp;
+      <a
+        class="btn btn-primary"
+        routerLinkActive="active"
+        [routerLink]="['/products/add']"
+      >
+        Add Product
+      </a>
+    </div>
   </div>
   <div class="card-body">
     <div class="row">

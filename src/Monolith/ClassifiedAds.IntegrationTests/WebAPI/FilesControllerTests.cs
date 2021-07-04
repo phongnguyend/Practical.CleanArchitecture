@@ -3,6 +3,7 @@ using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.WebAPI.Models.Files;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -54,6 +55,16 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
         {
             var updatedProduct = await PutAsync<FileEntryModel>($"api/files/{id}", file);
             return updatedProduct;
+        }
+
+        private async Task DownloadFileAsync(FileEntryModel file)
+        {
+            var path = Path.Combine(AppSettings.DownloadsFolder, "Practical.CleanArchitecture", file.Id.ToString());
+            Directory.CreateDirectory(path);
+
+            using var response = await _httpClient.GetAsync($"api/files/{file.Id}/download");
+            using var fileStream = new FileStream(Path.Combine(path, file.FileName), FileMode.CreateNew);
+            await response.Content.CopyToAsync(fileStream);
         }
 
         private async Task DeleteFile(Guid id)
@@ -111,6 +122,11 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             Assert.Equal(3, auditLogs.Count);
             Assert.Single(auditLogs, x => x.Action == "CREATED");
             Assert.Equal(2, auditLogs.Count(x => x.Action == "UPDATED"));
+
+            // DOWNLOAD
+            await DownloadFileAsync(createdFile);
+            var path = Path.Combine(AppSettings.DownloadsFolder, "Practical.CleanArchitecture", createdFile.Id.ToString(), createdFile.FileName);
+            Assert.True(File.Exists(path));
 
             // DELETE
             await DeleteFile(createdFile.Id);

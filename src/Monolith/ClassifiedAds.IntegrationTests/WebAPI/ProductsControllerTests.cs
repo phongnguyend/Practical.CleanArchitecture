@@ -3,6 +3,7 @@ using ClassifiedAds.Domain.Entities;
 using Polly;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -60,6 +61,15 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             return auditLogs;
         }
 
+        private async Task ExportAsPdfAsync(string path, string fileName)
+        {
+            Directory.CreateDirectory(path);
+
+            using var response = await _httpClient.GetAsync($"api/products/ExportAsPdf");
+            using var fileStream = new FileStream(Path.Combine(path, fileName), FileMode.CreateNew);
+            await response.Content.CopyToAsync(fileStream);
+        }
+
         [Fact]
         public async Task AllInOne()
         {
@@ -105,6 +115,11 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             Assert.Equal(2, auditLogs.Count);
             Assert.Single(auditLogs, x => x.Action == "CREATED");
             Assert.Equal(1, auditLogs.Count(x => x.Action == "UPDATED"));
+
+            // EXPORT PDF
+            var path = Path.Combine(AppSettings.DownloadsFolder, "Practical.CleanArchitecture", Guid.NewGuid().ToString());
+            await ExportAsPdfAsync(path, "Products.pdf");
+            Assert.True(File.Exists(Path.Combine(path, "Products.pdf")));
 
             // DELETE
             await DeleteProductAsync(createdProduct.Id);

@@ -85,4 +85,18 @@ export class ListProductsComponent implements OnInit {
       error: (err) => (this.errorMessage = err),
     });
   }
+
+  exportAsPdf() {
+    this.productService.exportAsPdf().subscribe({
+      next: (rs) => {
+        const url = window.URL.createObjectURL(rs);
+        const element = document.createElement("a");
+        element.href = url;
+        element.download = "Products.pdf";
+        document.body.appendChild(element);
+        element.click();
+      },
+      error: (err) => (this.errorMessage = err),
+    });
+  }
 }
