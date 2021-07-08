@@ -70,6 +70,15 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             await response.Content.CopyToAsync(fileStream);
         }
 
+        private async Task ExportAsCsvAsync(string path, string fileName)
+        {
+            Directory.CreateDirectory(path);
+
+            using var response = await _httpClient.GetAsync($"api/products/ExportAsCsv");
+            using var fileStream = new FileStream(Path.Combine(path, fileName), FileMode.CreateNew);
+            await response.Content.CopyToAsync(fileStream);
+        }
+
         [Fact]
         public async Task AllInOne()
         {
@@ -120,6 +129,11 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             var path = Path.Combine(AppSettings.DownloadsFolder, "Practical.CleanArchitecture", Guid.NewGuid().ToString());
             await ExportAsPdfAsync(path, "Products.pdf");
             Assert.True(File.Exists(Path.Combine(path, "Products.pdf")));
+
+            // EXPORT CSV
+            path = Path.Combine(AppSettings.DownloadsFolder, "Practical.CleanArchitecture", Guid.NewGuid().ToString());
+            await ExportAsCsvAsync(path, "Products.csv");
+            Assert.True(File.Exists(Path.Combine(path, "Products.csv")));
 
             // DELETE
             await DeleteProductAsync(createdProduct.Id);

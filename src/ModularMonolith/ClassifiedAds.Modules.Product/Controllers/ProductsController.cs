@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Application;
+using ClassifiedAds.CrossCuttingConcerns.Csv;
 using ClassifiedAds.CrossCuttingConcerns.HtmlGenerator;
 using ClassifiedAds.CrossCuttingConcerns.PdfConverter;
 using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
@@ -31,15 +32,18 @@ namespace ClassifiedAds.Modules.Product.Controllers
         private readonly ILogger _logger;
         private readonly IHtmlGenerator _htmlGenerator;
         private readonly IPdfConverter _pdfConverter;
+        private readonly ICsvWriter<ProductModel> _productCsvWriter;
 
         public ProductsController(Dispatcher dispatcher, ILogger<ProductsController> logger,
             IHtmlGenerator htmlGenerator,
-            IPdfConverter pdfConverter)
+            IPdfConverter pdfConverter,
+            ICsvWriter<ProductModel> productCsvWriter)
         {
             _dispatcher = dispatcher;
             _logger = logger;
             _htmlGenerator = htmlGenerator;
             _pdfConverter = pdfConverter;
+            _productCsvWriter = productCsvWriter;
         }
 
         [AuthorizePolicy(typeof(GetProductsPolicy))]
@@ -154,6 +158,16 @@ namespace ClassifiedAds.Modules.Product.Controllers
             var pdf = await _pdfConverter.ConvertAsync(html);
 
             return File(pdf, MediaTypeNames.Application.Octet, "Products.pdf");
+        }
+
+        [HttpGet("exportascsv")]
+        public async Task<IActionResult> ExportAsCsv()
+        {
+            var products = await _dispatcher.DispatchAsync(new GetProductsQuery());
+            var model = products.ToModels();
+            using var stream = new MemoryStream();
+            _productCsvWriter.Write(model, stream);
+            return File(stream.ToArray(), MediaTypeNames.Application.Octet, "Products.csv");
         }
     }
 }

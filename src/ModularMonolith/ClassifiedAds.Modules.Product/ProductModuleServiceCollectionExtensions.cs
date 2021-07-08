@@ -1,5 +1,7 @@
-﻿using ClassifiedAds.Domain.Events;
+﻿using ClassifiedAds.CrossCuttingConcerns.Csv;
+using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Infrastructure.Csv;
 using ClassifiedAds.Modules.Product.ConfigurationOptions;
 using ClassifiedAds.Modules.Product.Entities;
 using ClassifiedAds.Modules.Product.Repositories;
@@ -36,6 +38,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
             services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
+
+            services.AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>));
 
             return services;
         }
