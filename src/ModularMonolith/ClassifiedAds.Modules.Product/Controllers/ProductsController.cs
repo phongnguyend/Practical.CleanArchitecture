@@ -33,17 +33,20 @@ namespace ClassifiedAds.Modules.Product.Controllers
         private readonly IHtmlGenerator _htmlGenerator;
         private readonly IPdfConverter _pdfConverter;
         private readonly ICsvWriter<ProductModel> _productCsvWriter;
+        private readonly ICsvReader<ProductModel> _productCsvReader;
 
         public ProductsController(Dispatcher dispatcher, ILogger<ProductsController> logger,
             IHtmlGenerator htmlGenerator,
             IPdfConverter pdfConverter,
-            ICsvWriter<ProductModel> productCsvWriter)
+            ICsvWriter<ProductModel> productCsvWriter,
+            ICsvReader<ProductModel> productCsvReader)
         {
             _dispatcher = dispatcher;
             _logger = logger;
             _htmlGenerator = htmlGenerator;
             _pdfConverter = pdfConverter;
             _productCsvWriter = productCsvWriter;
+            _productCsvReader = productCsvReader;
         }
 
         [AuthorizePolicy(typeof(GetProductsPolicy))]
@@ -168,6 +171,16 @@ namespace ClassifiedAds.Modules.Product.Controllers
             using var stream = new MemoryStream();
             _productCsvWriter.Write(model, stream);
             return File(stream.ToArray(), MediaTypeNames.Application.Octet, "Products.csv");
+        }
+
+        [HttpPost("importcsv")]
+        public IActionResult Upload([FromForm] UploadFileModel model)
+        {
+            using (var stream = model.FormFile.OpenReadStream())
+            {
+                var products = _productCsvReader.Read(stream);
+                return Ok(products);
+            }
         }
     }
 }

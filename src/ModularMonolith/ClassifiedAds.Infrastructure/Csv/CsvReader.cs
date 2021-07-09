@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace ClassifiedAds.Infrastructure.Csv
 {
@@ -11,7 +12,7 @@ namespace ClassifiedAds.Infrastructure.Csv
         {
             using var reader = new StreamReader(stream);
             using var csv = new CsvHelper.CsvReader(reader, CultureInfo.InvariantCulture);
-            return csv.GetRecords<T>();
+            return csv.GetRecords<T>().ToList();
         }
     }
 }

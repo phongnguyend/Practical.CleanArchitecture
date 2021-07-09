@@ -39,6 +39,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
 
+            services.AddScoped(typeof(ICsvReader<>), typeof(CsvReader<>));
             services.AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>));
 
             return services;

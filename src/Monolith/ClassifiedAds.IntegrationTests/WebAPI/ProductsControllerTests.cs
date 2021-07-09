@@ -1,4 +1,5 @@
 using ClassifiedAds.Application.AuditLogEntries.DTOs;
+using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Domain.Entities;
 using Polly;
 using System;
@@ -6,6 +7,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -79,6 +82,21 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             await response.Content.CopyToAsync(fileStream);
         }
 
+        private async Task<List<Product>> ImportCsvAsync(string filePath)
+        {
+            using var form = new MultipartFormDataContent();
+            using var fileContent = new ByteArrayContent(File.ReadAllBytes(filePath));
+            fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+            form.Add(fileContent, "formFile", "Products.csv");
+            form.Add(new StringContent("Products.csv"), "name");
+
+            var response = await _httpClient.PostAsync($"api/products/ImportCsv", form);
+            response.EnsureSuccessStatusCode();
+
+            var products = await response.Content.ReadAs<List<Product>>();
+            return products;
+        }
+
         [Fact]
         public async Task AllInOne()
         {
@@ -130,10 +148,14 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             await ExportAsPdfAsync(path, "Products.pdf");
             Assert.True(File.Exists(Path.Combine(path, "Products.pdf")));
 
-            // EXPORT CSV
-            path = Path.Combine(AppSettings.DownloadsFolder, "Practical.CleanArchitecture", Guid.NewGuid().ToString());
-            await ExportAsCsvAsync(path, "Products.csv");
-            Assert.True(File.Exists(Path.Combine(path, "Products.csv")));
+            //// EXPORT CSV
+            //path = Path.Combine(AppSettings.DownloadsFolder, "Practical.CleanArchitecture", Guid.NewGuid().ToString());
+            //await ExportAsCsvAsync(path, "Products.csv");
+            //Assert.True(File.Exists(Path.Combine(path, "Products.csv")));
+
+            //// IMPORT CSV
+            //var importingProducts = await ImportCsvAsync(Path.Combine(path, "Products.csv"));
+            //Assert.True(importingProducts.Count > 0);
 
             // DELETE
             await DeleteProductAsync(createdProduct.Id);
