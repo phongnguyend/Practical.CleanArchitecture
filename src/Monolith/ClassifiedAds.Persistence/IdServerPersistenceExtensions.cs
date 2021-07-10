@@ -64,7 +64,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     {
                         ClientId = "Swagger",
                         ClientName = "Swagger",
-                        AllowedGrantTypes = GrantTypes.Code,
+                        AllowedGrantTypes = GrantTypes.Code.Combines(GrantTypes.ClientCredentials),
                         RequirePkce = true,
                         RedirectUris =
                         {

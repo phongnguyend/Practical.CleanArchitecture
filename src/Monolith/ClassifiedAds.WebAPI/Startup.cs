@@ -138,6 +138,14 @@ namespace ClassifiedAds.WebAPI
                                 { "ClassifiedAds.WebAPI", "ClassifiedAds WebAPI" },
                             },
                         },
+                        ClientCredentials = new OpenApiOAuthFlow
+                        {
+                            TokenUrl = new Uri(AppSettings.IdentityServerAuthentication.Authority + "/connect/token", UriKind.Absolute),
+                            Scopes = new Dictionary<string, string>
+                            {
+                                { "ClassifiedAds.WebAPI", "ClassifiedAds WebAPI" },
+                            },
+                        },
                     },
                 });
 
