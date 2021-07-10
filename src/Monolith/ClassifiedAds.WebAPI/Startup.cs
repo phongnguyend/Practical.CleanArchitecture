@@ -1,7 +1,9 @@
 ﻿using ClassifiedAds.Application.EmailMessages.DTOs;
 using ClassifiedAds.Application.FileEntries.DTOs;
 using ClassifiedAds.Application.SmsMessages.DTOs;
+using ClassifiedAds.CrossCuttingConcerns.Csv;
 using ClassifiedAds.Domain.Identity;
+using ClassifiedAds.Infrastructure.Csv;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Web.Filters;
@@ -187,6 +189,9 @@ namespace ClassifiedAds.WebAPI
             services.AddMessageBusSender<FileDeletedEvent>(AppSettings.MessageBroker);
             services.AddMessageBusSender<EmailMessageCreatedEvent>(AppSettings.MessageBroker);
             services.AddMessageBusSender<SmsMessageCreatedEvent>(AppSettings.MessageBroker);
+
+            services.AddScoped(typeof(ICsvReader<>), typeof(CsvReader<>));
+            services.AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

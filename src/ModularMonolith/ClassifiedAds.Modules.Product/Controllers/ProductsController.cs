@@ -35,7 +35,8 @@ namespace ClassifiedAds.Modules.Product.Controllers
         private readonly ICsvWriter<ProductModel> _productCsvWriter;
         private readonly ICsvReader<ProductModel> _productCsvReader;
 
-        public ProductsController(Dispatcher dispatcher, ILogger<ProductsController> logger,
+        public ProductsController(Dispatcher dispatcher,
+            ILogger<ProductsController> logger,
             IHtmlGenerator htmlGenerator,
             IPdfConverter pdfConverter,
             ICsvWriter<ProductModel> productCsvWriter,

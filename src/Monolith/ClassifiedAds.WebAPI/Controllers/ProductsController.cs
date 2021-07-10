@@ -4,6 +4,7 @@ using ClassifiedAds.Application.AuditLogEntries.Queries;
 using ClassifiedAds.Application.Products.Commands;
 using ClassifiedAds.Application.Products.DTOs;
 using ClassifiedAds.Application.Products.Queries;
+using ClassifiedAds.CrossCuttingConcerns.Csv;
 using ClassifiedAds.CrossCuttingConcerns.HtmlGenerator;
 using ClassifiedAds.CrossCuttingConcerns.PdfConverter;
 using ClassifiedAds.Domain.Entities;
@@ -34,16 +35,22 @@ namespace ClassifiedAds.WebAPI.Controllers
         private readonly ILogger _logger;
         private readonly IHtmlGenerator _htmlGenerator;
         private readonly IPdfConverter _pdfConverter;
+        private readonly ICsvWriter<ProductModel> _productCsvWriter;
+        private readonly ICsvReader<ProductModel> _productCsvReader;
 
         public ProductsController(Dispatcher dispatcher,
             ILogger<ProductsController> logger,
             IHtmlGenerator htmlGenerator,
-            IPdfConverter pdfConverter)
+            IPdfConverter pdfConverter,
+            ICsvWriter<ProductModel> productCsvWriter,
+            ICsvReader<ProductModel> productCsvReader)
         {
             _dispatcher = dispatcher;
             _logger = logger;
             _htmlGenerator = htmlGenerator;
             _pdfConverter = pdfConverter;
+            _productCsvWriter = productCsvWriter;
+            _productCsvReader = productCsvReader;
         }
 
         [AuthorizePolicy(typeof(GetProductsPolicy))]
@@ -158,6 +165,26 @@ namespace ClassifiedAds.WebAPI.Controllers
             var pdf = await _pdfConverter.ConvertAsync(html);
 
             return File(pdf, MediaTypeNames.Application.Octet, "Products.pdf");
+        }
+
+        [HttpGet("exportascsv")]
+        public async Task<IActionResult> ExportAsCsv()
+        {
+            var products = await _dispatcher.DispatchAsync(new GetProductsQuery());
+            var model = products.ToModels();
+            using var stream = new MemoryStream();
+            _productCsvWriter.Write(model, stream);
+            return File(stream.ToArray(), MediaTypeNames.Application.Octet, "Products.csv");
+        }
+
+        [HttpPost("importcsv")]
+        public IActionResult Upload([FromForm] UploadFileModel model)
+        {
+            using (var stream = model.FormFile.OpenReadStream())
+            {
+                var products = _productCsvReader.Read(stream);
+                return Ok(products);
+            }
         }
     }
 }

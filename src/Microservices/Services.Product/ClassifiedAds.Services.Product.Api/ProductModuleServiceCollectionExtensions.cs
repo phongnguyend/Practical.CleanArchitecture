@@ -1,5 +1,7 @@
-﻿using ClassifiedAds.Domain.Events;
+﻿using ClassifiedAds.CrossCuttingConcerns.Csv;
+using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Infrastructure.Csv;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Services.Product.ConfigurationOptions;
 using ClassifiedAds.Services.Product.Entities;
@@ -36,6 +38,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentWebUser>();
+
+            services.AddScoped(typeof(ICsvReader<>), typeof(CsvReader<>));
+            services.AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>));
 
             return services;
         }

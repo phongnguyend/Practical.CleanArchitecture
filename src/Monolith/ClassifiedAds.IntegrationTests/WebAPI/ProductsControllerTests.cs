@@ -66,8 +66,6 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
 
         private async Task ExportAsPdfAsync(string path, string fileName)
         {
-            Directory.CreateDirectory(path);
-
             using var response = await _httpClient.GetAsync($"api/products/ExportAsPdf");
             using var fileStream = new FileStream(Path.Combine(path, fileName), FileMode.CreateNew);
             await response.Content.CopyToAsync(fileStream);
@@ -75,8 +73,6 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
 
         private async Task ExportAsCsvAsync(string path, string fileName)
         {
-            Directory.CreateDirectory(path);
-
             using var response = await _httpClient.GetAsync($"api/products/ExportAsCsv");
             using var fileStream = new FileStream(Path.Combine(path, fileName), FileMode.CreateNew);
             await response.Content.CopyToAsync(fileStream);
@@ -131,10 +127,10 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             Assert.Equal(refreshedProduct.Description, createdProduct.Description);
 
             // PUT
-            refreshedProduct.Name = "Test 2";
+            refreshedProduct.Name = "Test' 2,2 \"a\"";
             var updatedProduct = await UpdateProductAsync(refreshedProduct.Id, refreshedProduct);
             Assert.Equal(refreshedProduct.Id, updatedProduct.Id);
-            Assert.Equal("Test 2", updatedProduct.Name);
+            Assert.Equal("Test' 2,2 \"a\"", updatedProduct.Name);
             Assert.Equal(refreshedProduct.Code, updatedProduct.Code);
             Assert.Equal(refreshedProduct.Description, updatedProduct.Description);
 
@@ -145,17 +141,18 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
 
             // EXPORT PDF
             var path = Path.Combine(AppSettings.DownloadsFolder, "Practical.CleanArchitecture", Guid.NewGuid().ToString());
+            Directory.CreateDirectory(path);
+
             await ExportAsPdfAsync(path, "Products.pdf");
             Assert.True(File.Exists(Path.Combine(path, "Products.pdf")));
 
-            //// EXPORT CSV
-            //path = Path.Combine(AppSettings.DownloadsFolder, "Practical.CleanArchitecture", Guid.NewGuid().ToString());
-            //await ExportAsCsvAsync(path, "Products.csv");
-            //Assert.True(File.Exists(Path.Combine(path, "Products.csv")));
+            // EXPORT CSV
+            await ExportAsCsvAsync(path, "Products.csv");
+            Assert.True(File.Exists(Path.Combine(path, "Products.csv")));
 
-            //// IMPORT CSV
-            //var importingProducts = await ImportCsvAsync(Path.Combine(path, "Products.csv"));
-            //Assert.True(importingProducts.Count > 0);
+            // IMPORT CSV
+            var importingProducts = await ImportCsvAsync(Path.Combine(path, "Products.csv"));
+            Assert.True(importingProducts.Count > 0);
 
             // DELETE
             await DeleteProductAsync(createdProduct.Id);
