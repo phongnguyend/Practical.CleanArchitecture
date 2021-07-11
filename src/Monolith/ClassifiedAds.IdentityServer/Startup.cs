@@ -42,6 +42,8 @@ namespace ClassifiedAds.IdentityServer
                 options.KnownProxies.Clear();
             });
 
+            services.Configure<AppSettings>(Configuration);
+
             if (AppSettings.CookiePolicyOptions?.IsEnabled ?? false)
             {
                 services.Configure<Microsoft.AspNetCore.Builder.CookiePolicyOptions>(options =>

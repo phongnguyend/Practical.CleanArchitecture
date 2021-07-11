@@ -9,6 +9,7 @@ using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Persistence;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
+using ClassifiedAds.WebAPI.Tenants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -70,7 +71,7 @@ namespace ClassifiedAds.WebAPI
 
             services.AddDateTimeProvider();
 
-            services.AddPersistence(AppSettings.ConnectionStrings.ClassifiedAds)
+            services.AddMultiTenantPersistence(typeof(AdsDbContextMultiTenantConnectionStringResolver), typeof(TenantResolver))
                     .AddDomainServices()
                     .AddApplicationServices((Type serviceType, Type implementationType, ServiceLifetime serviceLifetime) =>
                     {
