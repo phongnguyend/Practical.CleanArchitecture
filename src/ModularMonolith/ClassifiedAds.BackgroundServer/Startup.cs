@@ -4,14 +4,11 @@ using System.Threading;
 using ClassifiedAds.BackgroundServer.ConfigurationOptions;
 using ClassifiedAds.BackgroundServer.HostedServices;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using ClassifiedAds.Infrastructure.HealthChecks;
 using ClassifiedAds.Infrastructure.Notification.Web;
 using ClassifiedAds.Modules.Notification.Contracts.DTOs;
 using ClassifiedAds.Modules.Notification.Hubs;
 using ClassifiedAds.Modules.Notification.Services;
 using ClassifiedAds.Modules.Storage.DTOs;
-using Hangfire;
-using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -48,24 +45,6 @@ namespace ClassifiedAds.BackgroundServer
         {
             services.Configure<AppSettings>(Configuration);
 
-            if (AppSettings.CheckDependency.Enabled)
-            {
-                var hosts = AppSettings.CheckDependency.Host.Split(',');
-                foreach (var host in hosts)
-                {
-                    NetworkPortCheck.Wait(host, 5);
-                }
-            }
-
-            services.AddHangfire(x =>
-            {
-                var options = new SqlServerStorageOptions
-                {
-                    PrepareSchemaIfNecessary = true,
-                };
-                x.UseSqlServerStorage(AppSettings.ConnectionStrings.ClassifiedAds, options);
-            });
-
             services.AddDateTimeProvider();
 
             services.AddNotificationModule(new Modules.Notification.ConfigurationOptions.NotificationModuleOptions
@@ -98,13 +77,11 @@ namespace ClassifiedAds.BackgroundServer
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHangfireServer();
-
             RunMessageBrokerReceivers(app.ApplicationServices.CreateScope().ServiceProvider);
 
             app.Run(async (context) =>
             {
-                await context.Response.WriteAsync("Hello Hangfire Server!");
+                await context.Response.WriteAsync("Hello Background Server!");
             });
         }
 

@@ -11,9 +11,6 @@ using ClassifiedAds.BackgroundServer.ConfigurationOptions;
 using ClassifiedAds.BackgroundServer.HostedServices;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Notification;
-using ClassifiedAds.Infrastructure.HealthChecks;
-using Hangfire;
-using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -50,24 +47,6 @@ namespace ClassifiedAds.BackgroundServer
         {
             services.Configure<AppSettings>(Configuration);
 
-            if (AppSettings.CheckDependency.Enabled)
-            {
-                var hosts = AppSettings.CheckDependency.Host.Split(',');
-                foreach (var host in hosts)
-                {
-                    NetworkPortCheck.Wait(host, 5);
-                }
-            }
-
-            services.AddHangfire(x =>
-            {
-                var options = new SqlServerStorageOptions
-                {
-                    PrepareSchemaIfNecessary = true,
-                };
-                x.UseSqlServerStorage(AppSettings.ConnectionStrings.ClassifiedAds, options);
-            });
-
             services.AddDateTimeProvider();
             services.AddPersistence(AppSettings.ConnectionStrings.ClassifiedAds)
                     .AddDomainServices()
@@ -89,6 +68,7 @@ namespace ClassifiedAds.BackgroundServer
 
             services.AddHostedService<ResendEmailHostedService>();
             services.AddHostedService<ResendSmsHostedService>();
+            services.AddHostedService<ScheduleCronJobHostedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -99,15 +79,11 @@ namespace ClassifiedAds.BackgroundServer
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHangfireServer();
-
-            RecurringJob.AddOrUpdate<SimulatedLongRunningJob>(job => job.Run(), Cron.Minutely);
-
             RunMessageBrokerReceivers(app.ApplicationServices.CreateScope().ServiceProvider);
 
             app.Run(async (context) =>
             {
-                await context.Response.WriteAsync("Hello Hangfire Server!");
+                await context.Response.WriteAsync("Hello Background Server!");
             });
         }
 

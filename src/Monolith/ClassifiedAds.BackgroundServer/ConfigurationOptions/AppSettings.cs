@@ -12,8 +12,6 @@ namespace ClassifiedAds.BackgroundServer.ConfigurationOptions
 
         public LoggingOptions Logging { get; set; }
 
-        public CheckDependency CheckDependency { get; set; }
-
         public string AllowedHosts { get; set; }
 
         public string CurrentUrl { get; set; }

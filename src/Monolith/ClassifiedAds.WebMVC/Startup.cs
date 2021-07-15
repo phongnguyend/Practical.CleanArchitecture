@@ -8,7 +8,6 @@ using ClassifiedAds.WebMVC.ConfigurationOptions;
 using ClassifiedAds.WebMVC.Filters;
 using ClassifiedAds.WebMVC.HttpHandlers;
 using ClassifiedAds.WebMVC.Middleware;
-using Hangfire;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -154,11 +153,6 @@ namespace ClassifiedAds.WebMVC
                 setup.DisableDatabaseMigrations();
             }).AddInMemoryStorage();
 
-            services.AddHangfire(x =>
-            {
-                x.UseSqlServerStorage(AppSettings.ConnectionStrings.ClassifiedAds);
-            });
-
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentWebUser>();
 
@@ -220,12 +214,6 @@ namespace ClassifiedAds.WebMVC
             });
 
             app.UseHealthChecksUI(); // /healthchecks-ui#/healthchecks
-
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions
-            {
-                Authorization = new[] { new HangfireDashboardAuthorizationFilter() },
-                IgnoreAntiforgeryToken = true,
-            });
 
             app.UseEndpoints(endpoints =>
             {
