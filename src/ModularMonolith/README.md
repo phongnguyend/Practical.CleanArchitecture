@@ -125,3 +125,36 @@
   ```
   helm uninstall myrelease
   ```
+  
+# Build Nuget Packages using OctoPack
+
+- Install OctoPack
+  ```
+  dotnet tool install Octopus.DotNet.Cli --global --version 4.39.1
+  dotnet octo --version
+  dotnet tool update Octopus.DotNet.Cli --global
+  dotnet tool uninstall Octopus.DotNet.Cli --global
+  dotnet tool install Octopus.DotNet.Cli --global --version <version>
+  ```
+
+- Build
+  ```
+  dotnet restore ClassifiedAds.Monolith.sln
+
+  dotnet build -c Release
+
+  dotnet publish ./ClassifiedAds.BackgroundServer/ClassifiedAds.BackgroundServer.csproj -c Release -o ./publish/ClassifiedAds.BackgroundServer
+  dotnet publish ./ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj -c Release -o ./publish/ClassifiedAds.IdentityServer
+  dotnet publish ./ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj -c Release -o ./publish/ClassifiedAds.Migrator
+  dotnet publish ./ClassifiedAds.NotificationServer/ClassifiedAds.NotificationServer.csproj -c Release -o ./publish/ClassifiedAds.NotificationServer
+  dotnet publish ./ClassifiedAds.WebAPI/ClassifiedAds.WebAPI.csproj -c Release -o ./publish/ClassifiedAds.WebAPI
+  ```
+
+- Pack
+  ```
+  dotnet octo pack --id=ClassifiedAds.BackgroundServer --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.BackgroundServer --overwrite
+  dotnet octo pack --id=ClassifiedAds.IdentityServer --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.IdentityServer --overwrite
+  dotnet octo pack --id=ClassifiedAds.Migrator --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Migrator --overwrite
+  dotnet octo pack --id=ClassifiedAds.NotificationServer --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.NotificationServer --overwrite
+  dotnet octo pack --id=ClassifiedAds.WebAPI --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.WebAPI --overwrite
+  ```

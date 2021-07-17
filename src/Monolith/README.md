@@ -112,3 +112,44 @@
   ```
   helm uninstall myrelease
   ```
+
+# Build Nuget Packages using OctoPack
+
+- Install OctoPack
+  ```
+  dotnet tool install Octopus.DotNet.Cli --global --version 4.39.1
+  dotnet octo --version
+  dotnet tool update Octopus.DotNet.Cli --global
+  dotnet tool uninstall Octopus.DotNet.Cli --global
+  dotnet tool install Octopus.DotNet.Cli --global --version <version>
+  ```
+
+- Build
+  ```
+  dotnet restore ClassifiedAds.Monolith.sln
+
+  dotnet build -c Release
+
+  dotnet publish ./ClassifiedAds.BackgroundServer/ClassifiedAds.BackgroundServer.csproj -c Release -o ./publish/ClassifiedAds.BackgroundServer
+  dotnet publish ./ClassifiedAds.GraphQL/ClassifiedAds.GraphQL.csproj -c Release -o ./publish/ClassifiedAds.GraphQL
+  dotnet publish ./ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj -c Release -o ./publish/ClassifiedAds.Migrator
+  dotnet publish ./ClassifiedAds.NotificationServer/ClassifiedAds.NotificationServer.csproj -c Release -o ./publish/ClassifiedAds.NotificationServer
+  dotnet publish ./ClassifiedAds.WebAPI/ClassifiedAds.WebAPI.csproj -c Release -o ./publish/ClassifiedAds.WebAPI
+  dotnet publish ./ClassifiedAds.BlazorServerSide/ClassifiedAds.BlazorServerSide.csproj -c Release -o ./publish/ClassifiedAds.BlazorServerSide
+  dotnet publish ./ClassifiedAds.BlazorWebAssembly/ClassifiedAds.BlazorWebAssembly.csproj -c Release -o ./publish/ClassifiedAds.BlazorWebAssembly
+  dotnet publish ./ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj -c Release -o ./publish/ClassifiedAds.IdentityServer
+  dotnet publish ./ClassifiedAds.WebMVC/ClassifiedAds.WebMVC.csproj -c Release -o ./publish/ClassifiedAds.WebMVC
+  ```
+
+- Pack
+  ```
+  dotnet octo pack --id=ClassifiedAds.BackgroundServer --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.BackgroundServer --overwrite
+  dotnet octo pack --id=ClassifiedAds.GraphQL --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.GraphQL --overwrite
+  dotnet octo pack --id=ClassifiedAds.Migrator --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Migrator --overwrite
+  dotnet octo pack --id=ClassifiedAds.NotificationServer --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.NotificationServer --overwrite
+  dotnet octo pack --id=ClassifiedAds.WebAPI --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.WebAPI --overwrite
+  dotnet octo pack --id=ClassifiedAds.BlazorServerSide --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.BlazorServerSide --overwrite
+  dotnet octo pack --id=ClassifiedAds.BlazorWebAssembly --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.BlazorWebAssembly --overwrite
+  dotnet octo pack --id=ClassifiedAds.IdentityServer --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.IdentityServer --overwrite
+  dotnet octo pack --id=ClassifiedAds.WebMVC --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.WebMVC --overwrite
+  ```
