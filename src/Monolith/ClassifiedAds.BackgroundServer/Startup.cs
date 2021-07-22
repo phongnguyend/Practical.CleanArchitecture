@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading;
-using ClassifiedAds.Application.BackgroundTasks;
+﻿using ClassifiedAds.Application.BackgroundTasks;
 using ClassifiedAds.Application.EmailMessages.DTOs;
 using ClassifiedAds.Application.EmailMessages.Services;
 using ClassifiedAds.Application.FileEntries.DTOs;
@@ -17,6 +14,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.BackgroundServer
 {
@@ -98,7 +98,7 @@ namespace ClassifiedAds.BackgroundServer
 
             fileUploadedMessageQueueReceiver?.Receive(async (data, metaData) =>
             {
-                Thread.Sleep(5000); // simulate long running task
+                await Task.Delay(5000); // simulate long running task
 
                 string message = data.FileEntry.Id.ToString();
 
@@ -107,7 +107,7 @@ namespace ClassifiedAds.BackgroundServer
 
             fileDeletedMessageQueueReceiver?.Receive(async (data, metaData) =>
             {
-                Thread.Sleep(5000); // simulate long running task
+                await Task.Delay(5000); // simulate long running task
 
                 string message = data.FileEntry.Id.ToString();
 

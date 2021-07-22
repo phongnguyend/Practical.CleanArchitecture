@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Polly;
 using System;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Storage
 {
@@ -104,16 +104,16 @@ namespace ClassifiedAds.Services.Storage
             var fileUploadedMessageQueueReceiver = serviceProvider.GetService<IMessageReceiver<FileUploadedEvent>>();
             var fileDeletedMessageQueueReceiver = serviceProvider.GetService<IMessageReceiver<FileDeletedEvent>>();
 
-            fileUploadedMessageQueueReceiver?.Receive((data, metaData) =>
+            fileUploadedMessageQueueReceiver?.Receive(async (data, metaData) =>
             {
-                Thread.Sleep(5000); // simulate long running task
+                await Task.Delay(5000); // simulate long running task
 
                 string message = data.FileEntry.Id.ToString();
             });
 
-            fileDeletedMessageQueueReceiver?.Receive((data, metaData) =>
+            fileDeletedMessageQueueReceiver?.Receive(async (data, metaData) =>
             {
-                Thread.Sleep(5000); // simulate long running task
+                await Task.Delay(5000); // simulate long running task
 
                 string message = data.FileEntry.Id.ToString();
             });
