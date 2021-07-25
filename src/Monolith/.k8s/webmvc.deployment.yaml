@@ -31,10 +31,6 @@ spec:
           value: None
         - name: CurrentUrl
           value: http://host.docker.internal:9003
-        - name: NotificationServer__Endpoint
-          value: http://notificationserver
-        - name: NotificationServer__PublicEndpoint
-          value: http://localhost:9001
         - name: OpenIdConnect__Authority
           value: http://identityserver
         - name: OpenIdConnect__RequireHttpsMetadata

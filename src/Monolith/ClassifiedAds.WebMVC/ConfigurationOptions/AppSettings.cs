@@ -26,8 +26,6 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
 
         public ResourceServer ResourceServer { get; set; }
 
-        public NotificationServer NotificationServer { get; set; }
-
         public BackgroundServer BackgroundServer { get; set; }
 
         public string AllowedHosts { get; set; }
@@ -45,6 +43,8 @@ namespace ClassifiedAds.WebMVC.ConfigurationOptions
         public Dictionary<string, string> SecurityHeaders { get; set; }
 
         public InterceptorsOptions Interceptors { get; set; }
+
+        public Azure Azure { get; set; }
 
         public ValidateOptionsResult Validate()
         {

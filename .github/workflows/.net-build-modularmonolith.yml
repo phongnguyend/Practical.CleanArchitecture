@@ -36,9 +36,6 @@ jobs:
     - name: Publish ClassifiedAds.Migrator
       run: dotnet publish ClassifiedAds.Migrator/*.csproj --configuration Release
  
-    - name: Publish ClassifiedAds.NotificationServer
-      run: dotnet publish ClassifiedAds.NotificationServer/*.csproj --configuration Release
-
     - name: Publish ClassifiedAds.WebAPI
       run: dotnet publish ClassifiedAds.WebAPI/*.csproj --configuration Release
       
@@ -59,12 +56,6 @@ jobs:
       with:
         name: ClassifiedAds.Migrator
         path: src/ModularMonolith/ClassifiedAds.Migrator/bin/Release/net5.0/publish
-
-    - name: Upload ClassifiedAds.NotificationServer
-      uses: actions/upload-artifact@v1.0.0
-      with:
-        name: ClassifiedAds.NotificationServer
-        path: src/ModularMonolith/ClassifiedAds.NotificationServer/bin/Release/net5.0/publish
 
     - name: Upload ClassifiedAds.WebAPI
       uses: actions/upload-artifact@v1.0.0

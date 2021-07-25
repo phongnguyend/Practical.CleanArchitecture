@@ -68,19 +68,6 @@ services:
           MessageBroker__RabbitMQ__HostName: ${MessageBroker__RabbitMQ__HostName}
           MessageBroker__Kafka__BootstrapServers: ${MessageBroker__Kafka__BootstrapServers}
           MessageBroker__AzureQueue__ConnectionString: ${MessageBroker__AzureQueue__ConnectionString}
-    notificationserver:
-        image: classifiedads.notificationserver
-        build:
-          context: .
-          dockerfile: ./ClassifiedAds.NotificationServer/Dockerfile
-        ports:
-            - "9001:80"
-        depends_on:
-          - db
-          - migrator
-        environment:
-          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
-          ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
     webapi:
         image: classifiedads.webapi
         build:
@@ -122,7 +109,6 @@ services:
           - kafka
           - identityserver
           - webapi
-          - notificationserver
         environment:
           ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
           ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
@@ -135,8 +121,6 @@ services:
           OpenIdConnect__RequireHttpsMetadata: "false"
           ResourceServer__Endpoint: ${ResourceServer__Endpoint}
           ResourceServer__PublicEndpoint: ${ResourceServer__PublicEndpoint}
-          NotificationServer__Endpoint: ${NotificationServer__Endpoint}
-          NotificationServer__PublicEndpoint: ${NotificationServer__PublicEndpoint}
           BackgroundServer__Endpoint: ${BackgroundServer__Endpoint}
           CurrentUrl: "http://host.docker.internal:9003"
           Storage__Provider: ${Storage__Provider}
@@ -199,7 +183,7 @@ services:
           Notification__Sms__Twilio__AuthToken: ""
           Notification__Sms__Twilio__FromNumber: ""
           Notification__Web__Provider: "Fake"
-          Notification__Web__SignalR__Endpoint: ${NotificationServer__Endpoint}
+          Notification__Web__SignalR__Endpoint: "http://webmvc"
     graphql:
         image: classifiedads.graphql
         build:

@@ -24,7 +24,6 @@ COPY ./ClassifiedAds.Modules.Storage/*.csproj ./ClassifiedAds.Modules.Storage/
 COPY ./ClassifiedAds.BackgroundServer/*.csproj ./ClassifiedAds.BackgroundServer/
 COPY ./ClassifiedAds.IdentityServer/*.csproj ./ClassifiedAds.IdentityServer/
 COPY ./ClassifiedAds.Migrator/*.csproj ./ClassifiedAds.Migrator/
-COPY ./ClassifiedAds.NotificationServer/*.csproj ./ClassifiedAds.NotificationServer/
 COPY ./ClassifiedAds.WebAPI/*.csproj ./ClassifiedAds.WebAPI/
 
 COPY ./ClassifiedAds.ModularMonolith.sln .

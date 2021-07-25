@@ -6,7 +6,6 @@ docker run -d -p 8082:80 --name classifiedads.identityserver classifiedads.ident
 
 docker build -f "ClassifiedAds.BackgroundServer\Dockerfile" -t classifiedads.backgroundserver .
 docker build -f "ClassifiedAds.Migrator\Dockerfile" -t classifiedads.migrator .
-docker build -f "ClassifiedAds.NotificationServer\Dockerfile" -t classifiedads.notificationserver .
 docker build -f "ClassifiedAds.WebAPI\Dockerfile" -t classifiedads.webapi .
 docker build -f "ClassifiedAds.GraphQL\Dockerfile" -t classifiedads.graphql .
 docker build -f "ClassifiedAds.BlazorServerSide\Dockerfile" -t classifiedads.blazor .
@@ -15,7 +14,6 @@ docker build -f "ClassifiedAds.WebMVC\Dockerfile" -t classifiedads.webmvc .
 
 docker tag classifiedads.backgroundserver phongnguyend/classifiedads.backgroundserver
 docker tag classifiedads.migrator phongnguyend/classifiedads.migrator
-docker tag classifiedads.notificationserver phongnguyend/classifiedads.notificationserver
 docker tag classifiedads.webapi phongnguyend/classifiedads.webapi
 docker tag classifiedads.graphql phongnguyend/classifiedads.graphql
 docker tag classifiedads.blazor phongnguyend/classifiedads.blazor
@@ -24,7 +22,6 @@ docker tag classifiedads.webmvc phongnguyend/classifiedads.webmvc
 
 docker push phongnguyend/classifiedads.backgroundserver
 docker push phongnguyend/classifiedads.migrator
-docker push phongnguyend/classifiedads.notificationserver
 docker push phongnguyend/classifiedads.webapi
 docker push phongnguyend/classifiedads.graphql
 docker push phongnguyend/classifiedads.blazor

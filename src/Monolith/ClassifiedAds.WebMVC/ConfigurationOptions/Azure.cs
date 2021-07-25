@@ -1,4 +1,4 @@
-﻿namespace ClassifiedAds.NotificationServer.ConfigurationOptions
+﻿namespace ClassifiedAds.WebMVC.ConfigurationOptions
 {
     public class Azure
     {

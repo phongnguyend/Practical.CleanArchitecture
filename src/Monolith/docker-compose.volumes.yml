@@ -6,9 +6,6 @@ services:
     identityserver:
         volumes:
             - D:\\ClassifiedAds.Monolith\\Logs\\IdentityServer:/ClassifiedAds.Monolith/logs
-    notificationserver:
-        volumes:
-            - D:\\ClassifiedAds.Monolith\\Logs\\NotificationServer:/ClassifiedAds.Monolith/logs
     webapi:
         volumes:
             - D:\\ClassifiedAds.Monolith\\Logs\\WebAPI:/ClassifiedAds.Monolith/logs

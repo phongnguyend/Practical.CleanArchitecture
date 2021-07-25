@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 
-namespace ClassifiedAds.NotificationServer.Hubs
+namespace ClassifiedAds.WebMVC.Hubs
 {
     public class HealthCheckHub : Hub
     {

@@ -4,7 +4,7 @@
 // Write your JavaScript code.
 
 const connection = new signalR.HubConnectionBuilder()
-    .withUrl(appSettings.NotificationServer.Endpoint + "/SimulatedLongRunningTaskHub")
+    .withUrl("/SimulatedLongRunningTaskHub")
     .configureLogging(signalR.LogLevel.Information)
     .build();
 

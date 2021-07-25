@@ -25,4 +25,4 @@ data:
   Notification__Sms__Twilio__AuthToken: ""
   Notification__Sms__Twilio__FromNumber: ""
   Notification__Web__Provider: "Fake"
-  Notification__Web__SignalR__Endpoint: "http://notificationserver"
+  Notification__Web__SignalR__Endpoint: "http://webmvc"

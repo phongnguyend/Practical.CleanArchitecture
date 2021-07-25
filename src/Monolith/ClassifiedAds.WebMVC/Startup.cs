@@ -5,6 +5,7 @@ using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.WebMVC.Authorization;
 using ClassifiedAds.WebMVC.ClaimsTransformations;
 using ClassifiedAds.WebMVC.ConfigurationOptions;
+using ClassifiedAds.WebMVC.Configurations;
 using ClassifiedAds.WebMVC.Filters;
 using ClassifiedAds.WebMVC.HttpHandlers;
 using ClassifiedAds.WebMVC.Middleware;
@@ -65,6 +66,8 @@ namespace ClassifiedAds.WebMVC
                     options.Secure = AppSettings.CookiePolicyOptions.Secure;
                 });
             }
+
+            services.AddClassifiedAdsSignalR(AppSettings);
 
             services.AddMonitoringServices(AppSettings.Monitoring);
 
@@ -139,9 +142,6 @@ namespace ClassifiedAds.WebMVC
                     failureStatus: HealthStatus.Degraded)
                 .AddUrlGroup(new Uri(AppSettings.ResourceServer.Endpoint),
                     name: "Resource (Web API) Server",
-                    failureStatus: HealthStatus.Degraded)
-                .AddSignalRHub(AppSettings.NotificationServer.Endpoint + "/HealthCheckHub",
-                    name: "Notification (SignalR) Server",
                     failureStatus: HealthStatus.Degraded)
                 .AddUrlGroup(new Uri(AppSettings.BackgroundServer.Endpoint),
                     name: "Background Services Server",
@@ -218,6 +218,7 @@ namespace ClassifiedAds.WebMVC
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
+                endpoints.MapClassifiedAdsHubs();
             });
         }
     }

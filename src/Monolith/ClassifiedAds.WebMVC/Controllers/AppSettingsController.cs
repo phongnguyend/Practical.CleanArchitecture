@@ -18,7 +18,7 @@ namespace ClassifiedAds.WebMVC.Controllers
             string text = @"
             const appSettings = {
                 NotificationServer: {
-                    Endpoint: '" + _appSettings.NotificationServer.PublicEndpoint + @"'
+                    Endpoint: '" + string.Empty + @"'
                 }
             }";
 
