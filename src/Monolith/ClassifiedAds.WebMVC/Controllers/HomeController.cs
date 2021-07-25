@@ -4,6 +4,7 @@ using ClassifiedAds.Application.Products.Services;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebMVC.ConfigurationOptions;
+using ClassifiedAds.WebMVC.Hubs;
 using ClassifiedAds.WebMVC.Models;
 using ClassifiedAds.WebMVC.Models.Home;
 using IdentityModel.Client;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -33,15 +35,23 @@ namespace ClassifiedAds.WebMVC.Controllers
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly Dispatcher _dispatcher;
         private readonly ILogger _logger;
+        private readonly IHubContext<SimulatedLongRunningTaskHub> _hubContext;
         private readonly AppSettings _appSettings;
 
-        public HomeController(IDistributedCache distributedCache, IProductService productService, IHttpClientFactory httpClientFactory, Dispatcher dispatcher, ILogger<HomeController> logger, IOptionsSnapshot<AppSettings> appSettings)
+        public HomeController(IDistributedCache distributedCache,
+            IProductService productService,
+            IHttpClientFactory httpClientFactory,
+            Dispatcher dispatcher,
+            ILogger<HomeController> logger,
+            IOptionsSnapshot<AppSettings> appSettings,
+            IHubContext<SimulatedLongRunningTaskHub> hubContext)
         {
             _distributedCache = distributedCache;
             _productService = productService;
             _httpClientFactory = httpClientFactory;
             _dispatcher = dispatcher;
             _logger = logger;
+            _hubContext = hubContext;
             _appSettings = appSettings.Value;
         }
 
@@ -172,6 +182,13 @@ namespace ClassifiedAds.WebMVC.Controllers
         public IActionResult TestException()
         {
             throw new Exception("Test Exception Filter");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> InvokeHub([FromBody] SendTaskStatusMessage model)
+        {
+            await _hubContext.Clients.All.SendAsync("ReceiveTaskStatus", $"{model.Step}  {model.Message}");
+            return Content(string.Empty);
         }
 
         [Authorize(Policy = "CustomPolicy")]
