@@ -20,11 +20,6 @@ services:
   bindings:
   - protocol: https
     port: 44318
-- name: notificationserver
-  project: ./ClassifiedAds.NotificationServer/ClassifiedAds.NotificationServer.csproj
-  bindings:
-  - protocol: https
-    port: 44390
 - name: webmvc
   project: ./ClassifiedAds.WebMVC/ClassifiedAds.WebMVC.csproj
   bindings:
