@@ -60,10 +60,15 @@ namespace ClassifiedAds.IdentityServer
 
             services.AddIdentityServer(options =>
                     {
+                        if (!string.IsNullOrWhiteSpace(AppSettings.IdentityServer.IssuerUri))
+                        {
+                            options.IssuerUri = AppSettings.IdentityServer.IssuerUri;
+                        }
+
                         options.InputLengthRestrictions.Password = int.MaxValue;
                         options.InputLengthRestrictions.UserName = int.MaxValue;
                     })
-                    .AddSigningCredential(AppSettings.Certificates.Default.FindCertificate())
+                    .AddSigningCredential(AppSettings.IdentityServer.Certificate.FindCertificate())
                     .AddAspNetIdentity<User>()
                     .AddTokenProviderModule(AppSettings.ConnectionStrings.ClassifiedAds, typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
 

@@ -12,6 +12,8 @@ namespace ClassifiedAds.IdentityServer.ConfigurationOptions
     {
         public ConnectionStrings ConnectionStrings { get; set; }
 
+        public IdentityServerOptions IdentityServer { get; set; }
+
         public LoggingOptions Logging { get; set; }
 
         public CachingOptions Caching { get; set; }
