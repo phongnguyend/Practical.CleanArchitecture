@@ -9,8 +9,6 @@ namespace ClassifiedAds.IdentityServer.ConfigurationOptions
 
         public Dictionary<string, string> SecurityHeaders { get; set; }
 
-        public CertificatesOptions Certificates { get; set; }
-
         public ExternalLoginOptions ExternalLogin { get; set; }
 
         public CookiePolicyOptions CookiePolicyOptions { get; set; }

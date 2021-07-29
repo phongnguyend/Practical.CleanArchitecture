@@ -24,8 +24,6 @@ namespace ClassifiedAds.IdentityServer.ConfigurationOptions
 
         public MessageBrokerOptions MessageBroker { get; set; }
 
-        public CertificatesOptions Certificates { get; set; }
-
         public InterceptorsOptions Interceptors { get; set; }
 
         public ExternalLoginOptions ExternalLogin { get; set; }
