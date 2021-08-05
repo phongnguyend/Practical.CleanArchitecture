@@ -27,11 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddAmazonS3StorageManager(this IServiceCollection services, AmazonOptions options)
         {
-            services.AddSingleton<IFileStorageManager>(new AmazonS3StorageManager(
-                options.AccessKeyID,
-                options.SecretAccessKey,
-                options.BucketName,
-                options.RegionEndpoint));
+            services.AddSingleton<IFileStorageManager>(new AmazonS3StorageManager(options));
 
             return services;
         }

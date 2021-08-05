@@ -11,12 +11,12 @@ namespace ClassifiedAds.Infrastructure.Storages.Amazon
     public class AmazonS3StorageManager : IFileStorageManager
     {
         private readonly IAmazonS3 _client;
-        private readonly string _bucketName;
+        private readonly AmazonOptions _options;
 
-        public AmazonS3StorageManager(string awsAccessKeyId, string awsSecretAccessKey, string bucketName, string regionEndpoint)
+        public AmazonS3StorageManager(AmazonOptions options)
         {
-            _client = new AmazonS3Client(awsAccessKeyId, awsSecretAccessKey, RegionEndpoint.GetBySystemName(regionEndpoint));
-            _bucketName = bucketName;
+            _client = new AmazonS3Client(options.AccessKeyID, options.SecretAccessKey, RegionEndpoint.GetBySystemName(options.RegionEndpoint));
+            _options = options;
         }
 
         public async Task CreateAsync(IFileEntry fileEntry, Stream stream, CancellationToken cancellationToken = default)
@@ -27,25 +27,26 @@ namespace ClassifiedAds.Infrastructure.Storages.Amazon
             {
                 InputStream = stream,
                 Key = fileEntry.Id.ToString(),
-                BucketName = _bucketName,
+                BucketName = _options.BucketName,
                 CannedACL = S3CannedACL.NoACL,
             };
 
             await fileTransferUtility.UploadAsync(uploadRequest, cancellationToken);
 
-            fileEntry.FileLocation = fileEntry.Id.ToString();
+            fileEntry.FileLocation = uploadRequest.Key;
+
         }
 
         public async Task DeleteAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
-            await _client.DeleteObjectAsync(_bucketName, fileEntry.FileLocation, cancellationToken);
+            await _client.DeleteObjectAsync(_options.BucketName, fileEntry.FileLocation, cancellationToken);
         }
 
         public async Task<byte[]> ReadAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
             var request = new GetObjectRequest
             {
-                BucketName = _bucketName,
+                BucketName = _options.BucketName,
                 Key = fileEntry.FileLocation,
             };
 
