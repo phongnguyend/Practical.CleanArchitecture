@@ -65,6 +65,10 @@ namespace ClassifiedAds.WebAPI.Controllers
 
             await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
 
+            fileEntry.FileLocation = DateTime.Now.ToString("yyyy/MM/dd/") + fileEntry.Id;
+
+            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
+
             if (model.Encrypted)
             {
                 var key = SymmetricCrypto.GenerateKey(16);

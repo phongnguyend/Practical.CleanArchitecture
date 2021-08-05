@@ -16,15 +16,19 @@ namespace ClassifiedAds.Infrastructure.Storages.Local
 
         public async Task CreateAsync(IFileEntry fileEntry, Stream stream, CancellationToken cancellationToken = default)
         {
-            var trustedFileNameForFileStorage = fileEntry.Id.ToString();
-            var filePath = Path.Combine(_rootPath, trustedFileNameForFileStorage);
+            var filePath = Path.Combine(_rootPath, fileEntry.FileLocation);
+
+            var folder = Path.GetDirectoryName(filePath);
+
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
 
             using (var fileStream = File.Create(filePath))
             {
                 await stream.CopyToAsync(fileStream, cancellationToken);
             }
-
-            fileEntry.FileLocation = trustedFileNameForFileStorage;
         }
 
         public async Task DeleteAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)

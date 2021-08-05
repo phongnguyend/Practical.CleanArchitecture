@@ -26,15 +26,12 @@ namespace ClassifiedAds.Infrastructure.Storages.Amazon
             var uploadRequest = new TransferUtilityUploadRequest
             {
                 InputStream = stream,
-                Key = fileEntry.Id.ToString(),
+                Key = fileEntry.FileLocation,
                 BucketName = _options.BucketName,
                 CannedACL = S3CannedACL.NoACL,
             };
 
             await fileTransferUtility.UploadAsync(uploadRequest, cancellationToken);
-
-            fileEntry.FileLocation = uploadRequest.Key;
-
         }
 
         public async Task DeleteAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)

@@ -47,6 +47,10 @@ namespace ClassifiedAds.WebMVC.Controllers
 
             await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
 
+            fileEntry.FileLocation = DateTime.Now.ToString("yyyy/MM/dd/") + fileEntry.Id;
+
+            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
+
             using (var stream = new MemoryStream())
             {
                 await model.FormFile.CopyToAsync(stream);

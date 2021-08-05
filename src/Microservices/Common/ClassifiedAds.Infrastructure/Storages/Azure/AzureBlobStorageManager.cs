@@ -26,11 +26,8 @@ namespace ClassifiedAds.Infrastructure.Storages.Azure
         {
             await _container.CreateIfNotExistsAsync(cancellationToken);
 
-            var name = fileEntry.Id.ToString();
-            CloudBlockBlob blob = _container.GetBlockBlobReference(name);
+            CloudBlockBlob blob = _container.GetBlockBlobReference(fileEntry.FileLocation);
             await blob.UploadFromStreamAsync(stream, cancellationToken);
-
-            fileEntry.FileLocation = name;
         }
 
         public async Task DeleteAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
