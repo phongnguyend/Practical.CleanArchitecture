@@ -20,6 +20,11 @@ namespace ClassifiedAds.Infrastructure.Storages.Amazon
             _options = options;
         }
 
+        private string GetKey(IFileEntry fileEntry)
+        {
+            return _options.Path + fileEntry.FileLocation;
+        }
+
         public async Task CreateAsync(IFileEntry fileEntry, Stream stream, CancellationToken cancellationToken = default)
         {
             var fileTransferUtility = new TransferUtility(_client);
@@ -27,7 +32,7 @@ namespace ClassifiedAds.Infrastructure.Storages.Amazon
             var uploadRequest = new TransferUtilityUploadRequest
             {
                 InputStream = stream,
-                Key = fileEntry.FileLocation,
+                Key = GetKey(fileEntry),
                 BucketName = _options.BucketName,
                 CannedACL = S3CannedACL.NoACL,
             };
@@ -37,7 +42,7 @@ namespace ClassifiedAds.Infrastructure.Storages.Amazon
 
         public async Task DeleteAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
-            await _client.DeleteObjectAsync(_options.BucketName, fileEntry.FileLocation, cancellationToken);
+            await _client.DeleteObjectAsync(_options.BucketName, GetKey(fileEntry), cancellationToken);
         }
 
         public async Task<byte[]> ReadAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
@@ -45,7 +50,7 @@ namespace ClassifiedAds.Infrastructure.Storages.Amazon
             var request = new GetObjectRequest
             {
                 BucketName = _options.BucketName,
-                Key = fileEntry.FileLocation,
+                Key = GetKey(fileEntry),
             };
 
             using var response = await _client.GetObjectAsync(request, cancellationToken);
@@ -60,9 +65,9 @@ namespace ClassifiedAds.Infrastructure.Storages.Amazon
             var copy = new CopyObjectRequest
             {
                 SourceBucket = _options.BucketName,
-                SourceKey = fileEntry.FileLocation,
+                SourceKey = GetKey(fileEntry),
                 DestinationBucket = _options.BucketName,
-                DestinationKey = fileEntry.FileLocation,
+                DestinationKey = GetKey(fileEntry),
                 StorageClass = S3StorageClass.StandardInfrequentAccess,
             };
 
@@ -74,9 +79,9 @@ namespace ClassifiedAds.Infrastructure.Storages.Amazon
             var copy = new CopyObjectRequest
             {
                 SourceBucket = _options.BucketName,
-                SourceKey = fileEntry.FileLocation,
+                SourceKey = GetKey(fileEntry),
                 DestinationBucket = _options.BucketName,
-                DestinationKey = fileEntry.FileLocation,
+                DestinationKey = GetKey(fileEntry),
                 StorageClass = S3StorageClass.Standard,
             };
 

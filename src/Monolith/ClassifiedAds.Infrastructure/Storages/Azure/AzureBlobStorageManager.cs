@@ -20,23 +20,28 @@ namespace ClassifiedAds.Infrastructure.Storages.Azure
             _container = blobClient.GetContainerReference(_option.Container);
         }
 
+        private string GetBlobName(IFileEntry fileEntry)
+        {
+            return _option.Path + fileEntry.FileLocation;
+        }
+
         public async Task CreateAsync(IFileEntry fileEntry, Stream stream, CancellationToken cancellationToken = default)
         {
             await _container.CreateIfNotExistsAsync(cancellationToken);
 
-            CloudBlockBlob blob = _container.GetBlockBlobReference(fileEntry.FileLocation);
+            CloudBlockBlob blob = _container.GetBlockBlobReference(GetBlobName(fileEntry));
             await blob.UploadFromStreamAsync(stream, cancellationToken);
         }
 
         public async Task DeleteAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
-            CloudBlockBlob blob = _container.GetBlockBlobReference(fileEntry.FileLocation);
+            CloudBlockBlob blob = _container.GetBlockBlobReference(GetBlobName(fileEntry));
             await blob.DeleteAsync(cancellationToken);
         }
 
         public async Task<byte[]> ReadAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
-            CloudBlockBlob blob = _container.GetBlockBlobReference(fileEntry.FileLocation);
+            CloudBlockBlob blob = _container.GetBlockBlobReference(GetBlobName(fileEntry));
             using var stream = new MemoryStream();
             await blob.DownloadToStreamAsync(stream, cancellationToken);
             return stream.ToArray();
@@ -44,13 +49,13 @@ namespace ClassifiedAds.Infrastructure.Storages.Azure
 
         public async Task ArchiveAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
-            CloudBlockBlob blob = _container.GetBlockBlobReference(fileEntry.FileLocation);
+            CloudBlockBlob blob = _container.GetBlockBlobReference(GetBlobName(fileEntry));
             await blob.SetStandardBlobTierAsync(StandardBlobTier.Cool, cancellationToken);
         }
 
         public async Task UnArchiveAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
-            CloudBlockBlob blob = _container.GetBlockBlobReference(fileEntry.FileLocation);
+            CloudBlockBlob blob = _container.GetBlockBlobReference(GetBlobName(fileEntry));
             await blob.SetStandardBlobTierAsync(StandardBlobTier.Hot, cancellationToken);
         }
     }
