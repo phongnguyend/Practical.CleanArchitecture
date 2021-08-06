@@ -7,16 +7,16 @@ namespace ClassifiedAds.Infrastructure.Storages.Local
 {
     public class LocalFileStorageManager : IFileStorageManager
     {
-        private readonly string _rootPath;
+        private readonly LocalOption _option;
 
-        public LocalFileStorageManager(string rootPath)
+        public LocalFileStorageManager(LocalOption option)
         {
-            _rootPath = rootPath;
+            _option = option;
         }
 
         public async Task CreateAsync(IFileEntry fileEntry, Stream stream, CancellationToken cancellationToken = default)
         {
-            var filePath = Path.Combine(_rootPath, fileEntry.FileLocation);
+            var filePath = Path.Combine(_option.Path, fileEntry.FileLocation);
 
             var folder = Path.GetDirectoryName(filePath);
 
@@ -35,7 +35,7 @@ namespace ClassifiedAds.Infrastructure.Storages.Local
         {
             await Task.Run(() =>
              {
-                 var path = Path.Combine(_rootPath, fileEntry.FileLocation);
+                 var path = Path.Combine(_option.Path, fileEntry.FileLocation);
                  if (File.Exists(path))
                  {
                      File.Delete(path);
@@ -45,7 +45,19 @@ namespace ClassifiedAds.Infrastructure.Storages.Local
 
         public Task<byte[]> ReadAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
-            return File.ReadAllBytesAsync(Path.Combine(_rootPath, fileEntry.FileLocation), cancellationToken);
+            return File.ReadAllBytesAsync(Path.Combine(_option.Path, fileEntry.FileLocation), cancellationToken);
+        }
+
+        public Task ArchiveAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
+        {
+            // TODO: move to archive storage
+            return Task.CompletedTask;
+        }
+
+        public Task UnArchiveAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
+        {
+            // TODO: move to active storage
+            return Task.CompletedTask;
         }
     }
 }

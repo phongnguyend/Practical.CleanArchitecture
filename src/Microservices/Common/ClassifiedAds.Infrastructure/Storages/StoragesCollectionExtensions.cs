@@ -13,14 +13,14 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddLocalStorageManager(this IServiceCollection services, LocalOption options)
         {
-            services.AddSingleton<IFileStorageManager>(new LocalFileStorageManager(options.Path));
+            services.AddSingleton<IFileStorageManager>(new LocalFileStorageManager(options));
 
             return services;
         }
 
         public static IServiceCollection AddAzureBlobStorageManager(this IServiceCollection services, AzureBlobOption options)
         {
-            services.AddSingleton<IFileStorageManager>(new AzureBlobStorageManager(options.ConnectionString, options.Container));
+            services.AddSingleton<IFileStorageManager>(new AzureBlobStorageManager(options));
 
             return services;
         }

@@ -53,5 +53,33 @@ namespace ClassifiedAds.Infrastructure.Storages.Amazon
             await responseStream.CopyToAsync(reader, cancellationToken);
             return reader.ToArray();
         }
+
+        public async Task ArchiveAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
+        {
+            var copy = new CopyObjectRequest
+            {
+                SourceBucket = _options.BucketName,
+                SourceKey = fileEntry.FileLocation,
+                DestinationBucket = _options.BucketName,
+                DestinationKey = fileEntry.FileLocation,
+                StorageClass = S3StorageClass.StandardInfrequentAccess,
+            };
+
+            await _client.CopyObjectAsync(copy, cancellationToken);
+        }
+
+        public async Task UnArchiveAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
+        {
+            var copy = new CopyObjectRequest
+            {
+                SourceBucket = _options.BucketName,
+                SourceKey = fileEntry.FileLocation,
+                DestinationBucket = _options.BucketName,
+                DestinationKey = fileEntry.FileLocation,
+                StorageClass = S3StorageClass.Standard,
+            };
+
+            await _client.CopyObjectAsync(copy, cancellationToken);
+        }
     }
 }
