@@ -1,9 +1,8 @@
-﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using Microsoft.Azure.ServiceBus;
+﻿using Azure.Messaging.ServiceBus;
+using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using Newtonsoft.Json;
 using System;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus
@@ -12,40 +11,51 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus
     {
         private readonly string _connectionString;
         private readonly string _queueName;
-        private readonly QueueClient _queueClient;
 
         public AzureServiceBusReceiver(string connectionString, string queueName)
         {
             _connectionString = connectionString;
             _queueName = queueName;
-            _queueClient = new QueueClient(_connectionString, _queueName);
         }
 
         public void Receive(Action<T, MetaData> action)
         {
-            var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
-            {
-                MaxConcurrentCalls = 1,
-                AutoComplete = false,
-            };
-
-            _queueClient.RegisterMessageHandler((Message message, CancellationToken token) =>
-            {
-                var data = JsonConvert.DeserializeObject<Message<T>>(Encoding.UTF8.GetString(message.Body));
-                action(data.Data, data.MetaData);
-                return _queueClient.CompleteAsync(message.SystemProperties.LockToken);
-            }, messageHandlerOptions);
+            Task.Factory.StartNew(() => ReceiveAsync(action));
         }
 
-        private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
+        private Task ReceiveAsync(Action<T, MetaData> action)
         {
-            Console.WriteLine($"Message handler encountered an exception {exceptionReceivedEventArgs.Exception}.");
-            var context = exceptionReceivedEventArgs.ExceptionReceivedContext;
-            Console.WriteLine("Exception context for troubleshooting:");
-            Console.WriteLine($"- Endpoint: {context.Endpoint}");
-            Console.WriteLine($"- Entity Path: {context.EntityPath}");
-            Console.WriteLine($"- Executing Action: {context.Action}");
-            return Task.CompletedTask;
+            return ReceiveStringAsync(retrievedMessage =>
+            {
+                var message = JsonConvert.DeserializeObject<Message<T>>(retrievedMessage);
+                action(message.Data, message.MetaData);
+            });
+        }
+
+        public void ReceiveString(Action<string> action)
+        {
+            Task.Factory.StartNew(() => ReceiveStringAsync(action));
+        }
+
+        private async Task ReceiveStringAsync(Action<string> action)
+        {
+            await using var client = new ServiceBusClient(_connectionString);
+            ServiceBusReceiver receiver = client.CreateReceiver(_queueName);
+
+            while (true)
+            {
+                var retrievedMessage = await receiver.ReceiveMessageAsync();
+
+                if (retrievedMessage != null)
+                {
+                    action(Encoding.UTF8.GetString(retrievedMessage.Body));
+                    await receiver.CompleteMessageAsync(retrievedMessage);
+                }
+                else
+                {
+                    await Task.Delay(1000);
+                }
+            }
         }
     }
 }

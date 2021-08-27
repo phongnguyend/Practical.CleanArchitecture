@@ -1,6 +1,5 @@
-﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Queue;
+﻿using Azure.Storage.Queues;
+using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using Newtonsoft.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,16 +19,16 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
 
         public async Task SendAsync(T message, MetaData metaData, CancellationToken cancellationToken = default)
         {
-            var storageAccount = CloudStorageAccount.Parse(_connectionString);
-            var queueClient = storageAccount.CreateCloudQueueClient();
-            var queue = queueClient.GetQueueReference(_queueName);
-            await queue.CreateIfNotExistsAsync();
-            var jsonMessage = new CloudQueueMessage(JsonConvert.SerializeObject(new Message<T>
+            var queueClient = new QueueClient(_connectionString, _queueName);
+            await queueClient.CreateIfNotExistsAsync(cancellationToken: cancellationToken);
+
+            var jsonMessage = JsonConvert.SerializeObject(new Message<T>
             {
                 Data = message,
                 MetaData = metaData,
-            }));
-            await queue.AddMessageAsync(jsonMessage, cancellationToken);
+            });
+
+            await queueClient.SendMessageAsync(jsonMessage, cancellationToken);
         }
     }
 }

@@ -1,6 +1,5 @@
-﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Queue;
+﻿using Azure.Storage.Queues;
+using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
@@ -11,11 +10,13 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
     {
         private readonly string _connectionString;
         private readonly string _queueName;
+        private readonly QueueMessageEncoding _messageEncoding;
 
-        public AzureQueueReceiver(string connectionString, string queueName)
+        public AzureQueueReceiver(string connectionString, string queueName, QueueMessageEncoding messageEncoding = QueueMessageEncoding.None)
         {
             _connectionString = connectionString;
             _queueName = queueName;
+            _messageEncoding = messageEncoding;
         }
 
         public void Receive(Action<T, MetaData> action)
@@ -23,26 +24,51 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
             Task.Factory.StartNew(() => ReceiveAsync(action));
         }
 
-        private async Task ReceiveAsync(Action<T, MetaData> action)
+        private Task ReceiveAsync(Action<T, MetaData> action)
         {
-            var storageAccount = CloudStorageAccount.Parse(_connectionString);
-            var queueClient = storageAccount.CreateCloudQueueClient();
-            var queue = queueClient.GetQueueReference(_queueName);
+            return ReceiveStringAsync(retrievedMessage =>
+            {
+                var message = JsonConvert.DeserializeObject<Message<T>>(retrievedMessage);
+                action(message.Data, message.MetaData);
+            });
+        }
 
-            await queue.CreateIfNotExistsAsync();
+        public void ReceiveString(Action<string> action)
+        {
+            Task.Factory.StartNew(() => ReceiveStringAsync(action));
+        }
+
+        private async Task ReceiveStringAsync(Action<string> action)
+        {
+            var queueClient = new QueueClient(_connectionString, _queueName, new QueueClientOptions
+            {
+                MessageEncoding = _messageEncoding,
+            });
+
+            await queueClient.CreateIfNotExistsAsync();
 
             while (true)
             {
-                var retrievedMessage = await queue.GetMessageAsync();
+                try
+                {
+                    var retrievedMessages = (await queueClient.ReceiveMessagesAsync()).Value;
 
-                if (retrievedMessage != null)
-                {
-                    var message = JsonConvert.DeserializeObject<Message<T>>(retrievedMessage.AsString);
-                    action(message.Data, message.MetaData);
-                    await queue.DeleteMessageAsync(retrievedMessage);
+                    if (retrievedMessages.Length > 0)
+                    {
+                        foreach (var retrievedMessage in retrievedMessages)
+                        {
+                            action(retrievedMessage.Body.ToString());
+                            await queueClient.DeleteMessageAsync(retrievedMessage.MessageId, retrievedMessage.PopReceipt);
+                        }
+                    }
+                    else
+                    {
+                        await Task.Delay(1000);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
+                    Console.WriteLine(ex);
                     await Task.Delay(1000);
                 }
             }

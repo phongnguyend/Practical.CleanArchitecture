@@ -1,5 +1,5 @@
-﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using Microsoft.Azure.ServiceBus;
+﻿using Azure.Messaging.ServiceBus;
+using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using Newtonsoft.Json;
 using System.Text;
 using System.Threading;
@@ -20,13 +20,14 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus
 
         public async Task SendAsync(T message, MetaData metaData, CancellationToken cancellationToken = default)
         {
-            var queueClient = new QueueClient(_connectionString, _queueName);
-            var bytes = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new Message<T>
+            await using var client = new ServiceBusClient(_connectionString);
+            ServiceBusSender sender = client.CreateSender(_queueName);
+            var serviceBusMessage = new ServiceBusMessage(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new Message<T>
             {
                 Data = message,
                 MetaData = metaData,
             })));
-            await queueClient.SendAsync(bytes);
+            await sender.SendMessageAsync(serviceBusMessage, cancellationToken);
         }
     }
 }

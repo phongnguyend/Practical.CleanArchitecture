@@ -13,7 +13,7 @@
     <PackageReference Include="App.Metrics.AspNetCore.Tracking" Version="4.1.0" />
     <PackageReference Include="App.Metrics.Formatters.Prometheus" Version="4.1.0" />
     <PackageReference Include="AspNetCore.HealthChecks.Aws.S3" Version="5.0.0-preview1" />
-    <PackageReference Include="AspNetCore.HealthChecks.AzureServiceBus" Version="5.0.0-preview1" />
+    <PackageReference Include="AspNetCore.HealthChecks.AzureServiceBus" Version="5.1.1" />
     <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="5.0.0-preview1" />
     <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="5.0.0-preview1" />
     <PackageReference Include="AspNetCore.HealthChecks.RabbitMQ" Version="5.0.0-preview1" />
@@ -26,6 +26,12 @@
     <PackageReference Include="Azure.Data.AppConfiguration" Version="1.0.2" />
     <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.0.2" />
     <PackageReference Include="Azure.Identity" Version="1.3.0" />
+    <PackageReference Include="Azure.Messaging.EventGrid" Version="4.6.0" />
+    <PackageReference Include="Azure.Messaging.EventHubs" Version="5.6.0" />
+    <PackageReference Include="Azure.Messaging.EventHubs.Processor" Version="5.6.0" />
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.2.1" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.9.1" />
+    <PackageReference Include="Azure.Storage.Queues" Version="12.7.0" />
     <PackageReference Include="Castle.Core" Version="4.4.1" />
     <PackageReference Include="Confluent.Kafka" Version="1.5.2" />
     <PackageReference Include="CryptographyHelper" Version="1.0.0-beta4" />
@@ -38,12 +44,6 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="5.0.0" />
     <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="4.1.0" />
-    <PackageReference Include="Microsoft.Azure.EventGrid" Version="3.2.0" />
-    <PackageReference Include="Microsoft.Azure.EventHubs" Version="4.3.1" />
-    <PackageReference Include="Microsoft.Azure.EventHubs.Processor" Version="4.3.1" />
-    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.2.2" />
-    <PackageReference Include="Microsoft.Azure.Storage.Queue" Version="11.2.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="5.0.0" />

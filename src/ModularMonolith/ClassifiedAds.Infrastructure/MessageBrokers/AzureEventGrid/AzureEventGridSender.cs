@@ -1,6 +1,7 @@
-﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using Microsoft.Azure.EventGrid;
-using Microsoft.Azure.EventGrid.Models;
+﻿using Azure;
+using Azure.Messaging.EventGrid;
+using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -16,35 +17,36 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventGrid
 
         public AzureEventGridSender(string domainEndpoint, string domainKey, string topic)
         {
-            _domainEndpoint = new Uri(domainEndpoint).Host;
+            _domainEndpoint = domainEndpoint;
             _domainKey = domainKey;
             _topic = topic;
         }
 
         public async Task SendAsync(T message, MetaData metaData, CancellationToken cancellationToken = default)
         {
-            TopicCredentials domainKeyCredentials = new TopicCredentials(_domainKey);
-            EventGridClient client = new EventGridClient(domainKeyCredentials);
+
+            EventGridPublisherClient client = new EventGridPublisherClient(new Uri(_domainEndpoint), new AzureKeyCredential(_domainKey));
+
+            var data = new BinaryData(JsonConvert.SerializeObject(new Message<T>
+            {
+                Data = message,
+                MetaData = metaData,
+            }));
 
             var events = new List<EventGridEvent>()
             {
-                new EventGridEvent
+                new EventGridEvent("TEST", typeof(T).FullName, "1.0", data)
                 {
                     Id = Guid.NewGuid().ToString(),
                     EventType = typeof(T).FullName,
                     Topic = _topic,
-                    Data = new Message<T>
-                    {
-                        Data = message,
-                        MetaData = metaData,
-                    },
                     EventTime = DateTime.UtcNow,
                     Subject = "TEST",
                     DataVersion = "1.0",
                 },
             };
 
-            await client.PublishEventsAsync(_domainEndpoint, events, cancellationToken);
+            await client.SendEventsAsync(events, cancellationToken);
         }
     }
 }
