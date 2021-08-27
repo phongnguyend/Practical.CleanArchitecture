@@ -97,7 +97,7 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             Assert.Equal(file.Description, createdFile.Description);
 
             var auditLogs = await GetAuditLogsAsync(createdFile.Id);
-            Assert.Equal(2, auditLogs.Count);
+            Assert.Equal(3, auditLogs.Count);
             Assert.Contains(auditLogs, x => x.Action == "CREATED");
             Assert.Contains(auditLogs, x => x.Action == "UPDATED");
 
@@ -119,9 +119,9 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             Assert.Equal(refreshedFile.Description, updatedProduct.Description);
 
             auditLogs = await GetAuditLogsAsync(createdFile.Id);
-            Assert.Equal(3, auditLogs.Count);
+            Assert.Equal(4, auditLogs.Count);
             Assert.Single(auditLogs, x => x.Action == "CREATED");
-            Assert.Equal(2, auditLogs.Count(x => x.Action == "UPDATED"));
+            Assert.Equal(3, auditLogs.Count(x => x.Action == "UPDATED"));
 
             // DOWNLOAD
             await DownloadFileAsync(createdFile);
