@@ -141,6 +141,8 @@ namespace ClassifiedAds.WebAPI.Controllers
         {
             using var stream = model.FormFile.OpenReadStream();
             var entries = _configurationEntriesExcelReader.Read(stream);
+
+            // TODO: import to database
             return Ok(entries);
         }
     }

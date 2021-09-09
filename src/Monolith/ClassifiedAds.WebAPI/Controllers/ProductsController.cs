@@ -178,13 +178,13 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpPost("importcsv")]
-        public IActionResult Upload([FromForm] UploadFileModel model)
+        public IActionResult ImportCsv([FromForm] UploadFileModel model)
         {
-            using (var stream = model.FormFile.OpenReadStream())
-            {
-                var products = _productCsvReader.Read(stream);
-                return Ok(products);
-            }
+            using var stream = model.FormFile.OpenReadStream();
+            var products = _productCsvReader.Read(stream);
+
+            // TODO: import to database
+            return Ok(products);
         }
     }
 }

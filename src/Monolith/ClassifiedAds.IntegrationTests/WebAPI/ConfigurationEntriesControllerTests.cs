@@ -1,7 +1,10 @@
-﻿using ClassifiedAds.WebAPI.Models.ConfigurationEntries;
+﻿using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
+using ClassifiedAds.WebAPI.Models.ConfigurationEntries;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -39,6 +42,28 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
         private async Task DeleteAsync(Guid id)
         {
             await DeleteAsync($"api/ConfigurationEntries/{id}");
+        }
+
+        private async Task ExportAsExcelAsync(string path, string fileName)
+        {
+            using var response = await _httpClient.GetAsync($"api/ConfigurationEntries/ExportAsExcel");
+            using var fileStream = new FileStream(Path.Combine(path, fileName), FileMode.CreateNew);
+            await response.Content.CopyToAsync(fileStream);
+        }
+
+        private async Task<List<ConfigurationEntryModel>> ImportExcelAsync(string filePath)
+        {
+            using var form = new MultipartFormDataContent();
+            using var fileContent = new ByteArrayContent(File.ReadAllBytes(filePath));
+            fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+            form.Add(fileContent, "formFile", "ConfigurationEntries.xlsx");
+            form.Add(new StringContent("ConfigurationEntries.xlsx"), "name");
+
+            var response = await _httpClient.PostAsync($"api/ConfigurationEntries/ImportExcel", form);
+            response.EnsureSuccessStatusCode();
+
+            var products = await response.Content.ReadAs<List<ConfigurationEntryModel>>();
+            return products;
         }
 
         [Fact]
@@ -85,6 +110,17 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             Assert.Equal(refreshed.Id, updated.Id);
             Assert.NotEqual("VALUE3", updated.Value);
             Assert.Equal(refreshed.Description, updated.Description);
+
+            var path = Path.Combine(AppSettings.DownloadsFolder, "Practical.CleanArchitecture", Guid.NewGuid().ToString());
+            Directory.CreateDirectory(path);
+
+            // EXPORT Excel
+            await ExportAsExcelAsync(path, "ConfigurationEntries.xlsx");
+            Assert.True(File.Exists(Path.Combine(path, "ConfigurationEntries.xlsx")));
+
+            // IMPORT Excel
+            var importingEntries = await ImportExcelAsync(Path.Combine(path, "ConfigurationEntries.xlsx"));
+            Assert.True(importingEntries.Count > 0);
 
             // DELETE
             await DeleteAsync(created.Id);
@@ -136,6 +172,17 @@ namespace ClassifiedAds.IntegrationTests.WebAPI
             Assert.Equal(refreshed.Id, updated.Id);
             Assert.Equal("VALUE3", updated.Value);
             Assert.Equal(refreshed.Description, updated.Description);
+
+            var path = Path.Combine(AppSettings.DownloadsFolder, "Practical.CleanArchitecture", Guid.NewGuid().ToString());
+            Directory.CreateDirectory(path);
+
+            // EXPORT Excel
+            await ExportAsExcelAsync(path, "ConfigurationEntries.xlsx");
+            Assert.True(File.Exists(Path.Combine(path, "ConfigurationEntries.xlsx")));
+
+            // IMPORT Excel
+            var importingEntries = await ImportExcelAsync(Path.Combine(path, "ConfigurationEntries.xlsx"));
+            Assert.True(importingEntries.Count > 0);
 
             // DELETE
             await DeleteAsync(created.Id);
