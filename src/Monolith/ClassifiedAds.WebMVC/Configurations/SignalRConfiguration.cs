@@ -24,6 +24,7 @@ namespace ClassifiedAds.WebMVC.Configurations
 
         public static void MapClassifiedAdsHubs(this IEndpointRouteBuilder endpoints)
         {
+            endpoints.MapHub<AuthorizedHub>("/AuthorizedHub");
             endpoints.MapHub<HealthCheckHub>("/HealthCheckHub");
             endpoints.MapHub<SimulatedLongRunningTaskHub>("/SimulatedLongRunningTaskHub");
         }
