@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Application;
+using ClassifiedAds.CrossCuttingConcerns.Excel;
 using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
 using ClassifiedAds.Services.Configuration.Authorization.Policies.ConfigurationEntries;
 using ClassifiedAds.Services.Configuration.ConfigurationOptions;
@@ -13,7 +14,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Configuration.Controllers
@@ -27,14 +30,20 @@ namespace ClassifiedAds.Services.Configuration.Controllers
         private readonly Dispatcher _dispatcher;
         private readonly ILogger _logger;
         private readonly AppSettings _appSettings;
+        private readonly IExcelWriter<List<ConfigurationEntry>> _configurationEntriesExcelWriter;
+        private readonly IExcelReader<List<ConfigurationEntry>> _configurationEntriesExcelReader;
 
         public ConfigurationEntriesController(Dispatcher dispatcher,
             ILogger<ConfigurationEntriesController> logger,
-            IOptionsSnapshot<AppSettings> appSettings)
+            IOptionsSnapshot<AppSettings> appSettings,
+            IExcelWriter<List<ConfigurationEntry>> configurationEntriesExcelWriter,
+            IExcelReader<List<ConfigurationEntry>> configurationEntriesExcelReader)
         {
             _dispatcher = dispatcher;
             _logger = logger;
             _appSettings = appSettings.Value;
+            _configurationEntriesExcelWriter = configurationEntriesExcelWriter;
+            _configurationEntriesExcelReader = configurationEntriesExcelReader;
         }
 
         [AuthorizePolicy(typeof(GetConfigurationEntriesPolicy))]
@@ -116,6 +125,23 @@ namespace ClassifiedAds.Services.Configuration.Controllers
             await _dispatcher.DispatchAsync(new DeleteEntityCommand<ConfigurationEntry> { Entity = entity });
 
             return Ok();
+        }
+
+        [HttpGet("ExportAsExcel")]
+        public async Task<IActionResult> ExportAsExcel()
+        {
+            var entries = await _dispatcher.DispatchAsync(new GetEntititesQuery<ConfigurationEntry>());
+            using var stream = new MemoryStream();
+            _configurationEntriesExcelWriter.Write(entries, stream);
+            return File(stream.ToArray(), MediaTypeNames.Application.Octet, "ConfigurationEntries.xlsx");
+        }
+
+        [HttpPost("ImportExcel")]
+        public IActionResult ImportExcel([FromForm] UploadFileModel model)
+        {
+            using var stream = model.FormFile.OpenReadStream();
+            var entries = _configurationEntriesExcelReader.Read(stream);
+            return Ok(entries);
         }
     }
 }

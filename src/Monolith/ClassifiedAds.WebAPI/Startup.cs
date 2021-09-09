@@ -2,8 +2,11 @@
 using ClassifiedAds.Application.FileEntries.DTOs;
 using ClassifiedAds.Application.SmsMessages.DTOs;
 using ClassifiedAds.CrossCuttingConcerns.Csv;
+using ClassifiedAds.CrossCuttingConcerns.Excel;
+using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Infrastructure.Csv;
+using ClassifiedAds.Infrastructure.Excel.ClosedXML;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Web.Filters;
@@ -193,6 +196,8 @@ namespace ClassifiedAds.WebAPI
 
             services.AddScoped(typeof(ICsvReader<>), typeof(CsvReader<>));
             services.AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>));
+            services.AddScoped<IExcelReader<List<ConfigurationEntry>>, ConfigurationEntryExcelReader>();
+            services.AddScoped<IExcelWriter<List<ConfigurationEntry>>, ConfigurationEntryExcelWriter>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,11 +1,14 @@
-﻿using ClassifiedAds.Domain.Events;
+﻿using ClassifiedAds.CrossCuttingConcerns.Excel;
+using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Services.Configuration.ConfigurationOptions;
 using ClassifiedAds.Services.Configuration.Entities;
+using ClassifiedAds.Services.Configuration.Excel.ClosedXML;
 using ClassifiedAds.Services.Configuration.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -28,6 +31,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
             services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
+
+            services.AddScoped<IExcelReader<List<ConfigurationEntry>>, ConfigurationEntryExcelReader>();
+            services.AddScoped<IExcelWriter<List<ConfigurationEntry>>, ConfigurationEntryExcelWriter>();
 
             return services;
         }
