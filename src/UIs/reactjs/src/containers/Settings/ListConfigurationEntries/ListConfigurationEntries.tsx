@@ -5,6 +5,7 @@ import { Modal, Button } from "react-bootstrap";
 
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
+import axios from "../axios";
 
 class ListConfigurationEntries extends Component<any, any> {
   state = {
@@ -145,6 +146,16 @@ class ListConfigurationEntries extends Component<any, any> {
     if (!value) return value;
     var date = new Date(value);
     return date.toLocaleDateString() + " " + date.toLocaleTimeString();
+  };
+
+  exportAsExcel = async () => {
+    const rs = await axios.get("/ExportAsExcel", { responseType: "blob" });
+    const url = window.URL.createObjectURL(rs.data);
+    const element = document.createElement("a");
+    element.href = url;
+    element.download = "Settings.xlsx";
+    document.body.appendChild(element);
+    element.click();
   };
 
   componentDidMount() {
@@ -316,13 +327,23 @@ class ListConfigurationEntries extends Component<any, any> {
         <div className="card">
           <div className="card-header">
             Settings
-            <button
-              className="btn btn-primary"
-              style={{ float: "right" }}
-              onClick={() => this.addEntry()}
-            >
-              Add
-            </button>
+            <div style={{ float: "right" }}>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={this.exportAsExcel}
+              >
+                Export as Excel
+              </button>
+              &nbsp;
+              <button
+                className="btn btn-primary"
+                style={{ float: "right" }}
+                onClick={() => this.addEntry()}
+              >
+                Add
+              </button>
+            </div>
           </div>
           <div className="card-body">
             <div className="table-responsive">{table}</div>

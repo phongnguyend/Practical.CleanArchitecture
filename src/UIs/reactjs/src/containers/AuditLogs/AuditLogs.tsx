@@ -43,7 +43,7 @@ const AuditLogs = () => {
 
   return (
     <div className="card">
-      <div className="card-header">Audit Logs</div>
+      <div className="card-header">{pageTitle}</div>
       <div className="card-body">
         <div className="table-responsive">{table}</div>
       </div>
