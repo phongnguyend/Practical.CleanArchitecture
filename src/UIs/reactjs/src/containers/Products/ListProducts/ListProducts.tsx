@@ -45,15 +45,14 @@ class ListProducts extends Component<any, any> {
     this.setState({ showAuditLogsModal: true });
   };
 
-  exportAsPdf = () => {
-    axios.get("/ExportAsPdf", { responseType: "blob" }).then((rs) => {
-      const url = window.URL.createObjectURL(rs.data);
-      const element = document.createElement("a");
-      element.href = url;
-      element.download = "Products.pdf";
-      document.body.appendChild(element);
-      element.click();
-    });
+  exportAsPdf = async () => {
+    const rs = await axios.get("/ExportAsPdf", { responseType: "blob" });
+    const url = window.URL.createObjectURL(rs.data);
+    const element = document.createElement("a");
+    element.href = url;
+    element.download = "Products.pdf";
+    document.body.appendChild(element);
+    element.click();
   };
 
   deleteProduct = (product) => {
