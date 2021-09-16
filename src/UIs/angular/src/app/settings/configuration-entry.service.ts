@@ -40,4 +40,8 @@ export class ConfigurationEntriesService {
   ): Observable<IConfigurationEntry | undefined> {
     return this.http.delete<IConfigurationEntry>(this.url + "/" + entry.id);
   }
+
+  exportAsExcel() {
+    return this.http.get(this.url + "/ExportAsExcel", { responseType: "blob" });
+  }
 }

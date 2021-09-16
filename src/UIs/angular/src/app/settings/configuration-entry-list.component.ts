@@ -103,4 +103,18 @@ export class ConfigurationEntryListComponent implements OnInit {
   cancelDelete() {
     this.deleteModalRef.hide();
   }
+
+  exportAsExcel() {
+    this.configurationEntriesService.exportAsExcel().subscribe({
+      next: (rs) => {
+        const url = window.URL.createObjectURL(rs);
+        const element = document.createElement("a");
+        element.href = url;
+        element.download = "Settings.xlsx";
+        document.body.appendChild(element);
+        element.click();
+      },
+      error: (err) => (this.errorMessage = err),
+    });
+  }
 }

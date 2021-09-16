@@ -1,13 +1,19 @@
 <div class="card">
   <div class="card-header">
     Settings
-    <button
-      class="btn btn-primary"
-      style="float: right"
-      (click)="addEntry(addupdatetemplate)"
-    >
-      Add
-    </button>
+    <div style="float: right">
+      <button type="button" class="btn btn-secondary" (click)="exportAsExcel()">
+        Export as Excel
+      </button>
+      &nbsp;
+      <button
+        class="btn btn-primary"
+        style="float: right"
+        (click)="addEntry(addupdatetemplate)"
+      >
+        Add
+      </button>
+    </div>
   </div>
   <div class="card-body">
     <div class="table-responsive">

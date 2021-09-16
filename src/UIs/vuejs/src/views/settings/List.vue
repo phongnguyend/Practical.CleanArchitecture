@@ -2,9 +2,23 @@
   <div class="card">
     <div class="card-header">
       Settings
-      <button class="btn btn-primary" style="float: right" @click="addEntry()">
-        Add
-      </button>
+      <div style="float: right">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          @click="exportAsExcel()"
+        >
+          Export as Excel
+        </button>
+        &nbsp;
+        <button
+          class="btn btn-primary"
+          style="float: right; margin-left: 5px;"
+          @click="addEntry()"
+        >
+          Add
+        </button>
+      </div>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -215,6 +229,15 @@ export default Vue.extend({
         this.$bvModal.hide("modal-add-update");
         this.loadConfigurationEntries();
       });
+    },
+    async exportAsExcel() {
+      const rs = await axios.get("/ExportAsExcel", { responseType: "blob" });
+      const url = window.URL.createObjectURL(rs.data);
+      const element = document.createElement("a");
+      element.href = url;
+      element.download = "Settings.xlsx";
+      document.body.appendChild(element);
+      element.click();
     }
   },
   components: {},
