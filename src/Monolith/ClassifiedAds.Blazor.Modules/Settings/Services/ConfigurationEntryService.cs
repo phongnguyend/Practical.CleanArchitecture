@@ -49,5 +49,10 @@ namespace ClassifiedAds.Blazor.Modules.Settings.Services
             var auditLogs = await GetAsync<List<FileEntryAuditLogModel>>($"api/ConfigurationEntries/{id}/AuditLogs");
             return auditLogs;
         }
+
+        public string GetExportExcelUrl()
+        {
+            return $"{_httpClient.BaseAddress.AbsoluteUri.Trim('/')}/api/ConfigurationEntries/ExportAsExcel";
+        }
     }
 }

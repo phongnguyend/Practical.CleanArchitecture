@@ -4,16 +4,18 @@ using ClassifiedAds.Blazor.Modules.Settings.Models;
 using ClassifiedAds.Blazor.Modules.Settings.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Blazor.Modules.Settings.Pages
 {
     public partial class List
     {
+        [Inject]
+        public IJSRuntime JSRuntime { get; set; }
+
         [Inject]
         public ILogger<List> Logger { get; set; }
 
@@ -77,6 +79,13 @@ namespace ClassifiedAds.Blazor.Modules.Settings.Pages
             AddEditDialog.Close();
             ConfigurationEntries = await ConfigurationEntryService.GetListAsync();
             StateHasChanged();
+        }
+
+        protected async Task ExportAsExcel()
+        {
+            var token = await ConfigurationEntryService.GetAccessToken();
+            await JSRuntime.Log(token);
+            await JSRuntime.InvokeVoidAsync("interop.downloadFile", ConfigurationEntryService.GetExportExcelUrl(), token, "Settings.xlsx");
         }
     }
 }

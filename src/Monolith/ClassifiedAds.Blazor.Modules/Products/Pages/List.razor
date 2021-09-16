@@ -5,11 +5,22 @@
 <div class="card">
     <div class="card-header">
         Product List
-        <button class="btn btn-primary"
-                style="float: right;"
-                @onclick="QuickAddProduct">
-            Add Product
-        </button>
+
+        <div style="float: right">
+            <button type="button" class="btn btn-secondary" @onclick="ExportAsPdf">
+                Export as Pdf
+            </button>
+            &nbsp;
+            <button type="button" class="btn btn-secondary" @onclick="ExportAsCsv">
+                Export as Csv
+            </button>
+            &nbsp;
+            <button class="btn btn-primary"
+                    style="float: right;"
+                    @onclick="QuickAddProduct">
+                Add Product
+            </button>
+        </div>
     </div>
     <div class="card-body">
         <div class="table-responsive">

@@ -5,6 +5,7 @@ using ClassifiedAds.Blazor.Modules.Products.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,6 +21,9 @@ namespace ClassifiedAds.Blazor.Modules.Products.Pages
 
         [Inject]
         public NavigationManager NavManager { get; set; }
+
+        [Inject]
+        public IJSRuntime JSRuntime { get; set; }
 
         [Inject]
         public ILogger<List> Logger { get; set; }
@@ -66,6 +70,20 @@ namespace ClassifiedAds.Blazor.Modules.Products.Pages
             DeleteDialog.Close();
             Products = await ProductService.GetProductsAsync();
             StateHasChanged();
+        }
+
+        protected async Task ExportAsPdf()
+        {
+            var token = await ProductService.GetAccessToken();
+            await JSRuntime.Log(token);
+            await JSRuntime.InvokeVoidAsync("interop.downloadFile", ProductService.GetExportPdfUrl(), token, "Products.pdf");
+        }
+
+        protected async Task ExportAsCsv()
+        {
+            var token = await ProductService.GetAccessToken();
+            await JSRuntime.Log(token);
+            await JSRuntime.InvokeVoidAsync("interop.downloadFile", ProductService.GetExportCsvUrl(), token, "Products.csv");
         }
     }
 }

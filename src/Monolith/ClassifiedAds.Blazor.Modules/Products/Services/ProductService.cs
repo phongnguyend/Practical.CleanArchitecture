@@ -48,5 +48,15 @@ namespace ClassifiedAds.Blazor.Modules.Products.Services
             var auditLogs = await GetAsync<List<ProductAuditLogModel>>($"api/products/{id}/auditlogs");
             return auditLogs;
         }
+
+        public string GetExportPdfUrl()
+        {
+            return $"{_httpClient.BaseAddress.AbsoluteUri.Trim('/')}/api/products/ExportAsPdf";
+        }
+
+        public string GetExportCsvUrl()
+        {
+            return $"{_httpClient.BaseAddress.AbsoluteUri.Trim('/')}/api/products/ExportAsCsv";
+        }
     }
 }
