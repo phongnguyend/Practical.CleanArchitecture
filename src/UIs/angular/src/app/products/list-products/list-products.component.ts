@@ -99,4 +99,18 @@ export class ListProductsComponent implements OnInit {
       error: (err) => (this.errorMessage = err),
     });
   }
+
+    exportAsCsv() {
+    this.productService.exportAsCsv().subscribe({
+      next: (rs) => {
+        const url = window.URL.createObjectURL(rs);
+        const element = document.createElement("a");
+        element.href = url;
+        element.download = "Products.csv";
+        document.body.appendChild(element);
+        element.click();
+      },
+      error: (err) => (this.errorMessage = err),
+    });
+  }
 }

@@ -7,6 +7,10 @@
           Export as Pdf
         </button>
         &nbsp;
+        <button type="button" class="btn btn-secondary" @click="exportAsCsv">
+          Export as Csv
+        </button>
+        &nbsp;
         <router-link class="btn btn-primary" to="/products/add"
           >Add Product</router-link
         >
@@ -211,6 +215,16 @@ export default Vue.extend({
         const element = document.createElement("a");
         element.href = url;
         element.download = "Products.pdf";
+        document.body.appendChild(element);
+        element.click();
+      });
+    },
+    exportAsCsv() {
+      axios.get("/ExportAsCsv", { responseType: "blob" }).then(rs => {
+        const url = window.URL.createObjectURL(rs.data);
+        const element = document.createElement("a");
+        element.href = url;
+        element.download = "Products.csv";
         document.body.appendChild(element);
         element.click();
       });

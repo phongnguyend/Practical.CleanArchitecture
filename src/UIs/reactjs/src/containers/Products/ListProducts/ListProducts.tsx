@@ -55,6 +55,16 @@ class ListProducts extends Component<any, any> {
     element.click();
   };
 
+  exportAsCsv = async () => {
+    const rs = await axios.get("/ExportAsCsv", { responseType: "blob" });
+    const url = window.URL.createObjectURL(rs.data);
+    const element = document.createElement("a");
+    element.href = url;
+    element.download = "Products.csv";
+    document.body.appendChild(element);
+    element.click();
+  };
+
   deleteProduct = (product) => {
     this.setState({ showDeleteModal: true, deletingProduct: product });
   };
@@ -227,6 +237,14 @@ class ListProducts extends Component<any, any> {
                 onClick={this.exportAsPdf}
               >
                 Export as Pdf
+              </button>
+              &nbsp;
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={this.exportAsCsv}
+              >
+                Export as Csv
               </button>
               &nbsp;
               <NavLink className="btn btn-primary" to="/products/add">
