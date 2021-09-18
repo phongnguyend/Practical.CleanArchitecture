@@ -3,7 +3,6 @@ using ClassifiedAds.BackgroundServer.HostedServices;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Notification.Web;
 using ClassifiedAds.Modules.Notification.Contracts.DTOs;
-using ClassifiedAds.Modules.Notification.Hubs;
 using ClassifiedAds.Modules.Notification.Services;
 using ClassifiedAds.Modules.Storage.DTOs;
 using Microsoft.AspNetCore.Builder;
@@ -144,5 +143,11 @@ namespace ClassifiedAds.BackgroundServer
                 await notification.SendAsync(new SendTaskStatusMessage { Step = $"Send Sms", Message = message });
             });
         }
+    }
+
+    internal class SendTaskStatusMessage
+    {
+        public string Step { get; internal set; }
+        public string Message { get; internal set; }
     }
 }

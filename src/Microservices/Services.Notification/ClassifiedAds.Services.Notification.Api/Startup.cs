@@ -1,6 +1,8 @@
 using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Services.Notification.ConfigurationOptions;
+using ClassifiedAds.Services.Notification.HostedServices;
+using ClassifiedAds.Services.Notification.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,12 +37,20 @@ namespace ClassifiedAds.Services.Notification
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
             });
 
+            services.AddSignalR();
+
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAnyOrigin", builder => builder
                     .AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader());
+
+                options.AddPolicy("SignalRHubs", builder => builder
+                    .SetIsOriginAllowed(host => true)
+                    .AllowAnyHeader()
+                    .WithMethods("GET", "POST")
+                    .AllowCredentials());
             });
 
             services.AddDistributedTracing(AppSettings.DistributedTracing);
@@ -57,6 +67,8 @@ namespace ClassifiedAds.Services.Notification
                         options.Audience = AppSettings.IdentityServerAuthentication.ApiName;
                         options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
                     });
+
+            services.AddHostedService<PushNotificationHostedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,6 +100,7 @@ namespace ClassifiedAds.Services.Notification
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<NotificationHub>("/hubs/notification").RequireCors("SignalRHubs");
             });
         }
     }

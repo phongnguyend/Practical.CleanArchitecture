@@ -3,6 +3,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 
 import "./App.css";
 import Nav from "./components/Nav/Nav";
+import Notification from "./components/Notification/Notification";
 import Home from "./containers/Home/Home";
 import OidcLoginRedirect from "./containers/Auth/OidcLoginRedirect";
 import ListConfigurationEntries from "./containers/Settings/ListConfigurationEntries/ListConfigurationEntries";
@@ -39,6 +40,7 @@ function App() {
         <Route path="/auditlogs" component={AuditLogs} />
         <Redirect to="/home" />
       </Switch>
+      <Notification />
     </div>
   );
 }

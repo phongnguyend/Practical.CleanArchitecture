@@ -2,6 +2,7 @@ import Vue from "vue";
 import axios from "axios";
 import Vuelidate from "vuelidate";
 import { BootstrapVue } from "bootstrap-vue";
+import VueToastr from "vue-toastr";
 
 import App from "./App.vue";
 import "./registerServiceWorker";
@@ -28,6 +29,7 @@ Vue.filter("uppercase", function(value: string) {
 
 Vue.use(Vuelidate);
 Vue.use(BootstrapVue);
+Vue.use(VueToastr);
 
 addAuthInterceptors(axios);
 

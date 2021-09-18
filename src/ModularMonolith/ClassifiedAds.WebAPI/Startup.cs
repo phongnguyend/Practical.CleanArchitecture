@@ -9,6 +9,7 @@ using ClassifiedAds.Modules.Identity.ConfigurationOptions;
 using ClassifiedAds.Modules.Identity.Contracts.Services;
 using ClassifiedAds.Modules.Identity.Repositories;
 using ClassifiedAds.Modules.Identity.Services;
+using ClassifiedAds.Modules.Notification.Hubs;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -55,12 +56,20 @@ namespace ClassifiedAds.WebAPI
                 .AddStorageModule()
                 .AddMonitoringServices(AppSettings.Monitoring);
 
+            services.AddSignalR();
+
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowedOrigins", builder => builder
                     .WithOrigins(AppSettings.CORS.AllowedOrigins)
                     .AllowAnyMethod()
                     .AllowAnyHeader());
+
+                options.AddPolicy("SignalRHubs", builder => builder
+                    .WithOrigins(AppSettings.CORS.AllowedOrigins)
+                    .AllowAnyHeader()
+                    .WithMethods("GET", "POST")
+                    .AllowCredentials());
 
                 options.AddPolicy("AllowAnyOrigin", builder => builder
                     .AllowAnyOrigin()
@@ -281,6 +290,7 @@ namespace ClassifiedAds.WebAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<NotificationHub>("/hubs/notification").RequireCors("SignalRHubs");
             });
         }
     }

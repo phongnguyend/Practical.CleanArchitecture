@@ -5,12 +5,14 @@ using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.Storages;
 using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
 using ClassifiedAds.WebAPI.Authorization.Policies.Files;
+using ClassifiedAds.WebAPI.Hubs;
 using ClassifiedAds.WebAPI.Models.Files;
 using CryptographyHelper;
 using CryptographyHelper.SymmetricAlgorithms;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using System;
@@ -33,18 +35,24 @@ namespace ClassifiedAds.WebAPI.Controllers
         private readonly Dispatcher _dispatcher;
         private readonly IFileStorageManager _fileManager;
         private readonly IMemoryCache _memoryCache;
+        private readonly IHubContext<NotificationHub> _notificationHubContext;
 
-        public FilesController(Dispatcher dispatcher, IFileStorageManager fileManager, IMemoryCache memoryCache)
+        public FilesController(Dispatcher dispatcher,
+            IFileStorageManager fileManager,
+            IMemoryCache memoryCache,
+            IHubContext<NotificationHub> notificationHubContext)
         {
             _dispatcher = dispatcher;
             _fileManager = fileManager;
             _memoryCache = memoryCache;
+            _notificationHubContext = notificationHubContext;
         }
 
         [AuthorizePolicy(typeof(GetFilesPolicy))]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get()
         {
+            await _notificationHubContext.Clients.All.SendAsync("ReceiveMessage", $"Getting files ...");
             var fileEntries = await _dispatcher.DispatchAsync(new GetEntititesQuery<FileEntry>());
             return Ok(fileEntries.ToModels());
         }

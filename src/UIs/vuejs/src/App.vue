@@ -3,15 +3,18 @@
     <div class="container">
       <app-nav />
       <router-view />
+      <app-notification />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Nav from "./views/Nav.vue";
+import Notification from "./components/Notification.vue";
 export default {
   components: {
-    appNav: Nav
+    appNav: Nav,
+    appNotification: Notification
   }
 };
 </script>
