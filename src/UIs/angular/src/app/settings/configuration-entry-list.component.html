@@ -6,12 +6,15 @@
         Export as Excel
       </button>
       &nbsp;
+      <button class="btn btn-primary" (click)="addEntry(addupdatetemplate)">
+        Add
+      </button>
+      &nbsp;
       <button
         class="btn btn-primary"
-        style="float: right"
-        (click)="addEntry(addupdatetemplate)"
+        (click)="openImportExcelModal(import_excel_modal_template)"
       >
-        Add
+        Import Excel
       </button>
     </div>
   </div>
@@ -154,6 +157,43 @@
         <label class="col-sm-3 col-form-label"></label>
         <div class="col-sm-9">
           <button class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #import_excel_modal_template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Import Excel</h4>
+    <button
+      type="button"
+      class="close pull-right"
+      aria-label="Close"
+      (click)="importExcelModalRef.hide()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #form="ngForm" (ngSubmit)="confirmImportExcelFile(form)">
+      <div class="form-group row">
+        <div class="col-sm-12">
+          <input
+            id="importingFile"
+            type="file"
+            name="importingFile"
+            class="form-control"
+            required
+            (change)="handleFileInput($event.target.files)"
+            [class.is-invalid]="form.submitted && !importingFile"
+          />
+          <span class="invalid-feedback"> Select a file </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-12" style="text-align: center">
+          <button class="btn btn-primary">Import</button>
         </div>
       </div>
     </form>

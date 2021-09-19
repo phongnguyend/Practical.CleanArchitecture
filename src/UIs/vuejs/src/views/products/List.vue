@@ -14,6 +14,10 @@
         <router-link class="btn btn-primary" to="/products/add"
           >Add Product</router-link
         >
+        &nbsp;
+        <button class="btn btn-primary" @click="openImportCsvModal()">
+          Import Csv
+        </button>
       </div>
     </div>
     <div class="card-body">
@@ -143,6 +147,30 @@
         </table>
       </div>
     </b-modal>
+    <b-modal id="modal-import-csv" hide-footer title="Import Csv">
+      <form @submit.prevent="confirmImportCsvFile">
+        <div class="form-group row">
+          <div class="col-sm-12">
+            <input
+              id="importingFile"
+              type="file"
+              name="importingFile"
+              class="form-control"
+              :class="{
+                'is-invalid': isImportCsvFormSubmitted && !importingFile
+              }"
+              @change="handleFileInput($event.target.files)"
+            />
+            <span class="invalid-feedback"> Select a file </span>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-12" style="text-align: center">
+            <button class="btn btn-primary">Import</button>
+          </div>
+        </div>
+      </form>
+    </b-modal>
   </div>
 </template>
 
@@ -166,7 +194,9 @@ export default Vue.extend({
       auditLogs: [],
       selectedProduct: {} as IProduct,
       listFilter: "",
-      errorMessage: ""
+      errorMessage: "",
+      isImportCsvFormSubmitted: false,
+      importingFile: null as File | null
     };
   },
   computed: {
@@ -228,6 +258,26 @@ export default Vue.extend({
         document.body.appendChild(element);
         element.click();
       });
+    },
+    openImportCsvModal() {
+      this.isImportCsvFormSubmitted = false;
+      this.importingFile = null;
+      this.$bvModal.show("modal-import-csv");
+    },
+    handleFileInput(files: FileList) {
+      this.importingFile = files.item(0);
+    },
+    async confirmImportCsvFile() {
+      this.isImportCsvFormSubmitted = true;
+      if (!this.importingFile) {
+        return;
+      }
+      const formData = new FormData();
+      formData.append("formFile", this.importingFile);
+      const rs = await axios.post("ImportCsv", formData);
+      this.isImportCsvFormSubmitted = false;
+      this.$bvModal.hide("modal-import-csv");
+      this.loadProducts();
     }
   },
   components: {

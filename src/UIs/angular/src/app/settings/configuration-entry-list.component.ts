@@ -16,7 +16,9 @@ export class ConfigurationEntryListComponent implements OnInit {
   selectedEntry: IConfigurationEntry = null;
   addUpdateModalRef: BsModalRef;
   deleteModalRef: BsModalRef;
+  importExcelModalRef: BsModalRef;
   errorMessage;
+  importingFile;
   constructor(
     private configurationEntriesService: ConfigurationEntriesService,
     private modalService: BsModalService
@@ -113,6 +115,36 @@ export class ConfigurationEntryListComponent implements OnInit {
         element.download = "Settings.xlsx";
         document.body.appendChild(element);
         element.click();
+      },
+      error: (err) => (this.errorMessage = err),
+    });
+  }
+
+  openImportExcelModal(template: TemplateRef<any>) {
+    this.importingFile = null;
+    this.importExcelModalRef = this.modalService.show(template, {
+      class: "modal-sm",
+    });
+  }
+
+  handleFileInput(files: FileList) {
+    this.importingFile = files.item(0);
+  }
+
+  confirmImportExcelFile(form: NgForm) {
+    if (form.invalid || !this.importingFile) {
+      return;
+    }
+
+    var request = this.configurationEntriesService.importExcelFile(
+      this.importingFile
+    );
+
+    request.subscribe({
+      next: (rs) => {
+        console.log(rs);
+        this.importExcelModalRef.hide();
+        this.ngOnInit();
       },
       error: (err) => (this.errorMessage = err),
     });

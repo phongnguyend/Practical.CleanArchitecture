@@ -12,12 +12,15 @@ class ListProducts extends Component<any, any> {
   state = {
     pageTitle: "Product List",
     showImage: false,
-    showDeleteModal: false,
+    deleteModalOpen: false,
     deletingProduct: {
       name: null,
     },
     listFilter: "",
-    showAuditLogsModal: false,
+    auditLogsModalOpen: false,
+    importCsvModalOpen: false,
+    importingFile: null as File | null,
+    importCsvFormSubmitted: false,
   };
 
   toggleImage = () => {
@@ -42,7 +45,7 @@ class ListProducts extends Component<any, any> {
 
   viewAuditLogs = (product) => {
     this.props.fetchAuditLogs(product);
-    this.setState({ showAuditLogsModal: true });
+    this.setState({ auditLogsModalOpen: true });
   };
 
   exportAsPdf = async () => {
@@ -66,22 +69,64 @@ class ListProducts extends Component<any, any> {
   };
 
   deleteProduct = (product) => {
-    this.setState({ showDeleteModal: true, deletingProduct: product });
+    this.setState({ deleteModalOpen: true, deletingProduct: product });
   };
 
   deleteCanceled = () => {
-    this.setState({ showDeleteModal: false, deletingProduct: null });
+    this.setState({ deleteModalOpen: false, deletingProduct: null });
   };
 
   deleteConfirmed = () => {
     this.props.deleteProduct(this.state.deletingProduct);
-    this.setState({ showDeleteModal: false, deletingProduct: null });
+    this.setState({ deleteModalOpen: false, deletingProduct: null });
   };
 
   formatDateTime = (value) => {
     if (!value) return value;
     var date = new Date(value);
     return date.toLocaleDateString() + " " + date.toLocaleTimeString();
+  };
+
+  openImportCsvModal = () => {
+    this.setState({
+      importCsvModalOpen: true,
+      importingFile: null,
+      importCsvFormSubmitted: false,
+    });
+  };
+
+  importCsvCanceled = () => {
+    this.setState({
+      importCsvModalOpen: false,
+      importingFile: null,
+      importCsvFormSubmitted: false,
+    });
+  };
+
+  fileChanged = (event) => {
+    this.setState({
+      importingFile: event.target.files.item(0),
+    });
+  };
+
+  importCsvConfirmed = async (event) => {
+    event.preventDefault();
+    this.setState({
+      importCsvFormSubmitted: true,
+    });
+    if (!this.state.importingFile) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append("formFile", this.state.importingFile);
+    await axios.post("ImportCsv", formData);
+    this.setState({
+      importCsvModalOpen: false,
+      importingFile: null,
+      importCsvFormSubmitted: false,
+    });
+
+    this.props.fetchProducts();
   };
 
   componentDidMount() {
@@ -98,6 +143,7 @@ class ListProducts extends Component<any, any> {
         <td>
           {this.state.showImage ? (
             <img
+              alt=""
               src={product.imageUrl || logo}
               title={product.name}
               style={{ width: "50px", margin: "2px" }}
@@ -182,8 +228,8 @@ class ListProducts extends Component<any, any> {
     const auditLogsModal = (
       <Modal
         size="xl"
-        show={this.state.showAuditLogsModal}
-        onHide={() => this.setState({ showAuditLogsModal: false })}
+        show={this.state.auditLogsModalOpen}
+        onHide={() => this.setState({ auditLogsModalOpen: false })}
       >
         <Modal.Body>
           <div className="table-responsive">
@@ -206,7 +252,7 @@ class ListProducts extends Component<any, any> {
     );
 
     const deleteModal = (
-      <Modal show={this.state.showDeleteModal} onHide={this.deleteCanceled}>
+      <Modal show={this.state.deleteModalOpen} onHide={this.deleteCanceled}>
         <Modal.Header closeButton>
           <Modal.Title>Delete Product</Modal.Title>
         </Modal.Header>
@@ -222,6 +268,44 @@ class ListProducts extends Component<any, any> {
             Yes
           </Button>
         </Modal.Footer>
+      </Modal>
+    );
+
+    const importCsvModal = (
+      <Modal
+        show={this.state.importCsvModalOpen}
+        onHide={this.importCsvCanceled}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Import Csv</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form onSubmit={this.importCsvConfirmed}>
+            <div className="form-group row">
+              <div className="col-sm-12">
+                <input
+                  id="importingFile"
+                  type="file"
+                  name="importingFile"
+                  className={
+                    "form-control " +
+                    (this.state.importCsvFormSubmitted &&
+                    !this.state.importingFile
+                      ? "is-invalid"
+                      : "")
+                  }
+                  onChange={this.fileChanged}
+                />
+                <span className="invalid-feedback"> Select a file </span>
+              </div>
+            </div>
+            <div className="form-group row">
+              <div className="col-sm-12" style={{ textAlign: "center" }}>
+                <button className="btn btn-primary">Import</button>
+              </div>
+            </div>
+          </form>
+        </Modal.Body>
       </Modal>
     );
 
@@ -250,6 +334,13 @@ class ListProducts extends Component<any, any> {
               <NavLink className="btn btn-primary" to="/products/add">
                 Add Product
               </NavLink>
+              &nbsp;
+              <button
+                className="btn btn-primary"
+                onClick={() => this.openImportCsvModal()}
+              >
+                Import Csv
+              </button>
             </div>
           </div>
           <div className="card-body">
@@ -280,6 +371,7 @@ class ListProducts extends Component<any, any> {
         ) : null}
         {deleteModal}
         {auditLogsModal}
+        {importCsvModal}
       </div>
     );
   }

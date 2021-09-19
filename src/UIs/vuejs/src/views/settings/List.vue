@@ -11,12 +11,12 @@
           Export as Excel
         </button>
         &nbsp;
-        <button
-          class="btn btn-primary"
-          style="float: right; margin-left: 5px;"
-          @click="addEntry()"
-        >
+        <button class="btn btn-primary" @click="addEntry()">
           Add
+        </button>
+        &nbsp;
+        <button class="btn btn-primary" @click="openImportExcelModal()">
+          Import Excel
         </button>
       </div>
     </div>
@@ -137,6 +137,30 @@
         </div>
       </form>
     </b-modal>
+    <b-modal id="modal-import-excel" hide-footer title="Import Excel">
+      <form @submit.prevent="confirmImportExcelFile">
+        <div class="form-group row">
+          <div class="col-sm-12">
+            <input
+              id="importingFile"
+              type="file"
+              name="importingFile"
+              class="form-control"
+              :class="{
+                'is-invalid': isImportExcelFormSubmitted && !importingFile
+              }"
+              @change="handleFileInput($event.target.files)"
+            />
+            <span class="invalid-feedback"> Select a file </span>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-12" style="text-align: center">
+            <button class="btn btn-primary">Import</button>
+          </div>
+        </div>
+      </form>
+    </b-modal>
   </div>
 </template>
 
@@ -153,6 +177,8 @@ export default Vue.extend({
       configurationEntries: [] as IConfigurationEntry[],
       selectedEntry: {} as IConfigurationEntry,
       isSubmitted: false,
+      isImportExcelFormSubmitted: false,
+      importingFile: null as File | null,
       errorMessage: ""
     };
   },
@@ -238,6 +264,26 @@ export default Vue.extend({
       element.download = "Settings.xlsx";
       document.body.appendChild(element);
       element.click();
+    },
+    openImportExcelModal() {
+      this.isImportExcelFormSubmitted = false;
+      this.importingFile = null;
+      this.$bvModal.show("modal-import-excel");
+    },
+    handleFileInput(files: FileList) {
+      this.importingFile = files.item(0);
+    },
+    async confirmImportExcelFile() {
+      this.isImportExcelFormSubmitted = true;
+      if (!this.importingFile) {
+        return;
+      }
+      const formData = new FormData();
+      formData.append("formFile", this.importingFile);
+      const rs = await axios.post("ImportExcel", formData);
+      this.isImportExcelFormSubmitted = false;
+      this.$bvModal.hide("modal-import-excel");
+      this.loadConfigurationEntries();
     }
   },
   components: {},

@@ -9,8 +9,12 @@ import axios from "../axios";
 
 class ListConfigurationEntries extends Component<any, any> {
   state = {
-    showDeleteModal: false,
-    showAddUpdateModel: false,
+    deleteModalOpen: false,
+    addUpdateModalOpen: false,
+    addUpdateFormSubmitted: false,
+    importExcelModalOpen: false,
+    importingFile: null as File | null,
+    importExcelFormSubmitted: false,
     selectingEntry: {
       id: "",
       key: "",
@@ -40,14 +44,13 @@ class ListConfigurationEntries extends Component<any, any> {
         touched: false,
       },
     },
-    submitted: false,
     errorMessage: null,
   };
 
   fieldChanged = (event) => {
     let value = event.target.value;
 
-    if (event.target.type == "checkbox") {
+    if (event.target.type === "checkbox") {
       value = event.target.checked;
     }
 
@@ -85,26 +88,26 @@ class ListConfigurationEntries extends Component<any, any> {
     return validationRs.isValid;
   };
 
-  deleteEntry = (entry) => {
-    this.setState({ showDeleteModal: true, selectingEntry: entry });
+  openDeleteModal = (entry) => {
+    this.setState({ deleteModalOpen: true, selectingEntry: entry });
   };
 
   deleteCanceled = () => {
-    this.setState({ showDeleteModal: false, selectingEntry: null });
+    this.setState({ deleteModalOpen: false, selectingEntry: null });
   };
 
   deleteConfirmed = () => {
     this.props.deleteConfigurationEntry(this.state.selectingEntry);
-    this.setState({ showDeleteModal: false, selectingEntry: null });
+    this.setState({ deleteModalOpen: false, selectingEntry: null });
   };
 
-  addEntry = () => {
-    this.setState({ showAddUpdateModel: true, selectingEntry: {} });
+  openAddModal = () => {
+    this.setState({ addUpdateModalOpen: true, selectingEntry: {} });
   };
 
-  updateEntry = (entry) => {
+  openUpdateModal = (entry) => {
     this.setState({
-      showAddUpdateModel: true,
+      addUpdateModalOpen: true,
       selectingEntry: {
         id: entry.id,
         key: entry.key,
@@ -117,15 +120,15 @@ class ListConfigurationEntries extends Component<any, any> {
 
   addUpdateCanceled = () => {
     this.setState({
-      showAddUpdateModel: false,
+      addUpdateModalOpen: false,
       selectingEntry: null,
-      submitted: false,
+      addUpdateFormSubmitted: false,
     });
   };
 
   addUpdateConfirmed = (event) => {
     event.preventDefault();
-    this.setState({ submitted: true });
+    this.setState({ addUpdateFormSubmitted: true });
 
     let isValid = true;
     for (let fieldName in this.state.controls) {
@@ -138,7 +141,7 @@ class ListConfigurationEntries extends Component<any, any> {
 
     if (isValid) {
       this.props.saveConfigurationEntry(this.state.selectingEntry);
-      this.setState({ showAddUpdateModel: false, selectingEntry: null });
+      this.setState({ addUpdateModalOpen: false, selectingEntry: null });
     }
   };
 
@@ -158,6 +161,48 @@ class ListConfigurationEntries extends Component<any, any> {
     element.click();
   };
 
+  openImportExcelModal = () => {
+    this.setState({
+      importExcelModalOpen: true,
+      importingFile: null,
+      importExcelFormSubmitted: false,
+    });
+  };
+
+  importExcelCanceled = () => {
+    this.setState({
+      importExcelModalOpen: false,
+      importingFile: null,
+      importExcelFormSubmitted: false,
+    });
+  };
+
+  fileChanged = (event) => {
+    this.setState({
+      importingFile: event.target.files.item(0),
+    });
+  };
+
+  importExcelConfirmed = async (event) => {
+    event.preventDefault();
+    this.setState({
+      importExcelFormSubmitted: true,
+    });
+    if (!this.state.importingFile) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append("formFile", this.state.importingFile);
+    await axios.post("ImportExcel", formData);
+    this.setState({
+      importExcelModalOpen: false,
+      importingFile: null,
+      importExcelFormSubmitted: false,
+    });
+
+    this.props.fetchConfigurationEntries();
+  };
+
   componentDidMount() {
     this.props.fetchConfigurationEntries();
   }
@@ -172,7 +217,7 @@ class ListConfigurationEntries extends Component<any, any> {
         <td>
           <button
             className="btn btn-primary"
-            onClick={() => this.updateEntry(entry)}
+            onClick={() => this.openUpdateModal(entry)}
           >
             Edit
           </button>
@@ -180,7 +225,7 @@ class ListConfigurationEntries extends Component<any, any> {
           <button
             type="button"
             className="btn btn-primary btn-danger"
-            onClick={() => this.deleteEntry(entry)}
+            onClick={() => this.openDeleteModal(entry)}
           >
             Delete
           </button>
@@ -204,7 +249,7 @@ class ListConfigurationEntries extends Component<any, any> {
     ) : null;
 
     const deleteModal = (
-      <Modal show={this.state.showDeleteModal} onHide={this.deleteCanceled}>
+      <Modal show={this.state.deleteModalOpen} onHide={this.deleteCanceled}>
         <Modal.Header closeButton>
           <Modal.Title>Delete Entry</Modal.Title>
         </Modal.Header>
@@ -225,7 +270,7 @@ class ListConfigurationEntries extends Component<any, any> {
 
     const addUpdateModal = (
       <Modal
-        show={this.state.showAddUpdateModel && !this.props.saved}
+        show={this.state.addUpdateModalOpen && !this.props.saved}
         onHide={this.addUpdateCanceled}
       >
         <Modal.Header closeButton>
@@ -245,7 +290,8 @@ class ListConfigurationEntries extends Component<any, any> {
                   name="key"
                   className={
                     "form-control " +
-                    (this.state.submitted && !this.state.controls["key"].valid
+                    (this.state.addUpdateFormSubmitted &&
+                    !this.state.controls["key"].valid
                       ? "is-invalid"
                       : "")
                   }
@@ -269,7 +315,8 @@ class ListConfigurationEntries extends Component<any, any> {
                   name="value"
                   className={
                     "form-control " +
-                    (this.state.submitted && !this.state.controls["value"].valid
+                    (this.state.addUpdateFormSubmitted &&
+                    !this.state.controls["value"].valid
                       ? "is-invalid"
                       : "")
                   }
@@ -322,6 +369,44 @@ class ListConfigurationEntries extends Component<any, any> {
       </Modal>
     );
 
+    const importExcelModal = (
+      <Modal
+        show={this.state.importExcelModalOpen}
+        onHide={this.importExcelCanceled}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Import Excel</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form onSubmit={this.importExcelConfirmed}>
+            <div className="form-group row">
+              <div className="col-sm-12">
+                <input
+                  id="importingFile"
+                  type="file"
+                  name="importingFile"
+                  className={
+                    "form-control " +
+                    (this.state.importExcelFormSubmitted &&
+                    !this.state.importingFile
+                      ? "is-invalid"
+                      : "")
+                  }
+                  onChange={this.fileChanged}
+                />
+                <span className="invalid-feedback"> Select a file </span>
+              </div>
+            </div>
+            <div className="form-group row">
+              <div className="col-sm-12" style={{ textAlign: "center" }}>
+                <button className="btn btn-primary">Import</button>
+              </div>
+            </div>
+          </form>
+        </Modal.Body>
+      </Modal>
+    );
+
     return (
       <div>
         <div className="card">
@@ -338,10 +423,16 @@ class ListConfigurationEntries extends Component<any, any> {
               &nbsp;
               <button
                 className="btn btn-primary"
-                style={{ float: "right" }}
-                onClick={() => this.addEntry()}
+                onClick={() => this.openAddModal()}
               >
                 Add
+              </button>
+              &nbsp;
+              <button
+                className="btn btn-primary"
+                onClick={() => this.openImportExcelModal()}
+              >
+                Import Excel
               </button>
             </div>
           </div>
@@ -356,6 +447,7 @@ class ListConfigurationEntries extends Component<any, any> {
         ) : null}
         {deleteModal}
         {addUpdateModal}
+        {importExcelModal}
       </div>
     );
   }
@@ -372,9 +464,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchConfigurationEntries: () =>
       dispatch(actions.fetchConfigurationEntries()),
-    //updateConfigurationEntry: (entry) =>
-    //dispatch(actions.updateConfigurationEntry(entry)),
-    //resetConfigurationEntry: () => dispatch(actions.resetConfigurationEntry()),
     saveConfigurationEntry: (entry) =>
       dispatch(actions.saveConfigurationEntry(entry)),
     deleteConfigurationEntry: (entry) =>

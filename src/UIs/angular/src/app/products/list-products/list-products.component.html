@@ -17,6 +17,13 @@
       >
         Add Product
       </a>
+      &nbsp;
+      <button
+        class="btn btn-primary"
+        (click)="openImportCsvModal(import_csv_modal_template)"
+      >
+        Import Csv
+      </button>
     </div>
   </div>
   <div class="card-body">
@@ -140,5 +147,42 @@
         </tbody>
       </table>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #import_csv_modal_template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Import Csv</h4>
+    <button
+      type="button"
+      class="close pull-right"
+      aria-label="Close"
+      (click)="importCsvModalRef.hide()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #form="ngForm" (ngSubmit)="confirmImportCsvFile(form)">
+      <div class="form-group row">
+        <div class="col-sm-12">
+          <input
+            id="importingFile"
+            type="file"
+            name="importingFile"
+            class="form-control"
+            required
+            (change)="handleFileInput($event.target.files)"
+            [class.is-invalid]="form.submitted && !importingFile"
+          />
+          <span class="invalid-feedback"> Select a file </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-12" style="text-align: center">
+          <button class="btn btn-primary">Import</button>
+        </div>
+      </div>
+    </form>
   </div>
 </ng-template>

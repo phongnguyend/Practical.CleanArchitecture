@@ -44,4 +44,13 @@ export class ConfigurationEntriesService {
   exportAsExcel() {
     return this.http.get(this.url + "/ExportAsExcel", { responseType: "blob" });
   }
+
+  importExcelFile(file: File): Observable<IConfigurationEntry[] | undefined> {
+    const formData: FormData = new FormData();
+    formData.append("formFile", file);
+    return this.http.post<IConfigurationEntry[]>(
+      this.url + "/ImportExcel",
+      formData
+    );
+  }
 }

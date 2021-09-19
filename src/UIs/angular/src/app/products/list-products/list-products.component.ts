@@ -4,7 +4,8 @@ import { IProduct } from "../product";
 import { ProductService } from "../product.service";
 import { Title } from "@angular/platform-browser";
 import { IAuditLogEntry } from "../../auditlogs/audit-log";
-import { BsModalService } from "ngx-bootstrap";
+import { BsModalRef, BsModalService } from "ngx-bootstrap";
+import { NgForm } from "@angular/forms";
 
 @Component({
   templateUrl: "./list-products.component.html",
@@ -31,6 +32,9 @@ export class ListProductsComponent implements OnInit {
 
   filteredProducts: IProduct[] = [];
   products: IProduct[] = [];
+
+  importCsvModalRef: BsModalRef;
+  importingFile;
 
   constructor(
     private productService: ProductService,
@@ -100,7 +104,7 @@ export class ListProductsComponent implements OnInit {
     });
   }
 
-    exportAsCsv() {
+  exportAsCsv() {
     this.productService.exportAsCsv().subscribe({
       next: (rs) => {
         const url = window.URL.createObjectURL(rs);
@@ -109,6 +113,34 @@ export class ListProductsComponent implements OnInit {
         element.download = "Products.csv";
         document.body.appendChild(element);
         element.click();
+      },
+      error: (err) => (this.errorMessage = err),
+    });
+  }
+
+  openImportCsvModal(template: TemplateRef<any>) {
+    this.importingFile = null;
+    this.importCsvModalRef = this.modalService.show(template, {
+      class: "modal-sm",
+    });
+  }
+
+  handleFileInput(files: FileList) {
+    this.importingFile = files.item(0);
+  }
+
+  confirmImportCsvFile(form: NgForm) {
+    if (form.invalid || !this.importingFile) {
+      return;
+    }
+
+    var request = this.productService.importCsvFile(this.importingFile);
+
+    request.subscribe({
+      next: (rs) => {
+        console.log(rs);
+        this.importCsvModalRef.hide();
+        this.ngOnInit();
       },
       error: (err) => (this.errorMessage = err),
     });
