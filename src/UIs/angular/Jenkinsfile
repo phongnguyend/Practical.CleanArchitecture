@@ -1,0 +1,31 @@
+pipeline {
+  agent any
+  tools {
+    nodejs "Default"
+  }
+  stages {
+    stage('Git Checkout') {
+      steps {
+        git branch: 'master', url: 'https://github.com/phongnguyend/Practical.CleanArchitecture'
+      }
+    }
+    stage('Install') {
+      steps {
+        sh 'node --version'
+        sh 'npm --version'
+        dir('src/UIs/angular') {
+          sh 'npm install -g @angular/cli'
+          sh 'npm install'
+          sh 'npm audit --audit-level=high'
+        }
+      }
+    }
+    stage('Build') {
+      steps {
+        dir('src/UIs/angular') {
+          sh 'ng build --prod'
+        }
+      }
+    }
+  }
+}

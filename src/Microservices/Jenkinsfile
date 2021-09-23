@@ -1,0 +1,37 @@
+pipeline {
+  agent any
+  stages {
+    stage('Git Checkout') {
+      steps {
+        git branch: 'master', url: 'https://github.com/phongnguyend/Practical.CleanArchitecture'
+      }
+    }
+    stage('Build') {
+      steps {
+        sh 'dotnet --info'
+        dir('src/Microservices') {
+          sh 'dotnet clean'
+          sh 'dotnet build --configuration Release'
+        }
+      }
+    }
+    stage('Publish') {
+      steps {
+        dir('src/Microservices') {
+          sh 'dotnet publish Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI/*.csproj --configuration Release'
+          sh 'dotnet publish Services.AuditLog/ClassifiedAds.Services.AuditLog.Api/*.csproj --configuration Release'
+          sh 'dotnet publish Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/*.csproj --configuration Release'
+          sh 'dotnet publish Services.Configuration/ClassifiedAds.Services.Configuration.Api/*.csproj --configuration Release'
+          sh 'dotnet publish Services.Identity/ClassifiedAds.Services.Identity.Api/*.csproj --configuration Release'
+          sh 'dotnet publish Services.Identity/ClassifiedAds.Services.Identity.AuthServer/*.csproj --configuration Release'
+          sh 'dotnet publish Services.Identity/ClassifiedAds.Services.Identity.Grpc/*.csproj --configuration Release'
+          sh 'dotnet publish Services.Notification/ClassifiedAds.Services.Notification.Api/*.csproj --configuration Release'
+          sh 'dotnet publish Services.Notification/ClassifiedAds.Services.Notification.Background/*.csproj --configuration Release'
+          sh 'dotnet publish Services.Notification/ClassifiedAds.Services.Notification.Grpc/*.csproj --configuration Release'
+          sh 'dotnet publish Services.Product/ClassifiedAds.Services.Product.Api/*.csproj --configuration Release'
+          sh 'dotnet publish Services.Storage/ClassifiedAds.Services.Storage.Api/*.csproj --configuration Release'
+        }
+      }
+    }
+  }
+}

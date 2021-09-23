@@ -1,0 +1,29 @@
+pipeline {
+  agent any
+  stages {
+    stage('Git Checkout') {
+      steps {
+        git branch: 'master', url: 'https://github.com/phongnguyend/Practical.CleanArchitecture'
+      }
+    }
+    stage('Build') {
+      steps {
+        sh 'dotnet --info'
+        dir('src/ModularMonolith') {
+          sh 'dotnet clean'
+          sh 'dotnet build --configuration Release'
+        }
+      }
+    }
+    stage('Publish') {
+      steps {
+        dir('src/ModularMonolith') {
+          sh 'dotnet publish ClassifiedAds.BackgroundServer/*.csproj --configuration Release'
+          sh 'dotnet publish ClassifiedAds.IdentityServer/*.csproj --configuration Release'
+          sh 'dotnet publish ClassifiedAds.Migrator/*.csproj --configuration Release'
+          sh 'dotnet publish ClassifiedAds.WebAPI/*.csproj --configuration Release'
+        }
+      }
+    }
+  }
+}

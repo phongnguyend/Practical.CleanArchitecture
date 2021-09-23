@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+  jenkins:
+    image: jenkins
+    build:
+        context: .
+        dockerfile: ./Dockerfile
+    privileged: true
+    user: root
+    ports:
+      - 8080:8080
+      - 50000:50000
+    volumes:
+      - ~/.jenkins:/var/jenkins_home
