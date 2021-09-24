@@ -141,20 +141,20 @@
   ```
   dotnet restore ClassifiedAds.ModularMonolith.sln
 
-  dotnet build -c Release
+  dotnet build -p:Version=1.0.0.1 -c Release
 
-  dotnet publish ./ClassifiedAds.BackgroundServer/ClassifiedAds.BackgroundServer.csproj -c Release -o ./publish/ClassifiedAds.BackgroundServer
-  dotnet publish ./ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj -c Release -o ./publish/ClassifiedAds.IdentityServer
-  dotnet publish ./ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj -c Release -o ./publish/ClassifiedAds.Migrator
-  dotnet publish ./ClassifiedAds.WebAPI/ClassifiedAds.WebAPI.csproj -c Release -o ./publish/ClassifiedAds.WebAPI
+  dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.BackgroundServer/ClassifiedAds.BackgroundServer.csproj -o ./publish/ClassifiedAds.BackgroundServer
+  dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj -o ./publish/ClassifiedAds.IdentityServer
+  dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj -o ./publish/ClassifiedAds.Migrator
+  dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.WebAPI/ClassifiedAds.WebAPI.csproj -o ./publish/ClassifiedAds.WebAPI
   ```
 
 - Pack
   ```
-  dotnet octo pack --id=ClassifiedAds.BackgroundServer --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.BackgroundServer --overwrite
-  dotnet octo pack --id=ClassifiedAds.IdentityServer --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.IdentityServer --overwrite
-  dotnet octo pack --id=ClassifiedAds.Migrator --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Migrator --overwrite
-  dotnet octo pack --id=ClassifiedAds.WebAPI --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.WebAPI --overwrite
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.BackgroundServer --basePath=./publish/ClassifiedAds.BackgroundServer
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.IdentityServer --basePath=./publish/ClassifiedAds.IdentityServer
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Migrator --basePath=./publish/ClassifiedAds.Migrator
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.WebAPI --basePath=./publish/ClassifiedAds.WebAPI
   ```
 
 # SonarQube

@@ -126,28 +126,28 @@
   ```
   dotnet restore ClassifiedAds.Monolith.sln
 
-  dotnet build -c Release
+  dotnet build -p:Version=1.0.0.1 -c Release
 
-  dotnet publish ./ClassifiedAds.BackgroundServer/ClassifiedAds.BackgroundServer.csproj -c Release -o ./publish/ClassifiedAds.BackgroundServer
-  dotnet publish ./ClassifiedAds.GraphQL/ClassifiedAds.GraphQL.csproj -c Release -o ./publish/ClassifiedAds.GraphQL
-  dotnet publish ./ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj -c Release -o ./publish/ClassifiedAds.Migrator
-  dotnet publish ./ClassifiedAds.WebAPI/ClassifiedAds.WebAPI.csproj -c Release -o ./publish/ClassifiedAds.WebAPI
-  dotnet publish ./ClassifiedAds.BlazorServerSide/ClassifiedAds.BlazorServerSide.csproj -c Release -o ./publish/ClassifiedAds.BlazorServerSide
-  dotnet publish ./ClassifiedAds.BlazorWebAssembly/ClassifiedAds.BlazorWebAssembly.csproj -c Release -o ./publish/ClassifiedAds.BlazorWebAssembly
-  dotnet publish ./ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj -c Release -o ./publish/ClassifiedAds.IdentityServer
-  dotnet publish ./ClassifiedAds.WebMVC/ClassifiedAds.WebMVC.csproj -c Release -o ./publish/ClassifiedAds.WebMVC
+  dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.BackgroundServer/ClassifiedAds.BackgroundServer.csproj -o ./publish/ClassifiedAds.BackgroundServer
+  dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.GraphQL/ClassifiedAds.GraphQL.csproj -o ./publish/ClassifiedAds.GraphQL
+  dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj -o ./publish/ClassifiedAds.Migrator
+  dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.WebAPI/ClassifiedAds.WebAPI.csproj -o ./publish/ClassifiedAds.WebAPI
+  dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.BlazorServerSide/ClassifiedAds.BlazorServerSide.csproj -o ./publish/ClassifiedAds.BlazorServerSide
+  dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.BlazorWebAssembly/ClassifiedAds.BlazorWebAssembly.csproj -o ./publish/ClassifiedAds.BlazorWebAssembly
+  dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj -o ./publish/ClassifiedAds.IdentityServer
+  dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.WebMVC/ClassifiedAds.WebMVC.csproj -o ./publish/ClassifiedAds.WebMVC
   ```
 
 - Pack
   ```
-  dotnet octo pack --id=ClassifiedAds.BackgroundServer --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.BackgroundServer --overwrite
-  dotnet octo pack --id=ClassifiedAds.GraphQL --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.GraphQL --overwrite
-  dotnet octo pack --id=ClassifiedAds.Migrator --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Migrator --overwrite
-  dotnet octo pack --id=ClassifiedAds.WebAPI --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.WebAPI --overwrite
-  dotnet octo pack --id=ClassifiedAds.BlazorServerSide --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.BlazorServerSide --overwrite
-  dotnet octo pack --id=ClassifiedAds.BlazorWebAssembly --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.BlazorWebAssembly --overwrite
-  dotnet octo pack --id=ClassifiedAds.IdentityServer --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.IdentityServer --overwrite
-  dotnet octo pack --id=ClassifiedAds.WebMVC --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.WebMVC --overwrite
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.BackgroundServer --basePath=./publish/ClassifiedAds.BackgroundServer 
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.GraphQL --basePath=./publish/ClassifiedAds.GraphQL
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Migrator --basePath=./publish/ClassifiedAds.Migrator
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.WebAPI --basePath=./publish/ClassifiedAds.WebAPI
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.BlazorServerSide --basePath=./publish/ClassifiedAds.BlazorServerSide
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.BlazorWebAssembly --basePath=./publish/ClassifiedAds.BlazorWebAssembly
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.IdentityServer --basePath=./publish/ClassifiedAds.IdentityServer
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.WebMVC --basePath=./publish/ClassifiedAds.WebMVC
   ```
 
 # SonarQube

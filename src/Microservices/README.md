@@ -197,36 +197,36 @@
   ```
   dotnet restore ClassifiedAds.Microservices.sln
 
-  dotnet build -c Release
+  dotnet build -p:Version=1.0.0.1 -c Release
 
-  dotnet publish ./Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI.csproj -c Release -o ./publish/ClassifiedAds.Gateways.WebAPI
-  dotnet publish ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Api/ClassifiedAds.Services.AuditLog.Api.csproj -c Release -o ./publish/ClassifiedAds.Services.AuditLog.Api
-  dotnet publish ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/ClassifiedAds.Services.AuditLog.Grpc.csproj -c Release -o ./publish/ClassifiedAds.Services.AuditLog.Grpc
-  dotnet publish ./Services.Configuration/ClassifiedAds.Services.Configuration.Api/ClassifiedAds.Services.Configuration.Api.csproj -c Release -o ./publish/ClassifiedAds.Services.Configuration.Api
-  dotnet publish ./Services.Identity/ClassifiedAds.Services.Identity.Api/ClassifiedAds.Services.Identity.Api.csproj -c Release -o ./publish/ClassifiedAds.Services.Identity.Api
-  dotnet publish ./Services.Identity/ClassifiedAds.Services.Identity.AuthServer/ClassifiedAds.Services.Identity.AuthServer.csproj -c Release -o ./publish/ClassifiedAds.Services.Identity.AuthServer
-  dotnet publish ./Services.Identity/ClassifiedAds.Services.Identity.Grpc/ClassifiedAds.Services.Identity.Grpc.csproj -c Release -o ./publish/ClassifiedAds.Services.Identity.Grpc
-  dotnet publish ./Services.Notification/ClassifiedAds.Services.Notification.Api/ClassifiedAds.Services.Notification.Api.csproj -c Release -o ./publish/ClassifiedAds.Services.Notification.Api
-  dotnet publish ./Services.Notification/ClassifiedAds.Services.Notification.Background/ClassifiedAds.Services.Notification.Background.csproj -c Release -o ./publish/ClassifiedAds.Services.Notification.Background
-  dotnet publish ./Services.Notification/ClassifiedAds.Services.Notification.Grpc/ClassifiedAds.Services.Notification.Grpc.csproj -c Release -o ./publish/ClassifiedAds.Services.Notification.Grpc
-  dotnet publish ./Services.Product/ClassifiedAds.Services.Product.Api/ClassifiedAds.Services.Product.Api.csproj -c Release -o ./publish/ClassifiedAds.Services.Product.Api
-  dotnet publish ./Services.Storage/ClassifiedAds.Services.Storage.Api/ClassifiedAds.Services.Storage.Api.csproj -c Release -o ./publish/ClassifiedAds.Services.Storage.Api
+  dotnet publish -p:Version=1.0.0.1 -c Release ./Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI.csproj -o ./publish/ClassifiedAds.Gateways.WebAPI
+  dotnet publish -p:Version=1.0.0.1 -c Release ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Api/ClassifiedAds.Services.AuditLog.Api.csproj -o ./publish/ClassifiedAds.Services.AuditLog.Api
+  dotnet publish -p:Version=1.0.0.1 -c Release ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/ClassifiedAds.Services.AuditLog.Grpc.csproj -o ./publish/ClassifiedAds.Services.AuditLog.Grpc
+  dotnet publish -p:Version=1.0.0.1 -c Release ./Services.Configuration/ClassifiedAds.Services.Configuration.Api/ClassifiedAds.Services.Configuration.Api.csproj -o ./publish/ClassifiedAds.Services.Configuration.Api
+  dotnet publish -p:Version=1.0.0.1 -c Release ./Services.Identity/ClassifiedAds.Services.Identity.Api/ClassifiedAds.Services.Identity.Api.csproj -o ./publish/ClassifiedAds.Services.Identity.Api
+  dotnet publish -p:Version=1.0.0.1 -c Release ./Services.Identity/ClassifiedAds.Services.Identity.AuthServer/ClassifiedAds.Services.Identity.AuthServer.csproj -o ./publish/ClassifiedAds.Services.Identity.AuthServer
+  dotnet publish -p:Version=1.0.0.1 -c Release ./Services.Identity/ClassifiedAds.Services.Identity.Grpc/ClassifiedAds.Services.Identity.Grpc.csproj -o ./publish/ClassifiedAds.Services.Identity.Grpc
+  dotnet publish -p:Version=1.0.0.1 -c Release ./Services.Notification/ClassifiedAds.Services.Notification.Api/ClassifiedAds.Services.Notification.Api.csproj -o ./publish/ClassifiedAds.Services.Notification.Api
+  dotnet publish -p:Version=1.0.0.1 -c Release ./Services.Notification/ClassifiedAds.Services.Notification.Background/ClassifiedAds.Services.Notification.Background.csproj -o ./publish/ClassifiedAds.Services.Notification.Background
+  dotnet publish -p:Version=1.0.0.1 -c Release ./Services.Notification/ClassifiedAds.Services.Notification.Grpc/ClassifiedAds.Services.Notification.Grpc.csproj -o ./publish/ClassifiedAds.Services.Notification.Grpc
+  dotnet publish -p:Version=1.0.0.1 -c Release ./Services.Product/ClassifiedAds.Services.Product.Api/ClassifiedAds.Services.Product.Api.csproj -o ./publish/ClassifiedAds.Services.Product.Api
+  dotnet publish -p:Version=1.0.0.1 -c Release ./Services.Storage/ClassifiedAds.Services.Storage.Api/ClassifiedAds.Services.Storage.Api.csproj -o ./publish/ClassifiedAds.Services.Storage.Api
   ```
 
 - Pack
   ```
-  dotnet octo pack --id=ClassifiedAds.Gateways.WebAPI --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Gateways.WebAPI --overwrite
-  dotnet octo pack --id=ClassifiedAds.Services.AuditLog.Api --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Services.AuditLog.Api --overwrite
-  dotnet octo pack --id=ClassifiedAds.Services.AuditLog.Grpc --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Services.AuditLog.Grpc --overwrite
-  dotnet octo pack --id=ClassifiedAds.Services.Configuration.Api --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Services.Configuration.Api --overwrite
-  dotnet octo pack --id=ClassifiedAds.Services.Identity.Api --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Services.Identity.Api --overwrite
-  dotnet octo pack --id=ClassifiedAds.Services.Identity.AuthServer --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Services.Identity.AuthServer --overwrite
-  dotnet octo pack --id=ClassifiedAds.Services.Identity.Grpc --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Services.Identity.Grpc --overwrite
-  dotnet octo pack --id=ClassifiedAds.Services.Notification.Api --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Services.Notification.Api --overwrite
-  dotnet octo pack --id=ClassifiedAds.Services.Notification.Background --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Services.Notification.Background --overwrite
-  dotnet octo pack --id=ClassifiedAds.Services.Notification.Grpc --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Services.Notification.Grpc --overwrite
-  dotnet octo pack --id=ClassifiedAds.Services.Product.Api --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Services.Product.Api --overwrite
-  dotnet octo pack --id=ClassifiedAds.Services.Storage.Api --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Services.Storage.Api --overwrite
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Gateways.WebAPI --basePath=./publish/ClassifiedAds.Gateways.WebAPI
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Services.AuditLog.Api --basePath=./publish/ClassifiedAds.Services.AuditLog.Api
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Services.AuditLog.Grpc --basePath=./publish/ClassifiedAds.Services.AuditLog.Grpc
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Services.Configuration.Api --basePath=./publish/ClassifiedAds.Services.Configuration.Api
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Services.Identity.Api --basePath=./publish/ClassifiedAds.Services.Identity.Api
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Services.Identity.AuthServer --basePath=./publish/ClassifiedAds.Services.Identity.AuthServer
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Services.Identity.Grpc --basePath=./publish/ClassifiedAds.Services.Identity.Grpc
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Services.Notification.Api --basePath=./publish/ClassifiedAds.Services.Notification.Api
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Services.Notification.Background --basePath=./publish/ClassifiedAds.Services.Notification.Background
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Services.Notification.Grpc --basePath=./publish/ClassifiedAds.Services.Notification.Grpc
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Services.Product.Api --basePath=./publish/ClassifiedAds.Services.Product.Api
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Services.Storage.Api --basePath=./publish/ClassifiedAds.Services.Storage.Api
   ```
 
 # SonarQube

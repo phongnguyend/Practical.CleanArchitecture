@@ -1,5 +1,8 @@
 pipeline {
   agent any
+  environment {
+    VERSION = "1.0.0.${BUILD_NUMBER}"
+  }
   stages {
     stage('Git Checkout') {
       steps {
@@ -9,27 +12,29 @@ pipeline {
     stage('Build') {
       steps {
         sh 'dotnet --info'
+		echo "BUILD_NUMBER: ${BUILD_NUMBER}"
+		echo "VERSION: ${VERSION}"
         dir('src/Microservices') {
           sh 'dotnet clean'
-          sh 'dotnet build --configuration Release'
+          sh "dotnet build -p:Version=${VERSION} --configuration Release"
         }
       }
     }
     stage('Publish') {
       steps {
         dir('src/Microservices') {
-          sh 'dotnet publish Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI/*.csproj --configuration Release'
-          sh 'dotnet publish Services.AuditLog/ClassifiedAds.Services.AuditLog.Api/*.csproj --configuration Release'
-          sh 'dotnet publish Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/*.csproj --configuration Release'
-          sh 'dotnet publish Services.Configuration/ClassifiedAds.Services.Configuration.Api/*.csproj --configuration Release'
-          sh 'dotnet publish Services.Identity/ClassifiedAds.Services.Identity.Api/*.csproj --configuration Release'
-          sh 'dotnet publish Services.Identity/ClassifiedAds.Services.Identity.AuthServer/*.csproj --configuration Release'
-          sh 'dotnet publish Services.Identity/ClassifiedAds.Services.Identity.Grpc/*.csproj --configuration Release'
-          sh 'dotnet publish Services.Notification/ClassifiedAds.Services.Notification.Api/*.csproj --configuration Release'
-          sh 'dotnet publish Services.Notification/ClassifiedAds.Services.Notification.Background/*.csproj --configuration Release'
-          sh 'dotnet publish Services.Notification/ClassifiedAds.Services.Notification.Grpc/*.csproj --configuration Release'
-          sh 'dotnet publish Services.Product/ClassifiedAds.Services.Product.Api/*.csproj --configuration Release'
-          sh 'dotnet publish Services.Storage/ClassifiedAds.Services.Storage.Api/*.csproj --configuration Release'
+          sh "dotnet publish -p:Version=${VERSION} Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} Services.AuditLog/ClassifiedAds.Services.AuditLog.Api/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} Services.Configuration/ClassifiedAds.Services.Configuration.Api/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} Services.Identity/ClassifiedAds.Services.Identity.Api/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} Services.Identity/ClassifiedAds.Services.Identity.AuthServer/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} Services.Identity/ClassifiedAds.Services.Identity.Grpc/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} Services.Notification/ClassifiedAds.Services.Notification.Api/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} Services.Notification/ClassifiedAds.Services.Notification.Background/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} Services.Notification/ClassifiedAds.Services.Notification.Grpc/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} Services.Product/ClassifiedAds.Services.Product.Api/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} Services.Storage/ClassifiedAds.Services.Storage.Api/*.csproj --configuration Release"
         }
       }
     }

@@ -1,5 +1,8 @@
 pipeline {
   agent any
+  environment {
+    VERSION = "1.0.0.${BUILD_NUMBER}"
+  }
   stages {
     stage('Git Checkout') {
       steps {
@@ -9,23 +12,25 @@ pipeline {
     stage('Build') {
       steps {
         sh 'dotnet --info'
+		echo "BUILD_NUMBER: ${BUILD_NUMBER}"
+		echo "VERSION: ${VERSION}"
         dir('src/Monolith') {
           sh 'dotnet clean'
-          sh 'dotnet build --configuration Release'
+          sh "dotnet build -p:Version=${VERSION} --configuration Release"
         }
       }
     }
     stage('Publish') {
       steps {
         dir('src/Monolith') {
-          sh 'dotnet publish ClassifiedAds.BackgroundServer/*.csproj --configuration Release'
-          sh 'dotnet publish ClassifiedAds.GraphQL/*.csproj --configuration Release'
-          sh 'dotnet publish ClassifiedAds.Migrator/*.csproj --configuration Release'
-          sh 'dotnet publish ClassifiedAds.WebAPI/*.csproj --configuration Release'
-          sh 'dotnet publish ClassifiedAds.IdentityServer/*.csproj --configuration Release'
-          sh 'dotnet publish ClassifiedAds.WebMVC/*.csproj --configuration Release'
-          sh 'dotnet publish ClassifiedAds.BlazorServerSide/*.csproj --configuration Release'
-          sh 'dotnet publish ClassifiedAds.BlazorWebAssembly/*.csproj --configuration Release'
+          sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.BackgroundServer/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.GraphQL/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.Migrator/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.WebAPI/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.IdentityServer/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.WebMVC/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.BlazorServerSide/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.BlazorWebAssembly/*.csproj --configuration Release"
         }
       }
     }
