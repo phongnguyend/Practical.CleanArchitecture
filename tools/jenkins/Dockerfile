@@ -21,6 +21,10 @@ RUN apt-get update \
 RUN apt-get install -y dotnet-sdk-5.0 && \
     export PATH=$PATH:$HOME/dotnet && \
     dotnet --version
+	
+# Install Python & NodeJs
+RUN apt-get install -y build-essential python nodejs && \
+    python --version && node --version
 
 # Good idea to switch back to the jenkins user.
 USER jenkins

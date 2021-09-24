@@ -139,7 +139,7 @@
 
 - Build
   ```
-  dotnet restore ClassifiedAds.Monolith.sln
+  dotnet restore ClassifiedAds.ModularMonolith.sln
 
   dotnet build -c Release
 
@@ -155,4 +155,20 @@
   dotnet octo pack --id=ClassifiedAds.IdentityServer --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.IdentityServer --overwrite
   dotnet octo pack --id=ClassifiedAds.Migrator --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Migrator --overwrite
   dotnet octo pack --id=ClassifiedAds.WebAPI --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.WebAPI --overwrite
+  ```
+
+# SonarQube
+
+- Install Sonar Scanner
+  ```
+  dotnet tool install --global dotnet-sonarscanner
+  dotnet tool list --global
+  java --version
+  ```
+
+- Build & Scan
+  ```
+  dotnet sonarscanner begin /v:"1.0.0" /d:sonar.host.url="https://sonarcloud.io" /o:"phongnguyend" /k:"ModularMonolith" /d:sonar.login="<token>"
+  dotnet build ClassifiedAds.ModularMonolith.sln
+  dotnet sonarscanner end /d:sonar.login="<token>"
   ```

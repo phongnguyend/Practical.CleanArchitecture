@@ -149,3 +149,19 @@
   dotnet octo pack --id=ClassifiedAds.IdentityServer --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.IdentityServer --overwrite
   dotnet octo pack --id=ClassifiedAds.WebMVC --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.WebMVC --overwrite
   ```
+
+# SonarQube
+
+- Install Sonar Scanner
+  ```
+  dotnet tool install --global dotnet-sonarscanner
+  dotnet tool list --global
+  java --version
+  ```
+
+- Build & Scan
+  ```
+  dotnet sonarscanner begin /v:"1.0.0" /d:sonar.host.url="https://sonarcloud.io" /o:"phongnguyend" /k:"Monolith" /d:sonar.login="<token>"
+  dotnet build ClassifiedAds.Monolith.sln
+  dotnet sonarscanner end /d:sonar.login="<token>"
+  ```

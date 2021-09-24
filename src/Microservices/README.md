@@ -228,3 +228,19 @@
   dotnet octo pack --id=ClassifiedAds.Services.Product.Api --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Services.Product.Api --overwrite
   dotnet octo pack --id=ClassifiedAds.Services.Storage.Api --version=1.0.0 --outFolder=./publish --basePath=./publish/ClassifiedAds.Services.Storage.Api --overwrite
   ```
+
+# SonarQube
+
+- Install Sonar Scanner
+  ```
+  dotnet tool install --global dotnet-sonarscanner
+  dotnet tool list --global
+  java --version
+  ```
+
+- Build & Scan
+  ```
+  dotnet sonarscanner begin /v:"1.0.0" /d:sonar.host.url="https://sonarcloud.io" /o:"phongnguyend" /k:"Microservices" /d:sonar.login="<token>"
+  dotnet build ClassifiedAds.Microservices.sln
+  dotnet sonarscanner end /d:sonar.login="<token>"
+  ```
