@@ -1,0 +1,31 @@
+name: Static Code Analysis UIs - VueJs
+
+on:
+  push:
+    branches:
+      - master
+      - build
+    paths:
+      - 'src/UIs/vuejs/**'
+  pull_request:
+    paths: 
+      - 'src/UIs/vuejs/**'
+env:
+  ENV_NAME: ENV_VALUE
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: src/UIs/vuejs/
+          args: >
+            -Dsonar.organization=phongnguyend
+            -Dsonar.projectKey=UIs_Vue
+            -Dsonar.projectVersion=1.0.0.${{ github.run_number }}

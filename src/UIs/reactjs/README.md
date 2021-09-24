@@ -73,5 +73,5 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
 echo %SONAR_TOKEN%
 setx SONAR_TOKEN <token>
 set SONAR_TOKEN=<token>
-sonar-scanner.bat -D"sonar.organization=phongnguyend" -D"sonar.projectKey=UIs_React" -D"sonar.projectName=UIs React" -D"sonar.projectVersion=1.0.0" -D"sonar.sources=." -D"sonar.host.url=https://sonarcloud.io"
+sonar-scanner.bat -D"sonar.organization=phongnguyend" -D"sonar.projectKey=UIs_React" -D"sonar.projectName=UIs React" -D"sonar.projectVersion=1.0.0.0" -D"sonar.sources=." -D"sonar.host.url=https://sonarcloud.io"
 ```

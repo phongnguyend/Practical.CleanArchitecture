@@ -32,5 +32,5 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 echo %SONAR_TOKEN%
 setx SONAR_TOKEN <token>
 set SONAR_TOKEN=<token>
-sonar-scanner.bat -D"sonar.organization=phongnguyend" -D"sonar.projectKey=UIs_Angular" -D"sonar.projectName=UIs Angular" -D"sonar.projectVersion=1.0.0" -D"sonar.sources=." -D"sonar.host.url=https://sonarcloud.io"
+sonar-scanner.bat -D"sonar.organization=phongnguyend" -D"sonar.projectKey=UIs_Angular" -D"sonar.projectName=UIs Angular" -D"sonar.projectVersion=1.0.0.0" -D"sonar.sources=." -D"sonar.host.url=https://sonarcloud.io"
 ```
