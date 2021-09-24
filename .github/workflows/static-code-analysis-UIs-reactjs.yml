@@ -1,4 +1,4 @@
-name: Static Code Analysis UIs 
+name: Static Code Analysis UIs - ReactJs
 
 on:
   push:
@@ -6,10 +6,10 @@ on:
       - master
       - build
     paths:
-      - 'src/UIs/**'
+      - 'src/UIs/reactjs/**'
   pull_request:
     paths: 
-      - 'src/UIs/**'
+      - 'src/UIs/reactjs/**'
 env:
   ENV_NAME: ENV_VALUE
 
@@ -24,7 +24,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          projectBaseDir: src/UIs/
+          projectBaseDir: src/UIs/reactjs/
           args: >
             -Dsonar.organization=phongnguyend
-            -Dsonar.projectKey=Practical.CleanArchitecture
+            -Dsonar.projectKey=UIs_React
+            -Dsonar.projectVersion=1.0.0.${{ github.run_number }}
