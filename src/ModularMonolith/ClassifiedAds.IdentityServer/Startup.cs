@@ -55,6 +55,7 @@ namespace ClassifiedAds.IdentityServer
             }
 
             services.AddControllersWithViews();
+            services.AddRazorPages();
 
             services.AddCors();
 
@@ -143,6 +144,7 @@ namespace ClassifiedAds.IdentityServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
+                endpoints.MapRazorPages();
             });
         }
     }
