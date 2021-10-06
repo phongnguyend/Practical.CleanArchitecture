@@ -6,15 +6,12 @@ namespace ClassifiedAds.Persistence
     public class AdsDbContextMultiTenant : AdsDbContext
     {
         private readonly IConnectionStringResolver<AdsDbContextMultiTenant> _connectionStringResolver;
-        private readonly ITenantResolver _tenantResolver;
 
         public AdsDbContextMultiTenant(
-            IConnectionStringResolver<AdsDbContextMultiTenant> connectionStringResolver,
-            ITenantResolver tenantResolver)
+            IConnectionStringResolver<AdsDbContextMultiTenant> connectionStringResolver)
             : base(new DbContextOptions<AdsDbContext>())
         {
             _connectionStringResolver = connectionStringResolver;
-            _tenantResolver = tenantResolver;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

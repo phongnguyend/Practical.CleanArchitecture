@@ -2,7 +2,13 @@
 {
     public interface ITenantResolver
     {
-        string Id { get; }
-        string Name { get; }
+        Tenant Tenant { get; }
+    }
+
+    public class Tenant
+    {
+        public string Id { get; }
+        public string Name { get; }
+        public string ConnectionString { get; }
     }
 }
