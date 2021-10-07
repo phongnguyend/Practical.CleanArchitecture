@@ -1,7 +1,6 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Events;
-using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Notification.Email;
 using ClassifiedAds.Services.Notification.DTOs;
 using ClassifiedAds.Services.Notification.Entities;
@@ -17,13 +16,11 @@ namespace ClassifiedAds.Services.Notification.Services
     {
         private readonly ILogger _logger;
         private readonly IEmailMessageRepository _repository;
-        private readonly IMessageSender<EmailMessageCreatedEvent> _emailMessageCreatedEventSender;
         private readonly IEmailNotification _emailNotification;
         private readonly IDateTimeProvider _dateTimeProvider;
 
         public EmailMessageService(ILogger<EmailMessageService> logger,
             IEmailMessageRepository repository,
-            IMessageSender<EmailMessageCreatedEvent> emailMessageCreatedEventSender,
             IDomainEvents domainEvents,
             IEmailNotification emailNotification,
             IDateTimeProvider dateTimeProvider)
@@ -31,7 +28,6 @@ namespace ClassifiedAds.Services.Notification.Services
         {
             _logger = logger;
             _repository = repository;
-            _emailMessageCreatedEventSender = emailMessageCreatedEventSender;
             _emailNotification = emailNotification;
             _dateTimeProvider = dateTimeProvider;
         }
@@ -49,59 +45,46 @@ namespace ClassifiedAds.Services.Notification.Services
             });
         }
 
-        public async Task<int> ResendEmailMessagesAsync()
+        public async Task<int> SendEmailMessagesAsync()
         {
             var dateTime = _dateTimeProvider.OffsetNow.AddMinutes(-1);
 
             var messages = _repository.GetAll()
                 .Where(x => x.SentDateTime == null && x.RetriedCount < 3)
-                .Where(x => (x.RetriedCount == 0 && x.CreatedDateTime < dateTime) || (x.RetriedCount != 0 && x.UpdatedDateTime < dateTime))
+                .Where(x => (x.RetriedCount == 0) || (x.RetriedCount != 0 && x.UpdatedDateTime < dateTime))
                 .ToList();
 
             if (messages.Any())
             {
                 foreach (var email in messages)
                 {
-                    await _emailMessageCreatedEventSender.SendAsync(new EmailMessageCreatedEvent { Id = email.Id });
+                    try
+                    {
+                        await _emailNotification.SendAsync(new EmailMessageDTO
+                        {
+                            From = email.From,
+                            Tos = email.Tos,
+                            CCs = email.CCs,
+                            BCCs = email.BCCs,
+                            Subject = email.Subject,
+                            Body = email.Body,
+                        });
 
-                    email.RetriedCount++;
-
-                    await _repository.AddOrUpdateAsync(email);
-                    await _repository.UnitOfWork.SaveChangesAsync();
+                        _repository.UpdateSent(email.Id);
+                    }
+                    catch (Exception ex)
+                    {
+                        _repository.UpdateFailed(email.Id, Environment.NewLine + Environment.NewLine + ex.ToString());
+                        _repository.IncreaseRetry(email.Id);
+                    }
                 }
             }
             else
             {
-                _logger.LogInformation("No email to resend.");
+                _logger.LogInformation("No email to send.");
             }
 
             return messages.Count;
-        }
-
-        public async Task SendEmailMessageAsync(Guid id)
-        {
-            var emailMessage = _repository.GetAll().FirstOrDefault(x => x.Id == id);
-            if (emailMessage != null && !emailMessage.SentDateTime.HasValue)
-            {
-                try
-                {
-                    await _emailNotification.SendAsync(new EmailMessageDTO
-                    {
-                        From = emailMessage.From,
-                        Tos = emailMessage.Tos,
-                        CCs = emailMessage.CCs,
-                        BCCs = emailMessage.BCCs,
-                        Subject = emailMessage.Subject,
-                        Body = emailMessage.Body,
-                    });
-
-                    _repository.UpdateSent(emailMessage.Id);
-                }
-                catch (Exception ex)
-                {
-                    _repository.UpdateFailed(emailMessage.Id, Environment.NewLine + Environment.NewLine + ex.ToString());
-                }
-            }
         }
     }
 }

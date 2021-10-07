@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - env:
-        - name: ASPNETCORE_ENVIRONMENT
+        - name: DOTNET_ENVIRONMENT
           value: Development
         envFrom:
         - configMapRef:

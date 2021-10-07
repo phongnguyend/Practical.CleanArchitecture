@@ -4,6 +4,7 @@ metadata:
   name: {{ .Release.Name}}-shared
 data:
   ASPNETCORE_ENVIRONMENT: "Development"
+  DOTNET_ENVIRONMENT: "Development"
   IdentityServerAuthentication__Authority: "http://{{ .Release.Name}}-identityserver"
   IdentityServerAuthentication__RequireHttpsMetadata: "false"
   Services__AuditLog__Grpc: "https://{{ .Release.Name}}-auditlog-grpc"

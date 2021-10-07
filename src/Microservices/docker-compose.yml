@@ -140,7 +140,7 @@ services:
         depends_on:
           - db
         environment:
-          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+          DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT}
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices.Notification;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
           IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
           IdentityServerAuthentication__RequireHttpsMetadata: "false"
