@@ -82,7 +82,7 @@ services:
           - rabbitmq
           - mailhog
         environment:
-          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+          DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT}
           ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
           CheckDependency__Enabled: "true"
           CheckDependency__Host: "migrator:80,rabbitmq:5672"

@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.BackgroundServer.HostedServices
 {
-    public class ResendEmailHostedService : BackgroundService
+    public class SendSmsHostedService : BackgroundService
     {
         private readonly IServiceProvider _services;
-        private readonly ILogger<ResendEmailHostedService> _logger;
+        private readonly ILogger<SendSmsHostedService> _logger;
 
-        public ResendEmailHostedService(IServiceProvider services,
-            ILogger<ResendEmailHostedService> logger)
+        public SendSmsHostedService(IServiceProvider services,
+            ILogger<SendSmsHostedService> logger)
         {
             _services = services;
             _logger = logger;
@@ -22,7 +22,7 @@ namespace ClassifiedAds.BackgroundServer.HostedServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogDebug("ResendEmailService is starting.");
+            _logger.LogDebug("SendSmsService is starting.");
             await DoWork(stoppingToken);
         }
 
@@ -30,15 +30,15 @@ namespace ClassifiedAds.BackgroundServer.HostedServices
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogDebug($"ResendEmail task doing background work.");
+                _logger.LogDebug($"SendSms task doing background work.");
 
                 int rs = 0;
 
                 using (var scope = _services.CreateScope())
                 {
-                    var resendEmailTask = scope.ServiceProvider.GetRequiredService<EmailMessageService>();
+                    var smsService = scope.ServiceProvider.GetRequiredService<SmsMessageService>();
 
-                    rs = await resendEmailTask.ResendEmailMessagesAsync();
+                    rs = await smsService.SendSmsMessagesAsync();
                 }
 
                 if (rs == 0)
@@ -47,7 +47,7 @@ namespace ClassifiedAds.BackgroundServer.HostedServices
                 }
             }
 
-            _logger.LogDebug($"ResendEmail background task is stopping.");
+            _logger.LogDebug($"ResendSms background task is stopping.");
         }
     }
 }
