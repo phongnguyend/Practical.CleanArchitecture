@@ -8,6 +8,7 @@ using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Infrastructure.Csv;
 using ClassifiedAds.Infrastructure.Excel.ClosedXML;
 using ClassifiedAds.Infrastructure.Identity;
+using ClassifiedAds.Infrastructure.Localization;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Persistence;
@@ -197,6 +198,7 @@ namespace ClassifiedAds.WebAPI
             services.AddStorageManager(AppSettings.Storage);
             services.AddHtmlGenerator();
             services.AddDinkToPdfConverter();
+            services.AddClassifiedAdsLocalization();
 
             services.AddMessageBusSender<FileUploadedEvent>(AppSettings.MessageBroker);
             services.AddMessageBusSender<FileDeletedEvent>(AppSettings.MessageBroker);

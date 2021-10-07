@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -36,23 +37,26 @@ namespace ClassifiedAds.WebAPI.Controllers
         private readonly IFileStorageManager _fileManager;
         private readonly IMemoryCache _memoryCache;
         private readonly IHubContext<NotificationHub> _notificationHubContext;
+        private readonly IStringLocalizer _stringLocalizer;
 
         public FilesController(Dispatcher dispatcher,
             IFileStorageManager fileManager,
             IMemoryCache memoryCache,
-            IHubContext<NotificationHub> notificationHubContext)
+            IHubContext<NotificationHub> notificationHubContext,
+            IStringLocalizer stringLocalizer)
         {
             _dispatcher = dispatcher;
             _fileManager = fileManager;
             _memoryCache = memoryCache;
             _notificationHubContext = notificationHubContext;
+            _stringLocalizer = stringLocalizer;
         }
 
         [AuthorizePolicy(typeof(GetFilesPolicy))]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get()
         {
-            await _notificationHubContext.Clients.All.SendAsync("ReceiveMessage", $"Getting files ...");
+            await _notificationHubContext.Clients.All.SendAsync("ReceiveMessage", $"{_stringLocalizer["Getting files ..."]}");
             var fileEntries = await _dispatcher.DispatchAsync(new GetEntititesQuery<FileEntry>());
             return Ok(fileEntries.ToModels());
         }
