@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.BackgroundServer.HostedServices
 {
-    public class ResendSmsHostedService : BackgroundService
+    public class SendSmsHostedService : BackgroundService
     {
         private readonly IServiceProvider _services;
-        private readonly ILogger<ResendSmsHostedService> _logger;
+        private readonly ILogger<SendSmsHostedService> _logger;
 
-        public ResendSmsHostedService(IServiceProvider services,
-            ILogger<ResendSmsHostedService> logger)
+        public SendSmsHostedService(IServiceProvider services,
+            ILogger<SendSmsHostedService> logger)
         {
             _services = services;
             _logger = logger;
@@ -22,7 +22,7 @@ namespace ClassifiedAds.BackgroundServer.HostedServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogDebug("ResendSmsService is starting.");
+            _logger.LogDebug("SendSmsService is starting.");
             await DoWork(stoppingToken);
         }
 
@@ -30,15 +30,15 @@ namespace ClassifiedAds.BackgroundServer.HostedServices
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogDebug($"ResendSms task doing background work.");
+                _logger.LogDebug($"SendSms task doing background work.");
 
                 int rs = 0;
 
                 using (var scope = _services.CreateScope())
                 {
-                    var resendSmsTask = scope.ServiceProvider.GetRequiredService<SmsMessageService>();
+                    var smsService = scope.ServiceProvider.GetRequiredService<SmsMessageService>();
 
-                    rs = await resendSmsTask.ResendSmsMessageAsync();
+                    rs = await smsService.SendSmsMessagesAsync();
                 }
 
                 if (rs == 0)

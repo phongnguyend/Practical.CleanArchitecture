@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.Application.BackgroundTasks;
+﻿using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Infrastructure.HostedServices;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -23,12 +23,29 @@ namespace ClassifiedAds.BackgroundServer.HostedServices
 
         protected override async Task DoWork(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+            try
+            {
+                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 
-            using var scope = _serviceProvider.CreateScope();
-            var job = scope.ServiceProvider.GetRequiredService<SimulatedLongRunningJob>();
+                using var scope = _serviceProvider.CreateScope();
+                var notification = scope.ServiceProvider.GetRequiredService<IWebNotification<SendTaskStatusMessage>>();
 
-            await job.Run();
+                await notification.SendAsync(new SendTaskStatusMessage { Step = "Step 1", Message = "Begining xxx" }, stoppingToken);
+
+                await Task.Delay(2000, stoppingToken);
+
+                await notification.SendAsync(new SendTaskStatusMessage { Step = "Step 1", Message = "Finished xxx" }, stoppingToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Empty);
+            }
         }
+    }
+
+    public class SendTaskStatusMessage
+    {
+        public string Step { get; set; }
+        public string Message { get; set; }
     }
 }

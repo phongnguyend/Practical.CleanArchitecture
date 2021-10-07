@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.Application.BackgroundTasks;
 using ClassifiedAds.Application.EmailMessages.Services;
 using ClassifiedAds.Application.Products.Services;
 using ClassifiedAds.Application.SmsMessages.Services;
@@ -24,8 +23,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddScoped<IUserService, UserService>()
                 .AddScoped<IProductService, ProductService>()
                 .AddScoped<EmailMessageService>()
-                .AddScoped<SmsMessageService>()
-                .AddScoped<SimulatedLongRunningJob>();
+                .AddScoped<SmsMessageService>();
 
             if (configureInterceptor != null)
             {
