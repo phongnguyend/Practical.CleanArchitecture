@@ -9,11 +9,11 @@ import { Observable } from "rxjs";
   providedIn: "root",
 })
 export class AuditLogService {
-  private productUrl = environment.ResourceServer.Endpoint + "auditLogEntries";
+  private auditLogUrl = environment.ResourceServer.Endpoint + "auditLogEntries";
 
   constructor(private http: HttpClient) {}
 
-  getAudtLogs(): Observable<IAuditLogEntry[]> {
-    return this.http.get<IAuditLogEntry[]>(this.productUrl);
+  getAuditLogs(): Observable<IAuditLogEntry[]> {
+    return this.http.get<IAuditLogEntry[]>(this.auditLogUrl);
   }
 }
