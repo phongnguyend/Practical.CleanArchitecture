@@ -20,5 +20,7 @@ namespace ClassifiedAds.Domain.Entities
         public bool Encrypted { get; set; }
 
         public string EncryptionKey { get; set; }
+
+        public string EncryptionIV { get; set; }
     }
 }

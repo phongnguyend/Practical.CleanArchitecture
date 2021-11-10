@@ -83,18 +83,22 @@ namespace ClassifiedAds.WebAPI.Controllers
 
             if (model.Encrypted)
             {
-                var key = SymmetricCrypto.GenerateKey(16);
+                var key = SymmetricCrypto.GenerateKey(32);
+                var iv = SymmetricCrypto.GenerateKey(16);
                 using (var inputStream = model.FormFile.OpenReadStream())
                 using (var encryptedStream = new MemoryStream(inputStream
                         .UseAES(key)
-                        .WithCipher(CipherMode.ECB)
+                        .WithCipher(CipherMode.CBC)
+                        .WithIV(iv)
                         .WithPadding(PaddingMode.PKCS7)
                         .Encrypt()))
                 {
                     await _fileManager.CreateAsync(fileEntry, encryptedStream);
                 }
 
+                // TODO: EncryptionKey should be encrypted as well
                 fileEntry.EncryptionKey = key.ToBase64String();
+                fileEntry.EncryptionIV = iv.ToBase64String();
             }
             else
             {
@@ -127,7 +131,8 @@ namespace ClassifiedAds.WebAPI.Controllers
             var content = fileEntry.Encrypted && fileEntry.FileLocation != "Fake.txt"
                 ? rawData
                 .UseAES(fileEntry.EncryptionKey.FromBase64String())
-                .WithCipher(CipherMode.ECB)
+                .WithCipher(CipherMode.CBC)
+                .WithIV(fileEntry.EncryptionIV.FromBase64String())
                 .WithPadding(PaddingMode.PKCS7)
                 .Decrypt()
                 : rawData;
