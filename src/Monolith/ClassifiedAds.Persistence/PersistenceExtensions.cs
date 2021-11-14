@@ -1,6 +1,8 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.Tenants;
+﻿using ClassifiedAds.CrossCuttingConcerns.Locks;
+using ClassifiedAds.CrossCuttingConcerns.Tenants;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Persistence;
+using ClassifiedAds.Persistence.Locks;
 using ClassifiedAds.Persistence.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +47,8 @@ namespace Microsoft.Extensions.DependencyInjection
                     .AddScoped(typeof(ISmsMessageRepository), typeof(SmsMessageRepository))
                     .AddScoped(typeof(IUserRepository), typeof(UserRepository))
                     .AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
+
+            services.AddScoped<ILockManager, LockManager>();
 
             return services;
         }
