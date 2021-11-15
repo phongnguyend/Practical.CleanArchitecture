@@ -6,8 +6,12 @@ namespace ClassifiedAds.CrossCuttingConcerns.Locks
     {
         bool AcquireLock(string entityName, string entityId, string ownerId, TimeSpan expirationIn);
 
+        bool ExtendLock(string entityName, string entityId, string ownerId, TimeSpan expirationIn);
+
         bool ReleaseLock(string entityName, string entityId, string ownerId);
 
-        bool ExtendLock(string entityName, string entityId, string ownerId, TimeSpan expirationIn);
+        bool ReleaseLocks(string ownerId);
+
+        bool ReleaseExpiredLocks();
     }
 }

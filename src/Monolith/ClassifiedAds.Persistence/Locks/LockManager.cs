@@ -103,5 +103,35 @@ namespace ClassifiedAds.Persistence.Locks
 
             return true;
         }
+
+        public bool ReleaseLocks(string ownerId)
+        {
+            string sql = @"
+            Update Locks set OwnerId = NULL, 
+            AcquiredDateTime = NULL,
+            ExpiredDateTime = NULL
+            where OwnerId = @OwnerId";
+
+            _ = _dbContext.Database.ExecuteSqlRaw(sql,
+                  new SqlParameter("OwnerId", ownerId));
+
+            return true;
+        }
+
+        public bool ReleaseExpiredLocks()
+        {
+            var now = _dateTimeProvider.OffsetNow;
+
+            string sql = @"
+            Update Locks set OwnerId = NULL, 
+            AcquiredDateTime = NULL,
+            ExpiredDateTime = NULL
+            where ExpiredDateTime < @now";
+
+            _ = _dbContext.Database.ExecuteSqlRaw(sql,
+                  new SqlParameter("now", SqlDbType.DateTimeOffset) { Value = now });
+
+            return true;
+        }
     }
 }
