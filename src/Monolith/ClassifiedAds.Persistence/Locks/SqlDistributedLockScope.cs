@@ -8,18 +8,33 @@ namespace ClassifiedAds.Persistence.Locks
     public class SqlDistributedLockScope : IDistributedLockScope
     {
         private readonly SqlConnection _connection;
+        private readonly SqlTransaction _transaction;
         private readonly string _lockName;
 
-        public SqlDistributedLockScope(SqlConnection connection, string lockName)
+        public bool HasTransaction
+        {
+            get
+            {
+                return _transaction != null;
+            }
+        }
+
+        public SqlDistributedLockScope(SqlConnection connection, SqlTransaction transaction, string lockName)
         {
             _connection = connection;
+            _transaction = transaction;
             _lockName = lockName;
         }
 
         public void Dispose()
         {
+            if (HasTransaction)
+            {
+                return;
+            }
+
             SqlParameter returnValue;
-            var releaseCommand = CreateReleaseCommand(_connection, _lockName, false, out returnValue);
+            var releaseCommand = CreateReleaseCommand(_lockName, false, out returnValue);
             releaseCommand.ExecuteNonQuery();
 
             if (ParseReturnCode((int)returnValue.Value))
@@ -30,17 +45,21 @@ namespace ClassifiedAds.Persistence.Locks
         public bool StillHoldingLock()
         {
             var command = _connection.CreateCommand();
+            command.Transaction = _transaction;
+
             command.CommandText = @"SELECT APPLOCK_MODE('public', @Resource, @LockOwner)";
             command.Parameters.Add(new SqlParameter("Resource", _lockName));
-            command.Parameters.Add(new SqlParameter("LockOwner", "Session"));
+            command.Parameters.Add(new SqlParameter("LockOwner", HasTransaction ? "Transaction" : "Session"));
             var lockMode = (string)command.ExecuteScalar();
 
             return lockMode != "NoLock";
         }
 
-        private static SqlCommand CreateReleaseCommand(SqlConnection connection, string lockName, bool isTry, out SqlParameter returnValue)
+        private SqlCommand CreateReleaseCommand(string lockName, bool isTry, out SqlParameter returnValue)
         {
-            var command = connection.CreateCommand();
+            var command = _connection.CreateCommand();
+            command.Transaction = _transaction;
+
             if (isTry)
             {
                 command.CommandText =
@@ -57,7 +76,7 @@ namespace ClassifiedAds.Persistence.Locks
             }
 
             command.Parameters.Add(new SqlParameter("Resource", lockName));
-            command.Parameters.Add(new SqlParameter("LockOwner", "Session"));
+            command.Parameters.Add(new SqlParameter("LockOwner", HasTransaction ? "Transaction" : "Session"));
 
             if (isTry)
             {

@@ -10,22 +10,37 @@ namespace ClassifiedAds.Persistence.Locks
         public const int AlreadyHeldReturnCode = 103;
 
         private readonly SqlConnection _connection;
+        private readonly SqlTransaction _transaction;
+
+        public bool HasTransaction
+        {
+            get
+            {
+                return _transaction != null;
+            }
+        }
 
         public SqlDistributedLock(SqlConnection connection)
         {
             _connection = connection;
         }
 
+        public SqlDistributedLock(SqlTransaction transaction)
+        {
+            _transaction = transaction;
+            _connection = _transaction.Connection;
+        }
+
         public IDistributedLockScope Acquire(string lockName)
         {
             SqlParameter returnValue;
-            var acquireCommand = CreateAcquireCommand(_connection, 0, lockName, -1, out returnValue);
+            var acquireCommand = CreateAcquireCommand(0, lockName, -1, out returnValue);
 
             acquireCommand.ExecuteNonQuery();
 
             if (ParseReturnCode((int)returnValue.Value))
             {
-                return new SqlDistributedLockScope(_connection, lockName);
+                return new SqlDistributedLockScope(_connection, _transaction, lockName);
             }
             else
             {
@@ -36,13 +51,13 @@ namespace ClassifiedAds.Persistence.Locks
         public IDistributedLockScope TryAcquire(string lockName)
         {
             SqlParameter returnValue;
-            var acquireCommand = CreateAcquireCommand(_connection, 30, lockName, 0, out returnValue);
+            var acquireCommand = CreateAcquireCommand(30, lockName, 0, out returnValue);
 
             acquireCommand.ExecuteNonQuery();
 
             if (ParseReturnCode((int)returnValue.Value))
             {
-                return new SqlDistributedLockScope(_connection, lockName);
+                return new SqlDistributedLockScope(_connection, _transaction, lockName);
             }
             else
             {
@@ -50,22 +65,24 @@ namespace ClassifiedAds.Persistence.Locks
             }
         }
 
-        private static SqlCommand CreateAcquireCommand(SqlConnection connection, int commandTimeout, string lockName, int lockTimeout, out SqlParameter returnValue)
+        private SqlCommand CreateAcquireCommand(int commandTimeout, string lockName, int lockTimeout, out SqlParameter returnValue)
         {
-            SqlCommand command = connection.CreateCommand();
+            SqlCommand command = _connection.CreateCommand();
+            command.Transaction = _transaction;
+
             returnValue = command.Parameters.Add(new SqlParameter { ParameterName = "Result", DbType = DbType.Int32, Direction = ParameterDirection.Output });
             command.CommandText =
-                $@"IF APPLOCK_MODE('public', @Resource, @LockOwner) != 'NoLock'
+                $@"IF APPLOCK_MODE('public', @Resource, @LockOwner) != 'NoLock' {(HasTransaction ? " OR APPLOCK_MODE('public', @Resource, 'Session') != 'NoLock'" : "")}
                             SET @Result = {AlreadyHeldReturnCode}
                         ELSE
-                            EXEC @Result = dbo.sp_getapplock @Resource=@Resource, @LockMode=@LockMode, @LockOwner=@LockOwner, @LockTimeout=@LockTimeout, @DbPrincipal='public'"
-            ;
+                            EXEC @Result = dbo.sp_getapplock @Resource = @Resource, @LockMode = @LockMode, @LockOwner = @LockOwner, @LockTimeout = @LockTimeout, @DbPrincipal = 'public'"
+                      ;
 
             command.CommandTimeout = commandTimeout;
 
             command.Parameters.Add(new SqlParameter("Resource", lockName));
             command.Parameters.Add(new SqlParameter("LockMode", "Exclusive"));
-            command.Parameters.Add(new SqlParameter("LockOwner", "Session"));
+            command.Parameters.Add(new SqlParameter("LockOwner", HasTransaction ? "Transaction" : "Session"));
             command.Parameters.Add(new SqlParameter("LockTimeout", lockTimeout));
 
             return command;
