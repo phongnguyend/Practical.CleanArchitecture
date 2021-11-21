@@ -9,7 +9,13 @@ namespace ClassifiedAds.Modules.Notification.Entities
 
         public string PhoneNumber { get; set; }
 
-        public int RetriedCount { get; set; }
+        public int AttemptCount { get; set; }
+
+        public int MaxAttemptCount { get; set; }
+
+        public DateTimeOffset? NextAttemptDateTime { get; set; }
+
+        public DateTimeOffset? ExpiredDateTime { get; set; }
 
         public string Log { get; set; }
 

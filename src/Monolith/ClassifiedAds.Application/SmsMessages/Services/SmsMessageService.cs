@@ -3,6 +3,7 @@ using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Domain.Repositories;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,27 +29,58 @@ namespace ClassifiedAds.Application.SmsMessages.Services
 
         public async Task<int> SendSmsMessagesAsync()
         {
-            var dateTime = _dateTimeProvider.OffsetNow.AddMinutes(-1);
+            var deplayedTimes = new[]
+            {
+                TimeSpan.FromMinutes(1),
+                TimeSpan.FromMinutes(2),
+                TimeSpan.FromMinutes(3),
+                TimeSpan.FromMinutes(5),
+                TimeSpan.FromMinutes(8),
+                TimeSpan.FromMinutes(13),
+                TimeSpan.FromMinutes(21),
+                TimeSpan.FromMinutes(34),
+                TimeSpan.FromMinutes(55),
+                TimeSpan.FromMinutes(89),
+            };
+
+            var dateTime = _dateTimeProvider.OffsetNow;
+            var defaultAttemptCount = 5;
 
             var messages = _repository.GetAll()
-                .Where(x => x.SentDateTime == null && x.RetriedCount < 3)
-                .Where(x => (x.RetriedCount == 0) || (x.RetriedCount != 0 && x.UpdatedDateTime < dateTime))
+                .Where(x => x.SentDateTime == null)
+                .Where(x => x.ExpiredDateTime == null || x.ExpiredDateTime > dateTime)
+                .Where(x => (x.MaxAttemptCount == 0 && x.AttemptCount < defaultAttemptCount) || x.AttemptCount < x.MaxAttemptCount)
+                .Where(x => x.NextAttemptDateTime == null || x.NextAttemptDateTime <= dateTime)
                 .ToList();
 
             if (messages.Any())
             {
                 foreach (var sms in messages)
                 {
+                    string log = Environment.NewLine + Environment.NewLine
+                            + $"[{_dateTimeProvider.OffsetNow.ToString(CultureInfo.InvariantCulture)}] ";
                     try
                     {
                         await _smsNotification.SendAsync(sms);
-                        _repository.UpdateSent(sms.Id);
+                        sms.SentDateTime = _dateTimeProvider.OffsetNow;
+                        sms.Log += log + "Succeed.";
                     }
                     catch (Exception ex)
                     {
-                        _repository.UpdateFailed(sms.Id, Environment.NewLine + Environment.NewLine + ex.ToString());
-                        _repository.IncreaseRetry(sms.Id);
+                        sms.Log += log + ex.ToString();
+                        sms.NextAttemptDateTime = _dateTimeProvider.OffsetNow + deplayedTimes[sms.AttemptCount];
                     }
+
+                    sms.AttemptCount += 1;
+                    sms.Log = sms.Log.Trim();
+                    sms.UpdatedDateTime = _dateTimeProvider.OffsetNow;
+
+                    if (sms.MaxAttemptCount == 0)
+                    {
+                        sms.MaxAttemptCount = defaultAttemptCount;
+                    }
+
+                    await _repository.UnitOfWork.SaveChangesAsync();
                 }
             }
             else
