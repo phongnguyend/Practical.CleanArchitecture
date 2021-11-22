@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /ClassifiedAds.Microservices
 
 # Copy csproj and restore as distinct layers
@@ -17,7 +17,7 @@ COPY . ./
 RUN dotnet publish ./Services.Storage/ClassifiedAds.Services.Storage.Api/ClassifiedAds.Services.Storage.Api.csproj -c Release -o out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /ClassifiedAds.Microservices
 COPY --from=build-env /ClassifiedAds.Microservices/out .
 

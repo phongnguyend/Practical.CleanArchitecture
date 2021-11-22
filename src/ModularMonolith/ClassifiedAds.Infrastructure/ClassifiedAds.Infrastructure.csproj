@@ -1,82 +1,82 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>ClassifiedAds.Infrastructure</RootNamespace>
     <CodeAnalysisRuleSet>ClassifiedAds.Infrastructure.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="App.Metrics" Version="4.1.0" />
-    <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="4.1.0" />
-    <PackageReference Include="App.Metrics.AspNetCore.Tracking" Version="4.1.0" />
-    <PackageReference Include="App.Metrics.Formatters.Prometheus" Version="4.1.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.Aws.S3" Version="3.1.1" />
-    <PackageReference Include="AspNetCore.HealthChecks.AzureServiceBus" Version="5.1.1" />
-    <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="3.3.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="3.1.3" />
-    <PackageReference Include="AspNetCore.HealthChecks.RabbitMQ" Version="3.1.4" />
-    <PackageReference Include="AspNetCore.HealthChecks.SignalR" Version="3.1.1" />
-    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="3.1.1" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.1.3" />
-    <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="3.1.2" />
-    <PackageReference Include="AWSSDK.S3" Version="3.5.4" />
-    <PackageReference Include="Azure.Communication.Sms" Version="1.0.0-beta.3" />
-    <PackageReference Include="Azure.Data.AppConfiguration" Version="1.0.2" />
-    <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.0.2" />
-    <PackageReference Include="Azure.Identity" Version="1.3.0" />
-    <PackageReference Include="Azure.Messaging.EventGrid" Version="4.6.0" />
-    <PackageReference Include="Azure.Messaging.EventHubs" Version="5.6.0" />
-    <PackageReference Include="Azure.Messaging.EventHubs.Processor" Version="5.6.0" />
-    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.2.1" />
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.9.1" />
-    <PackageReference Include="Azure.Storage.Queues" Version="12.7.0" />
-    <PackageReference Include="Castle.Core" Version="4.4.1" />
-    <PackageReference Include="Confluent.Kafka" Version="1.5.2" />
-    <PackageReference Include="CryptographyHelper" Version="1.0.0-beta4" />
-    <PackageReference Include="CsvHelper" Version="27.1.1" />
-    <PackageReference Include="Dapper.StrongName" Version="2.0.35" />
-    <PackageReference Include="DinkToPdf" Version="1.0.8" />
-    <PackageReference Include="IdentityModel" Version="4.4.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.16.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="4.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="5.0.0" />
-    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.2.1" />
-    <PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.2.1" />
-    <PackageReference Include="MiniProfiler.Providers.SqlServer" Version="4.2.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.0.0-rc1.1" />
-    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.0.0-rc1.1" />
-    <PackageReference Include="OpenTelemetry.Exporter.Zipkin" Version="1.0.0-rc1.1" />
-    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc1.1" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc1.1" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc1.1" />
-    <PackageReference Include="PuppeteerSharp" Version="4.0.0" />
-    <PackageReference Include="Quartz" Version="3.3.2" />
-    <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
-    <PackageReference Include="RazorLight" Version="2.0.0-rc.3" />
-    <PackageReference Include="SendGrid" Version="9.21.2" />
-    <PackageReference Include="Serilog" Version="2.10.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
-    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.1.3" />
-    <PackageReference Include="Serilog.Exceptions" Version="6.0.0" />
-    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.4.1" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
-    <PackageReference Include="Twilio" Version="5.49.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="App.Metrics" Version="4.2.0" />
+		<PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="4.2.0" />
+		<PackageReference Include="App.Metrics.AspNetCore.Tracking" Version="4.2.0" />
+		<PackageReference Include="App.Metrics.Formatters.Prometheus" Version="4.2.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.Aws.S3" Version="5.0.2" />
+		<PackageReference Include="AspNetCore.HealthChecks.AzureServiceBus" Version="5.1.2" />
+		<PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="5.0.1" />
+		<PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="5.0.1" />
+		<PackageReference Include="AspNetCore.HealthChecks.RabbitMQ" Version="5.0.2" />
+		<PackageReference Include="AspNetCore.HealthChecks.SignalR" Version="5.0.1" />
+		<PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="5.0.3" />
+		<PackageReference Include="AspNetCore.HealthChecks.UI" Version="5.0.1" />
+		<PackageReference Include="AspNetCore.HealthChecks.Uris" Version="6.0.1" />
+		<PackageReference Include="AWSSDK.S3" Version="3.7.4.9" />
+		<PackageReference Include="Azure.Communication.Sms" Version="1.0.1" />
+		<PackageReference Include="Azure.Data.AppConfiguration" Version="1.2.0" />
+		<PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.2.1" />
+		<PackageReference Include="Azure.Identity" Version="1.5.0" />
+		<PackageReference Include="Azure.Messaging.EventGrid" Version="4.7.0" />
+		<PackageReference Include="Azure.Messaging.EventHubs" Version="5.6.2" />
+		<PackageReference Include="Azure.Messaging.EventHubs.Processor" Version="5.6.2" />
+		<PackageReference Include="Azure.Messaging.ServiceBus" Version="7.5.0" />
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
+		<PackageReference Include="Azure.Storage.Queues" Version="12.8.0" />
+		<PackageReference Include="Castle.Core" Version="4.4.1" />
+		<PackageReference Include="Confluent.Kafka" Version="1.8.2" />
+		<PackageReference Include="CryptographyHelper" Version="1.0.0-beta4" />
+		<PackageReference Include="CsvHelper" Version="27.2.0" />
+		<PackageReference Include="Dapper.StrongName" Version="2.0.123" />
+		<PackageReference Include="DinkToPdf" Version="1.0.8" />
+		<PackageReference Include="IdentityModel" Version="5.2.0" />
+		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="4.5.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.2.0" />
+		<PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="6.0.0" />
+		<PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.2.22" />
+		<PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.2.22" />
+		<PackageReference Include="MiniProfiler.Providers.SqlServer" Version="4.2.22" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.2.0-beta2.1" />
+		<PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.2.0-beta2.1" />
+		<PackageReference Include="OpenTelemetry.Exporter.Zipkin" Version="1.2.0-beta2.1" />
+		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc8" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc8" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc8" />
+		<PackageReference Include="PuppeteerSharp" Version="6.0.0" />
+		<PackageReference Include="Quartz" Version="3.3.3" />
+		<PackageReference Include="RabbitMQ.Client" Version="6.2.2" />
+		<PackageReference Include="RazorLight" Version="2.0.0-rc.3" />
+		<PackageReference Include="SendGrid" Version="9.25.0" />
+		<PackageReference Include="Serilog" Version="2.10.0" />
+		<PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
+		<PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
+		<PackageReference Include="Serilog.Exceptions" Version="8.0.0" />
+		<PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.4.1" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+		<PackageReference Include="Twilio" Version="5.68.1" />
+	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ClassifiedAds.Domain\ClassifiedAds.Domain.csproj" />

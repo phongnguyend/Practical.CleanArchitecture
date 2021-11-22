@@ -38,6 +38,8 @@
 
     public class OtlpOptions
     {
+        public string ServiceName { get; set; }
+
         public string Endpoint { get; set; }
     }
 }

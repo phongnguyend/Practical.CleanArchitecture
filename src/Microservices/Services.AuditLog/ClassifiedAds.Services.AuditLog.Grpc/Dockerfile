@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /ClassifiedAds.Microservices
 
 # Copy csproj and restore as distinct layers
@@ -9,8 +9,8 @@ COPY ./Common/ClassifiedAds.Infrastructure/*.csproj ./Common/ClassifiedAds.Infra
 RUN dotnet restore ./Common/ClassifiedAds.Application/ClassifiedAds.Application.csproj
 RUN dotnet restore ./Common/ClassifiedAds.Infrastructure/ClassifiedAds.Infrastructure.csproj
 
-COPY ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Api/*.csproj ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Api/
-RUN dotnet restore ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Api/ClassifiedAds.Services.AuditLog.Api.csproj
+COPY ./Services.AuditLog/ClassifiedAds.Services.AuditLog/*.csproj ./Services.AuditLog/ClassifiedAds.Services.AuditLog/
+RUN dotnet restore ./Services.AuditLog/ClassifiedAds.Services.AuditLog/ClassifiedAds.Services.AuditLog.csproj
 
 COPY ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/*.csproj ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/
 RUN dotnet restore ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/ClassifiedAds.Services.AuditLog.Grpc.csproj
@@ -20,7 +20,7 @@ COPY . ./
 RUN dotnet publish ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/ClassifiedAds.Services.AuditLog.Grpc.csproj -c Release -o out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /ClassifiedAds.Microservices
 COPY --from=build-env /ClassifiedAds.Microservices/out .
 

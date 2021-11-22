@@ -142,9 +142,6 @@ namespace ClassifiedAds.WebMVC
                     failureStatus: HealthStatus.Degraded)
                 .AddUrlGroup(new Uri(AppSettings.ResourceServer.Endpoint),
                     name: "Resource (Web API) Server",
-                    failureStatus: HealthStatus.Degraded)
-                .AddUrlGroup(new Uri(AppSettings.BackgroundServer.Endpoint),
-                    name: "Background Services Server",
                     failureStatus: HealthStatus.Degraded);
 
             services.AddHealthChecksUI(setupSettings: setup =>

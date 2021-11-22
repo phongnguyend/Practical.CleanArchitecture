@@ -1,5 +1,4 @@
-﻿using Azure.Communication;
-using Azure.Communication.Sms;
+﻿using Azure.Communication.Sms;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,8 +17,8 @@ namespace ClassifiedAds.Infrastructure.Notification.Sms.Azure
         {
             var smsClient = new SmsClient(_options.ConnectionString);
             var response = await smsClient.SendAsync(
-                from: new PhoneNumber(_options.FromNumber),
-                to: new PhoneNumber(smsMessage.PhoneNumber),
+                from: _options.FromNumber,
+                to: smsMessage.PhoneNumber,
                 message: smsMessage.Message,
                 cancellationToken: cancellationToken);
 

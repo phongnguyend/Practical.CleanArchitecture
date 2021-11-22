@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>3bb18abd-09c2-44f2-900e-28cc944866e1</UserSecretsId>
   </PropertyGroup>
 
@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.24.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,7 +19,7 @@
     <ProjectReference Include="..\..\Common\ClassifiedAds.CrossCuttingConcerns\ClassifiedAds.CrossCuttingConcerns.csproj" />
     <ProjectReference Include="..\..\Common\ClassifiedAds.Domain\ClassifiedAds.Domain.csproj" />
     <ProjectReference Include="..\..\Common\ClassifiedAds.Infrastructure\ClassifiedAds.Infrastructure.csproj" />
-    <ProjectReference Include="..\ClassifiedAds.Services.Notification.Api\ClassifiedAds.Services.Notification.Api.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.Services.Notification\ClassifiedAds.Services.Notification.csproj" />
   </ItemGroup>
 
   <ItemGroup>

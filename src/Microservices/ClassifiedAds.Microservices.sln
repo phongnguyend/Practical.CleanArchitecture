@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29613.14
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Services.AuditLog.Api", "Services.AuditLog\ClassifiedAds.Services.AuditLog.Api\ClassifiedAds.Services.AuditLog.Api.csproj", "{5638108B-FE42-42C5-84AE-72D4CFC0B3DE}"
 EndProject
@@ -56,6 +56,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{12076161-F47C-47E6-849A-92377D2F2923}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Services.Configuration.Api", "Services.Configuration\ClassifiedAds.Services.Configuration.Api\ClassifiedAds.Services.Configuration.Api.csproj", "{06E1983D-E90A-4853-82BE-C9557506A7ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Services.AuditLog", "Services.AuditLog\ClassifiedAds.Services.AuditLog\ClassifiedAds.Services.AuditLog.csproj", "{47340F4E-FE50-48F9-ACF8-140EDF71DBAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Services.Identity", "Services.Identity\ClassifiedAds.Services.Identity\ClassifiedAds.Services.Identity.csproj", "{51029D56-04FE-46C8-B176-0C65B6980518}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Services.Notification", "Services.Notification\ClassifiedAds.Services.Notification\ClassifiedAds.Services.Notification.csproj", "{F09154ED-2C3B-4316-834A-E8207AFDDD6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -135,6 +141,18 @@ Global
 		{06E1983D-E90A-4853-82BE-C9557506A7ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06E1983D-E90A-4853-82BE-C9557506A7ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06E1983D-E90A-4853-82BE-C9557506A7ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47340F4E-FE50-48F9-ACF8-140EDF71DBAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47340F4E-FE50-48F9-ACF8-140EDF71DBAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47340F4E-FE50-48F9-ACF8-140EDF71DBAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47340F4E-FE50-48F9-ACF8-140EDF71DBAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51029D56-04FE-46C8-B176-0C65B6980518}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51029D56-04FE-46C8-B176-0C65B6980518}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51029D56-04FE-46C8-B176-0C65B6980518}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51029D56-04FE-46C8-B176-0C65B6980518}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F09154ED-2C3B-4316-834A-E8207AFDDD6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F09154ED-2C3B-4316-834A-E8207AFDDD6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F09154ED-2C3B-4316-834A-E8207AFDDD6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F09154ED-2C3B-4316-834A-E8207AFDDD6D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -164,6 +182,9 @@ Global
 		{1760E9D6-C483-433F-A829-6C1CAFFAC0F0} = {7C1260FA-4009-489B-82CE-D8CA5FE7D7D9}
 		{12076161-F47C-47E6-849A-92377D2F2923} = {1E828A01-F4C9-4D88-8B21-559A889B6F42}
 		{06E1983D-E90A-4853-82BE-C9557506A7ED} = {12076161-F47C-47E6-849A-92377D2F2923}
+		{47340F4E-FE50-48F9-ACF8-140EDF71DBAB} = {02CB8A17-2BD5-4DE7-85E6-CEAB2DE9F06E}
+		{51029D56-04FE-46C8-B176-0C65B6980518} = {511C62E1-D820-4032-8CEB-5558B94D5833}
+		{F09154ED-2C3B-4316-834A-E8207AFDDD6D} = {5EF4FB70-0925-4193-AE9D-FDF8D1DCA82E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {56A0CE13-45AB-4778-AF71-23AFC781BDEF}

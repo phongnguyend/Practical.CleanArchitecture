@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /ClassifiedAds.Microservices
 
 # Copy csproj and restore as distinct layers
@@ -9,8 +9,8 @@ COPY ./Common/ClassifiedAds.Infrastructure/*.csproj ./Common/ClassifiedAds.Infra
 RUN dotnet restore ./Common/ClassifiedAds.Application/ClassifiedAds.Application.csproj
 RUN dotnet restore ./Common/ClassifiedAds.Infrastructure/ClassifiedAds.Infrastructure.csproj
 
-COPY ./Services.Identity/ClassifiedAds.Services.Identity.Api/*.csproj ./Services.Identity/ClassifiedAds.Services.Identity.Api/
-RUN dotnet restore ./Services.Identity/ClassifiedAds.Services.Identity.Api/ClassifiedAds.Services.Identity.Api.csproj
+COPY ./Services.Identity/ClassifiedAds.Services.Identity/*.csproj ./Services.Identity/ClassifiedAds.Services.Identity/
+RUN dotnet restore ./Services.Identity/ClassifiedAds.Services.Identity/ClassifiedAds.Services.Identity.csproj
 
 COPY ./Services.Identity/ClassifiedAds.Services.Identity.AuthServer/*.csproj ./Services.Identity/ClassifiedAds.Services.Identity.AuthServer/
 RUN dotnet restore ./Services.Identity/ClassifiedAds.Services.Identity.AuthServer/ClassifiedAds.Services.Identity.AuthServer.csproj
@@ -20,7 +20,7 @@ COPY . ./
 RUN dotnet publish ./Services.Identity/ClassifiedAds.Services.Identity.AuthServer/ClassifiedAds.Services.Identity.AuthServer.csproj -c Release -o out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /ClassifiedAds.Microservices
 COPY --from=build-env /ClassifiedAds.Microservices/out .
 

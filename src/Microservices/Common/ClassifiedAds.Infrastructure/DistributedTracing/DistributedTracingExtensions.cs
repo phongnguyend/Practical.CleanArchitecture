@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System;
 
@@ -16,12 +17,12 @@ namespace ClassifiedAds.Infrastructure.DistributedTracing
             if (options?.Exporter == ExporterOptions.Zipkin)
             {
                 services.AddOpenTelemetryTracing((builder) => builder
+                        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(options.Zipkin.ServiceName))
                         .AddAspNetCoreInstrumentation()
                         .AddHttpClientInstrumentation()
                         .SetSampler(new AlwaysOnSampler())
                         .AddZipkinExporter(zipkinOptions =>
                         {
-                            zipkinOptions.ServiceName = options.Zipkin.ServiceName;
                             zipkinOptions.Endpoint = new Uri(options.Zipkin.Endpoint);
                         }));
             }
@@ -29,6 +30,7 @@ namespace ClassifiedAds.Infrastructure.DistributedTracing
             if (options?.Exporter == ExporterOptions.Jaeger)
             {
                 services.AddOpenTelemetryTracing((builder) => builder
+                        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(options.Jaeger.ServiceName))
                         .AddAspNetCoreInstrumentation()
                         .AddHttpClientInstrumentation()
                         .SetSampler(new AlwaysOnSampler())
@@ -42,12 +44,13 @@ namespace ClassifiedAds.Infrastructure.DistributedTracing
             if (options?.Exporter == ExporterOptions.Otlp)
             {
                 services.AddOpenTelemetryTracing((builder) => builder
+                        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(options.Otlp.ServiceName))
                         .AddAspNetCoreInstrumentation()
                         .AddHttpClientInstrumentation()
                         .SetSampler(new AlwaysOnSampler())
                         .AddOtlpExporter(otlpOptions =>
                         {
-                            otlpOptions.Endpoint = options.Otlp.Endpoint;
+                            otlpOptions.Endpoint = new Uri(options.Otlp.Endpoint);
                         }));
             }
 
