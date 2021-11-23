@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace ClassifiedAds.Application.Decorators.AuditLog
 {
@@ -18,7 +18,7 @@ namespace ClassifiedAds.Application.Decorators.AuditLog
 
         public async Task HandleAsync(TCommand command, CancellationToken cancellationToken = default)
         {
-            var commandJson = JsonConvert.SerializeObject(command);
+            var commandJson = JsonSerializer.Serialize(command);
             Console.WriteLine($"Command of type {command.GetType().Name}: {commandJson}");
             await _handler.HandleAsync(command, cancellationToken);
         }

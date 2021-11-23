@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
 
 namespace ClassifiedAds.CrossCuttingConcerns.ExtensionMethods
 {
@@ -6,7 +6,7 @@ namespace ClassifiedAds.CrossCuttingConcerns.ExtensionMethods
     {
         public static string AsJsonString(this object obj)
         {
-            var content = JsonConvert.SerializeObject(obj, Formatting.Indented);
+            var content = JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
             return content;
         }
     }

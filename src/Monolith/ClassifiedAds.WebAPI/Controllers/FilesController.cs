@@ -15,7 +15,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,6 +22,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mime;
 using System.Security.Cryptography;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.WebAPI.Controllers
@@ -179,7 +179,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             FileEntry previous = null;
             foreach (var log in logs.OrderBy(x => x.CreatedDateTime))
             {
-                var data = JsonConvert.DeserializeObject<FileEntry>(log.Log);
+                var data = JsonSerializer.Deserialize<FileEntry>(log.Log);
                 var highLight = new
                 {
                     Name = previous != null && data.Name != previous.Name,

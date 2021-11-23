@@ -1,7 +1,8 @@
 ﻿using Castle.DynamicProxy;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ClassifiedAds.Infrastructure.Interceptors
 {
@@ -19,7 +20,13 @@ namespace ClassifiedAds.Infrastructure.Interceptors
             var method = invocation.Method;
             var className = method.DeclaringType.Name;
             var methodName = method.Name;
-            var arguments = JsonConvert.SerializeObject(invocation.Arguments, Formatting.None, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore, ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+
+            var arguments = JsonSerializer.Serialize(invocation.Arguments, new JsonSerializerOptions()
+            {
+                WriteIndented = false,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+            });
 
             _logger.LogDebug($"Start calling method: {className}.{methodName} with ({arguments}).");
 

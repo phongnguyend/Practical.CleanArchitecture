@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using Confluent.Kafka;
-using Newtonsoft.Json;
 using System;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -61,7 +61,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.Kafka
                         continue;
                     }
 
-                    var message = JsonConvert.DeserializeObject<Message<T>>(consumeResult.Message.Value);
+                    var message = JsonSerializer.Deserialize<Message<T>>(consumeResult.Message.Value);
                     action(message.Data, message.MetaData);
                 }
                 catch (ConsumeException e)

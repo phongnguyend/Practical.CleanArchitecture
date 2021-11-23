@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.Reflection;
+﻿using System.Reflection;
+using System.Text.Json;
 
 namespace ClassifiedAds.CrossCuttingConcerns.ExtensionMethods
 {
@@ -28,13 +28,7 @@ namespace ClassifiedAds.CrossCuttingConcerns.ExtensionMethods
                 return default(T);
             }
 
-            // initialize inner objects individually
-            // for example in default constructor some list property initialized with some values,
-            // but in 'source' these items are cleaned -
-            // without ObjectCreationHandling.Replace default constructor values will be added to result
-            var deserializeSettings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace };
-
-            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(source), deserializeSettings);
+            return JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(source));
         }
     }
 }

@@ -15,12 +15,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Mime;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.WebAPI.Controllers
@@ -129,7 +129,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             ProductDTO previous = null;
             foreach (var log in logs.OrderBy(x => x.CreatedDateTime))
             {
-                var data = JsonConvert.DeserializeObject<ProductDTO>(log.Log);
+                var data = JsonSerializer.Deserialize<ProductDTO>(log.Log);
                 var highLight = new
                 {
                     Code = previous != null && data.Code != previous.Code,

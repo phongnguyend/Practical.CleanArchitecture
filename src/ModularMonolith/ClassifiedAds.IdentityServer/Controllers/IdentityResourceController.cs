@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ClassifiedAds.IdentityServer.Models.IdentityResourceModels;
+﻿using ClassifiedAds.IdentityServer.Models.IdentityResourceModels;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 
 namespace ClassifiedAds.IdentityServer.Controllers
 {
@@ -63,7 +61,7 @@ namespace ClassifiedAds.IdentityServer.Controllers
 
             if (!string.IsNullOrEmpty(model.UserClaimsItems))
             {
-                model.UserClaims = JsonConvert.DeserializeObject<List<string>>(model.UserClaimsItems);
+                model.UserClaims = JsonSerializer.Deserialize<List<string>>(model.UserClaimsItems);
 
                 identity.UserClaims.AddRange(model.UserClaims.Select(x => new IdentityResourceClaim
                 {

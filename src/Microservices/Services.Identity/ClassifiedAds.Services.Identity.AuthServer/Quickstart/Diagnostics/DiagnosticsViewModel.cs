@@ -4,9 +4,9 @@
 
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
 
 namespace IdentityServerHost.Quickstart.UI
 {
@@ -22,7 +22,7 @@ namespace IdentityServerHost.Quickstart.UI
                 var bytes = Base64Url.Decode(encoded);
                 var value = Encoding.UTF8.GetString(bytes);
 
-                Clients = JsonConvert.DeserializeObject<string[]>(value);
+                Clients = JsonSerializer.Deserialize<string[]>(value);
             }
         }
 

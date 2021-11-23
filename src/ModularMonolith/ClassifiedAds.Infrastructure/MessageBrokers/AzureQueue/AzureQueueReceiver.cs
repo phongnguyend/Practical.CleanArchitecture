@@ -1,7 +1,7 @@
 ﻿using Azure.Storage.Queues;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using Newtonsoft.Json;
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
@@ -28,7 +28,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
         {
             return ReceiveStringAsync(retrievedMessage =>
             {
-                var message = JsonConvert.DeserializeObject<Message<T>>(retrievedMessage);
+                var message = JsonSerializer.Deserialize<Message<T>>(retrievedMessage);
                 action(message.Data, message.MetaData);
             });
         }

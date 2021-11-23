@@ -3,10 +3,10 @@ using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 namespace ClassifiedAds.IdentityServer.Controllers
 {
@@ -62,7 +62,7 @@ namespace ClassifiedAds.IdentityServer.Controllers
 
             if (!string.IsNullOrEmpty(model.UserClaimsItems))
             {
-                var userClaims = JsonConvert.DeserializeObject<List<string>>(model.UserClaimsItems);
+                var userClaims = JsonSerializer.Deserialize<List<string>>(model.UserClaimsItems);
 
                 api.UserClaims.AddRange(userClaims.Select(x => new ApiResourceClaim
                 {

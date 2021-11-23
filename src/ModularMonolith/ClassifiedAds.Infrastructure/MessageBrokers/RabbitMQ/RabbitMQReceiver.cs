@@ -1,9 +1,9 @@
 ﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
 using System.Text;
+using System.Text.Json;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
 {
@@ -56,7 +56,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
             consumer.Received += (model, ea) =>
             {
                 var body = Encoding.UTF8.GetString(ea.Body.Span);
-                var message = JsonConvert.DeserializeObject<Message<T>>(body);
+                var message = JsonSerializer.Deserialize<Message<T>>(body);
                 action(message.Data, message.MetaData);
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };

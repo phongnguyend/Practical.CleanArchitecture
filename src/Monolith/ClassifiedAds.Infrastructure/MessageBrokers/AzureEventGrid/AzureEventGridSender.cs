@@ -1,9 +1,9 @@
 ﻿using Azure;
 using Azure.Messaging.EventGrid;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,7 +27,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventGrid
 
             EventGridPublisherClient client = new EventGridPublisherClient(new Uri(_domainEndpoint), new AzureKeyCredential(_domainKey));
 
-            var data = new BinaryData(JsonConvert.SerializeObject(new Message<T>
+            var data = new BinaryData(JsonSerializer.Serialize(new Message<T>
             {
                 Data = message,
                 MetaData = metaData,

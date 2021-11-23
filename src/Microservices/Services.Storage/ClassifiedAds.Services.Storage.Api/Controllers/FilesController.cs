@@ -11,7 +11,6 @@ using CryptographyHelper.SymmetricAlgorithms;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,6 +18,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mime;
 using System.Security.Cryptography;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Storage.Controllers
@@ -166,7 +166,7 @@ namespace ClassifiedAds.Services.Storage.Controllers
             FileEntry previous = null;
             foreach (var log in logs.OrderBy(x => x.CreatedDateTime))
             {
-                var data = JsonConvert.DeserializeObject<FileEntry>(log.Log);
+                var data = JsonSerializer.Deserialize<FileEntry>(log.Log);
                 var highLight = new
                 {
                     Name = previous != null && data.Name != previous.Name,

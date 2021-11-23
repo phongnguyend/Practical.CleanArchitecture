@@ -1,8 +1,8 @@
 ﻿using Azure.Messaging.ServiceBus;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using Newtonsoft.Json;
 using System;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus
@@ -27,7 +27,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus
         {
             return ReceiveStringAsync(retrievedMessage =>
             {
-                var message = JsonConvert.DeserializeObject<Message<T>>(retrievedMessage);
+                var message = JsonSerializer.Deserialize<Message<T>>(retrievedMessage);
                 action(message.Data, message.MetaData);
             });
         }

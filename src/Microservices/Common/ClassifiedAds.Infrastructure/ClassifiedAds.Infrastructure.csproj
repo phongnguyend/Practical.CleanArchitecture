@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>ClassifiedAds.Infrastructure</RootNamespace>
-    <CodeAnalysisRuleSet>ClassifiedAds.Infrastructure.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<RootNamespace>ClassifiedAds.Infrastructure</RootNamespace>
+		<CodeAnalysisRuleSet>ClassifiedAds.Infrastructure.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
@@ -55,7 +55,6 @@
 		<PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.2.22" />
 		<PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.2.22" />
 		<PackageReference Include="MiniProfiler.Providers.SqlServer" Version="4.2.22" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.2.0-beta2.1" />
 		<PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.2.0-beta2.1" />
 		<PackageReference Include="OpenTelemetry.Exporter.Zipkin" Version="1.2.0-beta2.1" />
@@ -80,19 +79,19 @@
 		<PackageReference Include="Twilio" Version="5.68.1" />
 	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ClassifiedAds.Domain\ClassifiedAds.Domain.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ClassifiedAds.Domain\ClassifiedAds.Domain.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ContentWithTargetPath Include="..\libs\libwkhtmltox\libwkhtmltox-0.12.4-x64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>libwkhtmltox.dll</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="..\libs\libwkhtmltox\libwkhtmltox-0.12.4-x64.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>libwkhtmltox.so</TargetPath>
-    </ContentWithTargetPath>
-  </ItemGroup>
-  
+	<ItemGroup>
+		<ContentWithTargetPath Include="..\libs\libwkhtmltox\libwkhtmltox-0.12.4-x64.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<TargetPath>libwkhtmltox.dll</TargetPath>
+		</ContentWithTargetPath>
+		<ContentWithTargetPath Include="..\libs\libwkhtmltox\libwkhtmltox-0.12.4-x64.so">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<TargetPath>libwkhtmltox.so</TargetPath>
+		</ContentWithTargetPath>
+	</ItemGroup>
+
 </Project>

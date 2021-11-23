@@ -3,9 +3,9 @@ using Azure.Messaging.EventHubs.Consumer;
 using Azure.Messaging.EventHubs.Processor;
 using Azure.Storage.Blobs;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using Newtonsoft.Json;
 using System;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventHub
@@ -43,7 +43,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventHub
                 try
                 {
                     var messageAsString = Encoding.UTF8.GetString(eventArgs.Data.EventBody);
-                    var message = JsonConvert.DeserializeObject<Message<T>>(messageAsString);
+                    var message = JsonSerializer.Deserialize<Message<T>>(messageAsString);
                     action(message.Data, message.MetaData);
                 }
                 catch (Exception ex)

@@ -1,7 +1,8 @@
 ﻿using Castle.DynamicProxy;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ClassifiedAds.Infrastructure.Interceptors
 {
@@ -27,7 +28,12 @@ namespace ClassifiedAds.Infrastructure.Interceptors
                 var methodName = method.Name;
 
                 // TODO: Ignore serialize large argument object.
-                var arguments = JsonConvert.SerializeObject(invocation.Arguments, Formatting.None, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore, ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+                var arguments = JsonSerializer.Serialize(invocation.Arguments, new JsonSerializerOptions()
+                {
+                    WriteIndented = false,
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                });
                 _logger.LogError($"An unhandled exception has occurred while executing the method: {className}.{methodName} with ({arguments}). {Environment.NewLine}{ex.ToString()}");
                 throw;
             }

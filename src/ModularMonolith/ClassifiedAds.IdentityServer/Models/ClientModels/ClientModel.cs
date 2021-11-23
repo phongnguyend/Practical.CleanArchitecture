@@ -2,9 +2,9 @@
 using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Models;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 namespace ClassifiedAds.IdentityServer.Models.ClientModels
 {
@@ -82,7 +82,7 @@ namespace ClassifiedAds.IdentityServer.Models.ClientModels
         {
             return string.IsNullOrWhiteSpace(items)
                 ? new List<string>()
-                : JsonConvert.DeserializeObject<List<string>>(items);
+                : JsonSerializer.Deserialize<List<string>>(items);
         }
 
         public void UpdateEntity(IdentityServer4.EntityFramework.Entities.Client entity)

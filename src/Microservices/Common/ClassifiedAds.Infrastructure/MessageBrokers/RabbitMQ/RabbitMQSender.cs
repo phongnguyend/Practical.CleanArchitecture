@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,7 +32,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
             {
                 using var connection = _connectionFactory.CreateConnection();
                 using var channel = connection.CreateModel();
-                var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new Message<T>
+                var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new Message<T>
                 {
                     Data = message,
                     MetaData = metaData,

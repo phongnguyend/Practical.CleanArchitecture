@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace ClassifiedAds.Services.Identity.AuthServer.TagHelpers
 {
@@ -93,7 +90,7 @@ namespace ClassifiedAds.Services.Identity.AuthServer.TagHelpers
                 }
             };
 
-            var rawPickerHtml = new HtmlString($"<div data-bind='component: {JsonConvert.SerializeObject(component, new JsonSerializerSettings() { StringEscapeHandling = StringEscapeHandling.EscapeHtml })}'></div>");
+            var rawPickerHtml = new HtmlString($"<div data-bind='component: {JsonSerializer.Serialize(component)}'></div>");
 
             output.Content.AppendHtml(rawPickerHtml);
         }
