@@ -38,5 +38,11 @@ namespace Microsoft.AspNetCore.Builder
             app.UseMiddleware<GlobalExceptionHandlerMiddleware>(options);
             return app;
         }
+
+        public static IApplicationBuilder UseLoggingStatusCodeMiddleware(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<LoggingStatusCodeMiddleware>();
+            return app;
+        }
     }
 }
