@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Polly;
 using System;
+using System.Reflection;
 
 namespace ClassifiedAds.Services.Configuration.Api
 {
@@ -30,6 +31,8 @@ namespace ClassifiedAds.Services.Configuration.Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            AppSettings.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
             services.Configure<AppSettings>(Configuration);
 
             services.AddControllers(configure =>

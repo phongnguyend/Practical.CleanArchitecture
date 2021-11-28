@@ -13,15 +13,16 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Persistence.Repositories
+namespace ClassifiedAds.Infrastructure.Persistence
 {
-    public class Repository<T, TKey> : IRepository<T, TKey>
-        where T : AggregateRoot<TKey>
+    public class DbContextRepository<TDbContext, TEntity, TKey> : IRepository<TEntity, TKey>
+        where TEntity : AggregateRoot<TKey>
+        where TDbContext : DbContext, IUnitOfWork
     {
-        protected readonly AdsDbContext _dbContext;
+        private readonly TDbContext _dbContext;
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        protected DbSet<T> DbSet => _dbContext.Set<T>();
+        protected DbSet<TEntity> DbSet => _dbContext.Set<TEntity>();
 
         public IUnitOfWork UnitOfWork
         {
@@ -31,13 +32,13 @@ namespace ClassifiedAds.Persistence.Repositories
             }
         }
 
-        public Repository(AdsDbContext dbContext, IDateTimeProvider dateTimeProvider)
+        public DbContextRepository(TDbContext dbContext, IDateTimeProvider dateTimeProvider)
         {
             _dbContext = dbContext;
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task AddOrUpdateAsync(T entity, CancellationToken cancellationToken = default)
+        public async Task AddOrUpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             if (entity.Id.Equals(default(TKey)))
             {
@@ -50,14 +51,14 @@ namespace ClassifiedAds.Persistence.Repositories
             }
         }
 
-        public void Delete(T entity)
+        public void Delete(TEntity entity)
         {
             DbSet.Remove(entity);
         }
 
-        public IQueryable<T> GetAll()
+        public IQueryable<TEntity> GetAll()
         {
-            return _dbContext.Set<T>();
+            return _dbContext.Set<TEntity>();
         }
 
         public Task<T1> FirstOrDefaultAsync<T1>(IQueryable<T1> query)
@@ -75,27 +76,27 @@ namespace ClassifiedAds.Persistence.Repositories
             return query.ToListAsync();
         }
 
-        public void BulkInsert(IEnumerable<T> entities, Expression<Func<T, object>> columnNamesSelector)
+        public void BulkInsert(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector)
         {
             _dbContext.BulkInsert(entities, columnNamesSelector);
         }
 
-        public void BulkInsert(IEnumerable<T> entities, Expression<Func<T, object>> columnNamesSelector, Expression<Func<T, object>> idSelector)
+        public void BulkInsert(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector, Expression<Func<TEntity, object>> idSelector)
         {
             _dbContext.BulkInsert(entities, columnNamesSelector, idSelector);
         }
 
-        public void BulkUpdate(IList<T> data, Expression<Func<T, object>> idSelector, Expression<Func<T, object>> columnNamesSelector)
+        public void BulkUpdate(IList<TEntity> data, Expression<Func<TEntity, object>> idSelector, Expression<Func<TEntity, object>> columnNamesSelector)
         {
             _dbContext.BulkUpdate(data, idSelector, columnNamesSelector);
         }
 
-        public void BulkDelete(IList<T> data, Expression<Func<T, object>> idSelector)
+        public void BulkDelete(IList<TEntity> data, Expression<Func<TEntity, object>> idSelector)
         {
             _dbContext.BulkDelete(data, idSelector);
         }
 
-        public void BulkMerge(IEnumerable<T> data, Expression<Func<T, object>> idSelector, Expression<Func<T, object>> updateColumnNamesSelector, Expression<Func<T, object>> insertColumnNamesSelector)
+        public void BulkMerge(IEnumerable<TEntity> data, Expression<Func<TEntity, object>> idSelector, Expression<Func<TEntity, object>> updateColumnNamesSelector, Expression<Func<TEntity, object>> insertColumnNamesSelector)
         {
             _dbContext.BulkMerge(data, idSelector, updateColumnNamesSelector, insertColumnNamesSelector);
         }

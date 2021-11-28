@@ -1,40 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <CodeAnalysisRuleSet>ClassifiedAds.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<CodeAnalysisRuleSet>ClassifiedAds.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="ClosedXML" Version="0.95.4" />
-    <PackageReference Include="EPPlus" Version="4.5.3.2" />
-    <PackageReference Include="ExcelDataReader" Version="3.6.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Polly" Version="7.2.2" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="ClosedXML" Version="0.95.4" />
+		<PackageReference Include="EPPlus" Version="4.5.3.2" />
+		<PackageReference Include="ExcelDataReader" Version="3.6.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Polly" Version="7.2.2" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Common\ClassifiedAds.Application\ClassifiedAds.Application.csproj" />
-    <ProjectReference Include="..\..\Common\ClassifiedAds.CrossCuttingConcerns\ClassifiedAds.CrossCuttingConcerns.csproj" />
-    <ProjectReference Include="..\..\Common\ClassifiedAds.Domain\ClassifiedAds.Domain.csproj" />
-    <ProjectReference Include="..\..\Common\ClassifiedAds.Infrastructure\ClassifiedAds.Infrastructure.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Common\ClassifiedAds.Application\ClassifiedAds.Application.csproj" />
+		<ProjectReference Include="..\..\Common\ClassifiedAds.CrossCuttingConcerns\ClassifiedAds.CrossCuttingConcerns.csproj" />
+		<ProjectReference Include="..\..\Common\ClassifiedAds.Domain\ClassifiedAds.Domain.csproj" />
+		<ProjectReference Include="..\..\Common\ClassifiedAds.Infrastructure\ClassifiedAds.Infrastructure.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="Certs\classifiedads.secretsencryption.pfx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Update="Certs\classifiedads.secretsencryption.pfx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

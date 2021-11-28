@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Polly;
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Storage
@@ -34,6 +35,8 @@ namespace ClassifiedAds.Services.Storage
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            AppSettings.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));

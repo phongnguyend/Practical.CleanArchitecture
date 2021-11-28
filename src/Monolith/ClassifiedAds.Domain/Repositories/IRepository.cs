@@ -1,6 +1,8 @@
 ﻿using ClassifiedAds.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,5 +24,15 @@ namespace ClassifiedAds.Domain.Repositories
         Task<T> SingleOrDefaultAsync<T>(IQueryable<T> query);
 
         Task<List<T>> ToListAsync<T>(IQueryable<T> query);
+
+        void BulkInsert(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector);
+
+        void BulkInsert(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector, Expression<Func<TEntity, object>> idSelector);
+
+        void BulkUpdate(IList<TEntity> data, Expression<Func<TEntity, object>> idSelector, Expression<Func<TEntity, object>> columnNamesSelector);
+
+        void BulkMerge(IEnumerable<TEntity> data, Expression<Func<TEntity, object>> idSelector, Expression<Func<TEntity, object>> updateColumnNamesSelector, Expression<Func<TEntity, object>> insertColumnNamesSelector);
+
+        void BulkDelete(IList<TEntity> data, Expression<Func<TEntity, object>> idSelector);
     }
 }
