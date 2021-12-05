@@ -15,6 +15,10 @@ namespace ClassifiedAds.Domain.Repositories
 
         Task<IDisposable> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, CancellationToken cancellationToken = default);
 
+        IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, string lockName = null);
+
+        Task<IDisposable> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, string lockName = null, CancellationToken cancellationToken = default);
+
         void CommitTransaction();
 
         Task CommitTransactionAsync(CancellationToken cancellationToken = default);
