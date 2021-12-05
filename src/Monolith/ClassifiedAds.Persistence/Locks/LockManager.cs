@@ -54,7 +54,7 @@ namespace ClassifiedAds.Persistence.Locks
             ExpiredDateTime = @ExpiredDateTime
             where EntityId = @EntityId 
             and EntityName = @EntityName 
-            and OwnerId is null";
+            and (OwnerId is NULL or ExpiredDateTime < @AcquiredDateTime)";
 
             var rs = _dbContext.Database.ExecuteSqlRaw(sql,
                   new SqlParameter("EntityName", entityName),
