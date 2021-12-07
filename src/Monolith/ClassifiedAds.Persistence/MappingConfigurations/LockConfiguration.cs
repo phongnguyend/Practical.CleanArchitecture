@@ -10,6 +10,7 @@ namespace ClassifiedAds.Persistence.MappingConfigurations
         {
             builder.ToTable("Locks");
             builder.HasKey(x => new { x.EntityId, x.EntityName });
+            builder.HasIndex(x => new { x.OwnerId });
         }
     }
 }
