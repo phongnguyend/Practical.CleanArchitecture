@@ -76,29 +76,29 @@ namespace ClassifiedAds.Infrastructure.Persistence
             return query.ToListAsync();
         }
 
+        public void BulkInsert(IEnumerable<TEntity> entities)
+        {
+            _dbContext.BulkInsert(entities);
+        }
+
         public void BulkInsert(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector)
         {
             _dbContext.BulkInsert(entities, columnNamesSelector);
         }
 
-        public void BulkInsert(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector, Expression<Func<TEntity, object>> idSelector)
+        public void BulkUpdate(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector)
         {
-            _dbContext.BulkInsert(entities, columnNamesSelector, idSelector);
+            _dbContext.BulkUpdate(entities, columnNamesSelector);
         }
 
-        public void BulkUpdate(IList<TEntity> data, Expression<Func<TEntity, object>> idSelector, Expression<Func<TEntity, object>> columnNamesSelector)
+        public void BulkDelete(IEnumerable<TEntity> entities)
         {
-            _dbContext.BulkUpdate(data, idSelector, columnNamesSelector);
+            _dbContext.BulkDelete(entities);
         }
 
-        public void BulkDelete(IList<TEntity> data, Expression<Func<TEntity, object>> idSelector)
+        public void BulkMerge(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> idSelector, Expression<Func<TEntity, object>> updateColumnNamesSelector, Expression<Func<TEntity, object>> insertColumnNamesSelector)
         {
-            _dbContext.BulkDelete(data, idSelector);
-        }
-
-        public void BulkMerge(IEnumerable<TEntity> data, Expression<Func<TEntity, object>> idSelector, Expression<Func<TEntity, object>> updateColumnNamesSelector, Expression<Func<TEntity, object>> insertColumnNamesSelector)
-        {
-            _dbContext.BulkMerge(data, idSelector, updateColumnNamesSelector, insertColumnNamesSelector);
+            _dbContext.BulkMerge(entities, idSelector, updateColumnNamesSelector, insertColumnNamesSelector);
         }
     }
 }

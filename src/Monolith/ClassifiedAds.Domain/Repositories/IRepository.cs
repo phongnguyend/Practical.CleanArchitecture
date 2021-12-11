@@ -25,14 +25,14 @@ namespace ClassifiedAds.Domain.Repositories
 
         Task<List<T>> ToListAsync<T>(IQueryable<T> query);
 
+        void BulkInsert(IEnumerable<TEntity> entities);
+
         void BulkInsert(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector);
 
-        void BulkInsert(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector, Expression<Func<TEntity, object>> idSelector);
+        void BulkUpdate(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector);
 
-        void BulkUpdate(IList<TEntity> data, Expression<Func<TEntity, object>> idSelector, Expression<Func<TEntity, object>> columnNamesSelector);
+        void BulkMerge(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> idSelector, Expression<Func<TEntity, object>> updateColumnNamesSelector, Expression<Func<TEntity, object>> insertColumnNamesSelector);
 
-        void BulkMerge(IEnumerable<TEntity> data, Expression<Func<TEntity, object>> idSelector, Expression<Func<TEntity, object>> updateColumnNamesSelector, Expression<Func<TEntity, object>> insertColumnNamesSelector);
-
-        void BulkDelete(IList<TEntity> data, Expression<Func<TEntity, object>> idSelector);
+        void BulkDelete(IEnumerable<TEntity> entities);
     }
 }

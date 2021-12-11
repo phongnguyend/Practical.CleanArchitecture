@@ -75,29 +75,29 @@ namespace ClassifiedAds.Persistence.Repositories
             return query.ToListAsync();
         }
 
+        public void BulkInsert(IEnumerable<T> entities)
+        {
+            _dbContext.BulkInsert(entities);
+        }
+
         public void BulkInsert(IEnumerable<T> entities, Expression<Func<T, object>> columnNamesSelector)
         {
             _dbContext.BulkInsert(entities, columnNamesSelector);
         }
 
-        public void BulkInsert(IEnumerable<T> entities, Expression<Func<T, object>> columnNamesSelector, Expression<Func<T, object>> idSelector)
+        public void BulkUpdate(IEnumerable<T> entities, Expression<Func<T, object>> columnNamesSelector)
         {
-            _dbContext.BulkInsert(entities, columnNamesSelector, idSelector);
+            _dbContext.BulkUpdate(entities, columnNamesSelector);
         }
 
-        public void BulkUpdate(IList<T> data, Expression<Func<T, object>> idSelector, Expression<Func<T, object>> columnNamesSelector)
+        public void BulkDelete(IEnumerable<T> entities)
         {
-            _dbContext.BulkUpdate(data, idSelector, columnNamesSelector);
+            _dbContext.BulkDelete(entities);
         }
 
-        public void BulkDelete(IList<T> data, Expression<Func<T, object>> idSelector)
+        public void BulkMerge(IEnumerable<T> entities, Expression<Func<T, object>> idSelector, Expression<Func<T, object>> updateColumnNamesSelector, Expression<Func<T, object>> insertColumnNamesSelector)
         {
-            _dbContext.BulkDelete(data, idSelector);
-        }
-
-        public void BulkMerge(IEnumerable<T> data, Expression<Func<T, object>> idSelector, Expression<Func<T, object>> updateColumnNamesSelector, Expression<Func<T, object>> insertColumnNamesSelector)
-        {
-            _dbContext.BulkMerge(data, idSelector, updateColumnNamesSelector, insertColumnNamesSelector);
+            _dbContext.BulkMerge(entities, idSelector, updateColumnNamesSelector, insertColumnNamesSelector);
         }
     }
 }
