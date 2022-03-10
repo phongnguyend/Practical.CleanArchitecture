@@ -44,5 +44,11 @@ namespace Microsoft.AspNetCore.Builder
             app.UseMiddleware<LoggingStatusCodeMiddleware>();
             return app;
         }
+
+        public static IApplicationBuilder UseAccessTokenFromFormMiddleware(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<AccessTokenFromFormMiddleware>();
+            return app;
+        }
     }
 }

@@ -216,6 +216,8 @@ namespace ClassifiedAds.WebAPI
         {
             app.UseDebuggingMiddleware();
 
+            app.UseAccessTokenFromFormMiddleware();
+
             app.UseLoggingStatusCodeMiddleware();
 
             if (env.IsDevelopment())
