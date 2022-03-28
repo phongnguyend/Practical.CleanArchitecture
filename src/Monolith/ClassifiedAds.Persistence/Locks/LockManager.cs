@@ -133,5 +133,13 @@ namespace ClassifiedAds.Persistence.Locks
 
             return true;
         }
+
+        public void EnsureAcquiringLock(string entityName, string entityId, string ownerId, TimeSpan expirationIn)
+        {
+            if (!AcquireLock(entityName, entityId, ownerId, expirationIn))
+            {
+                throw new CouldNotAcquireLockException();
+            }
+        }
     }
 }
