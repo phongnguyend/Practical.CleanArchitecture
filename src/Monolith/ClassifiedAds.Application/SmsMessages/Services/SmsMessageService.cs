@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.OS;
+﻿using ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
+using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Domain.Repositories;
 using Microsoft.Extensions.Logging;
@@ -15,20 +16,26 @@ namespace ClassifiedAds.Application.SmsMessages.Services
         private readonly ISmsMessageRepository _repository;
         private readonly ISmsNotification _smsNotification;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly ICircuitBreakerManager _circuitBreakerManager;
 
         public SmsMessageService(ILogger<SmsMessageService> logger,
             ISmsMessageRepository repository,
             ISmsNotification smsNotification,
-            IDateTimeProvider dateTimeProvider)
+            IDateTimeProvider dateTimeProvider,
+            ICircuitBreakerManager circuitBreakerManager)
         {
             _logger = logger;
             _repository = repository;
             _smsNotification = smsNotification;
             _dateTimeProvider = dateTimeProvider;
+            _circuitBreakerManager = circuitBreakerManager;
         }
 
         public async Task<int> SendSmsMessagesAsync()
         {
+            var circuit = _circuitBreakerManager.GetCircuitBreaker("SmsService", TimeSpan.FromMinutes(1));
+            circuit.EnsureOkStatus();
+
             var deplayedTimes = new[]
             {
                 TimeSpan.FromMinutes(1),
@@ -64,11 +71,15 @@ namespace ClassifiedAds.Application.SmsMessages.Services
                         await _smsNotification.SendAsync(sms);
                         sms.SentDateTime = _dateTimeProvider.OffsetNow;
                         sms.Log += log + "Succeed.";
+
+                        _circuitBreakerManager.LogSuccess(circuit);
                     }
                     catch (Exception ex)
                     {
                         sms.Log += log + ex.ToString();
                         sms.NextAttemptDateTime = _dateTimeProvider.OffsetNow + deplayedTimes[sms.AttemptCount];
+
+                        _circuitBreakerManager.LogFailure(circuit, 5, TimeSpan.FromMinutes(5));
                     }
 
                     sms.AttemptCount += 1;
@@ -81,6 +92,8 @@ namespace ClassifiedAds.Application.SmsMessages.Services
                     }
 
                     await _repository.UnitOfWork.SaveChangesAsync();
+
+                    circuit.EnsureOkStatus();
                 }
             }
             else

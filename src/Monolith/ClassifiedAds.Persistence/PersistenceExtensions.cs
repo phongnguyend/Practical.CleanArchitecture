@@ -1,7 +1,9 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.Locks;
+﻿using ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
+using ClassifiedAds.CrossCuttingConcerns.Locks;
 using ClassifiedAds.CrossCuttingConcerns.Tenants;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Persistence;
+using ClassifiedAds.Persistence.CircuitBreakers;
 using ClassifiedAds.Persistence.Locks;
 using ClassifiedAds.Persistence.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -21,6 +23,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             sql.MigrationsAssembly(migrationsAssembly);
                         }
                     }))
+                    .AddDbContextFactory<AdsDbContext>((Action<DbContextOptionsBuilder>)null, ServiceLifetime.Scoped)
                     .AddRepositories();
             return services;
         }
@@ -49,6 +52,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     .AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
 
             services.AddScoped<ILockManager, LockManager>();
+            services.AddScoped<ICircuitBreakerManager, CircuitBreakerManager>();
 
             return services;
         }

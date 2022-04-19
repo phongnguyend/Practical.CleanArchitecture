@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Application.SmsMessages.Services;
+using ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -34,14 +35,21 @@ namespace ClassifiedAds.BackgroundServer.HostedServices
 
                 int rs = 0;
 
-                using (var scope = _services.CreateScope())
+                try
                 {
-                    var smsService = scope.ServiceProvider.GetRequiredService<SmsMessageService>();
+                    using (var scope = _services.CreateScope())
+                    {
+                        var smsService = scope.ServiceProvider.GetRequiredService<SmsMessageService>();
 
-                    rs = await smsService.SendSmsMessagesAsync();
+                        rs = await smsService.SendSmsMessagesAsync();
+                    }
+
+                    if (rs == 0)
+                    {
+                        await Task.Delay(10000, stoppingToken);
+                    }
                 }
-
-                if (rs == 0)
+                catch (CircuitBreakerOpenException)
                 {
                     await Task.Delay(10000, stoppingToken);
                 }

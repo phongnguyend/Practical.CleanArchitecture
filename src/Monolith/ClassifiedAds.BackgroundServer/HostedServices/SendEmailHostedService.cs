@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Application.EmailMessages.Services;
+using ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -34,14 +35,21 @@ namespace ClassifiedAds.BackgroundServer.HostedServices
 
                 int rs = 0;
 
-                using (var scope = _services.CreateScope())
+                try
                 {
-                    var emailService = scope.ServiceProvider.GetRequiredService<EmailMessageService>();
+                    using (var scope = _services.CreateScope())
+                    {
+                        var emailService = scope.ServiceProvider.GetRequiredService<EmailMessageService>();
 
-                    rs = await emailService.SendEmailMessagesAsync();
+                        rs = await emailService.SendEmailMessagesAsync();
+                    }
+
+                    if (rs == 0)
+                    {
+                        await Task.Delay(10000, stoppingToken);
+                    }
                 }
-
-                if (rs == 0)
+                catch (CircuitBreakerOpenException)
                 {
                     await Task.Delay(10000, stoppingToken);
                 }

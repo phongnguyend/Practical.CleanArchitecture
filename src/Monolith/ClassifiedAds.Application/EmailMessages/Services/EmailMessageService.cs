@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.OS;
+﻿using ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
+using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Domain.Repositories;
 using Microsoft.Extensions.Logging;
@@ -15,21 +16,26 @@ namespace ClassifiedAds.Application.EmailMessages.Services
         private readonly IEmailMessageRepository _repository;
         private readonly IEmailNotification _emailNotification;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly ICircuitBreakerManager _circuitBreakerManager;
 
         public EmailMessageService(ILogger<EmailMessageService> logger,
             IEmailMessageRepository repository,
             IEmailNotification emailNotification,
-            IDateTimeProvider dateTimeProvider
-            )
+            IDateTimeProvider dateTimeProvider,
+            ICircuitBreakerManager circuitBreakerManager)
         {
             _logger = logger;
             _repository = repository;
             _emailNotification = emailNotification;
             _dateTimeProvider = dateTimeProvider;
+            _circuitBreakerManager = circuitBreakerManager;
         }
 
         public async Task<int> SendEmailMessagesAsync()
         {
+            var circuit = _circuitBreakerManager.GetCircuitBreaker("EmailService", TimeSpan.FromMinutes(1));
+            circuit.EnsureOkStatus();
+
             var deplayedTimes = new[]
             {
                 TimeSpan.FromMinutes(1),
@@ -65,11 +71,15 @@ namespace ClassifiedAds.Application.EmailMessages.Services
                         await _emailNotification.SendAsync(email);
                         email.SentDateTime = _dateTimeProvider.OffsetNow;
                         email.Log += log + "Succeed.";
+
+                        _circuitBreakerManager.LogSuccess(circuit);
                     }
                     catch (Exception ex)
                     {
                         email.Log += log + ex.ToString();
                         email.NextAttemptDateTime = _dateTimeProvider.OffsetNow + deplayedTimes[email.AttemptCount];
+
+                        _circuitBreakerManager.LogFailure(circuit, 5, TimeSpan.FromMinutes(5));
                     }
 
                     email.AttemptCount += 1;
@@ -82,6 +92,8 @@ namespace ClassifiedAds.Application.EmailMessages.Services
                     }
 
                     await _repository.UnitOfWork.SaveChangesAsync();
+
+                    circuit.EnsureOkStatus();
                 }
             }
             else
