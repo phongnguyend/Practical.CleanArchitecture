@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Locks;
+using EntityFrameworkCore.SqlServer.SimpleBulks.Extensions;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Data;
@@ -11,6 +12,7 @@ namespace ClassifiedAds.Persistence.Locks
 
         private readonly SqlConnection _connection;
         private readonly SqlTransaction _transaction;
+        private readonly string _connectionString;
 
         public bool HasTransaction
         {
@@ -29,6 +31,12 @@ namespace ClassifiedAds.Persistence.Locks
         {
             _transaction = transaction;
             _connection = _transaction.Connection;
+        }
+
+        public SqlDistributedLock(string connectionString)
+        {
+            _connectionString = connectionString;
+            _connection = new SqlConnection(connectionString);
         }
 
         public IDistributedLockScope Acquire(string lockName)
@@ -67,6 +75,8 @@ namespace ClassifiedAds.Persistence.Locks
 
         private SqlCommand CreateAcquireCommand(int commandTimeout, string lockName, int lockTimeout, out SqlParameter returnValue)
         {
+            _connection.EnsureOpen();
+
             SqlCommand command = _connection.CreateCommand();
             command.Transaction = _transaction;
 
@@ -119,6 +129,14 @@ namespace ClassifiedAds.Persistence.Locks
             }
 
             return false;
+        }
+
+        public void Dispose()
+        {
+            if (!string.IsNullOrEmpty(_connectionString))
+            {
+                _connection.Dispose();
+            }
         }
     }
 }

@@ -1,6 +1,8 @@
-﻿namespace ClassifiedAds.CrossCuttingConcerns.Locks
+﻿using System;
+
+namespace ClassifiedAds.CrossCuttingConcerns.Locks
 {
-    public interface IDistributedLock
+    public interface IDistributedLock : IDisposable
     {
         IDistributedLockScope Acquire(string lockName);
 

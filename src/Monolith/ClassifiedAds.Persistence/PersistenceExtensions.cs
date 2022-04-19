@@ -25,6 +25,9 @@ namespace Microsoft.Extensions.DependencyInjection
                     }))
                     .AddDbContextFactory<AdsDbContext>((Action<DbContextOptionsBuilder>)null, ServiceLifetime.Scoped)
                     .AddRepositories();
+
+            services.AddScoped(typeof(IDistributedLock), _ => new SqlDistributedLock(connectionString));
+
             return services;
         }
 
@@ -39,6 +42,12 @@ namespace Microsoft.Extensions.DependencyInjection
                         return services.GetRequiredService<AdsDbContextMultiTenant>();
                     })
                     .AddRepositories();
+
+            services.AddScoped(typeof(IDistributedLock), services =>
+            {
+                return new SqlDistributedLock(services.GetRequiredService<IConnectionStringResolver<AdsDbContextMultiTenant>>().ConnectionString);
+            });
+
             return services;
         }
 

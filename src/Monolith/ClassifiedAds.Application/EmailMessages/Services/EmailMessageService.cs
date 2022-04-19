@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
+using ClassifiedAds.CrossCuttingConcerns.Locks;
 using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Domain.Repositories;
@@ -17,18 +18,21 @@ namespace ClassifiedAds.Application.EmailMessages.Services
         private readonly IEmailNotification _emailNotification;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ICircuitBreakerManager _circuitBreakerManager;
+        private readonly IDistributedLock _distributedLock;
 
         public EmailMessageService(ILogger<EmailMessageService> logger,
             IEmailMessageRepository repository,
             IEmailNotification emailNotification,
             IDateTimeProvider dateTimeProvider,
-            ICircuitBreakerManager circuitBreakerManager)
+            ICircuitBreakerManager circuitBreakerManager,
+            IDistributedLock distributedLock)
         {
             _logger = logger;
             _repository = repository;
             _emailNotification = emailNotification;
             _dateTimeProvider = dateTimeProvider;
             _circuitBreakerManager = circuitBreakerManager;
+            _distributedLock = distributedLock;
         }
 
         public async Task<int> SendEmailMessagesAsync()
