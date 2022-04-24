@@ -2,7 +2,6 @@
 using ClassifiedAds.Infrastructure.Caching;
 using ClassifiedAds.Infrastructure.Interceptors;
 using ClassifiedAds.Infrastructure.Logging;
-using ClassifiedAds.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Monitoring;
 using System.Collections.Generic;
 
@@ -21,8 +20,6 @@ namespace ClassifiedAds.IdentityServer.ConfigurationOptions
         public MonitoringOptions Monitoring { get; set; }
 
         public Dictionary<string, string> SecurityHeaders { get; set; }
-
-        public MessageBrokerOptions MessageBroker { get; set; }
 
         public InterceptorsOptions Interceptors { get; set; }
 

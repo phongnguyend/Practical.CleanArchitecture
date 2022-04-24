@@ -1,14 +1,9 @@
-﻿using ClassifiedAds.Infrastructure.MessageBrokers;
-using ClassifiedAds.Infrastructure.Notification;
+﻿using ClassifiedAds.Infrastructure.Notification;
 
 namespace ClassifiedAds.Modules.Notification.ConfigurationOptions
 {
-    public class NotificationModuleOptions
+    public class NotificationModuleOptions : NotificationOptions
     {
         public ConnectionStringsOptions ConnectionStrings { get; set; }
-
-        public MessageBrokerOptions MessageBroker { get; set; }
-
-        public NotificationOptions Notification { get; set; }
     }
 }

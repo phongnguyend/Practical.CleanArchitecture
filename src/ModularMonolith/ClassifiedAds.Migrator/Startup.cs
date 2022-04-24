@@ -1,12 +1,6 @@
 ﻿using ClassifiedAds.Infrastructure.HealthChecks;
-using ClassifiedAds.Infrastructure.MessageBrokers;
-using ClassifiedAds.Infrastructure.Notification;
-using ClassifiedAds.Infrastructure.Notification.Email;
-using ClassifiedAds.Infrastructure.Notification.Sms;
-using ClassifiedAds.Infrastructure.Notification.Web;
-using ClassifiedAds.Infrastructure.Storages;
-using ClassifiedAds.Modules.Configuration.ConfigurationOptions;
-using ClassifiedAds.Modules.Identity.ConfigurationOptions;
+using ClassifiedAds.Modules.Identity.Contracts.Services;
+using ClassifiedAds.Modules.Identity.Services;
 using DbUp;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,75 +32,43 @@ namespace ClassifiedAds.Migrator
 
             services.AddDateTimeProvider();
 
-            var messageBrokerOptions = new MessageBrokerOptions
+            services.AddAuditLogModule(opt =>
             {
-                Provider = "Fake",
-            };
-
-            var notificationOptions = new NotificationOptions
-            {
-                Email = new EmailOptions { Provider = "Fake" },
-                Sms = new SmsOptions { Provider = "Fake" },
-                Web = new WebOptions { Provider = "Fake" },
-            };
-
-            services.AddAuditLogModule(new Modules.AuditLog.ConfigurationOptions.AuditLogModuleOptions
-            {
-                ConnectionStrings = new Modules.AuditLog.ConfigurationOptions.ConnectionStringsOptions
-                {
-                    Default = Configuration["ConnectionStrings:ClassifiedAds"],
-                    MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name,
-                },
+                Configuration.GetSection("Modules:AuditLog").Bind(opt);
+                opt.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             })
-            .AddConfigurationModule(new ConfigurationModuleOptions
+            .AddConfigurationModule(opt =>
             {
-                ConnectionStrings = new Modules.Configuration.ConfigurationOptions.ConnectionStringsOptions
-                {
-                    Default = Configuration["ConnectionStrings:ClassifiedAds"],
-                    MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name,
-                },
+                Configuration.GetSection("Modules:Configuration").Bind(opt);
+                opt.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             })
-            .AddIdentityModule(new IdentityModuleOptions
+            .AddIdentityModuleCore(opt =>
             {
-                ConnectionStrings = new Modules.Identity.ConfigurationOptions.ConnectionStringsOptions
-                {
-                    Default = Configuration["ConnectionStrings:ClassifiedAds"],
-                    MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name,
-                },
+                Configuration.GetSection("Modules:Identity").Bind(opt);
+                opt.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             })
-            .AddNotificationModule(new Modules.Notification.ConfigurationOptions.NotificationModuleOptions
+            .AddNotificationModule(opt =>
             {
-                ConnectionStrings = new Modules.Notification.ConfigurationOptions.ConnectionStringsOptions
-                {
-                    Default = Configuration["ConnectionStrings:ClassifiedAds"],
-                    MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name,
-                },
-                MessageBroker = messageBrokerOptions,
-                Notification = notificationOptions,
+                Configuration.GetSection("Modules:Notification").Bind(opt);
+                opt.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             })
-            .AddProductModule(new Modules.Product.ConfigurationOptions.ProductModuleOptions
+            .AddProductModule(opt =>
             {
-                ConnectionStrings = new Modules.Product.ConfigurationOptions.ConnectionStringsOptions
-                {
-                    Default = Configuration["ConnectionStrings:ClassifiedAds"],
-                    MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name,
-                },
+                Configuration.GetSection("Modules:Product").Bind(opt);
+                opt.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             })
-            .AddStorageModule(new Modules.Storage.ConfigurationOptions.StorageModuleOptions
+            .AddStorageModule(opt =>
             {
-                ConnectionStrings = new Modules.Storage.ConfigurationOptions.ConnectionStringsOptions
-                {
-                    Default = Configuration["ConnectionStrings:ClassifiedAds"],
-                    MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name,
-                },
-                Storage = new StorageOptions(),
-                MessageBroker = messageBrokerOptions,
+                Configuration.GetSection("Modules:Storage").Bind(opt);
+                opt.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             })
             .AddApplicationServices();
 
             services.AddIdentityServer()
-                .AddTokenProviderModule(Configuration.GetConnectionString("ClassifiedAds"),
+                .AddIdServerPersistence(Configuration["Modules:Auth:ConnectionStrings:Default"],
                 typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
+
+            services.AddScoped<ICurrentUser, CurrentWebUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -129,7 +91,7 @@ namespace ClassifiedAds.Migrator
                 app.MigrateIdServerDb();
 
                 var upgrader = DeployChanges.To
-                .SqlDatabase(Configuration.GetConnectionString("ClassifiedAds"))
+                .SqlDatabase(Configuration["Modules:Auth:ConnectionStrings:Default"])
                 .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                 .LogToConsole()
                 .Build();

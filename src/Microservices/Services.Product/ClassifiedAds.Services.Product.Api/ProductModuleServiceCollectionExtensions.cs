@@ -4,7 +4,9 @@ using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Csv;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Services.Product.ConfigurationOptions;
+using ClassifiedAds.Services.Product.DTOs;
 using ClassifiedAds.Services.Product.Entities;
+using ClassifiedAds.Services.Product.HostedServices;
 using ClassifiedAds.Services.Product.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -28,7 +30,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services
                 .AddScoped<IRepository<Product, Guid>, Repository<Product, Guid>>()
-                .AddScoped(typeof(IProductRepository), typeof(ProductRepository));
+                .AddScoped(typeof(IProductRepository), typeof(ProductRepository))
+                .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>()
+                .AddScoped<IRepository<EventLog, long>, Repository<EventLog, long>>();
 
             DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
 
@@ -42,6 +46,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped(typeof(ICsvReader<>), typeof(CsvReader<>));
             services.AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>));
 
+            services.AddMessageBusSender<AuditLogCreatedEvent>(appSettings.MessageBroker);
+
             return services;
         }
 
@@ -51,6 +57,14 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>().Database.Migrate();
             }
+        }
+
+        public static IServiceCollection AddHostedServicesProductModule(this IServiceCollection services)
+        {
+            services.AddScoped<PublishEventService>();
+            services.AddHostedService<PublishEventWorker>();
+
+            return services;
         }
     }
 }

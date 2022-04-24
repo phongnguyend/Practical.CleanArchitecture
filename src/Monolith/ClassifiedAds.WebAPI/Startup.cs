@@ -1,7 +1,4 @@
-﻿using ClassifiedAds.Application.EmailMessages.DTOs;
-using ClassifiedAds.Application.FileEntries.DTOs;
-using ClassifiedAds.Application.SmsMessages.DTOs;
-using ClassifiedAds.CrossCuttingConcerns.Csv;
+﻿using ClassifiedAds.CrossCuttingConcerns.Csv;
 using ClassifiedAds.CrossCuttingConcerns.Excel;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Identity;
@@ -199,11 +196,6 @@ namespace ClassifiedAds.WebAPI
             services.AddHtmlGenerator();
             services.AddDinkToPdfConverter();
             services.AddClassifiedAdsLocalization();
-
-            services.AddMessageBusSender<FileUploadedEvent>(AppSettings.MessageBroker);
-            services.AddMessageBusSender<FileDeletedEvent>(AppSettings.MessageBroker);
-            services.AddMessageBusSender<EmailMessageCreatedEvent>(AppSettings.MessageBroker);
-            services.AddMessageBusSender<SmsMessageCreatedEvent>(AppSettings.MessageBroker);
 
             services.AddScoped(typeof(ICsvReader<>), typeof(CsvReader<>));
             services.AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>));

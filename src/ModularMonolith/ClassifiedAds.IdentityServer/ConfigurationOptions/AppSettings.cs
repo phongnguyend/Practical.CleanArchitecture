@@ -2,7 +2,6 @@
 using ClassifiedAds.Infrastructure.Caching;
 using ClassifiedAds.Infrastructure.Interceptors;
 using ClassifiedAds.Infrastructure.Logging;
-using ClassifiedAds.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Monitoring;
 using System.Collections.Generic;
 
@@ -10,8 +9,6 @@ namespace ClassifiedAds.IdentityServer.ConfigurationOptions
 {
     public class AppSettings
     {
-        public ConnectionStrings ConnectionStrings { get; set; }
-
         public IdentityServerOptions IdentityServer { get; set; }
 
         public LoggingOptions Logging { get; set; }
@@ -22,12 +19,12 @@ namespace ClassifiedAds.IdentityServer.ConfigurationOptions
 
         public Dictionary<string, string> SecurityHeaders { get; set; }
 
-        public MessageBrokerOptions MessageBroker { get; set; }
-
         public InterceptorsOptions Interceptors { get; set; }
 
         public ExternalLoginOptions ExternalLogin { get; set; }
 
         public CookiePolicyOptions CookiePolicyOptions { get; set; }
+
+        public ModulesOptions Modules { get; set; }
     }
 }

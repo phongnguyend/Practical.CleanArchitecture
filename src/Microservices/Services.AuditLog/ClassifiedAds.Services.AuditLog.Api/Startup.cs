@@ -1,6 +1,10 @@
+using ClassifiedAds.Application;
+using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Services.AuditLog.ConfigurationOptions;
+using ClassifiedAds.Services.AuditLog.DTOs;
+using ClassifiedAds.Services.AuditLog.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -84,6 +88,8 @@ namespace ClassifiedAds.Services.AuditLog
                 app.UseDeveloperExceptionPage();
             }
 
+            RunMessageBrokerReceivers(app.ApplicationServices.CreateScope().ServiceProvider);
+
             app.UseRouting();
 
             app.UseCors("AllowAnyOrigin");
@@ -94,6 +100,26 @@ namespace ClassifiedAds.Services.AuditLog
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+        }
+
+        private void RunMessageBrokerReceivers(IServiceProvider serviceProvider)
+        {
+            var auditLogCreatedEventReceiver = serviceProvider.GetService<IMessageReceiver<AuditLogCreatedEvent>>();
+
+            auditLogCreatedEventReceiver?.Receive(async (data, metaData) =>
+            {
+                try
+                {
+                    using (var scope = serviceProvider.CreateScope())
+                    {
+                        var dispatcher = scope.ServiceProvider.GetRequiredService<Dispatcher>();
+                        data.AuditLog.Id = Guid.Empty;
+                        await dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<AuditLogEntry>(data.AuditLog));
+                    }
+                }
+                catch (Exception ex)
+                { }
             });
         }
     }

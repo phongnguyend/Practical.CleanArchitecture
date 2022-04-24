@@ -1,6 +1,4 @@
-﻿using ClassifiedAds.Application.EmailMessages.DTOs;
-using ClassifiedAds.Application.SmsMessages.DTOs;
-using ClassifiedAds.Domain.Entities;
+﻿using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.IdentityServer.ConfigurationOptions;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Persistence;
@@ -160,9 +158,6 @@ namespace ClassifiedAds.IdentityServer
                     options.AppSecret = AppSettings.ExternalLogin.Facebook.AppSecret;
                 });
             }
-
-            services.AddMessageBusSender<EmailMessageCreatedEvent>(AppSettings.MessageBroker);
-            services.AddMessageBusSender<SmsMessageCreatedEvent>(AppSettings.MessageBroker);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

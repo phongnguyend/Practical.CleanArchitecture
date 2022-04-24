@@ -1,10 +1,8 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Domain.Events;
-using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
-using ClassifiedAds.Modules.AuditLog.Contracts.Services;
+using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Modules.Identity.Contracts.Services;
 using ClassifiedAds.Modules.Storage.Entities;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,30 +11,54 @@ namespace ClassifiedAds.Modules.Storage.EventHandlers
 {
     public class FileEntryUpdatedEventHandler : IDomainEventHandler<EntityUpdatedEvent<FileEntry>>
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ICurrentUser _currentUser;
+        private readonly IRepository<AuditLogEntry, Guid> _auditLogRepository;
+        private readonly IRepository<EventLog, long> _eventLogRepository;
 
-        public FileEntryUpdatedEventHandler(IServiceProvider serviceProvider)
+        public FileEntryUpdatedEventHandler(ICurrentUser currentUser,
+            IRepository<AuditLogEntry, Guid> auditLogRepository,
+            IRepository<EventLog, long> eventLogRepository)
         {
-            _serviceProvider = serviceProvider;
+            _currentUser = currentUser;
+            _auditLogRepository = auditLogRepository;
+            _eventLogRepository = eventLogRepository;
         }
 
         public async Task HandleAsync(EntityUpdatedEvent<FileEntry> domainEvent, CancellationToken cancellationToken = default)
         {
-            // Handle the event here and we can also forward to external systems
-            using (var scope = _serviceProvider.CreateScope())
+            var auditLog = new AuditLogEntry
             {
-                var auditSerivce = scope.ServiceProvider.GetService<IAuditLogService>();
-                var currentUser = scope.ServiceProvider.GetService<ICurrentUser>();
+                UserId = _currentUser.IsAuthenticated ? _currentUser.UserId : Guid.Empty,
+                CreatedDateTime = domainEvent.EventDateTime,
+                Action = "UPDATED_FILEENTRY",
+                ObjectId = domainEvent.Entity.Id.ToString(),
+                Log = domainEvent.Entity.AsJsonString(),
+            };
 
-                await auditSerivce.AddOrUpdateAsync(new AuditLogEntryDTO
-                {
-                    UserId = currentUser.IsAuthenticated ? currentUser.UserId : Guid.Empty,
-                    CreatedDateTime = domainEvent.EventDateTime,
-                    Action = "UPDATED_FILEENTRY",
-                    ObjectId = domainEvent.Entity.Id.ToString(),
-                    Log = domainEvent.Entity.AsJsonString(),
-                });
-            }
+            await _auditLogRepository.AddOrUpdateAsync(auditLog);
+            await _auditLogRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+            await _eventLogRepository.AddOrUpdateAsync(new EventLog
+            {
+                EventType = "AUDIT_LOG_ENTRY_CREATED",
+                TriggeredById = _currentUser.UserId,
+                CreatedDateTime = auditLog.CreatedDateTime,
+                ObjectId = auditLog.Id.ToString(),
+                Message = auditLog.AsJsonString(),
+                Published = false,
+            }, cancellationToken);
+
+            await _eventLogRepository.AddOrUpdateAsync(new EventLog
+            {
+                EventType = "FILEENTRY_UPDATED",
+                TriggeredById = _currentUser.UserId,
+                CreatedDateTime = domainEvent.EventDateTime,
+                ObjectId = domainEvent.Entity.Id.ToString(),
+                Message = domainEvent.Entity.AsJsonString(),
+                Published = false,
+            }, cancellationToken);
+
+            await _eventLogRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -1,13 +1,11 @@
 ﻿using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Services.Notification.ConfigurationOptions;
-using ClassifiedAds.Services.Notification.DTOs;
 using ClassifiedAds.Services.Notification.Entities;
 using ClassifiedAds.Services.Notification.Repositories;
 using ClassifiedAds.Services.Notification.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -37,12 +35,6 @@ namespace Microsoft.Extensions.DependencyInjection
             DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
 
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
-
-            services
-                .AddMessageBusSender<EmailMessageCreatedEvent>(appSettings.MessageBroker)
-                .AddMessageBusSender<SmsMessageCreatedEvent>(appSettings.MessageBroker)
-                .AddMessageBusReceiver<EmailMessageCreatedEvent>(appSettings.MessageBroker)
-                .AddMessageBusReceiver<SmsMessageCreatedEvent>(appSettings.MessageBroker);
 
             services.AddNotificationServices(appSettings.Notification);
 

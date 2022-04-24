@@ -2,10 +2,8 @@
 using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Interceptors;
 using ClassifiedAds.Infrastructure.Logging;
-using ClassifiedAds.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Notification;
-using ClassifiedAds.Infrastructure.Storages;
 
 namespace ClassifiedAds.Services.Notification.ConfigurationOptions
 {
@@ -22,10 +20,6 @@ namespace ClassifiedAds.Services.Notification.ConfigurationOptions
         public DistributedTracingOptions DistributedTracing { get; set; }
 
         public IdentityServerAuthentication IdentityServerAuthentication { get; set; }
-
-        public StorageOptions Storage { get; set; }
-
-        public MessageBrokerOptions MessageBroker { get; set; }
 
         public NotificationOptions Notification { get; set; }
 

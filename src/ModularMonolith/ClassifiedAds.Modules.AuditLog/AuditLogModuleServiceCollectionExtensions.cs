@@ -13,18 +13,18 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class AuditLogModuleServiceCollectionExtensions
     {
-        public static IServiceCollection AddAuditLogModule(this IServiceCollection services, AuditLogModuleOptions moduleOptions)
+        public static IServiceCollection AddAuditLogModule(this IServiceCollection services, Action<AuditLogModuleOptions> configureOptions)
         {
-            services.Configure<AuditLogModuleOptions>(op =>
-            {
-                op.ConnectionStrings = moduleOptions.ConnectionStrings;
-            });
+            var settings = new AuditLogModuleOptions();
+            configureOptions(settings);
 
-            services.AddDbContext<AuditLogDbContext>(options => options.UseSqlServer(moduleOptions.ConnectionStrings.Default, sql =>
+            services.Configure(configureOptions);
+
+            services.AddDbContext<AuditLogDbContext>(options => options.UseSqlServer(settings.ConnectionStrings.Default, sql =>
             {
-                if (!string.IsNullOrEmpty(moduleOptions.ConnectionStrings.MigrationsAssembly))
+                if (!string.IsNullOrEmpty(settings.ConnectionStrings.MigrationsAssembly))
                 {
-                    sql.MigrationsAssembly(moduleOptions.ConnectionStrings.MigrationsAssembly);
+                    sql.MigrationsAssembly(settings.ConnectionStrings.MigrationsAssembly);
                 }
             }))
                 .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>()

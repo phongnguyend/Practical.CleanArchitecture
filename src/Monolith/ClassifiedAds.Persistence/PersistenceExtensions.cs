@@ -60,6 +60,11 @@ namespace Microsoft.Extensions.DependencyInjection
                     .AddScoped(typeof(IUserRepository), typeof(UserRepository))
                     .AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
 
+            services.AddScoped(typeof(IUnitOfWork), services =>
+            {
+                return services.GetRequiredService<AdsDbContext>();
+            });
+
             services.AddScoped<ILockManager, LockManager>();
             services.AddScoped<ICircuitBreakerManager, CircuitBreakerManager>();
 

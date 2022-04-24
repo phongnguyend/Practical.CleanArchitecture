@@ -1,10 +1,7 @@
 ﻿using ClassifiedAds.BackgroundServer.ConfigurationOptions;
-using ClassifiedAds.BackgroundServer.HostedServices;
 using ClassifiedAds.BackgroundServer.Identity;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Modules.Identity.Contracts.Services;
-using ClassifiedAds.Modules.Notification.ConfigurationOptions;
-using ClassifiedAds.Modules.Notification.Contracts.DTOs;
 using ClassifiedAds.Modules.Storage.DTOs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,24 +46,22 @@ namespace ClassifiedAds.BackgroundServer
 
                 services.AddDateTimeProvider();
 
-                services.AddNotificationModule(new NotificationModuleOptions
-                {
-                    ConnectionStrings = new ConnectionStringsOptions
-                    {
-                        Default = appSettings.ConnectionStrings.ClassifiedAds,
-                    },
-                    MessageBroker = appSettings.MessageBroker,
-                    Notification = appSettings.Notification,
-                })
+                services
+                .AddAuditLogModule(opt => configuration.GetSection("Modules:AuditLog").Bind(opt))
+                .AddNotificationModule(opt => configuration.GetSection("Modules:Notification").Bind(opt))
+                .AddProductModule(opt => configuration.GetSection("Modules:Product").Bind(opt))
+                .AddStorageModule(opt => configuration.GetSection("Modules:Storage").Bind(opt))
                 .AddApplicationServices();
+
+                services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker);
+                services.AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker);
 
                 services.AddMessageBusReceiver<FileUploadedEvent>(appSettings.MessageBroker);
                 services.AddMessageBusReceiver<FileDeletedEvent>(appSettings.MessageBroker);
-                services.AddMessageBusReceiver<EmailMessageCreatedEvent>(appSettings.MessageBroker);
-                services.AddMessageBusReceiver<SmsMessageCreatedEvent>(appSettings.MessageBroker);
 
-                services.AddHostedService<SendEmailHostedService>();
-                services.AddHostedService<SendSmsHostedService>();
+                services.AddHostedServicesNotificationModule();
+                services.AddHostedServicesProductModule();
+                services.AddHostedServicesStorageModule();
             });
     }
 }

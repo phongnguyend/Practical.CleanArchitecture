@@ -4,6 +4,7 @@ using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Csv;
 using ClassifiedAds.Modules.Product.ConfigurationOptions;
 using ClassifiedAds.Modules.Product.Entities;
+using ClassifiedAds.Modules.Product.HostedServices;
 using ClassifiedAds.Modules.Product.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -14,24 +15,26 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ProductModuleServiceCollectionExtensions
     {
-        public static IServiceCollection AddProductModule(this IServiceCollection services, ProductModuleOptions moduleOptions)
+        public static IServiceCollection AddProductModule(this IServiceCollection services, Action<ProductModuleOptions> configureOptions)
         {
-            services.Configure<ProductModuleOptions>(op =>
-            {
-                op.ConnectionStrings = moduleOptions.ConnectionStrings;
-            });
+            var settings = new ProductModuleOptions();
+            configureOptions(settings);
 
-            services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(moduleOptions.ConnectionStrings.Default, sql =>
+            services.Configure(configureOptions);
+
+            services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(settings.ConnectionStrings.Default, sql =>
             {
-                if (!string.IsNullOrEmpty(moduleOptions.ConnectionStrings.MigrationsAssembly))
+                if (!string.IsNullOrEmpty(settings.ConnectionStrings.MigrationsAssembly))
                 {
-                    sql.MigrationsAssembly(moduleOptions.ConnectionStrings.MigrationsAssembly);
+                    sql.MigrationsAssembly(settings.ConnectionStrings.MigrationsAssembly);
                 }
             }));
 
             services
                 .AddScoped<IRepository<Product, Guid>, Repository<Product, Guid>>()
-                .AddScoped(typeof(IProductRepository), typeof(ProductRepository));
+                .AddScoped(typeof(IProductRepository), typeof(ProductRepository))
+                .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>()
+                .AddScoped<IRepository<EventLog, long>, Repository<EventLog, long>>();
 
             DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
 
@@ -56,6 +59,14 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>().Database.Migrate();
             }
+        }
+
+        public static IServiceCollection AddHostedServicesProductModule(this IServiceCollection services)
+        {
+            services.AddScoped<PublishEventService>();
+            services.AddHostedService<PublishEventWorker>();
+
+            return services;
         }
     }
 }

@@ -4,6 +4,7 @@ using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Services.Storage.ConfigurationOptions;
 using ClassifiedAds.Services.Storage.DTOs;
 using ClassifiedAds.Services.Storage.Entities;
+using ClassifiedAds.Services.Storage.HostedServices;
 using ClassifiedAds.Services.Storage.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -24,7 +25,9 @@ namespace Microsoft.Extensions.DependencyInjection
                     sql.MigrationsAssembly(appSettings.ConnectionStrings.MigrationsAssembly);
                 }
             }))
-                .AddScoped<IRepository<FileEntry, Guid>, Repository<FileEntry, Guid>>();
+                .AddScoped<IRepository<FileEntry, Guid>, Repository<FileEntry, Guid>>()
+                .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>()
+                .AddScoped<IRepository<EventLog, long>, Repository<EventLog, long>>();
 
             DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
 
@@ -39,6 +42,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker)
                     .AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker)
+                    .AddMessageBusSender<AuditLogCreatedEvent>(appSettings.MessageBroker)
                     .AddMessageBusReceiver<FileUploadedEvent>(appSettings.MessageBroker)
                     .AddMessageBusReceiver<FileDeletedEvent>(appSettings.MessageBroker);
 
@@ -51,6 +55,14 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 serviceScope.ServiceProvider.GetRequiredService<StorageDbContext>().Database.Migrate();
             }
+        }
+
+        public static IServiceCollection AddHostedServicesStorageModule(this IServiceCollection services)
+        {
+            services.AddScoped<PublishEventService>();
+            services.AddHostedService<PublishEventWorker>();
+
+            return services;
         }
     }
 }

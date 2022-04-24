@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <CodeAnalysisRuleSet>ClassifiedAds.IdentityServer.ruleset</CodeAnalysisRuleSet>
-    <UserSecretsId>aae914a2-80ef-4814-891a-8ed4e63c8c79</UserSecretsId>
+    <UserSecretsId>1ff63a22-ad40-4b86-9dae-1da800451a0f</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,11 +1,10 @@
 ﻿using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Services.AuditLog.ConfigurationOptions;
+using ClassifiedAds.Services.AuditLog.DTOs;
 using ClassifiedAds.Services.AuditLog.Entities;
 using ClassifiedAds.Services.AuditLog.Repositories;
-using ClassifiedAds.Services.AuditLog.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -21,12 +20,13 @@ namespace Microsoft.Extensions.DependencyInjection
                     sql.MigrationsAssembly(appSettings.ConnectionStrings.MigrationsAssembly);
                 }
             }))
-                .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>()
-                .AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
+                .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>();
 
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
             services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
+
+            services.AddMessageBusReceiver<AuditLogCreatedEvent>(appSettings.MessageBroker);
 
             return services;
         }

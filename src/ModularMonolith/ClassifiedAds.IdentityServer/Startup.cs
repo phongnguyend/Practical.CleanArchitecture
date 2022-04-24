@@ -1,13 +1,7 @@
 ﻿using ClassifiedAds.IdentityServer.ConfigurationOptions;
 using ClassifiedAds.Infrastructure.Monitoring;
-using ClassifiedAds.Infrastructure.Notification;
-using ClassifiedAds.Infrastructure.Notification.Email;
-using ClassifiedAds.Infrastructure.Notification.Sms;
-using ClassifiedAds.Infrastructure.Notification.Web;
-using ClassifiedAds.Modules.Identity.ConfigurationOptions;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
-using ClassifiedAds.Modules.Notification.ConfigurationOptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -61,29 +55,8 @@ namespace ClassifiedAds.IdentityServer
 
             services.AddDateTimeProvider();
 
-            var notificationOptions = new NotificationOptions
-            {
-                Email = new EmailOptions { Provider = "Fake" },
-                Sms = new SmsOptions { Provider = "Fake" },
-                Web = new WebOptions { Provider = "Fake" },
-            };
-
-            services.AddIdentityModule(new IdentityModuleOptions
-            {
-                ConnectionStrings = new Modules.Identity.ConfigurationOptions.ConnectionStringsOptions
-                {
-                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
-                },
-            })
-                    .AddNotificationModule(new NotificationModuleOptions
-                    {
-                        ConnectionStrings = new Modules.Notification.ConfigurationOptions.ConnectionStringsOptions
-                        {
-                            Default = AppSettings.ConnectionStrings.ClassifiedAds,
-                        },
-                        MessageBroker = AppSettings.MessageBroker,
-                        Notification = notificationOptions,
-                    })
+            services.AddIdentityModule(opt => Configuration.GetSection("Modules:Identity").Bind(opt))
+                    .AddNotificationModule(opt => Configuration.GetSection("Modules:Notification").Bind(opt))
                     .AddApplicationServices();
 
             services.AddIdentityServer(options =>
@@ -98,7 +71,7 @@ namespace ClassifiedAds.IdentityServer
                     })
                     .AddSigningCredential(AppSettings.IdentityServer.Certificate.FindCertificate())
                     .AddAspNetIdentity<User>()
-                    .AddTokenProviderModule(AppSettings.ConnectionStrings.ClassifiedAds);
+                    .AddIdServerPersistence(AppSettings.Modules.Auth.ConnectionStrings.Default);
 
             services.AddDataProtection()
                 .PersistKeysToDbContext<IdentityDbContext>()

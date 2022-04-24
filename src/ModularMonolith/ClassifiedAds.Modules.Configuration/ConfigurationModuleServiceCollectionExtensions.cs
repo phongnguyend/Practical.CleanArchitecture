@@ -15,19 +15,18 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ConfigurationModuleServiceCollectionExtensions
     {
-        public static IServiceCollection AddConfigurationModule(this IServiceCollection services, ConfigurationModuleOptions moduleOptions)
+        public static IServiceCollection AddConfigurationModule(this IServiceCollection services, Action<ConfigurationModuleOptions> configureOptions)
         {
-            services.Configure<ConfigurationModuleOptions>(op =>
-            {
-                op.ConnectionStrings = moduleOptions.ConnectionStrings;
-                op.Certificates = moduleOptions.Certificates;
-            });
+            var settings = new ConfigurationModuleOptions();
+            configureOptions(settings);
 
-            services.AddDbContext<ConfigurationDbContext>(options => options.UseSqlServer(moduleOptions.ConnectionStrings.Default, sql =>
+            services.Configure(configureOptions);
+
+            services.AddDbContext<ConfigurationDbContext>(options => options.UseSqlServer(settings.ConnectionStrings.Default, sql =>
             {
-                if (!string.IsNullOrEmpty(moduleOptions.ConnectionStrings.MigrationsAssembly))
+                if (!string.IsNullOrEmpty(settings.ConnectionStrings.MigrationsAssembly))
                 {
-                    sql.MigrationsAssembly(moduleOptions.ConnectionStrings.MigrationsAssembly);
+                    sql.MigrationsAssembly(settings.ConnectionStrings.MigrationsAssembly);
                 }
             }))
                 .AddScoped<IRepository<ConfigurationEntry, Guid>, Repository<ConfigurationEntry, Guid>>();

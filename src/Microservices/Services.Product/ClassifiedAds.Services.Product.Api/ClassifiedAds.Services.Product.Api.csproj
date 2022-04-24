@@ -3,10 +3,12 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<CodeAnalysisRuleSet>ClassifiedAds.ruleset</CodeAnalysisRuleSet>
+		<UserSecretsId>0de8f61d-276a-4df2-a419-89d3cbb127ff</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<Protobuf Include="..\..\Services.AuditLog\ClassifiedAds.Services.AuditLog.Grpc\Protos\auditlog.proto" GrpcServices="Client" Link="Protos\auditlog.proto" />
+		<Protobuf Include="..\..\Services.Identity\ClassifiedAds.Services.Identity.Grpc\Protos\user.proto" GrpcServices="Client" Link="Protos\user.proto" />
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 		<PackageReference Include="Grpc.Tools" Version="2.42.0">
 			<PrivateAssets>all</PrivateAssets>

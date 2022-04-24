@@ -1,9 +1,9 @@
 ﻿using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Modules.Notification.ConfigurationOptions;
-using ClassifiedAds.Modules.Notification.Contracts.DTOs;
 using ClassifiedAds.Modules.Notification.Contracts.Services;
 using ClassifiedAds.Modules.Notification.Entities;
+using ClassifiedAds.Modules.Notification.HostedServices;
 using ClassifiedAds.Modules.Notification.Repositories;
 using ClassifiedAds.Modules.Notification.Services;
 using Microsoft.AspNetCore.Builder;
@@ -15,21 +15,19 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class NotificationModuleServiceCollectionExtensions
     {
-        public static IServiceCollection AddNotificationModule(this IServiceCollection services, NotificationModuleOptions moduleOptions)
+        public static IServiceCollection AddNotificationModule(this IServiceCollection services, Action<NotificationModuleOptions> configureOptions)
         {
-            services.Configure<NotificationModuleOptions>(op =>
-            {
-                op.ConnectionStrings = moduleOptions.ConnectionStrings;
-                op.MessageBroker = moduleOptions.MessageBroker;
-                op.Notification = moduleOptions.Notification;
-            });
+            var settings = new NotificationModuleOptions();
+            configureOptions(settings);
+
+            services.Configure(configureOptions);
 
             services
-                .AddDbContext<NotificationDbContext>(options => options.UseSqlServer(moduleOptions.ConnectionStrings.Default, sql =>
+                .AddDbContext<NotificationDbContext>(options => options.UseSqlServer(settings.ConnectionStrings.Default, sql =>
                 {
-                    if (!string.IsNullOrEmpty(moduleOptions.ConnectionStrings.MigrationsAssembly))
+                    if (!string.IsNullOrEmpty(settings.ConnectionStrings.MigrationsAssembly))
                     {
-                        sql.MigrationsAssembly(moduleOptions.ConnectionStrings.MigrationsAssembly);
+                        sql.MigrationsAssembly(settings.ConnectionStrings.MigrationsAssembly);
                     }
                 }))
                 .AddScoped<IRepository<EmailMessage, Guid>, Repository<EmailMessage, Guid>>()
@@ -46,11 +44,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
-            services
-                .AddMessageBusSender<EmailMessageCreatedEvent>(moduleOptions.MessageBroker)
-                .AddMessageBusSender<SmsMessageCreatedEvent>(moduleOptions.MessageBroker);
-
-            services.AddNotificationServices(moduleOptions.Notification);
+            services.AddNotificationServices(settings);
 
             return services;
         }
@@ -66,6 +60,14 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 serviceScope.ServiceProvider.GetRequiredService<NotificationDbContext>().Database.Migrate();
             }
+        }
+
+        public static IServiceCollection AddHostedServicesNotificationModule(this IServiceCollection services)
+        {
+            services.AddHostedService<SendEmailWoker>();
+            services.AddHostedService<SendSmsWoker>();
+
+            return services;
         }
     }
 }

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <CodeAnalysisRuleSet>ClassifiedAds.Migrator.ruleset</CodeAnalysisRuleSet>
-    <UserSecretsId>b8df572d-5be2-4f41-b55a-8f4e2ef2b569</UserSecretsId>
+    <UserSecretsId>4be179d7-2665-482a-95cd-f35f0620143a</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

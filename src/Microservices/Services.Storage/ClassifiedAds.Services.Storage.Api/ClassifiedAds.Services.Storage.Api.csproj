@@ -8,6 +8,7 @@
 
 	<ItemGroup>
 		<Protobuf Include="..\..\Services.AuditLog\ClassifiedAds.Services.AuditLog.Grpc\Protos\auditlog.proto" GrpcServices="Client" Link="Protos\auditlog.proto" />
+		<Protobuf Include="..\..\Services.Identity\ClassifiedAds.Services.Identity.Grpc\Protos\user.proto" GrpcServices="Client" Link="Protos\user.proto" />
 		<PackageReference Include="Grpc.Tools" Version="2.42.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

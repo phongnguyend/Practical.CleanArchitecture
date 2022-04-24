@@ -56,6 +56,7 @@ namespace ClassifiedAds.Services.Storage
             services.AddApplicationServices();
 
             services.AddStorageModule(AppSettings);
+            services.AddHostedServicesStorageModule();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>

@@ -12,7 +12,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class IdServerPersistenceExtensions
     {
-        public static IIdentityServerBuilder AddTokenProviderModule(this IIdentityServerBuilder services, string connectionString, string migrationsAssembly = "")
+        public static IIdentityServerBuilder AddIdServerPersistence(this IIdentityServerBuilder services, string connectionString, string migrationsAssembly = "")
         {
             services.AddConfigurationStore(options =>
             {

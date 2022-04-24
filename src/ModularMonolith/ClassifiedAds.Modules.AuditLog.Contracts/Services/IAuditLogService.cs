@@ -6,7 +6,7 @@ namespace ClassifiedAds.Modules.AuditLog.Contracts.Services
 {
     public interface IAuditLogService
     {
-        Task AddOrUpdateAsync(AuditLogEntryDTO auditLog);
+        Task AddAsync(AuditLogEntryDTO auditLog);
 
         Task<List<AuditLogEntryDTO>> GetAuditLogEntriesAsync(AuditLogEntryQueryOptions query);
     }

@@ -13,7 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddScoped<Dispatcher>();
 
-            services.AddSingleton<IDomainEvents, DomainEvents>()
+            services.AddScoped<IDomainEvents, DomainEvents>()
                 .AddScoped(typeof(ICrudService<>), typeof(CrudService<>));
 
             return services;

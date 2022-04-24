@@ -1,12 +1,8 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Domain.Events;
-using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
-using ClassifiedAds.Modules.AuditLog.Contracts.Services;
+using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Modules.Identity.Contracts.Services;
-using ClassifiedAds.Modules.Storage.DTOs;
 using ClassifiedAds.Modules.Storage.Entities;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,37 +11,54 @@ namespace ClassifiedAds.Modules.Storage.EventHandlers
 {
     public class FileEntryDeletedEventHandler : IDomainEventHandler<EntityDeletedEvent<FileEntry>>
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ICurrentUser _currentUser;
+        private readonly IRepository<AuditLogEntry, Guid> _auditLogRepository;
+        private readonly IRepository<EventLog, long> _eventLogRepository;
 
-        public FileEntryDeletedEventHandler(IServiceProvider serviceProvider)
+        public FileEntryDeletedEventHandler(ICurrentUser currentUser,
+            IRepository<AuditLogEntry, Guid> auditLogRepository,
+            IRepository<EventLog, long> eventLogRepository)
         {
-            _serviceProvider = serviceProvider;
+            _currentUser = currentUser;
+            _auditLogRepository = auditLogRepository;
+            _eventLogRepository = eventLogRepository;
         }
 
         public async Task HandleAsync(EntityDeletedEvent<FileEntry> domainEvent, CancellationToken cancellationToken = default)
         {
-            using (var scope = _serviceProvider.CreateScope())
+            var auditLog = new AuditLogEntry
             {
-                var auditSerivce = scope.ServiceProvider.GetService<IAuditLogService>();
-                var currentUser = scope.ServiceProvider.GetService<ICurrentUser>();
+                UserId = _currentUser.IsAuthenticated ? _currentUser.UserId : Guid.Empty,
+                CreatedDateTime = domainEvent.EventDateTime,
+                Action = "DELETE_FILEENTRY",
+                ObjectId = domainEvent.Entity.Id.ToString(),
+                Log = domainEvent.Entity.AsJsonString(),
+            };
 
-                await auditSerivce.AddOrUpdateAsync(new AuditLogEntryDTO
-                {
-                    UserId = currentUser.IsAuthenticated ? currentUser.UserId : Guid.Empty,
-                    CreatedDateTime = domainEvent.EventDateTime,
-                    Action = "DELETE_FILEENTRY",
-                    ObjectId = domainEvent.Entity.Id.ToString(),
-                    Log = domainEvent.Entity.AsJsonString(),
-                });
+            await _auditLogRepository.AddOrUpdateAsync(auditLog);
+            await _auditLogRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-                IMessageSender<FileDeletedEvent> fileDeletedEventSender = scope.ServiceProvider.GetService<IMessageSender<FileDeletedEvent>>();
+            await _eventLogRepository.AddOrUpdateAsync(new EventLog
+            {
+                EventType = "AUDIT_LOG_ENTRY_CREATED",
+                TriggeredById = _currentUser.UserId,
+                CreatedDateTime = auditLog.CreatedDateTime,
+                ObjectId = auditLog.Id.ToString(),
+                Message = auditLog.AsJsonString(),
+                Published = false,
+            }, cancellationToken);
 
-                // Forward to external systems
-                await fileDeletedEventSender.SendAsync(new FileDeletedEvent
-                {
-                    FileEntry = domainEvent.Entity,
-                });
-            }
+            await _eventLogRepository.AddOrUpdateAsync(new EventLog
+            {
+                EventType = "FILEENTRY_DELETED",
+                TriggeredById = _currentUser.UserId,
+                CreatedDateTime = domainEvent.EventDateTime,
+                ObjectId = domainEvent.Entity.Id.ToString(),
+                Message = domainEvent.Entity.AsJsonString(),
+                Published = false,
+            }, cancellationToken);
+
+            await _eventLogRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

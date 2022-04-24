@@ -11,7 +11,7 @@ namespace ClassifiedAds.Domain.Events
     public class DomainEvents : IDomainEvents
     {
         private static List<Type> _handlers = new List<Type>();
-        private static IServiceProvider _serviceProvider;
+        private IServiceProvider _serviceProvider;
 
         public static void RegisterHandlers(Assembly assembly, IServiceCollection services)
         {

@@ -1,7 +1,6 @@
 ﻿using ClassifiedAds.Infrastructure.Caching;
 using ClassifiedAds.Infrastructure.Interceptors;
 using ClassifiedAds.Infrastructure.Logging;
-using ClassifiedAds.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Storages;
 using System.Collections.Generic;
@@ -25,8 +24,6 @@ namespace ClassifiedAds.WebAPI.ConfigurationOptions
         public CORS CORS { get; set; }
 
         public StorageOptions Storage { get; set; }
-
-        public MessageBrokerOptions MessageBroker { get; set; }
 
         public Dictionary<string, string> SecurityHeaders { get; set; }
 

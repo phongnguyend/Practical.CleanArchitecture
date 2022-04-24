@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Application.EmailMessages.Services;
+using ClassifiedAds.Application.EventLogs;
 using ClassifiedAds.Application.Products.Services;
 using ClassifiedAds.Application.SmsMessages.Services;
 using ClassifiedAds.Application.Users.Services;
@@ -18,12 +19,13 @@ namespace Microsoft.Extensions.DependencyInjection
             DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
 
             services
-                .AddSingleton<IDomainEvents, DomainEvents>()
+                .AddScoped<IDomainEvents, DomainEvents>()
                 .AddScoped(typeof(ICrudService<>), typeof(CrudService<>))
                 .AddScoped<IUserService, UserService>()
                 .AddScoped<IProductService, ProductService>()
                 .AddScoped<EmailMessageService>()
-                .AddScoped<SmsMessageService>();
+                .AddScoped<SmsMessageService>()
+                .AddScoped<PublishEventService>();
 
             if (configureInterceptor != null)
             {

@@ -21,7 +21,7 @@ namespace ClassifiedAds.Modules.AuditLog.Services
             _dispatcher = dispatcher;
         }
 
-        public async Task AddOrUpdateAsync(AuditLogEntryDTO dto)
+        public async Task AddAsync(AuditLogEntryDTO dto)
         {
             await AddOrUpdateAsync(new AuditLogEntry
             {

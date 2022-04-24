@@ -1,11 +1,5 @@
 ﻿using ClassifiedAds.Infrastructure.Monitoring;
-using ClassifiedAds.Infrastructure.Notification;
-using ClassifiedAds.Infrastructure.Notification.Email;
-using ClassifiedAds.Infrastructure.Notification.Sms;
-using ClassifiedAds.Infrastructure.Notification.Web;
 using ClassifiedAds.Infrastructure.Web.Filters;
-using ClassifiedAds.Modules.Configuration.ConfigurationOptions;
-using ClassifiedAds.Modules.Identity.ConfigurationOptions;
 using ClassifiedAds.Modules.Identity.Contracts.Services;
 using ClassifiedAds.Modules.Identity.Repositories;
 using ClassifiedAds.Modules.Identity.Services;
@@ -84,64 +78,12 @@ namespace ClassifiedAds.WebAPI
 
             services.AddDateTimeProvider();
 
-            var notificationOptions = new NotificationOptions
-            {
-                Email = new EmailOptions { Provider = "Fake" },
-                Sms = new SmsOptions { Provider = "Fake" },
-                Web = new WebOptions { Provider = "Fake" },
-            };
-
-            services.AddAuditLogModule(new Modules.AuditLog.ConfigurationOptions.AuditLogModuleOptions
-            {
-                ConnectionStrings = new Modules.AuditLog.ConfigurationOptions.ConnectionStringsOptions
-                {
-                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
-                },
-            })
-            .AddConfigurationModule(new ConfigurationModuleOptions
-            {
-                ConnectionStrings = new Modules.Configuration.ConfigurationOptions.ConnectionStringsOptions
-                {
-                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
-                },
-                Certificates = AppSettings.ConfigurationModule.Certificates,
-            })
-            .AddIdentityModuleCore(new IdentityModuleOptions
-            {
-                ConnectionStrings = new Modules.Identity.ConfigurationOptions.ConnectionStringsOptions
-                {
-                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
-                },
-                IdentityServerAuthentication = new Modules.Identity.ConfigurationOptions.IdentityServerAuthentication
-                {
-                    Authority = AppSettings.IdentityServerAuthentication.Authority,
-                },
-            })
-            .AddNotificationModule(new Modules.Notification.ConfigurationOptions.NotificationModuleOptions
-            {
-                ConnectionStrings = new Modules.Notification.ConfigurationOptions.ConnectionStringsOptions
-                {
-                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
-                },
-                MessageBroker = AppSettings.MessageBroker,
-                Notification = notificationOptions,
-            })
-            .AddProductModule(new Modules.Product.ConfigurationOptions.ProductModuleOptions
-            {
-                ConnectionStrings = new Modules.Product.ConfigurationOptions.ConnectionStringsOptions
-                {
-                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
-                },
-            })
-            .AddStorageModule(new Modules.Storage.ConfigurationOptions.StorageModuleOptions
-            {
-                ConnectionStrings = new Modules.Storage.ConfigurationOptions.ConnectionStringsOptions
-                {
-                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
-                },
-                Storage = AppSettings.Storage,
-                MessageBroker = AppSettings.MessageBroker,
-            })
+            services.AddAuditLogModule(opt => Configuration.GetSection("Modules:AuditLog").Bind(opt))
+            .AddConfigurationModule(opt => Configuration.GetSection("Modules:Configuration").Bind(opt))
+            .AddIdentityModuleCore(opt => Configuration.GetSection("Modules:Identity").Bind(opt))
+            .AddNotificationModule(opt => Configuration.GetSection("Modules:Notification").Bind(opt))
+            .AddProductModule(opt => Configuration.GetSection("Modules:Product").Bind(opt))
+            .AddStorageModule(opt => Configuration.GetSection("Modules:Storage").Bind(opt))
             .AddApplicationServices();
 
             services.AddHtmlGenerator();

@@ -56,6 +56,7 @@ namespace ClassifiedAds.Services.Product
             services.AddDinkToPdfConverter();
 
             services.AddProductModule(AppSettings);
+            services.AddHostedServicesProductModule();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>

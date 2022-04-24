@@ -1,54 +1,60 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.Infrastructure.Grpc;
-using ClassifiedAds.Services.Product.DTOs;
-using Google.Protobuf.WellKnownTypes;
-using Grpc.Core;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
+using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Infrastructure.Identity;
+using ClassifiedAds.Services.Product.Entities;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using static ClassifiedAds.Services.AuditLog.Grpc.AuditLog;
 
 namespace ClassifiedAds.Services.Product.Commands
 {
     public class AddAuditLogEntryCommand : ICommand
     {
-        public AuditLogEntryDTO AuditLogEntry { get; set; }
+        public AuditLogEntry AuditLogEntry { get; set; }
     }
 
     public class AddAuditLogEntryCommandHandler : ICommandHandler<AddAuditLogEntryCommand>
     {
-        private readonly IConfiguration _configuration;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICurrentUser _currentUser;
+        private readonly IRepository<AuditLogEntry, Guid> _auditLogRepository;
+        private readonly IRepository<EventLog, long> _eventLogRepository;
 
-        public AddAuditLogEntryCommandHandler(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public AddAuditLogEntryCommandHandler(
+            ICurrentUser currentUser,
+            IRepository<AuditLogEntry, Guid> auditLogRepository,
+            IRepository<EventLog, long> eventLogRepository)
         {
-            _configuration = configuration;
-            _httpContextAccessor = httpContextAccessor;
+            _currentUser = currentUser;
+            _auditLogRepository = auditLogRepository;
+            _eventLogRepository = eventLogRepository;
         }
 
         public async Task HandleAsync(AddAuditLogEntryCommand command, CancellationToken cancellationToken = default)
         {
-            var token = await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
-            var headers = new Metadata
+            var auditLog = new AuditLogEntry
             {
-                { "Authorization", $"Bearer {token}" },
+                UserId = command.AuditLogEntry.UserId,
+                CreatedDateTime = command.AuditLogEntry.CreatedDateTime,
+                Action = command.AuditLogEntry.Action,
+                ObjectId = command.AuditLogEntry.ObjectId,
+                Log = command.AuditLogEntry.Log,
             };
 
-            var client = new AuditLogClient(ChannelFactory.Create(_configuration["Services:AuditLog:Grpc"]));
-            client.AddAuditLogEntry(new AuditLog.Grpc.AddAuditLogEntryRequest
+            await _auditLogRepository.AddOrUpdateAsync(auditLog);
+            await _auditLogRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+            await _eventLogRepository.AddOrUpdateAsync(new EventLog
             {
-                Entry = new AuditLog.Grpc.AuditLogEntryMessage
-                {
-                    ObjectId = command.AuditLogEntry.ObjectId,
-                    UserId = command.AuditLogEntry.UserId.ToString(),
-                    Action = command.AuditLogEntry.Action,
-                    Log = command.AuditLogEntry.Log,
-                    CreatedDateTime = Timestamp.FromDateTimeOffset(command.AuditLogEntry.CreatedDateTime),
-                },
-            }, headers);
+                EventType = "AUDIT_LOG_ENTRY_CREATED",
+                TriggeredById = _currentUser.UserId,
+                CreatedDateTime = auditLog.CreatedDateTime,
+                ObjectId = auditLog.Id.ToString(),
+                Message = auditLog.AsJsonString(),
+                Published = false,
+            }, cancellationToken);
+
+            await _eventLogRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

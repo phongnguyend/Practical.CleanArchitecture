@@ -1,6 +1,4 @@
-﻿using ClassifiedAds.Application.EmailMessages.DTOs;
-using ClassifiedAds.Application.FileEntries.DTOs;
-using ClassifiedAds.Application.SmsMessages.DTOs;
+﻿using ClassifiedAds.Application.FileEntries.DTOs;
 using ClassifiedAds.BackgroundServer.ConfigurationOptions;
 using ClassifiedAds.BackgroundServer.HostedServices;
 using ClassifiedAds.BackgroundServer.Identity;
@@ -54,21 +52,18 @@ namespace ClassifiedAds.BackgroundServer
 
                 services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker);
                 services.AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker);
-                services.AddMessageBusSender<EmailMessageCreatedEvent>(appSettings.MessageBroker);
-                services.AddMessageBusSender<SmsMessageCreatedEvent>(appSettings.MessageBroker);
 
                 services.AddMessageBusReceiver<FileUploadedEvent>(appSettings.MessageBroker);
                 services.AddMessageBusReceiver<FileDeletedEvent>(appSettings.MessageBroker);
-                services.AddMessageBusReceiver<EmailMessageCreatedEvent>(appSettings.MessageBroker);
-                services.AddMessageBusReceiver<SmsMessageCreatedEvent>(appSettings.MessageBroker);
 
                 services.AddNotificationServices(appSettings.Notification);
 
                 services.AddWebNotification<SendTaskStatusMessage>(appSettings.Notification.Web);
 
-                services.AddHostedService<SendEmailHostedService>();
-                services.AddHostedService<SendSmsHostedService>();
-                services.AddHostedService<ScheduleCronJobHostedService>();
+                services.AddHostedService<PublishEventWorker>();
+                services.AddHostedService<SendEmailWorker>();
+                services.AddHostedService<SendSmsWorker>();
+                services.AddHostedService<ScheduleCronJobWorker>();
             });
     }
 }

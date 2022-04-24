@@ -1,18 +1,13 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.Infrastructure.Grpc;
-using ClassifiedAds.Services.AuditLog.Grpc;
 using ClassifiedAds.Services.Storage.DTOs;
-using Grpc.Core;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using ClassifiedAds.Services.Storage.Entities;
+using ClassifiedAds.Services.Storage.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using static ClassifiedAds.Services.AuditLog.Grpc.AuditLog;
 
 namespace ClassifiedAds.Services.Storage.Queries
 {
@@ -22,39 +17,50 @@ namespace ClassifiedAds.Services.Storage.Queries
 
     public class GetAuditEntriesQueryHandler : IQueryHandler<GetAuditEntriesQuery, List<AuditLogEntryDTO>>
     {
-        private readonly IConfiguration _configuration;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly StorageDbContext _dbContext;
+        private readonly Dispatcher _dispatcher;
 
-        public GetAuditEntriesQueryHandler(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public GetAuditEntriesQueryHandler(StorageDbContext dbContext, Dispatcher dispatcher)
         {
-            _configuration = configuration;
-            _httpContextAccessor = httpContextAccessor;
+            _dbContext = dbContext;
+            _dispatcher = dispatcher;
         }
 
         public async Task<List<AuditLogEntryDTO>> HandleAsync(GetAuditEntriesQuery queryOptions, CancellationToken cancellationToken = default)
         {
-            var token = await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
-            var headers = new Metadata
-            {
-                { "Authorization", $"Bearer {token}" },
-            };
+            var query = _dbContext.Set<AuditLogEntry>() as IQueryable<AuditLogEntry>;
 
-            var client = new AuditLogClient(ChannelFactory.Create(_configuration["Services:AuditLog:Grpc"]));
-            var entries = client.GetAuditLogEntries(new GetAuditLogEntriesRequest
+            if (queryOptions.UserId != Guid.Empty)
             {
-                ObjectId = queryOptions.ObjectId,
-            }, headers);
+                query = query.Where(x => x.UserId == queryOptions.UserId);
+            }
 
-            return entries.Entries.Select(x => new AuditLogEntryDTO
+            if (!string.IsNullOrEmpty(queryOptions.ObjectId))
             {
-                Id = Guid.Parse(x.Id),
-                ObjectId = x.ObjectId,
-                UserId = Guid.Parse(x.UserId),
-                Action = x.Action,
-                Log = x.Log,
-                UserName = x.UserName,
-                CreatedDateTime = x.CreatedDateTime.ToDateTimeOffset(),
-            }).ToList();
+                query = query.Where(x => x.ObjectId == queryOptions.ObjectId);
+            }
+
+            if (queryOptions.AsNoTracking)
+            {
+                query = query.AsNoTracking();
+            }
+
+            var auditLogs = await query.ToListAsync();
+            var users = await _dispatcher.DispatchAsync(new GetUsersQuery(), cancellationToken);
+
+            var rs = auditLogs.Join(users, x => x.UserId, y => y.Id,
+                (x, y) => new AuditLogEntryDTO
+                {
+                    Id = x.Id,
+                    UserId = x.UserId,
+                    Action = x.Action,
+                    ObjectId = x.ObjectId,
+                    Log = x.Log,
+                    CreatedDateTime = x.CreatedDateTime,
+                    UserName = y.UserName,
+                });
+
+            return rs.OrderByDescending(x => x.CreatedDateTime).ToList();
         }
     }
 }

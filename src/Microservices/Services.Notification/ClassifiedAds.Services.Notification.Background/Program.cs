@@ -38,8 +38,8 @@ namespace ClassifiedAds.Services.Notification.Background
                 services.AddNotificationModule(appSettings);
 
                 services.AddScoped<ICurrentUser, CurrentUser>();
-                services.AddHostedService<SendEmailHostedService>();
-                services.AddHostedService<SendSmsHostedService>();
+                services.AddHostedService<SendEmailWorker>();
+                services.AddHostedService<SendSmsWorker>();
             });
     }
 }
