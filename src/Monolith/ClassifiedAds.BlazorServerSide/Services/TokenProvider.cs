@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClassifiedAds.Blazor.Modules.Core.Services
+namespace ClassifiedAds.BlazorServerSide.Services
 {
     public class TokenProvider
     {
