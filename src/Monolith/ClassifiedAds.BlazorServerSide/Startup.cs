@@ -6,6 +6,7 @@ using ClassifiedAds.Blazor.Modules.Settings.Services;
 using ClassifiedAds.Blazor.Modules.Users.Services;
 using ClassifiedAds.BlazorServerSide.ConfigurationOptions;
 using ClassifiedAds.BlazorServerSide.Services;
+using ClassifiedAds.Infrastructure.HttpMessageHandlers;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -58,12 +59,15 @@ namespace ClassifiedAds.BlazorServerSide
             }
             services.AddScoped<ITokenManager, TokenManager>();
             services.AddScoped<TokenProvider>();
+            services.AddTransient<DebuggingHandler>();
+
             services.AddHttpClient<FileService, FileService>(client =>
             {
                 client.BaseAddress = new Uri(AppSettings.ResourceServer.Endpoint);
                 client.Timeout = new TimeSpan(0, 0, 30);
                 client.DefaultRequestHeaders.Clear();
-            });
+            }).AddHttpMessageHandler<DebuggingHandler>();
+
             services.AddHttpClient<ConfigurationEntryService, ConfigurationEntryService>(client =>
             {
                 client.BaseAddress = new Uri(AppSettings.ResourceServer.Endpoint);

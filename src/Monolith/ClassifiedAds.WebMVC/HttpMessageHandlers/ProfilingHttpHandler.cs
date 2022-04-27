@@ -1,12 +1,9 @@
 ﻿using StackExchange.Profiling;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.WebMVC.HttpHandlers
+namespace ClassifiedAds.WebMVC.HttpMessageHandlers
 {
     public class ProfilingHttpHandler : DelegatingHandler
     {
@@ -19,7 +16,6 @@ namespace ClassifiedAds.WebMVC.HttpHandlers
             InnerHandler = innerHandler;
         }
 
-
         protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var httpVerb = request.Method.ToString();
@@ -27,7 +23,7 @@ namespace ClassifiedAds.WebMVC.HttpHandlers
 
             var requestContent = await GetRequestContent(request);
 
-            using (CustomTiming timing = MiniProfiler.Current.CustomTiming("http", string.Empty, httpVerb))
+            using (var timing = MiniProfiler.Current.CustomTiming("http", string.Empty, httpVerb))
             {
                 var response = await base.SendAsync(request, cancellationToken);
 
@@ -35,7 +31,6 @@ namespace ClassifiedAds.WebMVC.HttpHandlers
                 return response;
             }
         }
-
 
         internal async Task<string> GetRequestContent(HttpRequestMessage request)
         {

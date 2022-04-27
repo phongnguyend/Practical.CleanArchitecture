@@ -7,7 +7,7 @@ using ClassifiedAds.WebMVC.ClaimsTransformations;
 using ClassifiedAds.WebMVC.ConfigurationOptions;
 using ClassifiedAds.WebMVC.Configurations;
 using ClassifiedAds.WebMVC.Filters;
-using ClassifiedAds.WebMVC.HttpHandlers;
+using ClassifiedAds.WebMVC.HttpMessageHandlers;
 using ClassifiedAds.WebMVC.Middleware;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication;
@@ -127,8 +127,10 @@ namespace ClassifiedAds.WebMVC
             .AddSingleton<IAuthorizationHandler, CustomRequirementHandler>();
 
             services.AddTransient<ProfilingHttpHandler>();
+            services.AddTransient<BearerTokenHandler>();
             services.AddHttpClient(string.Empty)
-                    .AddHttpMessageHandler<ProfilingHttpHandler>();
+                    .AddHttpMessageHandler<ProfilingHttpHandler>()
+                    .AddHttpMessageHandler<BearerTokenHandler>();
 
             services.AddCaches(AppSettings.Caching);
 
