@@ -60,6 +60,8 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddHostedServicesStorageModule(this IServiceCollection services)
         {
             services.AddScoped<PublishEventService>();
+
+            services.AddHostedService<MessageBusReceiver>();
             services.AddHostedService<PublishEventWorker>();
 
             return services;

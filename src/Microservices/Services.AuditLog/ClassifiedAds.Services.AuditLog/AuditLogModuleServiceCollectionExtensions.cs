@@ -2,6 +2,7 @@
 using ClassifiedAds.Services.AuditLog.ConfigurationOptions;
 using ClassifiedAds.Services.AuditLog.DTOs;
 using ClassifiedAds.Services.AuditLog.Entities;
+using ClassifiedAds.Services.AuditLog.HostedServices;
 using ClassifiedAds.Services.AuditLog.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -33,10 +34,17 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static void MigrateAuditLogDb(this IApplicationBuilder app)
         {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 serviceScope.ServiceProvider.GetRequiredService<AuditLogDbContext>().Database.Migrate();
             }
+        }
+
+        public static IServiceCollection AddHostedServicesAuditLogModule(this IServiceCollection services)
+        {
+            services.AddHostedService<MessageBusReceiver>();
+
+            return services;
         }
     }
 }

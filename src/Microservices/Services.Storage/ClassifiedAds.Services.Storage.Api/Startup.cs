@@ -1,8 +1,6 @@
-using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Services.Storage.ConfigurationOptions;
-using ClassifiedAds.Services.Storage.DTOs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,7 +11,6 @@ using Microsoft.Extensions.Hosting;
 using Polly;
 using System;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Storage
 {
@@ -88,8 +85,6 @@ namespace ClassifiedAds.Services.Storage
                 app.UseDeveloperExceptionPage();
             }
 
-            RunMessageBrokerReceivers(app.ApplicationServices.CreateScope().ServiceProvider);
-
             app.UseRouting();
 
             app.UseCors("AllowAnyOrigin");
@@ -100,26 +95,6 @@ namespace ClassifiedAds.Services.Storage
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
-        }
-
-        private void RunMessageBrokerReceivers(IServiceProvider serviceProvider)
-        {
-            var fileUploadedMessageQueueReceiver = serviceProvider.GetService<IMessageReceiver<FileUploadedEvent>>();
-            var fileDeletedMessageQueueReceiver = serviceProvider.GetService<IMessageReceiver<FileDeletedEvent>>();
-
-            fileUploadedMessageQueueReceiver?.Receive(async (data, metaData) =>
-            {
-                await Task.Delay(5000); // simulate long running task
-
-                string message = data.FileEntry.Id.ToString();
-            });
-
-            fileDeletedMessageQueueReceiver?.Receive(async (data, metaData) =>
-            {
-                await Task.Delay(5000); // simulate long running task
-
-                string message = data.FileEntry.Id.ToString();
             });
         }
     }

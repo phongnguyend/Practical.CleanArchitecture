@@ -60,6 +60,7 @@ namespace ClassifiedAds.BackgroundServer
 
                 services.AddWebNotification<SendTaskStatusMessage>(appSettings.Notification.Web);
 
+                services.AddHostedService<MessageBusReceiver>();
                 services.AddHostedService<PublishEventWorker>();
                 services.AddHostedService<SendEmailWorker>();
                 services.AddHostedService<SendSmsWorker>();
