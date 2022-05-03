@@ -19,21 +19,10 @@ namespace ClassifiedAds.Infrastructure.Persistence
         {
         }
 
-        public IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
-        {
-            _dbContextTransaction = Database.BeginTransaction(isolationLevel);
-            return _dbContextTransaction;
-        }
-
         public async Task<IDisposable> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, CancellationToken cancellationToken = default)
         {
             _dbContextTransaction = await Database.BeginTransactionAsync(isolationLevel, cancellationToken);
             return _dbContextTransaction;
-        }
-
-        public void CommitTransaction()
-        {
-            _dbContextTransaction.Commit();
         }
 
         public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)

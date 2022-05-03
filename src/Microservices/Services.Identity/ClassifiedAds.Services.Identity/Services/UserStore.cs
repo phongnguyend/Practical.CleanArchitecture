@@ -3,11 +3,6 @@ using ClassifiedAds.Services.Identity.Entities;
 using ClassifiedAds.Services.Identity.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Identity
 {
@@ -262,16 +257,15 @@ namespace ClassifiedAds.Services.Identity
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public Task RemoveTokenAsync(User user, string loginProvider, string name, CancellationToken cancellationToken)
+        public async Task RemoveTokenAsync(User user, string loginProvider, string name, CancellationToken cancellationToken)
         {
             var tokenEntity = user.Tokens.SingleOrDefault(
                     l => l.TokenName == name && l.LoginProvider == loginProvider);
             if (tokenEntity != null)
             {
                 user.Tokens.Remove(tokenEntity);
-                _unitOfWork.SaveChanges();
+                await _unitOfWork.SaveChangesAsync();
             }
-            return Task.CompletedTask;
         }
 
         public Task SetAuthenticatorKeyAsync(User user, string key, CancellationToken cancellationToken)

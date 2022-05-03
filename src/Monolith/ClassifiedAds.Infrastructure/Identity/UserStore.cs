@@ -261,16 +261,15 @@ namespace ClassifiedAds.Infrastructure.Identity
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public Task RemoveTokenAsync(User user, string loginProvider, string name, CancellationToken cancellationToken)
+        public async Task RemoveTokenAsync(User user, string loginProvider, string name, CancellationToken cancellationToken)
         {
             var tokenEntity = user.Tokens.SingleOrDefault(
                     l => l.TokenName == name && l.LoginProvider == loginProvider);
             if (tokenEntity != null)
             {
                 user.Tokens.Remove(tokenEntity);
-                _unitOfWork.SaveChanges();
+                await _unitOfWork.SaveChangesAsync();
             }
-            return Task.CompletedTask;
         }
 
         public Task SetAuthenticatorKeyAsync(User user, string key, CancellationToken cancellationToken)

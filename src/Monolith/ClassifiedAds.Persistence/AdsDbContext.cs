@@ -23,26 +23,6 @@ namespace ClassifiedAds.Persistence
 
         public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
 
-        public IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
-        {
-            _dbContextTransaction = Database.BeginTransaction(isolationLevel);
-            return _dbContextTransaction;
-        }
-
-        public IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, string lockName = null)
-        {
-            _dbContextTransaction = Database.BeginTransaction(isolationLevel);
-
-            var sqlLock = new SqlDistributedLock(_dbContextTransaction.GetDbTransaction() as SqlTransaction);
-            var lockScope = sqlLock.Acquire(lockName);
-            if (lockScope == null)
-            {
-                throw new Exception($"Could not acquire lock: {lockName}");
-            }
-
-            return _dbContextTransaction;
-        }
-
         public async Task<IDisposable> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, CancellationToken cancellationToken = default)
         {
             _dbContextTransaction = await Database.BeginTransactionAsync(isolationLevel, cancellationToken);
@@ -61,11 +41,6 @@ namespace ClassifiedAds.Persistence
             }
 
             return _dbContextTransaction;
-        }
-
-        public void CommitTransaction()
-        {
-            _dbContextTransaction.Commit();
         }
 
         public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
