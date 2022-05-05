@@ -1,8 +1,10 @@
 ﻿using Castle.DynamicProxy;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 
 namespace ClassifiedAds.Infrastructure.Interceptors
 {
@@ -21,7 +23,7 @@ namespace ClassifiedAds.Infrastructure.Interceptors
             var className = method.DeclaringType.Name;
             var methodName = method.Name;
 
-            var arguments = JsonSerializer.Serialize(invocation.Arguments, new JsonSerializerOptions()
+            var arguments = JsonSerializer.Serialize(invocation.Arguments.Where(x => x.GetType() != typeof(CancellationToken)), new JsonSerializerOptions()
             {
                 WriteIndented = false,
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
