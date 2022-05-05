@@ -41,13 +41,24 @@ namespace ClassifiedAds.Persistence.Repositories
         {
             if (entity.Id.Equals(default(TKey)))
             {
-                entity.CreatedDateTime = _dateTimeProvider.OffsetNow;
-                await DbSet.AddAsync(entity, cancellationToken);
+                await AddAsync(entity, cancellationToken);
             }
             else
             {
-                entity.UpdatedDateTime = _dateTimeProvider.OffsetNow;
+                await UpdateAsync(entity, cancellationToken);
             }
+        }
+
+        public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
+        {
+            entity.CreatedDateTime = _dateTimeProvider.OffsetNow;
+            await DbSet.AddAsync(entity, cancellationToken);
+        }
+
+        public Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
+        {
+            entity.UpdatedDateTime = _dateTimeProvider.OffsetNow;
+            return Task.CompletedTask;
         }
 
         public void Delete(T entity)

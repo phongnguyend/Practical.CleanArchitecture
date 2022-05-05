@@ -5,6 +5,7 @@ using ClassifiedAds.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application
@@ -23,39 +24,48 @@ namespace ClassifiedAds.Application
             _domainEvents = domainEvents;
         }
 
-        public Task<List<T>> GetAsync()
+        public Task<List<T>> GetAsync(CancellationToken cancellationToken = default)
         {
             return _repository.ToListAsync(_repository.GetAll());
         }
 
-        public Task<T> GetByIdAsync(Guid Id)
+        public Task<T> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            ValidationException.Requires(Id != Guid.Empty, "Invalid Id");
-            return _repository.FirstOrDefaultAsync(_repository.GetAll().Where(x => x.Id == Id));
+            ValidationException.Requires(id != Guid.Empty, "Invalid Id");
+            return _repository.FirstOrDefaultAsync(_repository.GetAll().Where(x => x.Id == id));
         }
 
-        public async Task AddOrUpdateAsync(T entity)
+        public async Task AddOrUpdateAsync(T entity, CancellationToken cancellationToken = default)
         {
-            var adding = entity.Id.Equals(default);
-
-            await _repository.AddOrUpdateAsync(entity);
-            await _unitOfWork.SaveChangesAsync();
-
-            if (adding)
+            if (entity.Id.Equals(default))
             {
-                await _domainEvents.DispatchAsync(new EntityCreatedEvent<T>(entity, DateTime.UtcNow));
+                await AddAsync(entity, cancellationToken);
             }
             else
             {
-                await _domainEvents.DispatchAsync(new EntityUpdatedEvent<T>(entity, DateTime.UtcNow));
+                await UpdateAsync(entity, cancellationToken);
             }
         }
 
-        public async Task DeleteAsync(T entity)
+        public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
+        {
+            await _repository.AddAsync(entity, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _domainEvents.DispatchAsync(new EntityCreatedEvent<T>(entity, DateTime.UtcNow), cancellationToken);
+        }
+
+        public async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
+        {
+            await _repository.UpdateAsync(entity, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _domainEvents.DispatchAsync(new EntityUpdatedEvent<T>(entity, DateTime.UtcNow), cancellationToken);
+        }
+
+        public async Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
         {
             _repository.Delete(entity);
-            await _unitOfWork.SaveChangesAsync();
-            await _domainEvents.DispatchAsync(new EntityDeletedEvent<T>(entity, DateTime.UtcNow));
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _domainEvents.DispatchAsync(new EntityDeletedEvent<T>(entity, DateTime.UtcNow), cancellationToken);
         }
     }
 }

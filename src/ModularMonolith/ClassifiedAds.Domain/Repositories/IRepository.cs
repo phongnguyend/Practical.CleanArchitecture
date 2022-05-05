@@ -17,6 +17,10 @@ namespace ClassifiedAds.Domain.Repositories
 
         Task AddOrUpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
 
+        Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
+
+        Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
+
         void Delete(TEntity entity);
 
         Task<T> FirstOrDefaultAsync<T>(IQueryable<T> query);
