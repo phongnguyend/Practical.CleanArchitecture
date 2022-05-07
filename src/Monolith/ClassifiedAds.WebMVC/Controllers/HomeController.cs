@@ -67,6 +67,9 @@ namespace ClassifiedAds.WebMVC.Controllers
 
             var products1 = await _dispatcher.DispatchAsync(new GetProductsQuery());
             var products2 = await _productService.GetAsync();
+            var addingProduct = new Product { Name = "Test" };
+            await _productService.AddAsync(addingProduct);
+            await _productService.DeleteAsync(addingProduct);
 
             var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
 
