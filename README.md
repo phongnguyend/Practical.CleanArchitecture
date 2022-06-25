@@ -40,6 +40,13 @@
 
 [*(open on draw.io)*](https://www.draw.io/#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fphongnguyend%2FPractical.CleanArchitecture%2Fmaster%2Fdocs%2Fimgs%2Flayer-examples.drawio)
 
+# Testing Pyramid
+![alt text](/docs/imgs/testing-pyramid.png)
+![alt text](/docs/imgs/testing-pyramid-unit-tests.png)
+![alt text](/docs/imgs/testing-pyramid-integration-e2e-tests.png)
+
+[*(open on draw.io)*](https://www.draw.io/#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fphongnguyend%2FPractical.CleanArchitecture%2Fmaster%2Fdocs%2Fimgs%2Ftesting-pyramid.drawio)
+
 # Solution Structure
 ![alt text](/docs/imgs/code-solution-structure.png)
 
