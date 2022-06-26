@@ -1,5 +1,3 @@
-[Domain-Driven Design Path | Pluralsight](https://app.pluralsight.com/paths/skills/domain-driven-design)
-
 # Database Centric vs Domain Centric Architecture 
 ![alt text](/docs/imgs/database-centrics-vs-domain-centric-architecture.png)
 
@@ -49,6 +47,10 @@
 
 # Solution Structure
 ![alt text](/docs/imgs/code-solution-structure.png)
+
+![alt text](/docs/imgs/code-solution-structure-modular-monolith.png)
+
+![alt text](/docs/imgs/code-solution-structure-microservices.png)
 
 # How to Run:
 ## Update Configuration
