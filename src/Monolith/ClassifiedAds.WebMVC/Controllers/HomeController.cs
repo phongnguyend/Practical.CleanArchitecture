@@ -65,11 +65,14 @@ namespace ClassifiedAds.WebMVC.Controllers
             _logger.LogInformation("Test LogInformation");
             _logger.LogWarning("Test LogWarning");
 
-            var products1 = await _dispatcher.DispatchAsync(new GetProductsQuery());
-            var products2 = await _productService.GetAsync();
-            var addingProduct = new Product { Name = "Test" };
-            await _productService.AddAsync(addingProduct);
-            await _productService.DeleteAsync(addingProduct);
+            if (User.Identity.IsAuthenticated)
+            {
+                var products1 = await _dispatcher.DispatchAsync(new GetProductsQuery());
+                var products2 = await _productService.GetAsync();
+                var addingProduct = new Product { Name = "Test" };
+                await _productService.AddAsync(addingProduct);
+                await _productService.DeleteAsync(addingProduct);
+            }
 
             var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
 

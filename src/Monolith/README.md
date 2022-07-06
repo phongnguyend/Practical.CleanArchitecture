@@ -49,7 +49,9 @@
   dotnet tool install -g Microsoft.Tye --version "0.5.0-alpha.20555.1"
   dotnet tool update -g Microsoft.Tye --version "0.5.0-alpha.20555.1"
   ```
-  
+
+- Install [Tye for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-tye)
+
 - Run
   ```
   tye run

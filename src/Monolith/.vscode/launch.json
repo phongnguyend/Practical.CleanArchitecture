@@ -1,0 +1,180 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "ClassifiedAds.BackgroundServer",
+            "type": "coreclr",
+            "request": "launch",
+            //"preLaunchTask": "build",
+            "program": "${workspaceFolder}/ClassifiedAds.BackgroundServer/bin/Debug/net6.0/ClassifiedAds.BackgroundServer.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/ClassifiedAds.BackgroundServer",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            "env": {
+                "DOTNET_ENVIRONMENT": "Development"
+            },
+        },
+        {
+            "name": "ClassifiedAds.GraphQL",
+            "type": "coreclr",
+            "request": "launch",
+            //"preLaunchTask": "build",
+            "program": "${workspaceFolder}/ClassifiedAds.GraphQL/bin/Debug/net6.0/ClassifiedAds.GraphQL.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/ClassifiedAds.GraphQL",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "https://localhost:44392/"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "ClassifiedAds.Migrator",
+            "type": "coreclr",
+            "request": "launch",
+            //"preLaunchTask": "build",
+            "program": "${workspaceFolder}/ClassifiedAds.Migrator/bin/Debug/net6.0/ClassifiedAds.Migrator.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/ClassifiedAds.Migrator",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "https://localhost:44380/"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "ClassifiedAds.WebAPI",
+            "type": "coreclr",
+            "request": "launch",
+            //"preLaunchTask": "build",
+            "program": "${workspaceFolder}/ClassifiedAds.WebAPI/bin/Debug/net6.0/ClassifiedAds.WebAPI.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/ClassifiedAds.WebAPI",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "https://localhost:44312/"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "ClassifiedAds.BlazorServerSide",
+            "type": "coreclr",
+            "request": "launch",
+            //"preLaunchTask": "build",
+            "program": "${workspaceFolder}/ClassifiedAds.BlazorServerSide/bin/Debug/net6.0/ClassifiedAds.BlazorServerSide.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/ClassifiedAds.BlazorServerSide",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "https://localhost:44331/"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "ClassifiedAds.BlazorWebAssembly",
+            "type": "coreclr",
+            "request": "launch",
+            //"preLaunchTask": "build",
+            "program": "${workspaceFolder}/ClassifiedAds.BlazorWebAssembly/bin/Debug/net6.0/ClassifiedAds.BlazorWebAssembly.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/ClassifiedAds.BlazorWebAssembly",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "https://localhost:44348/"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "ClassifiedAds.IdentityServer",
+            "type": "coreclr",
+            "request": "launch",
+            //"preLaunchTask": "build",
+            "program": "${workspaceFolder}/ClassifiedAds.IdentityServer/bin/Debug/net6.0/ClassifiedAds.IdentityServer.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/ClassifiedAds.IdentityServer",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "https://localhost:44367/"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "ClassifiedAds.WebMVC",
+            "type": "coreclr",
+            "request": "launch",
+            //"preLaunchTask": "build",
+            "program": "${workspaceFolder}/ClassifiedAds.WebMVC/bin/Debug/net6.0/ClassifiedAds.WebMVC.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/ClassifiedAds.WebMVC",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "https://localhost:44364/"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "ClassifiedAds.Monolith",
+            "configurations": ["ClassifiedAds.BackgroundServer", "ClassifiedAds.GraphQL", "ClassifiedAds.Migrator", "ClassifiedAds.WebAPI","ClassifiedAds.BlazorServerSide","ClassifiedAds.BlazorWebAssembly","ClassifiedAds.IdentityServer","ClassifiedAds.WebMVC"]
+        }
+    ]
+}
