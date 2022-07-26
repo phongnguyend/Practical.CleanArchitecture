@@ -110,7 +110,7 @@ namespace ClassifiedAds.Services.Identity
 
         public Task<string> GetSecurityStampAsync(User user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(user.SecurityStamp);
+            return Task.FromResult(user.SecurityStamp ?? string.Empty);
         }
 
         public Task<bool> GetTwoFactorEnabledAsync(User user, CancellationToken cancellationToken)
