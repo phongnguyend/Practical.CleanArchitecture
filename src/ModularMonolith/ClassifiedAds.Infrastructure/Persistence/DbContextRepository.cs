@@ -111,5 +111,15 @@ namespace ClassifiedAds.Infrastructure.Persistence
         {
             _dbContext.BulkMerge(entities, idSelector, updateColumnNamesSelector, insertColumnNamesSelector);
         }
+
+        public void SetRowVersion(TEntity entity, byte[] version)
+        {
+            _dbContext.Entry(entity).OriginalValues[nameof(entity.RowVersion)] = version;
+        }
+
+        public bool IsDbUpdateConcurrencyException(Exception ex)
+        {
+            return ex is DbUpdateConcurrencyException;
+        }
     }
 }

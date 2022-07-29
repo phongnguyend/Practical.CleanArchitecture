@@ -38,7 +38,7 @@
 		<PackageReference Include="CsvHelper" Version="27.2.0" />
 		<PackageReference Include="Dapper.StrongName" Version="2.0.123" />
 		<PackageReference Include="DinkToPdf" Version="1.0.8" />
-		<PackageReference Include="EntityFrameworkCore.SqlServer.SimpleBulks" Version="6.4.0" />
+		<PackageReference Include="EntityFrameworkCore.SqlServer.SimpleBulks" Version="6.5.0" />
 		<PackageReference Include="IdentityModel" Version="5.2.0" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.0" />
