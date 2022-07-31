@@ -6,7 +6,7 @@ const AuditLogs = () => {
   const [pageTitle] = useState("Audit Logs");
   const dispatch = useDispatch();
 
-  const auditLogs = useSelector((state) => state.auditLog.auditLogs);
+  const auditLogs = useSelector((state: any) => state.auditLog.auditLogs);
 
   useEffect(() => {
     dispatch(actions.fetchAuditLogs());

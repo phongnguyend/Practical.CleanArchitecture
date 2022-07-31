@@ -1,10 +1,9 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import createSagaMiddleware from "redux-saga";
-import axios from "axios";
 
 import "./index.css";
 import App from "./App";
@@ -62,16 +61,16 @@ AuthService.loadUser().then((user) => {
     });
   }
 
-  ReactDOM.render(
+  const container = document.getElementById('root');
+  const root = createRoot(container!);
+  root.render(
     <React.StrictMode>
       <Provider store={store}>
         <BrowserRouter>
           <App />
         </BrowserRouter>
       </Provider>
-    </React.StrictMode>,
-    document.getElementById("root")
-  );
+    </React.StrictMode>);
 
   // If you want your app to work offline and load faster, you can change
   // unregister() to register() below. Note this comes with some pitfalls.

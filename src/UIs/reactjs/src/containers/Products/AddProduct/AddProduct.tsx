@@ -1,22 +1,13 @@
-import React, { Component } from "react";
-import { NavLink, Redirect } from "react-router-dom";
-import { connect } from "react-redux";
+import { useEffect, useState } from "react";
+import { NavLink, Navigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
 
-type Props = {
-  resetProduct: any,
-  match: any,
-  fetchProduct: any,
-  product: any,
-  saveProduct: any,
-  updateProduct: any,
-  saved: any
-}
 
-class AddProduct extends Component<Props, any> {
-  state = {
+const AddProduct = () => {
+  const [state, setState] = useState({
     title: "Add Product",
     controls: {
       name: {
@@ -59,204 +50,190 @@ class AddProduct extends Component<Props, any> {
     valid: false,
     submitted: false,
     errorMessage: null
-  };
+  });
 
-  componentDidMount() {
-    this.props.resetProduct();
-    const id = this.props.match?.params?.id;
+  const { id } = useParams();
+  const { product, saved } = useSelector((state: any) => state.product);
+  const dispatch = useDispatch();
+  const fetchProduct = id => dispatch(actions.fetchProduct(id));
+  const updateProduct = product => dispatch(actions.updateProduct(product));
+  const resetProduct = () => dispatch(actions.resetProduct());
+  const saveProduct = product => dispatch(actions.saveProduct(product));
+
+  useEffect(() => {
+    resetProduct();
     if (id) {
-      this.setState({ title: "Edit Product" });
-      this.props.fetchProduct(id);
+      setState({ ...state, title: "Edit Product" });
+      fetchProduct(id);
     }
-  }
+  }, []);
 
-  fieldChanged = event => {
-    const product = {
-      ...this.props.product,
+
+  const fieldChanged = event => {
+    checkFieldValidity(event.target.name, event.target.value);
+
+    updateProduct({
+      ...product,
       [event.target.name]: event.target.value
-    };
-
-    this.checkFieldValidity(event.target.name, event.target.value);
-
-    this.props.updateProduct(product);
+    });
   };
 
-  checkFieldValidity = (name, value) => {
-    const control = this.state.controls[name];
+  const checkFieldValidity = (name, value) => {
+    const control = state.controls[name];
     const rules = control.validation;
     const validationRs = checkValidity(value, rules);
-
-    this.setState(preState => {
-      return {
-        controls: {
-          ...preState.controls,
-          [name]: {
-            ...preState.controls[name],
-            error: validationRs,
-            valid: validationRs.isValid
-          }
-        }
-      };
-    });
+    setState((preState) => ({
+      ...preState,
+      controls: {
+        ...preState.controls,
+        [name]: {
+          ...preState.controls[name],
+          error: validationRs,
+          valid: validationRs.isValid,
+        },
+      },
+    }));
 
     return validationRs.isValid;
   };
 
-  onSubmit = event => {
+  const onSubmit = event => {
     event.preventDefault();
-    this.setState({ submitted: true });
+    setState({ ...state, submitted: true });
     let isValid = true;
-    for (let fieldName in this.state.controls) {
+    for (let fieldName in state.controls) {
       isValid =
-        this.checkFieldValidity(fieldName, this.props.product[fieldName]) &&
+        checkFieldValidity(fieldName, product[fieldName]) &&
         isValid;
     }
 
     if (isValid) {
-      this.props.saveProduct(this.props.product);
+      saveProduct(product);
     }
   };
 
-  render() {
-    const form = (
-      <div className="card">
-        <div className="card-header">{this.state.title}</div>
-        <div className="card-body">
-          {this.state.errorMessage ? (
-            <div
-              className="row alert alert-danger"
-            >
-              {this.state.errorMessage}
-            </div>
-          ) : null}
-          <form onSubmit={this.onSubmit}>
-            <div className="form-group row">
-              <label htmlFor="name" className="col-sm-2 col-form-label">
-                Name
-              </label>
-              <div className="col-sm-10">
-                <input
-                  id="name"
-                  name="name"
-                  className={
-                    "form-control " +
-                    (this.state.submitted && !this.state.controls["name"].valid
-                      ? "is-invalid"
-                      : "")
-                  }
-                  value={this.props.product?.name}
-                  onChange={event => this.fieldChanged(event)}
-                />
-                <span className="invalid-feedback">
-                  {this.state.controls["name"].error.required ? (
-                    <span>Enter a name</span>
-                  ) : null}
-                  {this.state.controls["name"].error.minLength ? (
-                    <span>The name must be longer than 3 characters.</span>
-                  ) : null}
-                </span>
-              </div>
-            </div>
-            <div className="form-group row">
-              <label htmlFor="code" className="col-sm-2 col-form-label">
-                Code
-              </label>
-              <div className="col-sm-10">
-                <input
-                  id="code"
-                  name="code"
-                  className={
-                    "form-control " +
-                    (this.state.submitted && !this.state.controls["code"].valid
-                      ? "is-invalid"
-                      : "")
-                  }
-                  value={this.props.product?.code}
-                  onChange={event => this.fieldChanged(event)}
-                />
-                <span className="invalid-feedback">
-                  {this.state.controls["code"].error.required ? (
-                    <span>Enter a code</span>
-                  ) : null}
-                  {this.state.controls["code"].error.maxLength ? (
-                    <span>The code must be less than 10 characters.</span>
-                  ) : null}
-                </span>
-              </div>
-            </div>
-            <div className="form-group row">
-              <label htmlFor="description" className="col-sm-2 col-form-label">
-                Description
-              </label>
-              <div className="col-sm-10">
-                <input
-                  id="description"
-                  name="description"
-                  className={
-                    "form-control " +
-                    (this.state.submitted &&
-                    !this.state.controls["description"].valid
-                      ? "is-invalid"
-                      : "")
-                  }
-                  value={this.props.product?.description}
-                  onChange={event => this.fieldChanged(event)}
-                />
-                <span className="invalid-feedback">
-                  {this.state.controls["description"].error.required ? (
-                    <span>Enter a description</span>
-                  ) : null}
-                  {this.state.controls["description"].error.maxLength ? (
-                    <span>The code must be less than 100 characters.</span>
-                  ) : null}
-                </span>
-              </div>
-            </div>
-            <div className="form-group row">
-              <label
-                htmlFor="description"
-                className="col-sm-2 col-form-label"
-              ></label>
-              <div className="col-sm-10">
-                <button className="btn btn-primary">Save</button>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div className="card-footer">
-          <NavLink
-            className="btn btn-outline-secondary"
-            to="/products"
-            style={{ width: "80px" }}
+  const form = (
+    <div className="card">
+      <div className="card-header">{state.title}</div>
+      <div className="card-body">
+        {state.errorMessage ? (
+          <div
+            className="row alert alert-danger"
           >
-            <i className="fa fa-chevron-left"></i> Back
-          </NavLink>
-        </div>
+            {state.errorMessage}
+          </div>
+        ) : null}
+        <form onSubmit={onSubmit}>
+          <div className="form-group row">
+            <label htmlFor="name" className="col-sm-2 col-form-label">
+              Name
+            </label>
+            <div className="col-sm-10">
+              <input
+                id="name"
+                name="name"
+                className={
+                  "form-control " +
+                  (state.submitted && !state.controls["name"].valid
+                    ? "is-invalid"
+                    : "")
+                }
+                value={product?.name}
+                onChange={event => fieldChanged(event)}
+              />
+              <span className="invalid-feedback">
+                {state.controls["name"].error.required ? (
+                  <span>Enter a name</span>
+                ) : null}
+                {state.controls["name"].error.minLength ? (
+                  <span>The name must be longer than 3 characters.</span>
+                ) : null}
+              </span>
+            </div>
+          </div>
+          <div className="form-group row">
+            <label htmlFor="code" className="col-sm-2 col-form-label">
+              Code
+            </label>
+            <div className="col-sm-10">
+              <input
+                id="code"
+                name="code"
+                className={
+                  "form-control " +
+                  (state.submitted && !state.controls["code"].valid
+                    ? "is-invalid"
+                    : "")
+                }
+                value={product?.code}
+                onChange={event => fieldChanged(event)}
+              />
+              <span className="invalid-feedback">
+                {state.controls["code"].error.required ? (
+                  <span>Enter a code</span>
+                ) : null}
+                {state.controls["code"].error.maxLength ? (
+                  <span>The code must be less than 10 characters.</span>
+                ) : null}
+              </span>
+            </div>
+          </div>
+          <div className="form-group row">
+            <label htmlFor="description" className="col-sm-2 col-form-label">
+              Description
+            </label>
+            <div className="col-sm-10">
+              <input
+                id="description"
+                name="description"
+                className={
+                  "form-control " +
+                  (state.submitted &&
+                    !state.controls["description"].valid
+                    ? "is-invalid"
+                    : "")
+                }
+                value={product?.description}
+                onChange={event => fieldChanged(event)}
+              />
+              <span className="invalid-feedback">
+                {state.controls["description"].error.required ? (
+                  <span>Enter a description</span>
+                ) : null}
+                {state.controls["description"].error.maxLength ? (
+                  <span>The code must be less than 100 characters.</span>
+                ) : null}
+              </span>
+            </div>
+          </div>
+          <div className="form-group row">
+            <label
+              htmlFor="description"
+              className="col-sm-2 col-form-label"
+            ></label>
+            <div className="col-sm-10">
+              <button className="btn btn-primary">Save</button>
+            </div>
+          </div>
+        </form>
       </div>
-    );
+      <div className="card-footer">
+        <NavLink
+          className="btn btn-outline-secondary"
+          to="/products"
+          style={{ width: "80px" }}
+        >
+          <i className="fa fa-chevron-left"></i> Back
+        </NavLink>
+      </div>
+    </div>
+  );
 
-    return this.state.submitted && this.props.saved ? (
-      <Redirect to={"/products/" + this.props.product.id} />
-    ) : (
-      form
-    );
-  }
+  return state.submitted && saved ? (
+    <Navigate to={"/products/" + product.id} />
+  ) : (
+    form
+  );
 }
 
-const mapStateToProps = state => {
-  return {
-    product: state.product.product,
-    saved: state.product.saved
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchProduct: id => dispatch(actions.fetchProduct(id)),
-    updateProduct: product => dispatch(actions.updateProduct(product)),
-    resetProduct: () => dispatch(actions.resetProduct()),
-    saveProduct: product => dispatch(actions.saveProduct(product))
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(AddProduct);
+export default AddProduct;

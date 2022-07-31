@@ -1,5 +1,4 @@
-import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import "./App.css";
 import Nav from "./components/Nav/Nav";
@@ -17,29 +16,33 @@ import EditFile from "./containers/Files/EditFile/EditFile";
 import ListUsers from "./containers/Users/ListUsers/ListUsers";
 import AddUser from "./containers/Users/AddUser/AddUser";
 import ViewUser from "./containers/Users/ViewUser/ViewUser";
+import Login from "./containers/Auth/Login";
+import Logout from "./containers/Auth/Logout";
 
 function App() {
   return (
     <div className="container">
       <Nav />
-      <Switch>
-        <Route path="/home" component={Home} />
-        <Route path="/oidc-login-redirect" component={OidcLoginRedirect} />
-        <Route path="/settings" component={ListConfigurationEntries} />
-        <Route path="/files/upload" component={UploadFile} />
-        <Route path="/files/edit/:id" component={EditFile} />
-        <Route path="/files" component={ListFiles} />
-        <Route path="/products/add" component={AddProduct} />
-        <Route path="/products/edit/:id" component={AddProduct} />
-        <Route path="/products/:id" component={ViewProduct} />
-        <Route path="/products" component={ListProducts} />
-        <Route path="/users/add" component={AddUser} />
-        <Route path="/users/edit/:id" component={AddUser} />
-        <Route path="/users/:id" component={ViewUser} />
-        <Route path="/users" component={ListUsers} />
-        <Route path="/auditlogs" component={AuditLogs} />
-        <Redirect to="/home" />
-      </Switch>
+      <Routes>
+        <Route path="/home" element={<Home />} />
+        <Route path="/oidc-login-redirect" element={<OidcLoginRedirect />} />
+        <Route path="/settings" element={<ListConfigurationEntries />} />
+        <Route path="/files/upload" element={<UploadFile />} />
+        <Route path="/files/edit/:id" element={<EditFile />} />
+        <Route path="/files" element={<ListFiles />} />
+        <Route path="/products/add" element={<AddProduct />} />
+        <Route path="/products/edit/:id" element={<AddProduct />} />
+        <Route path="/products/:id" element={<ViewProduct />} />
+        <Route path="/products" element={<ListProducts />} />
+        <Route path="/users/add" element={<AddUser />} />
+        <Route path="/users/edit/:id" element={<AddUser />} />
+        <Route path="/users/:id" element={<ViewUser />} />
+        <Route path="/users" element={<ListUsers />} />
+        <Route path="/auditlogs" element={<AuditLogs />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route path="*" element={<Navigate to="/home" />} />
+      </Routes>
       <Notification />
     </div>
   );

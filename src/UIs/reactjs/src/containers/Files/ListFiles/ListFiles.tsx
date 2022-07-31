@@ -220,6 +220,7 @@ const mapStateToProps = (state) => {
   return {
     files: state.file.files,
     auditLogs: state.file.auditLogs,
+    errorMessage: state.file.errorMessage
   };
 };
 

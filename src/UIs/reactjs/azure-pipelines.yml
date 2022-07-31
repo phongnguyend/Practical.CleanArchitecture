@@ -21,16 +21,16 @@ stages:
     steps:
     - checkout: self
     - task: NodeTool@0
-      displayName: Use Node 12.x
+      displayName: Use Node 14.x
       inputs:
-        versionSpec: 12.x
+        versionSpec: 14.x
         checkLatest: true
     - task: Npm@1
       displayName: npm install
       inputs:
         workingDir: src/UIs/reactjs
     - task: Npm@1
-      displayName: npm audit --audit-level=high
+      displayName: npm audit --audit-level=critical
       inputs:
         command: 'custom'
         workingDir: 'src/UIs/reactjs'

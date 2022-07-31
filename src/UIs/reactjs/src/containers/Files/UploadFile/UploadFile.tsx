@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { NavLink, Redirect } from "react-router-dom";
+import { NavLink, Navigate } from "react-router-dom";
 import { connect } from "react-redux";
 
 import * as actions from "../actions";
@@ -248,7 +248,7 @@ class UploadFile extends Component<Props, any> {
     );
 
     return this.state.submitted && this.props.saved ? (
-      <Redirect to={"/files/edit/" + this.props.file.id} />
+      <Navigate to={"/files/edit/" + this.props.file.id} />
     ) : (
       form
     );
