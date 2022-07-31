@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from "@angular/forms";
 import { debounceTime } from "rxjs/operators";
 
 import { IProduct } from "../product";
@@ -16,13 +16,13 @@ export class EditProductComponent implements OnInit {
   postErrorMessage: string = "";
   postError = false;
 
-  productForm: FormGroup;
+  productForm: UntypedFormGroup;
   isSubmitted: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private productService: ProductService
   ) {}
 

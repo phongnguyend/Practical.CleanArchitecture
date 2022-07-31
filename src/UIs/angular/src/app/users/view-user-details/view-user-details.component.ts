@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef } from "@angular/core";
 import { IUser } from "../user";
 import { UserService } from "../user.service";
 import { Router, ActivatedRoute } from "@angular/router";
-import { BsModalService, BsModalRef } from "ngx-bootstrap";
+import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { NgForm } from "@angular/forms";
 
 @Component({

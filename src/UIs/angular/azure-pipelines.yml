@@ -21,9 +21,9 @@ stages:
     steps:
     - checkout: self
     - task: NodeTool@0
-      displayName: Use Node 12.x
+      displayName: Use Node 14.x
       inputs:
-        versionSpec: 12.x
+        versionSpec: 14.x
         checkLatest: true
     - task: Npm@1
       displayName: install @angular/cli
@@ -42,11 +42,11 @@ stages:
         workingDir: 'src/UIs/angular'
         customCommand: 'audit --audit-level=high'
     - task: Npm@1
-      displayName: run build --prod
+      displayName: run build
       inputs:
         command: custom
         workingDir: src/UIs/angular
-        customCommand: run build --prod
+        customCommand: run build
     - task: ArchiveFiles@2
       displayName: Archive
       inputs:

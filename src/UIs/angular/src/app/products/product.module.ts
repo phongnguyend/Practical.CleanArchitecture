@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { ModalModule } from "ngx-bootstrap";
+import { ModalModule } from "ngx-bootstrap/modal";
 
 import { ListProductsComponent } from "./list-products/list-products.component";
 import { ProductDetailComponent } from "./view-product-details/product-detail.component";

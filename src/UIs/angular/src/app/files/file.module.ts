@@ -3,7 +3,7 @@ import { UploadFileComponent } from "./upload-file/upload-file.component";
 import { ListFilesComponent } from "./list-files/list-files.component";
 import { RouterModule } from "@angular/router";
 import { SharedModule } from "../shared/shared.module";
-import { ModalModule } from "ngx-bootstrap";
+import { ModalModule } from "ngx-bootstrap/modal";
 import { EditFileComponent } from "./edit-file/edit-file.component";
 
 @NgModule({

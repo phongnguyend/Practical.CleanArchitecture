@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 
 import { IProduct } from "../product";
 import { ProductService } from "../product.service";
-import { BsModalService } from "ngx-bootstrap";
+import { BsModalService } from "ngx-bootstrap/modal";
 import { IAuditLogEntry } from "../../auditlogs/audit-log";
 
 @Component({

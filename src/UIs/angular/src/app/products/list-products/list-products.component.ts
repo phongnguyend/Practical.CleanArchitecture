@@ -4,7 +4,7 @@ import { IProduct } from "../product";
 import { ProductService } from "../product.service";
 import { Title } from "@angular/platform-browser";
 import { IAuditLogEntry } from "../../auditlogs/audit-log";
-import { BsModalRef, BsModalService } from "ngx-bootstrap";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { NgForm } from "@angular/forms";
 
 @Component({

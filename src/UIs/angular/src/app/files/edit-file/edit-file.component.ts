@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { IFile } from "../file";
 import { NgModel, NgForm } from "@angular/forms";
 import { IAuditLogEntry } from "src/app/auditlogs/audit-log";
-import { BsModalService } from "ngx-bootstrap";
+import { BsModalService } from "ngx-bootstrap/modal";
 import { GuidEmpty } from "src/app/shared/constants";
 
 @Component({

@@ -23,7 +23,7 @@ pipeline {
     stage('Build') {
       steps {
         dir('src/UIs/angular') {
-          sh 'ng build --prod'
+          sh 'ng build'
         }
       }
     }

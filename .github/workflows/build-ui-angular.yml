@@ -17,13 +17,13 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: "12"
+          node-version: "14"
       - run: npm install -g @angular/cli
       - run: npm install
         working-directory: ./src/UIs/angular/
       - run: npm audit --audit-level=high
         working-directory: ./src/UIs/angular/
-      - run: ng build --prod
+      - run: ng build
         working-directory: ./src/UIs/angular/
       - name: Upload Angular
         uses: actions/upload-artifact@v1.0.0

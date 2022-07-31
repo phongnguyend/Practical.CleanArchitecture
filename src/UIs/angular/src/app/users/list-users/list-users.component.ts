@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef } from "@angular/core";
 import { IUser } from "../user";
 import { IAuditLogEntry } from "src/app/auditlogs/audit-log";
-import { BsModalRef, BsModalService } from "ngx-bootstrap";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { UserService } from "../user.service";
 
 @Component({

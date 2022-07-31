@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef } from "@angular/core";
 import { ConfigurationEntriesService } from "./configuration-entry.service";
 import { IConfigurationEntry } from "./configuration-entry";
-import { BsModalRef, BsModalService } from "ngx-bootstrap";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { NgForm } from "@angular/forms";
 import { GuidEmpty } from "../shared/constants";
 
