@@ -10,7 +10,7 @@ const addAuthInterceptors = (axios: AxiosInstance) => {
         config.baseURL?.startsWith(env.ResourceServer.Endpoint) ||
         config.url?.startsWith(env.ResourceServer.Endpoint)
       ) {
-        config.headers["Authorization"] =
+        config.headers!["Authorization"] =
           "Bearer " + authService.getAccessToken();
       }
       return config;

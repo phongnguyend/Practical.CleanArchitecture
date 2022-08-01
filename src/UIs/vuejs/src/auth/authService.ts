@@ -7,7 +7,7 @@ class AuthService {
   _user?: User;
 
   constructor() {
-    var config = {
+    const config = {
       authority: env.OpenIdConnect.Authority,
       client_id: env.OpenIdConnect.ClientId,
       redirect_uri: `${env.CurrentUrl}oidc-login-redirect`,
@@ -20,7 +20,7 @@ class AuthService {
   }
 
   loadUser = () => {
-    var promise = this._userManager.getUser();
+    const promise = this._userManager.getUser();
     promise.then(user => {
       if (user && !user.expired) {
         this._user = user;
