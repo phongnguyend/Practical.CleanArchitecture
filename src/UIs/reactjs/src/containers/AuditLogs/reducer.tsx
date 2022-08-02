@@ -3,6 +3,7 @@ import * as actionTypes from "./actionTypes";
 
 const initialState = {
   auditLogs: [],
+  totalItems: 0,
   loading: false,
   error: null,
 };
@@ -16,6 +17,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.FETCH_AUDIT_LOGS_SUCCESS:
       return updateObject(state, {
         auditLogs: action.auditLogs,
+        totalItems: action.totalItems,
         loading: false,
       });
     case actionTypes.FETCH_AUDIT_LOGS_FAIL:

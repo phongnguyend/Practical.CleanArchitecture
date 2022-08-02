@@ -1,7 +1,9 @@
 export interface IAuditLogEntry {
-  UserName: string;
-  Action: string;
-  CreatedDateTime: Date;
-  Data: any;
-  HighLight: any;
+  id: string;
+  userName: string;
+  action: string;
+  createdDateTime: string;
+  data: any;
+  highLight: any;
+  log: string;
 }

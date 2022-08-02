@@ -4,7 +4,8 @@ import * as actionTypes from "./actionTypes";
 export const fetchAuditLogsSuccess = (auditLogs) => {
   return {
     type: actionTypes.FETCH_AUDIT_LOGS_SUCCESS,
-    auditLogs: auditLogs,
+    auditLogs: auditLogs.items,
+    totalItems: auditLogs.totalItems
   };
 };
 
@@ -21,9 +22,11 @@ export const fetchAuditLogsStart = () => {
   };
 };
 
-export const fetchAuditLogs = () => {
+export const fetchAuditLogs = (page: number, pageSize: number) => {
   return {
     type: actionTypes.FETCH_AUDIT_LOGS,
+    page,
+    pageSize
   };
 };
 /// FETCH AUDIT LOGS

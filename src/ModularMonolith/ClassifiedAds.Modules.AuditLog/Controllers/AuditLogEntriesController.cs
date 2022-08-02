@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Application;
+using ClassifiedAds.Application.Common.DTOs;
 using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
 using ClassifiedAds.Modules.AuditLog.Authorization.Policies.AuditLogs;
 using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
@@ -28,6 +29,14 @@ namespace ClassifiedAds.Modules.AuditLog.Controllers
         public async Task<ActionResult<IEnumerable<AuditLogEntryDTO>>> Get()
         {
             var logs = await _dispatcher.DispatchAsync(new GetAuditEntriesQuery { });
+            return Ok(logs);
+        }
+
+        [AuthorizePolicy(typeof(GetAuditLogsPolicy))]
+        [HttpGet("paged")]
+        public async Task<ActionResult<Paged<AuditLogEntryDTO>>> GetPaged(int page, int pageSize)
+        {
+            var logs = await _dispatcher.DispatchAsync(new GetPagedAuditEntriesQuery { Page = page, PageSize = pageSize });
             return Ok(logs);
         }
     }

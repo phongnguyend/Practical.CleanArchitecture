@@ -7,6 +7,9 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
+            <div style="float: right">
+            <Pagination TotalItems="TotalItems" PageSize="PageSize" CurrentPage="CurrentPage" PageChanged="GetAuditLogsAsync"></Pagination>
+            </div>
             <table class="table">
                 <thead>
                     <tr>
@@ -30,6 +33,9 @@
                     }
                 </tbody>
             </table>
+            <div style="float: right">
+            <Pagination TotalItems="TotalItems" PageSize="PageSize" CurrentPage="CurrentPage" PageChanged="GetAuditLogsAsync"></Pagination>
+            </div>
         </div>
     </div>
 </div>

@@ -4,12 +4,14 @@ import * as actions from "./audit-log.actions";
 
 export interface AuditLogState {
   auditLogs: IAuditLogEntry[];
+  totalItems: number,
   loading: boolean;
   error: string;
 }
 
 const initialState: AuditLogState = {
   auditLogs: [],
+  totalItems: 0,
   loading: false,
   error: null,
 };
@@ -26,7 +28,8 @@ export const auditLogReducer = createReducer<AuditLogState>(
   on(actions.fetchAuditLogsSuccess, (state, action): AuditLogState => {
     return {
       ...state,
-      auditLogs: action.auditLogs,
+      auditLogs: action.items,
+      totalItems: action.totalItems,
       loading: false,
     };
   }),

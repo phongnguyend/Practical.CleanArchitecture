@@ -13,9 +13,28 @@ namespace ClassifiedAds.Blazor.Modules.AuditLogs.Pages
 
         public List<AuditLogEntryDTO> AuditLogs { get; set; } = new List<AuditLogEntryDTO>();
 
+        public int CurrentPage { get; set; } = 1;
+
+        public int PageSize { get; set; } = 5;
+
+        public long TotalItems { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
-            AuditLogs = await AuditLogService.GetAuditLogsAsync();
+            var auditLogs = await AuditLogService.GetAuditLogsAsync(1, PageSize);
+            AuditLogs = auditLogs.Items;
+            TotalItems = auditLogs.TotalItems;
+        }
+
+        protected async Task GetAuditLogsAsync(int page)
+        {
+            if (page != CurrentPage)
+            {
+                CurrentPage = page;
+                var auditLogs = await AuditLogService.GetAuditLogsAsync(page, PageSize);
+                AuditLogs = auditLogs.Items;
+                TotalItems = auditLogs.TotalItems;
+            }
         }
     }
 }

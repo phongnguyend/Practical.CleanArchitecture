@@ -1,0 +1,14 @@
+﻿<ul class="pagination">
+    <li class="page-item @(CurrentPage==1?"disabled":"")"><a class="page-link" href="javascript:void(0)" @onclick="() => HandleClick(1)">First</a></li>
+    <li class="page-item @(CurrentPage==1?"disabled":"")"><a class="page-link" href="javascript:void(0)" @onclick="() => HandleClick(CurrentPage - 1)">Previous</a></li>
+    @foreach (var pageNumber in PageNumbers)
+    {
+        <li class="page-item @(CurrentPage==pageNumber?"active":"")"><a class="page-link" href="javascript:void(0)" @onclick="() => HandleClick(pageNumber)">@pageNumber</a></li>
+    }
+    <li class="page-item @(CurrentPage==TotalPages?"disabled":"")"><a class="page-link" href="javascript:void(0)" @onclick="() => HandleClick(CurrentPage + 1)">Next</a></li>
+    <li class="page-item @(CurrentPage==TotalPages?"disabled":"")"><a class="page-link" href="javascript:void(0)" @onclick="() => HandleClick(TotalPages)">Last</a></li>
+</ul>
+
+@code {
+
+}

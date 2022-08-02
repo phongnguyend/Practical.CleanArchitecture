@@ -7,7 +7,7 @@ import * as actions from "./actions";
 export function* fetchAuditLogsSaga(action) {
   yield put(actions.fetchAuditLogsStart());
   try {
-    const response = yield axios.get("");
+    const response = yield axios.get("paged?page=" + action.page + "&pageSize=" + action.pageSize);
     const fetchedAuditLogs = response.data;
     yield put(actions.fetchAuditLogsSuccess(fetchedAuditLogs));
   } catch (error) {

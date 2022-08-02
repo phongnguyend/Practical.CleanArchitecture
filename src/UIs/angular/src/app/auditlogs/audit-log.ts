@@ -1,7 +1,12 @@
 export interface IAuditLogEntry {
-  UserName: string;
-  Action: string;
-  CreatedDateTime: Date;
-  Data: any;
-  HighLight: any;
+  userName: string;
+  action: string;
+  createdDateTime: Date;
+  data: any;
+  highLight: any;
+}
+
+export interface Paged<T> {
+  totalItems: number,
+  items: Array<T>
 }
