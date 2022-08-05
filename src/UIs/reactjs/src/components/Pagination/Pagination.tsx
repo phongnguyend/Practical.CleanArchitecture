@@ -2,7 +2,7 @@ import { Pagination as BootstrapPagination } from "react-bootstrap";
 
 const Pagination = (props) => {
     const { totalItems, currentPage, pageSize } = props;
-    const totalPages = (totalItems + pageSize - 1) / pageSize;
+    const totalPages = Math.ceil(totalItems / pageSize);
 
     const pageNumbers: Array<number> = [];
     let startIndex = currentPage - 2;
