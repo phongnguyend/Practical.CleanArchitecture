@@ -37,7 +37,7 @@ namespace ClassifiedAds.Services.AuditLog
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
-            });
+            }).AddDapr();
 
             services.AddCors(options =>
             {
@@ -87,6 +87,8 @@ namespace ClassifiedAds.Services.AuditLog
 
             app.UseRouting();
 
+            app.UseCloudEvents();
+
             app.UseCors("AllowAnyOrigin");
 
             app.UseAuthentication();
@@ -94,6 +96,7 @@ namespace ClassifiedAds.Services.AuditLog
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapSubscribeHandler();
                 endpoints.MapControllers();
             });
         }

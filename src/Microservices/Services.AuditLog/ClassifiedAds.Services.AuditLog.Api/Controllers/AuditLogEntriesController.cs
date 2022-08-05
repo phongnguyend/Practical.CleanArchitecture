@@ -6,6 +6,7 @@ using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
 using ClassifiedAds.Services.AuditLog.Authorization.Policies.AuditLogs;
 using ClassifiedAds.Services.AuditLog.DTOs;
 using ClassifiedAds.Services.AuditLog.Queries;
+using Dapr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,6 +39,15 @@ namespace ClassifiedAds.Services.AuditLog.Controllers
         {
             var logs = await _dispatcher.DispatchAsync(new GetPagedAuditEntriesQuery { Page = page, PageSize = pageSize });
             return Ok(logs);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("")]
+        [Topic("pubsub", "AuditLogCreatedEvent")]
+        public async Task<IActionResult> ReceiveAuditLogCreatedEvent(AuditLogCreatedEvent auditLogEvent)
+        {
+            await Task.Delay(1);
+            return Ok();
         }
     }
 }

@@ -3,7 +3,9 @@ using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Services.Product.DTOs;
 using ClassifiedAds.Services.Product.Entities;
+using Dapr.Client;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -16,16 +18,19 @@ namespace ClassifiedAds.Services.Product.HostedServices
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IRepository<EventLog, long> _eventLogRepository;
         private readonly IMessageSender<AuditLogCreatedEvent> _auditLogCreatedEventSender;
+        private readonly DaprClient _daprClient;
 
         public PublishEventService(ILogger<PublishEventService> logger,
             IDateTimeProvider dateTimeProvider,
             IRepository<EventLog, long> eventLogRepository,
-            IMessageSender<AuditLogCreatedEvent> auditLogCreatedEventSender)
+            IMessageSender<AuditLogCreatedEvent> auditLogCreatedEventSender,
+            DaprClient daprClient)
         {
             _logger = logger;
             _dateTimeProvider = dateTimeProvider;
             _eventLogRepository = eventLogRepository;
             _auditLogCreatedEventSender = auditLogCreatedEventSender;
+            _daprClient = daprClient;
         }
 
         public async Task<int> PublishEvents()
@@ -42,6 +47,11 @@ namespace ClassifiedAds.Services.Product.HostedServices
                 {
                     var logEntry = JsonSerializer.Deserialize<AuditLogEntry>(eventLog.Message);
                     await _auditLogCreatedEventSender.SendAsync(new AuditLogCreatedEvent { AuditLog = logEntry });
+
+                    if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("DAPR_HTTP_PORT")))
+                    {
+                        await _daprClient.PublishEventAsync("pubsub", "AuditLogCreatedEvent", new AuditLogCreatedEvent { AuditLog = logEntry });
+                    }
                 }
                 else
                 {

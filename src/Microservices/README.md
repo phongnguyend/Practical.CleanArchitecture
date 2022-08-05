@@ -115,7 +115,25 @@
   
 - Run
   ```
-  tye run
+  tye run --watch
+  ```
+  
+- Open Tye Dashboard: http://localhost:8000/
+
+# Dapr & Tye
+- Install Dapr CLI
+  ```ps1
+  powershell -Command "iwr -useb https://raw.githubusercontent.com/dapr/cli/master/install/install.ps1 | iex"
+  ```
+
+- Init Dapr locally
+  ```ps1
+  dapr init
+  dapr --version
+  ```
+- Run
+  ```
+  tye run tye.dapr.yml --watch
   ```
   
 - Open Tye Dashboard: http://localhost:8000/
