@@ -12,15 +12,6 @@
 		<PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="4.2.0" />
 		<PackageReference Include="App.Metrics.AspNetCore.Tracking" Version="4.2.0" />
 		<PackageReference Include="App.Metrics.Formatters.Prometheus" Version="4.2.0" />
-		<PackageReference Include="AspNetCore.HealthChecks.Aws.S3" Version="5.0.2" />
-		<PackageReference Include="AspNetCore.HealthChecks.AzureServiceBus" Version="5.1.2" />
-		<PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="5.0.1" />
-		<PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="5.0.1" />
-		<PackageReference Include="AspNetCore.HealthChecks.RabbitMQ" Version="5.0.2" />
-		<PackageReference Include="AspNetCore.HealthChecks.SignalR" Version="5.0.1" />
-		<PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="5.0.3" />
-		<PackageReference Include="AspNetCore.HealthChecks.UI" Version="5.0.1" />
-		<PackageReference Include="AspNetCore.HealthChecks.Uris" Version="6.0.1" />
 		<PackageReference Include="AWSSDK.S3" Version="3.7.4.9" />
 		<PackageReference Include="Azure.Communication.Sms" Version="1.0.1" />
 		<PackageReference Include="Azure.Data.AppConfiguration" Version="1.2.0" />

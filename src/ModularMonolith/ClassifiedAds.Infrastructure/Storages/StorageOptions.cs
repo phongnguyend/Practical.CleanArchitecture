@@ -8,7 +8,7 @@ namespace ClassifiedAds.Infrastructure.Storages
     {
         public string Provider { get; set; }
 
-        public LocalOption Local { get; set; }
+        public LocalOptions Local { get; set; }
 
         public AzureBlobOption Azure { get; set; }
 
