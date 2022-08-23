@@ -137,13 +137,14 @@ namespace Microsoft.Extensions.DependencyInjection
                 {
                     var name = "Message Broker (RabbitMQ)";
 
-                    if (checkDulicated == null || !checkDulicated.Contains(name))
+                    healthChecksBuilder.AddRabbitMQ(new RabbitMQHealthCheckOptions
                     {
-                        healthChecksBuilder.AddRabbitMQ(
-                            rabbitConnectionString: options.RabbitMQ.ConnectionString,
-                            name: name,
-                            failureStatus: HealthStatus.Degraded);
-                    }
+                        HostName = options.RabbitMQ.HostName,
+                        UserName = options.RabbitMQ.UserName,
+                        Password = options.RabbitMQ.Password,
+                    },
+                    name: name,
+                    failureStatus: HealthStatus.Degraded);
 
                     checkDulicated?.Add(name);
                 }
@@ -159,11 +160,8 @@ namespace Microsoft.Extensions.DependencyInjection
                     if (checkDulicated == null || !checkDulicated.Contains(name))
                     {
                         healthChecksBuilder.AddKafka(
-                            setup =>
-                            {
-                                setup.BootstrapServers = options.Kafka.BootstrapServers;
-                                setup.MessageTimeoutMs = 5000;
-                            },
+                            bootstrapServers: options.Kafka.BootstrapServers,
+                            topic: "healthcheck",
                             name: name,
                             failureStatus: HealthStatus.Degraded);
                     }

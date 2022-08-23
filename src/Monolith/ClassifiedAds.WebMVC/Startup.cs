@@ -139,16 +139,16 @@ namespace ClassifiedAds.WebMVC
                     healthQuery: "SELECT 1;",
                     name: "Sql Server",
                     failureStatus: HealthStatus.Degraded)
-                .AddUrlGroup(new Uri(AppSettings.OpenIdConnect.Authority),
+                .AddHttp(AppSettings.OpenIdConnect.Authority,
                     name: "Identity Server",
                     failureStatus: HealthStatus.Degraded)
-                .AddUrlGroup(new Uri(AppSettings.ResourceServer.Endpoint),
+                .AddHttp(AppSettings.ResourceServer.Endpoint,
                     name: "Resource (Web API) Server",
                     failureStatus: HealthStatus.Degraded);
 
             services.AddHealthChecksUI(setupSettings: setup =>
             {
-                setup.AddHealthCheckEndpoint("Basic Health Check", $"{AppSettings.CurrentUrl}/healthcheck");
+                setup.AddHealthCheckEndpoint("Basic Health Check", $"{AppSettings.CurrentUrl}/healthz");
                 setup.DisableDatabaseMigrations();
             }).AddInMemoryStorage();
 
@@ -200,7 +200,7 @@ namespace ClassifiedAds.WebMVC
 
             app.UseMonitoringServices(AppSettings.Monitoring);
 
-            app.UseHealthChecks("/healthcheck", new HealthCheckOptions
+            app.UseHealthChecks("/healthz", new HealthCheckOptions
             {
                 Predicate = _ => true,
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,

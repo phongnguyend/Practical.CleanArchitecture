@@ -1,6 +1,4 @@
-﻿using Amazon;
-using Amazon.S3;
-using ClassifiedAds.Domain.Infrastructure.Storages;
+﻿using ClassifiedAds.Domain.Infrastructure.Storages;
 using ClassifiedAds.Infrastructure.Storages;
 using ClassifiedAds.Infrastructure.Storages.Amazon;
 using ClassifiedAds.Infrastructure.Storages.Azure;
@@ -12,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class StoragesCollectionExtensions
     {
-        public static IServiceCollection AddLocalStorageManager(this IServiceCollection services, LocalOption options)
+        public static IServiceCollection AddLocalStorageManager(this IServiceCollection services, LocalOptions options)
         {
             services.AddSingleton<IFileStorageManager>(new LocalFileStorageManager(options));
 
@@ -49,8 +47,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 if (healthChecksBuilder != null)
                 {
                     healthChecksBuilder.AddAzureBlobStorage(
-                        options.Azure.ConnectionString,
-                        containerName: options.Azure.Container,
+                        options.Azure,
                         name: "Storage (Azure Blob)",
                         failureStatus: HealthStatus.Degraded);
                 }
@@ -61,17 +58,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 if (healthChecksBuilder != null)
                 {
-                    healthChecksBuilder.AddS3(
-                    s3 =>
-                    {
-                        s3.AccessKey = options.Amazon.AccessKeyID;
-                        s3.SecretKey = options.Amazon.SecretAccessKey;
-                        s3.BucketName = options.Amazon.BucketName;
-                        s3.S3Config = new AmazonS3Config
-                        {
-                            RegionEndpoint = RegionEndpoint.GetBySystemName(options.Amazon.RegionEndpoint),
-                        };
-                    },
+                    healthChecksBuilder.AddAmazonS3(
+                    options.Amazon,
                     name: "Storage (Amazon S3)",
                     failureStatus: HealthStatus.Degraded);
                 }
@@ -82,7 +70,10 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 if (healthChecksBuilder != null)
                 {
-                    healthChecksBuilder.AddFilePathWrite(options.Local.Path,
+                    healthChecksBuilder.AddLocalFile(new LocalFileHealthCheckOptions
+                    {
+                        Path = options.Local.Path,
+                    },
                     name: "Storage (Local Directory)",
                     failureStatus: HealthStatus.Degraded);
                 }
