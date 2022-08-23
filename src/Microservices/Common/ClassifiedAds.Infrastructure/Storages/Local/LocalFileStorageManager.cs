@@ -6,9 +6,9 @@ namespace ClassifiedAds.Infrastructure.Storages.Local
 {
     public class LocalFileStorageManager : IFileStorageManager
     {
-        private readonly LocalOption _option;
+        private readonly LocalOptions _option;
 
-        public LocalFileStorageManager(LocalOption option)
+        public LocalFileStorageManager(LocalOptions option)
         {
             _option = option;
         }
