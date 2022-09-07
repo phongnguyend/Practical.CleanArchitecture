@@ -13,15 +13,15 @@ namespace ClassifiedAds.Modules.Storage.EventHandlers
     {
         private readonly ICurrentUser _currentUser;
         private readonly IRepository<AuditLogEntry, Guid> _auditLogRepository;
-        private readonly IRepository<EventLog, long> _eventLogRepository;
+        private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
 
         public FileEntryUpdatedEventHandler(ICurrentUser currentUser,
             IRepository<AuditLogEntry, Guid> auditLogRepository,
-            IRepository<EventLog, long> eventLogRepository)
+            IRepository<OutboxEvent, long> outboxEventRepository)
         {
             _currentUser = currentUser;
             _auditLogRepository = auditLogRepository;
-            _eventLogRepository = eventLogRepository;
+            _outboxEventRepository = outboxEventRepository;
         }
 
         public async Task HandleAsync(EntityUpdatedEvent<FileEntry> domainEvent, CancellationToken cancellationToken = default)
@@ -38,7 +38,7 @@ namespace ClassifiedAds.Modules.Storage.EventHandlers
             await _auditLogRepository.AddOrUpdateAsync(auditLog);
             await _auditLogRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-            await _eventLogRepository.AddOrUpdateAsync(new EventLog
+            await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
             {
                 EventType = "AUDIT_LOG_ENTRY_CREATED",
                 TriggeredById = _currentUser.UserId,
@@ -48,7 +48,7 @@ namespace ClassifiedAds.Modules.Storage.EventHandlers
                 Published = false,
             }, cancellationToken);
 
-            await _eventLogRepository.AddOrUpdateAsync(new EventLog
+            await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
             {
                 EventType = "FILEENTRY_UPDATED",
                 TriggeredById = _currentUser.UserId,
@@ -58,7 +58,7 @@ namespace ClassifiedAds.Modules.Storage.EventHandlers
                 Published = false,
             }, cancellationToken);
 
-            await _eventLogRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -13,15 +13,15 @@ namespace ClassifiedAds.Application.Products.EventHandlers
     {
         private readonly ICrudService<AuditLogEntry> _auditSerivce;
         private readonly ICurrentUser _currentUser;
-        private readonly IRepository<EventLog, long> _eventLogRepository;
+        private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
 
         public ProductCreatedEventHandler(ICrudService<AuditLogEntry> auditSerivce,
             ICurrentUser currentUser,
-            IRepository<EventLog, long> eventLogRepository)
+            IRepository<OutboxEvent, long> outboxEventRepository)
         {
             _auditSerivce = auditSerivce;
             _currentUser = currentUser;
-            _eventLogRepository = eventLogRepository;
+            _outboxEventRepository = outboxEventRepository;
         }
 
         public async Task HandleAsync(EntityCreatedEvent<Product> domainEvent, CancellationToken cancellationToken = default)
@@ -35,7 +35,7 @@ namespace ClassifiedAds.Application.Products.EventHandlers
                 Log = domainEvent.Entity.AsJsonString(),
             });
 
-            await _eventLogRepository.AddOrUpdateAsync(new EventLog
+            await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
             {
                 EventType = "PRODUCT_CREATED",
                 TriggeredById = _currentUser.UserId,
@@ -45,7 +45,7 @@ namespace ClassifiedAds.Application.Products.EventHandlers
                 Published = false,
             }, cancellationToken);
 
-            await _eventLogRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

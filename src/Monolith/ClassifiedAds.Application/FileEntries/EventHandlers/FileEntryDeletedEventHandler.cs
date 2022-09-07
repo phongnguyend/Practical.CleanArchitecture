@@ -13,15 +13,15 @@ namespace ClassifiedAds.Application.FileEntries.EventHandlers
     {
         private readonly ICrudService<AuditLogEntry> _auditSerivce;
         private readonly ICurrentUser _currentUser;
-        private readonly IRepository<EventLog, long> _eventLogRepository;
+        private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
 
         public FileEntryDeletedEventHandler(ICrudService<AuditLogEntry> auditSerivce,
             ICurrentUser currentUser,
-            IRepository<EventLog, long> eventLogRepository)
+            IRepository<OutboxEvent, long> outboxEventRepository)
         {
             _auditSerivce = auditSerivce;
             _currentUser = currentUser;
-            _eventLogRepository = eventLogRepository;
+            _outboxEventRepository = outboxEventRepository;
         }
 
         public async Task HandleAsync(EntityDeletedEvent<FileEntry> domainEvent, CancellationToken cancellationToken = default)
@@ -35,7 +35,7 @@ namespace ClassifiedAds.Application.FileEntries.EventHandlers
                 Log = domainEvent.Entity.AsJsonString(),
             });
 
-            await _eventLogRepository.AddOrUpdateAsync(new EventLog
+            await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
             {
                 EventType = "FILEENTRY_DELETED",
                 TriggeredById = _currentUser.UserId,
@@ -45,7 +45,7 @@ namespace ClassifiedAds.Application.FileEntries.EventHandlers
                 Published = false,
             }, cancellationToken);
 
-            await _eventLogRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

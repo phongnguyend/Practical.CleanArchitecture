@@ -16,26 +16,26 @@ namespace ClassifiedAds.Services.Product.HostedServices
     {
         private readonly ILogger<PublishEventService> _logger;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IRepository<EventLog, long> _eventLogRepository;
+        private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
         private readonly IMessageSender<AuditLogCreatedEvent> _auditLogCreatedEventSender;
         private readonly DaprClient _daprClient;
 
         public PublishEventService(ILogger<PublishEventService> logger,
             IDateTimeProvider dateTimeProvider,
-            IRepository<EventLog, long> eventLogRepository,
+            IRepository<OutboxEvent, long> outboxEventRepository,
             IMessageSender<AuditLogCreatedEvent> auditLogCreatedEventSender,
             DaprClient daprClient)
         {
             _logger = logger;
             _dateTimeProvider = dateTimeProvider;
-            _eventLogRepository = eventLogRepository;
+            _outboxEventRepository = outboxEventRepository;
             _auditLogCreatedEventSender = auditLogCreatedEventSender;
             _daprClient = daprClient;
         }
 
         public async Task<int> PublishEvents()
         {
-            var events = _eventLogRepository.GetAll()
+            var events = _outboxEventRepository.GetAll()
                 .Where(x => !x.Published)
                 .OrderBy(x => x.CreatedDateTime)
                 .Take(50)
@@ -60,7 +60,7 @@ namespace ClassifiedAds.Services.Product.HostedServices
 
                 eventLog.Published = true;
                 eventLog.UpdatedDateTime = _dateTimeProvider.OffsetNow;
-                await _eventLogRepository.UnitOfWork.SaveChangesAsync();
+                await _outboxEventRepository.UnitOfWork.SaveChangesAsync();
             }
 
             return events.Count;

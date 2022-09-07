@@ -1,9 +1,8 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System;
+﻿using System;
 
-namespace ClassifiedAds.Modules.Storage.Entities
+namespace ClassifiedAds.Domain.Entities
 {
-    public class EventLog : AggregateRoot<long>
+    public class OutboxEvent : AggregateRoot<long>
     {
         public string EventType { get; set; }
 

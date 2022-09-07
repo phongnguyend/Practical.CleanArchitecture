@@ -15,15 +15,15 @@ namespace ClassifiedAds.Services.Product.EventHandlers
     {
         private readonly Dispatcher _dispatcher;
         private readonly ICurrentUser _currentUser;
-        private readonly IRepository<EventLog, long> _eventLogRepository;
+        private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
 
         public ProductCreatedEventHandler(Dispatcher dispatcher,
             ICurrentUser currentUser,
-            IRepository<EventLog, long> eventLogRepository)
+            IRepository<OutboxEvent, long> outboxEventRepository)
         {
             _dispatcher = dispatcher;
             _currentUser = currentUser;
-            _eventLogRepository = eventLogRepository;
+            _outboxEventRepository = outboxEventRepository;
         }
 
         public async Task HandleAsync(EntityCreatedEvent<Entities.Product> domainEvent, CancellationToken cancellationToken = default)
@@ -40,7 +40,7 @@ namespace ClassifiedAds.Services.Product.EventHandlers
                 },
             });
 
-            await _eventLogRepository.AddOrUpdateAsync(new EventLog
+            await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
             {
                 EventType = "PRODUCT_CREATED",
                 TriggeredById = _currentUser.UserId,
@@ -50,7 +50,7 @@ namespace ClassifiedAds.Services.Product.EventHandlers
                 Published = false,
             }, cancellationToken);
 
-            await _eventLogRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

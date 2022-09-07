@@ -34,7 +34,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddScoped<IRepository<Product, Guid>, Repository<Product, Guid>>()
                 .AddScoped(typeof(IProductRepository), typeof(ProductRepository))
                 .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>()
-                .AddScoped<IRepository<EventLog, long>, Repository<EventLog, long>>();
+                .AddScoped<IRepository<OutboxEvent, long>, Repository<OutboxEvent, long>>();
 
             DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
 

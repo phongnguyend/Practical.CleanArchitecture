@@ -15,15 +15,15 @@ namespace ClassifiedAds.Services.Storage.EventHandlers
     {
         private readonly Dispatcher _dispatcher;
         private readonly ICurrentUser _currentUser;
-        private readonly IRepository<EventLog, long> _eventLogRepository;
+        private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
 
         public FileEntryCreatedEventHandler(Dispatcher dispatcher,
             ICurrentUser currentUser,
-            IRepository<EventLog, long> eventLogRepository)
+            IRepository<OutboxEvent, long> outboxEventRepository)
         {
             _dispatcher = dispatcher;
             _currentUser = currentUser;
-            _eventLogRepository = eventLogRepository;
+            _outboxEventRepository = outboxEventRepository;
         }
 
         public async Task HandleAsync(EntityCreatedEvent<FileEntry> domainEvent, CancellationToken cancellationToken = default)
@@ -40,7 +40,7 @@ namespace ClassifiedAds.Services.Storage.EventHandlers
                 },
             });
 
-            await _eventLogRepository.AddOrUpdateAsync(new EventLog
+            await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
             {
                 EventType = "FILEENTRY_CREATED",
                 TriggeredById = _currentUser.UserId,
@@ -50,7 +50,7 @@ namespace ClassifiedAds.Services.Storage.EventHandlers
                 Published = false,
             }, cancellationToken);
 
-            await _eventLogRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Microsoft.Extensions.DependencyInjection
             }))
                 .AddScoped<IRepository<FileEntry, Guid>, Repository<FileEntry, Guid>>()
                 .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>()
-                .AddScoped<IRepository<EventLog, long>, Repository<EventLog, long>>();
+                .AddScoped<IRepository<OutboxEvent, long>, Repository<OutboxEvent, long>>();
 
             DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
 

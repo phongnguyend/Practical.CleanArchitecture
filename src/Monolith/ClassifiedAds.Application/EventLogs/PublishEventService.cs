@@ -14,26 +14,26 @@ namespace ClassifiedAds.Application.EventLogs
     {
         private readonly ILogger<PublishEventService> _logger;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IRepository<EventLog, long> _eventLogRepository;
+        private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
         private readonly IMessageSender<FileUploadedEvent> _fileUploadedEventSender;
         private readonly IMessageSender<FileDeletedEvent> _fileDeletedEventSender;
 
         public PublishEventService(ILogger<PublishEventService> logger,
             IDateTimeProvider dateTimeProvider,
-            IRepository<EventLog, long> eventLogRepository,
+            IRepository<OutboxEvent, long> outboxEventRepository,
             IMessageSender<FileUploadedEvent> fileUploadedEventSender,
             IMessageSender<FileDeletedEvent> fileDeletedEventSender)
         {
             _logger = logger;
             _dateTimeProvider = dateTimeProvider;
-            _eventLogRepository = eventLogRepository;
+            _outboxEventRepository = outboxEventRepository;
             _fileUploadedEventSender = fileUploadedEventSender;
             _fileDeletedEventSender = fileDeletedEventSender;
         }
 
         public async Task<int> PublishEvents()
         {
-            var events = _eventLogRepository.GetAll()
+            var events = _outboxEventRepository.GetAll()
                 .Where(x => !x.Published)
                 .OrderBy(x => x.CreatedDateTime)
                 .Take(50)
@@ -56,7 +56,7 @@ namespace ClassifiedAds.Application.EventLogs
 
                 eventLog.Published = true;
                 eventLog.UpdatedDateTime = _dateTimeProvider.OffsetNow;
-                await _eventLogRepository.UnitOfWork.SaveChangesAsync();
+                await _outboxEventRepository.UnitOfWork.SaveChangesAsync();
             }
 
             return events.Count;

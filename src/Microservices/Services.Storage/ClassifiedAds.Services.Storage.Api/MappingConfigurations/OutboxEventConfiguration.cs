@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ClassifiedAds.Services.Storage.MappingConfigurations
 {
-    public class EventLogConfiguration : IEntityTypeConfiguration<EventLog>
+    public class OutboxEventConfiguration : IEntityTypeConfiguration<OutboxEvent>
     {
-        public void Configure(EntityTypeBuilder<EventLog> builder)
+        public void Configure(EntityTypeBuilder<OutboxEvent> builder)
         {
-            builder.ToTable("EventLogs");
+            builder.ToTable("OutboxEvents");
             builder.Property(x => x.Id).UseIdentityColumn();
         }
     }
