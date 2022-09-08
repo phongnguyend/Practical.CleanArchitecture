@@ -33,7 +33,7 @@
     <PackageReference Include="DinkToPdf" Version="1.0.8" />
     <PackageReference Include="EPPlus" Version="4.5.3.2" />
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
-    <PackageReference Include="IdentityModel" Version="5.2.0" />
+	<PackageReference Include="IdentityModel" Version="5.2.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.0" />
@@ -68,7 +68,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
     <PackageReference Include="Twilio" Version="5.68.1" />
   </ItemGroup>
 
