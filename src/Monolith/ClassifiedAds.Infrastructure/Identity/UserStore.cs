@@ -36,6 +36,14 @@ namespace ClassifiedAds.Infrastructure.Identity
 
         public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
         {
+            user.PasswordHistories = new List<PasswordHistory>()
+            {
+                new PasswordHistory
+                {
+                    PasswordHash = user.PasswordHash,
+                    CreatedDateTime = DateTimeOffset.Now,
+                },
+            };
             await _userRepository.AddOrUpdateAsync(user);
             await _unitOfWork.SaveChangesAsync();
             return IdentityResult.Success;

@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -15,6 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddTransient<IUserStore<User>, UserStore>();
             services.AddTransient<IRoleStore<Role>, RoleStore>();
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
 
             ConfigureOptions(services);
 
@@ -34,6 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddTransient<IUserStore<User>, UserStore>();
             services.AddTransient<IRoleStore<Role>, RoleStore>();
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
 
             ConfigureOptions(services);
 

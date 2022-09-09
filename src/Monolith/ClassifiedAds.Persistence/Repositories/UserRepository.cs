@@ -17,6 +17,12 @@ namespace ClassifiedAds.Persistence.Repositories
         public IQueryable<User> Get(UserQueryOptions queryOptions)
         {
             var query = GetAll();
+
+            if (queryOptions.IncludePasswordHistories)
+            {
+                query = query.Include(x => x.PasswordHistories);
+            }
+
             if (queryOptions.IncludeTokens)
             {
                 query = query.Include(x => x.Tokens);

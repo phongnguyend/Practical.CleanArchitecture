@@ -38,5 +38,7 @@ namespace ClassifiedAds.Domain.Entities
         public IList<UserClaim> Claims { get; set; }
 
         public IList<UserRole> UserRoles { get; set; }
+
+        public IList<PasswordHistory> PasswordHistories { get; set; }
     }
 }
