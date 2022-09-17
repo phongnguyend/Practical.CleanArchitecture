@@ -150,6 +150,11 @@ namespace ClassifiedAds.Infrastructure.Logging
                     });
                 }
 
+                if (options?.ApplicationInsights?.IsEnabled ?? false)
+                {
+                    logging.AddApplicationInsights(options.ApplicationInsights.InstrumentationKey);
+                }
+
                 context.HostingEnvironment.UseClassifiedAdsLogger(options);
             });
 
@@ -178,6 +183,11 @@ namespace ClassifiedAds.Infrastructure.Logging
                         LogName = options.EventLog.LogName,
                         SourceName = options.EventLog.SourceName,
                     });
+                }
+
+                if (options?.ApplicationInsights?.IsEnabled ?? false)
+                {
+                    logging.AddApplicationInsights(options.ApplicationInsights.InstrumentationKey);
                 }
 
                 context.HostingEnvironment.UseClassifiedAdsLogger(options);
