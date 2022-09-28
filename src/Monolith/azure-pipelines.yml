@@ -160,3 +160,65 @@ stages:
         projectName: $(Build.Repository.Name)
         qualifyImageNames: true
         additionalImageTags: $(Build.BuildId)
+
+- stage: Octopus
+  displayName: 'Octopus: Pack and Push Nuget Packages'
+  jobs:  
+  - job: Build
+    displayName: Build and Push
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: CmdLine@2
+      displayName: dotnet tool install Octopus.DotNet.Cli --global
+      inputs:
+        script: 'dotnet tool install Octopus.DotNet.Cli --global'
+    - task: DotNetCoreCLI@2
+      displayName: dotnet restore
+      inputs:
+        command: 'restore'
+        projects: 'src/Monolith/ClassifiedAds.Monolith.sln'
+        feedsToUse: 'select'
+    - task: DotNetCoreCLI@2
+      displayName: dotnet build
+      inputs:
+        command: 'build'
+        arguments: '--configuration Release'
+        workingDirectory: 'src/Monolith'
+    - task: DotNetCoreCLI@2
+      displayName: dotnet publish
+      inputs:
+        command: 'publish'
+        publishWebProjects: false
+        projects: |
+          src/Monolith/ClassifiedAds.BackgroundServer/*.csproj
+          src/Monolith/ClassifiedAds.GraphQL/*.csproj
+          src/Monolith/ClassifiedAds.Migrator/*.csproj
+          src/Monolith/ClassifiedAds.NotificationServer/*.csproj
+          src/Monolith/ClassifiedAds.WebAPI/*.csproj
+          src/Monolith/ClassifiedAds.IdentityServer/*.csproj
+          src/Monolith/ClassifiedAds.WebMVC/*.csproj
+          src/Monolith/ClassifiedAds.BlazorServerSide/*.csproj
+          src/Monolith/ClassifiedAds.BlazorWebAssembly/*.csproj
+        arguments: '--configuration Release -p:Version=1.0.0-$(Build.BuildNumber) --output $(Build.ArtifactStagingDirectory)'
+        zipAfterPublish: false
+
+    - task: CmdLine@2
+      displayName: dotnet octo pack
+      inputs:
+        script: |
+          dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.BackgroundServer --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.BackgroundServer
+          dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.GraphQL --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.GraphQL
+          dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.Migrator --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.Migrator
+          dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.WebAPI --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.WebAPI
+          dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.BlazorServerSide --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.BlazorServerSide
+          dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.BlazorWebAssembly --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.BlazorWebAssembly
+          dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.IdentityServer --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.IdentityServer
+          dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.WebMVC --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.WebMVC
+    - task: DotNetCoreCLI@2
+      displayName: dotnet nuget push
+      inputs:
+        command: 'push'
+        packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+        nuGetFeedType: 'internal'
+        publishVstsFeed: '649b11e9-9f40-41ae-bf73-6d93e3161e2c/24cbed38-cd60-4d56-bad6-7c5d18f75a60'
