@@ -42,6 +42,7 @@
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-standard": "^5.0.0",
     "eslint-plugin-vue": "^9.3.0",
+    "prettier": "2.7.1",
     "sass": "^1.54.0",
     "sass-loader": "^13.0.2",
     "typescript": "^4.7.4",
