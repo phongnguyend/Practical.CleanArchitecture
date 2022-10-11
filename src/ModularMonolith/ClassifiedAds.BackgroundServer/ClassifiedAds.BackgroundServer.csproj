@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <CodeAnalysisRuleSet>ClassifiedAds.BackgroundServer.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>ClassifiedAds.BackgroundServer</AssemblyName>
     <RootNamespace>ClassifiedAds.BackgroundServer</RootNamespace>
     <UserSecretsId>b924d88d-1033-40eb-80bd-48272839dd65</UserSecretsId>

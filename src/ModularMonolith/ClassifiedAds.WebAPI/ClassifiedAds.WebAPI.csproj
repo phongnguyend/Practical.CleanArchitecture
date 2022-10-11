@@ -3,7 +3,6 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<RootNamespace>ClassifiedAds.WebAPI</RootNamespace>
-		<CodeAnalysisRuleSet>ClassifiedAds.WebAPI.ruleset</CodeAnalysisRuleSet>
 		<UserSecretsId>f99dd7a7-93ea-4e83-ab01-b813707c2c57</UserSecretsId>
 	</PropertyGroup>
 
