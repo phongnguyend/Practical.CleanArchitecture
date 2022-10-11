@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>ClassifiedAds.Persistence</RootNamespace>
-    <CodeAnalysisRuleSet>ClassifiedAds.Persistence.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>

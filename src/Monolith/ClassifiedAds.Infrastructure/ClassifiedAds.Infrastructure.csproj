@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>ClassifiedAds.Infrastructure</RootNamespace>
-    <CodeAnalysisRuleSet>ClassifiedAds.Infrastructure.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
