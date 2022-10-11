@@ -2,7 +2,6 @@
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<CodeAnalysisRuleSet>ClassifiedAds.ruleset</CodeAnalysisRuleSet>
 		<UserSecretsId>3bb18abd-09c2-44f2-900e-28cc944866e1</UserSecretsId>
 	</PropertyGroup>
 
