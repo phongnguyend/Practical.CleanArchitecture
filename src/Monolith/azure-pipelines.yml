@@ -3,7 +3,12 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 trigger:
-- main
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - src/Monolith
 
 resources:
 - repo: self
@@ -67,10 +72,10 @@ stages:
       vmImage: $(vmImageName)
     steps:
       - task: UseDotNet@2
-        displayName: Use .Net 5.0.200
+        displayName: Use .Net 6.0.x
         inputs:
           packageType: 'sdk'
-          version: '5.0.200'
+          version: '6.0.x'
       - task: DotNetCoreCLI@2
         displayName: dotnet restore
         inputs:
@@ -119,7 +124,6 @@ stages:
             src/Monolith/ClassifiedAds.BackgroundServer/*.csproj
             src/Monolith/ClassifiedAds.GraphQL/*.csproj
             src/Monolith/ClassifiedAds.Migrator/*.csproj
-            src/Monolith/ClassifiedAds.NotificationServer/*.csproj
             src/Monolith/ClassifiedAds.WebAPI/*.csproj
             src/Monolith/ClassifiedAds.IdentityServer/*.csproj
             src/Monolith/ClassifiedAds.WebMVC/*.csproj
@@ -194,7 +198,6 @@ stages:
           src/Monolith/ClassifiedAds.BackgroundServer/*.csproj
           src/Monolith/ClassifiedAds.GraphQL/*.csproj
           src/Monolith/ClassifiedAds.Migrator/*.csproj
-          src/Monolith/ClassifiedAds.NotificationServer/*.csproj
           src/Monolith/ClassifiedAds.WebAPI/*.csproj
           src/Monolith/ClassifiedAds.IdentityServer/*.csproj
           src/Monolith/ClassifiedAds.WebMVC/*.csproj

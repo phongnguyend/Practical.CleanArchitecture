@@ -1,6 +1,11 @@
 
 trigger:
-- main
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - src/UIs/vuejs
 
 resources:
 - repo: self

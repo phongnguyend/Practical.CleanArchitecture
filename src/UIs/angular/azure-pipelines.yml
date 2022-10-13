@@ -1,6 +1,11 @@
 
 trigger:
-- main
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - src/UIs/angular
 
 resources:
 - repo: self
