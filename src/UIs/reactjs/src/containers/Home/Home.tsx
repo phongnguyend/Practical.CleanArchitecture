@@ -1,5 +1,7 @@
 import React from "react";
 import logo from "../../logo.svg";
+import Timer from "../../components/Timer/Timer";
+
 import "./Home.css";
 
 function Home() {
@@ -8,6 +10,9 @@ function Home() {
     <div className="card">
       <div className="card-header">
         Welcome ClassifiedAds React version: {React.version}
+        <div style={{ float: "right", color: "green" }}>
+          <Timer />
+        </div>
       </div>
       <div className="card-body">
         <div className="container-fluid">
