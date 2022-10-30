@@ -105,7 +105,7 @@
     "ConfigurationSources": {
       "SqlServer": {
         "IsEnabled": false,
-        "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
+        "ConnectionString": "Server=127.0.0.1;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
         "SqlQuery": "select [Key], [Value] from ConfigurationEntries"
       },
       "AzureKeyVault": {
@@ -120,7 +120,7 @@
     "ConfigurationSources": {
       "SqlServer": {
         "IsEnabled": true,
-        "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
+        "ConnectionString": "Server=127.0.0.1;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
         "SqlQuery": "select [Key], [Value] from ConfigurationEntries"
       },
     },
@@ -141,7 +141,7 @@
     "ConfigurationSources": {
       "SqlServer": {
         "IsEnabled": true,
-        "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
+        "ConnectionString": "Server=127.0.0.1;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
         "SqlQuery": "select [Key], [Value] from ConfigurationEntries"
       },
       "AzureKeyVault": {
@@ -458,14 +458,14 @@
   - Use Sql Server Distributed Cache:
     ```js
 	dotnet tool install --global dotnet-sql-cache --version="5.0"
-	dotnet sql-cache create "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#" dbo CacheEntries
+	dotnet sql-cache create "Server=127.0.0.1;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#" dbo CacheEntries
     ```
     ```js
     "Caching": {
       "Distributed": {
         "Provider": "SqlServer",
         "SqlServer": {
-          "ConnectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
+          "ConnectionString": "Server=127.0.0.1;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#",
           "SchemaName": "dbo",
           "TableName": "CacheEntries"
         }
@@ -497,7 +497,7 @@
       "MiniProfiler": {
         "IsEnabled": true,
         "SqlServerStorage": {
-          "ConectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
+          "ConectionString": "Server=127.0.0.1;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
           "ProfilersTable": "MiniProfilers",
           "TimingsTable": "MiniProfilerTimings",
           "ClientTimingsTable": "MiniProfilerClientTimings"
@@ -546,7 +546,7 @@
       "MiniProfiler": {
         "IsEnabled": true,
         "SqlServerStorage": {
-          "ConectionString": "Server=.;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
+          "ConectionString": "Server=127.0.0.1;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
           "ProfilersTable": "MiniProfilers",
           "TimingsTable": "MiniProfilerTimings",
           "ClientTimingsTable": "MiniProfilerClientTimings"
