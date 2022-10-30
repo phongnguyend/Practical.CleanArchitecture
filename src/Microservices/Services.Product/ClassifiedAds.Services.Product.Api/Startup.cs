@@ -1,4 +1,4 @@
-using ClassifiedAds.Infrastructure.DistributedTracing;
+﻿using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Services.Product.ConfigurationOptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,6 +37,12 @@ namespace ClassifiedAds.Services.Product
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
+            })
+            .ConfigureApiBehaviorOptions(options =>
+            {
+            })
+            .AddJsonOptions(options =>
+            {
             });
 
             services.AddCors(options =>

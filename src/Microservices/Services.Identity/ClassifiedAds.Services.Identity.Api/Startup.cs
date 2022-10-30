@@ -1,4 +1,4 @@
-using ClassifiedAds.Infrastructure.DistributedTracing;
+﻿using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Services.Identity.ConfigurationOptions;
 using ClassifiedAds.Services.Identity.Repositories;
@@ -39,6 +39,12 @@ namespace ClassifiedAds.Services.Identity
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
+            })
+            .ConfigureApiBehaviorOptions(options =>
+            {
+            })
+            .AddJsonOptions(options =>
+            {
             });
 
             services.AddCors(options =>

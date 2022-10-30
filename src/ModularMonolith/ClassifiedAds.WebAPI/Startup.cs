@@ -42,13 +42,19 @@ namespace ClassifiedAds.WebAPI
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
             })
-                .AddAuditLogModule()
-                .AddConfigurationModule()
-                .AddIdentityModule()
-                .AddNotificationModule()
-                .AddProductModule()
-                .AddStorageModule()
-                .AddMonitoringServices(AppSettings.Monitoring);
+            .ConfigureApiBehaviorOptions(options =>
+            {
+            })
+            .AddJsonOptions(options =>
+            {
+            })
+            .AddAuditLogModule()
+            .AddConfigurationModule()
+            .AddIdentityModule()
+            .AddNotificationModule()
+            .AddProductModule()
+            .AddStorageModule()
+            .AddMonitoringServices(AppSettings.Monitoring);
 
             services.AddSignalR();
 

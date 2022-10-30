@@ -51,7 +51,14 @@ namespace ClassifiedAds.WebAPI
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
-            }).AddMonitoringServices(AppSettings.Monitoring);
+            })
+            .ConfigureApiBehaviorOptions(options =>
+            {
+            })
+            .AddJsonOptions(options =>
+            {
+            })
+            .AddMonitoringServices(AppSettings.Monitoring);
 
             services.AddSignalR();
 

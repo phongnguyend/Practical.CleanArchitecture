@@ -1,4 +1,4 @@
-using ClassifiedAds.Infrastructure.DistributedTracing;
+﻿using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Services.Notification.ConfigurationOptions;
 using ClassifiedAds.Services.Notification.HostedServices;
@@ -38,6 +38,12 @@ namespace ClassifiedAds.Services.Notification
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
+            })
+            .ConfigureApiBehaviorOptions(options =>
+            {
+            })
+            .AddJsonOptions(options =>
+            {
             });
 
             services.AddSignalR();
