@@ -32,6 +32,7 @@ namespace ClassifiedAds.WebAPI
     {
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
+            
             Configuration = configuration;
 
             AppSettings = new AppSettings();
