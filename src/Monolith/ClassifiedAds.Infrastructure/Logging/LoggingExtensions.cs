@@ -116,7 +116,7 @@ namespace ClassifiedAds.Infrastructure.Logging
         {
             context = context.Replace("\"", string.Empty);
             string level = "Default";
-            var matches = options.LogLevel.Keys.Where(k => context.StartsWith(k));
+            var matches = options.LogLevel.Keys.Where(k => context.StartsWith(k, StringComparison.OrdinalIgnoreCase));
 
             if (matches.Any())
             {

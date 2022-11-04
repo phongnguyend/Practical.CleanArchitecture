@@ -52,7 +52,6 @@ namespace ClassifiedAds.Infrastructure.Notification.Email.SmtpClient
             if (!string.IsNullOrWhiteSpace(_options.UserName) && !string.IsNullOrWhiteSpace(_options.Password))
             {
                 smtpClient.Credentials = new System.Net.NetworkCredential(_options.UserName, _options.Password);
-
             }
 
             if (_options.EnableSsl.HasValue)

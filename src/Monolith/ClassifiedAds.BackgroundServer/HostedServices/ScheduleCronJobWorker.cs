@@ -25,7 +25,7 @@ namespace ClassifiedAds.BackgroundServer.HostedServices
         {
             try
             {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                _logger.LogInformation("Worker running at: {Time}", DateTimeOffset.Now);
 
                 using var scope = _serviceProvider.CreateScope();
                 var notification = scope.ServiceProvider.GetRequiredService<IWebNotification<SendTaskStatusMessage>>();

@@ -82,7 +82,7 @@ namespace ClassifiedAds.Persistence.Locks
 
             returnValue = command.Parameters.Add(new SqlParameter { ParameterName = "Result", DbType = DbType.Int32, Direction = ParameterDirection.Output });
             command.CommandText =
-                $@"IF APPLOCK_MODE('public', @Resource, @LockOwner) != 'NoLock' {(HasTransaction ? " OR APPLOCK_MODE('public', @Resource, 'Session') != 'NoLock'" : "")}
+                $@"IF APPLOCK_MODE('public', @Resource, @LockOwner) != 'NoLock' {(HasTransaction ? " OR APPLOCK_MODE('public', @Resource, 'Session') != 'NoLock'" : string.Empty)}
                             SET @Result = {AlreadyHeldReturnCode}
                         ELSE
                             EXEC @Result = dbo.sp_getapplock @Resource = @Resource, @LockMode = @LockMode, @LockOwner = @LockOwner, @LockTimeout = @LockTimeout, @DbPrincipal = 'public'"

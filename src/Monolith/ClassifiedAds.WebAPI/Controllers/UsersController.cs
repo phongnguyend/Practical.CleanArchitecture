@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Application.Users.Commands;
 using ClassifiedAds.Application.Users.Queries;
+using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
@@ -72,9 +73,9 @@ namespace ClassifiedAds.WebAPI.Controllers
             User user = new User
             {
                 UserName = model.UserName,
-                NormalizedUserName = model.UserName.ToUpper(),
+                NormalizedUserName = model.UserName.ToUpperInvariantCulture(),
                 Email = model.Email,
-                NormalizedEmail = model.Email.ToUpper(),
+                NormalizedEmail = model.Email.ToUpperInvariantCulture(),
                 EmailConfirmed = model.EmailConfirmed,
                 PhoneNumber = model.PhoneNumber,
                 PhoneNumberConfirmed = model.PhoneNumberConfirmed,
@@ -100,9 +101,9 @@ namespace ClassifiedAds.WebAPI.Controllers
             User user = await _dispatcher.DispatchAsync(new GetUserQuery { Id = id });
 
             user.UserName = model.UserName;
-            user.NormalizedUserName = model.UserName.ToUpper();
+            user.NormalizedUserName = model.UserName.ToUpperInvariantCulture();
             user.Email = model.Email;
-            user.NormalizedEmail = model.Email.ToUpper();
+            user.NormalizedEmail = model.Email.ToUpperInvariantCulture();
             user.EmailConfirmed = model.EmailConfirmed;
             user.PhoneNumber = model.PhoneNumber;
             user.PhoneNumberConfirmed = model.PhoneNumberConfirmed;
@@ -165,7 +166,7 @@ namespace ClassifiedAds.WebAPI.Controllers
                     From = "phong@gmail.com",
                     Tos = user.Email,
                     Subject = "Forgot Password",
-                    Body = string.Format("Reset Url: {0}", resetUrl),
+                    Body = $"Reset Url: {resetUrl}"
                 }));
             }
             else
@@ -193,9 +194,8 @@ namespace ClassifiedAds.WebAPI.Controllers
                     From = "phong@gmail.com",
                     Tos = user.Email,
                     Subject = "Confirmation Email",
-                    Body = string.Format("Confirmation Email: {0}", confirmationEmail),
-                }
-                ));
+                    Body = $"Confirmation Email: {confirmationEmail}"
+                }));
             }
             else
             {

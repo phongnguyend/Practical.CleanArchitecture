@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>ClassifiedAds.WebAPI</RootNamespace>
+    <AnalysisMode>Recommended</AnalysisMode>
+    <AnalysisModeSecurity>All</AnalysisModeSecurity>
     <UserSecretsId>a3cce8d1-91dc-440d-aa9d-6fc323cb0ab6</UserSecretsId>
   </PropertyGroup>
 

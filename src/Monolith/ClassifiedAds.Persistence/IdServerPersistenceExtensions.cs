@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
+﻿using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using IdentityServer4;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

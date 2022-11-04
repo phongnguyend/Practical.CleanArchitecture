@@ -12,6 +12,5 @@ namespace ClassifiedAds.CrossCuttingConcerns.PdfConverter
 
     public class PdfOptions
     {
-
     }
 }

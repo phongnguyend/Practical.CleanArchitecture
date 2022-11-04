@@ -18,7 +18,7 @@ namespace ClassifiedAds.Persistence.Repositories
     public class Repository<T, TKey> : IRepository<T, TKey>
         where T : AggregateRoot<TKey>
     {
-        protected readonly AdsDbContext _dbContext;
+        private readonly AdsDbContext _dbContext;
         private readonly IDateTimeProvider _dateTimeProvider;
 
         protected DbSet<T> DbSet => _dbContext.Set<T>();

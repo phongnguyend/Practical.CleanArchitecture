@@ -18,7 +18,6 @@ namespace ClassifiedAds.Infrastructure.Identity
 
         public void Dispose()
         {
-
         }
 
         public Task<IdentityResult> CreateAsync(Role role, CancellationToken cancellationToken)

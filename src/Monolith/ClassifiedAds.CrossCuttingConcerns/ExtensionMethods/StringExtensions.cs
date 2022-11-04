@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -60,8 +61,13 @@ namespace ClassifiedAds.CrossCuttingConcerns.ExtensionMethods
 
         public static string Remove(this string source, params string[] removedValues)
         {
-            removedValues.ToList().ForEach(x => source = source.Replace(x, ""));
+            removedValues.ToList().ForEach(x => source = source.Replace(x, string.Empty));
             return source;
+        }
+
+        public static string ToUpperInvariantCulture(this string source)
+        {
+            return source.ToUpper(CultureInfo.InvariantCulture);
         }
     }
 }

@@ -180,7 +180,6 @@ namespace Microsoft.Extensions.DependencyInjection
                         name: $"Message Broker (Azure Queue) {typeof(T).Name}",
                         failureStatus: HealthStatus.Degraded);
                 }
-
             }
             else if (options.UsedAzureServiceBus())
             {
@@ -194,7 +193,6 @@ namespace Microsoft.Extensions.DependencyInjection
                         name: $"Message Broker (Azure Service Bus) {typeof(T).Name}",
                         failureStatus: HealthStatus.Degraded);
                 }
-
             }
             else if (options.UsedAzureEventGrid())
             {

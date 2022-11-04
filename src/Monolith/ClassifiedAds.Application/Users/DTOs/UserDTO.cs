@@ -31,10 +31,10 @@ namespace ClassifiedAds.Application.Users.DTOs
 
         public int AccessFailedCount { get; set; }
 
-        //public IList<UserTokenDTO> Tokens { get; set; }
+        // public IList<UserTokenDTO> Tokens { get; set; }
 
-        //public IList<UserClaimDTO> Claims { get; set; }
+        // public IList<UserClaimDTO> Claims { get; set; }
 
-        //public IList<UserRoleDTO> UserRoles { get; set; }
+        // public IList<UserRoleDTO> UserRoles { get; set; }
     }
 }

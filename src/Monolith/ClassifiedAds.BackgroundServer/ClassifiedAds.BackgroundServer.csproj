@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <AssemblyName>ClassifiedAds.BackgroundServer</AssemblyName>
-    <RootNamespace>ClassifiedAds.BackgroundServer</RootNamespace>
+    <AnalysisMode>Recommended</AnalysisMode>
+    <AnalysisModeSecurity>All</AnalysisModeSecurity>
     <UserSecretsId>2afdbe02-eb10-41d2-8fee-1cb29d0dfffb</UserSecretsId>
   </PropertyGroup>
 

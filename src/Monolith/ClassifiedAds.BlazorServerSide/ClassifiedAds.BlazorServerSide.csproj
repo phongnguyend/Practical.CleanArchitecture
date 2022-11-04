@@ -2,8 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <AnalysisMode>Recommended</AnalysisMode>
+    <AnalysisModeSecurity>All</AnalysisModeSecurity>
     <UserSecretsId>752c7fb1-d2cf-490b-aa64-c3a9ea7b6734</UserSecretsId>
-    <AssemblyName>ClassifiedAds.BlazorServerSide</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

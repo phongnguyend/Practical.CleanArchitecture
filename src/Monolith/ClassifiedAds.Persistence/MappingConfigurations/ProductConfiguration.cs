@@ -14,7 +14,8 @@ namespace ClassifiedAds.Persistence.MappingConfigurations
             builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
 
             // Seed
-            builder.HasData(new List<Product> {
+            builder.HasData(new List<Product>
+            {
                 new Product
                 {
                     Id = Guid.Parse("6672E891-0D94-4620-B38A-DBC5B02DA9F7"),

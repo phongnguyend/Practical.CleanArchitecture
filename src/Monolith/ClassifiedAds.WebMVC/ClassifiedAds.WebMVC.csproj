@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <AnalysisMode>Recommended</AnalysisMode>
+    <AnalysisModeSecurity>All</AnalysisModeSecurity>
     <UserSecretsId>715a7fa5-7600-457a-bcdf-662d50011045</UserSecretsId>
   </PropertyGroup>
 

@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Net;
-using System.Threading;
 
 namespace ClassifiedAds.Infrastructure.Web.Filters
 {
@@ -33,7 +32,7 @@ namespace ClassifiedAds.Infrastructure.Web.Filters
             }
             else
             {
-                _logger.LogError(context.Exception, "[{0}-{1}]", DateTime.UtcNow.Ticks, Thread.CurrentThread.ManagedThreadId);
+                _logger.LogError(context.Exception, $"[{DateTime.UtcNow.Ticks}-{Environment.CurrentManagedThreadId}]");
 
                 if (_options.DetailLevel == GlobalExceptionDetailLevel.Throw)
                 {

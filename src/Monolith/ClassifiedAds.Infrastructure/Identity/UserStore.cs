@@ -298,7 +298,7 @@ namespace ClassifiedAds.Infrastructure.Identity
 
         public async Task<bool> RedeemCodeAsync(User user, string code, CancellationToken cancellationToken)
         {
-            var mergedCodes = await GetTokenAsync(user, AuthenticatorStoreLoginProvider, RecoveryCodeTokenName, cancellationToken) ?? "";
+            var mergedCodes = await GetTokenAsync(user, AuthenticatorStoreLoginProvider, RecoveryCodeTokenName, cancellationToken) ?? string.Empty;
             var splitCodes = mergedCodes.Split(';');
             if (splitCodes.Contains(code))
             {
@@ -312,7 +312,7 @@ namespace ClassifiedAds.Infrastructure.Identity
 
         public async Task<int> CountCodesAsync(User user, CancellationToken cancellationToken)
         {
-            var mergedCodes = await GetTokenAsync(user, AuthenticatorStoreLoginProvider, RecoveryCodeTokenName, cancellationToken) ?? "";
+            var mergedCodes = await GetTokenAsync(user, AuthenticatorStoreLoginProvider, RecoveryCodeTokenName, cancellationToken) ?? string.Empty;
             if (mergedCodes.Length > 0)
             {
                 return mergedCodes.Split(';').Length;

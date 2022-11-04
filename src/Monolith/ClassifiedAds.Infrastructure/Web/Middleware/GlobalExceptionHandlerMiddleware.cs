@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.Web.Middleware
@@ -44,7 +43,7 @@ namespace ClassifiedAds.Infrastructure.Web.Middleware
                         response.StatusCode = (int)HttpStatusCode.NotFound;
                         break;
                     default:
-                        _logger.LogError(ex, "[{0}-{1}]", DateTime.UtcNow.Ticks, Thread.CurrentThread.ManagedThreadId);
+                        _logger.LogError(ex, $"[{DateTime.UtcNow.Ticks}-{Environment.CurrentManagedThreadId}]");
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         break;
                 }

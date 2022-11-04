@@ -1,9 +1,9 @@
-﻿using System;
+﻿using ClassifiedAds.Application.Decorators;
+using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using ClassifiedAds.Application.Decorators;
-using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 
 namespace ClassifiedAds.Application
 {

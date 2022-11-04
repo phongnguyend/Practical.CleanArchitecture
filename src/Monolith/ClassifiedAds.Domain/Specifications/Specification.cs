@@ -29,9 +29,14 @@ namespace ClassifiedAds.Domain.Specifications
         public Specification<T> And(Specification<T> specification)
         {
             if (this == All)
+            {
                 return specification;
+            }
+
             if (specification == All)
+            {
                 return this;
+            }
 
             return new AndSpecification<T>(this, specification);
         }
@@ -39,7 +44,9 @@ namespace ClassifiedAds.Domain.Specifications
         public Specification<T> Or(Specification<T> specification)
         {
             if (this == All || specification == All)
+            {
                 return All;
+            }
 
             return new OrSpecification<T>(this, specification);
         }
@@ -49,7 +56,6 @@ namespace ClassifiedAds.Domain.Specifications
             return new NotSpecification<T>(this);
         }
     }
-
 
     internal sealed class AndSpecification<T> : Specification<T>
     {
@@ -73,7 +79,6 @@ namespace ClassifiedAds.Domain.Specifications
         }
     }
 
-
     internal sealed class OrSpecification<T> : Specification<T>
     {
         private readonly Specification<T> _left;
@@ -95,7 +100,6 @@ namespace ClassifiedAds.Domain.Specifications
             return Expression.Lambda<Func<T, bool>>(orExpression, leftExpression.Parameters.Single());
         }
     }
-
 
     internal sealed class NotSpecification<T> : Specification<T>
     {
