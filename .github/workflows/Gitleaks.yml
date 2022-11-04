@@ -1,0 +1,24 @@
+name: gitleaks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  scan:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: use gitleaks docker image
+        run: |
+          docker pull zricethezav/gitleaks:latest
+          echo $GITHUB_WORKSPACE
+          docker run -v $GITHUB_WORKSPACE:/path zricethezav/gitleaks:latest detect --source="/path" --verbose --no-git
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE}} # Only required for Organizations, not personal accounts.
