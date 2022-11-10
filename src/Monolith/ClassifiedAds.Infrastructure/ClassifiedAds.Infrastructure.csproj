@@ -69,6 +69,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Twilio" Version="5.68.1" />
+    <PackageReference Include="VaultSharp" Version="1.7.1" />
   </ItemGroup>
 
   <ItemGroup>
