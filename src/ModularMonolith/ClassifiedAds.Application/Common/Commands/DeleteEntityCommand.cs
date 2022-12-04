@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 namespace ClassifiedAds.Application
 {
     public class DeleteEntityCommand<TEntity> : ICommand
-         where TEntity : AggregateRoot<Guid>
+         where TEntity : Entity<Guid>, IAggregateRoot
     {
         public TEntity Entity { get; set; }
     }
 
     internal class DeleteEntityCommandHandler<TEntity> : ICommandHandler<DeleteEntityCommand<TEntity>>
-    where TEntity : AggregateRoot<Guid>
+    where TEntity : Entity<Guid>, IAggregateRoot
     {
         private readonly ICrudService<TEntity> _crudService;
 
