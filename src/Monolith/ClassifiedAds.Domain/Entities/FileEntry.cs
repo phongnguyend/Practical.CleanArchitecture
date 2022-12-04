@@ -3,7 +3,7 @@ using System;
 
 namespace ClassifiedAds.Domain.Entities
 {
-    public class FileEntry : AggregateRoot<Guid>, IFileEntry
+    public class FileEntry : Entity<Guid>, IAggregateRoot, IFileEntry
     {
         public string Name { get; set; }
 

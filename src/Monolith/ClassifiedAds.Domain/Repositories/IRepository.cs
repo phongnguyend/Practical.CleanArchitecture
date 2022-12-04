@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace ClassifiedAds.Domain.Repositories
 {
     public interface IRepository<TEntity, TKey> : IConcurrencyHandler<TEntity>
-        where TEntity : AggregateRoot<TKey>
+        where TEntity : Entity<TKey>, IAggregateRoot
     {
         IUnitOfWork UnitOfWork { get; }
 

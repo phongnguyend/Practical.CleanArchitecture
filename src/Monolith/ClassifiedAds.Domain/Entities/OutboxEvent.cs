@@ -2,7 +2,7 @@
 
 namespace ClassifiedAds.Domain.Entities
 {
-    public class OutboxEvent : AggregateRoot<long>
+    public class OutboxEvent : Entity<long>, IAggregateRoot
     {
         public string EventType { get; set; }
 

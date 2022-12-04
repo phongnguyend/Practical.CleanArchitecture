@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace ClassifiedAds.Persistence.Repositories
 {
     public class Repository<T, TKey> : IRepository<T, TKey>
-        where T : AggregateRoot<TKey>
+        where T : Entity<TKey>, IAggregateRoot
     {
         private readonly AdsDbContext _dbContext;
         private readonly IDateTimeProvider _dateTimeProvider;
