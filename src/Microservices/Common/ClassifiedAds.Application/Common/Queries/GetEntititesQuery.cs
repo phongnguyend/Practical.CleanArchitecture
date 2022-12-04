@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 namespace ClassifiedAds.Application
 {
     public class GetEntititesQuery<TEntity> : IQuery<List<TEntity>>
-         where TEntity : AggregateRoot<Guid>
+         where TEntity : Entity<Guid>, IAggregateRoot
     {
     }
 
     internal class GetEntititesQueryHandler<TEntity> : IQueryHandler<GetEntititesQuery<TEntity>, List<TEntity>>
-    where TEntity : AggregateRoot<Guid>
+    where TEntity : Entity<Guid>, IAggregateRoot
     {
         private readonly IRepository<TEntity, Guid> _repository;
 

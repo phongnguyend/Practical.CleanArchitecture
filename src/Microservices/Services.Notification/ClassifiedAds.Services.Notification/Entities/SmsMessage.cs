@@ -3,7 +3,7 @@ using System;
 
 namespace ClassifiedAds.Services.Notification.Entities
 {
-    public class SmsMessage : AggregateRoot<Guid>
+    public class SmsMessage : Entity<Guid>, IAggregateRoot
     {
         public string Message { get; set; }
 

@@ -3,7 +3,7 @@ using System;
 
 namespace ClassifiedAds.Services.Storage.Entities
 {
-    public class FileEntry : AggregateRoot<Guid>
+    public class FileEntry : Entity<Guid>, IAggregateRoot
     {
         public string Name { get; set; }
 

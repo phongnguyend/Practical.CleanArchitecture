@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace ClassifiedAds.Infrastructure.Persistence
 {
     public class DbContextRepository<TDbContext, TEntity, TKey> : IRepository<TEntity, TKey>
-        where TEntity : AggregateRoot<TKey>
+        where TEntity : Entity<TKey>, IAggregateRoot
         where TDbContext : DbContext, IUnitOfWork
     {
         private readonly TDbContext _dbContext;

@@ -39,7 +39,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 }
             }
 
-            var aggregateRootTypes = assembly.GetTypes().Where(x => x.BaseType == typeof(AggregateRoot<Guid>)).ToList();
+            var aggregateRootTypes = assembly.GetTypes().Where(x => x.BaseType == typeof(Entity<Guid>) && x.GetInterfaces().Contains(typeof(IAggregateRoot))).ToList();
 
             var genericHandlerTypes = new[]
             {

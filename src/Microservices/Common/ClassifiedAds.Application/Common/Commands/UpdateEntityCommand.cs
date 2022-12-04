@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace ClassifiedAds.Application
 {
     public class UpdateEntityCommand<TEntity> : ICommand
-        where TEntity : AggregateRoot<Guid>
+        where TEntity : Entity<Guid>, IAggregateRoot
     {
         public UpdateEntityCommand(TEntity entity)
         {
@@ -17,7 +17,7 @@ namespace ClassifiedAds.Application
     }
 
     internal class UpdateEntityCommandHandler<TEntity> : ICommandHandler<UpdateEntityCommand<TEntity>>
-    where TEntity : AggregateRoot<Guid>
+    where TEntity : Entity<Guid>, IAggregateRoot
     {
         private readonly ICrudService<TEntity> _crudService;
 

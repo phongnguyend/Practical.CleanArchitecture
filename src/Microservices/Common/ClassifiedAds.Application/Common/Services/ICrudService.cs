@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ClassifiedAds.Application
 {
     public interface ICrudService<T>
-        where T : AggregateRoot<Guid>
+        where T : Entity<Guid>, IAggregateRoot
     {
         Task<List<T>> GetAsync(CancellationToken cancellationToken = default);
 

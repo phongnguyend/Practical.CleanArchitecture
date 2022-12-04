@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 namespace ClassifiedAds.Application
 {
     public class GetEntityByIdQuery<TEntity> : IQuery<TEntity>
-        where TEntity : AggregateRoot<Guid>
+        where TEntity : Entity<Guid>, IAggregateRoot
     {
         public Guid Id { get; set; }
         public bool ThrowNotFoundIfNull { get; set; }
     }
 
     internal class GetEntityByIdQueryHandler<TEntity> : IQueryHandler<GetEntityByIdQuery<TEntity>, TEntity>
-    where TEntity : AggregateRoot<Guid>
+    where TEntity : Entity<Guid>, IAggregateRoot
     {
         private readonly IRepository<TEntity, Guid> _repository;
 

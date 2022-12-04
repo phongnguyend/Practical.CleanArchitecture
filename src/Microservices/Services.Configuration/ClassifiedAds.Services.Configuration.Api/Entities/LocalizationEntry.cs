@@ -3,7 +3,7 @@ using ClassifiedAds.Domain.Entities;
 
 namespace ClassifiedAds.Services.Configuration.Entities
 {
-    public class LocalizationEntry : AggregateRoot<Guid>
+    public class LocalizationEntry : Entity<Guid>, IAggregateRoot
     {
         public string Name { get; set; }
 

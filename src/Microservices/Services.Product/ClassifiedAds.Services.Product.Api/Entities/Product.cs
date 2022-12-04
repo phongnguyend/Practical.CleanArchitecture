@@ -3,7 +3,7 @@ using System;
 
 namespace ClassifiedAds.Services.Product.Entities
 {
-    public class Product : AggregateRoot<Guid>
+    public class Product : Entity<Guid>, IAggregateRoot
     {
         public string Code { get; set; }
 

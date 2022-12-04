@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace ClassifiedAds.Application
 {
     public class CrudService<T> : ICrudService<T>
-        where T : AggregateRoot<Guid>
+        where T : Entity<Guid>, IAggregateRoot
     {
         private readonly IUnitOfWork _unitOfWork;
         protected readonly IRepository<T, Guid> _repository;

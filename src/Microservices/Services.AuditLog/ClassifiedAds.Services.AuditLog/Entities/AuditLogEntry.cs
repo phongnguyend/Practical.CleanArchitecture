@@ -3,7 +3,7 @@ using System;
 
 namespace ClassifiedAds.Services.AuditLog.Entities
 {
-    public class AuditLogEntry : AggregateRoot<Guid>
+    public class AuditLogEntry : Entity<Guid>, IAggregateRoot
     {
         public Guid UserId { get; set; }
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ClassifiedAds.Services.Notification.Entities
 {
-    public class EmailMessage : AggregateRoot<Guid>
+    public class EmailMessage : Entity<Guid>, IAggregateRoot
     {
         public string From { get; set; }
 

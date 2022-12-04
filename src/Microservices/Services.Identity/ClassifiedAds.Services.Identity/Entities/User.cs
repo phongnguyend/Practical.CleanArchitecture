@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ClassifiedAds.Services.Identity.Entities
 {
-    public class User : AggregateRoot<Guid>
+    public class User : Entity<Guid>, IAggregateRoot
     {
         public string UserName { get; set; }
 
