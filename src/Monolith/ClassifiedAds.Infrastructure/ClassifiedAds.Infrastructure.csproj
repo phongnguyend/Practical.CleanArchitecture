@@ -8,10 +8,6 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="App.Metrics" Version="4.2.0" />
-    <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="4.2.0" />
-    <PackageReference Include="App.Metrics.AspNetCore.Tracking" Version="4.2.0" />
-    <PackageReference Include="App.Metrics.Formatters.Prometheus" Version="4.2.0" />
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="5.0.1" />
     <PackageReference Include="AWSSDK.S3" Version="3.7.4.9" />
     <PackageReference Include="Azure.Communication.Sms" Version="1.0.1" />

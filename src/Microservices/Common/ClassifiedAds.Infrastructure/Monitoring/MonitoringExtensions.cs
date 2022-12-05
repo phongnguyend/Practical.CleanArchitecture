@@ -1,8 +1,6 @@
-﻿using ClassifiedAds.Infrastructure.Monitoring.AppMetrics;
-using ClassifiedAds.Infrastructure.Monitoring.AzureApplicationInsights;
+﻿using ClassifiedAds.Infrastructure.Monitoring.AzureApplicationInsights;
 using ClassifiedAds.Infrastructure.Monitoring.MiniProfiler;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ClassifiedAds.Infrastructure.Monitoring
@@ -21,22 +19,7 @@ namespace ClassifiedAds.Infrastructure.Monitoring
                 services.AddAzureApplicationInsights(monitoringOptions.AzureApplicationInsights);
             }
 
-            if (monitoringOptions?.AppMetrics?.IsEnabled ?? false)
-            {
-                services.AddAppMetrics(monitoringOptions.AppMetrics);
-            }
-
             return services;
-        }
-
-        public static IMvcBuilder AddMonitoringServices(this IMvcBuilder mvcBuilder, MonitoringOptions monitoringOptions)
-        {
-            if (monitoringOptions?.AppMetrics?.IsEnabled ?? false)
-            {
-                mvcBuilder.AddMetrics();
-            }
-
-            return mvcBuilder;
         }
 
         public static IApplicationBuilder UseMonitoringServices(this IApplicationBuilder builder, MonitoringOptions monitoringOptions)

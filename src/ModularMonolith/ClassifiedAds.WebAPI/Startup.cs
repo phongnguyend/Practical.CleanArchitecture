@@ -53,8 +53,7 @@ namespace ClassifiedAds.WebAPI
             .AddIdentityModule()
             .AddNotificationModule()
             .AddProductModule()
-            .AddStorageModule()
-            .AddMonitoringServices(AppSettings.Monitoring);
+            .AddStorageModule();
 
             services.AddSignalR();
 

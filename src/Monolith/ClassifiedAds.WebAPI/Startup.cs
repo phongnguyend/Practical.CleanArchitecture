@@ -57,8 +57,7 @@ namespace ClassifiedAds.WebAPI
             })
             .AddJsonOptions(options =>
             {
-            })
-            .AddMonitoringServices(AppSettings.Monitoring);
+            });
 
             services.AddSignalR();
 
