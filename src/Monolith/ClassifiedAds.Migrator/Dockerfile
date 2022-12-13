@@ -13,7 +13,6 @@ COPY ./ClassifiedAds.CrossCuttingConcerns/*.csproj ./ClassifiedAds.CrossCuttingC
 COPY ./ClassifiedAds.Domain/*.csproj ./ClassifiedAds.Domain/
 COPY ./ClassifiedAds.EndToEndTests/*.csproj ./ClassifiedAds.EndToEndTests/
 COPY ./ClassifiedAds.GraphQL/*.csproj ./ClassifiedAds.GraphQL/
-COPY ./ClassifiedAds.IdentityServer/*.csproj ./ClassifiedAds.IdentityServer/
 COPY ./ClassifiedAds.Infrastructure/*.csproj ./ClassifiedAds.Infrastructure/
 COPY ./ClassifiedAds.IntegrationTests/*.csproj ./ClassifiedAds.IntegrationTests/
 COPY ./ClassifiedAds.Migrator/*.csproj ./ClassifiedAds.Migrator/

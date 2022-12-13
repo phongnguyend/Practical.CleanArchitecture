@@ -27,7 +27,6 @@ pipeline {
           sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.GraphQL/*.csproj --configuration Release"
           sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.Migrator/*.csproj --configuration Release"
           sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.WebAPI/*.csproj --configuration Release"
-          sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.IdentityServer/*.csproj --configuration Release"
           sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.WebMVC/*.csproj --configuration Release"
           sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.BlazorServerSide/*.csproj --configuration Release"
           sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.BlazorWebAssembly/*.csproj --configuration Release"

@@ -49,19 +49,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Services.Noti
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Services.Identity.IntegrationTests", "Services.Identity\ClassifiedAds.Services.Identity.IntegrationTests\ClassifiedAds.Services.Identity.IntegrationTests.csproj", "{50B4F734-D7E2-4846-9E68-31CCBE678AF3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Services.Identity.AuthServer", "Services.Identity\ClassifiedAds.Services.Identity.AuthServer\ClassifiedAds.Services.Identity.AuthServer.csproj", "{13C9FFD9-FF67-4B0C-84CA-E61118E39C16}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Gateways.WebAPI", "Gateways.WebAPI\ClassifiedAds.Gateways.WebAPI\ClassifiedAds.Gateways.WebAPI.csproj", "{1760E9D6-C483-433F-A829-6C1CAFFAC0F0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{12076161-F47C-47E6-849A-92377D2F2923}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Services.Configuration.Api", "Services.Configuration\ClassifiedAds.Services.Configuration.Api\ClassifiedAds.Services.Configuration.Api.csproj", "{06E1983D-E90A-4853-82BE-C9557506A7ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Services.AuditLog", "Services.AuditLog\ClassifiedAds.Services.AuditLog\ClassifiedAds.Services.AuditLog.csproj", "{47340F4E-FE50-48F9-ACF8-140EDF71DBAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Services.AuditLog", "Services.AuditLog\ClassifiedAds.Services.AuditLog\ClassifiedAds.Services.AuditLog.csproj", "{47340F4E-FE50-48F9-ACF8-140EDF71DBAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Services.Identity", "Services.Identity\ClassifiedAds.Services.Identity\ClassifiedAds.Services.Identity.csproj", "{51029D56-04FE-46C8-B176-0C65B6980518}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Services.Identity", "Services.Identity\ClassifiedAds.Services.Identity\ClassifiedAds.Services.Identity.csproj", "{51029D56-04FE-46C8-B176-0C65B6980518}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.Services.Notification", "Services.Notification\ClassifiedAds.Services.Notification\ClassifiedAds.Services.Notification.csproj", "{F09154ED-2C3B-4316-834A-E8207AFDDD6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Services.Notification", "Services.Notification\ClassifiedAds.Services.Notification\ClassifiedAds.Services.Notification.csproj", "{F09154ED-2C3B-4316-834A-E8207AFDDD6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -129,10 +127,6 @@ Global
 		{50B4F734-D7E2-4846-9E68-31CCBE678AF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50B4F734-D7E2-4846-9E68-31CCBE678AF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50B4F734-D7E2-4846-9E68-31CCBE678AF3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{13C9FFD9-FF67-4B0C-84CA-E61118E39C16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{13C9FFD9-FF67-4B0C-84CA-E61118E39C16}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{13C9FFD9-FF67-4B0C-84CA-E61118E39C16}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{13C9FFD9-FF67-4B0C-84CA-E61118E39C16}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1760E9D6-C483-433F-A829-6C1CAFFAC0F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1760E9D6-C483-433F-A829-6C1CAFFAC0F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1760E9D6-C483-433F-A829-6C1CAFFAC0F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -178,7 +172,6 @@ Global
 		{89BB2B6E-7A83-4DBA-87A7-FD47E09C0779} = {5EF4FB70-0925-4193-AE9D-FDF8D1DCA82E}
 		{62C1D830-7E6C-4A00-993E-59DA08420122} = {5EF4FB70-0925-4193-AE9D-FDF8D1DCA82E}
 		{50B4F734-D7E2-4846-9E68-31CCBE678AF3} = {511C62E1-D820-4032-8CEB-5558B94D5833}
-		{13C9FFD9-FF67-4B0C-84CA-E61118E39C16} = {511C62E1-D820-4032-8CEB-5558B94D5833}
 		{1760E9D6-C483-433F-A829-6C1CAFFAC0F0} = {7C1260FA-4009-489B-82CE-D8CA5FE7D7D9}
 		{12076161-F47C-47E6-849A-92377D2F2923} = {1E828A01-F4C9-4D88-8B21-559A889B6F42}
 		{06E1983D-E90A-4853-82BE-C9557506A7ED} = {12076161-F47C-47E6-849A-92377D2F2923}

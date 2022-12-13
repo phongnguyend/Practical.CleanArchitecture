@@ -2,6 +2,11 @@ name: classifiedads-microservices-dapr
 extensions:
 - name: dapr
 services:
+- name: identityserver
+  project: ../IdentityServer/ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj
+  bindings:
+  - protocol: https
+    port: 44367
 - name: gateway-webapi
   project: ./Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI.csproj
   bindings:
@@ -39,11 +44,6 @@ services:
   - protocol: http
     port: 54306
     name: http
-- name: identity-authserver
-  project: ./Services.Identity/ClassifiedAds.Services.Identity.AuthServer/ClassifiedAds.Services.Identity.AuthServer.csproj
-  bindings:
-  - protocol: https
-    port: 44367
 - name: identity-grpc
   project: ./Services.Identity/ClassifiedAds.Services.Identity.Grpc/ClassifiedAds.Services.Identity.Grpc.csproj
   bindings:

@@ -1,4 +1,4 @@
-name: classifiedads-modularmonolith
+name: classifiedads-monolith
 services:
 - name: migrator
   project: ./ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj
@@ -6,7 +6,7 @@ services:
   - protocol: https
     port: 44380
 - name: identityserver
-  project: ./ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj
+  project: ../IdentityServer/ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj
   bindings:
   - protocol: https
     port: 44367

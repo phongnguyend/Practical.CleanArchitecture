@@ -1,0 +1,2 @@
+﻿- [c# - Intercept the call to an async method using DynamicProxy - Stack Overflow](https://stackoverflow.com/questions/14288075/intercept-the-call-to-an-async-method-using-dynamicproxy/14288799)
+- [c# - Intercept async method that returns generic Task<> via DynamicProxy - Stack Overflow](https://stackoverflow.com/questions/28099669/intercept-async-method-that-returns-generic-task-via-dynamicproxy)

@@ -28,7 +28,6 @@ pipeline {
           sh "dotnet publish -p:Version=${VERSION} Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/*.csproj --configuration Release"
           sh "dotnet publish -p:Version=${VERSION} Services.Configuration/ClassifiedAds.Services.Configuration.Api/*.csproj --configuration Release"
           sh "dotnet publish -p:Version=${VERSION} Services.Identity/ClassifiedAds.Services.Identity.Api/*.csproj --configuration Release"
-          sh "dotnet publish -p:Version=${VERSION} Services.Identity/ClassifiedAds.Services.Identity.AuthServer/*.csproj --configuration Release"
           sh "dotnet publish -p:Version=${VERSION} Services.Identity/ClassifiedAds.Services.Identity.Grpc/*.csproj --configuration Release"
           sh "dotnet publish -p:Version=${VERSION} Services.Notification/ClassifiedAds.Services.Notification.Api/*.csproj --configuration Release"
           sh "dotnet publish -p:Version=${VERSION} Services.Notification/ClassifiedAds.Services.Notification.Background/*.csproj --configuration Release"

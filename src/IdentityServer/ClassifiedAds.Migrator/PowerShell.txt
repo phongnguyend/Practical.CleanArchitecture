@@ -1,0 +1,13 @@
+﻿https://docs.microsoft.com/en-us/ef/core/cli/powershell
+
+Add-Migration -Context ConfigurationDbContext Init -OutputDir Migrations/ConfigurationDb
+Add-Migration -Context PersistedGrantDbContext Init -OutputDir Migrations/PersistedGrantDb
+
+Update-Database -Context ConfigurationDbContext
+Update-Database -Context PersistedGrantDbContext
+
+Script-DbContext -Context ConfigurationDbContext
+Script-DbContext -Context PersistedGrantDbContext
+
+Script-Migration -Context ConfigurationDbContext
+Script-Migration -Context PersistedGrantDbContext

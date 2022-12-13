@@ -1,9 +1,12 @@
 ﻿using ClassifiedAds.Infrastructure.HealthChecks;
 using ClassifiedAds.Modules.Identity.Contracts.Services;
+using ClassifiedAds.Modules.Identity.Repositories;
 using ClassifiedAds.Modules.Identity.Services;
 using DbUp;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
@@ -64,10 +67,11 @@ namespace ClassifiedAds.Migrator
             })
             .AddApplicationServices();
 
-            services.AddIdentityServer()
-                .AddIdServerPersistence(Configuration["Modules:Auth:ConnectionStrings:Default"],
-                typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
+            services.AddDataProtection()
+                .PersistKeysToDbContext<IdentityDbContext>()
+                .SetApplicationName("ClassifiedAds");
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentWebUser>();
         }
 
@@ -88,7 +92,6 @@ namespace ClassifiedAds.Migrator
                 app.MigrateNotificationDb();
                 app.MigrateProductDb();
                 app.MigrateStorageDb();
-                app.MigrateIdServerDb();
 
                 var upgrader = DeployChanges.To
                 .SqlDatabase(Configuration["Modules:Auth:ConnectionStrings:Default"])

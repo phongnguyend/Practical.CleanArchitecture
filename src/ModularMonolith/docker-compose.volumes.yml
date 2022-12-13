@@ -5,7 +5,7 @@ services:
             - D:\\ClassifiedAds.ModularMonolith\\Logs\\Migrator:/ClassifiedAds.ModularMonolith/logs
     identityserver:
         volumes:
-            - D:\\ClassifiedAds.ModularMonolith\\Logs\\IdentityServer:/ClassifiedAds.ModularMonolith/logs
+            - D:\\ClassifiedAds.ModularMonolith\\Logs\\IdentityServer:/ClassifiedAds.IdentityServer/logs
     webapi:
         volumes:
             - D:\\ClassifiedAds.ModularMonolith\\Logs\\WebAPI:/ClassifiedAds.ModularMonolith/logs

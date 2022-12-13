@@ -33,10 +33,6 @@ namespace ClassifiedAds.Migrator
 
             services.AddPersistence(Configuration["ConnectionStrings:ClassifiedAds"],
                 typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
-
-            services.AddIdentityServer()
-                .AddIdServerPersistence(Configuration.GetConnectionString("ClassifiedAds"),
-                typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,7 +47,6 @@ namespace ClassifiedAds.Migrator
             .Execute(() =>
             {
                 app.MigrateAdsDb();
-                app.MigrateIdServerDb();
 
                 var upgrader = DeployChanges.To
                 .SqlDatabase(Configuration.GetConnectionString("ClassifiedAds"))

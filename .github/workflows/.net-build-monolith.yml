@@ -39,9 +39,6 @@ jobs:
     - name: Publish ClassifiedAds.WebAPI
       run: dotnet publish ClassifiedAds.WebAPI/*.csproj --configuration Release
       
-    - name: Publish ClassifiedAds.IdentityServer
-      run: dotnet publish ClassifiedAds.IdentityServer/*.csproj --configuration Release
-      
     - name: Publish ClassifiedAds.WebMVC
       run: dotnet publish ClassifiedAds.WebMVC/*.csproj --configuration Release
       
@@ -74,12 +71,6 @@ jobs:
       with:
         name: ClassifiedAds.WebAPI
         path: src/Monolith/ClassifiedAds.WebAPI/bin/Release/net6.0/publish
-
-    - name: Upload ClassifiedAds.IdentityServer
-      uses: actions/upload-artifact@v1.0.0
-      with:
-        name: ClassifiedAds.IdentityServer
-        path: src/Monolith/ClassifiedAds.IdentityServer/bin/Release/net6.0/publish
         
     - name: Upload ClassifiedAds.WebMVC
       uses: actions/upload-artifact@v1.0.0

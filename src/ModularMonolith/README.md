@@ -9,7 +9,7 @@
   | -------- | ------------------ | ----------------- |
   | ClassifiedAds.Migrator | [appsettings.json](ClassifiedAds.Migrator/appsettings.json) | ConnectionStrings:ClassifiedAds |
   | ClassifiedAds.BackgroundServer | [appsettings.json](ClassifiedAds.BackgroundServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.IdentityServer | [appsettings.json](ClassifiedAds.IdentityServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
+  | ClassifiedAds.IdentityServer | [appsettings.json](../IdentityServer/ClassifiedAds.IdentityServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
   | ClassifiedAds.WebAPI | [appsettings.json](ClassifiedAds.WebAPI/appsettings.json) | ConnectionStrings:ClassifiedAds |
 
 
@@ -22,21 +22,17 @@
     + Navigate to [ClassifiedAds.Migrator](ClassifiedAds.Migrator/) and run these commands:
       ```
       dotnet ef migrations add Init --context AuditLogDbContext -o Migrations/AuditLogDb
-      dotnet ef migrations add Init --context ClassifiedAds.Modules.Configuration.Repositories.ConfigurationDbContext -o Migrations/ConfigurationDb
+      dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
       dotnet ef migrations add Init --context IdentityDbContext -o Migrations/IdentityDb
       dotnet ef migrations add Init --context NotificationDbContext -o Migrations/NotificationDb
       dotnet ef migrations add Init --context ProductDbContext -o Migrations/ProductDb
       dotnet ef migrations add Init --context StorageDbContext -o Migrations/StorageDb
-      dotnet ef migrations add Init --context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext -o Migrations/Id4ConfigurationDb
-      dotnet ef migrations add Init --context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext -o Migrations/Id4PersistedGrantDb
       dotnet ef database update --context AuditLogDbContext
-      dotnet ef database update --context ClassifiedAds.Modules.Configuration.Repositories.ConfigurationDbContext
+      dotnet ef database update --context ConfigurationDbContext
       dotnet ef database update --context IdentityDbContext
       dotnet ef database update --context NotificationDbContext
       dotnet ef database update --context ProductDbContext
       dotnet ef database update --context StorageDbContext
-      dotnet ef database update --context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext
-      dotnet ef database update --context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext
 
       ```
   + Option 2: Using Package Manager Console:
@@ -45,21 +41,17 @@
     + Run these commands:
       ```
       Add-Migration -Context AuditLogDbContext Init -OutputDir Migrations/AuditLogDb
-      Add-Migration -Context ClassifiedAds.Modules.Configuration.Repositories.ConfigurationDbContext Init -OutputDir Migrations/ConfigurationDb
+      Add-Migration -Context ConfigurationDbContext Init -OutputDir Migrations/ConfigurationDb
       Add-Migration -Context IdentityDbContext Init -OutputDir Migrations/IdentityDb
       Add-Migration -Context NotificationDbContext Init -OutputDir Migrations/NotificationDb
       Add-Migration -Context ProductDbContext Init -OutputDir Migrations/ProductDb
       Add-Migration -Context StorageDbContext Init -OutputDir Migrations/StorageDb
-      Add-Migration -Context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext Init -OutputDir Migrations/Id4ConfigurationDb
-      Add-Migration -Context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext Init -OutputDir Migrations/Id4PersistedGrantDb
       Update-Database -Context AuditLogDbContext
-      Update-Database -Context ClassifiedAds.Modules.Configuration.Repositories.ConfigurationDbContext
+      Update-Database -Context ConfigurationDbContext
       Update-Database -Context IdentityDbContext
       Update-Database -Context NotificationDbContext
       Update-Database -Context ProductDbContext
       Update-Database -Context StorageDbContext
-      Update-Database -Context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext
-      Update-Database -Context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext
 
       ```  
 
@@ -145,16 +137,16 @@
 
   dotnet build -p:Version=1.0.0.1 -c Release
 
+  dotnet publish -p:Version=1.0.0.1 -c Release ../IdentityServer/ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj -o ./publish/ClassifiedAds.IdentityServer
   dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.BackgroundServer/ClassifiedAds.BackgroundServer.csproj -o ./publish/ClassifiedAds.BackgroundServer
-  dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj -o ./publish/ClassifiedAds.IdentityServer
   dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj -o ./publish/ClassifiedAds.Migrator
   dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.WebAPI/ClassifiedAds.WebAPI.csproj -o ./publish/ClassifiedAds.WebAPI
   ```
 
 - Pack
   ```
-  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.BackgroundServer --basePath=./publish/ClassifiedAds.BackgroundServer
   dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.IdentityServer --basePath=./publish/ClassifiedAds.IdentityServer
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.BackgroundServer --basePath=./publish/ClassifiedAds.BackgroundServer
   dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Migrator --basePath=./publish/ClassifiedAds.Migrator
   dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.WebAPI --basePath=./publish/ClassifiedAds.WebAPI
   ```

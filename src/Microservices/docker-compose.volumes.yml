@@ -14,7 +14,7 @@ services:
             - D:\\ClassifiedAds.Microservices\\Logs\\Identity.Api:/ClassifiedAds.Microservices/logs
     identity-authserver:
         volumes:
-            - D:\\ClassifiedAds.Microservices\\Logs\\Identity.AuthServer:/ClassifiedAds.Microservices/logs
+            - D:\\ClassifiedAds.Microservices\\Logs\\Identity.AuthServer:/ClassifiedAds.IdentityServer/logs
     identity-grpc:
         volumes:
             - D:\\ClassifiedAds.Microservices\\Logs\\Identity.Grpc:/ClassifiedAds.Microservices/logs

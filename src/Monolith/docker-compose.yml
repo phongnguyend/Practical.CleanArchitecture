@@ -51,8 +51,8 @@ services:
     identityserver:
         image: classifiedads.identityserver
         build:
-          context: .
-          dockerfile: ./ClassifiedAds.IdentityServer/Dockerfile
+          context: ../IdentityServer
+          dockerfile: ../IdentityServer/ClassifiedAds.IdentityServer/Dockerfile
         ports:
             - "9000:80"
         depends_on:
@@ -64,10 +64,6 @@ services:
           CookiePolicyOptions__IsEnabled: "true"
           CookiePolicyOptions__MinimumSameSitePolicy: "Lax"
           CookiePolicyOptions__Secure: "None"
-          MessageBroker__Provider: ${MessageBroker__Provider}
-          MessageBroker__RabbitMQ__HostName: ${MessageBroker__RabbitMQ__HostName}
-          MessageBroker__Kafka__BootstrapServers: ${MessageBroker__Kafka__BootstrapServers}
-          MessageBroker__AzureQueue__ConnectionString: ${MessageBroker__AzureQueue__ConnectionString}
     webapi:
         image: classifiedads.webapi
         build:
@@ -121,7 +117,6 @@ services:
           OpenIdConnect__RequireHttpsMetadata: "false"
           ResourceServer__Endpoint: ${ResourceServer__Endpoint}
           ResourceServer__PublicEndpoint: ${ResourceServer__PublicEndpoint}
-          BackgroundServer__Endpoint: ${BackgroundServer__Endpoint}
           CurrentUrl: "http://host.docker.internal:9003"
           Storage__Provider: ${Storage__Provider}
           Storage__Local__Path: ${Storage__Local__Path}

@@ -28,7 +28,6 @@ services:
         environment:
           ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
           Modules__AuditLog__ConnectionStrings__Default: ${Modules__AuditLog__ConnectionStrings__Default}
-          Modules__Auth__ConnectionStrings__Default: ${Modules__Auth__ConnectionStrings__Default}
           Modules__Configuration__ConnectionStrings__Default: ${Modules__Configuration_ConnectionStrings__Default}
           Modules__Identity__ConnectionStrings__Default: ${Modules__Identity__ConnectionStrings__Default}
           Modules__Notification__ConnectionStrings__Default: ${Modules__Notification__ConnectionStrings__Default}
@@ -39,22 +38,19 @@ services:
     identityserver:
         image: classifiedads.modularmonolith.identityserver
         build:
-          context: .
-          dockerfile: ./ClassifiedAds.IdentityServer/Dockerfile
+          context: ../IdentityServer
+          dockerfile: ../IdentityServer/ClassifiedAds.IdentityServer/Dockerfile
         ports:
             - "9000:80"
         depends_on:
           - db
           - migrator
-          - rabbitmq
         environment:
           ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+          ConnectionStrings__ClassifiedAds: ${Modules__Identity__ConnectionStrings__Default}
           CookiePolicyOptions__IsEnabled: "true"
           CookiePolicyOptions__MinimumSameSitePolicy: "Lax"
           CookiePolicyOptions__Secure: "None"
-          Modules__Auth__ConnectionStrings__Default: ${Modules__Auth__ConnectionStrings__Default}
-          Modules__Identity__ConnectionStrings__Default: ${Modules__Identity__ConnectionStrings__Default}
-          Modules__Notification__ConnectionStrings__Default: ${Modules__Notification__ConnectionStrings__Default}
     webapi:
         image: classifiedads.modularmonolith.webapi
         build:
@@ -71,7 +67,6 @@ services:
           IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
           IdentityServerAuthentication__RequireHttpsMetadata: "false"
           Modules__AuditLog__ConnectionStrings__Default: ${Modules__AuditLog__ConnectionStrings__Default}
-          Modules__Auth__ConnectionStrings__Default: ${Modules__Auth__ConnectionStrings__Default}
           Modules__Configuration__ConnectionStrings__Default: ${Modules__Configuration__ConnectionStrings__Default}
           Modules__Identity__ConnectionStrings__Default: ${Modules__Identity__ConnectionStrings__Default}
           Modules__Identity__IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
@@ -100,7 +95,6 @@ services:
           MessageBroker__Provider: ${MessageBroker__Provider}
           MessageBroker__RabbitMQ__HostName: ${MessageBroker__RabbitMQ__HostName}
           Modules__AuditLog__ConnectionStrings__Default: ${Modules__AuditLog__ConnectionStrings__Default}
-          Modules__Auth__ConnectionStrings__Default: ${Modules__Auth__ConnectionStrings__Default}
           Modules__Configuration__ConnectionStrings__Default: ${Modules__Configuration__ConnectionStrings__Default}
           Modules__Identity__ConnectionStrings__Default: ${Modules__Identity__ConnectionStrings__Default}
           Modules__Identity__IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"

@@ -82,8 +82,8 @@ services:
     identity-authserver:
         image: classifiedads.services.identity.authserver
         build:
-          context: .
-          dockerfile: ./Services.Identity/ClassifiedAds.Services.Identity.AuthServer/Dockerfile
+          context: ../IdentityServer
+          dockerfile: ../IdentityServer/ClassifiedAds.IdentityServer/Dockerfile
         ports:
           - "9000:80"
         depends_on:
@@ -94,11 +94,6 @@ services:
           CookiePolicyOptions__IsEnabled: "true"
           CookiePolicyOptions__MinimumSameSitePolicy: "Lax"
           CookiePolicyOptions__Secure: "None"
-          MessageBroker__Provider: "RabbitMQ"
-          MessageBroker__RabbitMQ__HostName: "rabbitmq"
-          Services__AuditLog__Grpc: ${Services__AuditLog__Grpc}
-          Services__Identity__Grpc: ${Services__Identity__Grpc}
-          Services__Notification__Grpc: ${Services__Notification__Grpc}
     identity-grpc:
         image: classifiedads.services.identity.grpc
         build:

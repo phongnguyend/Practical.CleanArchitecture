@@ -1,9 +1,7 @@
 
 
 docker build -f "ClassifiedAds.Services.Identity.Api\Dockerfile" -t classifiedads.services.identity.api ../
-docker build -f "ClassifiedAds.Services.Identity.AuthServer\Dockerfile" -t classifiedads.services.identity.authserver ../
 docker build -f "ClassifiedAds.Services.Identity.Grpc\Dockerfile" -t classifiedads.services.identity.grpc ../
 
 docker run -d -p 8080:80 --name classifiedads.services.identity.api classifiedads.services.identity.api
-docker run -d -p 8081:80 --name classifiedads.services.identity.authserver classifiedads.services.identity.authserver
 docker run -d -p 8082:80 --name classifiedads.services.identity.grpc classifiedads.services.identity.grpc

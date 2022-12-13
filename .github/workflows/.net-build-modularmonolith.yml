@@ -30,9 +30,6 @@ jobs:
     - name: Publish ClassifiedAds.BackgroundServer
       run: dotnet publish ClassifiedAds.BackgroundServer/*.csproj --configuration Release
 
-    - name: Publish ClassifiedAds.IdentityServer
-      run: dotnet publish ClassifiedAds.IdentityServer/*.csproj --configuration Release
-
     - name: Publish ClassifiedAds.Migrator
       run: dotnet publish ClassifiedAds.Migrator/*.csproj --configuration Release
  
@@ -44,12 +41,6 @@ jobs:
       with:
         name: ClassifiedAds.BackgroundServer
         path: src/ModularMonolith/ClassifiedAds.BackgroundServer/bin/Release/net6.0/publish
-
-    - name: Upload ClassifiedAds.IdentityServer
-      uses: actions/upload-artifact@v1.0.0
-      with:
-        name: ClassifiedAds.IdentityServer
-        path: src/ModularMonolith/ClassifiedAds.IdentityServer/bin/Release/net6.0/publish
 
     - name: Upload ClassifiedAds.Migrator
       uses: actions/upload-artifact@v1.0.0

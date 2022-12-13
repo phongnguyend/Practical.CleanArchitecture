@@ -36,9 +36,6 @@ jobs:
     - name: Publish Identity.Api
       run: dotnet publish Services.Identity/ClassifiedAds.Services.Identity.Api/*.csproj --configuration Release
 
-    - name: Publish Identity.AuthServer
-      run: dotnet publish Services.Identity/ClassifiedAds.Services.Identity.AuthServer/*.csproj --configuration Release
-
     - name: Publish Identity.Grpc
       run: dotnet publish Services.Identity/ClassifiedAds.Services.Identity.Grpc/*.csproj --configuration Release
 
@@ -77,12 +74,6 @@ jobs:
       with:
         name: ClassifiedAds.Services.Identity.Api
         path: src/Microservices/Services.Identity/ClassifiedAds.Services.Identity.Api/bin/Release/net6.0/publish
-
-    - name: Upload ClassifiedAds.Services.Identity.AuthServer
-      uses: actions/upload-artifact@v1.0.0
-      with:
-        name: ClassifiedAds.Services.Identity.AuthServer
-        path: src/Microservices/Services.Identity/ClassifiedAds.Services.Identity.AuthServer/bin/Release/net6.0/publish
 
     - name: Upload ClassifiedAds.Services.Identity.Grpc
       uses: actions/upload-artifact@v1.0.0
