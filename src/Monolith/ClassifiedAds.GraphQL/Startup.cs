@@ -1,6 +1,4 @@
-using ClassifiedAds.GraphQL.Types;
-using GraphQL.Server;
-using GraphQL.Types;
+﻿using GraphQL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -35,22 +33,11 @@ namespace ClassifiedAds.GraphQL
                 options.AllowSynchronousIO = true;
             });
 
-            services.AddScoped<ClassifiedAdsQuery>();
-            services.AddScoped<ClassifiedAdsMutation>();
-            services.AddSingleton<ProductType>();
-            services.AddSingleton<ProductInputType>();
-            services.AddScoped<ISchema, ClassifiedAdsSchema>();
-
             services.AddLogging(builder => builder.AddConsole());
             services.AddHttpContextAccessor();
 
-            services.AddGraphQL(_ =>
-            {
-                _.EnableMetrics = true;
-            })
-            .AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)
-            .AddSystemTextJson()
-            .AddUserContextBuilder(httpContext => new GraphQLUserContext { User = httpContext.User });
+            services.AddGraphQL(b => b.AddAutoSchema<ClassifiedAdsQuery>(s => s.WithMutation<ClassifiedAdsMutation>())
+                                .AddSystemTextJson());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,7 +49,7 @@ namespace ClassifiedAds.GraphQL
             }
 
             // add http for Schema at default url /graphql
-            app.UseGraphQL<ISchema>();
+            app.UseGraphQL();
 
             // use graphql-playground at default url /ui/playground
             app.UseGraphQLPlayground();
