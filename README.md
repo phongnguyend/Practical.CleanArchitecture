@@ -497,7 +497,7 @@
       "MiniProfiler": {
         "IsEnabled": true,
         "SqlServerStorage": {
-          "ConectionString": "Server=127.0.0.1;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
+          "ConectionString": "Server=127.0.0.1;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False",
           "ProfilersTable": "MiniProfilers",
           "TimingsTable": "MiniProfilerTimings",
           "ClientTimingsTable": "MiniProfilerClientTimings"
@@ -546,7 +546,7 @@
       "MiniProfiler": {
         "IsEnabled": true,
         "SqlServerStorage": {
-          "ConectionString": "Server=127.0.0.1;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true",
+          "ConectionString": "Server=127.0.0.1;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False",
           "ProfilersTable": "MiniProfilers",
           "TimingsTable": "MiniProfilerTimings",
           "ClientTimingsTable": "MiniProfilerClientTimings"

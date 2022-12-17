@@ -5,7 +5,7 @@ metadata:
 data:
   ASPNETCORE_ENVIRONMENT: "Development"
   DOTNET_ENVIRONMENT: "Development"
-  ConnectionStrings__ClassifiedAds: "Server={{ .Release.Name}}-db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+  ConnectionStrings__ClassifiedAds: "Server={{ .Release.Name}}-db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False"
   MessageBroker__Provider: "RabbitMQ"
   MessageBroker__RabbitMQ__HostName: "{{ .Release.Name}}-rabbitmq"
   MessageBroker__Kafka__BootstrapServers: "kafka:9092"

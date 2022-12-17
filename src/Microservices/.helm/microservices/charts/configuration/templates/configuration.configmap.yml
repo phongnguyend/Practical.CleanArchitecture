@@ -4,4 +4,4 @@ metadata:
   name: {{ .Release.Name}}-configuration
 data:
   ASPNETCORE_ENVIRONMENT: "Development"
-  ConnectionStrings__ClassifiedAds: "Server={{ .Release.Name}}-db;Database=ClassifiedAds.Microservices.Configuration;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
+  ConnectionStrings__ClassifiedAds: "Server={{ .Release.Name}}-db;Database=ClassifiedAds.Microservices.Configuration;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False"
