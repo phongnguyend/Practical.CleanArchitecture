@@ -146,11 +146,11 @@ namespace ClassifiedAds.WebMVC
                     name: "Resource (Web API) Server",
                     failureStatus: HealthStatus.Degraded);
 
-            services.AddHealthChecksUI(setupSettings: setup =>
-            {
-                setup.AddHealthCheckEndpoint("Basic Health Check", $"{AppSettings.CurrentUrl}/healthz");
-                setup.DisableDatabaseMigrations();
-            }).AddInMemoryStorage();
+            //services.AddHealthChecksUI(setupSettings: setup =>
+            //{
+            //    setup.AddHealthCheckEndpoint("Basic Health Check", $"{AppSettings.CurrentUrl}/healthz");
+            //    setup.DisableDatabaseMigrations();
+            //}).AddInMemoryStorage();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentWebUser>();
@@ -212,7 +212,7 @@ namespace ClassifiedAds.WebMVC
                 },
             });
 
-            app.UseHealthChecksUI(); // /healthchecks-ui#/healthchecks
+            // app.UseHealthChecksUI(); // /healthchecks-ui#/healthchecks
 
             app.UseEndpoints(endpoints =>
             {
