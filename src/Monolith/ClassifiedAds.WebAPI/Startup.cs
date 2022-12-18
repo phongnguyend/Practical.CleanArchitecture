@@ -11,6 +11,7 @@ using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Persistence;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
 using ClassifiedAds.WebAPI.Hubs;
+using ClassifiedAds.WebAPI.RateLimiterPolicies;
 using ClassifiedAds.WebAPI.Tenants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -110,6 +111,12 @@ namespace ClassifiedAds.WebAPI
                 });
 
             services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
+
+            services.AddRateLimiter(options =>
+            {
+                options.AddPolicy<string, DefaultRateLimiterPolicy>(RateLimiterPolicyNames.DefaultPolicy);
+                options.AddPolicy<string, GetAuditLogsRateLimiterPolicy>(RateLimiterPolicyNames.GetAuditLogsPolicy);
+            });
 
             services.AddSwaggerGen(setupAction =>
             {
@@ -252,6 +259,8 @@ namespace ClassifiedAds.WebAPI
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseRateLimiter();
 
             app.UseMonitoringServices(AppSettings.Monitoring);
 
