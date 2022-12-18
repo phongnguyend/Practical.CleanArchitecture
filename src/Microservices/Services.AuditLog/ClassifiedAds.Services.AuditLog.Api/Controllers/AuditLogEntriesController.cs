@@ -6,9 +6,11 @@ using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
 using ClassifiedAds.Services.AuditLog.Authorization.Policies.AuditLogs;
 using ClassifiedAds.Services.AuditLog.DTOs;
 using ClassifiedAds.Services.AuditLog.Queries;
+using ClassifiedAds.Services.AuditLog.RateLimiterPolicies;
 using Dapr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace ClassifiedAds.Services.AuditLog.Controllers
 {
@@ -25,6 +27,7 @@ namespace ClassifiedAds.Services.AuditLog.Controllers
             _dispatcher = dispatcher;
         }
 
+        [EnableRateLimiting(RateLimiterPolicyNames.GetAuditLogsPolicy)]
         [AuthorizePolicy(typeof(GetAuditLogsPolicy))]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AuditLogEntryDTO>>> Get()
