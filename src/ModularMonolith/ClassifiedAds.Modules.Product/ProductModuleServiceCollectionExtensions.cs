@@ -5,6 +5,7 @@ using ClassifiedAds.Infrastructure.Csv;
 using ClassifiedAds.Modules.Product.ConfigurationOptions;
 using ClassifiedAds.Modules.Product.Entities;
 using ClassifiedAds.Modules.Product.HostedServices;
+using ClassifiedAds.Modules.Product.RateLimiterPolicies;
 using ClassifiedAds.Modules.Product.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +42,11 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
             services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
+
+            services.AddRateLimiter(options =>
+            {
+                options.AddPolicy<string, DefaultRateLimiterPolicy>(RateLimiterPolicyNames.DefaultPolicy);
+            });
 
             services.AddScoped(typeof(ICsvReader<>), typeof(CsvReader<>));
             services.AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>));

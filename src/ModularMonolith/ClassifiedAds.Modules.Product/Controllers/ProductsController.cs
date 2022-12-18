@@ -8,9 +8,11 @@ using ClassifiedAds.Modules.Product.Authorization.Policies.Products;
 using ClassifiedAds.Modules.Product.Commands;
 using ClassifiedAds.Modules.Product.Models;
 using ClassifiedAds.Modules.Product.Queries;
+using ClassifiedAds.Modules.Product.RateLimiterPolicies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -22,6 +24,7 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Product.Controllers
 {
+    [EnableRateLimiting(RateLimiterPolicyNames.DefaultPolicy)]
     [Authorize]
     [Produces("application/json")]
     [Route("api/[controller]")]

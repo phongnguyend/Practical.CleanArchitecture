@@ -17,14 +17,14 @@ indent_size = 2
 # Code files
 [*.{cs,csx,vb,vbx}]
 indent_size = 4
-insert_final_newline = true
+# insert_final_newline = true
 charset = utf-8-bom
 ###############################
 # .NET Coding Conventions     #
 ###############################
 [*.{cs,vb}]
 # Organize usings
-dotnet_sort_system_directives_first = true
+dotnet_sort_system_directives_first = false
 # this. preferences
 dotnet_style_qualification_for_field = false:silent
 dotnet_style_qualification_for_property = false:silent
@@ -193,6 +193,9 @@ dotnet_diagnostic.SA1310.severity = none
 # SA1402: File may only contain a single type
 dotnet_diagnostic.SA1402.severity = none
 
+# SA1413: Use trailing comma in multi-line initializers
+dotnet_diagnostic.SA1413.severity = none
+
 # SA1516: Elements should be separated by blank line
 dotnet_diagnostic.SA1516.severity = none
 
@@ -216,3 +219,6 @@ dotnet_diagnostic.SA1629.severity = none
 
 # SA1633: File should have header
 dotnet_diagnostic.SA1633.severity = none
+
+# SA1649: File name should match first type name
+dotnet_diagnostic.SA1649.severity = suggestion

@@ -2,12 +2,14 @@
 using ClassifiedAds.Modules.AuditLog.ConfigurationOptions;
 using ClassifiedAds.Modules.AuditLog.Contracts.Services;
 using ClassifiedAds.Modules.AuditLog.Entities;
+using ClassifiedAds.Modules.AuditLog.RateLimiterPolicies;
 using ClassifiedAds.Modules.AuditLog.Repositories;
 using ClassifiedAds.Modules.AuditLog.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Reflection;
+using RateLimiterPolicyNames = ClassifiedAds.Modules.AuditLog.RateLimiterPolicies.RateLimiterPolicyNames;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -33,6 +35,11 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
             services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
+
+            services.AddRateLimiter(options =>
+            {
+                options.AddPolicy<string, GetAuditLogsRateLimiterPolicy>(RateLimiterPolicyNames.GetAuditLogsPolicy);
+            });
 
             return services;
         }

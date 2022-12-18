@@ -232,6 +232,8 @@ namespace ClassifiedAds.WebAPI
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseRateLimiter();
+
             app.UseMonitoringServices(AppSettings.Monitoring);
 
             app.UseEndpoints(endpoints =>
