@@ -1,8 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.CrossCuttingConcerns.Excel;
 using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
-using ClassifiedAds.WebAPI.Authorization.Policies.ConfigurationEntries;
+using ClassifiedAds.WebAPI.Authorization;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
 using ClassifiedAds.WebAPI.Models.ConfigurationEntries;
 using CryptographyHelper;
@@ -46,7 +45,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             _configurationEntriesExcelReader = configurationEntriesExcelReader;
         }
 
-        [AuthorizePolicy(typeof(GetConfigurationEntriesPolicy))]
+        [Authorize(AuthorizationPolicyNames.GetConfigurationEntriesPolicy)]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ConfigurationEntryModel>>> Get()
         {
@@ -55,7 +54,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
-        [AuthorizePolicy(typeof(GetConfigurationEntryPolicy))]
+        [Authorize(AuthorizationPolicyNames.GetConfigurationEntryPolicy)]
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -66,7 +65,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
-        [AuthorizePolicy(typeof(AddConfigurationEntryPolicy))]
+        [Authorize(AuthorizationPolicyNames.AddConfigurationEntryPolicy)]
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -86,7 +85,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Created($"/api/ConfigurationEntries/{model.Id}", model);
         }
 
-        [AuthorizePolicy(typeof(UpdateConfigurationEntryPolicy))]
+        [Authorize(AuthorizationPolicyNames.UpdateConfigurationEntryPolicy)]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -114,7 +113,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
-        [AuthorizePolicy(typeof(DeleteConfigurationEntryPolicy))]
+        [Authorize(AuthorizationPolicyNames.DeleteConfigurationEntryPolicy)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

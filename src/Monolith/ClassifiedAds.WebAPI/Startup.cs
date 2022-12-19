@@ -9,6 +9,7 @@ using ClassifiedAds.Infrastructure.Localization;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Persistence;
+using ClassifiedAds.WebAPI.Authorization;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
 using ClassifiedAds.WebAPI.Hubs;
 using ClassifiedAds.WebAPI.RateLimiterPolicies;
@@ -110,7 +111,7 @@ namespace ClassifiedAds.WebAPI
                     options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
                 });
 
-            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
+            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
 
             services.AddRateLimiter(options =>
             {
