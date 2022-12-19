@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Modules.Configuration.Authorization.Requirements
+namespace ClassifiedAds.Infrastructure.Web.Authorization.Requirements
 {
     public class PermissionRequirement : IAuthorizationRequirement
     {
-        public string Action { get; set; }
-
-        public string Feature { get; set; }
+        public string PermissionName { get; set; }
     }
 
     public class PermissionRequirementHandler : AuthorizationHandler<PermissionRequirement>

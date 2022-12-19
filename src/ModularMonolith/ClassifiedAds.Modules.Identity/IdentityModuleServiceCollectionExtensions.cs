@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Modules.Identity;
+using ClassifiedAds.Modules.Identity.Authorization;
 using ClassifiedAds.Modules.Identity.ConfigurationOptions;
 using ClassifiedAds.Modules.Identity.Contracts.Services;
 using ClassifiedAds.Modules.Identity.Entities;
@@ -130,7 +131,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 // option.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2;
             });
 
-            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
+            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
         }
 
         public static IMvcBuilder AddIdentityModule(this IMvcBuilder builder)

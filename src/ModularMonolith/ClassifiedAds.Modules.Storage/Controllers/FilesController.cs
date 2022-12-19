@@ -1,8 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Infrastructure.Storages;
-using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
 using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
-using ClassifiedAds.Modules.Storage.Authorization.Policies.Files;
+using ClassifiedAds.Modules.Storage.Authorization;
 using ClassifiedAds.Modules.Storage.Entities;
 using ClassifiedAds.Modules.Storage.Models;
 using ClassifiedAds.Modules.Storage.Queries;
@@ -38,7 +37,7 @@ namespace ClassifiedAds.Modules.Storage.Controllers
             _fileManager = fileManager;
         }
 
-        [AuthorizePolicy(typeof(GetFilesPolicy))]
+        [Authorize(AuthorizationPolicyNames.GetFilesPolicy)]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get()
         {
@@ -46,7 +45,7 @@ namespace ClassifiedAds.Modules.Storage.Controllers
             return Ok(fileEntries.ToModels());
         }
 
-        [AuthorizePolicy(typeof(UploadFilePolicy))]
+        [Authorize(AuthorizationPolicyNames.UploadFilePolicy)]
         [HttpPost]
         public async Task<ActionResult<FileEntryModel>> Upload([FromForm] UploadFileModel model)
         {
@@ -100,7 +99,7 @@ namespace ClassifiedAds.Modules.Storage.Controllers
             return Ok(fileEntry.ToModel());
         }
 
-        [AuthorizePolicy(typeof(GetFilePolicy))]
+        [Authorize(AuthorizationPolicyNames.GetFilePolicy)]
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get(Guid id)
         {
@@ -108,7 +107,7 @@ namespace ClassifiedAds.Modules.Storage.Controllers
             return Ok(fileEntry.ToModel());
         }
 
-        [AuthorizePolicy(typeof(DownloadFilePolicy))]
+        [Authorize(AuthorizationPolicyNames.DownloadFilePolicy)]
         [HttpGet("{id}/download")]
         public async Task<IActionResult> Download(Guid id)
         {
@@ -127,7 +126,7 @@ namespace ClassifiedAds.Modules.Storage.Controllers
             return File(content, MediaTypeNames.Application.Octet, WebUtility.HtmlEncode(fileEntry.FileName));
         }
 
-        [AuthorizePolicy(typeof(UpdateFilePolicy))]
+        [Authorize(AuthorizationPolicyNames.UpdateFilePolicy)]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -144,7 +143,7 @@ namespace ClassifiedAds.Modules.Storage.Controllers
             return Ok(model);
         }
 
-        [AuthorizePolicy(typeof(DeleteFilePolicy))]
+        [Authorize(AuthorizationPolicyNames.DeleteFilePolicy)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -156,7 +155,7 @@ namespace ClassifiedAds.Modules.Storage.Controllers
             return Ok();
         }
 
-        [AuthorizePolicy(typeof(GetFileAuditLogsPolicy))]
+        [Authorize(AuthorizationPolicyNames.GetFileAuditLogsPolicy)]
         [HttpGet("{id}/auditlogs")]
         public async Task<ActionResult<IEnumerable<AuditLogEntryDTO>>> GetAuditLogs(Guid id)
         {

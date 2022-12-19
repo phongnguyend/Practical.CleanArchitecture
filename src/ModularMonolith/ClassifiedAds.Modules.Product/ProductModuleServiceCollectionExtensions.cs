@@ -2,6 +2,7 @@
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Csv;
+using ClassifiedAds.Modules.Product.Authorization;
 using ClassifiedAds.Modules.Product.ConfigurationOptions;
 using ClassifiedAds.Modules.Product.Entities;
 using ClassifiedAds.Modules.Product.HostedServices;
@@ -41,7 +42,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
-            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
+            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
 
             services.AddRateLimiter(options =>
             {

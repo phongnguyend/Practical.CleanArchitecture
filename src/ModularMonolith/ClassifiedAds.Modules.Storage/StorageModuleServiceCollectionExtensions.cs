@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Modules.Storage.Authorization;
 using ClassifiedAds.Modules.Storage.ConfigurationOptions;
 using ClassifiedAds.Modules.Storage.Entities;
 using ClassifiedAds.Modules.Storage.HostedServices;
@@ -37,7 +38,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddStorageManager(settings);
 
-            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
+            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
 
             return services;
         }

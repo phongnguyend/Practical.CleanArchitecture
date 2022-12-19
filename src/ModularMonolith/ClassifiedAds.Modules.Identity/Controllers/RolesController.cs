@@ -1,6 +1,5 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
-using ClassifiedAds.Modules.Identity.Authorization.Policies.Roles;
+using ClassifiedAds.Modules.Identity.Authorization;
 using ClassifiedAds.Modules.Identity.Commands.Roles;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Models;
@@ -28,7 +27,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
             _dispatcher = dispatcher;
         }
 
-        [AuthorizePolicy(typeof(GetRolesPolicy))]
+        [Authorize(AuthorizationPolicyNames.GetRolesPolicy)]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Role>>> Get()
         {
@@ -37,7 +36,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
             return Ok(model);
         }
 
-        [AuthorizePolicy(typeof(GetRolePolicy))]
+        [Authorize(AuthorizationPolicyNames.GetRolePolicy)]
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -48,7 +47,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
             return Ok(model);
         }
 
-        [AuthorizePolicy(typeof(AddRolePolicy))]
+        [Authorize(AuthorizationPolicyNames.AddRolePolicy)]
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -67,7 +66,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
             return Created($"/api/roles/{model.Id}", model);
         }
 
-        [AuthorizePolicy(typeof(UpdateRolePolicy))]
+        [Authorize(AuthorizationPolicyNames.UpdateRolePolicy)]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -86,7 +85,7 @@ namespace ClassifiedAds.Modules.Identity.Controllers
             return Ok(model);
         }
 
-        [AuthorizePolicy(typeof(DeleteRolePolicy))]
+        [Authorize(AuthorizationPolicyNames.DeleteRolePolicy)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
