@@ -2,8 +2,7 @@
 using ClassifiedAds.CrossCuttingConcerns.Csv;
 using ClassifiedAds.CrossCuttingConcerns.HtmlGenerator;
 using ClassifiedAds.CrossCuttingConcerns.PdfConverter;
-using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
-using ClassifiedAds.Services.Product.Authorization.Policies.Products;
+using ClassifiedAds.Services.Product.Authorization;
 using ClassifiedAds.Services.Product.Commands;
 using ClassifiedAds.Services.Product.DTOs;
 using ClassifiedAds.Services.Product.Models;
@@ -53,7 +52,7 @@ namespace ClassifiedAds.Services.Product.Controllers
             _productCsvReader = productCsvReader;
         }
 
-        [AuthorizePolicy(typeof(GetProductsPolicy))]
+        [Authorize(AuthorizationPolicyNames.GetProductsPolicy)]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Entities.Product>>> Get()
         {
@@ -63,7 +62,7 @@ namespace ClassifiedAds.Services.Product.Controllers
             return Ok(model);
         }
 
-        [AuthorizePolicy(typeof(GetProductPolicy))]
+        [Authorize(AuthorizationPolicyNames.GetProductPolicy)]
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -74,7 +73,7 @@ namespace ClassifiedAds.Services.Product.Controllers
             return Ok(model);
         }
 
-        [AuthorizePolicy(typeof(AddProductPolicy))]
+        [Authorize(AuthorizationPolicyNames.AddProductPolicy)]
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -86,7 +85,7 @@ namespace ClassifiedAds.Services.Product.Controllers
             return Created($"/api/products/{model.Id}", model);
         }
 
-        [AuthorizePolicy(typeof(UpdateProductPolicy))]
+        [Authorize(AuthorizationPolicyNames.UpdateProductPolicy)]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -106,7 +105,7 @@ namespace ClassifiedAds.Services.Product.Controllers
             return Ok(model);
         }
 
-        [AuthorizePolicy(typeof(DeleteProductPolicy))]
+        [Authorize(AuthorizationPolicyNames.DeleteProductPolicy)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -119,7 +118,7 @@ namespace ClassifiedAds.Services.Product.Controllers
             return Ok();
         }
 
-        [AuthorizePolicy(typeof(GetProductAuditLogsPolicy))]
+        [Authorize(AuthorizationPolicyNames.GetProductAuditLogsPolicy)]
         [HttpGet("{id}/auditlogs")]
         public async Task<ActionResult<IEnumerable<AuditLogEntryDTO>>> GetAuditLogs(Guid id)
         {

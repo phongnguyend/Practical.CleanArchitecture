@@ -3,6 +3,7 @@ using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Csv;
 using ClassifiedAds.Infrastructure.Identity;
+using ClassifiedAds.Services.Product.Authorization;
 using ClassifiedAds.Services.Product.ConfigurationOptions;
 using ClassifiedAds.Services.Product.DTOs;
 using ClassifiedAds.Services.Product.Entities;
@@ -38,7 +39,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
-            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
+            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentWebUser>();

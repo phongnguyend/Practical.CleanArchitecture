@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Excel;
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Services.Configuration.Authorization;
 using ClassifiedAds.Services.Configuration.ConfigurationOptions;
 using ClassifiedAds.Services.Configuration.Entities;
 using ClassifiedAds.Services.Configuration.Excel.ClosedXML;
@@ -30,7 +31,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
-            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
+            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
 
             services.AddScoped<IExcelReader<List<ConfigurationEntry>>, ConfigurationEntryExcelReader>();
             services.AddScoped<IExcelWriter<List<ConfigurationEntry>>, ConfigurationEntryExcelWriter>();

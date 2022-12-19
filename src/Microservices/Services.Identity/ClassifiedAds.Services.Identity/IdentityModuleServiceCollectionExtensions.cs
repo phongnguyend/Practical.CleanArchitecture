@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Services.Identity;
+using ClassifiedAds.Services.Identity.Authorization;
 using ClassifiedAds.Services.Identity.ConfigurationOptions;
 using ClassifiedAds.Services.Identity.Entities;
 using ClassifiedAds.Services.Identity.PasswordValidators;
@@ -116,7 +117,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 // option.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2;
             });
 
-            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
+            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
         }
 
         public static void MigrateIdentityDb(this IApplicationBuilder app)

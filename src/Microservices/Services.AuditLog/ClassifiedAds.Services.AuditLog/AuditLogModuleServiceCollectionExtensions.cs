@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Services.AuditLog.Authorization;
 using ClassifiedAds.Services.AuditLog.ConfigurationOptions;
 using ClassifiedAds.Services.AuditLog.DTOs;
 using ClassifiedAds.Services.AuditLog.Entities;
@@ -25,7 +26,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
-            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
+            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
 
             services.AddMessageBusReceiver<AuditLogCreatedEvent>(appSettings.MessageBroker);
 

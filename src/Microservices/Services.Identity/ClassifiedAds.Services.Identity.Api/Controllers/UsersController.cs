@@ -1,6 +1,5 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
-using ClassifiedAds.Services.Identity.Authorization.Policies.Users;
+using ClassifiedAds.Services.Identity.Authorization;
 using ClassifiedAds.Services.Identity.Commands.EmailMessages;
 using ClassifiedAds.Services.Identity.Commands.Users;
 using ClassifiedAds.Services.Identity.DTOs;
@@ -40,7 +39,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
             _configuration = configuration;
         }
 
-        [AuthorizePolicy(typeof(GetUsersPolicy))]
+        [Authorize(AuthorizationPolicyNames.GetUsersPolicy)]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> Get()
         {
@@ -49,7 +48,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
             return Ok(model);
         }
 
-        [AuthorizePolicy(typeof(GetUserPolicy))]
+        [Authorize(AuthorizationPolicyNames.GetUserPolicy)]
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -60,7 +59,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
             return Ok(model);
         }
 
-        [AuthorizePolicy(typeof(AddUserPolicy))]
+        [Authorize(AuthorizationPolicyNames.AddUserPolicy)]
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -87,7 +86,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
             return Created($"/api/users/{model.Id}", model);
         }
 
-        [AuthorizePolicy(typeof(UpdateUserPolicy))]
+        [Authorize(AuthorizationPolicyNames.UpdateUserPolicy)]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -114,7 +113,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
             return Ok(model);
         }
 
-        [AuthorizePolicy(typeof(SetPasswordPolicy))]
+        [Authorize(AuthorizationPolicyNames.SetPasswordPolicy)]
         [HttpPut("{id}/password")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -134,7 +133,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
             return BadRequest(rs.Errors);
         }
 
-        [AuthorizePolicy(typeof(DeleteUserPolicy))]
+        [Authorize(AuthorizationPolicyNames.DeleteUserPolicy)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -146,7 +145,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
             return Ok();
         }
 
-        [AuthorizePolicy(typeof(SendResetPasswordEmailPolicy))]
+        [Authorize(AuthorizationPolicyNames.SendResetPasswordEmailPolicy)]
         [HttpPost("{id}/passwordresetemail")]
         public async Task<ActionResult> SendResetPasswordEmail(Guid id)
         {
@@ -176,7 +175,7 @@ namespace ClassifiedAds.Services.Identity.Controllers
             return Ok();
         }
 
-        [AuthorizePolicy(typeof(SendConfirmationEmailAddressEmailPolicy))]
+        [Authorize(AuthorizationPolicyNames.SendConfirmationEmailAddressEmailPolicy)]
         [HttpPost("{id}/emailaddressconfirmation")]
         public async Task<ActionResult> SendConfirmationEmailAddressEmail(Guid id)
         {

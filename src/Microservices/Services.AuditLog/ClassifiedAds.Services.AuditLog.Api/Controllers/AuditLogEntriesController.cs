@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using ClassifiedAds.Application;
+﻿using ClassifiedAds.Application;
 using ClassifiedAds.Application.Common.DTOs;
-using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
-using ClassifiedAds.Services.AuditLog.Authorization.Policies.AuditLogs;
+using ClassifiedAds.Services.AuditLog.Authorization;
 using ClassifiedAds.Services.AuditLog.DTOs;
 using ClassifiedAds.Services.AuditLog.Queries;
 using ClassifiedAds.Services.AuditLog.RateLimiterPolicies;
@@ -11,6 +8,8 @@ using Dapr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.AuditLog.Controllers
 {
@@ -28,7 +27,7 @@ namespace ClassifiedAds.Services.AuditLog.Controllers
         }
 
         [EnableRateLimiting(RateLimiterPolicyNames.GetAuditLogsPolicy)]
-        [AuthorizePolicy(typeof(GetAuditLogsPolicy))]
+        [Authorize(AuthorizationPolicyNames.GetAuditLogsPolicy)]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AuditLogEntryDTO>>> Get()
         {
@@ -36,7 +35,7 @@ namespace ClassifiedAds.Services.AuditLog.Controllers
             return Ok(logs);
         }
 
-        [AuthorizePolicy(typeof(GetAuditLogsPolicy))]
+        [Authorize(AuthorizationPolicyNames.GetAuditLogsPolicy)]
         [HttpGet("paged")]
         public async Task<ActionResult<Paged<AuditLogEntryDTO>>> GetPaged(int page, int pageSize)
         {
