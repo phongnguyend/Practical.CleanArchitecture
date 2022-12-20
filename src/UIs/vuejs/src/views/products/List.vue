@@ -11,9 +11,7 @@
           Export as Csv
         </button>
         &nbsp;
-        <router-link class="btn btn-primary" to="/products/add"
-          >Add Product</router-link
-        >
+        <router-link class="btn btn-primary" to="/products/add">Add Product</router-link>
         &nbsp;
         <button class="btn btn-primary" @click="openImportCsvModal()">
           Import Csv
@@ -52,50 +50,29 @@
           <tbody>
             <tr v-for="product in filteredProducts" :key="product.id">
               <td>
-                <img
-                  v-if="showImage"
-                  :src="
-                    product.imageUrl || '/img/icons/android-chrome-192x192.png'
-                  "
-                  :title="product.name"
-                  :style="{
-                    width: imageWidth + 'px',
-                    margin: imageMargin + 'px'
-                  }"
-                />
+                <img v-if="showImage" :src="
+                  product.imageUrl || '/img/icons/android-chrome-192x192.png'
+                " :title="product.name" :style="{
+  width: imageWidth + 'px',
+  margin: imageMargin + 'px'
+}" />
               </td>
               <td>
                 <router-link :to="'/products/' + product.id">{{
-                  product.name
+                    product.name
                 }}</router-link>
               </td>
-              <td>{{ product.code | uppercase }}</td>
+              <td>{{ uppercase(product.code) }}</td>
               <td>{{ product.description }}</td>
               <td>{{ product.price || 5 }}</td>
               <td>
-                <app-star
-                  :rating="product.starRating || 4"
-                  @ratingClicked="onRatingClicked($event)"
-                ></app-star>
+                <app-star :rating="product.starRating || 4" @ratingClicked="onRatingClicked($event)"></app-star>
               </td>
               <td>
-                <router-link
-                  class="btn btn-primary"
-                  :to="'/products/edit/' + product.id"
-                  >Edit</router-link
-                >&nbsp;
-                <button
-                  type="button"
-                  class="btn btn-primary btn-secondary"
-                  @click="viewAuditLogs(product)"
-                >
-                  View Audit Logs</button
-                >&nbsp;
-                <button
-                  type="button"
-                  class="btn btn-primary btn-danger"
-                  @click="deleteProduct(product)"
-                >
+                <router-link class="btn btn-primary" :to="'/products/edit/' + product.id">Edit</router-link>&nbsp;
+                <button type="button" class="btn btn-primary btn-secondary" @click="viewAuditLogs(product)">
+                  View Audit Logs</button>&nbsp;
+                <button type="button" class="btn btn-primary btn-danger" @click="deleteProduct(product)">
                   Delete
                 </button>
               </td>
@@ -107,13 +84,13 @@
     <div v-if="errorMessage" class="alert alert-danger">
       Error: {{ errorMessage }}
     </div>
-    <b-modal id="modal-delete" title="Delete Product" @ok="deleteConfirmed">
+    <b-modal ref="modal-delete" title="Delete Product" @ok="deleteConfirmed">
       <p class="my-4">
         Are you sure you want to delete:
         <strong>{{ selectedProduct.name }}</strong>
       </p>
     </b-modal>
-    <b-modal id="modal-audit-logs" hide-footer hide-header size="xl">
+    <b-modal ref="modal-audit-logs" hide-footer hide-header size="xl">
       <div class="table-responsive">
         <table class="table">
           <thead>
@@ -128,7 +105,7 @@
           </thead>
           <tbody>
             <tr v-for="auditLog in auditLogs" :key="auditLog.id">
-              <td>{{ auditLog.createdDateTime | formatedDateTime }}</td>
+              <td>{{ formatedDateTime(auditLog.createdDateTime) }}</td>
               <td>{{ auditLog.userName }}</td>
               <td>{{ auditLog.action }}</td>
               <td :style="{ color: auditLog.highLight.code ? 'red' : '' }">
@@ -137,9 +114,7 @@
               <td :style="{ color: auditLog.highLight.name ? 'red' : '' }">
                 {{ auditLog.data.name }}
               </td>
-              <td
-                :style="{ color: auditLog.highLight.description ? 'red' : '' }"
-              >
+              <td :style="{ color: auditLog.highLight.description ? 'red' : '' }">
                 {{ auditLog.data.description }}
               </td>
             </tr>
@@ -147,20 +122,13 @@
         </table>
       </div>
     </b-modal>
-    <b-modal id="modal-import-csv" hide-footer title="Import Csv">
+    <b-modal ref="modal-import-csv" hide-footer title="Import Csv">
       <form @submit.prevent="confirmImportCsvFile">
         <div class="form-group row">
           <div class="col-sm-12">
-            <input
-              id="importingFile"
-              type="file"
-              name="importingFile"
-              class="form-control"
-              :class="{
-                'is-invalid': isImportCsvFormSubmitted && !importingFile
-              }"
-              @change="handleFileInput($event.target.files)"
-            />
+            <input id="importingFile" type="file" name="importingFile" class="form-control" :class="{
+              'is-invalid': isImportCsvFormSubmitted && !importingFile
+            }" @change="handleFileInput($event.target.files)" />
             <span class="invalid-feedback"> Select a file </span>
           </div>
         </div>
@@ -175,14 +143,15 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
+import { BModal } from "bootstrap-vue";
 import axios from "./axios";
 
 import logo from "../../assets/logo.png";
 import Star from "../../components/Star.vue";
 import { IProduct } from "./Product";
 
-export default Vue.extend({
+export default defineComponent({
   data() {
     return {
       pageTitle: "Product List",
@@ -226,7 +195,7 @@ export default Vue.extend({
     },
     deleteProduct(product: IProduct) {
       this.selectedProduct = product;
-      this.$bvModal.show("modal-delete");
+      (this.$refs["modal-delete"] as BModal).show();
     },
     deleteConfirmed() {
       axios.delete(this.selectedProduct.id).then(rs => {
@@ -236,7 +205,7 @@ export default Vue.extend({
     viewAuditLogs(product: IProduct) {
       axios.get(product.id + "/auditLogs").then(rs => {
         this.auditLogs = rs.data;
-        this.$bvModal.show("modal-audit-logs");
+        (this.$refs["modal-audit-logs"] as BModal).show();
       });
     },
     exportAsPdf() {
@@ -262,7 +231,7 @@ export default Vue.extend({
     openImportCsvModal() {
       this.isImportCsvFormSubmitted = false;
       this.importingFile = null;
-      this.$bvModal.show("modal-import-csv");
+      (this.$refs["modal-import-csv"] as BModal).show();
     },
     handleFileInput(files: FileList) {
       this.importingFile = files.item(0);
@@ -276,22 +245,20 @@ export default Vue.extend({
       formData.append("formFile", this.importingFile);
       const rs = await axios.post("ImportCsv", formData);
       this.isImportCsvFormSubmitted = false;
-      this.$bvModal.hide("modal-import-csv");
+      (this.$refs["modal-import-csv"] as BModal).hide();
       this.loadProducts();
+    },
+    formatedDateTime(value: string) {
+      if (!value) return value;
+      var date = new Date(value);
+      return date.toLocaleDateString() + " " + date.toLocaleTimeString();
+    },
+    uppercase(value: string) {
+      return value?.toUpperCase();
     }
   },
   components: {
     appStar: Star
-  },
-  filters: {
-    lowercase: function(value: string) {
-      return value.toLowerCase();
-    },
-    formatedDateTime: function(value: string) {
-      if (!value) return value;
-      var date = new Date(value);
-      return date.toLocaleDateString() + " " + date.toLocaleTimeString();
-    }
   },
   created() {
     this.loadProducts();

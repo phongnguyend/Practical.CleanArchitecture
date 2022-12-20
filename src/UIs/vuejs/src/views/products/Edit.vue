@@ -9,64 +9,34 @@
         <div class="form-group row">
           <label for="name" class="col-sm-2 col-form-label">Name</label>
           <div class="col-sm-10">
-            <input
-              id="name"
-              name="name"
-              class="form-control"
-              v-model="product.name"
-              :class="{ 'is-invalid': isSubmitted && $v.product.name.$invalid }"
-              @input="$v.product.name.$touch()"
-            />
-            {{ $v.name }}
+            <input id="name" name="name" class="form-control" v-model="product.name"
+              :class="{ 'is-invalid': isSubmitted && v$.product.name.$invalid }" @input="v$.product.name.$touch()" />
             <span class="invalid-feedback">
-              <span v-if="!$v.product.name.required">Enter a name</span>
-              <span v-if="!$v.product.name.minLength"
-                >The name must be longer than 3 characters.</span
-              >
+              <span v-if="v$.product.name.required.$invalid">Enter a name</span>
+              <span v-if="v$.product.name.minLength.$invalid">The name must be longer than 3 characters.</span>
             </span>
           </div>
         </div>
         <div class="form-group row">
           <label for="code" class="col-sm-2 col-form-label">Code</label>
           <div class="col-sm-10">
-            <input
-              id="code"
-              name="code"
-              class="form-control"
-              v-model="product.code"
-              :class="{ 'is-invalid': isSubmitted && $v.product.code.$invalid }"
-              @input="$v.product.code.$touch()"
-            />
+            <input id="code" name="code" class="form-control" v-model="product.code"
+              :class="{ 'is-invalid': isSubmitted && v$.product.code.$invalid }" @input="v$.product.code.$touch()" />
             <span class="invalid-feedback">
-              <span v-if="!$v.product.code.required">Enter a code</span>
-              <span v-if="!$v.product.code.maxLength"
-                >The code must be less than 10 characters.</span
-              >
+              <span v-if="v$.product.code.required.$invalid">Enter a code</span>
+              <span v-if="v$.product.code.maxLength.$invalid">The code must be less than 10 characters.</span>
             </span>
           </div>
         </div>
         <div class="form-group row">
-          <label for="description" class="col-sm-2 col-form-label"
-            >Description</label
-          >
+          <label for="description" class="col-sm-2 col-form-label">Description</label>
           <div class="col-sm-10">
-            <input
-              id="description"
-              name="description"
-              class="form-control"
-              v-model="product.description"
-              :class="{
-                'is-invalid': isSubmitted && $v.product.description.$invalid
-              }"
-              @input="$v.product.description.$touch()"
-            />
+            <input id="description" name="description" class="form-control" v-model="product.description" :class="{
+              'is-invalid': isSubmitted && v$.product.description.$invalid
+            }" @input="v$.product.description.$touch()" />
             <span class="invalid-feedback">
-              <span v-if="!$v.product.description.required"
-                >Enter a description</span
-              >
-              <span v-if="!$v.product.description.maxLength"
-                >The code must be less than 100 characters.</span
-              >
+              <span v-if="v$.product.description.required.$invalid">Enter a description</span>
+              <span v-if="v$.product.description.maxLength.$invalid">The code must be less than 100 characters.</span>
             </span>
           </div>
         </div>
@@ -79,11 +49,7 @@
       </form>
     </div>
     <div class="card-footer">
-      <router-link
-        class="btn btn-outline-secondary"
-        to="/products"
-        style="width:80px"
-      >
+      <router-link class="btn btn-outline-secondary" to="/products" style="width:80px">
         <i class="fa fa-chevron-left"></i> Back
       </router-link>
     </div>
@@ -91,13 +57,17 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { required, minLength, maxLength } from "vuelidate/lib/validators";
-
+import { defineComponent } from "vue";
+import useVuelidate from "@vuelidate/core";
+import { required, minLength, maxLength } from "@vuelidate/validators";
 import axios from "./axios";
+
 import { IProduct } from "./Product";
 
-export default Vue.extend({
+export default defineComponent({
+  setup() {
+    return { v$: useVuelidate() }
+  },
   data() {
     return {
       product: { name: "", code: "", description: "" } as IProduct,
@@ -111,7 +81,7 @@ export default Vue.extend({
       return this.$route.params.id ? "Edit Product" : "Add Product";
     },
     id() {
-      return this.$route.params.id;
+      return this.$route.params.id as string;
     }
   },
   validations: {
@@ -131,7 +101,7 @@ export default Vue.extend({
     onSubmit() {
       this.isSubmitted = true;
 
-      if (this.$v.product.$invalid) {
+      if (this.v$.product.$invalid) {
         return;
       }
 
@@ -146,7 +116,7 @@ export default Vue.extend({
     }
   },
   created() {
-    const id = this.$route.params.id;
+    const id = this.$route.params.id as string;
     if (id) {
       axios.get(id).then(rs => {
         this.product = rs.data;

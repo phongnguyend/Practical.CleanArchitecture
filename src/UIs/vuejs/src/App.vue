@@ -9,14 +9,17 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from "vue";
+
 import Nav from "./views/Nav.vue";
 import Notification from "./components/Notification.vue";
-export default {
+
+export default defineComponent({
   components: {
     appNav: Nav,
     appNotification: Notification
   }
-};
+});
 </script>
 
 <style lang="scss">

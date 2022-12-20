@@ -30,8 +30,7 @@
 </template>
 
 <script lang="ts">
-// @ is an alias to /src
-import Vue, { defineComponent } from "vue";
+import { defineComponent, version } from "vue";
 
 import Timer from "../components/Timer.vue"
 
@@ -40,7 +39,7 @@ export default defineComponent({
   data() {
     return {
       pageTitle: "Welcome ClassifiedAds Vue" as string,
-      version: Vue.version
+      version: version
     };
   },
   components: {
@@ -48,7 +47,7 @@ export default defineComponent({
   },
   methods: {
     appendVersion: function (value: string) {
-      return value + " " + Vue.version;
+      return value + " " + version;
     },
     appendCurrentDateTime: function (value: string) {
       return value + " " + new Date();

@@ -6,10 +6,12 @@
 }} </span>
 </template>
 <script lang="ts">
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
   data() {
     return {
-      interval: 0 as number,
+      interval: 0 as any,
       years: 0,
       months: 0,
       days: 0,
@@ -36,10 +38,10 @@ export default {
       this.getTime();
     }, 1000);
   },
-  destroyed() {
+  unmounted() {
     clearInterval(this.interval);
   }
-};
+});
 </script>
 <style scoped>
 

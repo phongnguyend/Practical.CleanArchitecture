@@ -9,72 +9,36 @@
         <div class="form-group row">
           <label for="name" class="col-sm-2 col-form-label">Name</label>
           <div class="col-sm-10">
-            <input
-              id="name"
-              name="name"
-              class="form-control"
-              v-model="file.name"
-              :class="{ 'is-invalid': isSubmitted && $v.file.name.$invalid }"
-              @input="$v.file.name.$touch()"
-            />
-            {{ $v.name }}
+            <input id="name" name="name" class="form-control" v-model="file.name"
+              :class="{ 'is-invalid': isSubmitted && v$.file.name.$invalid }" @input="v$.file.name.$touch()" />
             <span class="invalid-feedback">
-              <span v-if="!$v.file.name.required">Enter a name</span>
-              <span v-if="!$v.file.name.minLength"
-                >The name must be longer than 3 characters.</span
-              >
+              <span v-if="v$.file.name.required.$invalid">Enter a name</span>
+              <span v-if="v$.file.name.minLength.$invalid">The name must be longer than 3 characters.</span>
             </span>
           </div>
         </div>
         <div class="form-group row">
-          <label for="description" class="col-sm-2 col-form-label"
-            >Description</label
-          >
+          <label for="description" class="col-sm-2 col-form-label">Description</label>
           <div class="col-sm-10">
-            <input
-              id="description"
-              name="description"
-              class="form-control"
-              v-model="file.description"
-              :class="{
-                'is-invalid': isSubmitted && $v.file.description.$invalid
-              }"
-              @input="$v.file.description.$touch()"
-            />
+            <input id="description" name="description" class="form-control" v-model="file.description" :class="{
+              'is-invalid': isSubmitted && v$.file.description.$invalid
+            }" @input="v$.file.description.$touch()" />
             <span class="invalid-feedback">
-              <span v-if="!$v.file.description.required"
-                >Enter a description</span
-              >
-              <span v-if="!$v.file.description.maxLength"
-                >The code must be less than 100 characters.</span
-              >
+              <span v-if="v$.file.description.required.$invalid">Enter a description</span>
+              <span v-if="v$.file.description.maxLength.$invalid">The code must be less than 100 characters.</span>
             </span>
           </div>
         </div>
         <div class="form-group row">
           <label for="formFile" class="col-sm-2 col-form-label">File</label>
           <div class="col-sm-10">
-            <input
-              id="formFile"
-              name="formFile"
-              class="form-control"
-              :value="file.fileName"
-              disabled
-            />
+            <input id="formFile" name="formFile" class="form-control" :value="file.fileName" disabled />
           </div>
         </div>
         <div class="form-group row">
-          <label for="encrypted" class="col-sm-2 col-form-label"
-            >Encrypted</label
-          >
+          <label for="encrypted" class="col-sm-2 col-form-label">Encrypted</label>
           <div class="col-sm-10">
-            <input
-              type="checkbox"
-              id="encrypted"
-              name="encrypted"
-              v-model="file.encrypted"
-              disabled
-            />
+            <input type="checkbox" id="encrypted" name="encrypted" v-model="file.encrypted" disabled />
           </div>
         </div>
         <div class="form-group row">
@@ -86,22 +50,13 @@
       </form>
     </div>
     <div class="card-footer">
-      <router-link
-        class="btn btn-outline-secondary"
-        to="/files"
-        style="width:80px"
-      >
-        <i class="fa fa-chevron-left"></i> Back </router-link
-      >&nbsp;
-      <button
-        type="button"
-        class="btn btn-primary btn-secondary"
-        @click="viewAuditLogs(file)"
-      >
+      <router-link class="btn btn-outline-secondary" to="/files" style="width:80px">
+        <i class="fa fa-chevron-left"></i> Back </router-link>&nbsp;
+      <button type="button" class="btn btn-primary btn-secondary" @click="viewAuditLogs(file)">
         View Audit Logs
       </button>
     </div>
-    <b-modal id="modal-audit-logs" hide-footer hide-header size="xl">
+    <b-modal ref="modal-audit-logs" hide-footer hide-header size="xl">
       <div class="table-responsive">
         <table class="table">
           <thead>
@@ -117,23 +72,19 @@
           </thead>
           <tbody>
             <tr v-for="auditLog in auditLogs" :key="auditLog.id">
-              <td>{{ auditLog.createdDateTime | formatedDateTime }}</td>
+              <td>{{ formatedDateTime(auditLog.createdDateTime) }}</td>
               <td>{{ auditLog.userName }}</td>
               <td>{{ auditLog.action }}</td>
               <td :style="{ color: auditLog.highLight.name ? 'red' : '' }">
                 {{ auditLog.data.name }}
               </td>
-              <td
-                :style="{ color: auditLog.highLight.description ? 'red' : '' }"
-              >
+              <td :style="{ color: auditLog.highLight.description ? 'red' : '' }">
                 {{ auditLog.data.description }}
               </td>
               <td :style="{ color: auditLog.highLight.fileName ? 'red' : '' }">
                 {{ auditLog.data.fileName }}
               </td>
-              <td
-                :style="{ color: auditLog.highLight.fileLocation ? 'red' : '' }"
-              >
+              <td :style="{ color: auditLog.highLight.fileLocation ? 'red' : '' }">
                 {{ auditLog.data.fileLocation }}
               </td>
             </tr>
@@ -145,13 +96,18 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { required, minLength, maxLength } from "vuelidate/lib/validators";
+import { defineComponent } from "vue";
+import { useVuelidate } from '@vuelidate/core'
+import { required, minLength, maxLength } from "@vuelidate/validators";
+import { BModal } from "bootstrap-vue";
 
 import axios from "./axios";
 import { IFile } from "./File";
 
-export default Vue.extend({
+export default defineComponent({
+  setup() {
+    return { v$: useVuelidate() }
+  },
   data() {
     return {
       file: { name: "", description: "" } as IFile,
@@ -166,7 +122,7 @@ export default Vue.extend({
       return this.$route.params.id ? "Edit File" : "Upload File";
     },
     id() {
-      return this.$route.params.id;
+      return this.$route.params.id as string;
     }
   },
   validations: {
@@ -182,7 +138,7 @@ export default Vue.extend({
     onSubmit() {
       this.isSubmitted = true;
 
-      if (this.$v.file.$invalid) {
+      if (this.v$.file.$invalid) {
         return;
       }
 
@@ -198,19 +154,17 @@ export default Vue.extend({
     viewAuditLogs(file: IFile) {
       axios.get(file.id + "/auditLogs").then(rs => {
         this.auditLogs = rs.data;
-        this.$bvModal.show("modal-audit-logs");
+        (this.$refs["modal-audit-logs"] as BModal).show();
       });
-    }
-  },
-  filters: {
-    formatedDateTime: function(value: string) {
+    },
+    formatedDateTime(value: string) {
       if (!value) return value;
       var date = new Date(value);
       return date.toLocaleDateString() + " " + date.toLocaleTimeString();
     }
   },
   created() {
-    const id = this.$route.params.id;
+    const id = this.$route.params.id as string;
     if (id) {
       axios.get(id).then(rs => {
         this.file = rs.data;

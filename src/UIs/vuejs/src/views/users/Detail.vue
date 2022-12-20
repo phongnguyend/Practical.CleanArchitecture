@@ -44,56 +44,29 @@
         </div>
 
         <div class="col-md-4">
-          <img
-            class="center-block img-responsive"
-            :style="{ width: '200px', margin: '2px' }"
-            :src="'/img/icons/android-chrome-192x192.png'"
-            :title="user.userName"
-          />
+          <img class="center-block img-responsive" :style="{ width: '200px', margin: '2px' }"
+            :src="'/img/icons/android-chrome-192x192.png'" :title="user.userName" />
         </div>
       </div>
     </div>
 
     <div class="card-footer">
-      <button
-        class="btn btn-outline-secondary"
-        @click="onBack"
-        style="width: 80px"
-      >
+      <button class="btn btn-outline-secondary" @click="onBack" style="width: 80px">
         <i class="fa fa-chevron-left"></i> Back
       </button>
       &nbsp;
-      <router-link class="btn btn-primary" :to="'/users/edit/' + user.id"
-        >Edit</router-link
-      >&nbsp;
-      <button
-        type="button"
-        class="btn btn-secondary"
-        @click="setPasswordModal()"
-      >
-        Set Password</button
-      >&nbsp;
-      <button
-        type="button"
-        class="btn btn-secondary"
-        @click="sendPasswordResetEmailModal()"
-      >
-        Send Password Reset Email</button
-      >&nbsp;
-      <button
-        type="button"
-        class="btn btn-secondary"
-        @click="sendEmailAddressConfirmationEmailModal()"
-      >
+      <router-link class="btn btn-primary" :to="'/users/edit/' + user.id">Edit</router-link>&nbsp;
+      <button type="button" class="btn btn-secondary" @click="setPasswordModal()">
+        Set Password</button>&nbsp;
+      <button type="button" class="btn btn-secondary" @click="sendPasswordResetEmailModal()">
+        Send Password Reset Email</button>&nbsp;
+      <button type="button" class="btn btn-secondary" @click="sendEmailAddressConfirmationEmailModal()">
         Send Email Address Confirmation Email
       </button>
     </div>
 
-    <b-modal id="modal-set-password" title="Set Password" :hide-footer="true">
-      <div
-        class="row alert alert-danger"
-        v-show="passwordValidationErrors && passwordValidationErrors.length"
-      >
+    <b-modal ref="modal-set-password" title="Set Password" :hide-footer="true">
+      <div class="row alert alert-danger" v-show="passwordValidationErrors && passwordValidationErrors.length">
         <ul>
           <li v-for="error in passwordValidationErrors" :key="error.code">
             {{ error.description }}
@@ -111,42 +84,24 @@
         <div class="form-group row">
           <label for="password" class="col-sm-4 col-form-label">Password</label>
           <div class="col-sm-8">
-            <input
-              type="password"
-              id="password"
-              name="password"
-              class="form-control"
-              required
-              v-model="setPasswordModel.password"
-              :class="{
+            <input type="password" id="password" name="password" class="form-control" required
+              v-model="setPasswordModel.password" :class="{
                 'is-invalid':
-                  isSubmitted && $v.setPasswordModel.password.$invalid
-              }"
-              @input="$v.setPasswordModel.password.$touch()"
-            />
+                  isSubmitted && v$.setPasswordModel.password.$invalid
+              }" @input="v$.setPasswordModel.password.$touch()" />
             <span class="invalid-feedback">Enter a password</span>
           </div>
         </div>
         <div class="form-group row">
-          <label for="confirmPassword" class="col-sm-4 col-form-label"
-            >Confirm Password</label
-          >
+          <label for="confirmPassword" class="col-sm-4 col-form-label">Confirm Password</label>
           <div class="col-sm-8">
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              class="form-control"
-              v-model="setPasswordModel.confirmPassword"
-              :class="{
+            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
+              v-model="setPasswordModel.confirmPassword" :class="{
                 'is-invalid':
                   isSubmitted &&
                   setPasswordModel.confirmPassword != setPasswordModel.password
-              }"
-            />
-            <span class="invalid-feedback"
-              >Confirm Password does not match</span
-            >
+              }" />
+            <span class="invalid-feedback">Confirm Password does not match</span>
           </div>
         </div>
         <div class="form-group row">
@@ -158,22 +113,16 @@
       </form>
     </b-modal>
 
-    <b-modal
-      id="modal-send-password-reset-email"
-      title="Send Password Reset Email"
-      @ok="confirmSendPasswordResetEmail"
-    >
+    <b-modal ref="modal-send-password-reset-email" title="Send Password Reset Email"
+      @ok="confirmSendPasswordResetEmail">
       <p>
         Are you sure you want to send reset password email
         <strong>{{ user.userName }}</strong>
       </p>
     </b-modal>
 
-    <b-modal
-      id="modal-send-email-address-confirmation-email"
-      title="Send Email Address Confirmation Email"
-      @ok="confirmSendEmailAddressConfirmationEmail"
-    >
+    <b-modal ref="modal-send-email-address-confirmation-email" title="Send Email Address Confirmation Email"
+      @ok="confirmSendEmailAddressConfirmationEmail">
       <p>
         Are you sure you want to send email address confirmation email
         <strong>{{ user.userName }}</strong>
@@ -183,12 +132,18 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { required } from "vuelidate/lib/validators";
+import { defineComponent } from "vue";
+import useVuelidate from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
+import { BModal } from "bootstrap-vue";
 import axios from "./axios";
+
 import { IUser } from "./User";
 
-export default Vue.extend({
+export default defineComponent({
+  setup() {
+    return { v$: useVuelidate() }
+  },
   data() {
     return {
       errorMessage: "",
@@ -211,7 +166,7 @@ export default Vue.extend({
       this.$router.push("/users");
     },
     setPasswordModal() {
-      this.$bvModal.show("modal-set-password");
+      (this.$refs["modal-set-password"] as BModal).show();
     },
     confirmSetPassword() {
       this.isSubmitted = true;
@@ -233,7 +188,7 @@ export default Vue.extend({
           this.isSubmitted = false;
           this.passwordValidationErrors = [];
           this.postErrorMessage = "";
-          this.$bvModal.hide("modal-set-password");
+          (this.$refs["modal-set-password"] as BModal).hide();
         })
         .catch(error => {
           if (error?.response?.status == 400) {
@@ -244,7 +199,7 @@ export default Vue.extend({
         });
     },
     sendPasswordResetEmailModal() {
-      this.$bvModal.show("modal-send-password-reset-email");
+      (this.$refs["modal-send-password-reset-email"] as BModal).show();
     },
     confirmSendPasswordResetEmail() {
       axios
@@ -252,11 +207,11 @@ export default Vue.extend({
           id: this.user.id
         })
         .then(rs => {
-          this.$bvModal.hide("modal-send-password-reset-email");
+          (this.$refs["modal-send-password-reset-email"] as BModal).hide();
         });
     },
     sendEmailAddressConfirmationEmailModal() {
-      this.$bvModal.show("modal-send-email-address-confirmation-email");
+      (this.$refs["modal-send-email-address-confirmation-email"] as BModal).show();
     },
     confirmSendEmailAddressConfirmationEmail() {
       axios
@@ -264,13 +219,13 @@ export default Vue.extend({
           id: this.user.id
         })
         .then(rs => {
-          this.$bvModal.hide("modal-send-email-address-confirmation-email");
+          (this.$refs["modal-send-email-address-confirmation-email"] as BModal).hide();
         });
     }
   },
   components: {},
   created() {
-    const id = this.$route.params.id;
+    const id = this.$route.params.id as string;
     axios.get(id).then(rs => {
       this.user = rs.data;
     });

@@ -7,145 +7,73 @@
       </div>
       <form @submit.prevent="onSubmit">
         <div class="form-group row">
-          <label for="userName" class="col-sm-3 col-form-label"
-            >User Name</label
-          >
+          <label for="userName" class="col-sm-3 col-form-label">User Name</label>
           <div class="col-sm-9">
-            <input
-              id="userName"
-              name="userName"
-              class="form-control"
-              v-model="user.userName"
-              :class="{
-                'is-invalid': isSubmitted && $v.user.userName.$invalid
-              }"
-              @input="$v.user.userName.$touch()"
-            />
+            <input id="userName" name="userName" class="form-control" v-model="user.userName" :class="{
+              'is-invalid': isSubmitted && v$.user.userName.$invalid
+            }" @input="v$.user.userName.$touch()" />
             <span class="invalid-feedback">
-              <span v-if="!$v.user.userName.required">Enter an user name</span>
-              <span v-if="!$v.user.userName.minLength"
-                >The user name must be longer than 3 characters.</span
-              >
+              <span v-if="v$.user.userName.required.$invalid">Enter an user name</span>
+              <span v-if="v$.user.userName.minLength.$invalid">The user name must be longer than 3 characters.</span>
             </span>
           </div>
         </div>
         <div class="form-group row">
           <label for="email" class="col-sm-3 col-form-label">Email</label>
           <div class="col-sm-9">
-            <input
-              id="email"
-              name="email"
-              class="form-control"
-              v-model="user.email"
-              :class="{ 'is-invalid': isSubmitted && $v.user.email.$invalid }"
-              @input="$v.user.email.$touch()"
-            />
+            <input id="email" name="email" class="form-control" v-model="user.email"
+              :class="{ 'is-invalid': isSubmitted && v$.user.email.$invalid }" @input="v$.user.email.$touch()" />
             <span class="invalid-feedback">
-              <span v-if="!$v.user.email.required">Enter an email</span>
-              <span v-if="!$v.user.email.minLength"
-                >The email must be longer than 3 characters.</span
-              >
+              <span v-if="v$.user.email.required.$invalid">Enter an email</span>
+              <span v-if="v$.user.email.minLength.$invalid">The email must be longer than 3 characters.</span>
             </span>
           </div>
         </div>
         <div class="form-group row">
-          <label for="emailConfirmed" class="col-sm-3 col-form-label"
-            >Email Confirmed</label
-          >
+          <label for="emailConfirmed" class="col-sm-3 col-form-label">Email Confirmed</label>
           <div class="col-sm-9">
-            <input
-              type="checkbox"
-              id="emailConfirmed"
-              name="emailConfirmed"
-              v-model="user.emailConfirmed"
-            />
+            <input type="checkbox" id="emailConfirmed" name="emailConfirmed" v-model="user.emailConfirmed" />
           </div>
         </div>
         <div class="form-group row">
-          <label for="phoneNumber" class="col-sm-3 col-form-label"
-            >Phone Number</label
-          >
+          <label for="phoneNumber" class="col-sm-3 col-form-label">Phone Number</label>
           <div class="col-sm-9">
-            <input
-              id="phoneNumber"
-              name="phoneNumber"
-              class="form-control"
-              v-model="user.phoneNumber"
-            />
+            <input id="phoneNumber" name="phoneNumber" class="form-control" v-model="user.phoneNumber" />
             <span class="invalid-feedback">Enter a phone number</span>
           </div>
         </div>
         <div class="form-group row">
-          <label for="phoneNumberConfirmed" class="col-sm-3 col-form-label"
-            >Phone Number Confirmed</label
-          >
+          <label for="phoneNumberConfirmed" class="col-sm-3 col-form-label">Phone Number Confirmed</label>
           <div class="col-sm-9">
-            <input
-              type="checkbox"
-              id="phoneNumberConfirmed"
-              name="phoneNumberConfirmed"
-              v-model="user.phoneNumberConfirmed"
-            />
+            <input type="checkbox" id="phoneNumberConfirmed" name="phoneNumberConfirmed"
+              v-model="user.phoneNumberConfirmed" />
           </div>
         </div>
         <div class="form-group row">
-          <label for="twoFactorEnabled" class="col-sm-3 col-form-label"
-            >Two Factor Enabled</label
-          >
+          <label for="twoFactorEnabled" class="col-sm-3 col-form-label">Two Factor Enabled</label>
           <div class="col-sm-9">
-            <input
-              type="checkbox"
-              id="twoFactorEnabled"
-              name="twoFactorEnabled"
-              v-model="user.twoFactorEnabled"
-            />
+            <input type="checkbox" id="twoFactorEnabled" name="twoFactorEnabled" v-model="user.twoFactorEnabled" />
           </div>
         </div>
         <div class="form-group row">
-          <label for="lockoutEnabled" class="col-sm-3 col-form-label"
-            >Lockout Enabled</label
-          >
+          <label for="lockoutEnabled" class="col-sm-3 col-form-label">Lockout Enabled</label>
           <div class="col-sm-9">
-            <input
-              type="checkbox"
-              id="lockoutEnabled"
-              name="lockoutEnabled"
-              v-model="user.lockoutEnabled"
-            />
+            <input type="checkbox" id="lockoutEnabled" name="lockoutEnabled" v-model="user.lockoutEnabled" />
           </div>
         </div>
         <div class="form-group row">
-          <label for="accessFailedCount" class="col-sm-3 col-form-label"
-            >Access Failed Count</label
-          >
+          <label for="accessFailedCount" class="col-sm-3 col-form-label">Access Failed Count</label>
           <div class="col-sm-9">
-            <input
-              type="number"
-              id="accessFailedCount"
-              name="accessFailedCount"
-              class="form-control"
-              v-model="user.accessFailedCount"
-            />
+            <input type="number" id="accessFailedCount" name="accessFailedCount" class="form-control"
+              v-model="user.accessFailedCount" />
           </div>
         </div>
         <div class="form-group row">
-          <label for="lockoutEnd" class="col-sm-3 col-form-label"
-            >Lockout End</label
-          >
+          <label for="lockoutEnd" class="col-sm-3 col-form-label">Lockout End</label>
           <div class="col-sm-9">
-            <b-form-datepicker
-              id="example-datepicker"
-              v-model="user.lockoutEndDate"
-              class="mb-2"
-              today-button
-              reset-button
-              close-button
-            ></b-form-datepicker>
-            <b-form-timepicker
-              v-model="user.lockoutEndTime"
-              now-button
-              reset-button
-            ></b-form-timepicker>
+            <b-form-datepicker id="example-datepicker" v-model="user.lockoutEndDate" class="mb-2" today-button
+              reset-button close-button></b-form-datepicker>
+            <b-form-timepicker v-model="user.lockoutEndTime" now-button reset-button></b-form-timepicker>
           </div>
         </div>
         <div class="form-group row">
@@ -157,11 +85,7 @@
       </form>
     </div>
     <div class="card-footer">
-      <router-link
-        class="btn btn-outline-secondary"
-        to="/users"
-        style="width:80px"
-      >
+      <router-link class="btn btn-outline-secondary" to="/users" style="width:80px">
         <i class="fa fa-chevron-left"></i> Back
       </router-link>
     </div>
@@ -169,9 +93,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { required, minLength, maxLength } from "vuelidate/lib/validators";
-
+import { defineComponent } from "vue";
+import useVuelidate from "@vuelidate/core";
+import { required, minLength } from "@vuelidate/validators";
 import axios from "./axios";
 
 interface IEditUser {
@@ -189,7 +113,10 @@ interface IEditUser {
   lockoutEndTime: string;
 }
 
-export default Vue.extend({
+export default defineComponent({
+  setup() {
+    return { v$: useVuelidate() }
+  },
   data() {
     return {
       user: { userName: "", email: "" } as IEditUser,
@@ -203,7 +130,7 @@ export default Vue.extend({
       return this.$route.params.id ? "Edit User" : "Add User";
     },
     id(): string {
-      return this.$route.params.id;
+      return this.$route.params.id as string;
     }
   },
   validations: {
@@ -221,7 +148,7 @@ export default Vue.extend({
   methods: {
     onSubmit() {
       this.isSubmitted = true;
-      if (this.$v.user.$invalid) {
+      if (this.v$.user.$invalid) {
         return;
       }
 
@@ -250,7 +177,7 @@ export default Vue.extend({
     }
   },
   created() {
-    const id = this.$route.params.id;
+    const id = this.$route.params.id as string;
     if (id) {
       axios.get(id).then(rs => {
         this.user = rs.data;

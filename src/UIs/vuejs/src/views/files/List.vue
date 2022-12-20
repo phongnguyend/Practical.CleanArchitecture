@@ -2,12 +2,7 @@
   <div class="card">
     <div class="card-header">
       Files
-      <router-link
-        class="btn btn-primary"
-        style="float: right;"
-        to="/files/upload"
-        >Upload File</router-link
-      >
+      <router-link class="btn btn-primary" style="float: right;" to="/files/upload">Upload File</router-link>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -24,40 +19,22 @@
           <tbody>
             <tr v-for="file in files" :key="file.id">
               <td>
-                <router-link :to="'/files/edit/' + file.id"
-                  >{{ file.name }} ({{ file.fileName }})</router-link
-                >
+                <router-link :to="'/files/edit/' + file.id">{{ file.name }} ({{ file.fileName }})</router-link>
               </td>
               <td>{{ file.description }}</td>
               <td>{{ file.size }}</td>
-              <td>{{ file.uploadedTime | formatedDateTime }}</td>
+              <td>{{ formatedDateTime(file.uploadedTime) }}</td>
               <td>
-                <button
-                  type="button"
-                  class="btn btn-primary btn-secondary"
-                  @click="download(file)"
-                >
+                <button type="button" class="btn btn-primary btn-secondary" @click="download(file)">
                   Download
                 </button>
                 &nbsp;
-                <router-link
-                  class="btn btn-primary"
-                  :to="'/files/edit/' + file.id"
-                  >Edit</router-link
-                >&nbsp;
-                <button
-                  type="button"
-                  class="btn btn-primary btn-secondary"
-                  @click="viewAuditLogs(file)"
-                >
+                <router-link class="btn btn-primary" :to="'/files/edit/' + file.id">Edit</router-link>&nbsp;
+                <button type="button" class="btn btn-primary btn-secondary" @click="viewAuditLogs(file)">
                   View Audit Logs
                 </button>
                 &nbsp;
-                <button
-                  type="button"
-                  class="btn btn-primary btn-danger"
-                  @click="deleteFile(file)"
-                >
+                <button type="button" class="btn btn-primary btn-danger" @click="deleteFile(file)">
                   Delete
                 </button>
               </td>
@@ -69,13 +46,13 @@
     <div v-if="errorMessage" class="alert alert-danger">
       Error: {{ errorMessage }}
     </div>
-    <b-modal id="modal-delete" title="Delete File" @ok="deleteConfirmed">
+    <b-modal ref="modal-delete" title="Delete File" @ok="deleteConfirmed">
       <p class="my-4">
         Are you sure you want to delete:
         <strong>{{ selectedFile.name }}</strong>
       </p>
     </b-modal>
-    <b-modal id="modal-audit-logs" hide-footer hide-header size="xl">
+    <b-modal ref="modal-audit-logs" hide-footer hide-header size="xl">
       <div class="table-responsive">
         <table class="table">
           <thead>
@@ -91,23 +68,19 @@
           </thead>
           <tbody>
             <tr v-for="auditLog in auditLogs" :key="auditLog.id">
-              <td>{{ auditLog.createdDateTime | formatedDateTime }}</td>
+              <td>{{ formatedDateTime(auditLog.createdDateTime) }}</td>
               <td>{{ auditLog.userName }}</td>
               <td>{{ auditLog.action }}</td>
               <td :style="{ color: auditLog.highLight.name ? 'red' : '' }">
                 {{ auditLog.data.name }}
               </td>
-              <td
-                :style="{ color: auditLog.highLight.description ? 'red' : '' }"
-              >
+              <td :style="{ color: auditLog.highLight.description ? 'red' : '' }">
                 {{ auditLog.data.description }}
               </td>
               <td :style="{ color: auditLog.highLight.fileName ? 'red' : '' }">
                 {{ auditLog.data.fileName }}
               </td>
-              <td
-                :style="{ color: auditLog.highLight.fileLocation ? 'red' : '' }"
-              >
+              <td :style="{ color: auditLog.highLight.fileLocation ? 'red' : '' }">
                 {{ auditLog.data.fileLocation }}
               </td>
             </tr>
@@ -119,11 +92,13 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
+import { BModal } from "bootstrap-vue";
 import axios from "./axios";
+
 import { IFile } from "./File";
 
-export default Vue.extend({
+export default defineComponent({
   data() {
     return {
       pageTitle: "Files",
@@ -152,7 +127,7 @@ export default Vue.extend({
     },
     deleteFile(file: IFile) {
       this.selectedFile = file;
-      this.$bvModal.show("modal-delete");
+      (this.$refs["modal-delete"] as BModal).show();
     },
     deleteConfirmed() {
       axios.delete(this.selectedFile.id).then(rs => {
@@ -162,18 +137,16 @@ export default Vue.extend({
     viewAuditLogs(file: IFile) {
       axios.get(file.id + "/auditLogs").then(rs => {
         this.auditLogs = rs.data;
-        this.$bvModal.show("modal-audit-logs");
+        (this.$refs["modal-audit-logs"] as BModal).show();
       });
-    }
-  },
-  components: {},
-  filters: {
-    formatedDateTime: function(value: string) {
+    },
+    formatedDateTime(value: string) {
       if (!value) return value;
       var date = new Date(value);
       return date.toLocaleDateString() + " " + date.toLocaleTimeString();
     }
   },
+  components: {},
   created() {
     this.loadFiles();
   }
