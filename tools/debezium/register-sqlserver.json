@@ -1,0 +1,16 @@
+{
+    "name": "inventory-connector",
+    "config": {
+        "connector.class" : "io.debezium.connector.sqlserver.SqlServerConnector",
+        "tasks.max" : "1",
+        "topic.prefix" : "server1",
+        "database.hostname" : "db",
+        "database.port" : "1433",
+        "database.user" : "sa",
+        "database.password" : "sqladmin123!@#",
+        "database.names" : "ClassifiedAds",
+        "schema.history.internal.kafka.bootstrap.servers" : "kafka:9092",
+        "schema.history.internal.kafka.topic": "schema-changes.inventory",
+        "database.encrypt": "false"
+    }
+}
