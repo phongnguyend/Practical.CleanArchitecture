@@ -30,11 +30,14 @@ namespace ClassifiedAds.Modules.Storage.Controllers
     {
         private readonly Dispatcher _dispatcher;
         private readonly IFileStorageManager _fileManager;
+        private readonly IAuthorizationService _authorizationService;
 
-        public FilesController(Dispatcher dispatcher, IFileStorageManager fileManager)
+        public FilesController(Dispatcher dispatcher, IFileStorageManager fileManager,
+            IAuthorizationService authorizationService)
         {
             _dispatcher = dispatcher;
             _fileManager = fileManager;
+            _authorizationService = authorizationService;
         }
 
         [Authorize(AuthorizationPolicyNames.GetFilesPolicy)]
@@ -104,6 +107,19 @@ namespace ClassifiedAds.Modules.Storage.Controllers
         public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get(Guid id)
         {
             var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
+
+            if (fileEntry == null)
+            {
+                // return NotFound();
+                return Ok(null);
+            }
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, fileEntry, Operations.Read);
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
+
             return Ok(fileEntry.ToModel());
         }
 
@@ -112,6 +128,12 @@ namespace ClassifiedAds.Modules.Storage.Controllers
         public async Task<IActionResult> Download(Guid id)
         {
             var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, fileEntry, Operations.Read);
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
 
             var rawData = await _fileManager.ReadAsync(fileEntry.ToModel());
             var content = fileEntry.Encrypted && fileEntry.FileLocation != "Fake.txt"
@@ -135,6 +157,12 @@ namespace ClassifiedAds.Modules.Storage.Controllers
         {
             var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id, ThrowNotFoundIfNull = true });
 
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, fileEntry, Operations.Update);
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
+
             fileEntry.Name = model.Name;
             fileEntry.Description = model.Description;
 
@@ -148,6 +176,12 @@ namespace ClassifiedAds.Modules.Storage.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, fileEntry, Operations.Delete);
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
 
             await _dispatcher.DispatchAsync(new DeleteEntityCommand<FileEntry> { Entity = fileEntry });
             await _fileManager.DeleteAsync(fileEntry.ToModel());

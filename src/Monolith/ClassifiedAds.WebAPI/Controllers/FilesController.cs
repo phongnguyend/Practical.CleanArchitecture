@@ -37,18 +37,21 @@ namespace ClassifiedAds.WebAPI.Controllers
         private readonly IMemoryCache _memoryCache;
         private readonly IHubContext<NotificationHub> _notificationHubContext;
         private readonly IStringLocalizer _stringLocalizer;
+        private readonly IAuthorizationService _authorizationService;
 
         public FilesController(Dispatcher dispatcher,
             IFileStorageManager fileManager,
             IMemoryCache memoryCache,
             IHubContext<NotificationHub> notificationHubContext,
-            IStringLocalizer stringLocalizer)
+            IStringLocalizer stringLocalizer,
+            IAuthorizationService authorizationService)
         {
             _dispatcher = dispatcher;
             _fileManager = fileManager;
             _memoryCache = memoryCache;
             _notificationHubContext = notificationHubContext;
             _stringLocalizer = stringLocalizer;
+            _authorizationService = authorizationService;
         }
 
         [Authorize(AuthorizationPolicyNames.GetFilesPolicy)]
@@ -117,6 +120,19 @@ namespace ClassifiedAds.WebAPI.Controllers
         public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get(Guid id)
         {
             var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
+
+            if (fileEntry == null)
+            {
+                // return NotFound();
+                return Ok(null);
+            }
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, fileEntry, Operations.Read);
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
+
             return Ok(fileEntry.ToModel());
         }
 
@@ -125,6 +141,12 @@ namespace ClassifiedAds.WebAPI.Controllers
         public async Task<IActionResult> Download(Guid id)
         {
             var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, fileEntry, Operations.Read);
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
 
             var rawData = await _fileManager.ReadAsync(fileEntry);
             var content = fileEntry.Encrypted && fileEntry.FileLocation != "Fake.txt"
@@ -148,6 +170,12 @@ namespace ClassifiedAds.WebAPI.Controllers
         {
             var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id, ThrowNotFoundIfNull = true });
 
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, fileEntry, Operations.Update);
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
+
             fileEntry.Name = model.Name;
             fileEntry.Description = model.Description;
 
@@ -161,6 +189,12 @@ namespace ClassifiedAds.WebAPI.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, fileEntry, Operations.Delete);
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
 
             await _dispatcher.DispatchAsync(new DeleteEntityCommand<FileEntry> { Entity = fileEntry });
             await _fileManager.DeleteAsync(fileEntry);

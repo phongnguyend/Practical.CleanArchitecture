@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Infrastructure.Web.Authorization.Requirements;
 using Microsoft.AspNetCore.Authorization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -30,7 +31,7 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             var requirementHandlerTypes = assembly.GetTypes()
-                .Where(t => t.BaseType != null && t.BaseType.IsGenericType && t.BaseType.GetGenericTypeDefinition() == typeof(AuthorizationHandler<>))
+                .Where(IsAuthorizationHandler)
                 .ToList();
 
             foreach (var type in requirementHandlerTypes)
@@ -39,6 +40,22 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             return services;
+        }
+
+        private static bool IsAuthorizationHandler(Type type)
+        {
+            if (type.BaseType == null)
+            {
+                return false;
+            }
+
+            if (!type.BaseType.IsGenericType)
+            {
+                return false;
+            }
+
+            var baseType = type.BaseType.GetGenericTypeDefinition();
+            return baseType == typeof(AuthorizationHandler<>) || baseType == typeof(AuthorizationHandler<,>);
         }
     }
 }
