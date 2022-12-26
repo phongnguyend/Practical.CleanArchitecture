@@ -1,7 +1,11 @@
-version: "3.6"
+version: '3.6'
 services:
-    rabbitmq:
-        image: "rabbitmq:3-management"
-        ports:
-          - "5672:5672"
-          - "15672:15672"
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+networks:
+  default:
+    external:
+      name: phongnguyend

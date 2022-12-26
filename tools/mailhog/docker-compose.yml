@@ -1,0 +1,11 @@
+version: "3.6"
+services:
+  mailhog:
+    image: mailhog/mailhog
+    ports: 
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
+networks:
+  default:
+    external:
+      name: phongnguyend

@@ -9,16 +9,12 @@ services:
       - "16686:16686"
       - "14268"
       - "14250"
-    networks:
-      - mssqlserver_default
 
   # Zipkin
   zipkin:
     image: openzipkin/zipkin:latest
     ports:
       - "9411:9411"
-    networks:
-      - mssqlserver_default
 
   # Collector
   otel-collector:
@@ -36,8 +32,6 @@ services:
     depends_on:
       - jaeger-all-in-one
       - zipkin
-    networks:
-      - mssqlserver_default
 
   prometheus:
     image: prom/prometheus:latest
@@ -47,8 +41,6 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml'
     ports:
       - "9090:9090"
-    networks:
-      - mssqlserver_default
 
   grafana:
     image: grafana/grafana:latest
@@ -71,9 +63,8 @@ services:
       nofile:
        soft: 65536
        hard: 65536
-    networks:
-      - mssqlserver_default
 
 networks:
-  mssqlserver_default:
-    external: true
+  default:
+    external:
+      name: phongnguyend
