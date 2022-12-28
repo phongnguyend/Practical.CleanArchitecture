@@ -13,5 +13,7 @@ namespace ClassifiedAds.Infrastructure.Logging
         public EventLogOptions EventLog { get; set; }
 
         public ApplicationInsightsOptions ApplicationInsights { get; set; }
+
+        public OpenTelemetryOptions OpenTelemetry { get; set; }
     }
 }

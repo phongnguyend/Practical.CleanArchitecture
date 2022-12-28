@@ -3,6 +3,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.EventLog;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Exceptions;
 using Serilog.Formatting.Json;
@@ -141,7 +144,7 @@ namespace ClassifiedAds.Infrastructure.Logging
 
                 LoggingOptions options = SetDefault(logOptions(context.Configuration));
 
-                if (options.EventLog != null && options.EventLog.IsEnabled)
+                if (options.EventLog != null && options.EventLog.IsEnabled && OperatingSystem.IsWindows())
                 {
                     logging.AddEventLog(new EventLogSettings
                     {
@@ -152,7 +155,26 @@ namespace ClassifiedAds.Infrastructure.Logging
 
                 if (options?.ApplicationInsights?.IsEnabled ?? false)
                 {
-                    logging.AddApplicationInsights(options.ApplicationInsights.InstrumentationKey);
+                    logging.AddApplicationInsights(
+                        configureTelemetryConfiguration: (config) =>
+                        {
+                            config.ConnectionString = options.ApplicationInsights.InstrumentationKey;
+                        },
+                        configureApplicationInsightsLoggerOptions: (options) => { });
+                }
+
+                if (options?.OpenTelemetry?.IsEnabled ?? false)
+                {
+                    var resourceBuilder = ResourceBuilder.CreateDefault().AddService(options.OpenTelemetry.ServiceName);
+
+                    logging.AddOpenTelemetry(configure =>
+                    {
+                        configure.SetResourceBuilder(resourceBuilder)
+                        .AddOtlpExporter(otlpOptions =>
+                        {
+                            otlpOptions.Endpoint = new Uri(options.OpenTelemetry.Otlp.Endpoint);
+                        });
+                    });
                 }
 
                 context.HostingEnvironment.UseClassifiedAdsLogger(options);
@@ -176,7 +198,7 @@ namespace ClassifiedAds.Infrastructure.Logging
 
                 LoggingOptions options = SetDefault(logOptions(context.Configuration));
 
-                if (options.EventLog != null && options.EventLog.IsEnabled)
+                if (options.EventLog != null && options.EventLog.IsEnabled && OperatingSystem.IsWindows())
                 {
                     logging.AddEventLog(new EventLogSettings
                     {
@@ -187,7 +209,26 @@ namespace ClassifiedAds.Infrastructure.Logging
 
                 if (options?.ApplicationInsights?.IsEnabled ?? false)
                 {
-                    logging.AddApplicationInsights(options.ApplicationInsights.InstrumentationKey);
+                    logging.AddApplicationInsights(
+                        configureTelemetryConfiguration: (config) =>
+                        {
+                            config.ConnectionString = options.ApplicationInsights.InstrumentationKey;
+                        },
+                        configureApplicationInsightsLoggerOptions: (options) => { });
+                }
+
+                if (options?.OpenTelemetry?.IsEnabled ?? false)
+                {
+                    var resourceBuilder = ResourceBuilder.CreateDefault().AddService(options.OpenTelemetry.ServiceName);
+
+                    logging.AddOpenTelemetry(configure =>
+                    {
+                        configure.SetResourceBuilder(resourceBuilder)
+                        .AddOtlpExporter(otlpOptions =>
+                        {
+                            otlpOptions.Endpoint = new Uri(options.OpenTelemetry.Otlp.Endpoint);
+                        });
+                    });
                 }
 
                 context.HostingEnvironment.UseClassifiedAdsLogger(options);
