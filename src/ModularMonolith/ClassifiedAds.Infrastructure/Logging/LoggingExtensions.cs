@@ -3,6 +3,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.EventLog;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Exceptions;
 using Serilog.Formatting.Json;
@@ -116,7 +119,7 @@ namespace ClassifiedAds.Infrastructure.Logging
         {
             context = context.Replace("\"", string.Empty);
             string level = "Default";
-            var matches = options.LogLevel.Keys.Where(k => context.StartsWith(k));
+            var matches = options.LogLevel.Keys.Where(k => context.StartsWith(k, StringComparison.OrdinalIgnoreCase));
 
             if (matches.Any())
             {
@@ -141,12 +144,36 @@ namespace ClassifiedAds.Infrastructure.Logging
 
                 LoggingOptions options = SetDefault(logOptions(context.Configuration));
 
-                if (options.EventLog != null && options.EventLog.IsEnabled)
+                if (options.EventLog != null && options.EventLog.IsEnabled && OperatingSystem.IsWindows())
                 {
                     logging.AddEventLog(new EventLogSettings
                     {
                         LogName = options.EventLog.LogName,
                         SourceName = options.EventLog.SourceName,
+                    });
+                }
+
+                if (options?.ApplicationInsights?.IsEnabled ?? false)
+                {
+                    logging.AddApplicationInsights(
+                        configureTelemetryConfiguration: (config) =>
+                        {
+                            config.ConnectionString = options.ApplicationInsights.InstrumentationKey;
+                        },
+                        configureApplicationInsightsLoggerOptions: (options) => { });
+                }
+
+                if (options?.OpenTelemetry?.IsEnabled ?? false)
+                {
+                    var resourceBuilder = ResourceBuilder.CreateDefault().AddService(options.OpenTelemetry.ServiceName);
+
+                    logging.AddOpenTelemetry(configure =>
+                    {
+                        configure.SetResourceBuilder(resourceBuilder)
+                        .AddOtlpExporter(otlpOptions =>
+                        {
+                            otlpOptions.Endpoint = new Uri(options.OpenTelemetry.Otlp.Endpoint);
+                        });
                     });
                 }
 
@@ -171,12 +198,36 @@ namespace ClassifiedAds.Infrastructure.Logging
 
                 LoggingOptions options = SetDefault(logOptions(context.Configuration));
 
-                if (options.EventLog != null && options.EventLog.IsEnabled)
+                if (options.EventLog != null && options.EventLog.IsEnabled && OperatingSystem.IsWindows())
                 {
                     logging.AddEventLog(new EventLogSettings
                     {
                         LogName = options.EventLog.LogName,
                         SourceName = options.EventLog.SourceName,
+                    });
+                }
+
+                if (options?.ApplicationInsights?.IsEnabled ?? false)
+                {
+                    logging.AddApplicationInsights(
+                        configureTelemetryConfiguration: (config) =>
+                        {
+                            config.ConnectionString = options.ApplicationInsights.InstrumentationKey;
+                        },
+                        configureApplicationInsightsLoggerOptions: (options) => { });
+                }
+
+                if (options?.OpenTelemetry?.IsEnabled ?? false)
+                {
+                    var resourceBuilder = ResourceBuilder.CreateDefault().AddService(options.OpenTelemetry.ServiceName);
+
+                    logging.AddOpenTelemetry(configure =>
+                    {
+                        configure.SetResourceBuilder(resourceBuilder)
+                        .AddOtlpExporter(otlpOptions =>
+                        {
+                            otlpOptions.Endpoint = new Uri(options.OpenTelemetry.Otlp.Endpoint);
+                        });
                     });
                 }
 
