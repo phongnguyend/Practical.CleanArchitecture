@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.Infrastructure.DistributedTracing;
+﻿using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Services.Identity.ConfigurationOptions;
 using ClassifiedAds.Services.Identity.Repositories;
@@ -36,6 +36,8 @@ namespace ClassifiedAds.Services.Identity
         {
             AppSettings.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
+            services.AddMonitoringServices(AppSettings.Monitoring);
+
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
@@ -54,8 +56,6 @@ namespace ClassifiedAds.Services.Identity
                     .AllowAnyMethod()
                     .AllowAnyHeader());
             });
-
-            services.AddDistributedTracing(AppSettings.DistributedTracing);
 
             services.AddDateTimeProvider();
             services.AddApplicationServices();

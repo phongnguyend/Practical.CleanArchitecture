@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.Infrastructure.Caching;
-using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Interceptors;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.Monitoring;
@@ -16,8 +15,6 @@ namespace ClassifiedAds.Services.Identity.ConfigurationOptions
         public CachingOptions Caching { get; set; }
 
         public MonitoringOptions Monitoring { get; set; }
-
-        public DistributedTracingOptions DistributedTracing { get; set; }
 
         public IdentityServerAuthentication IdentityServerAuthentication { get; set; }
 

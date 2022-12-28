@@ -1,4 +1,4 @@
-using ClassifiedAds.Infrastructure.DistributedTracing;
+﻿using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Services.Notification.ConfigurationOptions;
 using ClassifiedAds.Services.Notification.Grpc.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -31,7 +31,7 @@ namespace ClassifiedAds.Services.Notification.Grpc
         {
             services.AddGrpc();
 
-            services.AddDistributedTracing(AppSettings.DistributedTracing);
+            services.AddMonitoringServices(AppSettings.Monitoring);
 
             services.AddDateTimeProvider();
             services.AddApplicationServices();

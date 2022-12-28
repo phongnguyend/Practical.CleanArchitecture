@@ -1,4 +1,4 @@
-using ClassifiedAds.Infrastructure.DistributedTracing;
+﻿using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Services.Identity.ConfigurationOptions;
 using ClassifiedAds.Services.Identity.Grpc.Services;
 using ClassifiedAds.Services.Identity.Repositories;
@@ -33,7 +33,7 @@ namespace ClassifiedAds.Services.Identity.Grpc
         {
             services.AddGrpc();
 
-            services.AddDistributedTracing(AppSettings.DistributedTracing);
+            services.AddMonitoringServices(AppSettings.Monitoring);
 
             services.AddDateTimeProvider();
             services.AddApplicationServices();

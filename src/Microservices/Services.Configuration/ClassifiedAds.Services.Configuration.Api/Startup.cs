@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.Infrastructure.DistributedTracing;
+﻿using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Services.Configuration.ConfigurationOptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -35,6 +35,8 @@ namespace ClassifiedAds.Services.Configuration.Api
 
             services.Configure<AppSettings>(Configuration);
 
+            services.AddMonitoringServices(AppSettings.Monitoring);
+
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
@@ -53,8 +55,6 @@ namespace ClassifiedAds.Services.Configuration.Api
                     .AllowAnyMethod()
                     .AllowAnyHeader());
             });
-
-            services.AddDistributedTracing(AppSettings.DistributedTracing);
 
             services.AddDateTimeProvider();
             services.AddApplicationServices();

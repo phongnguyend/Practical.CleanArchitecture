@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Infrastructure.Monitoring.AzureApplicationInsights;
 using ClassifiedAds.Infrastructure.Monitoring.MiniProfiler;
+using ClassifiedAds.Infrastructure.Monitoring.OpenTelemetry;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,6 +18,11 @@ namespace ClassifiedAds.Infrastructure.Monitoring
             if (monitoringOptions?.AzureApplicationInsights?.IsEnabled ?? false)
             {
                 services.AddAzureApplicationInsights(monitoringOptions.AzureApplicationInsights);
+            }
+
+            if (monitoringOptions?.OpenTelemetry?.IsEnabled ?? false)
+            {
+                services.AddClassifiedAdsOpenTelemetry(monitoringOptions.OpenTelemetry);
             }
 
             return services;

@@ -1,4 +1,4 @@
-using ClassifiedAds.Infrastructure.DistributedTracing;
+﻿using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Services.AuditLog.ConfigurationOptions;
 using ClassifiedAds.Services.Identity.Grpc.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -31,7 +31,7 @@ namespace ClassifiedAds.Services.AuditLog.Grpc
         {
             services.AddGrpc();
 
-            services.AddDistributedTracing(AppSettings.DistributedTracing);
+            services.AddMonitoringServices(AppSettings.Monitoring);
 
             services.AddDateTimeProvider();
             services.AddApplicationServices();

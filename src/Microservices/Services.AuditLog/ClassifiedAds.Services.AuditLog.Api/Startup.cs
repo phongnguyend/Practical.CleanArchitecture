@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.Infrastructure.DistributedTracing;
+﻿using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Services.AuditLog.ConfigurationOptions;
 using ClassifiedAds.Services.AuditLog.RateLimiterPolicies;
@@ -35,6 +35,8 @@ namespace ClassifiedAds.Services.AuditLog
         {
             AppSettings.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
+            services.AddMonitoringServices(AppSettings.Monitoring);
+
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
@@ -54,8 +56,6 @@ namespace ClassifiedAds.Services.AuditLog
                     .AllowAnyMethod()
                     .AllowAnyHeader());
             });
-
-            services.AddDistributedTracing(AppSettings.DistributedTracing);
 
             services.AddDateTimeProvider();
             services.AddApplicationServices();
