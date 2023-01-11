@@ -8,18 +8,11 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="5.0.1" />
     <PackageReference Include="AWSSDK.S3" Version="3.7.4.9" />
     <PackageReference Include="Azure.Communication.Sms" Version="1.0.1" />
     <PackageReference Include="Azure.Data.AppConfiguration" Version="1.2.0" />
     <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.2.1" />
     <PackageReference Include="Azure.Identity" Version="1.5.0" />
-    <PackageReference Include="Azure.Messaging.EventGrid" Version="4.7.0" />
-    <PackageReference Include="Azure.Messaging.EventHubs" Version="5.6.2" />
-    <PackageReference Include="Azure.Messaging.EventHubs.Processor" Version="5.6.2" />
-    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.5.0" />
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
-    <PackageReference Include="Azure.Storage.Queues" Version="12.8.0" />
     <PackageReference Include="Castle.Core" Version="4.4.1" />
     <PackageReference Include="ClosedXML" Version="0.95.4" />
     <PackageReference Include="Confluent.Kafka" Version="1.8.2" />
@@ -29,7 +22,7 @@
     <PackageReference Include="DinkToPdf" Version="1.0.8" />
     <PackageReference Include="EPPlus" Version="4.5.3.2" />
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
-	<PackageReference Include="IdentityModel" Version="5.2.0" />
+    <PackageReference Include="IdentityModel" Version="5.2.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.0" />
@@ -44,12 +37,6 @@
     <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.2.22" />
     <PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.2.22" />
     <PackageReference Include="MiniProfiler.Providers.SqlServer" Version="4.2.22" />
-    <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.2.0-beta2.1" />
-    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.2.0-beta2.1" />
-    <PackageReference Include="OpenTelemetry.Exporter.Zipkin" Version="1.2.0-beta2.1" />
-    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc8" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc8" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc8" />
     <PackageReference Include="PuppeteerSharp" Version="6.0.0" />
     <PackageReference Include="Quartz" Version="3.3.3" />
     <PackageReference Include="RabbitMQ.Client" Version="6.2.2" />
