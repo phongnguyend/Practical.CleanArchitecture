@@ -3,37 +3,29 @@
 dotnet tool install --global dotnet-ef --version="5.0"
 
 dotnet ef migrations add Init --context AuditLogDbContext -o Migrations/AuditLogDb
-dotnet ef migrations add Init --context ClassifiedAds.Modules.Configuration.Repositories.ConfigurationDbContext -o Migrations/ConfigurationDb
+dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
 dotnet ef migrations add Init --context IdentityDbContext -o Migrations/IdentityDb
 dotnet ef migrations add Init --context NotificationDbContext -o Migrations/NotificationDb
 dotnet ef migrations add Init --context ProductDbContext -o Migrations/ProductDb
 dotnet ef migrations add Init --context StorageDbContext -o Migrations/StorageDb
-dotnet ef migrations add Init --context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext -o Migrations/Id4ConfigurationDb
-dotnet ef migrations add Init --context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext -o Migrations/Id4PersistedGrantDb
 
 dotnet ef migrations script --context AuditLogDbContext
-dotnet ef migrations script --context ClassifiedAds.Modules.Configuration.Repositories.ConfigurationDbContext
+dotnet ef migrations script --context ConfigurationDbContext
 dotnet ef migrations script --context IdentityDbContext
 dotnet ef migrations script --context NotificationDbContext
 dotnet ef migrations script --context ProductDbContext
 dotnet ef migrations script --context StorageDbContext
-dotnet ef migrations script --context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext
-dotnet ef migrations script --context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext
 
 dotnet ef dbcontext script --context AuditLogDbContext
-dotnet ef dbcontext script --context ClassifiedAds.Modules.Configuration.Repositories.ConfigurationDbContext
+dotnet ef dbcontext script --context ConfigurationDbContext
 dotnet ef dbcontext script --context IdentityDbContext
 dotnet ef dbcontext script --context NotificationDbContext
 dotnet ef dbcontext script --context ProductDbContext
 dotnet ef dbcontext script --context StorageDbContext
-dotnet ef dbcontext script --context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext
-dotnet ef dbcontext script --context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext
 
 dotnet ef database update --context AuditLogDbContext
-dotnet ef database update --context ClassifiedAds.Modules.Configuration.Repositories.ConfigurationDbContext
+dotnet ef database update --context ConfigurationDbContext
 dotnet ef database update --context IdentityDbContext
 dotnet ef database update --context NotificationDbContext
 dotnet ef database update --context ProductDbContext
 dotnet ef database update --context StorageDbContext
-dotnet ef database update --context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext
-dotnet ef database update --context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext

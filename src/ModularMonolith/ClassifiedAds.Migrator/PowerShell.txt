@@ -1,18 +1,16 @@
 ﻿https://docs.microsoft.com/en-us/ef/core/cli/powershell
 
 Add-Migration -Context AuditLogDbContext Init -OutputDir Migrations/AuditLogDb
-Add-Migration -Context ClassifiedAds.Modules.Configuration.Repositories.ConfigurationDbContext Init -OutputDir Migrations/ConfigurationDb
+Add-Migration -Context ConfigurationDbContext Init -OutputDir Migrations/ConfigurationDb
 Add-Migration -Context IdentityDbContext Init -OutputDir Migrations/IdentityDb
 Add-Migration -Context NotificationDbContext Init -OutputDir Migrations/NotificationDb
 Add-Migration -Context ProductDbContext Init -OutputDir Migrations/ProductDb
 Add-Migration -Context StorageDbContext Init -OutputDir Migrations/StorageDb
-Add-Migration -Context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext Init -OutputDir Migrations/Id4ConfigurationDb
-Add-Migration -Context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext Init -OutputDir Migrations/Id4PersistedGrantDb
 
 Remove-Migration -Context AuditLogDbContext
 Remove-Migration -Context AuditLogDbContext -Force
-Remove-Migration -Context ClassifiedAds.Modules.Configuration.Repositories.ConfigurationDbContext
-Remove-Migration -Context ClassifiedAds.Modules.Configuration.Repositories.ConfigurationDbContext -Force
+Remove-Migration -Context ConfigurationDbContext
+Remove-Migration -Context ConfigurationDbContext -Force
 Remove-Migration -Context IdentityDbContext
 Remove-Migration -Context IdentityDbContext -Force
 Remove-Migration -Context NotificationDbContext
@@ -23,28 +21,22 @@ Remove-Migration -Context StorageDbContext
 Remove-Migration -Context StorageDbContext -Force
 
 Update-Database -Context AuditLogDbContext
-Update-Database -Context ClassifiedAds.Modules.Configuration.Repositories.ConfigurationDbContext
+Update-Database -Context ConfigurationDbContext
 Update-Database -Context IdentityDbContext
 Update-Database -Context NotificationDbContext
 Update-Database -Context ProductDbContext
 Update-Database -Context StorageDbContext
-Update-Database -Context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext
-Update-Database -Context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext
 
 Script-DbContext -Context AuditLogDbContext
-Script-DbContext -Context ClassifiedAds.Modules.Configuration.Repositories.ConfigurationDbContext
+Script-DbContext -Context ConfigurationDbContext
 Script-DbContext -Context IdentityDbContext
 Script-DbContext -Context NotificationDbContext
 Script-DbContext -Context ProductDbContext
 Script-DbContext -Context StorageDbContext
-Script-DbContext -Context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext
-Script-DbContext -Context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext
 
 Script-Migration -Context AuditLogDbContext
-Script-Migration -Context ClassifiedAds.Modules.Configuration.Repositories.ConfigurationDbContext
+Script-Migration -Context ConfigurationDbContext
 Script-Migration -Context IdentityDbContext
 Script-Migration -Context NotificationDbContext
 Script-Migration -Context ProductDbContext
 Script-Migration -Context StorageDbContext
-Script-Migration -Context IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext
-Script-Migration -Context IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext
