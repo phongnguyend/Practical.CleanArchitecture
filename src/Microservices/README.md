@@ -12,7 +12,7 @@
   | Services.Configuration.Api | [appsettings.json](Services.Configuration/ClassifiedAds.Services.Configuration.Api/appsettings.json) | ConnectionStrings:ClassifiedAds | Configuration
   | Services.Identity.Api | [appsettings.json](Services.Identity/ClassifiedAds.Services.Identity.Api/appsettings.json) | ConnectionStrings:ClassifiedAds | Identity
   | Services.Identity.Grpc | [appsettings.json](Services.Identity/ClassifiedAds.Services.Identity.Grpc/appsettings.json) | ConnectionStrings:ClassifiedAds | Identity
-  | ClassifiedAds.IdentityServer | [appsettings.json](../IdentityServer/ClassifiedAds.IdentityServer/appsettings.json) | ConnectionStrings:ClassifiedAds | Identity
+  | ClassifiedAds.IdentityServer | [appsettings.json](../IdentityServer/IdentityServer4/ClassifiedAds.IdentityServer/appsettings.json) | ConnectionStrings:ClassifiedAds | Identity
   | Services.Notification.Api | [appsettings.json](Services.Notification/ClassifiedAds.Services.Notification.Api/appsettings.json) | ConnectionStrings:ClassifiedAds | Notification
   | Services.Notification.Background | [appsettings.json](Services.Notification/ClassifiedAds.Services.Notification.Background/appsettings.json) | ConnectionStrings:ClassifiedAds | Notification
   | Services.Notification.Grpc | [appsettings.json](Services.Notification/ClassifiedAds.Services.Notification.Grpc/appsettings.json) | ConnectionStrings:ClassifiedAds | Notification
@@ -41,7 +41,7 @@
       dotnet ef migrations add Init --context IdentityDbContext -o Migrations/IdentityDb
       dotnet ef database update --context IdentityDbContext
       ```
-    + Navigate to [ClassifiedAds.IdentityServer](../IdentityServer/ClassifiedAds.Migrator/) and run these commands:
+    + Navigate to [ClassifiedAds.IdentityServer](../IdentityServer/IdentityServer4/ClassifiedAds.Migrator/) and run these commands:
       ```
       dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
       dotnet ef migrations add Init --context PersistedGrantDbContext -o Migrations/PersistedGrantDb
@@ -80,7 +80,7 @@
       Add-Migration -Context IdentityDbContext Init -OutputDir Migrations/IdentityDb
       Update-Database -Context IdentityDbContext
       ```
-	+ Select **../IdentityServer/ClassifiedAds.Migrator** as Default Project and run these commands:
+	+ Select **../IdentityServer/IdentityServer4/ClassifiedAds.Migrator** as Default Project and run these commands:
       ```
       Add-Migration -Context ConfigurationDbContext Init -OutputDir Migrations/ConfigurationDb
       Add-Migration -Context PersistedGrantDbContext Init -OutputDir Migrations/PersistedGrantDb
@@ -219,7 +219,7 @@
 
   dotnet build -p:Version=1.0.0.1 -c Release
 
-  dotnet publish -p:Version=1.0.0.1 -c Release ../IdentityServer/ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj -o ./publish/ClassifiedAds.IdentityServer
+  dotnet publish -p:Version=1.0.0.1 -c Release ../IdentityServer/IdentityServer4/ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj -o ./publish/ClassifiedAds.IdentityServer
   dotnet publish -p:Version=1.0.0.1 -c Release ./Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI.csproj -o ./publish/ClassifiedAds.Gateways.WebAPI
   dotnet publish -p:Version=1.0.0.1 -c Release ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Api/ClassifiedAds.Services.AuditLog.Api.csproj -o ./publish/ClassifiedAds.Services.AuditLog.Api
   dotnet publish -p:Version=1.0.0.1 -c Release ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/ClassifiedAds.Services.AuditLog.Grpc.csproj -o ./publish/ClassifiedAds.Services.AuditLog.Grpc

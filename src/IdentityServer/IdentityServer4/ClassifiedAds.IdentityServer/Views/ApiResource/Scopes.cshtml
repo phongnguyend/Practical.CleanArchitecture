@@ -1,0 +1,98 @@
+﻿@using ClassifiedAds.IdentityServer.Models.ApiResourceModels
+@model ScopesModel
+
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="ApiResource" asp-action="Index">Api Resources</a></li>
+                <li class="breadcrumb-item"><a asp-controller="ApiResource" asp-action="Edit" asp-route-id="@Model.ApiResourceId">@Model.ApiResourceName</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Scopes</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="col-md-12">
+        <h3>Add Scope</h3>
+
+        <form asp-controller="ApiResource" asp-action="AddScope" Method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <!--Hidden -->
+            <input type="hidden" asp-for="ApiResourceId" />
+
+            <div class="card mt-3">
+                <h5 class="card-header">Add Scope</h5>
+                <div class="card-body">
+
+                    <!--Select-->
+                    <div class="form-group row">
+                        <label asp-for="Scope" class="col-sm-3 col-form-label">
+                            @await Html.PartialAsync("_Label", "Scopes")
+                        </label>
+                        <div class="col-sm-9">
+                            <select asp-for="Scope" asp-items="@(new SelectList(Model.ApiScopes, "Name", "DisplayName"))" class="form-control single-select"></select>
+                        </div>
+                    </div>
+
+                    <!--Button-->
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">
+                        </label>
+                        <div class="col-sm-9">
+                            <button type="submit" class="btn btn-primary">Add Scope</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mt-3">
+            <h5 class="card-header">Scopes</h5>
+            <div class="card-body">
+                <div class="row table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var scope in Model.Scopes)
+                            {
+                                <tr>
+                                    <td>@scope.Scope</td>
+                                    <td><a asp-action="DeleteScope" asp-route-apiId="@Model.ApiResourceId" asp-route-scopeId="@scope.Id" class="btn btn-danger">Remove</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        @*@await Html.PartialAsync("Common/Pager", new Pager() { Action = "ApiScopes", PageSize = Model.PageSize, TotalCount = Model.TotalCount })*@
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section scripts
+	{
+    <script>
+        $(function () {
+            //Disable enter for this form
+            FormMvc.disableEnter($('#api-scope-form'));
+        });
+    </script>
+}

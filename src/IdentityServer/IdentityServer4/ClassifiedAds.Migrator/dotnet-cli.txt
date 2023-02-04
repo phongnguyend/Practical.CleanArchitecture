@@ -1,0 +1,15 @@
+﻿https://docs.microsoft.com/en-us/ef/core/cli/dotnet
+
+dotnet tool install --global dotnet-ef --version="5.0"
+
+dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
+dotnet ef migrations add Init --context PersistedGrantDbContext -o Migrations/PersistedGrantDb
+
+dotnet ef migrations script --context ConfigurationDbContext
+dotnet ef migrations script --context PersistedGrantDbContext
+
+dotnet ef dbcontext script --context ConfigurationDbContext
+dotnet ef dbcontext script --context PersistedGrantDbContext
+
+dotnet ef database update --context ConfigurationDbContext
+dotnet ef database update --context PersistedGrantDbContext

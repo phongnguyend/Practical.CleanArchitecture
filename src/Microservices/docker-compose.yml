@@ -82,8 +82,8 @@ services:
     identity-authserver:
         image: classifiedads.services.identity.authserver
         build:
-          context: ../IdentityServer
-          dockerfile: ../IdentityServer/ClassifiedAds.IdentityServer/Dockerfile
+          context: ../IdentityServer/IdentityServer4
+          dockerfile: ../IdentityServer/IdentityServer4/ClassifiedAds.IdentityServer/Dockerfile
         ports:
           - "9000:80"
         depends_on:

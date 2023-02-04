@@ -3,7 +3,7 @@ extensions:
 - name: dapr
 services:
 - name: identityserver
-  project: ../IdentityServer/ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj
+  project: ../IdentityServer/IdentityServer4/ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj
   bindings:
   - protocol: https
     port: 44367
