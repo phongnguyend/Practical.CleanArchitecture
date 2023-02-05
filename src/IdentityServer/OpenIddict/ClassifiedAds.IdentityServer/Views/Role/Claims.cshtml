@@ -1,0 +1,127 @@
+﻿@using ClassifiedAds.IdentityServer.Models.RoleModels
+@model ClaimsModel
+
+<form id="role-claims-form" asp-controller="Role" asp-action="Claims" Method="post">
+    <div class="row">
+
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Role" asp-action="Index">Roles</a></li>
+                    <li class="breadcrumb-item"><a asp-controller="Role" asp-action="Edit" asp-route-id="@Model.Role.Id">@Model.Role.Name</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Claims</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="col-md-12">
+            <h3>Claims</h3>
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <!--Hidden -->
+            <input type="hidden" asp-for="Role.Id" />
+
+            <div class="card mt-3">
+                <h5 class="card-header">Add Claim</h5>
+                <div class="card-body">
+
+                    <!--Select with tags-->
+                    <div class="form-group row">
+                        <label asp-for="Type" class="col-sm-3 col-form-label">
+                            @await Html.PartialAsync("_Label", "Type")
+                        </label>
+                        <div class="col-sm-9">
+                            <picker id="Type" multiple-select="false" min-search-text="2"
+                                    selected-item="@Model.Type"
+                                    url="@Url.Action("GetClaims","IdentityResource")?claim"
+                                    search-input-placeholder="search"
+                                    selected-items-title="selected items"
+                                    search-result-title="search result"
+                                    suggested-items-title="suggested items"
+                                    no-item-selected-title="no item selected"
+                                    show-all-items-title="show all items"
+                                    item-already-selected-title="item already selected"
+                                    required="true" required-message="The Type is required">
+                            </picker>
+
+                            <span asp-validation-for="Type" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!--Input - text -->
+                    <div class="form-group row">
+                        <label asp-for="Value" class="col-sm-3 col-form-label">
+                            @await Html.PartialAsync("_Label", "Value")
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" required class="form-control" asp-for="Value">
+                            <span asp-validation-for="Value" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!--Button-->
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">
+                        </label>
+                        <div class="col-sm-9">
+                            <button type="submit" id="role-claims-button" class="btn btn-primary">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mt-3">
+            <h5 class="card-header">Claims</h5>
+            <div class="card-body">
+
+                <div class="row table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Value</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var claim in Model.Claims)
+                            {
+                                <tr>
+                                    <td>@claim.Type</td>
+                                    <td>@claim.Value</td>
+                                    <td><a asp-action="DeleteClaim" asp-route-claimId="@claim.Id" asp-route-roleId="@Model.Role.Id" class="btn btn-danger">Remove</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        @*@await Html.PartialAsync("Common/Pager", new Pager { Action = "RoleClaims", PageSize = Model.PageSize, TotalCount = Model.TotalCount })*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+	{
+    <script>
+        $(function () {
+            //Disable enter for this form
+            FormMvc.disableEnter($('#role-claims-form'));
+
+            //Allow validate hidden field
+            FormMvc.allowValidateHiddenField($('#role-claims-form'));
+        });
+    </script>
+}

@@ -1,0 +1,29 @@
+﻿@using Microsoft.AspNetCore.Authentication
+@{
+    var authenticationResult = await Context.AuthenticateAsync();
+    if (authenticationResult.Succeeded)
+    {
+        var issued = authenticationResult.Properties.Items[".issued"];
+        var expires = authenticationResult.Properties.Items[".expires"];
+        <div>
+            <p>You are signed in as</p>
+            <h2>@User.Identity.Name</h2>
+            <hr />
+            <dl>
+                <dt>Issued</dt>
+                <dd>@issued</dd>
+                <dt>Expires</dt>
+                <dd>@expires</dd>
+            </dl>
+            <hr />
+            <p><a class="btn btn-dark" asp-controller="Account" asp-action="Logout">Sign out</a></p>
+        </div>
+    }
+    else
+    {
+        <div>
+            <p>You are not signed in</p>
+            <p><a class="btn btn-sm btn-dark" asp-controller="Account" asp-action="Login">Sign in</a></p>
+        </div>
+    }
+}

@@ -1,0 +1,68 @@
+@using ClassifiedAds.IdentityServer.Models.Accounts;
+@model LoginModel
+
+<div class="login-page">
+    <div class="lead">
+        <h1>Login</h1>
+    </div>
+
+    <partial name="_ValidationSummary" />
+
+    <div class="row">
+
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Local Account</h5>
+                </div>
+
+                <div class="card-body">
+                    <form asp-route="Login">
+                        <input type="hidden" asp-for="ReturnUrl" />
+
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="input-username">
+                                            <i class="fa fa-user"></i>
+                                        </span>
+                                    </div>
+                                    <input class="form-control" placeholder="Username" asp-for="Username" aria-label="Username" aria-describedby="input-username" autofocus>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="input-password">
+                                            <span class="oi oi-lock-locked" title="Lock" aria-hidden="true"></span>
+                                        </span>
+                                    </div>
+                                    <input type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="input-password" asp-for="Password" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group login-remember row">
+                            <div class="col-sm-9">
+                                <div>
+                                    Remember My Login
+                                </div>
+                                <toggle-button>
+                                    <input asp-for="RememberLogin" type="checkbox">
+                                </toggle-button>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" name="button" id="btnLogin" value="login">Login</button>
+                        <button class="btn btn-secondary" name="button" id="btnCancel" value="cancel">Cancel</button>
+                        <a asp-action="ForgotPassword" asp-controller="Account" class="btn btn-info" value="forgot">Forgot</a>
+                        <a asp-action="Register" asp-controller="Account" class="btn btn-dark" value="forgot">Register</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,11 @@
+﻿https://docs.microsoft.com/en-us/ef/core/cli/dotnet
+
+dotnet tool install --global dotnet-ef --version="5.0"
+
+dotnet ef migrations add Init --context OpenIddictDbContext -o Migrations/OpenIddictDb
+
+dotnet ef migrations script --context OpenIddictDbContext
+
+dotnet ef dbcontext script --context OpenIddictDbContext
+
+dotnet ef database update --context OpenIddictDbContext

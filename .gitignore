@@ -1,6 +1,7 @@
 ## Ignore the Migrations folder for now since this repo is for learning and testing purposes
 ## We don't want to mess things up with lot of migration files anytime we make changes to the database structure.
 /src/IdentityServer/IdentityServer4/ClassifiedAds.Migrator/Migrations/
+/src/IdentityServer/OpenIddict/ClassifiedAds.Migrator/Migrations/
 /src/Monolith/ClassifiedAds.Migrator/Migrations/
 /src/ModularMonolith/ClassifiedAds.Migrator/Migrations/
 /src/Microservices/Services.AuditLog/ClassifiedAds.Services.AuditLog.Api/Migrations/
