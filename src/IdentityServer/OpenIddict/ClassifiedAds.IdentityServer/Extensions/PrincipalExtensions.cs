@@ -1,4 +1,4 @@
-﻿using IdentityModel;
+﻿using OpenIddict.Abstractions;
 using System.Security.Claims;
 
 namespace ClassifiedAds.IdentityServer.Extensions
@@ -13,7 +13,7 @@ namespace ClassifiedAds.IdentityServer.Extensions
                 return name;
             }
 
-            var sub = principal.FindFirst(JwtClaimTypes.Subject);
+            var sub = principal.FindFirst(OpenIddictConstants.Claims.Subject);
             if (sub != null)
             {
                 return sub.Value;

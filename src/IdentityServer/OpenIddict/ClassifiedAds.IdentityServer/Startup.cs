@@ -103,12 +103,13 @@ namespace ClassifiedAds.IdentityServer
                 options.AllowAuthorizationCodeFlow()
                        .AllowHybridFlow()
                        .AllowClientCredentialsFlow()
+                       .AllowPasswordFlow()
                        .AllowRefreshTokenFlow();
 
                 options.RegisterScopes(Scopes.OpenId, Scopes.Profile, Scopes.OfflineAccess, "ClassifiedAds.WebAPI");
 
-                options.AddDevelopmentEncryptionCertificate()
-                       .AddDevelopmentSigningCertificate();
+                options.AddEncryptionCertificate(AppSettings.IdentityServer.EncryptionCertificate.FindCertificate())
+                       .AddSigningCertificate(AppSettings.IdentityServer.SigningCertificate.FindCertificate());
 
                 options
                     .UseAspNetCore()

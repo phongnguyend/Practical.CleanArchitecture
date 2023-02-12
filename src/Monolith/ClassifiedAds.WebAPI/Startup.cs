@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
@@ -106,9 +107,22 @@ namespace ClassifiedAds.WebAPI
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.Authority = AppSettings.IdentityServerAuthentication.Authority;
-                    options.Audience = AppSettings.IdentityServerAuthentication.ApiName;
-                    options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
+                    if (AppSettings.IdentityServerAuthentication.Provider == "OpenIddict")
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateAudience = false,
+                            ValidIssuer = AppSettings.IdentityServerAuthentication.OpenIddict.IssuerUri,
+                            TokenDecryptionKey = new X509SecurityKey(AppSettings.IdentityServerAuthentication.OpenIddict.TokenDecryptionCertificate.FindCertificate()),
+                            IssuerSigningKey = new X509SecurityKey(AppSettings.IdentityServerAuthentication.OpenIddict.IssuerSigningCertificate.FindCertificate()),
+                        };
+                    }
+                    else
+                    {
+                        options.Authority = AppSettings.IdentityServerAuthentication.Authority;
+                        options.Audience = AppSettings.IdentityServerAuthentication.ApiName;
+                        options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
+                    }
                 });
 
             services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());

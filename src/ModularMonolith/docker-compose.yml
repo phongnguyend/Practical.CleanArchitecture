@@ -39,7 +39,7 @@ services:
         image: classifiedads.modularmonolith.identityserver
         build:
           context: ../IdentityServer/IdentityServer4
-          dockerfile: ../IdentityServer/IdentityServer4/ClassifiedAds.IdentityServer/Dockerfile
+          dockerfile: ./ClassifiedAds.IdentityServer/Dockerfile
         ports:
             - "9000:80"
         depends_on:

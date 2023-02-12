@@ -40,4 +40,10 @@
 		</None>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="Certs\classifiedads.identityserver.pfx">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>

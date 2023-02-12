@@ -4,6 +4,8 @@ namespace ClassifiedAds.IdentityServer.ConfigurationOptions
 {
     public class IdentityServerOptions
     {
-        public CertificateOption Certificate { get; set; }
+        public CertificateOption EncryptionCertificate { get; set; }
+
+        public CertificateOption SigningCertificate { get; set; }
     }
 }

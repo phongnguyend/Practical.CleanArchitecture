@@ -37,6 +37,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Certs\classifiedads.identityserver.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Certs\classifiedads.secretsencryption.pfx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
