@@ -1,4 +1,5 @@
-﻿
+﻿@using Microsoft.Extensions.Primitives;
+
 <div class="logout-page">
     <div class="lead">
         <h1>Logout</h1>
@@ -7,6 +8,11 @@
 
     <form asp-action="Logout">
         <div class="form-group">
+            @foreach (var parameter in Context.Request.HasFormContentType ?
+            (IEnumerable<KeyValuePair<string, StringValues>>)Context.Request.Form : Context.Request.Query)
+            {
+                <input type="hidden" name="@parameter.Key" value="@parameter.Value" />
+            }
             <button class="btn btn-primary">Yes</button>
         </div>
     </form>
