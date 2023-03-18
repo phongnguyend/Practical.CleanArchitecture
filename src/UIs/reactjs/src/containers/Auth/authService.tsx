@@ -1,10 +1,10 @@
-import { UserManager, User, WebStorageStateStore } from "oidc-client";
+import { User, UserManager, WebStorageStateStore } from "oidc-client-ts";
 
 import env from "../../environments";
 
 class AuthService {
-  _userManager: any;
-  _user: any;
+  _userManager: UserManager;
+  _user?: User;
 
   constructor() {
     var config = {
@@ -53,7 +53,7 @@ class AuthService {
 
   getCurrentUser = () => {
     return {
-      id: this._user.profile.sub,
+      id: this._user?.profile.sub,
       userName: "phongnguyend",
       firstName: "Phong",
       lastName: "Nguyen",

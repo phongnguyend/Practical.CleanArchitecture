@@ -28,6 +28,7 @@
     "ngx-bootstrap": "^10.2.0",
     "ngx-toastr": "^16.0.1",
     "oidc-client": "^1.11.5",
+    "oidc-client-ts": "^2.2.2",
     "rxjs": "^7.8.0",
     "tslib": "^2.4.0",
     "zone.js": "^0.12.0"

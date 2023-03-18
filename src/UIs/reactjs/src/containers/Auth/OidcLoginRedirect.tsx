@@ -1,21 +1,22 @@
-import { UserManager, User, WebStorageStateStore } from "oidc-client";
-import React, { Component } from "react";
+import { UserManager, User, WebStorageStateStore, UserManagerSettings } from "oidc-client-ts";
+import { Component } from "react";
+
+import env from "../../environments";
 
 var config = {
+  authority: env.OpenIdConnect.Authority,
+  client_id: env.OpenIdConnect.ClientId,
   userStore: new WebStorageStateStore({ store: window.localStorage }),
   response_mode: "query",
-};
+} as UserManagerSettings;
+
 var mgr = new UserManager(config);
 
 class OidcLoginRedirect extends Component {
   componentDidMount() {
     mgr.signinRedirectCallback().then(
-      () => {
-        window.history.replaceState(
-          {},
-          window.document.title,
-          window.location.origin
-        );
+      (user: User) => {
+        window.history.replaceState({}, window.document.title, window.location.origin);
 
         let returnUrl = localStorage.getItem("returnUrl");
         if (returnUrl) {

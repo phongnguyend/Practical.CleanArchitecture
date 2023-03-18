@@ -1,4 +1,4 @@
-import { UserManager, User, WebStorageStateStore } from "oidc-client";
+import { UserManager, User, WebStorageStateStore } from "oidc-client-ts";
 
 import env from "../../environments";
 
@@ -14,14 +14,14 @@ class AuthService {
       scope: "openid profile ClassifiedAds.WebAPI",
       response_type: "code",
       post_logout_redirect_uri: `${env.CurrentUrl}?postLogout=true`,
-      userStore: new WebStorageStateStore({ store: window.localStorage })
+      userStore: new WebStorageStateStore({ store: window.localStorage }),
     };
     this._userManager = new UserManager(config);
   }
 
   loadUser = () => {
     const promise = this._userManager.getUser();
-    promise.then(user => {
+    promise.then((user) => {
       if (user && !user.expired) {
         this._user = user;
       }
@@ -56,7 +56,7 @@ class AuthService {
       id: this._user?.profile.sub,
       userName: "phongnguyend",
       firstName: "Phong",
-      lastName: "Nguyen"
+      lastName: "Nguyen",
     };
   };
 

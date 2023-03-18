@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { UserManager, User, WebStorageStateStore } from "oidc-client";
+import { UserManager, User, WebStorageStateStore } from "oidc-client-ts";
 
 import { IUser } from "./user.model";
 import { environment } from "src/environments/environment";
