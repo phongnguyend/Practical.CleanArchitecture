@@ -1,90 +1,66 @@
-import React, { Component } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
-import { connect } from "react-redux";
 
+import { isAuthenticated } from "../../containers/Auth/authService";
 import classes from "./Nav.module.css";
 
-type Props = {
-  authService: any;
+const Nav = () => {
+  const pageTitle = "ClassifiedAds.React";
+  return (
+    <nav className={"navbar navbar-expand navbar-light bg-light " + classes.Nav}>
+      <a className="navbar-brand" href="/">
+        {pageTitle + " " + React.version}
+      </a>
+      <ul className="nav nav-pills">
+        <li>
+          <NavLink className="nav-link" to="/home">
+            Home
+          </NavLink>
+        </li>
+        <li>
+          <NavLink className="nav-link" to="/settings">
+            Settings
+          </NavLink>
+        </li>
+        <li>
+          <NavLink className="nav-link" to="/files">
+            Files
+          </NavLink>
+        </li>
+        <li>
+          <NavLink className="nav-link" to="/products">
+            Products
+          </NavLink>
+        </li>
+        <li>
+          <NavLink className="nav-link" to="/users">
+            Users
+          </NavLink>
+        </li>
+        <li>
+          <NavLink className="nav-link" to="/auditlogs">
+            Audit Logs
+          </NavLink>
+        </li>
+
+        {!isAuthenticated() ? (
+          <li>
+            <NavLink className="nav-link" to="/login">
+              Login
+            </NavLink>
+          </li>
+        ) : null}
+
+        {isAuthenticated() ? (
+          <li>
+            <NavLink className="nav-link" to="/logout">
+              Logout
+            </NavLink>
+          </li>
+        ) : null}
+      </ul>
+    </nav>
+  );
 };
 
-class Nav extends Component<Props> {
-  render() {
-    const pageTitle = "ClassifiedAds.React";
-    return (
-      <nav
-        className={"navbar navbar-expand navbar-light bg-light " + classes.Nav}
-      >
-        <a className="navbar-brand" href="/">
-          {pageTitle + " " + React.version}
-        </a>
-        <ul className="nav nav-pills">
-          <li>
-            <NavLink className="nav-link" to="/home">
-              Home
-            </NavLink>
-          </li>
-          <li>
-            <NavLink className="nav-link" to="/settings">
-              Settings
-            </NavLink>
-          </li>
-          <li>
-            <NavLink className="nav-link" to="/files">
-              Files
-            </NavLink>
-          </li>
-          <li>
-            <NavLink className="nav-link" to="/products">
-              Products
-            </NavLink>
-          </li>
-          <li>
-            <NavLink className="nav-link" to="/users">
-              Users
-            </NavLink>
-          </li>
-          <li>
-            <NavLink className="nav-link" to="/auditlogs">
-              Audit Logs
-            </NavLink>
-          </li>
-
-          {!this.props.authService.isAuthenticated() ? (
-            <li>
-              <NavLink
-                className="nav-link"
-                to="/login"
-              >
-                Login
-              </NavLink>
-            </li>
-          ) : null}
-
-          {this.props.authService.isAuthenticated() ? (
-            <li>
-              <NavLink
-                className="nav-link"
-                to="/logout"
-              >
-                Logout
-              </NavLink>
-            </li>
-          ) : null}
-        </ul>
-      </nav>
-    );
-  }
-}
-const mapStateToProps = (state) => {
-  return {
-    user: state.auth.user,
-    authService: state.auth.authService,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {};
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Nav);
+export default Nav;

@@ -1,5 +1,5 @@
 import React from "react";
-import { createRoot } from 'react-dom/client';
+import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
@@ -8,7 +8,7 @@ import createSagaMiddleware from "redux-saga";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import AuthService from "./containers/Auth/authService";
+import { loadUser, isAuthenticated } from "./containers/Auth/authService";
 import authReducer from "./containers/Auth/reducer";
 import auditLogReducer from "./containers/AuditLogs/reducer";
 import { watchAuditLog } from "./containers/AuditLogs/sagas";
@@ -37,10 +37,7 @@ const rootReducer = combineReducers({
 
 const sagaMiddleware = createSagaMiddleware();
 
-const store = createStore(
-  rootReducer,
-  composeEnhancers(applyMiddleware(sagaMiddleware))
-);
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(sagaMiddleware)));
 
 sagaMiddleware.run(watchConfigurationEntry);
 sagaMiddleware.run(watchFile);
@@ -48,20 +45,15 @@ sagaMiddleware.run(watchProduct);
 sagaMiddleware.run(watchUser);
 sagaMiddleware.run(watchAuditLog);
 
-store.dispatch({
-  type: "SET_AUTH_SERVICE",
-  authService: AuthService,
-});
-
-AuthService.loadUser().then((user) => {
-  if (AuthService.isAuthenticated()) {
+loadUser().then((user) => {
+  if (isAuthenticated()) {
     store.dispatch({
       type: "LOGIN",
       user: user,
     });
   }
 
-  const container = document.getElementById('root');
+  const container = document.getElementById("root");
   const root = createRoot(container!);
   root.render(
     <React.StrictMode>
@@ -70,7 +62,8 @@ AuthService.loadUser().then((user) => {
           <App />
         </BrowserRouter>
       </Provider>
-    </React.StrictMode>);
+    </React.StrictMode>
+  );
 
   // If you want your app to work offline and load faster, you can change
   // unregister() to register() below. Note this comes with some pitfalls.

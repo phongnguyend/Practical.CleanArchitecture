@@ -1,14 +1,12 @@
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { login } from "../../containers/Auth/authService";
 
 const Login = () => {
-    const { authService } = useSelector((state: any) => state.auth);
+  useEffect(() => {
+    login();
+  }, []);
 
-    useEffect(() => {
-        authService.login()
-    }, []);
-
-    return <div>Logging In ...</div>;
-}
+  return <div>Logging In ...</div>;
+};
 
 export default Login;

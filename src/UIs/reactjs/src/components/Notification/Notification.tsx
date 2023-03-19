@@ -3,14 +3,14 @@ import { HubConnectionBuilder } from "@microsoft/signalr";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import authService from "../../containers/Auth/authService";
+import { getAccessToken } from "../../containers/Auth/authService";
 import env from "../..//environments";
 
 function Notification() {
   useEffect(() => {
     const connection = new HubConnectionBuilder()
       .withUrl(env.ResourceServer.NotificationEndpoint, {
-        accessTokenFactory: () => authService.getAccessToken(),
+        accessTokenFactory: () => getAccessToken(),
       })
       .withAutomaticReconnect()
       .build();
@@ -22,12 +22,10 @@ function Notification() {
       },
       function () {
         console.log(
-          "Cannot connect to NotificationHub: " +
-            env.ResourceServer.NotificationEndpoint
+          "Cannot connect to NotificationHub: " + env.ResourceServer.NotificationEndpoint
         );
         toast.error(
-          "Cannot connect to NotificationHub: " +
-            env.ResourceServer.NotificationEndpoint
+          "Cannot connect to NotificationHub: " + env.ResourceServer.NotificationEndpoint
         );
       }
     );
