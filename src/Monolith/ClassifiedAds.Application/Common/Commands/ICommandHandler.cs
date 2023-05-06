@@ -1,11 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Application
+namespace ClassifiedAds.Application;
+
+public interface ICommandHandler<TCommand>
+    where TCommand : ICommand
 {
-    public interface ICommandHandler<TCommand>
-        where TCommand : ICommand
-    {
-        Task HandleAsync(TCommand command, CancellationToken cancellationToken = default);
-    }
+    Task HandleAsync(TCommand command, CancellationToken cancellationToken = default);
 }

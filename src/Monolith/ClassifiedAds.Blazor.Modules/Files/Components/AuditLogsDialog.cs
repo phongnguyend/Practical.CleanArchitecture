@@ -1,25 +1,24 @@
 ﻿using ClassifiedAds.Blazor.Modules.Files.Models;
 using System.Collections.Generic;
 
-namespace ClassifiedAds.Blazor.Modules.Files.Components
+namespace ClassifiedAds.Blazor.Modules.Files.Components;
+
+public partial class AuditLogsDialog
 {
-    public partial class AuditLogsDialog
+    public bool ShowDialog { get; set; }
+
+    public List<FileEntryAuditLogModel> AuditLogs { get; set; }
+
+    public void Show(List<FileEntryAuditLogModel> auditLogs)
     {
-        public bool ShowDialog { get; set; }
+        AuditLogs = auditLogs;
+        ShowDialog = true;
+        StateHasChanged();
+    }
 
-        public List<FileEntryAuditLogModel> AuditLogs { get; set; }
-
-        public void Show(List<FileEntryAuditLogModel> auditLogs)
-        {
-            AuditLogs = auditLogs;
-            ShowDialog = true;
-            StateHasChanged();
-        }
-
-        public void Close()
-        {
-            ShowDialog = false;
-            StateHasChanged();
-        }
+    public void Close()
+    {
+        ShowDialog = false;
+        StateHasChanged();
     }
 }

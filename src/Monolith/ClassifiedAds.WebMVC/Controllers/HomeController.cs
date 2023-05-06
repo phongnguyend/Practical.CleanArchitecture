@@ -26,181 +26,180 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.WebMVC.Controllers
+namespace ClassifiedAds.WebMVC.Controllers;
+
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    private readonly IDistributedCache _distributedCache;
+    private readonly IProductService _productService;
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly Dispatcher _dispatcher;
+    private readonly ILogger _logger;
+    private readonly IHubContext<SimulatedLongRunningTaskHub> _hubContext;
+    private readonly AppSettings _appSettings;
+
+    public HomeController(IDistributedCache distributedCache,
+        IProductService productService,
+        IHttpClientFactory httpClientFactory,
+        Dispatcher dispatcher,
+        ILogger<HomeController> logger,
+        IOptionsSnapshot<AppSettings> appSettings,
+        IHubContext<SimulatedLongRunningTaskHub> hubContext)
     {
-        private readonly IDistributedCache _distributedCache;
-        private readonly IProductService _productService;
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly Dispatcher _dispatcher;
-        private readonly ILogger _logger;
-        private readonly IHubContext<SimulatedLongRunningTaskHub> _hubContext;
-        private readonly AppSettings _appSettings;
+        _distributedCache = distributedCache;
+        _productService = productService;
+        _httpClientFactory = httpClientFactory;
+        _dispatcher = dispatcher;
+        _logger = logger;
+        _hubContext = hubContext;
+        _appSettings = appSettings.Value;
+    }
 
-        public HomeController(IDistributedCache distributedCache,
-            IProductService productService,
-            IHttpClientFactory httpClientFactory,
-            Dispatcher dispatcher,
-            ILogger<HomeController> logger,
-            IOptionsSnapshot<AppSettings> appSettings,
-            IHubContext<SimulatedLongRunningTaskHub> hubContext)
+    public async Task<IActionResult> Index()
+    {
+        _distributedCache.SetString("Test", "Test");
+
+        _logger.LogInformation("Getting all products");
+
+        _logger.LogDebug("Test LogDebug");
+        _logger.LogInformation("Test LogInformation");
+        _logger.LogWarning("Test LogWarning");
+
+        if (User.Identity.IsAuthenticated)
         {
-            _distributedCache = distributedCache;
-            _productService = productService;
-            _httpClientFactory = httpClientFactory;
-            _dispatcher = dispatcher;
-            _logger = logger;
-            _hubContext = hubContext;
-            _appSettings = appSettings.Value;
+            var products1 = await _dispatcher.DispatchAsync(new GetProductsQuery());
+            var products2 = await _productService.GetAsync();
+            var addingProduct = new Product { Name = "Test" };
+            await _productService.AddAsync(addingProduct);
+            await _productService.DeleteAsync(addingProduct);
         }
 
-        public async Task<IActionResult> Index()
-        {
-            _distributedCache.SetString("Test", "Test");
+        var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
 
-            _logger.LogInformation("Getting all products");
-
-            _logger.LogDebug("Test LogDebug");
-            _logger.LogInformation("Test LogInformation");
-            _logger.LogWarning("Test LogWarning");
-
-            if (User.Identity.IsAuthenticated)
-            {
-                var products1 = await _dispatcher.DispatchAsync(new GetProductsQuery());
-                var products2 = await _productService.GetAsync();
-                var addingProduct = new Product { Name = "Test" };
-                await _productService.AddAsync(addingProduct);
-                await _productService.DeleteAsync(addingProduct);
-            }
-
-            var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
-
-            if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(accessToken))
-            {
-                var httpClient = _httpClientFactory.CreateClient();
-
-                httpClient.SetBearerToken(accessToken);
-                var response = await httpClient.GetAsync($"{_appSettings.ResourceServer.Endpoint}/api/products");
-                var product3 = await response.Content.ReadAs<List<Product>>();
-            }
-
-            var cachedValue = _distributedCache.GetString("Test");
-
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        [Authorize]
-        public async Task<IActionResult> AuthorizedAction()
-        {
-            var model = new AuthenticationModel
-            {
-                User = new CurrentUserModel
-                {
-                    Identity = new CurrentUserIdentityModel
-                    {
-                        IsAuthenticated = User.Identity.IsAuthenticated,
-                        Name = User.Identity.Name,
-                        AuthenticationType = User.Identity.AuthenticationType,
-                    },
-                    Claims = User.Claims.Select(x => new ClaimModel { Type = x.Type, Value = x.Value }).ToList(),
-                },
-                Token = new TokenModel
-                {
-                    IdentityToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken),
-                    AccessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken),
-                    RefreshToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken),
-                    ExpiresAt = await HttpContext.GetTokenAsync("expires_at"),
-                },
-            };
-
-            var httpClient = _httpClientFactory.CreateClient();
-            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(_appSettings.OpenIdConnect.Authority);
-            var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
-
-            var response = await httpClient.GetUserInfoAsync(new UserInfoRequest { Address = metaDataResponse.UserInfoEndpoint, Token = accessToken });
-
-            if (!response.IsError)
-            {
-                model.User.Claims.AddRange(response.Claims.Select(x => new ClaimModel { Type = x.Type, Value = x.Value }));
-            }
-
-            return View(model);
-        }
-
-        [Authorize]
-        public IActionResult Login()
-        {
-            return RedirectToAction(nameof(Index));
-        }
-
-        public async Task Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
-        }
-
-        [Authorize]
-        public async Task<IActionResult> RefreshToken()
+        if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(accessToken))
         {
             var httpClient = _httpClientFactory.CreateClient();
-            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
-            {
-                Address = _appSettings.OpenIdConnect.Authority,
-                Policy = { RequireHttps = _appSettings.OpenIdConnect.RequireHttpsMetadata },
-            });
 
-            var refreshToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
-            var response = await httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
-            {
-                Address = metaDataResponse.TokenEndpoint,
-                ClientId = _appSettings.OpenIdConnect.ClientId,
-                ClientSecret = _appSettings.OpenIdConnect.ClientSecret,
-                RefreshToken = refreshToken,
-            });
-
-            if (response.IsError)
-            {
-                return Json(response);
-            }
-
-            var auth = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            auth.Properties.UpdateTokenValue(OpenIdConnectParameterNames.AccessToken, response.AccessToken);
-            auth.Properties.UpdateTokenValue(OpenIdConnectParameterNames.RefreshToken, response.RefreshToken);
-            var expiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(response.ExpiresIn);
-            auth.Properties.UpdateTokenValue("expires_at", expiresAt.ToString("o", CultureInfo.InvariantCulture));
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, auth.Principal, auth.Properties);
-
-            return RedirectToAction(nameof(AuthorizedAction));
+            httpClient.SetBearerToken(accessToken);
+            var response = await httpClient.GetAsync($"{_appSettings.ResourceServer.Endpoint}/api/products");
+            var product3 = await response.Content.ReadAs<List<Product>>();
         }
 
-        public IActionResult TestException()
+        var cachedValue = _distributedCache.GetString("Test");
+
+        return View();
+    }
+
+    public IActionResult Privacy()
+    {
+        return View();
+    }
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    [Authorize]
+    public async Task<IActionResult> AuthorizedAction()
+    {
+        var model = new AuthenticationModel
         {
-            throw new Exception("Test Exception Filter");
+            User = new CurrentUserModel
+            {
+                Identity = new CurrentUserIdentityModel
+                {
+                    IsAuthenticated = User.Identity.IsAuthenticated,
+                    Name = User.Identity.Name,
+                    AuthenticationType = User.Identity.AuthenticationType,
+                },
+                Claims = User.Claims.Select(x => new ClaimModel { Type = x.Type, Value = x.Value }).ToList(),
+            },
+            Token = new TokenModel
+            {
+                IdentityToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken),
+                AccessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken),
+                RefreshToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken),
+                ExpiresAt = await HttpContext.GetTokenAsync("expires_at"),
+            },
+        };
+
+        var httpClient = _httpClientFactory.CreateClient();
+        var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(_appSettings.OpenIdConnect.Authority);
+        var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+
+        var response = await httpClient.GetUserInfoAsync(new UserInfoRequest { Address = metaDataResponse.UserInfoEndpoint, Token = accessToken });
+
+        if (!response.IsError)
+        {
+            model.User.Claims.AddRange(response.Claims.Select(x => new ClaimModel { Type = x.Type, Value = x.Value }));
         }
 
-        [HttpPost]
-        public async Task<IActionResult> InvokeHub([FromBody] SendTaskStatusMessage model)
+        return View(model);
+    }
+
+    [Authorize]
+    public IActionResult Login()
+    {
+        return RedirectToAction(nameof(Index));
+    }
+
+    public async Task Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
+    }
+
+    [Authorize]
+    public async Task<IActionResult> RefreshToken()
+    {
+        var httpClient = _httpClientFactory.CreateClient();
+        var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
         {
-            await _hubContext.Clients.All.SendAsync("ReceiveTaskStatus", $"{model.Step}  {model.Message}");
-            return Content(string.Empty);
+            Address = _appSettings.OpenIdConnect.Authority,
+            Policy = { RequireHttps = _appSettings.OpenIdConnect.RequireHttpsMetadata },
+        });
+
+        var refreshToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
+        var response = await httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
+        {
+            Address = metaDataResponse.TokenEndpoint,
+            ClientId = _appSettings.OpenIdConnect.ClientId,
+            ClientSecret = _appSettings.OpenIdConnect.ClientSecret,
+            RefreshToken = refreshToken,
+        });
+
+        if (response.IsError)
+        {
+            return Json(response);
         }
 
-        [Authorize(Policy = "CustomPolicy")]
-        public IActionResult CustomRequirement()
-        {
-            return Content("Inside Custom Requirement Action");
-        }
+        var auth = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        auth.Properties.UpdateTokenValue(OpenIdConnectParameterNames.AccessToken, response.AccessToken);
+        auth.Properties.UpdateTokenValue(OpenIdConnectParameterNames.RefreshToken, response.RefreshToken);
+        var expiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(response.ExpiresIn);
+        auth.Properties.UpdateTokenValue("expires_at", expiresAt.ToString("o", CultureInfo.InvariantCulture));
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, auth.Principal, auth.Properties);
+
+        return RedirectToAction(nameof(AuthorizedAction));
+    }
+
+    public IActionResult TestException()
+    {
+        throw new Exception("Test Exception Filter");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> InvokeHub([FromBody] SendTaskStatusMessage model)
+    {
+        await _hubContext.Clients.All.SendAsync("ReceiveTaskStatus", $"{model.Step}  {model.Message}");
+        return Content(string.Empty);
+    }
+
+    [Authorize(Policy = "CustomPolicy")]
+    public IActionResult CustomRequirement()
+    {
+        return Content("Inside Custom Requirement Action");
     }
 }

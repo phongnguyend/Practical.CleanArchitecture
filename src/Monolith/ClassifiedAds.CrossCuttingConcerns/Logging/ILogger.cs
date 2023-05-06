@@ -1,6 +1,5 @@
-﻿namespace ClassifiedAds.CrossCuttingConcerns.Logging
+﻿namespace ClassifiedAds.CrossCuttingConcerns.Logging;
+
+public interface ILogger
 {
-    public interface ILogger
-    {
-    }
 }

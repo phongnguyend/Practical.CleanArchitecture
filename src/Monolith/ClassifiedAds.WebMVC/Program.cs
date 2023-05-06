@@ -7,36 +7,35 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace ClassifiedAds.WebMVC
+namespace ClassifiedAds.WebMVC;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            CreateWebHostBuilder(args).Build().Run();
-        }
-
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .ConfigureAppConfiguration((ctx, builder) =>
-                {
-                    var config = builder.Build();
-                    var appSettings = new AppSettings();
-                    config.Bind(appSettings);
-
-                    if (appSettings.CheckDependency.Enabled)
-                    {
-                        NetworkPortCheck.Wait(appSettings.CheckDependency.Host, 5);
-                    }
-
-                    builder.AddAppConfiguration(appSettings.ConfigurationProviders);
-                })
-                .UseClassifiedAdsLogger(configuration =>
-                {
-                    var appSettings = new AppSettings();
-                    configuration.Bind(appSettings);
-                    return appSettings.Logging;
-                });
+        CreateWebHostBuilder(args).Build().Run();
     }
+
+    public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        WebHost.CreateDefaultBuilder(args)
+            .UseStartup<Startup>()
+            .ConfigureAppConfiguration((ctx, builder) =>
+            {
+                var config = builder.Build();
+                var appSettings = new AppSettings();
+                config.Bind(appSettings);
+
+                if (appSettings.CheckDependency.Enabled)
+                {
+                    NetworkPortCheck.Wait(appSettings.CheckDependency.Host, 5);
+                }
+
+                builder.AddAppConfiguration(appSettings.ConfigurationProviders);
+            })
+            .UseClassifiedAdsLogger(configuration =>
+            {
+                var appSettings = new AppSettings();
+                configuration.Bind(appSettings);
+                return appSettings.Logging;
+            });
 }

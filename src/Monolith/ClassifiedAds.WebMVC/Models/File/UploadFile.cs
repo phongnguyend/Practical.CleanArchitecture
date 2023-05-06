@@ -1,20 +1,19 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
-namespace ClassifiedAds.WebMVC.Models.File
+namespace ClassifiedAds.WebMVC.Models.File;
+
+public class UploadFile
 {
-    public class UploadFile
-    {
-        [Display(Name = "Name")]
-        [StringLength(50, MinimumLength = 0)]
-        public string Name { get; set; }
+    [Display(Name = "Name")]
+    [StringLength(50, MinimumLength = 0)]
+    public string Name { get; set; }
 
-        [Display(Name = "Description")]
-        [StringLength(50, MinimumLength = 0)]
-        public string Description { get; set; }
+    [Display(Name = "Description")]
+    [StringLength(50, MinimumLength = 0)]
+    public string Description { get; set; }
 
-        [Required]
-        [Display(Name = "File")]
-        public IFormFile FormFile { get; set; }
-    }
+    [Required]
+    [Display(Name = "File")]
+    public IFormFile FormFile { get; set; }
 }

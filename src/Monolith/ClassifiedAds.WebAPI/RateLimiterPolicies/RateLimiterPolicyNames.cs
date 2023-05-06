@@ -1,9 +1,8 @@
-﻿namespace ClassifiedAds.WebAPI.RateLimiterPolicies
-{
-    public static class RateLimiterPolicyNames
-    {
-        public const string DefaultPolicy = "DefaultPolicy";
+﻿namespace ClassifiedAds.WebAPI.RateLimiterPolicies;
 
-        public const string GetAuditLogsPolicy = "GetAuditLogsPolicy";
-    }
+public static class RateLimiterPolicyNames
+{
+    public const string DefaultPolicy = "DefaultPolicy";
+
+    public const string GetAuditLogsPolicy = "GetAuditLogsPolicy";
 }

@@ -1,12 +1,11 @@
-﻿namespace ClassifiedAds.BlazorServerSide.ConfigurationOptions
-{
-    public class Azure
-    {
-        public SignalR SignalR { get; set; }
-    }
+﻿namespace ClassifiedAds.BlazorServerSide.ConfigurationOptions;
 
-    public class SignalR
-    {
-        public bool IsEnabled { get; set; }
-    }
+public class Azure
+{
+    public SignalR SignalR { get; set; }
+}
+
+public class SignalR
+{
+    public bool IsEnabled { get; set; }
 }

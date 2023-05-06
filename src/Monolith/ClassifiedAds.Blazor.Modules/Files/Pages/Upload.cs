@@ -7,77 +7,76 @@ using Microsoft.JSInterop;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Blazor.Modules.Files.Pages
+namespace ClassifiedAds.Blazor.Modules.Files.Pages;
+
+public partial class Upload
 {
-    public partial class Upload
+    [Inject]
+    public NavigationManager NavManager { get; set; }
+
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
+
+    [Inject]
+    public ILogger<Upload> Logger { get; set; }
+
+    [Inject]
+    public FileService FileService { get; set; }
+
+    public FileEntryModel File { get; set; } = new FileEntryModel();
+
+    public IBrowserFile BrowserFile { get; set; }
+
+    public EditContext EditContext { get; set; }
+
+    protected override void OnInitialized()
     {
-        [Inject]
-        public NavigationManager NavManager { get; set; }
+        EditContext = new EditContext(File);
+        EditContext.SetFieldCssClassProvider(new MyFieldClassProvider());
+    }
 
-        [Inject]
-        public IJSRuntime JSRuntime { get; set; }
-
-        [Inject]
-        public ILogger<Upload> Logger { get; set; }
-
-        [Inject]
-        public FileService FileService { get; set; }
-
-        public FileEntryModel File { get; set; } = new FileEntryModel();
-
-        public IBrowserFile BrowserFile { get; set; }
-
-        public EditContext EditContext { get; set; }
-
-        protected override void OnInitialized()
+    protected async Task HandleValidSubmit()
+    {
+        if (BrowserFile != null)
         {
-            EditContext = new EditContext(File);
-            EditContext.SetFieldCssClassProvider(new MyFieldClassProvider());
+            Logger.LogWarning("Upload using InputFile + HttpClient.");
+
+            var buffer = new byte[BrowserFile.Size];
+            await BrowserFile.OpenReadStream().ReadAsync(buffer);
+
+            File.FileName = BrowserFile.Name;
+            var res = await FileService.UploadFileAsync(File, buffer);
+
+            NavManager.NavigateTo($"/files/edit/{res.Id}");
         }
-
-        protected async Task HandleValidSubmit()
+        else
         {
-            if (BrowserFile != null)
-            {
-                Logger.LogWarning("Upload using InputFile + HttpClient.");
+            Logger.LogWarning("Upload using JavaScript Interop.");
 
-                var buffer = new byte[BrowserFile.Size];
-                await BrowserFile.OpenReadStream().ReadAsync(buffer);
-
-                File.FileName = BrowserFile.Name;
-                var res = await FileService.UploadFileAsync(File, buffer);
-
-                NavManager.NavigateTo($"/files/edit/{res.Id}");
-            }
-            else
-            {
-                Logger.LogWarning("Upload using JavaScript Interop.");
-
-                var dotNetObj = DotNetObjectReference.Create(this);
-                await JSRuntime.InvokeVoidAsync("interop.uploadFile", FileService.GetUploadUrl(), await FileService.GetAccessToken(), File, dotNetObj);
-            }
-        }
-
-        [JSInvokable]
-        public void Uploaded(string id)
-        {
-            NavManager.NavigateTo($"/files/edit/{id}");
-        }
-
-        private void OnInputFileChange(InputFileChangeEventArgs e)
-        {
-            BrowserFile = e.File;
+            var dotNetObj = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("interop.uploadFile", FileService.GetUploadUrl(), await FileService.GetAccessToken(), File, dotNetObj);
         }
     }
 
-    public class MyFieldClassProvider : FieldCssClassProvider
+    [JSInvokable]
+    public void Uploaded(string id)
     {
-        public override string GetFieldCssClass(EditContext editContext,
-            in FieldIdentifier fieldIdentifier)
-        {
-            var isValid = !editContext.GetValidationMessages(fieldIdentifier).Any();
+        NavManager.NavigateTo($"/files/edit/{id}");
+    }
 
-            return isValid ? "is-valid" : "is-invalid";
-        }
+    private void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        BrowserFile = e.File;
+    }
+}
+
+public class MyFieldClassProvider : FieldCssClassProvider
+{
+    public override string GetFieldCssClass(EditContext editContext,
+        in FieldIdentifier fieldIdentifier)
+    {
+        var isValid = !editContext.GetValidationMessages(fieldIdentifier).Any();
+
+        return isValid ? "is-valid" : "is-invalid";
     }
 }

@@ -2,40 +2,39 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassifiedAds.WebAPI.Models.Products
+namespace ClassifiedAds.WebAPI.Models.Products;
+
+public static class ProductModelMappingConfiguration
 {
-    public static class ProductModelMappingConfiguration
+    public static IEnumerable<ProductModel> ToModels(this IEnumerable<Product> entities)
     {
-        public static IEnumerable<ProductModel> ToModels(this IEnumerable<Product> entities)
+        return entities.Select(x => x.ToModel());
+    }
+
+    public static ProductModel ToModel(this Product entity)
+    {
+        if (entity == null)
         {
-            return entities.Select(x => x.ToModel());
+            return null;
         }
 
-        public static ProductModel ToModel(this Product entity)
+        return new ProductModel
         {
-            if (entity == null)
-            {
-                return null;
-            }
+            Id = entity.Id,
+            Code = entity.Code,
+            Name = entity.Name,
+            Description = entity.Description,
+        };
+    }
 
-            return new ProductModel
-            {
-                Id = entity.Id,
-                Code = entity.Code,
-                Name = entity.Name,
-                Description = entity.Description,
-            };
-        }
-
-        public static Product ToEntity(this ProductModel model)
+    public static Product ToEntity(this ProductModel model)
+    {
+        return new Product
         {
-            return new Product
-            {
-                Id = model.Id,
-                Code = model.Code,
-                Name = model.Name,
-                Description = model.Description,
-            };
-        }
+            Id = model.Id,
+            Code = model.Code,
+            Name = model.Name,
+            Description = model.Description,
+        };
     }
 }

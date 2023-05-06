@@ -5,38 +5,37 @@ using Microsoft.AspNetCore.Components;
 using System;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Blazor.Modules.Files.Pages
+namespace ClassifiedAds.Blazor.Modules.Files.Pages;
+
+public partial class Edit
 {
-    public partial class Edit
+    [Inject]
+    public NavigationManager NavManager { get; set; }
+
+    [Inject]
+    public FileService FileService { get; set; }
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    public FileEntryModel File { get; set; } = new FileEntryModel();
+
+    protected AuditLogsDialog AuditLogsDialog { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
-        [Inject]
-        public NavigationManager NavManager { get; set; }
+        File = await FileService.GetFileByIdAsync(Id);
+    }
 
-        [Inject]
-        public FileService FileService { get; set; }
+    protected async Task ViewAuditLogs()
+    {
+        var logs = await FileService.GetAuditLogsAsync(File.Id);
+        AuditLogsDialog.Show(logs);
+    }
 
-        [Parameter]
-        public Guid Id { get; set; }
-
-        public FileEntryModel File { get; set; } = new FileEntryModel();
-
-        protected AuditLogsDialog AuditLogsDialog { get; set; }
-
-        protected override async Task OnInitializedAsync()
-        {
-            File = await FileService.GetFileByIdAsync(Id);
-        }
-
-        protected async Task ViewAuditLogs()
-        {
-            var logs = await FileService.GetAuditLogsAsync(File.Id);
-            AuditLogsDialog.Show(logs);
-        }
-
-        protected async Task HandleValidSubmit()
-        {
-            await FileService.UpdateFileAsync(File.Id, File);
-            NavManager.NavigateTo("/files");
-        }
+    protected async Task HandleValidSubmit()
+    {
+        await FileService.UpdateFileAsync(File.Id, File);
+        NavManager.NavigateTo("/files");
     }
 }

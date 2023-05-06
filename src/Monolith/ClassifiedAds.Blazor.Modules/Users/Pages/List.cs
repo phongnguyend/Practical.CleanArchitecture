@@ -5,39 +5,38 @@ using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Blazor.Modules.Users.Pages
+namespace ClassifiedAds.Blazor.Modules.Users.Pages;
+
+public partial class List
 {
-    public partial class List
+    [Inject]
+    public NavigationManager NavManager { get; set; }
+
+    [Inject]
+    public UserService UserService { get; set; }
+
+    public List<UserModel> Users { get; set; } = new List<UserModel>();
+
+    public UserModel DeletingUser { get; private set; }
+
+    protected ConfirmDialog DeleteDialog { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
-        [Inject]
-        public NavigationManager NavManager { get; set; }
+        Users = await UserService.GetUsersAsync();
+    }
 
-        [Inject]
-        public UserService UserService { get; set; }
+    protected void DeleteUser(UserModel user)
+    {
+        DeletingUser = user;
+        DeleteDialog.Show();
+    }
 
-        public List<UserModel> Users { get; set; } = new List<UserModel>();
-
-        public UserModel DeletingUser { get; private set; }
-
-        protected ConfirmDialog DeleteDialog { get; set; }
-
-        protected override async Task OnInitializedAsync()
-        {
-            Users = await UserService.GetUsersAsync();
-        }
-
-        protected void DeleteUser(UserModel user)
-        {
-            DeletingUser = user;
-            DeleteDialog.Show();
-        }
-
-        public async void ConfirmedDeleteUser()
-        {
-            await UserService.DeleteUserAsync(DeletingUser.Id);
-            DeleteDialog.Close();
-            Users = await UserService.GetUsersAsync();
-            StateHasChanged();
-        }
+    public async void ConfirmedDeleteUser()
+    {
+        await UserService.DeleteUserAsync(DeletingUser.Id);
+        DeleteDialog.Close();
+        Users = await UserService.GetUsersAsync();
+        StateHasChanged();
     }
 }

@@ -1,26 +1,25 @@
 ﻿using ClassifiedAds.Domain.Infrastructure.Storages;
 using System;
 
-namespace ClassifiedAds.Domain.Entities
+namespace ClassifiedAds.Domain.Entities;
+
+public class FileEntry : Entity<Guid>, IAggregateRoot, IFileEntry
 {
-    public class FileEntry : Entity<Guid>, IAggregateRoot, IFileEntry
-    {
-        public string Name { get; set; }
+    public string Name { get; set; }
 
-        public string Description { get; set; }
+    public string Description { get; set; }
 
-        public long Size { get; set; }
+    public long Size { get; set; }
 
-        public DateTimeOffset UploadedTime { get; set; }
+    public DateTimeOffset UploadedTime { get; set; }
 
-        public string FileName { get; set; }
+    public string FileName { get; set; }
 
-        public string FileLocation { get; set; }
+    public string FileLocation { get; set; }
 
-        public bool Encrypted { get; set; }
+    public bool Encrypted { get; set; }
 
-        public string EncryptionKey { get; set; }
+    public string EncryptionKey { get; set; }
 
-        public string EncryptionIV { get; set; }
-    }
+    public string EncryptionIV { get; set; }
 }

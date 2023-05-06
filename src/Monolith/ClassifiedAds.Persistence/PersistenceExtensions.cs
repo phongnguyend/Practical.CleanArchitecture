@@ -10,73 +10,72 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace Microsoft.Extensions.DependencyInjection;
+
+public static class PersistenceExtensions
 {
-    public static class PersistenceExtensions
+    public static IServiceCollection AddPersistence(this IServiceCollection services, string connectionString, string migrationsAssembly = "")
     {
-        public static IServiceCollection AddPersistence(this IServiceCollection services, string connectionString, string migrationsAssembly = "")
-        {
-            services.AddDbContext<AdsDbContext>(options => options.UseSqlServer(connectionString, sql =>
+        services.AddDbContext<AdsDbContext>(options => options.UseSqlServer(connectionString, sql =>
+                {
+                    if (!string.IsNullOrEmpty(migrationsAssembly))
                     {
-                        if (!string.IsNullOrEmpty(migrationsAssembly))
-                        {
-                            sql.MigrationsAssembly(migrationsAssembly);
-                        }
-                    }))
-                    .AddDbContextFactory<AdsDbContext>((Action<DbContextOptionsBuilder>)null, ServiceLifetime.Scoped)
-                    .AddRepositories();
+                        sql.MigrationsAssembly(migrationsAssembly);
+                    }
+                }))
+                .AddDbContextFactory<AdsDbContext>((Action<DbContextOptionsBuilder>)null, ServiceLifetime.Scoped)
+                .AddRepositories();
 
-            services.AddScoped(typeof(IDistributedLock), _ => new SqlDistributedLock(connectionString));
+        services.AddScoped(typeof(IDistributedLock), _ => new SqlDistributedLock(connectionString));
 
-            return services;
-        }
+        return services;
+    }
 
-        public static IServiceCollection AddMultiTenantPersistence(this IServiceCollection services, Type connectionStringResolverType, Type tenantResolverType)
+    public static IServiceCollection AddMultiTenantPersistence(this IServiceCollection services, Type connectionStringResolverType, Type tenantResolverType)
+    {
+        services.AddScoped(typeof(IConnectionStringResolver<AdsDbContextMultiTenant>), connectionStringResolverType);
+        services.AddScoped(typeof(ITenantResolver), tenantResolverType);
+
+        services.AddDbContext<AdsDbContextMultiTenant>(options => { })
+                .AddScoped(typeof(AdsDbContext), services =>
+                {
+                    return services.GetRequiredService<AdsDbContextMultiTenant>();
+                })
+                .AddRepositories();
+
+        services.AddScoped(typeof(IDistributedLock), services =>
         {
-            services.AddScoped(typeof(IConnectionStringResolver<AdsDbContextMultiTenant>), connectionStringResolverType);
-            services.AddScoped(typeof(ITenantResolver), tenantResolverType);
+            return new SqlDistributedLock(services.GetRequiredService<IConnectionStringResolver<AdsDbContextMultiTenant>>().ConnectionString);
+        });
 
-            services.AddDbContext<AdsDbContextMultiTenant>(options => { })
-                    .AddScoped(typeof(AdsDbContext), services =>
-                    {
-                        return services.GetRequiredService<AdsDbContextMultiTenant>();
-                    })
-                    .AddRepositories();
+        return services;
+    }
 
-            services.AddScoped(typeof(IDistributedLock), services =>
-            {
-                return new SqlDistributedLock(services.GetRequiredService<IConnectionStringResolver<AdsDbContextMultiTenant>>().ConnectionString);
-            });
+    private static IServiceCollection AddRepositories(this IServiceCollection services)
+    {
+        services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
+                .AddScoped(typeof(IAuditLogEntryRepository), typeof(AuditLogEntryRepository))
+                .AddScoped(typeof(IEmailMessageRepository), typeof(EmailMessageRepository))
+                .AddScoped(typeof(ISmsMessageRepository), typeof(SmsMessageRepository))
+                .AddScoped(typeof(IUserRepository), typeof(UserRepository))
+                .AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
 
-            return services;
-        }
-
-        private static IServiceCollection AddRepositories(this IServiceCollection services)
+        services.AddScoped(typeof(IUnitOfWork), services =>
         {
-            services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
-                    .AddScoped(typeof(IAuditLogEntryRepository), typeof(AuditLogEntryRepository))
-                    .AddScoped(typeof(IEmailMessageRepository), typeof(EmailMessageRepository))
-                    .AddScoped(typeof(ISmsMessageRepository), typeof(SmsMessageRepository))
-                    .AddScoped(typeof(IUserRepository), typeof(UserRepository))
-                    .AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
+            return services.GetRequiredService<AdsDbContext>();
+        });
 
-            services.AddScoped(typeof(IUnitOfWork), services =>
-            {
-                return services.GetRequiredService<AdsDbContext>();
-            });
+        services.AddScoped<ILockManager, LockManager>();
+        services.AddScoped<ICircuitBreakerManager, CircuitBreakerManager>();
 
-            services.AddScoped<ILockManager, LockManager>();
-            services.AddScoped<ICircuitBreakerManager, CircuitBreakerManager>();
+        return services;
+    }
 
-            return services;
-        }
-
-        public static void MigrateAdsDb(this IApplicationBuilder app)
+    public static void MigrateAdsDb(this IApplicationBuilder app)
+    {
+        using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
         {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                serviceScope.ServiceProvider.GetRequiredService<AdsDbContext>().Database.Migrate();
-            }
+            serviceScope.ServiceProvider.GetRequiredService<AdsDbContext>().Database.Migrate();
         }
     }
 }

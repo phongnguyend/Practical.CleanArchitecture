@@ -7,45 +7,44 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventGrid
+namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventGrid;
+
+public class AzureEventGridSender<T> : IMessageSender<T>
 {
-    public class AzureEventGridSender<T> : IMessageSender<T>
+    private readonly string _domainEndpoint;
+    private readonly string _domainKey;
+    private readonly string _topic;
+
+    public AzureEventGridSender(string domainEndpoint, string domainKey, string topic)
     {
-        private readonly string _domainEndpoint;
-        private readonly string _domainKey;
-        private readonly string _topic;
+        _domainEndpoint = domainEndpoint;
+        _domainKey = domainKey;
+        _topic = topic;
+    }
 
-        public AzureEventGridSender(string domainEndpoint, string domainKey, string topic)
+    public async Task SendAsync(T message, MetaData metaData, CancellationToken cancellationToken = default)
+    {
+        EventGridPublisherClient client = new EventGridPublisherClient(new Uri(_domainEndpoint), new AzureKeyCredential(_domainKey));
+
+        var data = new BinaryData(JsonSerializer.Serialize(new Message<T>
         {
-            _domainEndpoint = domainEndpoint;
-            _domainKey = domainKey;
-            _topic = topic;
-        }
+            Data = message,
+            MetaData = metaData,
+        }));
 
-        public async Task SendAsync(T message, MetaData metaData, CancellationToken cancellationToken = default)
+        var events = new List<EventGridEvent>()
         {
-            EventGridPublisherClient client = new EventGridPublisherClient(new Uri(_domainEndpoint), new AzureKeyCredential(_domainKey));
-
-            var data = new BinaryData(JsonSerializer.Serialize(new Message<T>
+            new EventGridEvent("TEST", typeof(T).FullName, "1.0", data)
             {
-                Data = message,
-                MetaData = metaData,
-            }));
+                Id = Guid.NewGuid().ToString(),
+                EventType = typeof(T).FullName,
+                Topic = _topic,
+                EventTime = DateTime.UtcNow,
+                Subject = "TEST",
+                DataVersion = "1.0",
+            },
+        };
 
-            var events = new List<EventGridEvent>()
-            {
-                new EventGridEvent("TEST", typeof(T).FullName, "1.0", data)
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    EventType = typeof(T).FullName,
-                    Topic = _topic,
-                    EventTime = DateTime.UtcNow,
-                    Subject = "TEST",
-                    DataVersion = "1.0",
-                },
-            };
-
-            await client.SendEventsAsync(events, cancellationToken);
-        }
+        await client.SendEventsAsync(events, cancellationToken);
     }
 }

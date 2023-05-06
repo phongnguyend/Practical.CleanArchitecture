@@ -2,23 +2,22 @@
 using System;
 using System.Collections.Generic;
 
-namespace ClassifiedAds.Infrastructure.Excel.ClosedXML
+namespace ClassifiedAds.Infrastructure.Excel.ClosedXML;
+
+public static class IXLWorksheetExtensions
 {
-    public static class IXLWorksheetExtensions
+    public static string VerifyHeader(this IXLWorksheet worksheet, int headerIndex, Dictionary<string, string> expectedValues)
     {
-        public static string VerifyHeader(this IXLWorksheet worksheet, int headerIndex, Dictionary<string, string> expectedValues)
+        foreach (var correctHeader in expectedValues)
         {
-            foreach (var correctHeader in expectedValues)
+            var currentHeader = worksheet.Cell(correctHeader.Key + headerIndex).GetString();
+
+            if (!correctHeader.Value.Equals(currentHeader, StringComparison.OrdinalIgnoreCase))
             {
-                var currentHeader = worksheet.Cell(correctHeader.Key + headerIndex).GetString();
-
-                if (!correctHeader.Value.Equals(currentHeader, StringComparison.OrdinalIgnoreCase))
-                {
-                    return $"Wrong Template! The expected value of cell [{correctHeader.Key}{headerIndex}] is: {correctHeader.Value} but the actual value is: {currentHeader}";
-                }
+                return $"Wrong Template! The expected value of cell [{correctHeader.Key}{headerIndex}] is: {correctHeader.Value} but the actual value is: {currentHeader}";
             }
-
-            return string.Empty;
         }
+
+        return string.Empty;
     }
 }

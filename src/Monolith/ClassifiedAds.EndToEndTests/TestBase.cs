@@ -5,32 +5,31 @@ using OpenQA.Selenium.Chrome;
 using System;
 using System.IO;
 
-namespace ClassifiedAds.EndToEndTests
+namespace ClassifiedAds.EndToEndTests;
+
+public class TestBase : IDisposable
 {
-    public class TestBase : IDisposable
+    public IWebDriver Driver { get; private set; }
+
+    public AppSettings AppSettings { get; set; } = new AppSettings();
+
+    public TestBase()
     {
-        public IWebDriver Driver { get; private set; }
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json");
 
-        public AppSettings AppSettings { get; set; } = new AppSettings();
+        var configuration = builder.Build();
 
-        public TestBase()
-        {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json");
+        configuration.Bind(AppSettings);
 
-            var configuration = builder.Build();
+        Driver = new ChromeDriver(AppSettings.ChromeDriverPath);
+        Driver.Manage().Window.Maximize();
+        Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(2);
+    }
 
-            configuration.Bind(AppSettings);
-
-            Driver = new ChromeDriver(AppSettings.ChromeDriverPath);
-            Driver.Manage().Window.Maximize();
-            Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(2);
-        }
-
-        public void Dispose()
-        {
-            Driver.Dispose();
-        }
+    public void Dispose()
+    {
+        Driver.Dispose();
     }
 }

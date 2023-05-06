@@ -8,44 +8,43 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Infrastructure.Storages.Amazon
+namespace ClassifiedAds.Infrastructure.Storages.Amazon;
+
+public class AmazonS3HealthCheck : IHealthCheck
 {
-    public class AmazonS3HealthCheck : IHealthCheck
+    private readonly IAmazonS3 _client;
+    private readonly AmazonOptions _options;
+
+    public AmazonS3HealthCheck(AmazonOptions options)
     {
-        private readonly IAmazonS3 _client;
-        private readonly AmazonOptions _options;
+        _client = new AmazonS3Client(options.AccessKeyID, options.SecretAccessKey, RegionEndpoint.GetBySystemName(options.RegionEndpoint));
+        _options = options;
+    }
 
-        public AmazonS3HealthCheck(AmazonOptions options)
+    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default(CancellationToken))
+    {
+        try
         {
-            _client = new AmazonS3Client(options.AccessKeyID, options.SecretAccessKey, RegionEndpoint.GetBySystemName(options.RegionEndpoint));
-            _options = options;
+            var fileName = _options.Path + $"HealthCheck/{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}-{Guid.NewGuid()}.txt";
+            var fileTransferUtility = new TransferUtility(_client);
+
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes($"HealthCheck {DateTime.Now}"));
+            var uploadRequest = new TransferUtilityUploadRequest
+            {
+                InputStream = stream,
+                Key = fileName,
+                BucketName = _options.BucketName,
+                CannedACL = S3CannedACL.NoACL,
+            };
+
+            await fileTransferUtility.UploadAsync(uploadRequest, cancellationToken);
+            await _client.DeleteObjectAsync(_options.BucketName, fileName, cancellationToken);
+
+            return HealthCheckResult.Healthy($"BucketName: {_options.BucketName}");
         }
-
-        public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default(CancellationToken))
+        catch (Exception exception)
         {
-            try
-            {
-                var fileName = _options.Path + $"HealthCheck/{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}-{Guid.NewGuid()}.txt";
-                var fileTransferUtility = new TransferUtility(_client);
-
-                using var stream = new MemoryStream(Encoding.UTF8.GetBytes($"HealthCheck {DateTime.Now}"));
-                var uploadRequest = new TransferUtilityUploadRequest
-                {
-                    InputStream = stream,
-                    Key = fileName,
-                    BucketName = _options.BucketName,
-                    CannedACL = S3CannedACL.NoACL,
-                };
-
-                await fileTransferUtility.UploadAsync(uploadRequest, cancellationToken);
-                await _client.DeleteObjectAsync(_options.BucketName, fileName, cancellationToken);
-
-                return HealthCheckResult.Healthy($"BucketName: {_options.BucketName}");
-            }
-            catch (Exception exception)
-            {
-                return new HealthCheckResult(context.Registration.FailureStatus, null, exception);
-            }
+            return new HealthCheckResult(context.Registration.FailureStatus, null, exception);
         }
     }
 }

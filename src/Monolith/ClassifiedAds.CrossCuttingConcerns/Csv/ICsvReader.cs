@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace ClassifiedAds.CrossCuttingConcerns.Csv
+namespace ClassifiedAds.CrossCuttingConcerns.Csv;
+
+public interface ICsvReader<T>
 {
-    public interface ICsvReader<T>
-    {
-        IEnumerable<T> Read(Stream stream);
-    }
+    IEnumerable<T> Read(Stream stream);
 }

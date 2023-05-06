@@ -1,37 +1,36 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Tenants;
 using Microsoft.AspNetCore.Http;
 
-namespace ClassifiedAds.WebAPI.Tenants
+namespace ClassifiedAds.WebAPI.Tenants;
+
+public class TenantResolver : ITenantResolver
 {
-    public class TenantResolver : ITenantResolver
+    private readonly IHttpContextAccessor _context;
+
+    public TenantResolver(IHttpContextAccessor context)
     {
-        private readonly IHttpContextAccessor _context;
+        _context = context;
+    }
 
-        public TenantResolver(IHttpContextAccessor context)
+    public Tenant Tenant
+    {
+        get
         {
-            _context = context;
-        }
+            var request = _context?.HttpContext?.Request;
 
-        public Tenant Tenant
-        {
-            get
+            if (request is null)
             {
-                var request = _context?.HttpContext?.Request;
-
-                if (request is null)
-                {
-                    return null;
-                }
-
-                var scheme = request.Scheme;
-                var host = request.Host.Host;
-                var port = request.Host.Port;
-
-                // TODO: query configuration store to get Tenant information
-                return new Tenant
-                {
-                };
+                return null;
             }
+
+            var scheme = request.Scheme;
+            var host = request.Host.Host;
+            var port = request.Host.Port;
+
+            // TODO: query configuration store to get Tenant information
+            return new Tenant
+            {
+            };
         }
     }
 }

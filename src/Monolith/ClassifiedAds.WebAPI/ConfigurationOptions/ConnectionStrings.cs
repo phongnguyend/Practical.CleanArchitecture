@@ -1,7 +1,6 @@
-﻿namespace ClassifiedAds.WebAPI.ConfigurationOptions
+﻿namespace ClassifiedAds.WebAPI.ConfigurationOptions;
+
+public class ConnectionStrings
 {
-    public class ConnectionStrings
-    {
-        public string ClassifiedAds { get; set; }
-    }
+    public string ClassifiedAds { get; set; }
 }

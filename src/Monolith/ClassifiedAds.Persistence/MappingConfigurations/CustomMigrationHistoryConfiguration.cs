@@ -2,14 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ClassifiedAds.Persistence.MappingConfigurations
+namespace ClassifiedAds.Persistence.MappingConfigurations;
+
+public class CustomMigrationHistoryConfiguration : IEntityTypeConfiguration<CustomMigrationHistory>
 {
-    public class CustomMigrationHistoryConfiguration : IEntityTypeConfiguration<CustomMigrationHistory>
+    public void Configure(EntityTypeBuilder<CustomMigrationHistory> builder)
     {
-        public void Configure(EntityTypeBuilder<CustomMigrationHistory> builder)
-        {
-            builder.ToTable("_CustomMigrationHistories");
-            builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
-        }
+        builder.ToTable("_CustomMigrationHistories");
+        builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
     }
 }

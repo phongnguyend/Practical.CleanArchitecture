@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace ClassifiedAds.CrossCuttingConcerns.HtmlGenerator
+namespace ClassifiedAds.CrossCuttingConcerns.HtmlGenerator;
+
+public interface IHtmlGenerator
 {
-    public interface IHtmlGenerator
-    {
-        Task<string> GenerateAsync(string template, object model);
-    }
+    Task<string> GenerateAsync(string template, object model);
 }

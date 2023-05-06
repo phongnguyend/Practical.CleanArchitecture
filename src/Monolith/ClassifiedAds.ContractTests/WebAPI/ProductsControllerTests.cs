@@ -4,16 +4,15 @@ using ClassifiedAds.WebAPI.Models.Products;
 using NJsonSchema;
 using Xunit;
 
-namespace ClassifiedAds.ContractTests.WebAPI
+namespace ClassifiedAds.ContractTests.WebAPI;
+
+[UseReporter(typeof(VisualStudioReporter))]
+public class ProductsControllerTests
 {
-    [UseReporter(typeof(VisualStudioReporter))]
-    public class ProductsControllerTests
+    [Fact]
+    public void ProductModelTest()
     {
-        [Fact]
-        public void ProductModelTest()
-        {
-            var schema = JsonSchema.FromType<ProductModel>().ToJson();
-            Approvals.Verify(schema);
-        }
+        var schema = JsonSchema.FromType<ProductModel>().ToJson();
+        Approvals.Verify(schema);
     }
 }

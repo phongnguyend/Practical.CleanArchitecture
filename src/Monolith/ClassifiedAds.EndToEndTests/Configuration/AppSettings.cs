@@ -1,9 +1,8 @@
-﻿namespace ClassifiedAds.EndToEndTests.Configuration
-{
-    public class AppSettings
-    {
-        public string ChromeDriverPath { get; set; }
+﻿namespace ClassifiedAds.EndToEndTests.Configuration;
 
-        public LoginOptions Login { get; set; }
-    }
+public class AppSettings
+{
+    public string ChromeDriverPath { get; set; }
+
+    public LoginOptions Login { get; set; }
 }

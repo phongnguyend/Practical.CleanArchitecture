@@ -1,9 +1,8 @@
-﻿namespace ClassifiedAds.BlazorWebAssembly.ConfigurationOptions
-{
-    public class ResourceServer
-    {
-        public string Endpoint { get; set; }
+﻿namespace ClassifiedAds.BlazorWebAssembly.ConfigurationOptions;
 
-        public string PublicEndpoint { get; set; }
-    }
+public class ResourceServer
+{
+    public string Endpoint { get; set; }
+
+    public string PublicEndpoint { get; set; }
 }

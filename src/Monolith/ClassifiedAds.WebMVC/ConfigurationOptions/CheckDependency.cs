@@ -1,9 +1,8 @@
-﻿namespace ClassifiedAds.WebMVC.ConfigurationOptions
-{
-    public class CheckDependency
-    {
-        public bool Enabled { get; set; }
+﻿namespace ClassifiedAds.WebMVC.ConfigurationOptions;
 
-        public string Host { get; set; }
-    }
+public class CheckDependency
+{
+    public bool Enabled { get; set; }
+
+    public string Host { get; set; }
 }

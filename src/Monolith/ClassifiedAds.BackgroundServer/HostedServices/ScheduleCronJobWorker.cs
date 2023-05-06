@@ -6,46 +6,45 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.BackgroundServer.HostedServices
+namespace ClassifiedAds.BackgroundServer.HostedServices;
+
+public class ScheduleCronJobWorker : CronJobBackgroundService
 {
-    public class ScheduleCronJobWorker : CronJobBackgroundService
+    private readonly ILogger<ScheduleCronJobWorker> _logger;
+    private readonly IServiceProvider _serviceProvider;
+
+    public ScheduleCronJobWorker(ILogger<ScheduleCronJobWorker> logger,
+        IServiceProvider serviceProvider)
     {
-        private readonly ILogger<ScheduleCronJobWorker> _logger;
-        private readonly IServiceProvider _serviceProvider;
-
-        public ScheduleCronJobWorker(ILogger<ScheduleCronJobWorker> logger,
-            IServiceProvider serviceProvider)
-        {
-            _logger = logger;
-            _serviceProvider = serviceProvider;
-            Cron = "0 0/1 * 1/1 * ? *"; // every minute
-        }
-
-        protected override async Task DoWork(CancellationToken stoppingToken)
-        {
-            try
-            {
-                _logger.LogInformation("Worker running at: {Time}", DateTimeOffset.Now);
-
-                using var scope = _serviceProvider.CreateScope();
-                var notification = scope.ServiceProvider.GetRequiredService<IWebNotification<SendTaskStatusMessage>>();
-
-                await notification.SendAsync(new SendTaskStatusMessage { Step = "Step 1", Message = "Begining xxx" }, stoppingToken);
-
-                await Task.Delay(2000, stoppingToken);
-
-                await notification.SendAsync(new SendTaskStatusMessage { Step = "Step 1", Message = "Finished xxx" }, stoppingToken);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, string.Empty);
-            }
-        }
+        _logger = logger;
+        _serviceProvider = serviceProvider;
+        Cron = "0 0/1 * 1/1 * ? *"; // every minute
     }
 
-    public class SendTaskStatusMessage
+    protected override async Task DoWork(CancellationToken stoppingToken)
     {
-        public string Step { get; set; }
-        public string Message { get; set; }
+        try
+        {
+            _logger.LogInformation("Worker running at: {Time}", DateTimeOffset.Now);
+
+            using var scope = _serviceProvider.CreateScope();
+            var notification = scope.ServiceProvider.GetRequiredService<IWebNotification<SendTaskStatusMessage>>();
+
+            await notification.SendAsync(new SendTaskStatusMessage { Step = "Step 1", Message = "Begining xxx" }, stoppingToken);
+
+            await Task.Delay(2000, stoppingToken);
+
+            await notification.SendAsync(new SendTaskStatusMessage { Step = "Step 1", Message = "Finished xxx" }, stoppingToken);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, string.Empty);
+        }
     }
+}
+
+public class SendTaskStatusMessage
+{
+    public string Step { get; set; }
+    public string Message { get; set; }
 }

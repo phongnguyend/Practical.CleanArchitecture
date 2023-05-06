@@ -4,90 +4,89 @@ using ClassifiedAds.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using System;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace Microsoft.Extensions.DependencyInjection;
+
+public static class IdentityServiceCollectionExtensions
 {
-    public static class IdentityServiceCollectionExtensions
+    public static IServiceCollection AddIdentity(this IServiceCollection services)
     {
-        public static IServiceCollection AddIdentity(this IServiceCollection services)
+        services.AddIdentity<User, Role>()
+                .AddTokenProviders()
+                .AddPasswordValidators();
+
+        services.AddTransient<IUserStore<User>, UserStore>();
+        services.AddTransient<IRoleStore<Role>, RoleStore>();
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+        ConfigureOptions(services);
+
+        services.ConfigureApplicationCookie(options =>
         {
-            services.AddIdentity<User, Role>()
-                    .AddTokenProviders()
-                    .AddPasswordValidators();
+            options.LoginPath = "/Account/Login";
+        });
 
-            services.AddTransient<IUserStore<User>, UserStore>();
-            services.AddTransient<IRoleStore<Role>, RoleStore>();
-            services.AddScoped<IPasswordHasher, PasswordHasher>();
+        return services;
+    }
 
-            ConfigureOptions(services);
+    public static IServiceCollection AddIdentityCore(this IServiceCollection services)
+    {
+        services.AddIdentityCore<User>()
+                .AddTokenProviders()
+                .AddPasswordValidators();
 
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.LoginPath = "/Account/Login";
-            });
+        services.AddTransient<IUserStore<User>, UserStore>();
+        services.AddTransient<IRoleStore<Role>, RoleStore>();
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
 
-            return services;
-        }
+        ConfigureOptions(services);
 
-        public static IServiceCollection AddIdentityCore(this IServiceCollection services)
+        return services;
+    }
+
+    private static IdentityBuilder AddTokenProviders(this IdentityBuilder identityBuilder)
+    {
+        identityBuilder
+            .AddDefaultTokenProviders()
+            .AddTokenProvider<EmailConfirmationTokenProvider<User>>("EmailConfirmation");
+
+        return identityBuilder;
+    }
+
+    private static IdentityBuilder AddPasswordValidators(this IdentityBuilder identityBuilder)
+    {
+        identityBuilder
+            .AddPasswordValidator<WeakPasswordValidator>()
+            .AddPasswordValidator<HistoricalPasswordValidator>();
+
+        return identityBuilder;
+    }
+
+    private static void ConfigureOptions(IServiceCollection services)
+    {
+        services.Configure<DataProtectionTokenProviderOptions>(options =>
         {
-            services.AddIdentityCore<User>()
-                    .AddTokenProviders()
-                    .AddPasswordValidators();
+            options.TokenLifespan = TimeSpan.FromHours(3);
+        });
 
-            services.AddTransient<IUserStore<User>, UserStore>();
-            services.AddTransient<IRoleStore<Role>, RoleStore>();
-            services.AddScoped<IPasswordHasher, PasswordHasher>();
-
-            ConfigureOptions(services);
-
-            return services;
-        }
-
-        private static IdentityBuilder AddTokenProviders(this IdentityBuilder identityBuilder)
+        services.Configure<EmailConfirmationTokenProviderOptions>(options =>
         {
-            identityBuilder
-                .AddDefaultTokenProviders()
-                .AddTokenProvider<EmailConfirmationTokenProvider<User>>("EmailConfirmation");
+            options.TokenLifespan = TimeSpan.FromDays(2);
+        });
 
-            return identityBuilder;
-        }
-
-        private static IdentityBuilder AddPasswordValidators(this IdentityBuilder identityBuilder)
+        services.Configure<IdentityOptions>(options =>
         {
-            identityBuilder
-                .AddPasswordValidator<WeakPasswordValidator>()
-                .AddPasswordValidator<HistoricalPasswordValidator>();
+            options.Tokens.EmailConfirmationTokenProvider = "EmailConfirmation";
 
-            return identityBuilder;
-        }
+            // Default Lockout settings.
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+            options.Lockout.MaxFailedAccessAttempts = 5;
+            options.Lockout.AllowedForNewUsers = true;
+        });
 
-        private static void ConfigureOptions(IServiceCollection services)
+        services.Configure<PasswordHasherOptions>(option =>
         {
-            services.Configure<DataProtectionTokenProviderOptions>(options =>
-            {
-                options.TokenLifespan = TimeSpan.FromHours(3);
-            });
-
-            services.Configure<EmailConfirmationTokenProviderOptions>(options =>
-            {
-                options.TokenLifespan = TimeSpan.FromDays(2);
-            });
-
-            services.Configure<IdentityOptions>(options =>
-            {
-                options.Tokens.EmailConfirmationTokenProvider = "EmailConfirmation";
-
-                // Default Lockout settings.
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-                options.Lockout.MaxFailedAccessAttempts = 5;
-                options.Lockout.AllowedForNewUsers = true;
-            });
-
-            services.Configure<PasswordHasherOptions>(option =>
-            {
-                // option.IterationCount = 10000;
-                // option.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2;
-            });
-        }
+            // option.IterationCount = 10000;
+            // option.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2;
+        });
     }
 }

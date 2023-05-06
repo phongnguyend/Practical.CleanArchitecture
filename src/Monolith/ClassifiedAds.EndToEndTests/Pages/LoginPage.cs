@@ -1,73 +1,72 @@
 ﻿using ClassifiedAds.EndToEndTests.Configuration;
 using OpenQA.Selenium;
 
-namespace ClassifiedAds.EndToEndTests.Pages
+namespace ClassifiedAds.EndToEndTests.Pages;
+
+public class LoginPage
 {
-    public class LoginPage
+    private readonly IWebDriver _driver;
+    private readonly AppSettings _appSettings;
+
+    public LoginPage(IWebDriver driver, AppSettings appSettings)
     {
-        private readonly IWebDriver _driver;
-        private readonly AppSettings _appSettings;
+        _driver = driver;
+        _appSettings = appSettings;
+    }
 
-        public LoginPage(IWebDriver driver, AppSettings appSettings)
+    public void GoTo()
+    {
+        var loginUrl = _appSettings.Login.Url;
+        _driver.Navigate().GoToUrl(loginUrl);
+    }
+
+    public string UserName
+    {
+        set
         {
-            _driver = driver;
-            _appSettings = appSettings;
+            var emailInput = _driver.FindElement(By.Id("Username"));
+            emailInput.SendKeys(value);
         }
+    }
 
-        public void GoTo()
+    public string Password
+    {
+        set
         {
-            var loginUrl = _appSettings.Login.Url;
-            _driver.Navigate().GoToUrl(loginUrl);
+            var emailInput = _driver.FindElement(By.Id("Password"));
+            emailInput.SendKeys(value);
         }
+    }
 
-        public string UserName
+    public bool RememberMyLogin
+    {
+        set
         {
-            set
+            var remember = _driver.FindElement(By.Id("RememberLogin"));
+            var btn = _driver.FindElement(By.XPath("//input[@id='RememberLogin']/following-sibling::div"));
+            if (value)
             {
-                var emailInput = _driver.FindElement(By.Id("Username"));
-                emailInput.SendKeys(value);
-            }
-        }
-
-        public string Password
-        {
-            set
-            {
-                var emailInput = _driver.FindElement(By.Id("Password"));
-                emailInput.SendKeys(value);
-            }
-        }
-
-        public bool RememberMyLogin
-        {
-            set
-            {
-                var remember = _driver.FindElement(By.Id("RememberLogin"));
-                var btn = _driver.FindElement(By.XPath("//input[@id='RememberLogin']/following-sibling::div"));
-                if (value)
+                if (!remember.Selected)
                 {
-                    if (!remember.Selected)
-                    {
-                        btn.Click();
-                    }
-
+                    btn.Click();
                 }
-                else
+
+            }
+            else
+            {
+                if (remember.Selected)
                 {
-                    if (remember.Selected)
-                    {
-                        btn.Click();
-                    }
+                    btn.Click();
                 }
             }
         }
+    }
 
-        internal ConsentPage Login()
-        {
-            var loginButton = _driver.FindElement(By.Id("btnLogin"));
-            loginButton.Click();
+    internal ConsentPage Login()
+    {
+        var loginButton = _driver.FindElement(By.Id("btnLogin"));
+        loginButton.Click();
 
-            return new ConsentPage(_driver);
-        }
+        return new ConsentPage(_driver);
     }
 }

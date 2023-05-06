@@ -10,60 +10,59 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ClassifiedAds.UnitTests.Application.Services
+namespace ClassifiedAds.UnitTests.Application.Services;
+
+public class UserServiceTests
 {
-    public class UserServiceTests
+    private Mock<IRepository<User, Guid>> _userRepository;
+    private UserService _userService;
+
+    public UserServiceTests()
     {
-        private Mock<IRepository<User, Guid>> _userRepository;
-        private UserService _userService;
+        _userRepository = new Mock<IRepository<User, Guid>>();
+        var domainEvents = new Mock<IDomainEvents>();
+        _userService = new UserService(_userRepository.Object, domainEvents.Object);
+    }
 
-        public UserServiceTests()
-        {
-            _userRepository = new Mock<IRepository<User, Guid>>();
-            var domainEvents = new Mock<IDomainEvents>();
-            _userService = new UserService(_userRepository.Object, domainEvents.Object);
-        }
+    [Fact]
+    public async Task GetUserById_ThereIsNoUser_ReturnNull()
+    {
+        // Arrange
+        var users = new List<User>();
+        _userRepository.Setup(x => x.GetAll()).Returns(users.AsQueryable());
 
-        [Fact]
-        public async Task GetUserById_ThereIsNoUser_ReturnNull()
-        {
-            // Arrange
-            var users = new List<User>();
-            _userRepository.Setup(x => x.GetAll()).Returns(users.AsQueryable());
+        // Act
+        var user = await _userService.GetByIdAsync(Guid.NewGuid());
 
-            // Act
-            var user = await _userService.GetByIdAsync(Guid.NewGuid());
+        // Assert
+        Assert.Null(user);
+    }
 
-            // Assert
-            Assert.Null(user);
-        }
+    [Fact]
+    public async Task GetUserById_InvalidId_ThrowException()
+    {
+        // Arrange
+        var userId = Guid.Empty;
 
-        [Fact]
-        public async Task GetUserById_InvalidId_ThrowException()
-        {
-            // Arrange
-            var userId = Guid.Empty;
+        // Act && Assert
+        await Assert.ThrowsAsync<ValidationException>(async () => await _userService.GetByIdAsync(userId));
+    }
 
-            // Act && Assert
-            await Assert.ThrowsAsync<ValidationException>(async () => await _userService.GetByIdAsync(userId));
-        }
+    [Fact]
+    public async Task GetUserById_ThereIsUser_ReturnOne()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var users = new List<User> { new User { Id = userId, UserName = "XXX" } }.AsQueryable();
+        _userRepository.Setup(x => x.GetAll()).Returns(users);
+        _userRepository.Setup(x => x.FirstOrDefaultAsync(It.IsAny<IQueryable<User>>()))
+            .Returns(Task.FromResult(users.FirstOrDefault(x => x.Id == userId)));
 
-        [Fact]
-        public async Task GetUserById_ThereIsUser_ReturnOne()
-        {
-            // Arrange
-            var userId = Guid.NewGuid();
-            var users = new List<User> { new User { Id = userId, UserName = "XXX" } }.AsQueryable();
-            _userRepository.Setup(x => x.GetAll()).Returns(users);
-            _userRepository.Setup(x => x.FirstOrDefaultAsync(It.IsAny<IQueryable<User>>()))
-                .Returns(Task.FromResult(users.FirstOrDefault(x => x.Id == userId)));
+        // Act
+        var user = await _userService.GetByIdAsync(userId);
 
-            // Act
-            var user = await _userService.GetByIdAsync(userId);
-
-            // Assert
-            Assert.Equal(userId, user.Id);
-            Assert.Equal("XXX", user.UserName);
-        }
+        // Assert
+        Assert.Equal(userId, user.Id);
+        Assert.Equal("XXX", user.UserName);
     }
 }

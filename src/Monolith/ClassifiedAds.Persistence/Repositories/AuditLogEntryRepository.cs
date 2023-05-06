@@ -5,35 +5,34 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 
-namespace ClassifiedAds.Persistence.Repositories
+namespace ClassifiedAds.Persistence.Repositories;
+
+public class AuditLogEntryRepository : Repository<AuditLogEntry, Guid>, IAuditLogEntryRepository
 {
-    public class AuditLogEntryRepository : Repository<AuditLogEntry, Guid>, IAuditLogEntryRepository
+    public AuditLogEntryRepository(AdsDbContext dbContext, IDateTimeProvider dateTimeProvider)
+        : base(dbContext, dateTimeProvider)
     {
-        public AuditLogEntryRepository(AdsDbContext dbContext, IDateTimeProvider dateTimeProvider)
-            : base(dbContext, dateTimeProvider)
+    }
+
+    public IQueryable<AuditLogEntry> Get(AuditLogEntryQueryOptions queryOptions)
+    {
+        var query = GetAll();
+
+        if (queryOptions.UserId != Guid.Empty)
         {
+            query = query.Where(x => x.UserId == queryOptions.UserId);
         }
 
-        public IQueryable<AuditLogEntry> Get(AuditLogEntryQueryOptions queryOptions)
+        if (!string.IsNullOrEmpty(queryOptions.ObjectId))
         {
-            var query = GetAll();
-
-            if (queryOptions.UserId != Guid.Empty)
-            {
-                query = query.Where(x => x.UserId == queryOptions.UserId);
-            }
-
-            if (!string.IsNullOrEmpty(queryOptions.ObjectId))
-            {
-                query = query.Where(x => x.ObjectId == queryOptions.ObjectId);
-            }
-
-            if (queryOptions.AsNoTracking)
-            {
-                query = query.AsNoTracking();
-            }
-
-            return query;
+            query = query.Where(x => x.ObjectId == queryOptions.ObjectId);
         }
+
+        if (queryOptions.AsNoTracking)
+        {
+            query = query.AsNoTracking();
+        }
+
+        return query;
     }
 }

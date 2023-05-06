@@ -5,30 +5,29 @@ using ClassifiedAds.WebAPI.Models.Files;
 using NJsonSchema;
 using Xunit;
 
-namespace ClassifiedAds.ContractTests.WebAPI
+namespace ClassifiedAds.ContractTests.WebAPI;
+
+[UseReporter(typeof(VisualStudioReporter))]
+public class FilesControllerTests
 {
-    [UseReporter(typeof(VisualStudioReporter))]
-    public class FilesControllerTests
+    [Fact]
+    public void FileEntryModelTest()
     {
-        [Fact]
-        public void FileEntryModelTest()
-        {
-            var schema = JsonSchema.FromType<FileEntryModel>().ToJson();
-            Approvals.Verify(schema);
-        }
+        var schema = JsonSchema.FromType<FileEntryModel>().ToJson();
+        Approvals.Verify(schema);
+    }
 
-        [Fact]
-        public void UploadFileTest()
-        {
-            var schema = JsonSchema.FromType<UploadFileModel>().ToJson();
-            Approvals.Verify(schema);
-        }
+    [Fact]
+    public void UploadFileTest()
+    {
+        var schema = JsonSchema.FromType<UploadFileModel>().ToJson();
+        Approvals.Verify(schema);
+    }
 
-        [Fact]
-        public void AuditLogEntryDTOTest()
-        {
-            var schema = JsonSchema.FromType<AuditLogEntryDTO>().ToJson();
-            Approvals.Verify(schema);
-        }
+    [Fact]
+    public void AuditLogEntryDTOTest()
+    {
+        var schema = JsonSchema.FromType<AuditLogEntryDTO>().ToJson();
+        Approvals.Verify(schema);
     }
 }

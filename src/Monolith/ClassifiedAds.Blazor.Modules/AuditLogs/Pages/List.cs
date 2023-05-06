@@ -4,37 +4,36 @@ using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Blazor.Modules.AuditLogs.Pages
+namespace ClassifiedAds.Blazor.Modules.AuditLogs.Pages;
+
+public partial class List
 {
-    public partial class List
+    [Inject]
+    public AuditLogService AuditLogService { get; set; }
+
+    public List<AuditLogEntryDTO> AuditLogs { get; set; } = new List<AuditLogEntryDTO>();
+
+    public int CurrentPage { get; set; } = 1;
+
+    public int PageSize { get; set; } = 5;
+
+    public long TotalItems { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
-        [Inject]
-        public AuditLogService AuditLogService { get; set; }
+        var auditLogs = await AuditLogService.GetAuditLogsAsync(1, PageSize);
+        AuditLogs = auditLogs.Items;
+        TotalItems = auditLogs.TotalItems;
+    }
 
-        public List<AuditLogEntryDTO> AuditLogs { get; set; } = new List<AuditLogEntryDTO>();
-
-        public int CurrentPage { get; set; } = 1;
-
-        public int PageSize { get; set; } = 5;
-
-        public long TotalItems { get; set; }
-
-        protected override async Task OnInitializedAsync()
+    protected async Task GetAuditLogsAsync(int page)
+    {
+        if (page != CurrentPage)
         {
-            var auditLogs = await AuditLogService.GetAuditLogsAsync(1, PageSize);
+            CurrentPage = page;
+            var auditLogs = await AuditLogService.GetAuditLogsAsync(page, PageSize);
             AuditLogs = auditLogs.Items;
             TotalItems = auditLogs.TotalItems;
-        }
-
-        protected async Task GetAuditLogsAsync(int page)
-        {
-            if (page != CurrentPage)
-            {
-                CurrentPage = page;
-                var auditLogs = await AuditLogService.GetAuditLogsAsync(page, PageSize);
-                AuditLogs = auditLogs.Items;
-                TotalItems = auditLogs.TotalItems;
-            }
         }
     }
 }

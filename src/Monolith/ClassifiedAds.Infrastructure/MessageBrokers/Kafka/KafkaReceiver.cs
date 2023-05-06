@@ -5,69 +5,68 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Infrastructure.MessageBrokers.Kafka
+namespace ClassifiedAds.Infrastructure.MessageBrokers.Kafka;
+
+public class KafkaReceiver<T> : IMessageReceiver<T>, IDisposable
 {
-    public class KafkaReceiver<T> : IMessageReceiver<T>, IDisposable
+    private readonly IConsumer<Ignore, string> _consumer;
+
+    public KafkaReceiver(string bootstrapServers, string topic, string groupId)
     {
-        private readonly IConsumer<Ignore, string> _consumer;
-
-        public KafkaReceiver(string bootstrapServers, string topic, string groupId)
+        var config = new ConsumerConfig
         {
-            var config = new ConsumerConfig
+            GroupId = groupId,
+            BootstrapServers = bootstrapServers,
+            AutoOffsetReset = AutoOffsetReset.Earliest,
+        };
+
+        _consumer = new ConsumerBuilder<Ignore, string>(config).Build();
+        _consumer.Subscribe(topic);
+    }
+
+    public void Dispose()
+    {
+        _consumer.Dispose();
+    }
+
+    public void Receive(Action<T, MetaData> action)
+    {
+        CancellationTokenSource cts = new CancellationTokenSource();
+        var cancellationToken = cts.Token;
+
+        Task.Factory.StartNew(() =>
+        {
+            try
             {
-                GroupId = groupId,
-                BootstrapServers = bootstrapServers,
-                AutoOffsetReset = AutoOffsetReset.Earliest,
-            };
-
-            _consumer = new ConsumerBuilder<Ignore, string>(config).Build();
-            _consumer.Subscribe(topic);
-        }
-
-        public void Dispose()
-        {
-            _consumer.Dispose();
-        }
-
-        public void Receive(Action<T, MetaData> action)
-        {
-            CancellationTokenSource cts = new CancellationTokenSource();
-            var cancellationToken = cts.Token;
-
-            Task.Factory.StartNew(() =>
+                StartReceiving(action, cancellationToken);
+            }
+            catch (OperationCanceledException)
             {
-                try
-                {
-                    StartReceiving(action, cancellationToken);
-                }
-                catch (OperationCanceledException)
-                {
-                    Console.WriteLine("Closing consumer.");
-                    _consumer.Close();
-                }
-            });
-        }
+                Console.WriteLine("Closing consumer.");
+                _consumer.Close();
+            }
+        });
+    }
 
-        private void StartReceiving(Action<T, MetaData> action, CancellationToken cancellationToken)
+    private void StartReceiving(Action<T, MetaData> action, CancellationToken cancellationToken)
+    {
+        while (true)
         {
-            while (true)
+            try
             {
-                try
-                {
-                    var consumeResult = _consumer.Consume(cancellationToken);
+                var consumeResult = _consumer.Consume(cancellationToken);
 
-                    if (consumeResult.IsPartitionEOF)
-                    {
-                        continue;
-                    }
-
-                    var message = JsonSerializer.Deserialize<Message<T>>(consumeResult.Message.Value);
-                    action(message.Data, message.MetaData);
-                }
-                catch (ConsumeException e)
+                if (consumeResult.IsPartitionEOF)
                 {
-                    Console.WriteLine($"Consume error: {e.Error.Reason}");
+                    continue;
                 }
+
+                var message = JsonSerializer.Deserialize<Message<T>>(consumeResult.Message.Value);
+                action(message.Data, message.MetaData);
+            }
+            catch (ConsumeException e)
+            {
+                Console.WriteLine($"Consume error: {e.Error.Reason}");
             }
         }
     }

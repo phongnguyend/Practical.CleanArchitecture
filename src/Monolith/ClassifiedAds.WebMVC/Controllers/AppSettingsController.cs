@@ -2,29 +2,28 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-namespace ClassifiedAds.WebMVC.Controllers
+namespace ClassifiedAds.WebMVC.Controllers;
+
+public class AppSettingsController : Controller
 {
-    public class AppSettingsController : Controller
+    private readonly AppSettings _appSettings;
+
+    public AppSettingsController(IOptionsSnapshot<AppSettings> appSettings)
     {
-        private readonly AppSettings _appSettings;
+        _appSettings = appSettings.Value;
+    }
 
-        public AppSettingsController(IOptionsSnapshot<AppSettings> appSettings)
-        {
-            _appSettings = appSettings.Value;
-        }
-
-        public IActionResult Index()
-        {
-            string text = @"
+    public IActionResult Index()
+    {
+        string text = @"
             const appSettings = {
                 NotificationServer: {
                     Endpoint: '" + string.Empty + @"'
                 }
             }";
 
-            var rs = Content(text);
-            rs.ContentType = "application/javascript";
-            return rs;
-        }
+        var rs = Content(text);
+        rs.ContentType = "application/javascript";
+        return rs;
     }
 }

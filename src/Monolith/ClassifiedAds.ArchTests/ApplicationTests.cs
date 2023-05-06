@@ -2,30 +2,29 @@ using ClassifiedAds.Application;
 using NetArchTest.Rules;
 using Xunit;
 
-namespace ClassifiedAds.ArchTests
+namespace ClassifiedAds.ArchTests;
+
+public class ApplicationTests
 {
-    public class ApplicationTests
+    [Fact]
+    public void ApplicationShouldNotHaveDependencyOnInfrastructure()
     {
-        [Fact]
-        public void ApplicationShouldNotHaveDependencyOnInfrastructure()
-        {
-            var result = Types.InAssembly(typeof(Dispatcher).Assembly)
-                .ShouldNot()
-                .HaveDependencyOn("ClassifiedAds.Infrastructure")
-                .GetResult();
+        var result = Types.InAssembly(typeof(Dispatcher).Assembly)
+            .ShouldNot()
+            .HaveDependencyOn("ClassifiedAds.Infrastructure")
+            .GetResult();
 
-            Assert.True(result.IsSuccessful);
-        }
+        Assert.True(result.IsSuccessful);
+    }
 
-        [Fact]
-        public void ApplicationShouldNotHaveDependencyOnPersistence()
-        {
-            var result = Types.InAssembly(typeof(Dispatcher).Assembly)
-                .ShouldNot()
-                .HaveDependencyOn("ClassifiedAds.Persistence")
-                .GetResult();
+    [Fact]
+    public void ApplicationShouldNotHaveDependencyOnPersistence()
+    {
+        var result = Types.InAssembly(typeof(Dispatcher).Assembly)
+            .ShouldNot()
+            .HaveDependencyOn("ClassifiedAds.Persistence")
+            .GetResult();
 
-            Assert.True(result.IsSuccessful);
-        }
+        Assert.True(result.IsSuccessful);
     }
 }

@@ -6,45 +6,44 @@ using ClassifiedAds.Domain.Repositories;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Application.Products.EventHandlers
+namespace ClassifiedAds.Application.Products.EventHandlers;
+
+public class ProductUpdatedEventHandler : IDomainEventHandler<EntityUpdatedEvent<Product>>
 {
-    public class ProductUpdatedEventHandler : IDomainEventHandler<EntityUpdatedEvent<Product>>
+    private readonly ICrudService<AuditLogEntry> _auditSerivce;
+    private readonly ICurrentUser _currentUser;
+    private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
+
+    public ProductUpdatedEventHandler(ICrudService<AuditLogEntry> auditSerivce,
+        ICurrentUser currentUser,
+        IRepository<OutboxEvent, long> outboxEventRepository)
     {
-        private readonly ICrudService<AuditLogEntry> _auditSerivce;
-        private readonly ICurrentUser _currentUser;
-        private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
+        _auditSerivce = auditSerivce;
+        _currentUser = currentUser;
+        _outboxEventRepository = outboxEventRepository;
+    }
 
-        public ProductUpdatedEventHandler(ICrudService<AuditLogEntry> auditSerivce,
-            ICurrentUser currentUser,
-            IRepository<OutboxEvent, long> outboxEventRepository)
+    public async Task HandleAsync(EntityUpdatedEvent<Product> domainEvent, CancellationToken cancellationToken = default)
+    {
+        await _auditSerivce.AddOrUpdateAsync(new AuditLogEntry
         {
-            _auditSerivce = auditSerivce;
-            _currentUser = currentUser;
-            _outboxEventRepository = outboxEventRepository;
-        }
+            UserId = _currentUser.UserId,
+            CreatedDateTime = domainEvent.EventDateTime,
+            Action = "UPDATED_PRODUCT",
+            ObjectId = domainEvent.Entity.Id.ToString(),
+            Log = domainEvent.Entity.AsJsonString(),
+        });
 
-        public async Task HandleAsync(EntityUpdatedEvent<Product> domainEvent, CancellationToken cancellationToken = default)
+        await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
         {
-            await _auditSerivce.AddOrUpdateAsync(new AuditLogEntry
-            {
-                UserId = _currentUser.UserId,
-                CreatedDateTime = domainEvent.EventDateTime,
-                Action = "UPDATED_PRODUCT",
-                ObjectId = domainEvent.Entity.Id.ToString(),
-                Log = domainEvent.Entity.AsJsonString(),
-            });
+            EventType = "PRODUCT_UPDATED",
+            TriggeredById = _currentUser.UserId,
+            CreatedDateTime = domainEvent.EventDateTime,
+            ObjectId = domainEvent.Entity.Id.ToString(),
+            Message = domainEvent.Entity.AsJsonString(),
+            Published = false,
+        }, cancellationToken);
 
-            await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
-            {
-                EventType = "PRODUCT_UPDATED",
-                TriggeredById = _currentUser.UserId,
-                CreatedDateTime = domainEvent.EventDateTime,
-                ObjectId = domainEvent.Entity.Id.ToString(),
-                Message = domainEvent.Entity.AsJsonString(),
-                Published = false,
-            }, cancellationToken);
-
-            await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        }
+        await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }
