@@ -5,26 +5,25 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Application
+namespace ClassifiedAds.Application;
+
+public class GetEntititesQuery<TEntity> : IQuery<List<TEntity>>
+     where TEntity : Entity<Guid>, IAggregateRoot
 {
-    public class GetEntititesQuery<TEntity> : IQuery<List<TEntity>>
-         where TEntity : Entity<Guid>, IAggregateRoot
+}
+
+internal class GetEntititesQueryHandler<TEntity> : IQueryHandler<GetEntititesQuery<TEntity>, List<TEntity>>
+where TEntity : Entity<Guid>, IAggregateRoot
+{
+    private readonly IRepository<TEntity, Guid> _repository;
+
+    public GetEntititesQueryHandler(IRepository<TEntity, Guid> repository)
     {
+        _repository = repository;
     }
 
-    internal class GetEntititesQueryHandler<TEntity> : IQueryHandler<GetEntititesQuery<TEntity>, List<TEntity>>
-    where TEntity : Entity<Guid>, IAggregateRoot
+    public Task<List<TEntity>> HandleAsync(GetEntititesQuery<TEntity> query, CancellationToken cancellationToken = default)
     {
-        private readonly IRepository<TEntity, Guid> _repository;
-
-        public GetEntititesQueryHandler(IRepository<TEntity, Guid> repository)
-        {
-            _repository = repository;
-        }
-
-        public Task<List<TEntity>> HandleAsync(GetEntititesQuery<TEntity> query, CancellationToken cancellationToken = default)
-        {
-            return _repository.ToListAsync(_repository.GetAll());
-        }
+        return _repository.ToListAsync(_repository.GetAll());
     }
 }

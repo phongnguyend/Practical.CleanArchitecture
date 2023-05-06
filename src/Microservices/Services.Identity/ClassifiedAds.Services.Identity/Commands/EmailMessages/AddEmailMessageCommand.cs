@@ -10,45 +10,44 @@ using System.Threading;
 using System.Threading.Tasks;
 using static ClassifiedAds.Services.Notification.Grpc.Email;
 
-namespace ClassifiedAds.Services.Identity.Commands.EmailMessages
+namespace ClassifiedAds.Services.Identity.Commands.EmailMessages;
+
+public class AddEmailMessageCommand : ICommand
 {
-    public class AddEmailMessageCommand : ICommand
+    public EmailMessageDTO EmailMessage { get; set; }
+}
+
+public class AddEmailMessageCommandHandler : ICommandHandler<AddEmailMessageCommand>
+{
+    private readonly IConfiguration _configuration;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public AddEmailMessageCommandHandler(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
     {
-        public EmailMessageDTO EmailMessage { get; set; }
+        _configuration = configuration;
+        _httpContextAccessor = httpContextAccessor;
     }
 
-    public class AddEmailMessageCommandHandler : ICommandHandler<AddEmailMessageCommand>
+    public async Task HandleAsync(AddEmailMessageCommand command, CancellationToken cancellationToken = default)
     {
-        private readonly IConfiguration _configuration;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public AddEmailMessageCommandHandler(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        var token = await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+        var headers = new Metadata
         {
-            _configuration = configuration;
-            _httpContextAccessor = httpContextAccessor;
-        }
+            { "Authorization", $"Bearer {token}" },
+        };
 
-        public async Task HandleAsync(AddEmailMessageCommand command, CancellationToken cancellationToken = default)
+        var client = new EmailClient(ChannelFactory.Create(_configuration["Services:Notification:Grpc"]));
+        client.AddEmailMessage(new Notification.Grpc.AddEmailMessageRequest
         {
-            var token = await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
-            var headers = new Metadata
+            Message = new Notification.Grpc.EmailMessage
             {
-                { "Authorization", $"Bearer {token}" },
-            };
-
-            var client = new EmailClient(ChannelFactory.Create(_configuration["Services:Notification:Grpc"]));
-            client.AddEmailMessage(new Notification.Grpc.AddEmailMessageRequest
-            {
-                Message = new Notification.Grpc.EmailMessage
-                {
-                    From = command.EmailMessage.From,
-                    Tos = command.EmailMessage.Tos,
-                    CCs = command.EmailMessage.CCs ?? string.Empty,
-                    BCCs = command.EmailMessage.BCCs ?? string.Empty,
-                    Subject = command.EmailMessage.Subject,
-                    Body = command.EmailMessage.Body,
-                },
-            }, headers);
-        }
+                From = command.EmailMessage.From,
+                Tos = command.EmailMessage.Tos,
+                CCs = command.EmailMessage.CCs ?? string.Empty,
+                BCCs = command.EmailMessage.BCCs ?? string.Empty,
+                Subject = command.EmailMessage.Subject,
+                Body = command.EmailMessage.Body,
+            },
+        }, headers);
     }
 }

@@ -4,26 +4,25 @@ using ClassifiedAds.Services.Identity.Repositories;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Services.Identity.Commands.Roles
+namespace ClassifiedAds.Services.Identity.Commands.Roles;
+
+public class DeleteRoleCommand : ICommand
 {
-    public class DeleteRoleCommand : ICommand
+    public Role Role { get; set; }
+}
+
+public class DeleteRoleCommandHandler : ICommandHandler<DeleteRoleCommand>
+{
+    private readonly IRoleRepository _roleRepository;
+
+    public DeleteRoleCommandHandler(IRoleRepository roleRepository)
     {
-        public Role Role { get; set; }
+        _roleRepository = roleRepository;
     }
 
-    public class DeleteRoleCommandHandler : ICommandHandler<DeleteRoleCommand>
+    public async Task HandleAsync(DeleteRoleCommand command, CancellationToken cancellationToken = default)
     {
-        private readonly IRoleRepository _roleRepository;
-
-        public DeleteRoleCommandHandler(IRoleRepository roleRepository)
-        {
-            _roleRepository = roleRepository;
-        }
-
-        public async Task HandleAsync(DeleteRoleCommand command, CancellationToken cancellationToken = default)
-        {
-            _roleRepository.Delete(command.Role);
-            await _roleRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        }
+        _roleRepository.Delete(command.Role);
+        await _roleRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

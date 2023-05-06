@@ -1,13 +1,12 @@
 ﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using System;
 
-namespace ClassifiedAds.Infrastructure.MessageBrokers.Fake
+namespace ClassifiedAds.Infrastructure.MessageBrokers.Fake;
+
+public class FakeReceiver<T> : IMessageReceiver<T>
 {
-    public class FakeReceiver<T> : IMessageReceiver<T>
+    public void Receive(Action<T, MetaData> action)
     {
-        public void Receive(Action<T, MetaData> action)
-        {
-            // do nothing
-        }
+        // do nothing
     }
 }

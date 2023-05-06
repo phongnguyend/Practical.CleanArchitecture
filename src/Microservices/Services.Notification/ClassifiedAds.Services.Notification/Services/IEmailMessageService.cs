@@ -1,10 +1,9 @@
 ﻿using ClassifiedAds.Services.Notification.DTOs;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Services.Notification.Services
+namespace ClassifiedAds.Services.Notification.Services;
+
+public interface IEmailMessageService
 {
-    public interface IEmailMessageService
-    {
-        Task CreateEmailMessageAsync(EmailMessageDTO emailMessage);
-    }
+    Task CreateEmailMessageAsync(EmailMessageDTO emailMessage);
 }

@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace ClassifiedAds.Services.AuditLog.DTOs
+namespace ClassifiedAds.Services.AuditLog.DTOs;
+
+public class AuditLogEntryQueryOptions
 {
-    public class AuditLogEntryQueryOptions
-    {
-        public Guid UserId { get; set; }
+    public Guid UserId { get; set; }
 
-        public string ObjectId { get; set; }
+    public string ObjectId { get; set; }
 
-        public bool AsNoTracking { get; set; }
-    }
+    public bool AsNoTracking { get; set; }
 }

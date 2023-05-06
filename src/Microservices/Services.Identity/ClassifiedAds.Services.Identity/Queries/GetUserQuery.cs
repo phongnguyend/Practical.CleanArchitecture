@@ -6,37 +6,36 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Services.Identity.Queries
+namespace ClassifiedAds.Services.Identity.Queries;
+
+public class GetUserQuery : IQuery<User>
 {
-    public class GetUserQuery : IQuery<User>
+    public Guid Id { get; set; }
+    public bool IncludeClaims { get; set; }
+    public bool IncludeUserRoles { get; set; }
+    public bool IncludeRoles { get; set; }
+    public bool AsNoTracking { get; set; }
+}
+
+public class GetUserQueryHandler : IQueryHandler<GetUserQuery, User>
+{
+    private readonly IUserRepository _userRepository;
+
+    public GetUserQueryHandler(IUserRepository userRepository)
     {
-        public Guid Id { get; set; }
-        public bool IncludeClaims { get; set; }
-        public bool IncludeUserRoles { get; set; }
-        public bool IncludeRoles { get; set; }
-        public bool AsNoTracking { get; set; }
+        _userRepository = userRepository;
     }
 
-    public class GetUserQueryHandler : IQueryHandler<GetUserQuery, User>
+    public Task<User> HandleAsync(GetUserQuery query, CancellationToken cancellationToken = default)
     {
-        private readonly IUserRepository _userRepository;
-
-        public GetUserQueryHandler(IUserRepository userRepository)
+        var db = _userRepository.Get(new UserQueryOptions
         {
-            _userRepository = userRepository;
-        }
+            IncludeClaims = query.IncludeClaims,
+            IncludeUserRoles = query.IncludeUserRoles,
+            IncludeRoles = query.IncludeRoles,
+            AsNoTracking = query.AsNoTracking,
+        });
 
-        public Task<User> HandleAsync(GetUserQuery query, CancellationToken cancellationToken = default)
-        {
-            var db = _userRepository.Get(new UserQueryOptions
-            {
-                IncludeClaims = query.IncludeClaims,
-                IncludeUserRoles = query.IncludeUserRoles,
-                IncludeRoles = query.IncludeRoles,
-                AsNoTracking = query.AsNoTracking,
-            });
-
-            return _userRepository.FirstOrDefaultAsync(db.Where(x => x.Id == query.Id));
-        }
+        return _userRepository.FirstOrDefaultAsync(db.Where(x => x.Id == query.Id));
     }
 }

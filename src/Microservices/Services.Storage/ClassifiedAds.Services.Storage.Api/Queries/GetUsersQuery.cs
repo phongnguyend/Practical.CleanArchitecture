@@ -13,44 +13,43 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Services.Storage.Queries
+namespace ClassifiedAds.Services.Storage.Queries;
+
+public class GetUsersQuery : IQuery<List<UserDTO>>
 {
-    public class GetUsersQuery : IQuery<List<UserDTO>>
+    public bool IncludeClaims { get; set; }
+    public bool IncludeUserRoles { get; set; }
+    public bool IncludeRoles { get; set; }
+    public bool AsNoTracking { get; set; }
+}
+
+public class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, List<UserDTO>>
+{
+    private readonly IConfiguration _configuration;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public GetUsersQueryHandler(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
     {
-        public bool IncludeClaims { get; set; }
-        public bool IncludeUserRoles { get; set; }
-        public bool IncludeRoles { get; set; }
-        public bool AsNoTracking { get; set; }
+        _configuration = configuration;
+        _httpContextAccessor = httpContextAccessor;
     }
 
-    public class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, List<UserDTO>>
+    public async Task<List<UserDTO>> HandleAsync(GetUsersQuery query, CancellationToken cancellationToken = default)
     {
-        private readonly IConfiguration _configuration;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public GetUsersQueryHandler(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        var token = await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+        var headers = new Metadata
         {
-            _configuration = configuration;
-            _httpContextAccessor = httpContextAccessor;
-        }
+            { "Authorization", $"Bearer {token}" },
+        };
 
-        public async Task<List<UserDTO>> HandleAsync(GetUsersQuery query, CancellationToken cancellationToken = default)
+        var client = new User.UserClient(ChannelFactory.Create(_configuration["Services:Identity:Grpc"]));
+        var response = await client.GetUsersAsync(new GetUsersRequest(), headers);
+
+        return response.Users.Select(x => new UserDTO
         {
-            var token = await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
-            var headers = new Metadata
-            {
-                { "Authorization", $"Bearer {token}" },
-            };
-
-            var client = new User.UserClient(ChannelFactory.Create(_configuration["Services:Identity:Grpc"]));
-            var response = await client.GetUsersAsync(new GetUsersRequest(), headers);
-
-            return response.Users.Select(x => new UserDTO
-            {
-                Id = Guid.Parse(x.Id),
-                UserName = x.UserName,
-                Email = x.Email,
-            }).ToList();
-        }
+            Id = Guid.Parse(x.Id),
+            UserName = x.UserName,
+            Email = x.Email,
+        }).ToList();
     }
 }

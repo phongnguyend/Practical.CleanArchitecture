@@ -1,7 +1,6 @@
-﻿namespace ClassifiedAds.Infrastructure.Storages.Local
+﻿namespace ClassifiedAds.Infrastructure.Storages.Local;
+
+public class LocalOptions
 {
-    public class LocalOptions
-    {
-        public string Path { get; set; }
-    }
+    public string Path { get; set; }
 }

@@ -6,35 +6,34 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Services.Identity.Queries
+namespace ClassifiedAds.Services.Identity.Queries;
+
+public class GetRolesQuery : IQuery<List<Role>>
 {
-    public class GetRolesQuery : IQuery<List<Role>>
+    public bool IncludeClaims { get; set; }
+    public bool IncludeUserRoles { get; set; }
+    public bool AsNoTracking { get; set; }
+}
+
+[DatabaseRetry(retryTimes: 2)]
+public class GetRolesQueryHandler : IQueryHandler<GetRolesQuery, List<Role>>
+{
+    private readonly IRoleRepository _roleRepository;
+
+    public GetRolesQueryHandler(IRoleRepository roleRepository)
     {
-        public bool IncludeClaims { get; set; }
-        public bool IncludeUserRoles { get; set; }
-        public bool AsNoTracking { get; set; }
+        _roleRepository = roleRepository;
     }
 
-    [DatabaseRetry(retryTimes: 2)]
-    public class GetRolesQueryHandler : IQueryHandler<GetRolesQuery, List<Role>>
+    public Task<List<Role>> HandleAsync(GetRolesQuery query, CancellationToken cancellationToken = default)
     {
-        private readonly IRoleRepository _roleRepository;
-
-        public GetRolesQueryHandler(IRoleRepository roleRepository)
+        var db = _roleRepository.Get(new RoleQueryOptions
         {
-            _roleRepository = roleRepository;
-        }
+            IncludeClaims = query.IncludeClaims,
+            IncludeUserRoles = query.IncludeUserRoles,
+            AsNoTracking = query.AsNoTracking,
+        });
 
-        public Task<List<Role>> HandleAsync(GetRolesQuery query, CancellationToken cancellationToken = default)
-        {
-            var db = _roleRepository.Get(new RoleQueryOptions
-            {
-                IncludeClaims = query.IncludeClaims,
-                IncludeUserRoles = query.IncludeUserRoles,
-                AsNoTracking = query.AsNoTracking,
-            });
-
-            return _roleRepository.ToListAsync(db);
-        }
+        return _roleRepository.ToListAsync(db);
     }
 }

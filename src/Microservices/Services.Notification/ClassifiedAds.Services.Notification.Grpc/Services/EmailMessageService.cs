@@ -5,45 +5,44 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using static ClassifiedAds.Services.Notification.Grpc.Email;
 
-namespace ClassifiedAds.Services.Notification.Grpc.Services
+namespace ClassifiedAds.Services.Notification.Grpc.Services;
+
+[Authorize]
+public class EmailMessageService : EmailBase
 {
-    [Authorize]
-    public class EmailMessageService : EmailBase
+    private readonly ILogger<EmailMessageService> _logger;
+    private readonly Dispatcher _dispatcher;
+
+    public EmailMessageService(ILogger<EmailMessageService> logger, Dispatcher dispatcher)
     {
-        private readonly ILogger<EmailMessageService> _logger;
-        private readonly Dispatcher _dispatcher;
+        _logger = logger;
+        _dispatcher = dispatcher;
+    }
 
-        public EmailMessageService(ILogger<EmailMessageService> logger, Dispatcher dispatcher)
+    [AllowAnonymous]
+    public override async Task<AddEmailMessageResponse> AddEmailMessage(AddEmailMessageRequest request, ServerCallContext context)
+    {
+        /// var user = context.GetHttpContext().User;
+
+        var message = new Entities.EmailMessage
         {
-            _logger = logger;
-            _dispatcher = dispatcher;
-        }
+            From = request.Message.From,
+            Tos = request.Message.Tos,
+            CCs = request.Message.CCs,
+            BCCs = request.Message.BCCs,
+            Subject = request.Message.Subject,
+            Body = request.Message.Body,
+        };
 
-        [AllowAnonymous]
-        public override async Task<AddEmailMessageResponse> AddEmailMessage(AddEmailMessageRequest request, ServerCallContext context)
+        await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<Entities.EmailMessage>(message));
+
+        var response = new AddEmailMessageResponse
         {
-            /// var user = context.GetHttpContext().User;
+            Message = request.Message
+        };
 
-            var message = new Entities.EmailMessage
-            {
-                From = request.Message.From,
-                Tos = request.Message.Tos,
-                CCs = request.Message.CCs,
-                BCCs = request.Message.BCCs,
-                Subject = request.Message.Subject,
-                Body = request.Message.Body,
-            };
+        response.Message.Id = message.Id.ToString();
 
-            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<Entities.EmailMessage>(message));
-
-            var response = new AddEmailMessageResponse
-            {
-                Message = request.Message
-            };
-
-            response.Message.Id = message.Id.ToString();
-
-            return response;
-        }
+        return response;
     }
 }

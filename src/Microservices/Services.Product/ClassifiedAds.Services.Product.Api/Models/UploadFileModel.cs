@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace ClassifiedAds.Services.Product.Models
+namespace ClassifiedAds.Services.Product.Models;
+
+public class UploadFileModel
 {
-    public class UploadFileModel
-    {
-        public IFormFile FormFile { get; set; }
-    }
+    public IFormFile FormFile { get; set; }
 }

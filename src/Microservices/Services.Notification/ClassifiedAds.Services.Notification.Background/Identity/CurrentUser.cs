@@ -1,12 +1,11 @@
 ﻿using ClassifiedAds.Infrastructure.Identity;
 using System;
 
-namespace ClassifiedAds.BackgroundServer.Identity
-{
-    public class CurrentUser : ICurrentUser
-    {
-        public bool IsAuthenticated => false;
+namespace ClassifiedAds.BackgroundServer.Identity;
 
-        public Guid UserId => Guid.Empty;
-    }
+public class CurrentUser : ICurrentUser
+{
+    public bool IsAuthenticated => false;
+
+    public Guid UserId => Guid.Empty;
 }

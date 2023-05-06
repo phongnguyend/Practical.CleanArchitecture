@@ -9,58 +9,57 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Services.Storage.Queries
+namespace ClassifiedAds.Services.Storage.Queries;
+
+public class GetAuditEntriesQuery : AuditLogEntryQueryOptions, IQuery<List<AuditLogEntryDTO>>
 {
-    public class GetAuditEntriesQuery : AuditLogEntryQueryOptions, IQuery<List<AuditLogEntryDTO>>
+}
+
+public class GetAuditEntriesQueryHandler : IQueryHandler<GetAuditEntriesQuery, List<AuditLogEntryDTO>>
+{
+    private readonly StorageDbContext _dbContext;
+    private readonly Dispatcher _dispatcher;
+
+    public GetAuditEntriesQueryHandler(StorageDbContext dbContext, Dispatcher dispatcher)
     {
+        _dbContext = dbContext;
+        _dispatcher = dispatcher;
     }
 
-    public class GetAuditEntriesQueryHandler : IQueryHandler<GetAuditEntriesQuery, List<AuditLogEntryDTO>>
+    public async Task<List<AuditLogEntryDTO>> HandleAsync(GetAuditEntriesQuery queryOptions, CancellationToken cancellationToken = default)
     {
-        private readonly StorageDbContext _dbContext;
-        private readonly Dispatcher _dispatcher;
+        var query = _dbContext.Set<AuditLogEntry>() as IQueryable<AuditLogEntry>;
 
-        public GetAuditEntriesQueryHandler(StorageDbContext dbContext, Dispatcher dispatcher)
+        if (queryOptions.UserId != Guid.Empty)
         {
-            _dbContext = dbContext;
-            _dispatcher = dispatcher;
+            query = query.Where(x => x.UserId == queryOptions.UserId);
         }
 
-        public async Task<List<AuditLogEntryDTO>> HandleAsync(GetAuditEntriesQuery queryOptions, CancellationToken cancellationToken = default)
+        if (!string.IsNullOrEmpty(queryOptions.ObjectId))
         {
-            var query = _dbContext.Set<AuditLogEntry>() as IQueryable<AuditLogEntry>;
-
-            if (queryOptions.UserId != Guid.Empty)
-            {
-                query = query.Where(x => x.UserId == queryOptions.UserId);
-            }
-
-            if (!string.IsNullOrEmpty(queryOptions.ObjectId))
-            {
-                query = query.Where(x => x.ObjectId == queryOptions.ObjectId);
-            }
-
-            if (queryOptions.AsNoTracking)
-            {
-                query = query.AsNoTracking();
-            }
-
-            var auditLogs = await query.ToListAsync();
-            var users = await _dispatcher.DispatchAsync(new GetUsersQuery(), cancellationToken);
-
-            var rs = auditLogs.Join(users, x => x.UserId, y => y.Id,
-                (x, y) => new AuditLogEntryDTO
-                {
-                    Id = x.Id,
-                    UserId = x.UserId,
-                    Action = x.Action,
-                    ObjectId = x.ObjectId,
-                    Log = x.Log,
-                    CreatedDateTime = x.CreatedDateTime,
-                    UserName = y.UserName,
-                });
-
-            return rs.OrderByDescending(x => x.CreatedDateTime).ToList();
+            query = query.Where(x => x.ObjectId == queryOptions.ObjectId);
         }
+
+        if (queryOptions.AsNoTracking)
+        {
+            query = query.AsNoTracking();
+        }
+
+        var auditLogs = await query.ToListAsync();
+        var users = await _dispatcher.DispatchAsync(new GetUsersQuery(), cancellationToken);
+
+        var rs = auditLogs.Join(users, x => x.UserId, y => y.Id,
+            (x, y) => new AuditLogEntryDTO
+            {
+                Id = x.Id,
+                UserId = x.UserId,
+                Action = x.Action,
+                ObjectId = x.ObjectId,
+                Log = x.Log,
+                CreatedDateTime = x.CreatedDateTime,
+                UserName = y.UserName,
+            });
+
+        return rs.OrderByDescending(x => x.CreatedDateTime).ToList();
     }
 }

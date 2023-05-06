@@ -2,36 +2,35 @@
 using ClassifiedAds.Infrastructure.Storages.Azure;
 using ClassifiedAds.Infrastructure.Storages.Local;
 
-namespace ClassifiedAds.Infrastructure.Storages
+namespace ClassifiedAds.Infrastructure.Storages;
+
+public class StorageOptions
 {
-    public class StorageOptions
+    public string Provider { get; set; }
+
+    public LocalOptions Local { get; set; }
+
+    public AzureBlobOption Azure { get; set; }
+
+    public AmazonOptions Amazon { get; set; }
+
+    public bool UsedLocal()
     {
-        public string Provider { get; set; }
+        return Provider == "Local";
+    }
 
-        public LocalOptions Local { get; set; }
+    public bool UsedAzure()
+    {
+        return Provider == "Azure";
+    }
 
-        public AzureBlobOption Azure { get; set; }
+    public bool UsedAmazon()
+    {
+        return Provider == "Amazon";
+    }
 
-        public AmazonOptions Amazon { get; set; }
-
-        public bool UsedLocal()
-        {
-            return Provider == "Local";
-        }
-
-        public bool UsedAzure()
-        {
-            return Provider == "Azure";
-        }
-
-        public bool UsedAmazon()
-        {
-            return Provider == "Amazon";
-        }
-
-        public bool UsedFake()
-        {
-            return Provider == "Fake";
-        }
+    public bool UsedFake()
+    {
+        return Provider == "Fake";
     }
 }

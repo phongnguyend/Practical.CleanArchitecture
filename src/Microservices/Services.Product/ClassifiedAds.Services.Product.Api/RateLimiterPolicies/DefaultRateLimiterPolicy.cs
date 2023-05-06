@@ -5,41 +5,40 @@ using System.Threading;
 using System.Threading.RateLimiting;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Services.Product.RateLimiterPolicies
+namespace ClassifiedAds.Services.Product.RateLimiterPolicies;
+
+public class DefaultRateLimiterPolicy : IRateLimiterPolicy<string>
 {
-    public class DefaultRateLimiterPolicy : IRateLimiterPolicy<string>
+    public Func<OnRejectedContext, CancellationToken, ValueTask>? OnRejected { get; } = (context, cancellationToken) =>
     {
-        public Func<OnRejectedContext, CancellationToken, ValueTask>? OnRejected { get; } = (context, cancellationToken) =>
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        return default;
+    };
+
+    public RateLimitPartition<string> GetPartition(HttpContext httpContext)
+    {
+        // same policy name and same partition key => will use the same rate limiter instance
+        string partitionKey = null;
+
+        if (httpContext.User.Identity?.IsAuthenticated == true)
         {
-            context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-            return default;
-        };
-
-        public RateLimitPartition<string> GetPartition(HttpContext httpContext)
-        {
-            // same policy name and same partition key => will use the same rate limiter instance
-            string partitionKey = null;
-
-            if (httpContext.User.Identity?.IsAuthenticated == true)
-            {
-                partitionKey = httpContext.User.Identity.Name!;
-                return RateLimitPartition.GetFixedWindowLimiter(partitionKey,
-                    partition => new FixedWindowRateLimiterOptions
-                    {
-                        AutoReplenishment = true,
-                        PermitLimit = 200,
-                        Window = TimeSpan.FromMinutes(1),
-                    });
-            }
-
-            partitionKey = httpContext.Request.Headers.Host.ToString();
+            partitionKey = httpContext.User.Identity.Name!;
             return RateLimitPartition.GetFixedWindowLimiter(partitionKey,
                 partition => new FixedWindowRateLimiterOptions
                 {
                     AutoReplenishment = true,
-                    PermitLimit = 100,
+                    PermitLimit = 200,
                     Window = TimeSpan.FromMinutes(1),
                 });
         }
+
+        partitionKey = httpContext.Request.Headers.Host.ToString();
+        return RateLimitPartition.GetFixedWindowLimiter(partitionKey,
+            partition => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 100,
+                Window = TimeSpan.FromMinutes(1),
+            });
     }
 }

@@ -5,96 +5,95 @@ using System.Reflection;
 using ClassifiedAds.Application.Decorators;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 
-namespace ClassifiedAds.Application
+namespace ClassifiedAds.Application;
+
+internal class HandlerFactory
 {
-    internal class HandlerFactory
+    private readonly List<Func<object, Type, IServiceProvider, object>> _handlerFactoriesPipeline = new List<Func<object, Type, IServiceProvider, object>>();
+
+    public HandlerFactory(Type type)
     {
-        private readonly List<Func<object, Type, IServiceProvider, object>> _handlerFactoriesPipeline = new List<Func<object, Type, IServiceProvider, object>>();
+        AddHandlerFactory(type);
+        AddDecoratedFactories(type);
+    }
 
-        public HandlerFactory(Type type)
+    public object Create(IServiceProvider provider, Type handlerInterfaceType)
+    {
+        object currentHandler = null;
+        foreach (var handlerFactory in _handlerFactoriesPipeline)
         {
-            AddHandlerFactory(type);
-            AddDecoratedFactories(type);
+            currentHandler = handlerFactory(currentHandler, handlerInterfaceType, provider);
         }
 
-        public object Create(IServiceProvider provider, Type handlerInterfaceType)
+        return currentHandler;
+    }
+
+    private void AddDecoratedFactories(Type type)
+    {
+        var attributes = type.GetCustomAttributes(inherit: false);
+
+        for (var i = attributes.Length - 1; i >= 0; i--)
         {
-            object currentHandler = null;
-            foreach (var handlerFactory in _handlerFactoriesPipeline)
+            var attribute = attributes[i];
+            var attributeType = attribute.GetType();
+            Type decoratorHandlerType = null;
+            var hasDecoratorHandler = (type.HasInterface(typeof(ICommandHandler<>)) && Mappings.AttributeToCommandHandler.TryGetValue(attributeType, out decoratorHandlerType))
+            || (type.HasInterface(typeof(IQueryHandler<,>)) && Mappings.AttributeToQueryHandler.TryGetValue(attributeType, out decoratorHandlerType));
+
+            if (!hasDecoratorHandler)
             {
-                currentHandler = handlerFactory(currentHandler, handlerInterfaceType, provider);
+                continue;
             }
 
-            return currentHandler;
+            AddHandlerFactory(decoratorHandlerType, attribute);
         }
+    }
 
-        private void AddDecoratedFactories(Type type)
+    private void AddHandlerFactory(Type handlerType, object attribute = null)
+    {
+        _handlerFactoriesPipeline.Add(CreateHandler);
+
+        object CreateHandler(object decoratingHandler, Type interfaceType, IServiceProvider provider)
         {
-            var attributes = type.GetCustomAttributes(inherit: false);
+            var ctor = handlerType
+               .MakeGenericTypeSafe(interfaceType.GenericTypeArguments)
+               .GetConstructors()
+               .Single();
 
-            for (var i = attributes.Length - 1; i >= 0; i--)
-            {
-                var attribute = attributes[i];
-                var attributeType = attribute.GetType();
-                Type decoratorHandlerType = null;
-                var hasDecoratorHandler = (type.HasInterface(typeof(ICommandHandler<>)) && Mappings.AttributeToCommandHandler.TryGetValue(attributeType, out decoratorHandlerType))
-                || (type.HasInterface(typeof(IQueryHandler<,>)) && Mappings.AttributeToQueryHandler.TryGetValue(attributeType, out decoratorHandlerType));
+            var parameterInfos = ctor.GetParameters();
+            var parameters = GetParameters(parameterInfos, decoratingHandler, attribute, provider);
 
-                if (!hasDecoratorHandler)
-                {
-                    continue;
-                }
+            var handler = ctor.Invoke(parameters);
 
-                AddHandlerFactory(decoratorHandlerType, attribute);
-            }
+            return handler;
         }
+    }
 
-        private void AddHandlerFactory(Type handlerType, object attribute = null)
+    private static object[] GetParameters(IEnumerable<ParameterInfo> parameterInfos, object current, object attribute, IServiceProvider provider)
+    {
+        return parameterInfos.Select(GetParameter).ToArray();
+
+        object GetParameter(ParameterInfo parameterInfo)
         {
-            _handlerFactoriesPipeline.Add(CreateHandler);
+            var parameterType = parameterInfo.ParameterType;
 
-            object CreateHandler(object decoratingHandler, Type interfaceType, IServiceProvider provider)
+            if (Utils.IsHandlerInterface(parameterType))
             {
-                var ctor = handlerType
-                   .MakeGenericTypeSafe(interfaceType.GenericTypeArguments)
-                   .GetConstructors()
-                   .Single();
-
-                var parameterInfos = ctor.GetParameters();
-                var parameters = GetParameters(parameterInfos, decoratingHandler, attribute, provider);
-
-                var handler = ctor.Invoke(parameters);
-
-                return handler;
+                return current;
             }
-        }
 
-        private static object[] GetParameters(IEnumerable<ParameterInfo> parameterInfos, object current, object attribute, IServiceProvider provider)
-        {
-            return parameterInfos.Select(GetParameter).ToArray();
-
-            object GetParameter(ParameterInfo parameterInfo)
+            if (parameterType == attribute?.GetType())
             {
-                var parameterType = parameterInfo.ParameterType;
-
-                if (Utils.IsHandlerInterface(parameterType))
-                {
-                    return current;
-                }
-
-                if (parameterType == attribute?.GetType())
-                {
-                    return attribute;
-                }
-
-                var service = provider.GetService(parameterType);
-                if (service != null)
-                {
-                    return service;
-                }
-
-                throw new ArgumentException($"Type {parameterType} not found");
+                return attribute;
             }
+
+            var service = provider.GetService(parameterType);
+            if (service != null)
+            {
+                return service;
+            }
+
+            throw new ArgumentException($"Type {parameterType} not found");
         }
     }
 }

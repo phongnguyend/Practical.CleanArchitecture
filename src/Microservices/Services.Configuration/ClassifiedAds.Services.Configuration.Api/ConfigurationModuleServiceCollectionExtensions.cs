@@ -12,44 +12,43 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace Microsoft.Extensions.DependencyInjection;
+
+public static class ConfigurationModuleServiceCollectionExtensions
 {
-    public static class ConfigurationModuleServiceCollectionExtensions
+    public static IServiceCollection AddConfigurationModule(this IServiceCollection services, AppSettings appSettings)
     {
-        public static IServiceCollection AddConfigurationModule(this IServiceCollection services, AppSettings appSettings)
+        services.AddDbContext<ConfigurationDbContext>(options => options.UseSqlServer(appSettings.ConnectionStrings.ClassifiedAds, sql =>
         {
-            services.AddDbContext<ConfigurationDbContext>(options => options.UseSqlServer(appSettings.ConnectionStrings.ClassifiedAds, sql =>
+            if (!string.IsNullOrEmpty(appSettings.ConnectionStrings.MigrationsAssembly))
             {
-                if (!string.IsNullOrEmpty(appSettings.ConnectionStrings.MigrationsAssembly))
-                {
-                    sql.MigrationsAssembly(appSettings.ConnectionStrings.MigrationsAssembly);
-                }
-            }))
-                .AddScoped<IRepository<ConfigurationEntry, Guid>, Repository<ConfigurationEntry, Guid>>();
-
-            DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
-
-            services.AddMessageHandlers(Assembly.GetExecutingAssembly());
-
-            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
-
-            services.AddScoped<IExcelReader<List<ConfigurationEntry>>, ConfigurationEntryExcelReader>();
-            services.AddScoped<IExcelWriter<List<ConfigurationEntry>>, ConfigurationEntryExcelWriter>();
-
-            return services;
-        }
-
-        public static IMvcBuilder AddConfigurationModule(this IMvcBuilder builder)
-        {
-            return builder.AddApplicationPart(Assembly.GetExecutingAssembly());
-        }
-
-        public static void MigrateConfigurationDb(this IApplicationBuilder app)
-        {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.Migrate();
+                sql.MigrationsAssembly(appSettings.ConnectionStrings.MigrationsAssembly);
             }
+        }))
+            .AddScoped<IRepository<ConfigurationEntry, Guid>, Repository<ConfigurationEntry, Guid>>();
+
+        DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
+
+        services.AddMessageHandlers(Assembly.GetExecutingAssembly());
+
+        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
+
+        services.AddScoped<IExcelReader<List<ConfigurationEntry>>, ConfigurationEntryExcelReader>();
+        services.AddScoped<IExcelWriter<List<ConfigurationEntry>>, ConfigurationEntryExcelWriter>();
+
+        return services;
+    }
+
+    public static IMvcBuilder AddConfigurationModule(this IMvcBuilder builder)
+    {
+        return builder.AddApplicationPart(Assembly.GetExecutingAssembly());
+    }
+
+    public static void MigrateConfigurationDb(this IApplicationBuilder app)
+    {
+        using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+        {
+            serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.Migrate();
         }
     }
 }

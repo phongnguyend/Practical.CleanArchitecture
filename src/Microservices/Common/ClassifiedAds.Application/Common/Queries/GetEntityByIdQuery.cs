@@ -6,35 +6,34 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Application
+namespace ClassifiedAds.Application;
+
+public class GetEntityByIdQuery<TEntity> : IQuery<TEntity>
+    where TEntity : Entity<Guid>, IAggregateRoot
 {
-    public class GetEntityByIdQuery<TEntity> : IQuery<TEntity>
-        where TEntity : Entity<Guid>, IAggregateRoot
+    public Guid Id { get; set; }
+    public bool ThrowNotFoundIfNull { get; set; }
+}
+
+internal class GetEntityByIdQueryHandler<TEntity> : IQueryHandler<GetEntityByIdQuery<TEntity>, TEntity>
+where TEntity : Entity<Guid>, IAggregateRoot
+{
+    private readonly IRepository<TEntity, Guid> _repository;
+
+    public GetEntityByIdQueryHandler(IRepository<TEntity, Guid> repository)
     {
-        public Guid Id { get; set; }
-        public bool ThrowNotFoundIfNull { get; set; }
+        _repository = repository;
     }
 
-    internal class GetEntityByIdQueryHandler<TEntity> : IQueryHandler<GetEntityByIdQuery<TEntity>, TEntity>
-    where TEntity : Entity<Guid>, IAggregateRoot
+    public async Task<TEntity> HandleAsync(GetEntityByIdQuery<TEntity> query, CancellationToken cancellationToken = default)
     {
-        private readonly IRepository<TEntity, Guid> _repository;
+        var entity = await _repository.FirstOrDefaultAsync(_repository.GetAll().Where(x => x.Id == query.Id));
 
-        public GetEntityByIdQueryHandler(IRepository<TEntity, Guid> repository)
+        if (query.ThrowNotFoundIfNull && entity == null)
         {
-            _repository = repository;
+            throw new NotFoundException($"Entity {query.Id} not found.");
         }
 
-        public async Task<TEntity> HandleAsync(GetEntityByIdQuery<TEntity> query, CancellationToken cancellationToken = default)
-        {
-            var entity = await _repository.FirstOrDefaultAsync(_repository.GetAll().Where(x => x.Id == query.Id));
-
-            if (query.ThrowNotFoundIfNull && entity == null)
-            {
-                throw new NotFoundException($"Entity {query.Id} not found.");
-            }
-
-            return entity;
-        }
+        return entity;
     }
 }

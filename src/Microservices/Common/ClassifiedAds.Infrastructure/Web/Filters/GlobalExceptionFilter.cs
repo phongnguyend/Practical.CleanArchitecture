@@ -7,70 +7,69 @@ using System;
 using System.Net;
 using System.Threading;
 
-namespace ClassifiedAds.Infrastructure.Web.Filters
+namespace ClassifiedAds.Infrastructure.Web.Filters;
+
+public class GlobalExceptionFilter : IExceptionFilter
 {
-    public class GlobalExceptionFilter : IExceptionFilter
+    private readonly ILogger<GlobalExceptionFilter> _logger;
+    private readonly GlobalExceptionFilterOptions _options;
+
+    public GlobalExceptionFilter(ILogger<GlobalExceptionFilter> logger,
+        IOptionsSnapshot<GlobalExceptionFilterOptions> options)
     {
-        private readonly ILogger<GlobalExceptionFilter> _logger;
-        private readonly GlobalExceptionFilterOptions _options;
+        _logger = logger;
+        _options = options.Value;
+    }
 
-        public GlobalExceptionFilter(ILogger<GlobalExceptionFilter> logger,
-            IOptionsSnapshot<GlobalExceptionFilterOptions> options)
+    public void OnException(ExceptionContext context)
+    {
+        if (context.Exception is NotFoundException)
         {
-            _logger = logger;
-            _options = options.Value;
+            context.Result = new NotFoundResult();
         }
-
-        public void OnException(ExceptionContext context)
+        else if (context.Exception is ValidationException)
         {
-            if (context.Exception is NotFoundException)
-            {
-                context.Result = new NotFoundResult();
-            }
-            else if (context.Exception is ValidationException)
-            {
-                context.Result = new BadRequestObjectResult(context.Exception.Message);
-            }
-            else
-            {
-                _logger.LogError(context.Exception, "[{0}-{1}]", DateTime.UtcNow.Ticks, Thread.CurrentThread.ManagedThreadId);
-
-                if (_options.DetailLevel == GlobalExceptionDetailLevel.Throw)
-                {
-                    return;
-                }
-
-                context.Result = new ObjectResult(new { Message = GetErrorMessage(context.Exception) })
-                {
-                    StatusCode = (int)HttpStatusCode.InternalServerError,
-                };
-            }
+            context.Result = new BadRequestObjectResult(context.Exception.Message);
         }
-
-        private string GetErrorMessage(Exception ex)
+        else
         {
-            return _options.DetailLevel switch
+            _logger.LogError(context.Exception, "[{0}-{1}]", DateTime.UtcNow.Ticks, Thread.CurrentThread.ManagedThreadId);
+
+            if (_options.DetailLevel == GlobalExceptionDetailLevel.Throw)
             {
-                GlobalExceptionDetailLevel.None => "An internal exception has occurred.",
-                GlobalExceptionDetailLevel.Message => ex.Message,
-                GlobalExceptionDetailLevel.StackTrace => ex.StackTrace,
-                GlobalExceptionDetailLevel.ToString => ex.ToString(),
-                _ => "An internal exception has occurred.",
+                return;
+            }
+
+            context.Result = new ObjectResult(new { Message = GetErrorMessage(context.Exception) })
+            {
+                StatusCode = (int)HttpStatusCode.InternalServerError,
             };
         }
     }
 
-    public class GlobalExceptionFilterOptions
+    private string GetErrorMessage(Exception ex)
     {
-        public GlobalExceptionDetailLevel DetailLevel { get; set; }
+        return _options.DetailLevel switch
+        {
+            GlobalExceptionDetailLevel.None => "An internal exception has occurred.",
+            GlobalExceptionDetailLevel.Message => ex.Message,
+            GlobalExceptionDetailLevel.StackTrace => ex.StackTrace,
+            GlobalExceptionDetailLevel.ToString => ex.ToString(),
+            _ => "An internal exception has occurred.",
+        };
     }
+}
 
-    public enum GlobalExceptionDetailLevel
-    {
-        None,
-        Message,
-        StackTrace,
-        ToString,
-        Throw,
-    }
+public class GlobalExceptionFilterOptions
+{
+    public GlobalExceptionDetailLevel DetailLevel { get; set; }
+}
+
+public enum GlobalExceptionDetailLevel
+{
+    None,
+    Message,
+    StackTrace,
+    ToString,
+    Throw,
 }

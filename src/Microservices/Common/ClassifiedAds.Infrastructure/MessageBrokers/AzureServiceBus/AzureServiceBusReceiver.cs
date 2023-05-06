@@ -5,56 +5,55 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus
+namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
+
+public class AzureServiceBusReceiver<T> : IMessageReceiver<T>
 {
-    public class AzureServiceBusReceiver<T> : IMessageReceiver<T>
+    private readonly string _connectionString;
+    private readonly string _queueName;
+
+    public AzureServiceBusReceiver(string connectionString, string queueName)
     {
-        private readonly string _connectionString;
-        private readonly string _queueName;
+        _connectionString = connectionString;
+        _queueName = queueName;
+    }
 
-        public AzureServiceBusReceiver(string connectionString, string queueName)
-        {
-            _connectionString = connectionString;
-            _queueName = queueName;
-        }
+    public void Receive(Action<T, MetaData> action)
+    {
+        Task.Factory.StartNew(() => ReceiveAsync(action));
+    }
 
-        public void Receive(Action<T, MetaData> action)
+    private Task ReceiveAsync(Action<T, MetaData> action)
+    {
+        return ReceiveStringAsync(retrievedMessage =>
         {
-            Task.Factory.StartNew(() => ReceiveAsync(action));
-        }
+            var message = JsonSerializer.Deserialize<Message<T>>(retrievedMessage);
+            action(message.Data, message.MetaData);
+        });
+    }
 
-        private Task ReceiveAsync(Action<T, MetaData> action)
+    public void ReceiveString(Action<string> action)
+    {
+        Task.Factory.StartNew(() => ReceiveStringAsync(action));
+    }
+
+    private async Task ReceiveStringAsync(Action<string> action)
+    {
+        await using var client = new ServiceBusClient(_connectionString);
+        ServiceBusReceiver receiver = client.CreateReceiver(_queueName);
+
+        while (true)
         {
-            return ReceiveStringAsync(retrievedMessage =>
+            var retrievedMessage = await receiver.ReceiveMessageAsync();
+
+            if (retrievedMessage != null)
             {
-                var message = JsonSerializer.Deserialize<Message<T>>(retrievedMessage);
-                action(message.Data, message.MetaData);
-            });
-        }
-
-        public void ReceiveString(Action<string> action)
-        {
-            Task.Factory.StartNew(() => ReceiveStringAsync(action));
-        }
-
-        private async Task ReceiveStringAsync(Action<string> action)
-        {
-            await using var client = new ServiceBusClient(_connectionString);
-            ServiceBusReceiver receiver = client.CreateReceiver(_queueName);
-
-            while (true)
+                action(Encoding.UTF8.GetString(retrievedMessage.Body));
+                await receiver.CompleteMessageAsync(retrievedMessage);
+            }
+            else
             {
-                var retrievedMessage = await receiver.ReceiveMessageAsync();
-
-                if (retrievedMessage != null)
-                {
-                    action(Encoding.UTF8.GetString(retrievedMessage.Body));
-                    await receiver.CompleteMessageAsync(retrievedMessage);
-                }
-                else
-                {
-                    await Task.Delay(1000);
-                }
+                await Task.Delay(1000);
             }
         }
     }

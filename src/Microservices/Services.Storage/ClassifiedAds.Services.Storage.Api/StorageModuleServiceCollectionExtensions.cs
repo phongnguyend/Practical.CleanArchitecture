@@ -13,59 +13,58 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Reflection;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace Microsoft.Extensions.DependencyInjection;
+
+public static class StorageModuleServiceCollectionExtensions
 {
-    public static class StorageModuleServiceCollectionExtensions
+    public static IServiceCollection AddStorageModule(this IServiceCollection services, AppSettings appSettings)
     {
-        public static IServiceCollection AddStorageModule(this IServiceCollection services, AppSettings appSettings)
+        services.AddDbContext<StorageDbContext>(options => options.UseSqlServer(appSettings.ConnectionStrings.ClassifiedAds, sql =>
         {
-            services.AddDbContext<StorageDbContext>(options => options.UseSqlServer(appSettings.ConnectionStrings.ClassifiedAds, sql =>
+            if (!string.IsNullOrEmpty(appSettings.ConnectionStrings.MigrationsAssembly))
             {
-                if (!string.IsNullOrEmpty(appSettings.ConnectionStrings.MigrationsAssembly))
-                {
-                    sql.MigrationsAssembly(appSettings.ConnectionStrings.MigrationsAssembly);
-                }
-            }))
-                .AddScoped<IRepository<FileEntry, Guid>, Repository<FileEntry, Guid>>()
-                .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>()
-                .AddScoped<IRepository<OutboxEvent, long>, Repository<OutboxEvent, long>>();
-
-            DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
-
-            services.AddMessageHandlers(Assembly.GetExecutingAssembly());
-
-            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
-
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<ICurrentUser, CurrentWebUser>();
-
-            services.AddStorageManager(appSettings.Storage);
-
-            services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker)
-                    .AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker)
-                    .AddMessageBusSender<AuditLogCreatedEvent>(appSettings.MessageBroker)
-                    .AddMessageBusReceiver<FileUploadedEvent>(appSettings.MessageBroker)
-                    .AddMessageBusReceiver<FileDeletedEvent>(appSettings.MessageBroker);
-
-            return services;
-        }
-
-        public static void MigrateStorageDb(this IApplicationBuilder app)
-        {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                serviceScope.ServiceProvider.GetRequiredService<StorageDbContext>().Database.Migrate();
+                sql.MigrationsAssembly(appSettings.ConnectionStrings.MigrationsAssembly);
             }
-        }
+        }))
+            .AddScoped<IRepository<FileEntry, Guid>, Repository<FileEntry, Guid>>()
+            .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>()
+            .AddScoped<IRepository<OutboxEvent, long>, Repository<OutboxEvent, long>>();
 
-        public static IServiceCollection AddHostedServicesStorageModule(this IServiceCollection services)
+        DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
+
+        services.AddMessageHandlers(Assembly.GetExecutingAssembly());
+
+        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
+
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.AddScoped<ICurrentUser, CurrentWebUser>();
+
+        services.AddStorageManager(appSettings.Storage);
+
+        services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker)
+                .AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker)
+                .AddMessageBusSender<AuditLogCreatedEvent>(appSettings.MessageBroker)
+                .AddMessageBusReceiver<FileUploadedEvent>(appSettings.MessageBroker)
+                .AddMessageBusReceiver<FileDeletedEvent>(appSettings.MessageBroker);
+
+        return services;
+    }
+
+    public static void MigrateStorageDb(this IApplicationBuilder app)
+    {
+        using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
         {
-            services.AddScoped<PublishEventService>();
-
-            services.AddHostedService<MessageBusReceiver>();
-            services.AddHostedService<PublishEventWorker>();
-
-            return services;
+            serviceScope.ServiceProvider.GetRequiredService<StorageDbContext>().Database.Migrate();
         }
+    }
+
+    public static IServiceCollection AddHostedServicesStorageModule(this IServiceCollection services)
+    {
+        services.AddScoped<PublishEventService>();
+
+        services.AddHostedService<MessageBusReceiver>();
+        services.AddHostedService<PublishEventWorker>();
+
+        return services;
     }
 }

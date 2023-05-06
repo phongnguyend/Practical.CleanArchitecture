@@ -1,9 +1,8 @@
-﻿namespace ClassifiedAds.Infrastructure.Logging
-{
-    public class LoggerOptions
-    {
-        public FileOptions File { get; set; }
+﻿namespace ClassifiedAds.Infrastructure.Logging;
 
-        public ElasticsearchOptions Elasticsearch { get; set; }
-    }
+public class LoggerOptions
+{
+    public FileOptions File { get; set; }
+
+    public ElasticsearchOptions Elasticsearch { get; set; }
 }

@@ -9,68 +9,67 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace ClassifiedAds.Services.Notification.Grpc
+namespace ClassifiedAds.Services.Notification.Grpc;
+
+public class Startup
 {
-    public class Startup
+    public Startup(IConfiguration configuration, IWebHostEnvironment env)
     {
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
-        {
-            Configuration = configuration;
+        Configuration = configuration;
 
-            AppSettings = new AppSettings();
-            Configuration.Bind(AppSettings);
-        }
+        AppSettings = new AppSettings();
+        Configuration.Bind(AppSettings);
+    }
 
-        public IConfiguration Configuration { get; }
+    public IConfiguration Configuration { get; }
 
-        private AppSettings AppSettings { get; set; }
+    private AppSettings AppSettings { get; set; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddGrpc();
+    // This method gets called by the runtime. Use this method to add services to the container.
+    // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddGrpc();
 
-            services.AddMonitoringServices(AppSettings.Monitoring);
+        services.AddMonitoringServices(AppSettings.Monitoring);
 
-            services.AddDateTimeProvider();
-            services.AddApplicationServices();
+        services.AddDateTimeProvider();
+        services.AddApplicationServices();
 
-            services.AddNotificationModule(AppSettings);
+        services.AddNotificationModule(AppSettings);
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.Authority = AppSettings.IdentityServerAuthentication.Authority;
-                    options.Audience = AppSettings.IdentityServerAuthentication.ApiName;
-                    options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
-                });
-            services.AddAuthorization();
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
             {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseRouting();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGrpcService<EmailMessageService>();
-                endpoints.MapGrpcService<SmsMessageService>();
-
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
-                });
+                options.Authority = AppSettings.IdentityServerAuthentication.Authority;
+                options.Audience = AppSettings.IdentityServerAuthentication.ApiName;
+                options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
             });
+        services.AddAuthorization();
+    }
+
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
         }
+
+        app.UseRouting();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapGrpcService<EmailMessageService>();
+            endpoints.MapGrpcService<SmsMessageService>();
+
+            endpoints.MapGet("/", async context =>
+            {
+                await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+            });
+        });
     }
 }

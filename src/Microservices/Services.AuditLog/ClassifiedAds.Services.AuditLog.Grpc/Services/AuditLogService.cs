@@ -11,66 +11,65 @@ using System.Linq;
 using System.Threading.Tasks;
 using static ClassifiedAds.Services.AuditLog.Grpc.AuditLog;
 
-namespace ClassifiedAds.Services.Identity.Grpc.Services
+namespace ClassifiedAds.Services.Identity.Grpc.Services;
+
+[Authorize]
+public class AuditLogService : AuditLogBase
 {
-    [Authorize]
-    public class AuditLogService : AuditLogBase
+    private readonly ILogger<AuditLogService> _logger;
+    private readonly Dispatcher _dispatcher;
+
+    public AuditLogService(ILogger<AuditLogService> logger, Dispatcher dispatcher)
     {
-        private readonly ILogger<AuditLogService> _logger;
-        private readonly Dispatcher _dispatcher;
+        _logger = logger;
+        _dispatcher = dispatcher;
+    }
 
-        public AuditLogService(ILogger<AuditLogService> logger, Dispatcher dispatcher)
+    public override async Task<AddAuditLogEntryResponse> AddAuditLogEntry(AddAuditLogEntryRequest request, ServerCallContext context)
+    {
+        var entry = new AuditLogEntry
         {
-            _logger = logger;
-            _dispatcher = dispatcher;
-        }
+            UserId = Guid.Parse(request.Entry.UserId),
+            ObjectId = request.Entry.ObjectId,
+            Action = request.Entry.Action,
+            Log = request.Entry.Log,
+            CreatedDateTime = request.Entry.CreatedDateTime.ToDateTimeOffset(),
+        };
 
-        public override async Task<AddAuditLogEntryResponse> AddAuditLogEntry(AddAuditLogEntryRequest request, ServerCallContext context)
+        await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<AuditLogEntry>(entry));
+
+        var response = new AddAuditLogEntryResponse
         {
-            var entry = new AuditLogEntry
+            Entry = new AuditLogEntryMessage
             {
-                UserId = Guid.Parse(request.Entry.UserId),
-                ObjectId = request.Entry.ObjectId,
-                Action = request.Entry.Action,
-                Log = request.Entry.Log,
-                CreatedDateTime = request.Entry.CreatedDateTime.ToDateTimeOffset(),
-            };
+                Id = entry.Id.ToString(),
+                ObjectId = entry.ObjectId,
+                UserId = entry.UserId.ToString(),
+                Action = entry.Action,
+                Log = entry.Log,
+                CreatedDateTime = Timestamp.FromDateTimeOffset(entry.CreatedDateTime),
+            }
+        };
 
-            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<AuditLogEntry>(entry));
+        return response;
+    }
 
-            var response = new AddAuditLogEntryResponse
+    public override async Task<GetAuditLogEntriesResponse> GetAuditLogEntries(GetAuditLogEntriesRequest request, ServerCallContext context)
+    {
+        var entries = (await _dispatcher.DispatchAsync(new GetAuditEntriesQuery { ObjectId = request.ObjectId }))
+            .Select(x => new AuditLogEntryMessage
             {
-                Entry = new AuditLogEntryMessage
-                {
-                    Id = entry.Id.ToString(),
-                    ObjectId = entry.ObjectId,
-                    UserId = entry.UserId.ToString(),
-                    Action = entry.Action,
-                    Log = entry.Log,
-                    CreatedDateTime = Timestamp.FromDateTimeOffset(entry.CreatedDateTime),
-                }
-            };
+                Id = x.Id.ToString(),
+                ObjectId = x.ObjectId,
+                UserId = x.UserId.ToString(),
+                Action = x.Action,
+                Log = x.Log,
+                UserName = x.UserName,
+                CreatedDateTime = Timestamp.FromDateTimeOffset(x.CreatedDateTime),
+            });
 
-            return response;
-        }
-
-        public override async Task<GetAuditLogEntriesResponse> GetAuditLogEntries(GetAuditLogEntriesRequest request, ServerCallContext context)
-        {
-            var entries = (await _dispatcher.DispatchAsync(new GetAuditEntriesQuery { ObjectId = request.ObjectId }))
-                .Select(x => new AuditLogEntryMessage
-                {
-                    Id = x.Id.ToString(),
-                    ObjectId = x.ObjectId,
-                    UserId = x.UserId.ToString(),
-                    Action = x.Action,
-                    Log = x.Log,
-                    UserName = x.UserName,
-                    CreatedDateTime = Timestamp.FromDateTimeOffset(x.CreatedDateTime),
-                });
-
-            var rp = new GetAuditLogEntriesResponse();
-            rp.Entries.AddRange(entries);
-            return rp;
-        }
+        var rp = new GetAuditLogEntriesResponse();
+        rp.Entries.AddRange(entries);
+        return rp;
     }
 }

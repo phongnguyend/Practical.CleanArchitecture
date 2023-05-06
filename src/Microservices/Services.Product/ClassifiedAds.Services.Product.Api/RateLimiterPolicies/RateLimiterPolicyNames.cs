@@ -1,7 +1,6 @@
-﻿namespace ClassifiedAds.Services.Product.RateLimiterPolicies
+﻿namespace ClassifiedAds.Services.Product.RateLimiterPolicies;
+
+public static class RateLimiterPolicyNames
 {
-    public static class RateLimiterPolicyNames
-    {
-        public const string DefaultPolicy = "DefaultPolicy";
-    }
+    public const string DefaultPolicy = "DefaultPolicy";
 }

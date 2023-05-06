@@ -10,60 +10,59 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Services.Product.HostedServices
+namespace ClassifiedAds.Services.Product.HostedServices;
+
+public class PublishEventService
 {
-    public class PublishEventService
+    private readonly ILogger<PublishEventService> _logger;
+    private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
+    private readonly IMessageSender<AuditLogCreatedEvent> _auditLogCreatedEventSender;
+    private readonly DaprClient _daprClient;
+
+    public PublishEventService(ILogger<PublishEventService> logger,
+        IDateTimeProvider dateTimeProvider,
+        IRepository<OutboxEvent, long> outboxEventRepository,
+        IMessageSender<AuditLogCreatedEvent> auditLogCreatedEventSender,
+        DaprClient daprClient)
     {
-        private readonly ILogger<PublishEventService> _logger;
-        private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
-        private readonly IMessageSender<AuditLogCreatedEvent> _auditLogCreatedEventSender;
-        private readonly DaprClient _daprClient;
+        _logger = logger;
+        _dateTimeProvider = dateTimeProvider;
+        _outboxEventRepository = outboxEventRepository;
+        _auditLogCreatedEventSender = auditLogCreatedEventSender;
+        _daprClient = daprClient;
+    }
 
-        public PublishEventService(ILogger<PublishEventService> logger,
-            IDateTimeProvider dateTimeProvider,
-            IRepository<OutboxEvent, long> outboxEventRepository,
-            IMessageSender<AuditLogCreatedEvent> auditLogCreatedEventSender,
-            DaprClient daprClient)
+    public async Task<int> PublishEvents()
+    {
+        var events = _outboxEventRepository.GetAll()
+            .Where(x => !x.Published)
+            .OrderBy(x => x.CreatedDateTime)
+            .Take(50)
+            .ToList();
+
+        foreach (var eventLog in events)
         {
-            _logger = logger;
-            _dateTimeProvider = dateTimeProvider;
-            _outboxEventRepository = outboxEventRepository;
-            _auditLogCreatedEventSender = auditLogCreatedEventSender;
-            _daprClient = daprClient;
-        }
-
-        public async Task<int> PublishEvents()
-        {
-            var events = _outboxEventRepository.GetAll()
-                .Where(x => !x.Published)
-                .OrderBy(x => x.CreatedDateTime)
-                .Take(50)
-                .ToList();
-
-            foreach (var eventLog in events)
+            if (eventLog.EventType == "AUDIT_LOG_ENTRY_CREATED")
             {
-                if (eventLog.EventType == "AUDIT_LOG_ENTRY_CREATED")
-                {
-                    var logEntry = JsonSerializer.Deserialize<AuditLogEntry>(eventLog.Message);
-                    await _auditLogCreatedEventSender.SendAsync(new AuditLogCreatedEvent { AuditLog = logEntry });
+                var logEntry = JsonSerializer.Deserialize<AuditLogEntry>(eventLog.Message);
+                await _auditLogCreatedEventSender.SendAsync(new AuditLogCreatedEvent { AuditLog = logEntry });
 
-                    if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("DAPR_HTTP_PORT")))
-                    {
-                        await _daprClient.PublishEventAsync("pubsub", "AuditLogCreatedEvent", new AuditLogCreatedEvent { AuditLog = logEntry });
-                    }
-                }
-                else
+                if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("DAPR_HTTP_PORT")))
                 {
-                    // TODO: Take Note
+                    await _daprClient.PublishEventAsync("pubsub", "AuditLogCreatedEvent", new AuditLogCreatedEvent { AuditLog = logEntry });
                 }
-
-                eventLog.Published = true;
-                eventLog.UpdatedDateTime = _dateTimeProvider.OffsetNow;
-                await _outboxEventRepository.UnitOfWork.SaveChangesAsync();
+            }
+            else
+            {
+                // TODO: Take Note
             }
 
-            return events.Count;
+            eventLog.Published = true;
+            eventLog.UpdatedDateTime = _dateTimeProvider.OffsetNow;
+            await _outboxEventRepository.UnitOfWork.SaveChangesAsync();
         }
+
+        return events.Count;
     }
 }

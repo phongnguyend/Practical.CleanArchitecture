@@ -2,14 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ClassifiedAds.Services.Storage.MappingConfigurations
+namespace ClassifiedAds.Services.Storage.MappingConfigurations;
+
+public class FileEntryConfiguration : IEntityTypeConfiguration<FileEntry>
 {
-    public class FileEntryConfiguration : IEntityTypeConfiguration<FileEntry>
+    public void Configure(EntityTypeBuilder<FileEntry> builder)
     {
-        public void Configure(EntityTypeBuilder<FileEntry> builder)
-        {
-            builder.ToTable("FileEntries");
-            builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
-        }
+        builder.ToTable("FileEntries");
+        builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
     }
 }

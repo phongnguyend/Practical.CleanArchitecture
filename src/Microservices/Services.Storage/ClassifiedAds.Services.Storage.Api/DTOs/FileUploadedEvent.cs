@@ -1,9 +1,8 @@
 ﻿using ClassifiedAds.Services.Storage.Entities;
 
-namespace ClassifiedAds.Services.Storage.DTOs
+namespace ClassifiedAds.Services.Storage.DTOs;
+
+public class FileUploadedEvent
 {
-    public class FileUploadedEvent
-    {
-        public FileEntry FileEntry { get; set; }
-    }
+    public FileEntry FileEntry { get; set; }
 }

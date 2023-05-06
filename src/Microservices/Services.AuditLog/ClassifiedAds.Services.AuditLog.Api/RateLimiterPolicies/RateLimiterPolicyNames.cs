@@ -1,7 +1,6 @@
-﻿namespace ClassifiedAds.Services.AuditLog.RateLimiterPolicies
+﻿namespace ClassifiedAds.Services.AuditLog.RateLimiterPolicies;
+
+public static partial class RateLimiterPolicyNames
 {
-    public static partial class RateLimiterPolicyNames
-    {
-        public const string GetAuditLogsPolicy = "GetAuditLogsPolicy";
-    }
+    public const string GetAuditLogsPolicy = "GetAuditLogsPolicy";
 }

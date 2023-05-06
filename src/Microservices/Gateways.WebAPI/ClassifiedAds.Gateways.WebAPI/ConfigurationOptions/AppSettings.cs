@@ -1,7 +1,6 @@
-﻿namespace ClassifiedAds.Gateways.WebAPI.ConfigurationOptions
+﻿namespace ClassifiedAds.Gateways.WebAPI.ConfigurationOptions;
+
+public class AppSettings
 {
-    public class AppSettings
-    {
-        public OcelotOptions Ocelot { get; set; }
-    }
+    public OcelotOptions Ocelot { get; set; }
 }

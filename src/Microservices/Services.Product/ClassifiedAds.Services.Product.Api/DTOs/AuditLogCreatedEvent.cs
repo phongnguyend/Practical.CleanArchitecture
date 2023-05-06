@@ -1,9 +1,8 @@
 ﻿using ClassifiedAds.Services.Product.Entities;
 
-namespace ClassifiedAds.Services.Product.DTOs
+namespace ClassifiedAds.Services.Product.DTOs;
+
+public class AuditLogCreatedEvent
 {
-    public class AuditLogCreatedEvent
-    {
-        public AuditLogEntry AuditLog { get; set; }
-    }
+    public AuditLogEntry AuditLog { get; set; }
 }

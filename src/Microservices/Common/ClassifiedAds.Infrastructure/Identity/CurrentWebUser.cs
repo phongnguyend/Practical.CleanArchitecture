@@ -2,34 +2,33 @@
 using System;
 using System.Security.Claims;
 
-namespace ClassifiedAds.Infrastructure.Identity
+namespace ClassifiedAds.Infrastructure.Identity;
+
+public class CurrentWebUser : ICurrentUser
 {
-    public class CurrentWebUser : ICurrentUser
+    private readonly IHttpContextAccessor _context;
+
+    public CurrentWebUser(IHttpContextAccessor context)
     {
-        private readonly IHttpContextAccessor _context;
+        _context = context;
+    }
 
-        public CurrentWebUser(IHttpContextAccessor context)
+    public bool IsAuthenticated
+    {
+        get
         {
-            _context = context;
+            return _context.HttpContext.User.Identity.IsAuthenticated;
         }
+    }
 
-        public bool IsAuthenticated
+    public Guid UserId
+    {
+        get
         {
-            get
-            {
-                return _context.HttpContext.User.Identity.IsAuthenticated;
-            }
-        }
+            var userId = _context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? _context.HttpContext.User.FindFirst("sub")?.Value;
 
-        public Guid UserId
-        {
-            get
-            {
-                var userId = _context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                    ?? _context.HttpContext.User.FindFirst("sub")?.Value;
-
-                return Guid.Parse(userId);
-            }
+            return Guid.Parse(userId);
         }
     }
 }

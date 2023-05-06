@@ -10,41 +10,40 @@ using System.Threading;
 using System.Threading.Tasks;
 using static ClassifiedAds.Services.Notification.Grpc.Sms;
 
-namespace ClassifiedAds.Services.Identity.Commands.SmsMessages
+namespace ClassifiedAds.Services.Identity.Commands.SmsMessages;
+
+public class AddSmsMessageCommand : ICommand
 {
-    public class AddSmsMessageCommand : ICommand
+    public SmsMessageDTO SmsMessage { get; set; }
+}
+
+public class AddSmsMessageCommandHandler : ICommandHandler<AddSmsMessageCommand>
+{
+    private readonly IConfiguration _configuration;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public AddSmsMessageCommandHandler(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
     {
-        public SmsMessageDTO SmsMessage { get; set; }
+        _configuration = configuration;
+        _httpContextAccessor = httpContextAccessor;
     }
 
-    public class AddSmsMessageCommandHandler : ICommandHandler<AddSmsMessageCommand>
+    public async Task HandleAsync(AddSmsMessageCommand command, CancellationToken cancellationToken = default)
     {
-        private readonly IConfiguration _configuration;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public AddSmsMessageCommandHandler(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        var token = await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+        var headers = new Metadata
         {
-            _configuration = configuration;
-            _httpContextAccessor = httpContextAccessor;
-        }
+            { "Authorization", $"Bearer {token}" },
+        };
 
-        public async Task HandleAsync(AddSmsMessageCommand command, CancellationToken cancellationToken = default)
+        var client = new SmsClient(ChannelFactory.Create(_configuration["Services:Notification:Grpc"]));
+        client.AddSmsMessage(new Notification.Grpc.AddSmsMessageRequest
         {
-            var token = await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
-            var headers = new Metadata
+            Message = new Notification.Grpc.SmsMessage
             {
-                { "Authorization", $"Bearer {token}" },
-            };
-
-            var client = new SmsClient(ChannelFactory.Create(_configuration["Services:Notification:Grpc"]));
-            client.AddSmsMessage(new Notification.Grpc.AddSmsMessageRequest
-            {
-                Message = new Notification.Grpc.SmsMessage
-                {
-                    Message = command.SmsMessage.Message,
-                    PhoneNumber = command.SmsMessage.PhoneNumber,
-                },
-            }, headers);
-        }
+                Message = command.SmsMessage.Message,
+                PhoneNumber = command.SmsMessage.PhoneNumber,
+            },
+        }, headers);
     }
 }

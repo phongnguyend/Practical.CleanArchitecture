@@ -7,38 +7,37 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Services.Identity.Queries
+namespace ClassifiedAds.Services.Identity.Queries;
+
+public class GetUsersQuery : IQuery<List<User>>
 {
-    public class GetUsersQuery : IQuery<List<User>>
+    public bool IncludeClaims { get; set; }
+    public bool IncludeUserRoles { get; set; }
+    public bool IncludeRoles { get; set; }
+    public bool AsNoTracking { get; set; }
+}
+
+[AuditLog]
+[DatabaseRetry(retryTimes: 4)]
+public class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, List<User>>
+{
+    private readonly IUserRepository _userRepository;
+
+    public GetUsersQueryHandler(IUserRepository userRepository)
     {
-        public bool IncludeClaims { get; set; }
-        public bool IncludeUserRoles { get; set; }
-        public bool IncludeRoles { get; set; }
-        public bool AsNoTracking { get; set; }
+        _userRepository = userRepository;
     }
 
-    [AuditLog]
-    [DatabaseRetry(retryTimes: 4)]
-    public class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, List<User>>
+    public Task<List<User>> HandleAsync(GetUsersQuery query, CancellationToken cancellationToken = default)
     {
-        private readonly IUserRepository _userRepository;
-
-        public GetUsersQueryHandler(IUserRepository userRepository)
+        var db = _userRepository.Get(new UserQueryOptions
         {
-            _userRepository = userRepository;
-        }
+            IncludeClaims = query.IncludeClaims,
+            IncludeUserRoles = query.IncludeUserRoles,
+            IncludeRoles = query.IncludeRoles,
+            AsNoTracking = query.AsNoTracking,
+        });
 
-        public Task<List<User>> HandleAsync(GetUsersQuery query, CancellationToken cancellationToken = default)
-        {
-            var db = _userRepository.Get(new UserQueryOptions
-            {
-                IncludeClaims = query.IncludeClaims,
-                IncludeUserRoles = query.IncludeUserRoles,
-                IncludeRoles = query.IncludeRoles,
-                AsNoTracking = query.AsNoTracking,
-            });
-
-            return _userRepository.ToListAsync(db);
-        }
+        return _userRepository.ToListAsync(db);
     }
 }

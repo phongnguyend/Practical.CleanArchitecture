@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace ClassifiedAds.Infrastructure.Identity
-{
-    public interface ICurrentUser
-    {
-        bool IsAuthenticated { get; }
+namespace ClassifiedAds.Infrastructure.Identity;
 
-        Guid UserId { get; }
-    }
+public interface ICurrentUser
+{
+    bool IsAuthenticated { get; }
+
+    Guid UserId { get; }
 }

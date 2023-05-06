@@ -2,46 +2,45 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassifiedAds.Services.Configuration.Models
+namespace ClassifiedAds.Services.Configuration.Models;
+
+public static class ConfigurationEntryModelMappingConfiguration
 {
-    public static class ConfigurationEntryModelMappingConfiguration
+    public static IEnumerable<ConfigurationEntryModel> ToModels(this IEnumerable<ConfigurationEntry> entities)
     {
-        public static IEnumerable<ConfigurationEntryModel> ToModels(this IEnumerable<ConfigurationEntry> entities)
+        return entities.Select(x => x.ToModel());
+    }
+
+    public static ConfigurationEntryModel ToModel(this ConfigurationEntry entity)
+    {
+        if (entity == null)
         {
-            return entities.Select(x => x.ToModel());
+            return null;
         }
 
-        public static ConfigurationEntryModel ToModel(this ConfigurationEntry entity)
+        return new ConfigurationEntryModel
         {
-            if (entity == null)
-            {
-                return null;
-            }
+            Id = entity.Id,
+            Key = entity.Key,
+            Value = entity.Value,
+            Description = entity.Description,
+            IsSensitive = entity.IsSensitive,
+            CreatedDateTime = entity.CreatedDateTime,
+            UpdatedDateTime = entity.UpdatedDateTime,
+        };
+    }
 
-            return new ConfigurationEntryModel
-            {
-                Id = entity.Id,
-                Key = entity.Key,
-                Value = entity.Value,
-                Description = entity.Description,
-                IsSensitive = entity.IsSensitive,
-                CreatedDateTime = entity.CreatedDateTime,
-                UpdatedDateTime = entity.UpdatedDateTime,
-            };
-        }
-
-        public static ConfigurationEntry ToEntity(this ConfigurationEntryModel model)
+    public static ConfigurationEntry ToEntity(this ConfigurationEntryModel model)
+    {
+        return new ConfigurationEntry
         {
-            return new ConfigurationEntry
-            {
-                Id = model.Id,
-                Key = model.Key,
-                Value = model.Value,
-                Description = model.Description,
-                IsSensitive = model.IsSensitive,
-                CreatedDateTime = model.CreatedDateTime,
-                UpdatedDateTime = model.UpdatedDateTime,
-            };
-        }
+            Id = model.Id,
+            Key = model.Key,
+            Value = model.Value,
+            Description = model.Description,
+            IsSensitive = model.IsSensitive,
+            CreatedDateTime = model.CreatedDateTime,
+            UpdatedDateTime = model.UpdatedDateTime,
+        };
     }
 }

@@ -2,9 +2,8 @@
 using ClassifiedAds.Services.Notification.Entities;
 using System;
 
-namespace ClassifiedAds.Services.Notification.Repositories
+namespace ClassifiedAds.Services.Notification.Repositories;
+
+public interface IEmailMessageRepository : IRepository<EmailMessage, Guid>
 {
-    public interface IEmailMessageRepository : IRepository<EmailMessage, Guid>
-    {
-    }
 }

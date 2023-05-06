@@ -1,16 +1,15 @@
 ﻿using ClassifiedAds.Infrastructure.Notification;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace Microsoft.Extensions.DependencyInjection;
+
+public static class NotificationServiceCollectionExtensions
 {
-    public static class NotificationServiceCollectionExtensions
+    public static IServiceCollection AddNotificationServices(this IServiceCollection services, NotificationOptions options)
     {
-        public static IServiceCollection AddNotificationServices(this IServiceCollection services, NotificationOptions options)
-        {
-            services.AddEmailNotification(options.Email);
+        services.AddEmailNotification(options.Email);
 
-            services.AddSmsNotification(options.Sms);
+        services.AddSmsNotification(options.Sms);
 
-            return services;
-        }
+        return services;
     }
 }

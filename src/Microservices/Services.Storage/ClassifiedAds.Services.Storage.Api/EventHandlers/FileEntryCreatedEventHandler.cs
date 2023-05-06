@@ -9,48 +9,47 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Services.Storage.EventHandlers
+namespace ClassifiedAds.Services.Storage.EventHandlers;
+
+public class FileEntryCreatedEventHandler : IDomainEventHandler<EntityCreatedEvent<FileEntry>>
 {
-    public class FileEntryCreatedEventHandler : IDomainEventHandler<EntityCreatedEvent<FileEntry>>
+    private readonly Dispatcher _dispatcher;
+    private readonly ICurrentUser _currentUser;
+    private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
+
+    public FileEntryCreatedEventHandler(Dispatcher dispatcher,
+        ICurrentUser currentUser,
+        IRepository<OutboxEvent, long> outboxEventRepository)
     {
-        private readonly Dispatcher _dispatcher;
-        private readonly ICurrentUser _currentUser;
-        private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
+        _dispatcher = dispatcher;
+        _currentUser = currentUser;
+        _outboxEventRepository = outboxEventRepository;
+    }
 
-        public FileEntryCreatedEventHandler(Dispatcher dispatcher,
-            ICurrentUser currentUser,
-            IRepository<OutboxEvent, long> outboxEventRepository)
+    public async Task HandleAsync(EntityCreatedEvent<FileEntry> domainEvent, CancellationToken cancellationToken = default)
+    {
+        await _dispatcher.DispatchAsync(new AddAuditLogEntryCommand
         {
-            _dispatcher = dispatcher;
-            _currentUser = currentUser;
-            _outboxEventRepository = outboxEventRepository;
-        }
-
-        public async Task HandleAsync(EntityCreatedEvent<FileEntry> domainEvent, CancellationToken cancellationToken = default)
-        {
-            await _dispatcher.DispatchAsync(new AddAuditLogEntryCommand
+            AuditLogEntry = new AuditLogEntry
             {
-                AuditLogEntry = new AuditLogEntry
-                {
-                    UserId = _currentUser.IsAuthenticated ? _currentUser.UserId : Guid.Empty,
-                    CreatedDateTime = domainEvent.EventDateTime,
-                    Action = "CREATED_FILEENTRY",
-                    ObjectId = domainEvent.Entity.Id.ToString(),
-                    Log = domainEvent.Entity.AsJsonString(),
-                },
-            });
-
-            await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
-            {
-                EventType = "FILEENTRY_CREATED",
-                TriggeredById = _currentUser.UserId,
+                UserId = _currentUser.IsAuthenticated ? _currentUser.UserId : Guid.Empty,
                 CreatedDateTime = domainEvent.EventDateTime,
+                Action = "CREATED_FILEENTRY",
                 ObjectId = domainEvent.Entity.Id.ToString(),
-                Message = domainEvent.Entity.AsJsonString(),
-                Published = false,
-            }, cancellationToken);
+                Log = domainEvent.Entity.AsJsonString(),
+            },
+        });
 
-            await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        }
+        await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
+        {
+            EventType = "FILEENTRY_CREATED",
+            TriggeredById = _currentUser.UserId,
+            CreatedDateTime = domainEvent.EventDateTime,
+            ObjectId = domainEvent.Entity.Id.ToString(),
+            Message = domainEvent.Entity.AsJsonString(),
+            Published = false,
+        }, cancellationToken);
+
+        await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

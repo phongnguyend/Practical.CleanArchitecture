@@ -1,16 +1,15 @@
 ﻿using ClassifiedAds.Domain.Entities;
 using System;
 
-namespace ClassifiedAds.Services.AuditLog.Entities
+namespace ClassifiedAds.Services.AuditLog.Entities;
+
+public class AuditLogEntry : Entity<Guid>, IAggregateRoot
 {
-    public class AuditLogEntry : Entity<Guid>, IAggregateRoot
-    {
-        public Guid UserId { get; set; }
+    public Guid UserId { get; set; }
 
-        public string Action { get; set; }
+    public string Action { get; set; }
 
-        public string ObjectId { get; set; }
+    public string ObjectId { get; set; }
 
-        public string Log { get; set; }
-    }
+    public string Log { get; set; }
 }

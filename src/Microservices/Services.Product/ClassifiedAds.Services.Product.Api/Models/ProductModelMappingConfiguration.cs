@@ -1,40 +1,39 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassifiedAds.Services.Product.Models
+namespace ClassifiedAds.Services.Product.Models;
+
+public static class ProductModelMappingConfiguration
 {
-    public static class ProductModelMappingConfiguration
+    public static IEnumerable<ProductModel> ToModels(this IEnumerable<Entities.Product> entities)
     {
-        public static IEnumerable<ProductModel> ToModels(this IEnumerable<Entities.Product> entities)
+        return entities.Select(x => x.ToModel());
+    }
+
+    public static ProductModel ToModel(this Entities.Product entity)
+    {
+        if (entity == null)
         {
-            return entities.Select(x => x.ToModel());
+            return null;
         }
 
-        public static ProductModel ToModel(this Entities.Product entity)
+        return new ProductModel
         {
-            if (entity == null)
-            {
-                return null;
-            }
+            Id = entity.Id,
+            Code = entity.Code,
+            Name = entity.Name,
+            Description = entity.Description,
+        };
+    }
 
-            return new ProductModel
-            {
-                Id = entity.Id,
-                Code = entity.Code,
-                Name = entity.Name,
-                Description = entity.Description,
-            };
-        }
-
-        public static Entities.Product ToEntity(this ProductModel model)
+    public static Entities.Product ToEntity(this ProductModel model)
+    {
+        return new Entities.Product
         {
-            return new Entities.Product
-            {
-                Id = model.Id,
-                Code = model.Code,
-                Name = model.Name,
-                Description = model.Description,
-            };
-        }
+            Id = model.Id,
+            Code = model.Code,
+            Name = model.Name,
+            Description = model.Description,
+        };
     }
 }
