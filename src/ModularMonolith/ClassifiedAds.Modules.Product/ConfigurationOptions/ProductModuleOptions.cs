@@ -1,7 +1,6 @@
-﻿namespace ClassifiedAds.Modules.Product.ConfigurationOptions
+﻿namespace ClassifiedAds.Modules.Product.ConfigurationOptions;
+
+public class ProductModuleOptions
 {
-    public class ProductModuleOptions
-    {
-        public ConnectionStringsOptions ConnectionStrings { get; set; }
-    }
+    public ConnectionStringsOptions ConnectionStrings { get; set; }
 }

@@ -1,7 +1,6 @@
-﻿namespace ClassifiedAds.Modules.AuditLog.ConfigurationOptions
+﻿namespace ClassifiedAds.Modules.AuditLog.ConfigurationOptions;
+
+public class AuditLogModuleOptions
 {
-    public class AuditLogModuleOptions
-    {
-        public ConnectionStringsOptions ConnectionStrings { get; set; }
-    }
+    public ConnectionStringsOptions ConnectionStrings { get; set; }
 }

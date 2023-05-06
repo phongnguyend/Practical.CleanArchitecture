@@ -13,100 +13,99 @@ using Polly;
 using System;
 using System.Reflection;
 
-namespace ClassifiedAds.Migrator
+namespace ClassifiedAds.Migrator;
+
+public class Startup
 {
-    public class Startup
+    public Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
+        Configuration = configuration;
+    }
+
+    public IConfiguration Configuration { get; }
+
+    // This method gets called by the runtime. Use this method to add services to the container.
+    // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+    public void ConfigureServices(IServiceCollection services)
+    {
+        if (string.Equals(Configuration["CheckDependency:Enabled"], "true", System.StringComparison.OrdinalIgnoreCase))
         {
-            Configuration = configuration;
+            NetworkPortCheck.Wait(Configuration["CheckDependency:Host"], 5);
         }
 
-        public IConfiguration Configuration { get; }
+        services.AddDateTimeProvider();
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
+        services.AddAuditLogModule(opt =>
         {
-            if (string.Equals(Configuration["CheckDependency:Enabled"], "true", System.StringComparison.OrdinalIgnoreCase))
+            Configuration.GetSection("Modules:AuditLog").Bind(opt);
+            opt.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+        })
+        .AddConfigurationModule(opt =>
+        {
+            Configuration.GetSection("Modules:Configuration").Bind(opt);
+            opt.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+        })
+        .AddIdentityModuleCore(opt =>
+        {
+            Configuration.GetSection("Modules:Identity").Bind(opt);
+            opt.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+        })
+        .AddNotificationModule(opt =>
+        {
+            Configuration.GetSection("Modules:Notification").Bind(opt);
+            opt.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+        })
+        .AddProductModule(opt =>
+        {
+            Configuration.GetSection("Modules:Product").Bind(opt);
+            opt.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+        })
+        .AddStorageModule(opt =>
+        {
+            Configuration.GetSection("Modules:Storage").Bind(opt);
+            opt.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+        })
+        .AddApplicationServices();
+
+        services.AddDataProtection()
+            .PersistKeysToDbContext<IdentityDbContext>()
+            .SetApplicationName("ClassifiedAds");
+
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.AddScoped<ICurrentUser, CurrentWebUser>();
+    }
+
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        Policy.Handle<Exception>().WaitAndRetry(new[]
+        {
+            TimeSpan.FromSeconds(10),
+            TimeSpan.FromSeconds(20),
+            TimeSpan.FromSeconds(30),
+        })
+        .Execute(() =>
+        {
+            app.MigrateAuditLogDb();
+            app.MigrateConfigurationDb();
+            app.MigrateIdentityDb();
+            app.MigrateNotificationDb();
+            app.MigrateProductDb();
+            app.MigrateStorageDb();
+
+            var upgrader = DeployChanges.To
+            .SqlDatabase(Configuration["Modules:Auth:ConnectionStrings:Default"])
+            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+            .LogToConsole()
+            .Build();
+
+            var result = upgrader.PerformUpgrade();
+
+            if (!result.Successful)
             {
-                NetworkPortCheck.Wait(Configuration["CheckDependency:Host"], 5);
+                throw result.Error;
             }
+        });
 
-            services.AddDateTimeProvider();
-
-            services.AddAuditLogModule(opt =>
-            {
-                Configuration.GetSection("Modules:AuditLog").Bind(opt);
-                opt.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-            })
-            .AddConfigurationModule(opt =>
-            {
-                Configuration.GetSection("Modules:Configuration").Bind(opt);
-                opt.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-            })
-            .AddIdentityModuleCore(opt =>
-            {
-                Configuration.GetSection("Modules:Identity").Bind(opt);
-                opt.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-            })
-            .AddNotificationModule(opt =>
-            {
-                Configuration.GetSection("Modules:Notification").Bind(opt);
-                opt.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-            })
-            .AddProductModule(opt =>
-            {
-                Configuration.GetSection("Modules:Product").Bind(opt);
-                opt.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-            })
-            .AddStorageModule(opt =>
-            {
-                Configuration.GetSection("Modules:Storage").Bind(opt);
-                opt.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-            })
-            .AddApplicationServices();
-
-            services.AddDataProtection()
-                .PersistKeysToDbContext<IdentityDbContext>()
-                .SetApplicationName("ClassifiedAds");
-
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<ICurrentUser, CurrentWebUser>();
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            Policy.Handle<Exception>().WaitAndRetry(new[]
-            {
-                TimeSpan.FromSeconds(10),
-                TimeSpan.FromSeconds(20),
-                TimeSpan.FromSeconds(30),
-            })
-            .Execute(() =>
-            {
-                app.MigrateAuditLogDb();
-                app.MigrateConfigurationDb();
-                app.MigrateIdentityDb();
-                app.MigrateNotificationDb();
-                app.MigrateProductDb();
-                app.MigrateStorageDb();
-
-                var upgrader = DeployChanges.To
-                .SqlDatabase(Configuration["Modules:Auth:ConnectionStrings:Default"])
-                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
-                .LogToConsole()
-                .Build();
-
-                var result = upgrader.PerformUpgrade();
-
-                if (!result.Successful)
-                {
-                    throw result.Error;
-                }
-            });
-
-        }
     }
 }

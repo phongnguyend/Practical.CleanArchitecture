@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Modules.AuditLog.Contracts.Services
-{
-    public interface IAuditLogService
-    {
-        Task AddAsync(AuditLogEntryDTO auditLog);
+namespace ClassifiedAds.Modules.AuditLog.Contracts.Services;
 
-        Task<List<AuditLogEntryDTO>> GetAuditLogEntriesAsync(AuditLogEntryQueryOptions query);
-    }
+public interface IAuditLogService
+{
+    Task AddAsync(AuditLogEntryDTO auditLog);
+
+    Task<List<AuditLogEntryDTO>> GetAuditLogEntriesAsync(AuditLogEntryQueryOptions query);
 }

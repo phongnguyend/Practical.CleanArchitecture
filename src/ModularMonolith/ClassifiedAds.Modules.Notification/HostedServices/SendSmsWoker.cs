@@ -6,48 +6,47 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Modules.Notification.HostedServices
+namespace ClassifiedAds.Modules.Notification.HostedServices;
+
+public class SendSmsWoker : BackgroundService
 {
-    public class SendSmsWoker : BackgroundService
+    private readonly IServiceProvider _services;
+    private readonly ILogger<SendSmsWoker> _logger;
+
+    public SendSmsWoker(IServiceProvider services,
+        ILogger<SendSmsWoker> logger)
     {
-        private readonly IServiceProvider _services;
-        private readonly ILogger<SendSmsWoker> _logger;
+        _services = services;
+        _logger = logger;
+    }
 
-        public SendSmsWoker(IServiceProvider services,
-            ILogger<SendSmsWoker> logger)
-        {
-            _services = services;
-            _logger = logger;
-        }
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        _logger.LogDebug("SendSmsService is starting.");
+        await DoWork(stoppingToken);
+    }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    private async Task DoWork(CancellationToken stoppingToken)
+    {
+        while (!stoppingToken.IsCancellationRequested)
         {
-            _logger.LogDebug("SendSmsService is starting.");
-            await DoWork(stoppingToken);
-        }
+            _logger.LogDebug($"SendSms task doing background work.");
 
-        private async Task DoWork(CancellationToken stoppingToken)
-        {
-            while (!stoppingToken.IsCancellationRequested)
+            int rs = 0;
+
+            using (var scope = _services.CreateScope())
             {
-                _logger.LogDebug($"SendSms task doing background work.");
+                var smsService = scope.ServiceProvider.GetRequiredService<SmsMessageService>();
 
-                int rs = 0;
-
-                using (var scope = _services.CreateScope())
-                {
-                    var smsService = scope.ServiceProvider.GetRequiredService<SmsMessageService>();
-
-                    rs = await smsService.SendSmsMessagesAsync();
-                }
-
-                if (rs == 0)
-                {
-                    await Task.Delay(10000, stoppingToken);
-                }
+                rs = await smsService.SendSmsMessagesAsync();
             }
 
-            _logger.LogDebug($"ResendSms background task is stopping.");
+            if (rs == 0)
+            {
+                await Task.Delay(10000, stoppingToken);
+            }
         }
+
+        _logger.LogDebug($"ResendSms background task is stopping.");
     }
 }

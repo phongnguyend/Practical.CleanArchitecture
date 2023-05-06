@@ -2,29 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassifiedAds.Modules.Identity.Models
+namespace ClassifiedAds.Modules.Identity.Models;
+
+public static class RoleModelMappingConfiguration
 {
-    public static class RoleModelMappingConfiguration
+    public static IEnumerable<RoleModel> ToModels(this IEnumerable<Role> entities)
     {
-        public static IEnumerable<RoleModel> ToModels(this IEnumerable<Role> entities)
+        return entities.Select(x => x.ToModel());
+    }
+
+    public static RoleModel ToModel(this Role entity)
+    {
+        if (entity == null)
         {
-            return entities.Select(x => x.ToModel());
+            return null;
         }
 
-        public static RoleModel ToModel(this Role entity)
+        return new RoleModel
         {
-            if (entity == null)
-            {
-                return null;
-            }
-
-            return new RoleModel
-            {
-                Id = entity.Id,
-                Name = entity.Name,
-                NormalizedName = entity.NormalizedName,
-                ConcurrencyStamp = entity.ConcurrencyStamp,
-            };
-        }
+            Id = entity.Id,
+            Name = entity.Name,
+            NormalizedName = entity.NormalizedName,
+            ConcurrencyStamp = entity.ConcurrencyStamp,
+        };
     }
 }

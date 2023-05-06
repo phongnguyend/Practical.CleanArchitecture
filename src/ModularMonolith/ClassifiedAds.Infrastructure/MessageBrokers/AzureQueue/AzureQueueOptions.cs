@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue
-{
-    public class AzureQueueOptions
-    {
-        public string ConnectionString { get; set; }
+namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
 
-        public Dictionary<string, string> QueueNames { get; set; }
-    }
+public class AzureQueueOptions
+{
+    public string ConnectionString { get; set; }
+
+    public Dictionary<string, string> QueueNames { get; set; }
 }

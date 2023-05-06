@@ -2,18 +2,17 @@
 using ClassifiedAds.Infrastructure.PdfConverters.PuppeteerSharp;
 using PuppeteerSharp;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace Microsoft.Extensions.DependencyInjection;
+
+public static class PuppeteerSharpConverterCollectionExtensions
 {
-    public static class PuppeteerSharpConverterCollectionExtensions
+    public static IServiceCollection AddPuppeteerSharpPdfConverter(this IServiceCollection services)
     {
-        public static IServiceCollection AddPuppeteerSharpPdfConverter(this IServiceCollection services)
-        {
-            var browserFetcher = new BrowserFetcher();
-            browserFetcher.DownloadAsync().GetAwaiter().GetResult();
+        var browserFetcher = new BrowserFetcher();
+        browserFetcher.DownloadAsync().GetAwaiter().GetResult();
 
-            services.AddSingleton<IPdfConverter, PuppeteerSharpConverter>();
+        services.AddSingleton<IPdfConverter, PuppeteerSharpConverter>();
 
-            return services;
-        }
+        return services;
     }
 }

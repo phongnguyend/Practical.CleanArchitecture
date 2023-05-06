@@ -2,58 +2,57 @@
 using System;
 using System.Collections.Generic;
 
-namespace ClassifiedAds.Modules.Configuration.Excel.EPPlus
+namespace ClassifiedAds.Modules.Configuration.Excel.EPPlus;
+
+public static class ExcelWorksheetExtensions
 {
-    public static class ExcelWorksheetExtensions
+    public static string GetCellValue(this ExcelWorksheet worksheet, string col, int row)
     {
-        public static string GetCellValue(this ExcelWorksheet worksheet, string col, int row)
-        {
-            return worksheet.Cells[col + row].Value?.ToString()?.Trim();
-        }
+        return worksheet.Cells[col + row].Value?.ToString()?.Trim();
+    }
 
-        public static string GetCellText(this ExcelWorksheet worksheet, string col, int row)
-        {
-            return worksheet.Cells[col + row].Text?.Trim();
-        }
+    public static string GetCellText(this ExcelWorksheet worksheet, string col, int row)
+    {
+        return worksheet.Cells[col + row].Text?.Trim();
+    }
 
-        public static string GetCellComment(this ExcelWorksheet worksheet, string col, int row)
-        {
-            return worksheet.Cells[col + row].Comment?.Text;
-        }
+    public static string GetCellComment(this ExcelWorksheet worksheet, string col, int row)
+    {
+        return worksheet.Cells[col + row].Comment?.Text;
+    }
 
-        public static DateTime? GetCellDateTimeValue(this ExcelWorksheet worksheet, string col, int row)
+    public static DateTime? GetCellDateTimeValue(this ExcelWorksheet worksheet, string col, int row)
+    {
+        double resFrom;
+        DateTime dateTime;
+        if (!string.IsNullOrWhiteSpace(worksheet.GetCellValue(col, row)))
         {
-            double resFrom;
-            DateTime dateTime;
-            if (!string.IsNullOrWhiteSpace(worksheet.GetCellValue(col, row)))
+            if (double.TryParse(worksheet.GetCellValue(col, row), out resFrom))
             {
-                if (double.TryParse(worksheet.GetCellValue(col, row), out resFrom))
-                {
-                    return DateTime.FromOADate(resFrom);
-                }
-
-                if (DateTime.TryParse(worksheet.GetCellValue(col, row), out dateTime))
-                {
-                    return dateTime;
-                }
+                return DateTime.FromOADate(resFrom);
             }
 
-            return null;
-        }
-
-        public static string VerifyHeader(this ExcelWorksheet worksheet, int headerIndex, Dictionary<string, string> expectedValues)
-        {
-            foreach (var correctHeader in expectedValues)
+            if (DateTime.TryParse(worksheet.GetCellValue(col, row), out dateTime))
             {
-                var currentHeader = worksheet.GetCellValue(correctHeader.Key, headerIndex);
-
-                if (!correctHeader.Value.Equals(currentHeader, StringComparison.OrdinalIgnoreCase))
-                {
-                    return $"Wrong Template! The expected value of cell [{correctHeader.Key}{headerIndex}] is: {correctHeader.Value} but the actual value is: {currentHeader}";
-                }
+                return dateTime;
             }
-
-            return string.Empty;
         }
+
+        return null;
+    }
+
+    public static string VerifyHeader(this ExcelWorksheet worksheet, int headerIndex, Dictionary<string, string> expectedValues)
+    {
+        foreach (var correctHeader in expectedValues)
+        {
+            var currentHeader = worksheet.GetCellValue(correctHeader.Key, headerIndex);
+
+            if (!correctHeader.Value.Equals(currentHeader, StringComparison.OrdinalIgnoreCase))
+            {
+                return $"Wrong Template! The expected value of cell [{correctHeader.Key}{headerIndex}] is: {correctHeader.Value} but the actual value is: {currentHeader}";
+            }
+        }
+
+        return string.Empty;
     }
 }

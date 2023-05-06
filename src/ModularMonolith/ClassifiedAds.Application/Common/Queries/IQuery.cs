@@ -1,6 +1,5 @@
-﻿namespace ClassifiedAds.Application
+﻿namespace ClassifiedAds.Application;
+
+public interface IQuery<TResult>
 {
-    public interface IQuery<TResult>
-    {
-    }
 }

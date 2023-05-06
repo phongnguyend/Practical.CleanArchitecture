@@ -3,27 +3,26 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Infrastructure.Storages
+namespace ClassifiedAds.Infrastructure.Storages;
+
+public interface IFileStorageManager
 {
-    public interface IFileStorageManager
-    {
-        Task CreateAsync(IFileEntry fileEntry, Stream stream, CancellationToken cancellationToken = default);
+    Task CreateAsync(IFileEntry fileEntry, Stream stream, CancellationToken cancellationToken = default);
 
-        Task<byte[]> ReadAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default);
+    Task<byte[]> ReadAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default);
 
-        Task DeleteAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default);
+    Task DeleteAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default);
 
-        Task ArchiveAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default);
+    Task ArchiveAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default);
 
-        Task UnArchiveAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default);
-    }
+    Task UnArchiveAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default);
+}
 
-    public interface IFileEntry
-    {
-        public Guid Id { get; set; }
+public interface IFileEntry
+{
+    public Guid Id { get; set; }
 
-        public string FileName { get; set; }
+    public string FileName { get; set; }
 
-        public string FileLocation { get; set; }
-    }
+    public string FileLocation { get; set; }
 }

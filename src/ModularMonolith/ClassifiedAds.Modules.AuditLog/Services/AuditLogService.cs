@@ -9,40 +9,39 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Modules.AuditLog.Services
+namespace ClassifiedAds.Modules.AuditLog.Services;
+
+public class AuditLogService : CrudService<AuditLogEntry>, IAuditLogService
 {
-    public class AuditLogService : CrudService<AuditLogEntry>, IAuditLogService
+    private readonly Dispatcher _dispatcher;
+
+    public AuditLogService(IRepository<AuditLogEntry, Guid> repository, IDomainEvents domainEvents, Dispatcher dispatcher)
+        : base(repository, domainEvents)
     {
-        private readonly Dispatcher _dispatcher;
+        _dispatcher = dispatcher;
+    }
 
-        public AuditLogService(IRepository<AuditLogEntry, Guid> repository, IDomainEvents domainEvents, Dispatcher dispatcher)
-            : base(repository, domainEvents)
+    public async Task AddAsync(AuditLogEntryDTO dto)
+    {
+        await AddOrUpdateAsync(new AuditLogEntry
         {
-            _dispatcher = dispatcher;
-        }
+            UserId = dto.UserId,
+            CreatedDateTime = dto.CreatedDateTime,
+            Action = dto.Action,
+            ObjectId = dto.ObjectId,
+            Log = dto.Log,
+        });
+    }
 
-        public async Task AddAsync(AuditLogEntryDTO dto)
+    public async Task<List<AuditLogEntryDTO>> GetAuditLogEntriesAsync(AuditLogEntryQueryOptions query)
+    {
+        var logs = await _dispatcher.DispatchAsync(new GetAuditEntriesQuery
         {
-            await AddOrUpdateAsync(new AuditLogEntry
-            {
-                UserId = dto.UserId,
-                CreatedDateTime = dto.CreatedDateTime,
-                Action = dto.Action,
-                ObjectId = dto.ObjectId,
-                Log = dto.Log,
-            });
-        }
+            UserId = query.UserId,
+            ObjectId = query.ObjectId,
+            AsNoTracking = query.AsNoTracking,
+        });
 
-        public async Task<List<AuditLogEntryDTO>> GetAuditLogEntriesAsync(AuditLogEntryQueryOptions query)
-        {
-            var logs = await _dispatcher.DispatchAsync(new GetAuditEntriesQuery
-            {
-                UserId = query.UserId,
-                ObjectId = query.ObjectId,
-                AsNoTracking = query.AsNoTracking,
-            });
-
-            return logs;
-        }
+        return logs;
     }
 }

@@ -2,14 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ClassifiedAds.Modules.Notification.MappingConfigurations
+namespace ClassifiedAds.Modules.Notification.MappingConfigurations;
+
+public class EmailMessageAttachmentConfiguration : IEntityTypeConfiguration<EmailMessageAttachment>
 {
-    public class EmailMessageAttachmentConfiguration : IEntityTypeConfiguration<EmailMessageAttachment>
+    public void Configure(EntityTypeBuilder<EmailMessageAttachment> builder)
     {
-        public void Configure(EntityTypeBuilder<EmailMessageAttachment> builder)
-        {
-            builder.ToTable("EmailMessageAttachments");
-            builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
-        }
+        builder.ToTable("EmailMessageAttachments");
+        builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
     }
 }

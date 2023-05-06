@@ -9,35 +9,34 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Modules.Identity.Queries.Roles
+namespace ClassifiedAds.Modules.Identity.Queries.Roles;
+
+public class GetUsersQuery : UserQueryOptions, IQuery<List<User>>
 {
-    public class GetUsersQuery : UserQueryOptions, IQuery<List<User>>
+}
+
+[AuditLog]
+[DatabaseRetry(retryTimes: 4)]
+public class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, List<User>>
+{
+    private readonly IUserRepository _userRepository;
+
+    public GetUsersQueryHandler(IUserRepository userRepository)
     {
+        _userRepository = userRepository;
     }
 
-    [AuditLog]
-    [DatabaseRetry(retryTimes: 4)]
-    public class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, List<User>>
+    public Task<List<User>> HandleAsync(GetUsersQuery query, CancellationToken cancellationToken = default)
     {
-        private readonly IUserRepository _userRepository;
-
-        public GetUsersQueryHandler(IUserRepository userRepository)
+        var db = _userRepository.Get(new UserQueryOptions
         {
-            _userRepository = userRepository;
-        }
+            IncludeClaims = query.IncludeClaims,
+            IncludeUserRoles = query.IncludeUserRoles,
+            IncludeRoles = query.IncludeRoles,
+            AsNoTracking = query.AsNoTracking,
+        });
 
-        public Task<List<User>> HandleAsync(GetUsersQuery query, CancellationToken cancellationToken = default)
-        {
-            var db = _userRepository.Get(new UserQueryOptions
-            {
-                IncludeClaims = query.IncludeClaims,
-                IncludeUserRoles = query.IncludeUserRoles,
-                IncludeRoles = query.IncludeRoles,
-                AsNoTracking = query.AsNoTracking,
-            });
-
-            return _userRepository.ToListAsync(db);
-        }
-
+        return _userRepository.ToListAsync(db);
     }
+
 }

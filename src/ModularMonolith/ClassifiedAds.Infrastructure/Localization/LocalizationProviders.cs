@@ -1,7 +1,6 @@
-﻿namespace ClassifiedAds.Infrastructure.Localization
+﻿namespace ClassifiedAds.Infrastructure.Localization;
+
+public class LocalizationProviders
 {
-    public class LocalizationProviders
-    {
-        public SqlServerOptions SqlServer { get; set; }
-    }
+    public SqlServerOptions SqlServer { get; set; }
 }

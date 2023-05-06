@@ -4,25 +4,24 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 
-namespace ClassifiedAds.Modules.Configuration.MappingConfigurations
-{
-    public class ConfigurationEntryConfiguration : IEntityTypeConfiguration<ConfigurationEntry>
-    {
-        public void Configure(EntityTypeBuilder<ConfigurationEntry> builder)
-        {
-            builder.ToTable("ConfigurationEntries");
-            builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
+namespace ClassifiedAds.Modules.Configuration.MappingConfigurations;
 
-            // Seed
-            builder.HasData(new List<ConfigurationEntry>
+public class ConfigurationEntryConfiguration : IEntityTypeConfiguration<ConfigurationEntry>
+{
+    public void Configure(EntityTypeBuilder<ConfigurationEntry> builder)
+    {
+        builder.ToTable("ConfigurationEntries");
+        builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
+
+        // Seed
+        builder.HasData(new List<ConfigurationEntry>
+        {
+            new ConfigurationEntry
             {
-                new ConfigurationEntry
-                {
-                    Id = Guid.Parse("8A051AA5-BCD1-EA11-B098-AC728981BD15"),
-                    Key = "SecurityHeaders:Test-Read-From-SqlServer",
-                    Value = "this-is-read-from-sqlserver",
-                },
-            });
-        }
+                Id = Guid.Parse("8A051AA5-BCD1-EA11-B098-AC728981BD15"),
+                Key = "SecurityHeaders:Test-Read-From-SqlServer",
+                Value = "this-is-read-from-sqlserver",
+            },
+        });
     }
 }

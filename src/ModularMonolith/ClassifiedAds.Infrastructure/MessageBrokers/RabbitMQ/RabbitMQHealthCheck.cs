@@ -4,46 +4,45 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
+namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ;
+
+public class RabbitMQHealthCheck : IHealthCheck
 {
-    public class RabbitMQHealthCheck : IHealthCheck
+    private readonly RabbitMQHealthCheckOptions _options;
+
+    public RabbitMQHealthCheck(RabbitMQHealthCheckOptions options)
     {
-        private readonly RabbitMQHealthCheckOptions _options;
-
-        public RabbitMQHealthCheck(RabbitMQHealthCheckOptions options)
-        {
-            _options = options;
-        }
-
-        public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                var connectionFactory = new ConnectionFactory
-                {
-                    HostName = _options.HostName,
-                    UserName = _options.UserName,
-                    Password = _options.Password,
-                };
-
-                using var connection = connectionFactory.CreateConnection();
-                using var model = connection.CreateModel();
-
-                return Task.FromResult(HealthCheckResult.Healthy($"HostName: {_options.HostName}"));
-            }
-            catch (Exception exception)
-            {
-                return Task.FromResult(new HealthCheckResult(context.Registration.FailureStatus, null, exception));
-            }
-        }
+        _options = options;
     }
 
-    public class RabbitMQHealthCheckOptions
+    public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {
-        public string HostName { get; set; }
+        try
+        {
+            var connectionFactory = new ConnectionFactory
+            {
+                HostName = _options.HostName,
+                UserName = _options.UserName,
+                Password = _options.Password,
+            };
 
-        public string UserName { get; set; }
+            using var connection = connectionFactory.CreateConnection();
+            using var model = connection.CreateModel();
 
-        public string Password { get; set; }
+            return Task.FromResult(HealthCheckResult.Healthy($"HostName: {_options.HostName}"));
+        }
+        catch (Exception exception)
+        {
+            return Task.FromResult(new HealthCheckResult(context.Registration.FailureStatus, null, exception));
+        }
     }
+}
+
+public class RabbitMQHealthCheckOptions
+{
+    public string HostName { get; set; }
+
+    public string UserName { get; set; }
+
+    public string Password { get; set; }
 }

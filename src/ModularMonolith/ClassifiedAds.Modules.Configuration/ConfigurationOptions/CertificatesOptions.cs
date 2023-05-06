@@ -1,9 +1,8 @@
 ﻿using CryptographyHelper.Certificates;
 
-namespace ClassifiedAds.Modules.Configuration.ConfigurationOptions
+namespace ClassifiedAds.Modules.Configuration.ConfigurationOptions;
+
+public class CertificatesOptions
 {
-    public class CertificatesOptions
-    {
-        public CertificateOption SettingsEncryption { get; set; }
-    }
+    public CertificateOption SettingsEncryption { get; set; }
 }

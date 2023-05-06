@@ -1,9 +1,8 @@
-﻿namespace ClassifiedAds.Modules.Notification.ConfigurationOptions
-{
-    public class ConnectionStringsOptions
-    {
-        public string Default { get; set; }
+﻿namespace ClassifiedAds.Modules.Notification.ConfigurationOptions;
 
-        public string MigrationsAssembly { get; set; }
-    }
+public class ConnectionStringsOptions
+{
+    public string Default { get; set; }
+
+    public string MigrationsAssembly { get; set; }
 }

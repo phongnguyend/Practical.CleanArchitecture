@@ -1,17 +1,16 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.CrossCuttingConcerns.PdfConverter
+namespace ClassifiedAds.CrossCuttingConcerns.PdfConverter;
+
+public interface IPdfConverter
 {
-    public interface IPdfConverter
-    {
-        Stream Convert(string html, PdfOptions pdfOptions = null);
+    Stream Convert(string html, PdfOptions pdfOptions = null);
 
-        Task<Stream> ConvertAsync(string html, PdfOptions pdfOptions = null);
-    }
+    Task<Stream> ConvertAsync(string html, PdfOptions pdfOptions = null);
+}
 
-    public class PdfOptions
-    {
+public class PdfOptions
+{
 
-    }
 }

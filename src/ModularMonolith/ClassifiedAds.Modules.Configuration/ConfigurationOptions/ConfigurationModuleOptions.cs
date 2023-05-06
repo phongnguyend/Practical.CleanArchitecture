@@ -1,9 +1,8 @@
-﻿namespace ClassifiedAds.Modules.Configuration.ConfigurationOptions
-{
-    public class ConfigurationModuleOptions
-    {
-        public ConnectionStringsOptions ConnectionStrings { get; set; }
+﻿namespace ClassifiedAds.Modules.Configuration.ConfigurationOptions;
 
-        public CertificatesOptions Certificates { get; set; }
-    }
+public class ConfigurationModuleOptions
+{
+    public ConnectionStringsOptions ConnectionStrings { get; set; }
+
+    public CertificatesOptions Certificates { get; set; }
 }

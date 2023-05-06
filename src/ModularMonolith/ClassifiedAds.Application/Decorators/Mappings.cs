@@ -4,44 +4,43 @@ using System.Linq;
 using System.Reflection;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 
-namespace ClassifiedAds.Application.Decorators
+namespace ClassifiedAds.Application.Decorators;
+
+internal static class Mappings
 {
-    internal static class Mappings
+    static Mappings()
     {
-        static Mappings()
+        var decorators = Assembly.GetExecutingAssembly().GetTypes();
+        foreach (var type in decorators)
         {
-            var decorators = Assembly.GetExecutingAssembly().GetTypes();
-            foreach (var type in decorators)
+            if (type.HasInterface(typeof(ICommandHandler<>)))
             {
-                if (type.HasInterface(typeof(ICommandHandler<>)))
-                {
-                    var decoratorAttribute = (MappingAttribute)type.GetCustomAttributes(false).FirstOrDefault(x => x.GetType() == typeof(MappingAttribute));
+                var decoratorAttribute = (MappingAttribute)type.GetCustomAttributes(false).FirstOrDefault(x => x.GetType() == typeof(MappingAttribute));
 
-                    if (decoratorAttribute != null)
-                    {
-                        AttributeToCommandHandler[decoratorAttribute.Type] = type;
-                    }
+                if (decoratorAttribute != null)
+                {
+                    AttributeToCommandHandler[decoratorAttribute.Type] = type;
                 }
-                else if (type.HasInterface(typeof(IQueryHandler<,>)))
-                {
-                    var decoratorAttribute = (MappingAttribute)type.GetCustomAttributes(false).FirstOrDefault(x => x.GetType() == typeof(MappingAttribute));
+            }
+            else if (type.HasInterface(typeof(IQueryHandler<,>)))
+            {
+                var decoratorAttribute = (MappingAttribute)type.GetCustomAttributes(false).FirstOrDefault(x => x.GetType() == typeof(MappingAttribute));
 
-                    if (decoratorAttribute != null)
-                    {
-                        AttributeToQueryHandler[decoratorAttribute.Type] = type;
-                    }
+                if (decoratorAttribute != null)
+                {
+                    AttributeToQueryHandler[decoratorAttribute.Type] = type;
                 }
             }
         }
-
-        public static readonly Dictionary<Type, Type> AttributeToCommandHandler = new Dictionary<Type, Type>();
-
-        public static readonly Dictionary<Type, Type> AttributeToQueryHandler = new Dictionary<Type, Type>();
     }
 
-    [AttributeUsage(AttributeTargets.Class)]
-    public sealed class MappingAttribute : Attribute
-    {
-        public Type Type { get; set; }
-    }
+    public static readonly Dictionary<Type, Type> AttributeToCommandHandler = new Dictionary<Type, Type>();
+
+    public static readonly Dictionary<Type, Type> AttributeToQueryHandler = new Dictionary<Type, Type>();
+}
+
+[AttributeUsage(AttributeTargets.Class)]
+public sealed class MappingAttribute : Attribute
+{
+    public Type Type { get; set; }
 }

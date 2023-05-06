@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace ClassifiedAds.CrossCuttingConcerns.Locks
+namespace ClassifiedAds.CrossCuttingConcerns.Locks;
+
+public interface IDistributedLockScope : IDisposable
 {
-    public interface IDistributedLockScope : IDisposable
-    {
-        bool StillHoldingLock();
-    }
+    bool StillHoldingLock();
 }

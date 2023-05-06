@@ -2,19 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace ClassifiedAds.Modules.Storage.Repositories
-{
-    public class StorageDbContext : DbContextUnitOfWork<StorageDbContext>
-    {
-        public StorageDbContext(DbContextOptions<StorageDbContext> options)
-            : base(options)
-        {
-        }
+namespace ClassifiedAds.Modules.Storage.Repositories;
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        }
+public class StorageDbContext : DbContextUnitOfWork<StorageDbContext>
+{
+    public StorageDbContext(DbContextOptions<StorageDbContext> options)
+        : base(options)
+    {
+    }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

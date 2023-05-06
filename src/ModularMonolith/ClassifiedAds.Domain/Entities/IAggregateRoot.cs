@@ -1,6 +1,5 @@
-﻿namespace ClassifiedAds.Domain.Entities
+﻿namespace ClassifiedAds.Domain.Entities;
+
+public interface IAggregateRoot
 {
-    public interface IAggregateRoot
-    {
-    }
 }

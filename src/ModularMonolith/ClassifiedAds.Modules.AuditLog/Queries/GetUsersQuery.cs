@@ -5,24 +5,23 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Modules.AuditLog.Queries
+namespace ClassifiedAds.Modules.AuditLog.Queries;
+
+public class GetUsersQuery : UserQueryOptions, IQuery<List<UserDTO>>
 {
-    public class GetUsersQuery : UserQueryOptions, IQuery<List<UserDTO>>
+}
+
+public class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, List<UserDTO>>
+{
+    private readonly IUserService _userService;
+
+    public GetUsersQueryHandler(IUserService userService)
     {
+        _userService = userService;
     }
 
-    public class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, List<UserDTO>>
+    public Task<List<UserDTO>> HandleAsync(GetUsersQuery query, CancellationToken cancellationToken = default)
     {
-        private readonly IUserService _userService;
-
-        public GetUsersQueryHandler(IUserService userService)
-        {
-            _userService = userService;
-        }
-
-        public Task<List<UserDTO>> HandleAsync(GetUsersQuery query, CancellationToken cancellationToken = default)
-        {
-            return _userService.GetUsersAsync(query);
-        }
+        return _userService.GetUsersAsync(query);
     }
 }

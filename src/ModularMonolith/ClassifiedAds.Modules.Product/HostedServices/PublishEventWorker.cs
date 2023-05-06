@@ -5,56 +5,55 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Modules.Product.HostedServices
+namespace ClassifiedAds.Modules.Product.HostedServices;
+
+public class PublishEventWorker : BackgroundService
 {
-    public class PublishEventWorker : BackgroundService
+    private readonly IServiceProvider _services;
+    private readonly ILogger<PublishEventWorker> _logger;
+
+    public PublishEventWorker(IServiceProvider services,
+        ILogger<PublishEventWorker> logger)
     {
-        private readonly IServiceProvider _services;
-        private readonly ILogger<PublishEventWorker> _logger;
+        _services = services;
+        _logger = logger;
+    }
 
-        public PublishEventWorker(IServiceProvider services,
-            ILogger<PublishEventWorker> logger)
-        {
-            _services = services;
-            _logger = logger;
-        }
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        _logger.LogDebug("PushlishEventWorker is starting.");
+        await DoWork(stoppingToken);
+    }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    private async Task DoWork(CancellationToken stoppingToken)
+    {
+        while (!stoppingToken.IsCancellationRequested)
         {
-            _logger.LogDebug("PushlishEventWorker is starting.");
-            await DoWork(stoppingToken);
-        }
+            _logger.LogDebug($"PushlishEvent task doing background work.");
 
-        private async Task DoWork(CancellationToken stoppingToken)
-        {
-            while (!stoppingToken.IsCancellationRequested)
+            int rs = 0;
+
+            try
             {
-                _logger.LogDebug($"PushlishEvent task doing background work.");
-
-                int rs = 0;
-
-                try
+                using (var scope = _services.CreateScope())
                 {
-                    using (var scope = _services.CreateScope())
-                    {
-                        var emailService = scope.ServiceProvider.GetRequiredService<PublishEventService>();
+                    var emailService = scope.ServiceProvider.GetRequiredService<PublishEventService>();
 
-                        rs = await emailService.PublishEvents();
-                    }
-
-                    if (rs == 0)
-                    {
-                        await Task.Delay(10000, stoppingToken);
-                    }
+                    rs = await emailService.PublishEvents();
                 }
-                catch (Exception ex)
+
+                if (rs == 0)
                 {
-                    _logger.LogError(ex, $"");
                     await Task.Delay(10000, stoppingToken);
                 }
             }
-
-            _logger.LogDebug($"PushlishEventWorker background task is stopping.");
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"");
+                await Task.Delay(10000, stoppingToken);
+            }
         }
+
+        _logger.LogDebug($"PushlishEventWorker background task is stopping.");
     }
 }

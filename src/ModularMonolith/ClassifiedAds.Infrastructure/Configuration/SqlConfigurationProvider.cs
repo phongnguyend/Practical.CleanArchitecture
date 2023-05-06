@@ -5,48 +5,47 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
 
-namespace ClassifiedAds.Infrastructure.Configuration
+namespace ClassifiedAds.Infrastructure.Configuration;
+
+public class SqlConfigurationProvider : ConfigurationProvider
 {
-    public class SqlConfigurationProvider : ConfigurationProvider
+    private readonly SqlServerOptions _options;
+
+    public SqlConfigurationProvider(SqlServerOptions options)
     {
-        private readonly SqlServerOptions _options;
+        _options = options;
+    }
 
-        public SqlConfigurationProvider(SqlServerOptions options)
+    public override void Load()
+    {
+        using (var conn = new SqlConnection(_options.ConnectionString))
         {
-            _options = options;
-        }
+            conn.Open();
+            var data = conn.Query<ConfigurationEntry>(_options.SqlQuery).ToList();
 
-        public override void Load()
-        {
-            using (var conn = new SqlConnection(_options.ConnectionString))
+            var cert = data.Any(x => x.IsSensitive)
+                ? _options.Certificate.FindCertificate()
+                : null;
+
+            foreach (var entry in data)
             {
-                conn.Open();
-                var data = conn.Query<ConfigurationEntry>(_options.SqlQuery).ToList();
-
-                var cert = data.Any(x => x.IsSensitive)
-                    ? _options.Certificate.FindCertificate()
-                    : null;
-
-                foreach (var entry in data)
+                if (entry.IsSensitive)
                 {
-                    if (entry.IsSensitive)
-                    {
-                        var decrypted = entry.Value.FromBase64String().UseRSA(cert).Decrypt();
-                        entry.Value = decrypted.GetString();
-                    }
+                    var decrypted = entry.Value.FromBase64String().UseRSA(cert).Decrypt();
+                    entry.Value = decrypted.GetString();
                 }
-
-                Data = data.ToDictionary(c => c.Key, c => c.Value);
             }
+
+            Data = data.ToDictionary(c => c.Key, c => c.Value);
         }
     }
+}
 
-    public class ConfigurationEntry
-    {
-        public string Key { get; set; }
+public class ConfigurationEntry
+{
+    public string Key { get; set; }
 
-        public string Value { get; set; }
+    public string Value { get; set; }
 
-        public bool IsSensitive { get; set; }
-    }
+    public bool IsSensitive { get; set; }
 }
