@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
+﻿namespace ClassifiedAds.Domain.ValueObjects;
 
-namespace ClassifiedAds.Domain.ValueObjects;
-
-public class Money : ValueObject
+public record Money
 {
     public decimal Amount { get; }
 
@@ -16,11 +14,5 @@ public class Money : ValueObject
     {
         Amount = amount;
         Currency = currency;
-    }
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Amount;
-        yield return Currency;
     }
 }
