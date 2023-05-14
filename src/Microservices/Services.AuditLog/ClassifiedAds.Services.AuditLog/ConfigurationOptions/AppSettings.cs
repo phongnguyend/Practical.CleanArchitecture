@@ -5,6 +5,7 @@ using ClassifiedAds.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Notification;
 using ClassifiedAds.Infrastructure.Storages;
+using CryptographyHelper.Certificates;
 
 namespace ClassifiedAds.Services.AuditLog.ConfigurationOptions;
 
@@ -38,9 +39,22 @@ public class ConnectionStrings
 
 public class IdentityServerAuthentication
 {
+    public string Provider { get; set; }
+
     public string Authority { get; set; }
 
     public string ApiName { get; set; }
 
     public bool RequireHttpsMetadata { get; set; }
+
+    public OpenIddictOptions OpenIddict { get; set; }
+}
+
+public class OpenIddictOptions
+{
+    public string IssuerUri { get; set; }
+
+    public CertificateOption TokenDecryptionCertificate { get; set; }
+
+    public CertificateOption IssuerSigningCertificate { get; set; }
 }

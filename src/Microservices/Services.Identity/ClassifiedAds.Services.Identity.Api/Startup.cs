@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Polly;
 using System;
 using System.Reflection;
@@ -66,13 +67,30 @@ public class Startup
                 .PersistKeysToDbContext<IdentityDbContext>()
                 .SetApplicationName("ClassifiedAds");
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.Authority = AppSettings.IdentityServerAuthentication.Authority;
-                    options.Audience = AppSettings.IdentityServerAuthentication.ApiName;
-                    options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
-                });
+        services.AddAuthentication(options =>
+        {
+            options.DefaultScheme = AppSettings.IdentityServerAuthentication.Provider switch
+            {
+                "OpenIddict" => "OpenIddict",
+                _ => JwtBearerDefaults.AuthenticationScheme
+            };
+        })
+        .AddJwtBearer(options =>
+        {
+            options.Authority = AppSettings.IdentityServerAuthentication.Authority;
+            options.Audience = AppSettings.IdentityServerAuthentication.ApiName;
+            options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
+        })
+        .AddJwtBearer("OpenIddict", options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidIssuer = AppSettings.IdentityServerAuthentication.OpenIddict.IssuerUri,
+                TokenDecryptionKey = new X509SecurityKey(AppSettings.IdentityServerAuthentication.OpenIddict.TokenDecryptionCertificate.FindCertificate()),
+                IssuerSigningKey = new X509SecurityKey(AppSettings.IdentityServerAuthentication.OpenIddict.IssuerSigningCertificate.FindCertificate()),
+            };
+        });
 
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     }
