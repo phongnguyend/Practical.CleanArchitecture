@@ -1,9 +1,8 @@
 ﻿using ClassifiedAds.Domain.Entities;
 
-namespace ClassifiedAds.Application.FileEntries.DTOs
+namespace ClassifiedAds.Application.FileEntries.DTOs;
+
+public class FileDeletedEvent
 {
-    public class FileDeletedEvent
-    {
-        public FileEntry FileEntry { get; set; }
-    }
+    public FileEntry FileEntry { get; set; }
 }

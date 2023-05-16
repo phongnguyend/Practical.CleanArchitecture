@@ -1,7 +1,6 @@
-﻿namespace ClassifiedAds.IdentityServer.Models.Accounts
+﻿namespace ClassifiedAds.IdentityServer.Models.Accounts;
+
+public class LogoutModel
 {
-    public class LogoutModel
-    {
-        public string LogoutId { get; set; }
-    }
+    public string LogoutId { get; set; }
 }

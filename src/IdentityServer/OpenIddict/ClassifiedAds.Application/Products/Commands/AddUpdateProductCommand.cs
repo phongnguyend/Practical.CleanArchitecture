@@ -3,32 +3,31 @@ using ClassifiedAds.Domain.Repositories;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Application.Products.Commands
+namespace ClassifiedAds.Application.Products.Commands;
+
+public class AddUpdateProductCommand : ICommand
 {
-    public class AddUpdateProductCommand : ICommand
+    public Product Product { get; set; }
+}
+
+internal class AddUpdateProductCommandHandler : ICommandHandler<AddUpdateProductCommand>
+{
+    private readonly ICrudService<Product> _productService;
+    private readonly IUnitOfWork _unitOfWork;
+
+    public AddUpdateProductCommandHandler(ICrudService<Product> productService, IUnitOfWork unitOfWork)
     {
-        public Product Product { get; set; }
+        _productService = productService;
+        _unitOfWork = unitOfWork;
     }
 
-    internal class AddUpdateProductCommandHandler : ICommandHandler<AddUpdateProductCommand>
+    public async Task HandleAsync(AddUpdateProductCommand command, CancellationToken cancellationToken = default)
     {
-        private readonly ICrudService<Product> _productService;
-        private readonly IUnitOfWork _unitOfWork;
-
-        public AddUpdateProductCommandHandler(ICrudService<Product> productService, IUnitOfWork unitOfWork)
+        using (await _unitOfWork.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted, cancellationToken))
         {
-            _productService = productService;
-            _unitOfWork = unitOfWork;
-        }
+            await _productService.AddOrUpdateAsync(command.Product);
 
-        public async Task HandleAsync(AddUpdateProductCommand command, CancellationToken cancellationToken = default)
-        {
-            using (await _unitOfWork.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted, cancellationToken))
-            {
-                await _productService.AddOrUpdateAsync(command.Product);
-
-                await _unitOfWork.CommitTransactionAsync(cancellationToken);
-            }
+            await _unitOfWork.CommitTransactionAsync(cancellationToken);
         }
     }
 }

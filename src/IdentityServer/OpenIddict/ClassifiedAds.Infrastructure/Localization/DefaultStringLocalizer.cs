@@ -2,30 +2,29 @@
 using System;
 using System.Collections.Generic;
 
-namespace ClassifiedAds.Infrastructure.Localization
+namespace ClassifiedAds.Infrastructure.Localization;
+
+public class DefaultStringLocalizer : IStringLocalizer
 {
-    public class DefaultStringLocalizer : IStringLocalizer
+    public LocalizedString this[string name]
     {
-        public LocalizedString this[string name]
+        get
         {
-            get
-            {
-                return new LocalizedString(name, name);
-            }
+            return new LocalizedString(name, name);
         }
+    }
 
-        public LocalizedString this[string name, params object[] arguments]
+    public LocalizedString this[string name, params object[] arguments]
+    {
+        get
         {
-            get
-            {
-                var value = string.Format(name, arguments);
-                return new LocalizedString(name, value);
-            }
+            var value = string.Format(name, arguments);
+            return new LocalizedString(name, value);
         }
+    }
 
-        public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
-        {
-            throw new NotImplementedException();
-        }
+    public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
+    {
+        throw new NotImplementedException();
     }
 }

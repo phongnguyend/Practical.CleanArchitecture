@@ -2,25 +2,24 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Application.Products.Commands
+namespace ClassifiedAds.Application.Products.Commands;
+
+public class DeleteProductCommand : ICommand
 {
-    public class DeleteProductCommand : ICommand
+    public Product Product { get; set; }
+}
+
+internal class DeleteProductCommandHandler : ICommandHandler<DeleteProductCommand>
+{
+    private readonly ICrudService<Product> _productService;
+
+    public DeleteProductCommandHandler(ICrudService<Product> productService)
     {
-        public Product Product { get; set; }
+        _productService = productService;
     }
 
-    internal class DeleteProductCommandHandler : ICommandHandler<DeleteProductCommand>
+    public async Task HandleAsync(DeleteProductCommand command, CancellationToken cancellationToken = default)
     {
-        private readonly ICrudService<Product> _productService;
-
-        public DeleteProductCommandHandler(ICrudService<Product> productService)
-        {
-            _productService = productService;
-        }
-
-        public async Task HandleAsync(DeleteProductCommand command, CancellationToken cancellationToken = default)
-        {
-            await _productService.DeleteAsync(command.Product);
-        }
+        await _productService.DeleteAsync(command.Product);
     }
 }

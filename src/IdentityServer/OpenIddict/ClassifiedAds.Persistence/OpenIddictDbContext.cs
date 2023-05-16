@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace ClassifiedAds.Persistence
+namespace ClassifiedAds.Persistence;
+
+public class OpenIddictDbContext : DbContext
 {
-    public class OpenIddictDbContext : DbContext
+    public OpenIddictDbContext(DbContextOptions<OpenIddictDbContext> options)
+        : base(options)
     {
-        public OpenIddictDbContext(DbContextOptions<OpenIddictDbContext> options)
-            : base(options)
-        {
-        }
     }
 }

@@ -1,14 +1,13 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Infrastructure.OS;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace Microsoft.Extensions.DependencyInjection;
+
+public static class DateTimeProviderExtensions
 {
-    public static class DateTimeProviderExtensions
+    public static IServiceCollection AddDateTimeProvider(this IServiceCollection services)
     {
-        public static IServiceCollection AddDateTimeProvider(this IServiceCollection services)
-        {
-            _ = services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
-            return services;
-        }
+        _ = services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        return services;
     }
 }

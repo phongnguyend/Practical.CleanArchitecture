@@ -6,33 +6,32 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Application.Products.Queries
+namespace ClassifiedAds.Application.Products.Queries;
+
+public class GetProductQuery : IQuery<Product>
 {
-    public class GetProductQuery : IQuery<Product>
+    public Guid Id { get; set; }
+    public bool ThrowNotFoundIfNull { get; set; }
+}
+
+internal class GetProductQueryHandler : IQueryHandler<GetProductQuery, Product>
+{
+    private readonly IRepository<Product, Guid> _productRepository;
+
+    public GetProductQueryHandler(IRepository<Product, Guid> productRepository)
     {
-        public Guid Id { get; set; }
-        public bool ThrowNotFoundIfNull { get; set; }
+        _productRepository = productRepository;
     }
 
-    internal class GetProductQueryHandler : IQueryHandler<GetProductQuery, Product>
+    public async Task<Product> HandleAsync(GetProductQuery query, CancellationToken cancellationToken = default)
     {
-        private readonly IRepository<Product, Guid> _productRepository;
+        var product = await _productRepository.FirstOrDefaultAsync(_productRepository.GetAll().Where(x => x.Id == query.Id));
 
-        public GetProductQueryHandler(IRepository<Product, Guid> productRepository)
+        if (query.ThrowNotFoundIfNull && product == null)
         {
-            _productRepository = productRepository;
+            throw new NotFoundException($"Product {query.Id} not found.");
         }
 
-        public async Task<Product> HandleAsync(GetProductQuery query, CancellationToken cancellationToken = default)
-        {
-            var product = await _productRepository.FirstOrDefaultAsync(_productRepository.GetAll().Where(x => x.Id == query.Id));
-
-            if (query.ThrowNotFoundIfNull && product == null)
-            {
-                throw new NotFoundException($"Product {query.Id} not found.");
-            }
-
-            return product;
-        }
+        return product;
     }
 }

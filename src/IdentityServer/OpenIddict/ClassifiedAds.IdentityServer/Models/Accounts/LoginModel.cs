@@ -1,13 +1,12 @@
-﻿namespace ClassifiedAds.IdentityServer.Models.Accounts
+﻿namespace ClassifiedAds.IdentityServer.Models.Accounts;
+
+public class LoginModel
 {
-    public class LoginModel
-    {
-        public string ReturnUrl { get; set; }
+    public string ReturnUrl { get; set; }
 
-        public string Username { get; set; }
+    public string Username { get; set; }
 
-        public string Password { get; set; }
+    public string Password { get; set; }
 
-        public bool RememberLogin { get; set; }
-    }
+    public bool RememberLogin { get; set; }
 }

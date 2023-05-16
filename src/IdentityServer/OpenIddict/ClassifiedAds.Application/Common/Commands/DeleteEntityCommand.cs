@@ -3,27 +3,26 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Application
+namespace ClassifiedAds.Application;
+
+public class DeleteEntityCommand<TEntity> : ICommand
+     where TEntity : Entity<Guid>, IAggregateRoot
 {
-    public class DeleteEntityCommand<TEntity> : ICommand
-         where TEntity : Entity<Guid>, IAggregateRoot
+    public TEntity Entity { get; set; }
+}
+
+internal class DeleteEntityCommandHandler<TEntity> : ICommandHandler<DeleteEntityCommand<TEntity>>
+where TEntity : Entity<Guid>, IAggregateRoot
+{
+    private readonly ICrudService<TEntity> _crudService;
+
+    public DeleteEntityCommandHandler(ICrudService<TEntity> crudService)
     {
-        public TEntity Entity { get; set; }
+        _crudService = crudService;
     }
 
-    internal class DeleteEntityCommandHandler<TEntity> : ICommandHandler<DeleteEntityCommand<TEntity>>
-    where TEntity : Entity<Guid>, IAggregateRoot
+    public async Task HandleAsync(DeleteEntityCommand<TEntity> command, CancellationToken cancellationToken = default)
     {
-        private readonly ICrudService<TEntity> _crudService;
-
-        public DeleteEntityCommandHandler(ICrudService<TEntity> crudService)
-        {
-            _crudService = crudService;
-        }
-
-        public async Task HandleAsync(DeleteEntityCommand<TEntity> command, CancellationToken cancellationToken = default)
-        {
-            await _crudService.DeleteAsync(command.Entity);
-        }
+        await _crudService.DeleteAsync(command.Entity);
     }
 }

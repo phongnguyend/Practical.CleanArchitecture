@@ -1,10 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Domain.Infrastructure.MessageBrokers
+namespace ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+
+public interface IMessageSender<T>
 {
-    public interface IMessageSender<T>
-    {
-        Task SendAsync(T message, MetaData metaData = null, CancellationToken cancellationToken = default);
-    }
+    Task SendAsync(T message, MetaData metaData = null, CancellationToken cancellationToken = default);
 }
