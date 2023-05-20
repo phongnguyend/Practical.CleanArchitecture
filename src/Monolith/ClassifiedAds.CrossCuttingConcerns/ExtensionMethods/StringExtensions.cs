@@ -8,6 +8,18 @@ namespace ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 
 public static class StringExtensions
 {
+    public static T ParseTo<T>(this string s, IFormatProvider provider)
+        where T : IParsable<T>
+    {
+        return T.Parse(s, provider);
+    }
+
+    public static bool TryParseTo<T>(this string s, IFormatProvider provider, out T result)
+        where T : IParsable<T>
+    {
+        return T.TryParse(s, provider, out result);
+    }
+
     public static string Left(this string value, int length)
     {
         length = Math.Abs(length);
