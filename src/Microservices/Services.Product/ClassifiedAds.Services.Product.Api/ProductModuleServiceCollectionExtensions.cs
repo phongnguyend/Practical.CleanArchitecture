@@ -37,7 +37,7 @@ public static class ProductModuleServiceCollectionExtensions
 
         DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
 
-        services.AddMessageHandlers(Assembly.GetExecutingAssembly());
+        services.AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
         services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
 

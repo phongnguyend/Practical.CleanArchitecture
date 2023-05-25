@@ -1,8 +1,8 @@
-﻿using ClassifiedAds.Application;
-using ClassifiedAds.Infrastructure.Grpc;
+﻿using ClassifiedAds.Infrastructure.Grpc;
 using ClassifiedAds.Services.Identity.Grpc;
 using ClassifiedAds.Services.Product.DTOs;
 using Grpc.Core;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Product.Queries;
 
-public class GetUsersQuery : IQuery<List<UserDTO>>
+public class GetUsersQuery : IRequest<List<UserDTO>>
 {
     public bool IncludeClaims { get; set; }
     public bool IncludeUserRoles { get; set; }
@@ -23,7 +23,7 @@ public class GetUsersQuery : IQuery<List<UserDTO>>
     public bool AsNoTracking { get; set; }
 }
 
-public class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, List<UserDTO>>
+public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, List<UserDTO>>
 {
     private readonly IConfiguration _configuration;
     private readonly IHttpContextAccessor _httpContextAccessor;
@@ -34,7 +34,7 @@ public class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, List<UserDTO>>
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<List<UserDTO>> HandleAsync(GetUsersQuery query, CancellationToken cancellationToken = default)
+    public async Task<List<UserDTO>> Handle(GetUsersQuery query, CancellationToken cancellationToken = default)
     {
         var token = await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
         var headers = new Metadata

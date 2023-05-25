@@ -1,20 +1,19 @@
-﻿using ClassifiedAds.Application;
-using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
+﻿using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Services.Product.Entities;
+using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-
 namespace ClassifiedAds.Services.Product.Commands;
 
-public class AddAuditLogEntryCommand : ICommand
+public class AddAuditLogEntryCommand : IRequest
 {
     public AuditLogEntry AuditLogEntry { get; set; }
 }
 
-public class AddAuditLogEntryCommandHandler : ICommandHandler<AddAuditLogEntryCommand>
+public class AddAuditLogEntryCommandHandler : IRequestHandler<AddAuditLogEntryCommand>
 {
     private readonly ICurrentUser _currentUser;
     private readonly IRepository<AuditLogEntry, Guid> _auditLogRepository;
@@ -30,7 +29,7 @@ public class AddAuditLogEntryCommandHandler : ICommandHandler<AddAuditLogEntryCo
         _outboxEventRepository = outboxEventRepository;
     }
 
-    public async Task HandleAsync(AddAuditLogEntryCommand command, CancellationToken cancellationToken = default)
+    public async Task Handle(AddAuditLogEntryCommand command, CancellationToken cancellationToken)
     {
         var auditLog = new AuditLogEntry
         {

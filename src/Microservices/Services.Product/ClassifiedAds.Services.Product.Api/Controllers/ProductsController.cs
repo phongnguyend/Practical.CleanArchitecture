@@ -1,5 +1,4 @@
-﻿using ClassifiedAds.Application;
-using ClassifiedAds.CrossCuttingConcerns.Csv;
+﻿using ClassifiedAds.CrossCuttingConcerns.Csv;
 using ClassifiedAds.CrossCuttingConcerns.HtmlGenerator;
 using ClassifiedAds.CrossCuttingConcerns.PdfConverter;
 using ClassifiedAds.Services.Product.Authorization;
@@ -8,6 +7,7 @@ using ClassifiedAds.Services.Product.DTOs;
 using ClassifiedAds.Services.Product.Models;
 using ClassifiedAds.Services.Product.Queries;
 using ClassifiedAds.Services.Product.RateLimiterPolicies;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,14 +30,14 @@ namespace ClassifiedAds.Services.Product.Controllers;
 [ApiController]
 public class ProductsController : ControllerBase
 {
-    private readonly Dispatcher _dispatcher;
+    private readonly IMediator _dispatcher;
     private readonly ILogger _logger;
     private readonly IHtmlGenerator _htmlGenerator;
     private readonly IPdfConverter _pdfConverter;
     private readonly ICsvWriter<ProductModel> _productCsvWriter;
     private readonly ICsvReader<ProductModel> _productCsvReader;
 
-    public ProductsController(Dispatcher dispatcher,
+    public ProductsController(IMediator dispatcher,
         ILogger<ProductsController> logger,
         IHtmlGenerator htmlGenerator,
         IPdfConverter pdfConverter,
@@ -57,7 +57,7 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<IEnumerable<Entities.Product>>> Get()
     {
         _logger.LogInformation("Getting all products");
-        var products = await _dispatcher.DispatchAsync(new GetProductsQuery());
+        var products = await _dispatcher.Send(new GetProductsQuery());
         var model = products.ToModels();
         return Ok(model);
     }
@@ -68,7 +68,7 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<Entities.Product>> Get(Guid id)
     {
-        var product = await _dispatcher.DispatchAsync(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
+        var product = await _dispatcher.Send(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
         var model = product.ToModel();
         return Ok(model);
     }
@@ -80,7 +80,7 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<Entities.Product>> Post([FromBody] ProductModel model)
     {
         var product = model.ToEntity();
-        await _dispatcher.DispatchAsync(new AddUpdateProductCommand { Product = product });
+        await _dispatcher.Send(new AddUpdateProductCommand { Product = product });
         model = product.ToModel();
         return Created($"/api/products/{model.Id}", model);
     }
@@ -92,13 +92,13 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Put(Guid id, [FromBody] ProductModel model)
     {
-        var product = await _dispatcher.DispatchAsync(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
+        var product = await _dispatcher.Send(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
 
         product.Code = model.Code;
         product.Name = model.Name;
         product.Description = model.Description;
 
-        await _dispatcher.DispatchAsync(new AddUpdateProductCommand { Product = product });
+        await _dispatcher.Send(new AddUpdateProductCommand { Product = product });
 
         model = product.ToModel();
 
@@ -111,9 +111,9 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Delete(Guid id)
     {
-        var product = await _dispatcher.DispatchAsync(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
+        var product = await _dispatcher.Send(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
 
-        await _dispatcher.DispatchAsync(new DeleteProductCommand { Product = product });
+        await _dispatcher.Send(new DeleteProductCommand { Product = product });
 
         return Ok();
     }
@@ -122,7 +122,7 @@ public class ProductsController : ControllerBase
     [HttpGet("{id}/auditlogs")]
     public async Task<ActionResult<IEnumerable<AuditLogEntryDTO>>> GetAuditLogs(Guid id)
     {
-        var logs = await _dispatcher.DispatchAsync(new GetAuditEntriesQuery { ObjectId = id.ToString() });
+        var logs = await _dispatcher.Send(new GetAuditEntriesQuery { ObjectId = id.ToString() });
 
         List<dynamic> entries = new List<dynamic>();
         ProductModel previous = null;
@@ -156,7 +156,7 @@ public class ProductsController : ControllerBase
     [HttpGet("exportaspdf")]
     public async Task<IActionResult> ExportAsPdf()
     {
-        var products = await _dispatcher.DispatchAsync(new GetProductsQuery());
+        var products = await _dispatcher.Send(new GetProductsQuery());
         var model = products.ToModels();
 
         var template = Path.Combine(Environment.CurrentDirectory, $"Templates/ProductList.cshtml");
@@ -169,7 +169,7 @@ public class ProductsController : ControllerBase
     [HttpGet("exportascsv")]
     public async Task<IActionResult> ExportAsCsv()
     {
-        var products = await _dispatcher.DispatchAsync(new GetProductsQuery());
+        var products = await _dispatcher.Send(new GetProductsQuery());
         var model = products.ToModels();
         using var stream = new MemoryStream();
         _productCsvWriter.Write(model, stream);

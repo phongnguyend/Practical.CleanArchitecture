@@ -1,10 +1,10 @@
-﻿using ClassifiedAds.Application;
-using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
+﻿using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Services.Product.Commands;
 using ClassifiedAds.Services.Product.Entities;
+using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,11 +13,11 @@ namespace ClassifiedAds.Services.Product.EventHandlers;
 
 public class ProductCreatedEventHandler : IDomainEventHandler<EntityCreatedEvent<Entities.Product>>
 {
-    private readonly Dispatcher _dispatcher;
+    private readonly IMediator _dispatcher;
     private readonly ICurrentUser _currentUser;
     private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
 
-    public ProductCreatedEventHandler(Dispatcher dispatcher,
+    public ProductCreatedEventHandler(IMediator dispatcher,
         ICurrentUser currentUser,
         IRepository<OutboxEvent, long> outboxEventRepository)
     {
@@ -28,7 +28,7 @@ public class ProductCreatedEventHandler : IDomainEventHandler<EntityCreatedEvent
 
     public async Task HandleAsync(EntityCreatedEvent<Entities.Product> domainEvent, CancellationToken cancellationToken = default)
     {
-        await _dispatcher.DispatchAsync(new AddAuditLogEntryCommand
+        await _dispatcher.Send(new AddAuditLogEntryCommand
         {
             AuditLogEntry = new AuditLogEntry
             {

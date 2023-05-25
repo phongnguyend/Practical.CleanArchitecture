@@ -1,7 +1,7 @@
-﻿using ClassifiedAds.Application;
-using ClassifiedAds.Services.Product.DTOs;
+﻿using ClassifiedAds.Services.Product.DTOs;
 using ClassifiedAds.Services.Product.Entities;
 using ClassifiedAds.Services.Product.Repositories;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,22 +11,22 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Product.Queries;
 
-public class GetAuditEntriesQuery : AuditLogEntryQueryOptions, IQuery<List<AuditLogEntryDTO>>
+public class GetAuditEntriesQuery : AuditLogEntryQueryOptions, IRequest<List<AuditLogEntryDTO>>
 {
 }
 
-public class GetAuditEntriesQueryHandler : IQueryHandler<GetAuditEntriesQuery, List<AuditLogEntryDTO>>
+public class GetAuditEntriesQueryHandler : IRequestHandler<GetAuditEntriesQuery, List<AuditLogEntryDTO>>
 {
     private readonly ProductDbContext _dbContext;
-    private readonly Dispatcher _dispatcher;
+    private readonly IMediator _dispatcher;
 
-    public GetAuditEntriesQueryHandler(ProductDbContext dbContext, Dispatcher dispatcher)
+    public GetAuditEntriesQueryHandler(ProductDbContext dbContext, IMediator dispatcher)
     {
         _dbContext = dbContext;
         _dispatcher = dispatcher;
     }
 
-    public async Task<List<AuditLogEntryDTO>> HandleAsync(GetAuditEntriesQuery queryOptions, CancellationToken cancellationToken = default)
+    public async Task<List<AuditLogEntryDTO>> Handle(GetAuditEntriesQuery queryOptions, CancellationToken cancellationToken = default)
     {
         var query = _dbContext.Set<AuditLogEntry>() as IQueryable<AuditLogEntry>;
 
@@ -46,7 +46,7 @@ public class GetAuditEntriesQueryHandler : IQueryHandler<GetAuditEntriesQuery, L
         }
 
         var auditLogs = await query.ToListAsync();
-        var users = await _dispatcher.DispatchAsync(new GetUsersQuery(), cancellationToken);
+        var users = await _dispatcher.Send(new GetUsersQuery(), cancellationToken);
 
         var rs = auditLogs.Join(users, x => x.UserId, y => y.Id,
             (x, y) => new AuditLogEntryDTO
