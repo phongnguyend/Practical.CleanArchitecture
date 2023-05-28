@@ -24,7 +24,6 @@ public class AzureEventGridSender<T> : IMessageSender<T>
 
     public async Task SendAsync(T message, MetaData metaData, CancellationToken cancellationToken = default)
     {
-
         EventGridPublisherClient client = new EventGridPublisherClient(new Uri(_domainEndpoint), new AzureKeyCredential(_domainKey));
 
         var data = new BinaryData(JsonSerializer.Serialize(new Message<T>

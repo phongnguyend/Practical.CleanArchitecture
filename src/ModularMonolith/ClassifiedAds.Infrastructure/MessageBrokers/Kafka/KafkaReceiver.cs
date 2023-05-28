@@ -29,28 +29,9 @@ public class KafkaReceiver<T> : IMessageReceiver<T>, IDisposable
         _consumer.Dispose();
     }
 
-    public void Receive(Action<T, MetaData> action)
+    public async Task ReceiveAsync(Func<T, MetaData, Task> action, CancellationToken cancellationToken)
     {
-        CancellationTokenSource cts = new CancellationTokenSource();
-        var cancellationToken = cts.Token;
-
-        Task.Factory.StartNew(() =>
-        {
-            try
-            {
-                StartReceiving(action, cancellationToken);
-            }
-            catch (OperationCanceledException)
-            {
-                Console.WriteLine("Closing consumer.");
-                _consumer.Close();
-            }
-        });
-    }
-
-    private void StartReceiving(Action<T, MetaData> action, CancellationToken cancellationToken)
-    {
-        while (true)
+        while (!cancellationToken.IsCancellationRequested)
         {
             try
             {
@@ -62,7 +43,7 @@ public class KafkaReceiver<T> : IMessageReceiver<T>, IDisposable
                 }
 
                 var message = JsonSerializer.Deserialize<Message<T>>(consumeResult.Message.Value);
-                action(message.Data, message.MetaData);
+                await action(message.Data, message.MetaData);
             }
             catch (ConsumeException e)
             {
