@@ -2,6 +2,7 @@
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using System;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
@@ -19,57 +20,47 @@ public class AzureQueueReceiver<T> : IMessageReceiver<T>
         _messageEncoding = messageEncoding;
     }
 
-    public void Receive(Action<T, MetaData> action)
+    public async Task ReceiveAsync(Func<T, MetaData, Task> action, CancellationToken cancellationToken)
     {
-        Task.Factory.StartNew(() => ReceiveAsync(action));
-    }
-
-    private Task ReceiveAsync(Action<T, MetaData> action)
-    {
-        return ReceiveStringAsync(retrievedMessage =>
+        await ReceiveStringAsync(async retrievedMessage =>
         {
             var message = JsonSerializer.Deserialize<Message<T>>(retrievedMessage);
-            action(message.Data, message.MetaData);
-        });
+            await action(message.Data, message.MetaData);
+        }, cancellationToken);
     }
 
-    public void ReceiveString(Action<string> action)
-    {
-        Task.Factory.StartNew(() => ReceiveStringAsync(action));
-    }
-
-    private async Task ReceiveStringAsync(Action<string> action)
+    private async Task ReceiveStringAsync(Func<string, Task> action, CancellationToken cancellationToken)
     {
         var queueClient = new QueueClient(_connectionString, _queueName, new QueueClientOptions
         {
             MessageEncoding = _messageEncoding,
         });
 
-        await queueClient.CreateIfNotExistsAsync();
+        await queueClient.CreateIfNotExistsAsync(cancellationToken: cancellationToken);
 
-        while (true)
+        while (!cancellationToken.IsCancellationRequested)
         {
             try
             {
-                var retrievedMessages = (await queueClient.ReceiveMessagesAsync()).Value;
+                var retrievedMessages = (await queueClient.ReceiveMessagesAsync(cancellationToken)).Value;
 
                 if (retrievedMessages.Length > 0)
                 {
                     foreach (var retrievedMessage in retrievedMessages)
                     {
-                        action(retrievedMessage.Body.ToString());
-                        await queueClient.DeleteMessageAsync(retrievedMessage.MessageId, retrievedMessage.PopReceipt);
+                        await action(retrievedMessage.Body.ToString());
+                        await queueClient.DeleteMessageAsync(retrievedMessage.MessageId, retrievedMessage.PopReceipt, cancellationToken);
                     }
                 }
                 else
                 {
-                    await Task.Delay(1000);
+                    await Task.Delay(1000, cancellationToken);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                await Task.Delay(1000);
+                await Task.Delay(1000, cancellationToken);
             }
         }
     }

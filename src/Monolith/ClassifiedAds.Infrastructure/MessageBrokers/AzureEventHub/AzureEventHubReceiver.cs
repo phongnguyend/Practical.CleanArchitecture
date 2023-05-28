@@ -6,6 +6,7 @@ using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using System;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventHub;
@@ -29,29 +30,22 @@ public class AzureEventHubReceiver<T> : IMessageReceiver<T>, IDisposable
     {
     }
 
-    public void Receive(Action<T, MetaData> action)
-    {
-        ReceiveAsync(action).GetAwaiter().GetResult();
-    }
-
-    public async Task ReceiveAsync(Action<T, MetaData> action)
+    public async Task ReceiveAsync(Func<T, MetaData, Task> action, CancellationToken cancellationToken)
     {
         var storageClient = new BlobContainerClient(_storageConnectionString, _storageContainerName);
 
-        Task ProcessEventHandler(ProcessEventArgs eventArgs)
+        async Task ProcessEventHandler(ProcessEventArgs eventArgs)
         {
             try
             {
                 var messageAsString = Encoding.UTF8.GetString(eventArgs.Data.EventBody);
                 var message = JsonSerializer.Deserialize<Message<T>>(messageAsString);
-                action(message.Data, message.MetaData);
+                await action(message.Data, message.MetaData);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
-
-            return Task.CompletedTask;
         }
 
         Task ProcessErrorHandler(ProcessErrorEventArgs eventArgs)
@@ -76,6 +70,6 @@ public class AzureEventHubReceiver<T> : IMessageReceiver<T>, IDisposable
 
         processor.ProcessEventAsync += ProcessEventHandler;
         processor.ProcessErrorAsync += ProcessErrorHandler;
-        await processor.StartProcessingAsync();
+        await processor.StartProcessingAsync(cancellationToken);
     }
 }

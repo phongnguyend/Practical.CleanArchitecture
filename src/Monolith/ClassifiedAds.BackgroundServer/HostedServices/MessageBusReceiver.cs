@@ -2,13 +2,12 @@
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.BackgroundServer.HostedServices;
 
-internal class MessageBusReceiver : BackgroundService
+internal sealed class MessageBusReceiver : BackgroundService
 {
     private readonly ILogger<MessageBusReceiver> _logger;
     private readonly IMessageReceiver<FileUploadedEvent> _fileUploadedEventMessageReceiver;
@@ -25,23 +24,23 @@ internal class MessageBusReceiver : BackgroundService
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _fileUploadedEventMessageReceiver?.Receive(async (data, metaData) =>
+        _fileUploadedEventMessageReceiver?.ReceiveAsync(async (data, metaData) =>
         {
             string message = data.FileEntry.Id.ToString();
 
-            _logger.LogInformation(message);
+            _logger.LogInformation("{Message}", message);
 
             await Task.Delay(5000); // simulate long running task
-        });
+        }, stoppingToken);
 
-        _fileDeletedEventMessageReceiver?.Receive(async (data, metaData) =>
+        _fileDeletedEventMessageReceiver?.ReceiveAsync(async (data, metaData) =>
         {
             string message = data.FileEntry.Id.ToString();
 
-            _logger.LogInformation(message);
+            _logger.LogInformation("{Message}", message);
 
             await Task.Delay(5000); // simulate long running task
-        });
+        }, stoppingToken);
 
         return Task.CompletedTask;
     }
