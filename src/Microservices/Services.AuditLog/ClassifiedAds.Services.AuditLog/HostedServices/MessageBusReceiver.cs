@@ -25,7 +25,7 @@ internal class MessageBusReceiver : BackgroundService
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _auditLogCreatedEventReceiver?.Receive(async (data, metaData) =>
+        _auditLogCreatedEventReceiver?.ReceiveAsync(async (data, metaData) =>
         {
             using (var scope = _serviceProvider.CreateScope())
             {
@@ -35,7 +35,7 @@ internal class MessageBusReceiver : BackgroundService
 
                 _logger.LogInformation(data.AuditLog.Action);
             }
-        });
+        }, stoppingToken);
 
         return Task.CompletedTask;
     }

@@ -24,23 +24,23 @@ internal class MessageBusReceiver : BackgroundService
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _fileUploadedEventMessageReceiver?.Receive(async (data, metaData) =>
+        _fileUploadedEventMessageReceiver?.ReceiveAsync(async (data, metaData) =>
         {
             string message = data.FileEntry.Id.ToString();
 
             _logger.LogInformation(message);
 
             await Task.Delay(5000); // simulate long running task
-        });
+        }, stoppingToken);
 
-        _fileDeletedEventMessageReceiver?.Receive(async (data, metaData) =>
+        _fileDeletedEventMessageReceiver?.ReceiveAsync(async (data, metaData) =>
         {
             string message = data.FileEntry.Id.ToString();
 
             _logger.LogInformation(message);
 
             await Task.Delay(5000); // simulate long running task
-        });
+        }, stoppingToken);
 
         return Task.CompletedTask;
     }

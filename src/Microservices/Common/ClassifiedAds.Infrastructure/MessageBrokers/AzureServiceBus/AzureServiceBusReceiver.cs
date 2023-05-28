@@ -3,6 +3,7 @@ using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using System;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
@@ -18,42 +19,32 @@ public class AzureServiceBusReceiver<T> : IMessageReceiver<T>
         _queueName = queueName;
     }
 
-    public void Receive(Action<T, MetaData> action)
+    public async Task ReceiveAsync(Func<T, MetaData, Task> action, CancellationToken cancellationToken)
     {
-        Task.Factory.StartNew(() => ReceiveAsync(action));
-    }
-
-    private Task ReceiveAsync(Action<T, MetaData> action)
-    {
-        return ReceiveStringAsync(retrievedMessage =>
+        await ReceiveStringAsync(async retrievedMessage =>
         {
             var message = JsonSerializer.Deserialize<Message<T>>(retrievedMessage);
-            action(message.Data, message.MetaData);
-        });
+            await action(message.Data, message.MetaData);
+        }, cancellationToken);
     }
 
-    public void ReceiveString(Action<string> action)
-    {
-        Task.Factory.StartNew(() => ReceiveStringAsync(action));
-    }
-
-    private async Task ReceiveStringAsync(Action<string> action)
+    private async Task ReceiveStringAsync(Func<string, Task> action, CancellationToken cancellationToken)
     {
         await using var client = new ServiceBusClient(_connectionString);
         ServiceBusReceiver receiver = client.CreateReceiver(_queueName);
 
-        while (true)
+        while (!cancellationToken.IsCancellationRequested)
         {
-            var retrievedMessage = await receiver.ReceiveMessageAsync();
+            var retrievedMessage = await receiver.ReceiveMessageAsync(cancellationToken: cancellationToken);
 
             if (retrievedMessage != null)
             {
-                action(Encoding.UTF8.GetString(retrievedMessage.Body));
-                await receiver.CompleteMessageAsync(retrievedMessage);
+                await action(Encoding.UTF8.GetString(retrievedMessage.Body));
+                await receiver.CompleteMessageAsync(retrievedMessage, cancellationToken);
             }
             else
             {
-                await Task.Delay(1000);
+                await Task.Delay(1000, cancellationToken);
             }
         }
     }

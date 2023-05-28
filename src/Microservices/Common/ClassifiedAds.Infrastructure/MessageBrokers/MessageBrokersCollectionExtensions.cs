@@ -180,7 +180,6 @@ public static class MessageBrokersCollectionExtensions
                     name: $"Message Broker (Azure Queue) {typeof(T).Name}",
                     failureStatus: HealthStatus.Degraded);
             }
-
         }
         else if (options.UsedAzureServiceBus())
         {
@@ -194,7 +193,6 @@ public static class MessageBrokersCollectionExtensions
                     name: $"Message Broker (Azure Service Bus) {typeof(T).Name}",
                     failureStatus: HealthStatus.Degraded);
             }
-
         }
         else if (options.UsedAzureEventGrid())
         {
