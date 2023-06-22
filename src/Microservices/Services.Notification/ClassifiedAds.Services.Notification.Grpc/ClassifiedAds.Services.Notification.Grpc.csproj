@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\EmailMessage.proto" GrpcServices="Server" />
-    <Protobuf Include="Protos\SmsMessage.proto" GrpcServices="Server" />
+    <Protobuf Include="..\..\Contracts\Notification\Protos\EmailMessage.proto" GrpcServices="Server" Link="Protos\EmailMessage.proto" />
+    <Protobuf Include="..\..\Contracts\Notification\Protos\SmsMessage.proto" GrpcServices="Server" Link="Protos\SmsMessage.proto" />
   </ItemGroup>
 
   <ItemGroup>

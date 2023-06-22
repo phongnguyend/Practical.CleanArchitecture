@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\auditlog.proto" GrpcServices="Server" />
+    <Protobuf Include="..\..\Contracts\AuditLog\Protos\auditlog.proto" GrpcServices="Server" Link="Protos\auditlog.proto"/>
   </ItemGroup>
 
   <ItemGroup>

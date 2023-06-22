@@ -6,8 +6,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Protobuf Include="..\..\Services.Notification\ClassifiedAds.Services.Notification.Grpc\Protos\EmailMessage.proto" GrpcServices="Client" Link="Protos\EmailMessage.proto" />
-		<Protobuf Include="..\..\Services.Notification\ClassifiedAds.Services.Notification.Grpc\Protos\SmsMessage.proto" GrpcServices="Client" Link="Protos\SmsMessage.proto" />
+		<Protobuf Include="..\..\Contracts\Notification\Protos\EmailMessage.proto" GrpcServices="Client" Link="Protos\EmailMessage.proto" />
+		<Protobuf Include="..\..\Contracts\Notification\Protos\SmsMessage.proto" GrpcServices="Client" Link="Protos\SmsMessage.proto" />
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 		<PackageReference Include="Grpc.Tools" Version="2.51.0">
 			<PrivateAssets>all</PrivateAssets>
