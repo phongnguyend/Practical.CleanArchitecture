@@ -1,11 +1,10 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Application.Decorators.AuditLog;
 using ClassifiedAds.Application.Decorators.DatabaseRetry;
-using ClassifiedAds.Modules.Identity.Contracts.DTOs;
+using ClassifiedAds.Contracts.Identity.DTOs;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 

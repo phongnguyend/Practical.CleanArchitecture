@@ -1,5 +1,5 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.Modules.Identity.Contracts.DTOs;
+using ClassifiedAds.Contracts.Identity.DTOs;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
 using System;

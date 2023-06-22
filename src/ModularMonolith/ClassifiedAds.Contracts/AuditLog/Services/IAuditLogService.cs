@@ -1,8 +1,8 @@
-﻿using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
+﻿using ClassifiedAds.Contracts.AuditLog.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Modules.AuditLog.Contracts.Services;
+namespace ClassifiedAds.Contracts.AuditLog.Services;
 
 public interface IAuditLogService
 {

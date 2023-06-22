@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClassifiedAds.Modules.Identity.Contracts.Services;
+namespace ClassifiedAds.Contracts.Identity.Services;
 
 public interface ICurrentUser
 {

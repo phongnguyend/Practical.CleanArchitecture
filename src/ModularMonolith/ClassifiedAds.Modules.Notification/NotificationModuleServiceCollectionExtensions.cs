@@ -1,7 +1,7 @@
-﻿using ClassifiedAds.Domain.Events;
+﻿using ClassifiedAds.Contracts.Notification.Services;
+using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Modules.Notification.ConfigurationOptions;
-using ClassifiedAds.Modules.Notification.Contracts.Services;
 using ClassifiedAds.Modules.Notification.Entities;
 using ClassifiedAds.Modules.Notification.HostedServices;
 using ClassifiedAds.Modules.Notification.Repositories;

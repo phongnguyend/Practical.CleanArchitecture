@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Application.Common.DTOs;
+using ClassifiedAds.Contracts.AuditLog.DTOs;
 using ClassifiedAds.Modules.AuditLog.Authorization;
-using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
 using ClassifiedAds.Modules.AuditLog.Queries;
 using ClassifiedAds.Modules.AuditLog.RateLimiterPolicies;
 using Microsoft.AspNetCore.Authorization;

@@ -1,7 +1,7 @@
-﻿using ClassifiedAds.Modules.Identity;
+﻿using ClassifiedAds.Contracts.Identity.Services;
+using ClassifiedAds.Modules.Identity;
 using ClassifiedAds.Modules.Identity.Authorization;
 using ClassifiedAds.Modules.Identity.ConfigurationOptions;
-using ClassifiedAds.Modules.Identity.Contracts.Services;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.PasswordValidators;
 using ClassifiedAds.Modules.Identity.Repositories;

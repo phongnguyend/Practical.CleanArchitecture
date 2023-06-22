@@ -1,7 +1,7 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.OS;
+﻿using ClassifiedAds.Contracts.AuditLog.Services;
+using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Modules.AuditLog.Contracts.Services;
 using ClassifiedAds.Modules.Storage.DTOs;
 using ClassifiedAds.Modules.Storage.Entities;
 using Microsoft.Extensions.Logging;
@@ -55,7 +55,7 @@ public class PublishEventService
             }
             else if (eventLog.EventType == "AUDIT_LOG_ENTRY_CREATED")
             {
-                var logEntry = JsonSerializer.Deserialize<AuditLog.Contracts.DTOs.AuditLogEntryDTO>(eventLog.Message);
+                var logEntry = JsonSerializer.Deserialize<Contracts.AuditLog.DTOs.AuditLogEntryDTO>(eventLog.Message);
                 await _externalAuditLogService.AddAsync(logEntry);
             }
             else

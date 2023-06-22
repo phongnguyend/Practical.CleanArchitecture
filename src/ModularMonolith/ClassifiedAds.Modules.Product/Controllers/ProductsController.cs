@@ -1,8 +1,8 @@
 ﻿using ClassifiedAds.Application;
+using ClassifiedAds.Contracts.AuditLog.DTOs;
 using ClassifiedAds.CrossCuttingConcerns.Csv;
 using ClassifiedAds.CrossCuttingConcerns.HtmlGenerator;
 using ClassifiedAds.CrossCuttingConcerns.PdfConverter;
-using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
 using ClassifiedAds.Modules.Product.Authorization;
 using ClassifiedAds.Modules.Product.Commands;
 using ClassifiedAds.Modules.Product.Models;

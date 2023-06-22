@@ -1,5 +1,5 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
+using ClassifiedAds.Contracts.AuditLog.DTOs;
 using ClassifiedAds.Modules.Product.Entities;
 using ClassifiedAds.Modules.Product.Repositories;
 using Microsoft.EntityFrameworkCore;

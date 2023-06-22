@@ -1,7 +1,7 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
+﻿using ClassifiedAds.Contracts.Identity.Services;
+using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Modules.Identity.Contracts.Services;
 using ClassifiedAds.Modules.Product.Entities;
 using System;
 using System.Threading;

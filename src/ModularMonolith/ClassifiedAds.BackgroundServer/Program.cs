@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.BackgroundServer.ConfigurationOptions;
 using ClassifiedAds.BackgroundServer.Identity;
+using ClassifiedAds.Contracts.Identity.Services;
 using ClassifiedAds.Infrastructure.Logging;
-using ClassifiedAds.Modules.Identity.Contracts.Services;
 using ClassifiedAds.Modules.Storage.DTOs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

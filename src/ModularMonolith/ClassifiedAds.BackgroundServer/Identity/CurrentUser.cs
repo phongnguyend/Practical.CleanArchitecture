@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.Modules.Identity.Contracts.Services;
+﻿using ClassifiedAds.Contracts.Identity.Services;
 using System;
 
 namespace ClassifiedAds.BackgroundServer.Identity;

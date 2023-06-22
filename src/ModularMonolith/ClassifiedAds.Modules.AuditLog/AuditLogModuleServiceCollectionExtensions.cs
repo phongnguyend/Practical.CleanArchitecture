@@ -1,7 +1,7 @@
-﻿using ClassifiedAds.Domain.Repositories;
+﻿using ClassifiedAds.Contracts.AuditLog.Services;
+using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Modules.AuditLog.Authorization;
 using ClassifiedAds.Modules.AuditLog.ConfigurationOptions;
-using ClassifiedAds.Modules.AuditLog.Contracts.Services;
 using ClassifiedAds.Modules.AuditLog.Entities;
 using ClassifiedAds.Modules.AuditLog.RateLimiterPolicies;
 using ClassifiedAds.Modules.AuditLog.Repositories;

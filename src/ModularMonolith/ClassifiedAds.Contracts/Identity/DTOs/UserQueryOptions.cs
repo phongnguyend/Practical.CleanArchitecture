@@ -1,4 +1,4 @@
-﻿namespace ClassifiedAds.Modules.Identity.Contracts.DTOs;
+﻿namespace ClassifiedAds.Contracts.Identity.DTOs;
 
 public class UserQueryOptions
 {

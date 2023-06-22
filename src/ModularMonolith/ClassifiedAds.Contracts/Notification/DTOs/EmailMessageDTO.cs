@@ -1,4 +1,4 @@
-﻿namespace ClassifiedAds.Modules.Notification.Contracts.DTOs;
+﻿namespace ClassifiedAds.Contracts.Notification.DTOs;
 
 public class EmailMessageDTO
 {

@@ -20,7 +20,6 @@
     <ProjectReference Include="..\ClassifiedAds.Application\ClassifiedAds.Application.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Infrastructure\ClassifiedAds.Infrastructure.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Modules.AuditLog\ClassifiedAds.Modules.AuditLog.csproj" />
-    <ProjectReference Include="..\ClassifiedAds.Modules.Notification.Contracts\ClassifiedAds.Modules.Notification.Contracts.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Modules.Notification\ClassifiedAds.Modules.Notification.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Modules.Product\ClassifiedAds.Modules.Product.csproj" />
     <ProjectReference Include="..\ClassifiedAds.Modules.Storage\ClassifiedAds.Modules.Storage.csproj" />

@@ -7,13 +7,11 @@ COPY ./ClassifiedAds.CrossCuttingConcerns/*.csproj ./ClassifiedAds.CrossCuttingC
 COPY ./ClassifiedAds.Domain/*.csproj ./ClassifiedAds.Domain/
 COPY ./ClassifiedAds.Infrastructure/*.csproj ./ClassifiedAds.Infrastructure/
 
+COPY ./ClassifiedAds.Contracts/*.csproj ./ClassifiedAds.Contracts/
 COPY ./ClassifiedAds.Modules.AuditLog/*.csproj ./ClassifiedAds.Modules.AuditLog/
-COPY ./ClassifiedAds.Modules.AuditLog.Contracts/*.csproj ./ClassifiedAds.Modules.AuditLog.Contracts/
 COPY ./ClassifiedAds.Modules.Configuration/*.csproj ./ClassifiedAds.Modules.Configuration/
 COPY ./ClassifiedAds.Modules.Identity/*.csproj ./ClassifiedAds.Modules.Identity/
-COPY ./ClassifiedAds.Modules.Identity.Contracts/*.csproj ./ClassifiedAds.Modules.Identity.Contracts/
 COPY ./ClassifiedAds.Modules.Notification/*.csproj ./ClassifiedAds.Modules.Notification/
-COPY ./ClassifiedAds.Modules.Notification.Contracts/*.csproj ./ClassifiedAds.Modules.Notification.Contracts/
 COPY ./ClassifiedAds.Modules.Product/*.csproj ./ClassifiedAds.Modules.Product/
 COPY ./ClassifiedAds.Modules.Product.EndToEndTests/*.csproj ./ClassifiedAds.Modules.Product.EndToEndTests/
 COPY ./ClassifiedAds.Modules.Product.IntegrationTests/*.csproj ./ClassifiedAds.Modules.Product.IntegrationTests/

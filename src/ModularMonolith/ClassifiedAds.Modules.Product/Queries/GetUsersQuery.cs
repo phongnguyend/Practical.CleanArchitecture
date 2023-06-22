@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.Modules.Identity.Contracts.DTOs;
-using ClassifiedAds.Modules.Identity.Contracts.Services;
+using ClassifiedAds.Contracts.Identity.DTOs;
+using ClassifiedAds.Contracts.Identity.Services;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

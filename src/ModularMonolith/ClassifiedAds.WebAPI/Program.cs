@@ -1,7 +1,7 @@
-﻿using ClassifiedAds.Infrastructure.Logging;
+﻿using ClassifiedAds.Contracts.Identity.Services;
+using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Web.Filters;
-using ClassifiedAds.Modules.Identity.Contracts.Services;
 using ClassifiedAds.Modules.Identity.Repositories;
 using ClassifiedAds.Modules.Identity.Services;
 using ClassifiedAds.Modules.Notification.Hubs;

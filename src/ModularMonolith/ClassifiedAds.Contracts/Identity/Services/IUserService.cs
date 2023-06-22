@@ -1,8 +1,8 @@
-﻿using ClassifiedAds.Modules.Identity.Contracts.DTOs;
+﻿using ClassifiedAds.Contracts.Identity.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Modules.Identity.Contracts.Services;
+namespace ClassifiedAds.Contracts.Identity.Services;
 
 public interface IUserService
 {

@@ -1,5 +1,5 @@
-﻿using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Modules.Identity.Contracts.DTOs;
+﻿using ClassifiedAds.Contracts.Identity.DTOs;
+using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
 using Microsoft.AspNetCore.Identity;

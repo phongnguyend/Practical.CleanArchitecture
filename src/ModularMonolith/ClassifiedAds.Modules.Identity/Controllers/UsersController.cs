@@ -1,4 +1,6 @@
 ﻿using ClassifiedAds.Application;
+using ClassifiedAds.Contracts.Notification.DTOs;
+using ClassifiedAds.Contracts.Notification.Services;
 using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Modules.Identity.Authorization;
 using ClassifiedAds.Modules.Identity.Commands.Users;
@@ -6,8 +8,6 @@ using ClassifiedAds.Modules.Identity.ConfigurationOptions;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Models;
 using ClassifiedAds.Modules.Identity.Queries.Roles;
-using ClassifiedAds.Modules.Notification.Contracts.DTOs;
-using ClassifiedAds.Modules.Notification.Contracts.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

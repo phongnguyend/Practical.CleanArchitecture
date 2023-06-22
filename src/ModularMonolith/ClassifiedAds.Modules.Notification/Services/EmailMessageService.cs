@@ -1,9 +1,9 @@
 ﻿using ClassifiedAds.Application;
+using ClassifiedAds.Contracts.Notification.DTOs;
+using ClassifiedAds.Contracts.Notification.Services;
 using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Infrastructure.Notification.Email;
-using ClassifiedAds.Modules.Notification.Contracts.DTOs;
-using ClassifiedAds.Modules.Notification.Contracts.Services;
 using ClassifiedAds.Modules.Notification.Entities;
 using ClassifiedAds.Modules.Notification.Repositories;
 using Microsoft.Extensions.Logging;

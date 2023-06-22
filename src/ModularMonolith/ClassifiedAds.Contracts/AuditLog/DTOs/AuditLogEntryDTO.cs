@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
+namespace ClassifiedAds.Contracts.AuditLog.DTOs;
 
 public class AuditLogEntryDTO
 {
