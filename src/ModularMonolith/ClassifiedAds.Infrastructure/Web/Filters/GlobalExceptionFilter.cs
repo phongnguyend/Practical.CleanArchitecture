@@ -1,11 +1,12 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Exceptions;
+using ClassifiedAds.Infrastructure.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
+using System.Diagnostics;
 using System.Net;
-using System.Threading;
 
 namespace ClassifiedAds.Infrastructure.Web.Filters;
 
@@ -29,18 +30,45 @@ public class GlobalExceptionFilter : IExceptionFilter
         }
         else if (context.Exception is ValidationException)
         {
-            context.Result = new BadRequestObjectResult(context.Exception.Message);
+            var problemDetails = new ProblemDetails
+            {
+                Detail = context.Exception.Message,
+                Instance = null,
+                Status = (int)HttpStatusCode.BadRequest,
+                Title = "Bad Request",
+                Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1"
+            };
+
+            problemDetails.Extensions.Add("message", context.Exception.Message);
+            problemDetails.Extensions.Add("traceId", Activity.Current.GetTraceId());
+
+            context.Result = new ObjectResult(problemDetails)
+            {
+                StatusCode = (int)HttpStatusCode.BadRequest,
+            };
         }
         else
         {
-            _logger.LogError(context.Exception, "[{0}-{1}]", DateTime.UtcNow.Ticks, Thread.CurrentThread.ManagedThreadId);
+            _logger.LogError(context.Exception, "[{Ticks}-{ThreadId}]", DateTime.UtcNow.Ticks, Environment.CurrentManagedThreadId);
 
             if (_options.DetailLevel == GlobalExceptionDetailLevel.Throw)
             {
                 return;
             }
 
-            context.Result = new ObjectResult(new { Message = GetErrorMessage(context.Exception) })
+            var problemDetails = new ProblemDetails
+            {
+                Detail = GetErrorMessage(context.Exception),
+                Instance = null,
+                Status = (int)HttpStatusCode.InternalServerError,
+                Title = "Internal Server Error",
+                Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1"
+            };
+
+            problemDetails.Extensions.Add("message", GetErrorMessage(context.Exception));
+            problemDetails.Extensions.Add("traceId", Activity.Current.GetTraceId());
+
+            context.Result = new ObjectResult(problemDetails)
             {
                 StatusCode = (int)HttpStatusCode.InternalServerError,
             };
