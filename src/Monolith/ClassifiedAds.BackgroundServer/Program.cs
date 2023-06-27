@@ -48,7 +48,8 @@ public class Program
             services.AddDateTimeProvider();
             services.AddPersistence(appSettings.ConnectionStrings.ClassifiedAds)
                     .AddDomainServices()
-                    .AddApplicationServices();
+                    .AddApplicationServices()
+                    .AddMessageHandlers();
 
             services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker);
             services.AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker);

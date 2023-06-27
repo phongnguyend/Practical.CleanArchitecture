@@ -1,7 +1,7 @@
+﻿using ClassifiedAds.Application;
 using ClassifiedAds.Application.Users.Services;
 using ClassifiedAds.CrossCuttingConcerns.Exceptions;
 using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using Moq;
 using System;
@@ -20,8 +20,9 @@ public class UserServiceTests
     public UserServiceTests()
     {
         _userRepository = new Mock<IRepository<User, Guid>>();
-        var domainEvents = new Mock<IDomainEvents>();
-        _userService = new UserService(_userRepository.Object, domainEvents.Object);
+        var serviceProvider = new Mock<IServiceProvider>();
+        var dispatcher = new Dispatcher(serviceProvider.Object);
+        _userService = new UserService(_userRepository.Object, dispatcher);
     }
 
     [Fact]
