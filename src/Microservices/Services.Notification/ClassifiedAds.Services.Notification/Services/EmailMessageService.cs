@@ -1,15 +1,11 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.CrossCuttingConcerns.OS;
-using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Infrastructure.Notification.Email;
 using ClassifiedAds.Services.Notification.DTOs;
 using ClassifiedAds.Services.Notification.Entities;
 using ClassifiedAds.Services.Notification.Repositories;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Notification.Services;
 
@@ -22,10 +18,10 @@ public class EmailMessageService : CrudService<EmailMessage>, IEmailMessageServi
 
     public EmailMessageService(ILogger<EmailMessageService> logger,
         IEmailMessageRepository repository,
-        IDomainEvents domainEvents,
+        Dispatcher dispatcher,
         IEmailNotification emailNotification,
         IDateTimeProvider dateTimeProvider)
-        : base(repository, domainEvents)
+        : base(repository, dispatcher)
     {
         _logger = logger;
         _repository = repository;

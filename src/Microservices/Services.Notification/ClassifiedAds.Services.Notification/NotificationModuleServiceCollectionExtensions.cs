@@ -1,5 +1,4 @@
-﻿using ClassifiedAds.Domain.Events;
-using ClassifiedAds.Domain.Repositories;
+﻿using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Services.Notification.ConfigurationOptions;
 using ClassifiedAds.Services.Notification.Entities;
 using ClassifiedAds.Services.Notification.Repositories;
@@ -31,8 +30,6 @@ public static class NotificationModuleServiceCollectionExtensions
         services
             .AddScoped<EmailMessageService>()
             .AddScoped<SmsMessageService>();
-
-        DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
 
         services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 

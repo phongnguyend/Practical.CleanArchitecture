@@ -1,5 +1,4 @@
-﻿using ClassifiedAds.Domain.Events;
-using ClassifiedAds.Domain.Repositories;
+﻿using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Services.Storage.Authorization;
 using ClassifiedAds.Services.Storage.ConfigurationOptions;
@@ -29,8 +28,6 @@ public static class StorageModuleServiceCollectionExtensions
             .AddScoped<IRepository<FileEntry, Guid>, Repository<FileEntry, Guid>>()
             .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>()
             .AddScoped<IRepository<OutboxEvent, long>, Repository<OutboxEvent, long>>();
-
-        DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
 
         services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 

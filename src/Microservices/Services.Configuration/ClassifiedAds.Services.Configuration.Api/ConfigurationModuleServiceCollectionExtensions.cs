@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Excel;
-using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Services.Configuration.Authorization;
 using ClassifiedAds.Services.Configuration.ConfigurationOptions;
@@ -26,8 +25,6 @@ public static class ConfigurationModuleServiceCollectionExtensions
             }
         }))
             .AddScoped<IRepository<ConfigurationEntry, Guid>, Repository<ConfigurationEntry, Guid>>();
-
-        DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
 
         services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
