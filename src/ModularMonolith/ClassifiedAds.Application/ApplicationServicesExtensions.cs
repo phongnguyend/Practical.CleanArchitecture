@@ -1,9 +1,8 @@
-﻿using System;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.Domain.Entities;
+using System;
 using System.Linq;
 using System.Reflection;
-using ClassifiedAds.Application;
-using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Events;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -13,8 +12,7 @@ public static class ApplicationServicesExtensions
     {
         services.AddScoped<Dispatcher>();
 
-        services.AddScoped<IDomainEvents, DomainEvents>()
-            .AddScoped(typeof(ICrudService<>), typeof(CrudService<>));
+        services.AddScoped(typeof(ICrudService<>), typeof(CrudService<>));
 
         return services;
     }
@@ -63,6 +61,8 @@ public static class ApplicationServicesExtensions
                 }
             }
         }
+
+        Dispatcher.RegisterEventHandlers(assembly, services);
 
         return services;
     }

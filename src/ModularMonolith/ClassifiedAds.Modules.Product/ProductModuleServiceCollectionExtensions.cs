@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Csv;
-using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Csv;
 using ClassifiedAds.Modules.Product.Authorization;
@@ -37,8 +36,6 @@ public static class ProductModuleServiceCollectionExtensions
             .AddScoped(typeof(IProductRepository), typeof(ProductRepository))
             .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>()
             .AddScoped<IRepository<OutboxEvent, long>, Repository<OutboxEvent, long>>();
-
-        DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
 
         services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 

@@ -1,7 +1,6 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Contracts.AuditLog.DTOs;
 using ClassifiedAds.Contracts.AuditLog.Services;
-using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Modules.AuditLog.Entities;
 using ClassifiedAds.Modules.AuditLog.Queries;
@@ -13,12 +12,9 @@ namespace ClassifiedAds.Modules.AuditLog.Services;
 
 public class AuditLogService : CrudService<AuditLogEntry>, IAuditLogService
 {
-    private readonly Dispatcher _dispatcher;
-
-    public AuditLogService(IRepository<AuditLogEntry, Guid> repository, IDomainEvents domainEvents, Dispatcher dispatcher)
-        : base(repository, domainEvents)
+    public AuditLogService(IRepository<AuditLogEntry, Guid> repository, Dispatcher dispatcher)
+        : base(repository, dispatcher)
     {
-        _dispatcher = dispatcher;
     }
 
     public async Task AddAsync(AuditLogEntryDTO dto)
