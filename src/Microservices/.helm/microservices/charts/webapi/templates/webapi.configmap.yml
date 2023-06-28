@@ -4,6 +4,7 @@ metadata:
   name: {{ .Release.Name}}-webapi
 data:
   ASPNETCORE_ENVIRONMENT: "Development"
+  ProxyProvider: "Ocelot"
   Ocelot__DefaultDownstreamScheme: "http"
   Ocelot__Routes__Products__Downstream: "http://{{ .Release.Name}}-product-api"
   Ocelot__Routes__Files__Downstream: "http://{{ .Release.Name}}-storage-api"
@@ -11,3 +12,9 @@ data:
   Ocelot__Routes__Users__Downstream: "http://{{ .Release.Name}}-identity-api"
   Ocelot__Routes__Configurations__Downstream: "http://{{ .Release.Name}}-configuration-api"
   Ocelot__Routes__Hubs__Downstream: "ws://{{ .Release.Name}}-notification-api"
+  Yarp__Clusters__Products__Destinations__destination1__Address: "http://{{ .Release.Name}}-product-api"
+  Yarp__Clusters__Files__Destinations__destination1__Address: "http://{{ .Release.Name}}-storage-api"
+  Yarp__Clusters__AuditLogs__Destinations__destination1__Address: "http://{{ .Release.Name}}-auditlog-api"
+  Yarp__Clusters__Users__Destinations__destination1__Address: "http://{{ .Release.Name}}-identity-api"
+  Yarp__Clusters__Configurations__Destinations__destination1__Address: "http://{{ .Release.Name}}-configuration-api"
+  Yarp__Clusters__Hubs__Destinations__destination1__Address: "http://{{ .Release.Name}}-notification-api"

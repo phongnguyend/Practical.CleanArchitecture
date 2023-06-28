@@ -4,6 +4,7 @@ metadata:
   name: webapi
 data:
   ASPNETCORE_ENVIRONMENT: "Development"
+  ProxyProvider: "Ocelot"
   Ocelot__DefaultDownstreamScheme: "http"
   Ocelot__Routes__Products__Downstream: "http://product-api"
   Ocelot__Routes__Files__Downstream: "http://storage-api"
@@ -11,3 +12,9 @@ data:
   Ocelot__Routes__Users__Downstream: "http://identity-api"
   Ocelot__Routes__Configurations__Downstream: "http://configuration-api"
   Ocelot__Routes__Hubs__Downstream: "ws://notification-api"
+  Yarp__Clusters__Products__Destinations__destination1__Address: "http://product-api"
+  Yarp__Clusters__Files__Destinations__destination1__Address: "http://storage-api"
+  Yarp__Clusters__AuditLogs__Destinations__destination1__Address: "http://auditlog-api"
+  Yarp__Clusters__Users__Destinations__destination1__Address: "http://identity-api"
+  Yarp__Clusters__Configurations__Destinations__destination1__Address: "http://configuration-api"
+  Yarp__Clusters__Hubs__Destinations__destination1__Address: "http://notification-api"

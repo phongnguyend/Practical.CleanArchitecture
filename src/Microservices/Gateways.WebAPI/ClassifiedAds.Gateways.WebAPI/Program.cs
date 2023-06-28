@@ -55,7 +55,7 @@ services.PostConfigure<FileConfiguration>(fileConfiguration =>
     {
         if (string.IsNullOrWhiteSpace(route.DownstreamScheme))
         {
-            route.DownstreamScheme = configuration["Ocelot:DefaultDownstreamScheme"];
+            route.DownstreamScheme = appSettings?.Ocelot?.DefaultDownstreamScheme;
         }
 
         if (string.IsNullOrWhiteSpace(route.DownstreamPathTemplate))
