@@ -44,7 +44,7 @@ public class GlobalExceptionFilter : IExceptionFilter
 
             context.Result = new ObjectResult(problemDetails)
             {
-                StatusCode = (int)HttpStatusCode.BadRequest,
+                StatusCode = problemDetails.Status,
             };
         }
         else
@@ -70,7 +70,7 @@ public class GlobalExceptionFilter : IExceptionFilter
 
             context.Result = new ObjectResult(problemDetails)
             {
-                StatusCode = (int)HttpStatusCode.InternalServerError,
+                StatusCode = problemDetails.Status,
             };
         }
     }

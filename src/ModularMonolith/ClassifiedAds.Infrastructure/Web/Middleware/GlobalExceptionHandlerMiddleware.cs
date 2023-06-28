@@ -1,10 +1,12 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Exceptions;
+using ClassifiedAds.Infrastructure.Logging;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.Web.Middleware;
@@ -33,23 +35,39 @@ public class GlobalExceptionHandlerMiddleware
         catch (Exception ex)
         {
             var response = context.Response;
-            response.ContentType = "application/json";
+            response.ContentType = "application/problem+json";
+
+            var problemDetails = new ProblemDetails
+            {
+                Detail = GetErrorMessage(ex)
+            };
+
+            problemDetails.Extensions.Add("message", GetErrorMessage(ex));
+            problemDetails.Extensions.Add("traceId", Activity.Current.GetTraceId());
 
             switch (ex)
             {
-                case ValidationException:
-                    response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    break;
                 case NotFoundException:
-                    response.StatusCode = (int)HttpStatusCode.NotFound;
+                    problemDetails.Status = (int)HttpStatusCode.NotFound;
+                    problemDetails.Title = "Not Found";
+                    problemDetails.Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4";
+                    break;
+                case ValidationException:
+                    problemDetails.Status = (int)HttpStatusCode.BadRequest;
+                    problemDetails.Title = "Bad Request";
+                    problemDetails.Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1";
                     break;
                 default:
-                    _logger.LogError(ex, "[{0}-{1}]", DateTime.UtcNow.Ticks, Thread.CurrentThread.ManagedThreadId);
-                    response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    _logger.LogError(ex, "[{Ticks}-{ThreadId}]", DateTime.UtcNow.Ticks, Environment.CurrentManagedThreadId);
+                    problemDetails.Status = (int)HttpStatusCode.InternalServerError;
+                    problemDetails.Title = "Internal Server Error";
+                    problemDetails.Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1";
                     break;
             }
 
-            var result = JsonSerializer.Serialize(new { message = GetErrorMessage(ex) });
+            response.StatusCode = problemDetails.Status.Value;
+
+            var result = JsonSerializer.Serialize(problemDetails);
             await response.WriteAsync(result);
         }
     }
