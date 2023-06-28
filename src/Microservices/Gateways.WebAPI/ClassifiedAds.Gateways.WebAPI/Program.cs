@@ -10,73 +10,74 @@ using Ocelot.Middleware;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace ClassifiedAds.Gateways.Ocelot;
 
-public class Program
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+var services = builder.Services;
+var configuration = builder.Configuration;
+
+builder.WebHost.UseClassifiedAdsLogger(configuration =>
 {
-    public static async Task Main(string[] args)
+    return new LoggingOptions();
+});
+
+var appSettings = new AppSettings();
+configuration.Bind(appSettings);
+
+services.AddOcelot()
+    .AddDelegatingHandler<DebuggingHandler>(true);
+
+services.PostConfigure<FileConfiguration>(fileConfiguration =>
+{
+    foreach (var route in appSettings.Ocelot.Routes.Select(x => x.Value))
     {
-        var builder = WebApplication.CreateBuilder(args);
+        var uri = new Uri(route.Downstream);
 
-        // Add services to the container.
-        var services = builder.Services;
-        var configuration = builder.Configuration;
-
-        builder.WebHost.UseClassifiedAdsLogger(configuration =>
+        foreach (var pathTemplate in route.UpstreamPathTemplates)
         {
-            return new LoggingOptions();
-        });
 
-        var appSettings = new AppSettings();
-        configuration.Bind(appSettings);
-
-        services.AddOcelot()
-            .AddDelegatingHandler<DebuggingHandler>(true);
-
-        services.PostConfigure<FileConfiguration>(fileConfiguration =>
-        {
-            foreach (var route in appSettings.Ocelot.Routes.Select(x => x.Value))
+            fileConfiguration.Routes.Add(new FileRoute
             {
-                var uri = new Uri(route.Downstream);
-
-                foreach (var pathTemplate in route.UpstreamPathTemplates)
+                UpstreamPathTemplate = pathTemplate,
+                DownstreamPathTemplate = pathTemplate,
+                DownstreamScheme = uri.Scheme,
+                DownstreamHostAndPorts = new List<FileHostAndPort>
                 {
-
-                    fileConfiguration.Routes.Add(new FileRoute
-                    {
-                        UpstreamPathTemplate = pathTemplate,
-                        DownstreamPathTemplate = pathTemplate,
-                        DownstreamScheme = uri.Scheme,
-                        DownstreamHostAndPorts = new List<FileHostAndPort>
-                        {
-                            new FileHostAndPort{ Host = uri.Host, Port = uri.Port }
-                        }
-                    });
+                    new FileHostAndPort{ Host = uri.Host, Port = uri.Port }
                 }
-            }
-
-            foreach (var route in fileConfiguration.Routes)
-            {
-                if (string.IsNullOrWhiteSpace(route.DownstreamScheme))
-                {
-                    route.DownstreamScheme = configuration["Ocelot:DefaultDownstreamScheme"];
-                }
-
-                if (string.IsNullOrWhiteSpace(route.DownstreamPathTemplate))
-                {
-                    route.DownstreamPathTemplate = route.UpstreamPathTemplate;
-                }
-            }
-        });
-
-        // Configure the HTTP request pipeline.
-        var app = builder.Build();
-
-        app.UseWebSockets();
-        await app.UseOcelot();
-
-        app.Run();
+            });
+        }
     }
+
+    foreach (var route in fileConfiguration.Routes)
+    {
+        if (string.IsNullOrWhiteSpace(route.DownstreamScheme))
+        {
+            route.DownstreamScheme = configuration["Ocelot:DefaultDownstreamScheme"];
+        }
+
+        if (string.IsNullOrWhiteSpace(route.DownstreamPathTemplate))
+        {
+            route.DownstreamPathTemplate = route.UpstreamPathTemplate;
+        }
+    }
+});
+
+services.AddReverseProxy().LoadFromConfig(configuration.GetSection("Yarp"));
+
+// Configure the HTTP request pipeline.
+var app = builder.Build();
+
+if (appSettings.ProxyProvider == "Ocelot")
+{
+    app.UseWebSockets();
+    await app.UseOcelot();
 }
+else if (appSettings.ProxyProvider == "Yarp")
+{
+    app.MapReverseProxy();
+}
+
+app.Run();
