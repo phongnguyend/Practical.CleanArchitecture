@@ -8,59 +8,51 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 
-namespace ClassifiedAds.BackgroundServer;
+CreateHostBuilder(args).Build().Run();
 
-public class Program
-{
-    public static void Main(string[] args)
+static IHostBuilder CreateHostBuilder(string[] args) =>
+    Host.CreateDefaultBuilder(args)
+    .UseWindowsService()
+    .UseClassifiedAdsLogger(configuration =>
     {
-        CreateHostBuilder(args).Build().Run();
-    }
+        var appSettings = new AppSettings();
+        configuration.Bind(appSettings);
+        return appSettings.Logging;
+    })
+    .ConfigureServices((hostContext, services) =>
+    {
+        var serviceProvider = services.BuildServiceProvider();
+        var configuration = serviceProvider.GetService<IConfiguration>();
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-        .UseWindowsService()
-        .UseClassifiedAdsLogger(configuration =>
+        var appSettings = new AppSettings();
+        configuration.Bind(appSettings);
+
+        var validationResult = appSettings.Validate();
+        if (validationResult.Failed)
         {
-            var appSettings = new AppSettings();
-            configuration.Bind(appSettings);
-            return appSettings.Logging;
-        })
-        .ConfigureServices((hostContext, services) =>
-        {
-            var serviceProvider = services.BuildServiceProvider();
-            var configuration = serviceProvider.GetService<IConfiguration>();
+            throw new Exception(validationResult.FailureMessage);
+        }
 
-            var appSettings = new AppSettings();
-            configuration.Bind(appSettings);
+        services.Configure<AppSettings>(configuration);
 
-            var validationResult = appSettings.Validate();
-            if (validationResult.Failed)
-            {
-                throw new Exception(validationResult.FailureMessage);
-            }
+        services.AddScoped<ICurrentUser, CurrentUser>();
 
-            services.Configure<AppSettings>(configuration);
+        services.AddDateTimeProvider();
 
-            services.AddScoped<ICurrentUser, CurrentUser>();
+        services
+        .AddAuditLogModule(opt => configuration.GetSection("Modules:AuditLog").Bind(opt))
+        .AddNotificationModule(opt => configuration.GetSection("Modules:Notification").Bind(opt))
+        .AddProductModule(opt => configuration.GetSection("Modules:Product").Bind(opt))
+        .AddStorageModule(opt => configuration.GetSection("Modules:Storage").Bind(opt))
+        .AddApplicationServices();
 
-            services.AddDateTimeProvider();
+        services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker);
+        services.AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker);
 
-            services
-            .AddAuditLogModule(opt => configuration.GetSection("Modules:AuditLog").Bind(opt))
-            .AddNotificationModule(opt => configuration.GetSection("Modules:Notification").Bind(opt))
-            .AddProductModule(opt => configuration.GetSection("Modules:Product").Bind(opt))
-            .AddStorageModule(opt => configuration.GetSection("Modules:Storage").Bind(opt))
-            .AddApplicationServices();
+        services.AddMessageBusReceiver<FileUploadedEvent>(appSettings.MessageBroker);
+        services.AddMessageBusReceiver<FileDeletedEvent>(appSettings.MessageBroker);
 
-            services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker);
-            services.AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker);
-
-            services.AddMessageBusReceiver<FileUploadedEvent>(appSettings.MessageBroker);
-            services.AddMessageBusReceiver<FileDeletedEvent>(appSettings.MessageBroker);
-
-            services.AddHostedServicesNotificationModule();
-            services.AddHostedServicesProductModule();
-            services.AddHostedServicesStorageModule();
-        });
-}
+        services.AddHostedServicesNotificationModule();
+        services.AddHostedServicesProductModule();
+        services.AddHostedServicesStorageModule();
+    });
