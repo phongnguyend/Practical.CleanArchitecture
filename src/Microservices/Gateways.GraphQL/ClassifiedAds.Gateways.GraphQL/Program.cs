@@ -3,33 +3,25 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 
-namespace ClassifiedAds.Gateways.GraphQL;
+var builder = WebApplication.CreateBuilder(args);
 
-public class Program
+// Add services to the container.
+var services = builder.Services;
+var configuration = builder.Configuration;
+
+// Configure the HTTP request pipeline.
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
 {
-    public static void Main(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
-
-        // Add services to the container.
-        var services = builder.Services;
-        var configuration = builder.Configuration;
-
-        // Configure the HTTP request pipeline.
-        var app = builder.Build();
-
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
-        }
-
-        app.UseRouting();
-
-        app.MapGet("/", async context =>
-        {
-            await context.Response.WriteAsync("Hello World!");
-        });
-
-        app.Run();
-    }
+    app.UseDeveloperExceptionPage();
 }
+
+app.UseRouting();
+
+app.MapGet("/", async context =>
+{
+    await context.Response.WriteAsync("Hello World!");
+});
+
+app.Run();
