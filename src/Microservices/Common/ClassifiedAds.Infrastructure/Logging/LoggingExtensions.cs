@@ -35,6 +35,7 @@ public static class LoggingExtensions
             .Enrich.With<ActivityEnricher>()
             .Enrich.WithMachineName()
             .Enrich.WithEnvironmentUserName()
+            .Enrich.WithProperty("ProcessId", Environment.ProcessId)
             .Enrich.WithProperty("Assembly", assemblyName)
             .Enrich.WithProperty("Application", env.ApplicationName)
             .Enrich.WithProperty("EnvironmentName", env.EnvironmentName)
@@ -62,7 +63,7 @@ public static class LoggingExtensions
                 rollOnFileSizeLimit: true,
                 shared: true,
                 flushToDiskInterval: TimeSpan.FromSeconds(1),
-                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] [TraceId: {TraceId}] {Message:lj}{NewLine}{Exception}",
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] [TraceId: {TraceId}] [MachineName: {MachineName}] [ProcessId: {ProcessId}] {Message:lj}{NewLine}{Exception}",
                 restrictedToMinimumLevel: options.File.MinimumLogEventLevel);
 
         if (options.Elasticsearch != null && options.Elasticsearch.IsEnabled)
@@ -251,6 +252,7 @@ public static class LoggingExtensions
             .Enrich.With<ActivityEnricher>()
             .Enrich.WithMachineName()
             .Enrich.WithEnvironmentUserName()
+            .Enrich.WithProperty("ProcessId", Environment.ProcessId)
             .Enrich.WithProperty("Assembly", assemblyName)
             .Enrich.WithProperty("Application", env.ApplicationName)
             .Enrich.WithProperty("EnvironmentName", env.EnvironmentName)
@@ -277,7 +279,7 @@ public static class LoggingExtensions
                 rollOnFileSizeLimit: true,
                 shared: true,
                 flushToDiskInterval: TimeSpan.FromSeconds(1),
-                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] [TraceId: {TraceId}] {Message:lj}{NewLine}{Exception}",
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] [TraceId: {TraceId}] [MachineName: {MachineName}] [ProcessId: {ProcessId}] {Message:lj}{NewLine}{Exception}",
                 restrictedToMinimumLevel: options.File.MinimumLogEventLevel);
 
         if (options.Elasticsearch != null && options.Elasticsearch.IsEnabled)
