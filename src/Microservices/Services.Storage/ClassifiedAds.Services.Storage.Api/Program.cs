@@ -10,8 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Polly;
+using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -82,6 +85,88 @@ services.AddAuthentication(options =>
     };
 });
 
+services.AddSwaggerGen(setupAction =>
+{
+    setupAction.SwaggerDoc(
+        $"ClassifiedAds",
+        new OpenApiInfo()
+        {
+            Title = "ClassifiedAds API",
+            Version = "1",
+            Description = "ClassifiedAds API Specification.",
+            Contact = new OpenApiContact
+            {
+                Email = "abc.xyz@gmail.com",
+                Name = "Phong Nguyen",
+                Url = new Uri("https://github.com/phongnguyend"),
+            },
+            License = new OpenApiLicense
+            {
+                Name = "MIT License",
+                Url = new Uri("https://opensource.org/licenses/MIT"),
+            },
+        });
+
+    setupAction.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        Description = "Input your Bearer token to access this API",
+    });
+
+    setupAction.AddSecurityDefinition("Oidc", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.OAuth2,
+        Flows = new OpenApiOAuthFlows
+        {
+            AuthorizationCode = new OpenApiOAuthFlow
+            {
+                TokenUrl = new Uri(appSettings.IdentityServerAuthentication.Authority + "/connect/token", UriKind.Absolute),
+                AuthorizationUrl = new Uri(appSettings.IdentityServerAuthentication.Authority + "/connect/authorize", UriKind.Absolute),
+                Scopes = new Dictionary<string, string>
+                {
+                            { "openid", "OpenId" },
+                            { "profile", "Profile" },
+                            { "ClassifiedAds.WebAPI", "ClassifiedAds WebAPI" },
+                },
+            },
+            ClientCredentials = new OpenApiOAuthFlow
+            {
+                TokenUrl = new Uri(appSettings.IdentityServerAuthentication.Authority + "/connect/token", UriKind.Absolute),
+                Scopes = new Dictionary<string, string>
+                {
+                            { "ClassifiedAds.WebAPI", "ClassifiedAds WebAPI" },
+                },
+            },
+        },
+    });
+
+    setupAction.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Oidc",
+                },
+            }, new List<string>()
+        },
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer",
+                },
+            }, new List<string>()
+        },
+    });
+});
+
 services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // Configure the HTTP request pipeline.
@@ -106,6 +191,27 @@ if (builder.Environment.IsDevelopment())
 app.UseRouting();
 
 app.UseCors("AllowAnyOrigin");
+
+app.UseSwagger();
+
+app.UseSwaggerUI(setupAction =>
+{
+    setupAction.OAuthClientId("Swagger");
+    setupAction.OAuthClientSecret("secret");
+    setupAction.OAuthUsePkce();
+
+    setupAction.SwaggerEndpoint(
+        "/swagger/ClassifiedAds/swagger.json",
+        "ClassifiedAds API");
+
+    setupAction.RoutePrefix = string.Empty;
+
+    setupAction.DefaultModelExpandDepth(2);
+    setupAction.DefaultModelRendering(ModelRendering.Model);
+    setupAction.DocExpansion(DocExpansion.None);
+    setupAction.EnableDeepLinking();
+    setupAction.DisplayOperationId();
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
