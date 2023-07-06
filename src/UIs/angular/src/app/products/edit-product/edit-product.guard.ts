@@ -1,11 +1,5 @@
 import { Injectable } from "@angular/core";
-import {
-  CanActivate,
-  CanDeactivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  UrlTree
-} from "@angular/router";
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from "@angular/router";
 import { Observable } from "rxjs";
 import { EditProductComponent } from "./edit-product.component";
 
@@ -13,7 +7,7 @@ import { EditProductComponent } from "./edit-product.component";
   providedIn: "root"
 })
 export class EditProductGuard
-  implements CanActivate, CanDeactivate<EditProductComponent> {
+   {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
