@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Web.Filters;
+using ClassifiedAds.Infrastructure.Web.MinimalApis;
 using ClassifiedAds.Services.Product.ConfigurationOptions;
 using ClassifiedAds.Services.Product.RateLimiterPolicies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -47,6 +48,10 @@ services.AddControllers(configure =>
 {
 });
 
+services.ConfigureHttpJsonOptions(options =>
+{
+});
+
 services.AddCors(options =>
 {
     options.AddPolicy("AllowAnyOrigin", builder => builder
@@ -89,6 +94,7 @@ services.AddAuthentication(options =>
     };
 });
 
+services.AddEndpointsApiExplorer();
 services.AddSwaggerGen(setupAction =>
 {
     setupAction.SwaggerDoc(
@@ -230,5 +236,7 @@ app.UseAuthorization();
 app.UseRateLimiter();
 
 app.MapControllers();
+
+app.MapEndpointHandlers(Assembly.GetCallingAssembly());
 
 app.Run();
