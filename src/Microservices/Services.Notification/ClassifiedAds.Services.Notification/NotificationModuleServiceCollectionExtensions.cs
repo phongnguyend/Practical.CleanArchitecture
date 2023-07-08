@@ -2,7 +2,6 @@
 using ClassifiedAds.Services.Notification.ConfigurationOptions;
 using ClassifiedAds.Services.Notification.Entities;
 using ClassifiedAds.Services.Notification.Repositories;
-using ClassifiedAds.Services.Notification.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -24,12 +23,7 @@ public static class NotificationModuleServiceCollectionExtensions
             .AddScoped<IRepository<EmailMessage, Guid>, Repository<EmailMessage, Guid>>()
             .AddScoped<IRepository<SmsMessage, Guid>, Repository<SmsMessage, Guid>>()
             .AddScoped(typeof(IEmailMessageRepository), typeof(EmailMessageRepository))
-            .AddScoped(typeof(ISmsMessageRepository), typeof(SmsMessageRepository))
-            .AddScoped<IEmailMessageService, EmailMessageService>();
-
-        services
-            .AddScoped<EmailMessageService>()
-            .AddScoped<SmsMessageService>();
+            .AddScoped(typeof(ISmsMessageRepository), typeof(SmsMessageRepository));
 
         services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
