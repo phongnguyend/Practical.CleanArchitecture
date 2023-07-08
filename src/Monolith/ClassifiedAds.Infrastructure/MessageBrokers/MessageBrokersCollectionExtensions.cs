@@ -108,6 +108,8 @@ public static class MessageBrokersCollectionExtensions
             Password = options.Password,
             ExchangeName = options.ExchangeName,
             RoutingKey = options.RoutingKeys[typeof(T).Name],
+            MessageEncryptionEnabled = options.MessageEncryptionEnabled,
+            MessageEncryptionKey = options.MessageEncryptionKey
         }));
         return services;
     }
@@ -123,6 +125,8 @@ public static class MessageBrokersCollectionExtensions
             RoutingKey = options.RoutingKeys[typeof(T).Name],
             QueueName = options.QueueNames[typeof(T).Name],
             AutomaticCreateEnabled = true,
+            MessageEncryptionEnabled = options.MessageEncryptionEnabled,
+            MessageEncryptionKey = options.MessageEncryptionKey
         }));
         return services;
     }

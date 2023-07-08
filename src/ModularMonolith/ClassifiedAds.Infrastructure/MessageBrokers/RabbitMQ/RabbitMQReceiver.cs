@@ -1,7 +1,11 @@
 ﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+using CryptographyHelper;
+using CryptographyHelper.SymmetricAlgorithms;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
+using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -39,13 +43,31 @@ public class RabbitMQReceiver<T> : IMessageReceiver<T>, IDisposable
         // TODO: add log here
     }
 
-    public Task ReceiveAsync(Func<T, MetaData, Task> action, CancellationToken cancellationToken)
+    public Task ReceiveAsync(Func<T, MetaData, Task> action, CancellationToken cancellationToken = default)
     {
         _channel = _connection.CreateModel();
 
         if (_options.AutomaticCreateEnabled)
         {
-            _channel.QueueDeclare(_options.QueueName, true, false, false, null);
+            var arguments = new Dictionary<string, object>();
+
+            if (string.Equals(_options.QueueType, "Quorum", StringComparison.OrdinalIgnoreCase))
+            {
+                arguments["x-queue-type"] = "quorum";
+            }
+            else if (string.Equals(_options.QueueType, "Stream", StringComparison.OrdinalIgnoreCase))
+            {
+                arguments["x-queue-type"] = "stream";
+            }
+
+            if (_options.SingleActiveConsumer)
+            {
+                arguments["x-single-active-consumer"] = true;
+            }
+
+            arguments = arguments.Count == 0 ? null : arguments;
+
+            _channel.QueueDeclare(_options.QueueName, true, false, false, arguments);
             _channel.QueueBind(_options.QueueName, _options.ExchangeName, _options.RoutingKey, null);
         }
 
@@ -54,11 +76,34 @@ public class RabbitMQReceiver<T> : IMessageReceiver<T>, IDisposable
         var consumer = new AsyncEventingBasicConsumer(_channel);
         consumer.Received += async (model, ea) =>
         {
-            var body = Encoding.UTF8.GetString(ea.Body.Span);
-            var message = JsonSerializer.Deserialize<Message<T>>(body);
-            await action(message.Data, message.MetaData);
-            _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+            try
+            {
+                var bodyText = string.Empty;
+
+                if (_options.MessageEncryptionEnabled)
+                {
+                    bodyText = ea.Body.Span.ToArray().UseAES(_options.MessageEncryptionKey.FromBase64String())
+                    .WithCipher(CipherMode.ECB)
+                    .Decrypt()
+                    .GetString();
+                }
+                else
+                {
+                    bodyText = Encoding.UTF8.GetString(ea.Body.Span);
+                }
+
+                var message = JsonSerializer.Deserialize<Message<T>>(bodyText);
+
+                await action(message.Data, message.MetaData);
+
+                _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+            }
+            catch (Exception ex)
+            {
+                // TODO: log here
+            }
         };
+
         _channel.BasicConsume(queue: _queueName,
                              autoAck: false,
                              consumer: consumer);

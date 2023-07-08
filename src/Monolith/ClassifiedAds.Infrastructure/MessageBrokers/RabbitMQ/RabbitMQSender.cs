@@ -1,7 +1,8 @@
 ﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+using CryptographyHelper;
+using CryptographyHelper.SymmetricAlgorithms;
 using RabbitMQ.Client;
-using System.Text;
-using System.Text.Json;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,12 +10,15 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ;
 
 public class RabbitMQSender<T> : IMessageSender<T>
 {
+    private readonly RabbitMQSenderOptions _options;
     private readonly IConnectionFactory _connectionFactory;
     private readonly string _exchangeName;
     private readonly string _routingKey;
 
     public RabbitMQSender(RabbitMQSenderOptions options)
     {
+        _options = options;
+
         _connectionFactory = new ConnectionFactory
         {
             HostName = options.HostName,
@@ -32,11 +36,19 @@ public class RabbitMQSender<T> : IMessageSender<T>
         {
             using var connection = _connectionFactory.CreateConnection();
             using var channel = connection.CreateModel();
-            var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new Message<T>
+            var body = new Message<T>
             {
                 Data = message,
                 MetaData = metaData,
-            }));
+            }.GetBytes();
+
+            if (_options.MessageEncryptionEnabled)
+            {
+                body = body.UseAES(_options.MessageEncryptionKey.FromBase64String())
+                .WithCipher(CipherMode.ECB)
+                .Encrypt();
+            }
+
             var properties = channel.CreateBasicProperties();
             properties.Persistent = true;
 
