@@ -1,9 +1,9 @@
 ﻿using ClassifiedAds.Infrastructure.Web.MinimalApis;
 using ClassifiedAds.Services.Product.Authorization;
 using ClassifiedAds.Services.Product.Commands;
-using ClassifiedAds.Services.Product.Models;
 using ClassifiedAds.Services.Product.Queries;
 using ClassifiedAds.Services.Product.RateLimiterPolicies;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -12,11 +12,40 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Product.Api.Endpoints;
 
-public class UpdateProductRequest : IEndpointHandler
+public class UpdateProductRequest
+{
+    public string Code { get; set; }
+
+    public string Name { get; set; }
+
+    public string Description { get; set; }
+
+    public class Validator : AbstractValidator<UpdateProductRequest>
+    {
+        public Validator()
+        {
+            RuleFor(x => x.Code).NotEmpty();
+        }
+    }
+}
+
+public class UpdateProductResponse
+{
+    public Guid Id { get; set; }
+
+    public string Code { get; set; }
+
+    public string Name { get; set; }
+
+    public string Description { get; set; }
+}
+
+public class UpdateProductRequestHandler : IEndpointHandler
 {
     public static void MapEndpoint(IEndpointRouteBuilder builder)
     {
@@ -24,7 +53,7 @@ public class UpdateProductRequest : IEndpointHandler
         .RequireAuthorization(AuthorizationPolicyNames.UpdateProductPolicy)
         .RequireRateLimiting(RateLimiterPolicyNames.DefaultPolicy)
         .WithName("UpdateProduct")
-        .Produces<ProductModel>(StatusCodes.Status200OK, contentType: "application/json")
+        .Produces<UpdateProductResponse>(StatusCodes.Status200OK, contentType: "application/json")
         .ProducesProblem(StatusCodes.Status404NotFound)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithOpenApi(operation => new OpenApiOperation(operation)
@@ -33,18 +62,31 @@ public class UpdateProductRequest : IEndpointHandler
         });
     }
 
-    private static async Task<IResult> HandleAsync(IMediator dispatcher, Guid id, [FromBody] ProductModel model)
+    private static async Task<IResult> HandleAsync(IMediator dispatcher, Guid id, [FromBody] UpdateProductRequest request, IValidator<UpdateProductRequest> validator)
     {
+        var validationResult = await validator.ValidateAsync(request);
+        if (!validationResult.IsValid)
+        {
+            return Results.ValidationProblem(validationResult.ToDictionary(),
+                statusCode: (int)HttpStatusCode.BadRequest);
+        }
+
         var product = await dispatcher.Send(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
 
-        product.Code = model.Code;
-        product.Name = model.Name;
-        product.Description = model.Description;
+        product.Code = request.Code;
+        product.Name = request.Name;
+        product.Description = request.Description;
 
         await dispatcher.Send(new AddUpdateProductCommand { Product = product });
 
-        model = product.ToModel();
+        var response = new UpdateProductResponse
+        {
+            Id = product.Id,
+            Code = product.Code,
+            Name = product.Name,
+            Description = product.Description,
+        };
 
-        return Results.Ok(model);
+        return Results.Ok(response);
     }
 }

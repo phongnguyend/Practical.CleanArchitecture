@@ -4,6 +4,7 @@ using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Infrastructure.Web.MinimalApis;
 using ClassifiedAds.Services.Product.ConfigurationOptions;
 using ClassifiedAds.Services.Product.RateLimiterPolicies;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -185,6 +186,8 @@ services.AddRateLimiter(options =>
 services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 services.AddDaprClient();
+
+services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 // Configure the HTTP request pipeline.
 var app = builder.Build();

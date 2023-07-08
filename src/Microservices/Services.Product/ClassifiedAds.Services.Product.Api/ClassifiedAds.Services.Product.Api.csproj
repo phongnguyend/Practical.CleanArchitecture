@@ -9,6 +9,7 @@
 		<Protobuf Include="..\..\Contracts\AuditLog\Protos\auditlog.proto" GrpcServices="Client" Link="Protos\auditlog.proto" />
 		<Protobuf Include="..\..\Contracts\Identity\Protos\user.proto" GrpcServices="Client" Link="Protos\user.proto" />
 		<PackageReference Include="Dapr.AspNetCore" Version="1.9.0" />
+		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
 		<PackageReference Include="Grpc.Tools" Version="2.51.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
