@@ -1,33 +1,40 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.OS;
-using ClassifiedAds.Infrastructure.Notification.Sms;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.CrossCuttingConcerns.OS;
+using ClassifiedAds.Infrastructure.Notification.Email;
 using ClassifiedAds.Modules.Notification.Repositories;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Modules.Notification.Services;
+namespace ClassifiedAds.Modules.Notification.Commands;
 
-public class SmsMessageService
+public class SendEmailMessagesCommand : ICommand
+{
+    public int SentMessagesCount { get; set; }
+}
+
+public class SendEmailMessagesCommandHandler : ICommandHandler<SendEmailMessagesCommand>
 {
     private readonly ILogger _logger;
-    private readonly ISmsMessageRepository _repository;
-    private readonly ISmsNotification _smsNotification;
+    private readonly IEmailMessageRepository _repository;
+    private readonly IEmailNotification _emailNotification;
     private readonly IDateTimeProvider _dateTimeProvider;
 
-    public SmsMessageService(ILogger<SmsMessageService> logger,
-        ISmsMessageRepository repository,
-        ISmsNotification smsNotification,
+    public SendEmailMessagesCommandHandler(ILogger<SendEmailMessagesCommandHandler> logger,
+        IEmailMessageRepository repository,
+        IEmailNotification emailNotification,
         IDateTimeProvider dateTimeProvider)
     {
         _logger = logger;
         _repository = repository;
-        _smsNotification = smsNotification;
+        _emailNotification = emailNotification;
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<int> SendSmsMessagesAsync()
+    public async Task HandleAsync(SendEmailMessagesCommand command, CancellationToken cancellationToken = default)
     {
         var deplayedTimes = new[]
         {
@@ -55,34 +62,38 @@ public class SmsMessageService
 
         if (messages.Any())
         {
-            foreach (var sms in messages)
+            foreach (var email in messages)
             {
                 string log = Environment.NewLine + Environment.NewLine
                         + $"[{_dateTimeProvider.OffsetNow.ToString(CultureInfo.InvariantCulture)}] ";
                 try
                 {
-                    await _smsNotification.SendAsync(new DTOs.SmsMessageDTO
+                    await _emailNotification.SendAsync(new DTOs.EmailMessageDTO
                     {
-                        Message = sms.Message,
-                        PhoneNumber = sms.PhoneNumber,
+                        From = email.From,
+                        Tos = email.Tos,
+                        CCs = email.CCs,
+                        BCCs = email.BCCs,
+                        Subject = email.Subject,
+                        Body = email.Body,
                     });
 
-                    sms.SentDateTime = _dateTimeProvider.OffsetNow;
-                    sms.Log += log + "Succeed.";
+                    email.SentDateTime = _dateTimeProvider.OffsetNow;
+                    email.Log += log + "Succeed.";
                 }
                 catch (Exception ex)
                 {
-                    sms.Log += log + ex.ToString();
-                    sms.NextAttemptDateTime = _dateTimeProvider.OffsetNow + deplayedTimes[sms.AttemptCount];
+                    email.Log += log + ex.ToString();
+                    email.NextAttemptDateTime = _dateTimeProvider.OffsetNow + deplayedTimes[email.AttemptCount];
                 }
 
-                sms.AttemptCount += 1;
-                sms.Log = sms.Log.Trim();
-                sms.UpdatedDateTime = _dateTimeProvider.OffsetNow;
+                email.AttemptCount += 1;
+                email.Log = email.Log.Trim();
+                email.UpdatedDateTime = _dateTimeProvider.OffsetNow;
 
-                if (sms.MaxAttemptCount == 0)
+                if (email.MaxAttemptCount == 0)
                 {
-                    sms.MaxAttemptCount = defaultAttemptCount;
+                    email.MaxAttemptCount = defaultAttemptCount;
                 }
 
                 await _repository.UnitOfWork.SaveChangesAsync();
@@ -90,9 +101,9 @@ public class SmsMessageService
         }
         else
         {
-            _logger.LogInformation("No SMS to send.");
+            _logger.LogInformation("No email to send.");
         }
 
-        return messages.Count;
+        command.SentMessagesCount = messages.Count;
     }
 }

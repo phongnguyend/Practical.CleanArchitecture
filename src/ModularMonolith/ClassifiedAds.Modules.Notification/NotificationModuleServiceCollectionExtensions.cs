@@ -35,10 +35,6 @@ public static class NotificationModuleServiceCollectionExtensions
             .AddScoped(typeof(ISmsMessageRepository), typeof(SmsMessageRepository))
             .AddScoped<IEmailMessageService, EmailMessageService>();
 
-        services
-            .AddScoped<EmailMessageService>()
-            .AddScoped<SmsMessageService>();
-
         services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
         services.AddNotificationServices(settings);

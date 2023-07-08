@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Modules.Notification.Services;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.Modules.Notification.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -32,16 +33,16 @@ public class SendEmailWoker : BackgroundService
         {
             _logger.LogDebug($"SendEmail task doing background work.");
 
-            int rs = 0;
+            var sendEmailsCommand = new SendEmailMessagesCommand();
 
             using (var scope = _services.CreateScope())
             {
-                var emailService = scope.ServiceProvider.GetRequiredService<EmailMessageService>();
+                var dispatcher = scope.ServiceProvider.GetRequiredService<Dispatcher>();
 
-                rs = await emailService.SendEmailMessagesAsync();
+                await dispatcher.DispatchAsync(sendEmailsCommand);
             }
 
-            if (rs == 0)
+            if (sendEmailsCommand.SentMessagesCount == 0)
             {
                 await Task.Delay(10000, stoppingToken);
             }

@@ -113,7 +113,7 @@ public class RabbitMQReceiver<T> : IMessageReceiver<T>, IDisposable
 
     public void Dispose()
     {
-        _channel.Dispose();
-        _connection.Dispose();
+        _channel?.Dispose();
+        _connection?.Dispose();
     }
 }
