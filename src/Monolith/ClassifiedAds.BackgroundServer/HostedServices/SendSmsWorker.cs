@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Application.SmsMessages.Services;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.Application.SmsMessages.Commands;
 using ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,18 +34,18 @@ public class SendSmsWorker : BackgroundService
         {
             _logger.LogDebug($"SendSms task doing background work.");
 
-            int rs = 0;
-
             try
             {
+                var sendSmsesCommand = new SendSmsMessagesCommand();
+
                 using (var scope = _services.CreateScope())
                 {
-                    var smsService = scope.ServiceProvider.GetRequiredService<SmsMessageService>();
+                    var dispatcher = scope.ServiceProvider.GetRequiredService<Dispatcher>();
 
-                    rs = await smsService.SendSmsMessagesAsync();
+                    await dispatcher.DispatchAsync(sendSmsesCommand, stoppingToken);
                 }
 
-                if (rs == 0)
+                if (sendSmsesCommand.SentMessagesCount == 0)
                 {
                     await Task.Delay(10000, stoppingToken);
                 }

@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Application.EmailMessages.Services;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.Application.EmailMessages.Commands;
 using ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,18 +34,18 @@ public class SendEmailWorker : BackgroundService
         {
             _logger.LogDebug($"SendEmail task doing background work.");
 
-            int rs = 0;
-
             try
             {
+                var sendEmailsCommand = new SendEmailMessagesCommand();
+
                 using (var scope = _services.CreateScope())
                 {
-                    var emailService = scope.ServiceProvider.GetRequiredService<EmailMessageService>();
+                    var dispatcher = scope.ServiceProvider.GetRequiredService<Dispatcher>();
 
-                    rs = await emailService.SendEmailMessagesAsync();
+                    await dispatcher.DispatchAsync(sendEmailsCommand, stoppingToken);
                 }
 
-                if (rs == 0)
+                if (sendEmailsCommand.SentMessagesCount == 0)
                 {
                     await Task.Delay(10000, stoppingToken);
                 }

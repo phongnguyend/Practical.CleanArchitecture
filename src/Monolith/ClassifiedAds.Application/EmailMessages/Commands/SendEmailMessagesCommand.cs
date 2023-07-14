@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
-using ClassifiedAds.CrossCuttingConcerns.Locks;
 using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Domain.Repositories;
@@ -7,37 +6,40 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Application.SmsMessages.Services;
+namespace ClassifiedAds.Application.EmailMessages.Commands;
 
-public class SmsMessageService
+public class SendEmailMessagesCommand : ICommand
+{
+    public int SentMessagesCount { get; set; }
+}
+
+public class SendEmailMessagesCommandHandler : ICommandHandler<SendEmailMessagesCommand>
 {
     private readonly ILogger _logger;
-    private readonly ISmsMessageRepository _repository;
-    private readonly ISmsNotification _smsNotification;
+    private readonly IEmailMessageRepository _repository;
+    private readonly IEmailNotification _emailNotification;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly ICircuitBreakerManager _circuitBreakerManager;
-    private readonly IDistributedLock _distributedLock;
 
-    public SmsMessageService(ILogger<SmsMessageService> logger,
-        ISmsMessageRepository repository,
-        ISmsNotification smsNotification,
+    public SendEmailMessagesCommandHandler(ILogger<SendEmailMessagesCommandHandler> logger,
+        IEmailMessageRepository repository,
+        IEmailNotification emailNotification,
         IDateTimeProvider dateTimeProvider,
-        ICircuitBreakerManager circuitBreakerManager,
-        IDistributedLock distributedLock)
+        ICircuitBreakerManager circuitBreakerManager)
     {
         _logger = logger;
         _repository = repository;
-        _smsNotification = smsNotification;
+        _emailNotification = emailNotification;
         _dateTimeProvider = dateTimeProvider;
         _circuitBreakerManager = circuitBreakerManager;
-        _distributedLock = distributedLock;
     }
 
-    public async Task<int> SendSmsMessagesAsync()
+    public async Task HandleAsync(SendEmailMessagesCommand command, CancellationToken cancellationToken = default)
     {
-        var circuit = _circuitBreakerManager.GetCircuitBreaker("SmsService", TimeSpan.FromMinutes(1));
+        var circuit = _circuitBreakerManager.GetCircuitBreaker("EmailService", TimeSpan.FromMinutes(1));
         circuit.EnsureOkStatus();
 
         var deplayedTimes = new[]
@@ -66,45 +68,45 @@ public class SmsMessageService
 
         if (messages.Any())
         {
-            foreach (var sms in messages)
+            foreach (var email in messages)
             {
                 string log = Environment.NewLine + Environment.NewLine
                         + $"[{_dateTimeProvider.OffsetNow.ToString(CultureInfo.InvariantCulture)}] ";
                 try
                 {
-                    await _smsNotification.SendAsync(sms);
-                    sms.SentDateTime = _dateTimeProvider.OffsetNow;
-                    sms.Log += log + "Succeed.";
+                    await _emailNotification.SendAsync(email, cancellationToken);
+                    email.SentDateTime = _dateTimeProvider.OffsetNow;
+                    email.Log += log + "Succeed.";
 
                     _circuitBreakerManager.LogSuccess(circuit);
                 }
                 catch (Exception ex)
                 {
-                    sms.Log += log + ex.ToString();
-                    sms.NextAttemptDateTime = _dateTimeProvider.OffsetNow + deplayedTimes[sms.AttemptCount];
+                    email.Log += log + ex.ToString();
+                    email.NextAttemptDateTime = _dateTimeProvider.OffsetNow + deplayedTimes[email.AttemptCount];
 
                     _circuitBreakerManager.LogFailure(circuit, 5, TimeSpan.FromMinutes(5));
                 }
 
-                sms.AttemptCount += 1;
-                sms.Log = sms.Log.Trim();
-                sms.UpdatedDateTime = _dateTimeProvider.OffsetNow;
+                email.AttemptCount += 1;
+                email.Log = email.Log.Trim();
+                email.UpdatedDateTime = _dateTimeProvider.OffsetNow;
 
-                if (sms.MaxAttemptCount == 0)
+                if (email.MaxAttemptCount == 0)
                 {
-                    sms.MaxAttemptCount = defaultAttemptCount;
+                    email.MaxAttemptCount = defaultAttemptCount;
                 }
 
-                await _repository.UnitOfWork.SaveChangesAsync();
+                await _repository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
                 circuit.EnsureOkStatus();
             }
         }
         else
         {
-            _logger.LogInformation("No SMS to send.");
+            _logger.LogInformation("No email to send.");
         }
 
-        return messages.Count;
+        command.SentMessagesCount = messages.Count;
     }
 }

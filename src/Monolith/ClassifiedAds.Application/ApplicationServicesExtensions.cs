@@ -1,8 +1,6 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.Application.EmailMessages.Services;
 using ClassifiedAds.Application.EventLogs;
 using ClassifiedAds.Application.Products.Services;
-using ClassifiedAds.Application.SmsMessages.Services;
 using ClassifiedAds.Application.Users.Services;
 using ClassifiedAds.Domain.Entities;
 using System;
@@ -18,8 +16,6 @@ public static class ApplicationServicesExtensions
         services.AddScoped(typeof(ICrudService<>), typeof(CrudService<>))
             .AddScoped<IUserService, UserService>()
             .AddScoped<IProductService, ProductService>()
-            .AddScoped<EmailMessageService>()
-            .AddScoped<SmsMessageService>()
             .AddScoped<PublishEventService>();
 
         if (configureInterceptor != null)
