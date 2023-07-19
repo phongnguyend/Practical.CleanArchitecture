@@ -15,13 +15,13 @@ public class CrudService<T> : ICrudService<T>
 {
     private readonly IUnitOfWork _unitOfWork;
     protected readonly IRepository<T, Guid> _repository;
-    private readonly IDomainEvents _domainEvents;
+    protected readonly Dispatcher _dispatcher;
 
-    public CrudService(IRepository<T, Guid> repository, IDomainEvents domainEvents)
+    public CrudService(IRepository<T, Guid> repository, Dispatcher dispatcher)
     {
         _unitOfWork = repository.UnitOfWork;
         _repository = repository;
-        _domainEvents = domainEvents;
+        _dispatcher = dispatcher;
     }
 
     public Task<List<T>> GetAsync(CancellationToken cancellationToken = default)
@@ -51,20 +51,20 @@ public class CrudService<T> : ICrudService<T>
     {
         await _repository.AddAsync(entity, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        await _domainEvents.DispatchAsync(new EntityCreatedEvent<T>(entity, DateTime.UtcNow), cancellationToken);
+        await _dispatcher.DispatchAsync(new EntityCreatedEvent<T>(entity, DateTime.UtcNow), cancellationToken);
     }
 
     public async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
     {
         await _repository.UpdateAsync(entity, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        await _domainEvents.DispatchAsync(new EntityUpdatedEvent<T>(entity, DateTime.UtcNow), cancellationToken);
+        await _dispatcher.DispatchAsync(new EntityUpdatedEvent<T>(entity, DateTime.UtcNow), cancellationToken);
     }
 
     public async Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
     {
         _repository.Delete(entity);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        await _domainEvents.DispatchAsync(new EntityDeletedEvent<T>(entity, DateTime.UtcNow), cancellationToken);
+        await _dispatcher.DispatchAsync(new EntityDeletedEvent<T>(entity, DateTime.UtcNow), cancellationToken);
     }
 }

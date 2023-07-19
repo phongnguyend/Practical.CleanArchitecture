@@ -2,7 +2,6 @@
 using ClassifiedAds.Application.EventLogs;
 using ClassifiedAds.Application.Users.Services;
 using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Events;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -13,11 +12,7 @@ public static class ApplicationServicesExtensions
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, Action<Type, Type, ServiceLifetime> configureInterceptor = null)
     {
-        DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
-
-        services
-            .AddScoped<IDomainEvents, DomainEvents>()
-            .AddScoped(typeof(ICrudService<>), typeof(CrudService<>))
+        services.AddScoped(typeof(ICrudService<>), typeof(CrudService<>))
             .AddScoped<IUserService, UserService>()
             .AddScoped<PublishEventService>();
 
@@ -39,7 +34,9 @@ public static class ApplicationServicesExtensions
     {
         services.AddScoped<Dispatcher>();
 
-        var assemblyTypes = Assembly.GetExecutingAssembly().GetTypes();
+        var assembly = Assembly.GetExecutingAssembly();
+
+        var assemblyTypes = assembly.GetTypes();
 
         foreach (var type in assemblyTypes)
         {
@@ -83,6 +80,8 @@ public static class ApplicationServicesExtensions
                 }
             }
         }
+
+        Dispatcher.RegisterEventHandlers(assembly, services);
 
         return services;
     }
