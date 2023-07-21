@@ -1,3 +1,9 @@
+#
+> :warning: **Warning**
+> 
+> The code samples contain multiple ways and patterns to do things and not always be considered best practices or recommended for all situations.
+#
+
 # Database Centric vs Domain Centric Architecture 
 ![alt text](/docs/imgs/database-centrics-vs-domain-centric-architecture.png)
 
