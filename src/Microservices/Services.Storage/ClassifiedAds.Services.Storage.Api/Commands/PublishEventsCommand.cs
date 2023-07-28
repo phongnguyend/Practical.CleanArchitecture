@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.OS;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Services.Storage.DTOs;
@@ -6,20 +7,26 @@ using ClassifiedAds.Services.Storage.Entities;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Services.Storage.HostedServices;
+namespace ClassifiedAds.Services.Storage.Commands;
 
-public class PublishEventService
+public class PublishEventsCommand : ICommand
 {
-    private readonly ILogger<PublishEventService> _logger;
+    public int SentEventsCount { get; set; }
+}
+
+public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
+{
+    private readonly ILogger<PublishEventsCommandHandler> _logger;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
     private readonly IMessageSender<FileUploadedEvent> _fileUploadedEventSender;
     private readonly IMessageSender<FileDeletedEvent> _fileDeletedEventSender;
     private readonly IMessageSender<AuditLogCreatedEvent> _auditLogCreatedEventSender;
 
-    public PublishEventService(ILogger<PublishEventService> logger,
+    public PublishEventsCommandHandler(ILogger<PublishEventsCommandHandler> logger,
         IDateTimeProvider dateTimeProvider,
         IRepository<OutboxEvent, long> outboxEventRepository,
         IMessageSender<FileUploadedEvent> fileUploadedEventSender,
@@ -34,7 +41,7 @@ public class PublishEventService
         _auditLogCreatedEventSender = auditLogCreatedEventSender;
     }
 
-    public async Task<int> PublishEvents()
+    public async Task HandleAsync(PublishEventsCommand command, CancellationToken cancellationToken = default)
     {
         var events = _outboxEventRepository.GetAll()
             .Where(x => !x.Published)
@@ -67,6 +74,6 @@ public class PublishEventService
             await _outboxEventRepository.UnitOfWork.SaveChangesAsync();
         }
 
-        return events.Count;
+        command.SentEventsCount = events.Count;
     }
 }

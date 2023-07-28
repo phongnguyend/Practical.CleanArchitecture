@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using ClassifiedAds.Services.Product.Commands;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -31,18 +33,18 @@ public class PublishEventWorker : BackgroundService
         {
             _logger.LogDebug($"PushlishEvent task doing background work.");
 
-            int rs = 0;
-
             try
             {
+                var publishEventsCommand = new PublishEventsCommand();
+
                 using (var scope = _services.CreateScope())
                 {
-                    var emailService = scope.ServiceProvider.GetRequiredService<PublishEventService>();
+                    var dispatcher = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-                    rs = await emailService.PublishEvents();
+                    await dispatcher.Send(publishEventsCommand);
                 }
 
-                if (rs == 0)
+                if (publishEventsCommand.SentEventsCount == 0)
                 {
                     await Task.Delay(10000, stoppingToken);
                 }

@@ -57,8 +57,6 @@ public static class StorageModuleServiceCollectionExtensions
 
     public static IServiceCollection AddHostedServicesStorageModule(this IServiceCollection services)
     {
-        services.AddScoped<PublishEventService>();
-
         services.AddHostedService<MessageBusReceiver>();
         services.AddHostedService<PublishEventWorker>();
 

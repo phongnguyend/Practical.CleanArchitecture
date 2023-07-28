@@ -4,23 +4,30 @@ using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Services.Product.DTOs;
 using ClassifiedAds.Services.Product.Entities;
 using Dapr.Client;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Services.Product.HostedServices;
+namespace ClassifiedAds.Services.Product.Commands;
 
-public class PublishEventService
+public class PublishEventsCommand : IRequest
 {
-    private readonly ILogger<PublishEventService> _logger;
+    public int SentEventsCount { get; set; }
+}
+
+public class PublishEventsCommandHandler : IRequestHandler<PublishEventsCommand>
+{
+    private readonly ILogger<PublishEventsCommandHandler> _logger;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
     private readonly IMessageSender<AuditLogCreatedEvent> _auditLogCreatedEventSender;
     private readonly DaprClient _daprClient;
 
-    public PublishEventService(ILogger<PublishEventService> logger,
+    public PublishEventsCommandHandler(ILogger<PublishEventsCommandHandler> logger,
         IDateTimeProvider dateTimeProvider,
         IRepository<OutboxEvent, long> outboxEventRepository,
         IMessageSender<AuditLogCreatedEvent> auditLogCreatedEventSender,
@@ -33,7 +40,7 @@ public class PublishEventService
         _daprClient = daprClient;
     }
 
-    public async Task<int> PublishEvents()
+    public async Task Handle(PublishEventsCommand command, CancellationToken cancellationToken = default)
     {
         var events = _outboxEventRepository.GetAll()
             .Where(x => !x.Published)
@@ -63,6 +70,6 @@ public class PublishEventService
             await _outboxEventRepository.UnitOfWork.SaveChangesAsync();
         }
 
-        return events.Count;
+        command.SentEventsCount = events.Count;
     }
 }

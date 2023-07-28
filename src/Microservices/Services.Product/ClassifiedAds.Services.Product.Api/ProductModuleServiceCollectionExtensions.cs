@@ -61,7 +61,6 @@ public static class ProductModuleServiceCollectionExtensions
 
     public static IServiceCollection AddHostedServicesProductModule(this IServiceCollection services)
     {
-        services.AddScoped<PublishEventService>();
         services.AddHostedService<PublishEventWorker>();
 
         return services;
