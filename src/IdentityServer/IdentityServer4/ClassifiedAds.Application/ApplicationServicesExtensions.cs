@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.Application.EventLogs;
 using ClassifiedAds.Application.Users.Services;
 using ClassifiedAds.Domain.Entities;
 using System;
@@ -13,8 +12,7 @@ public static class ApplicationServicesExtensions
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, Action<Type, Type, ServiceLifetime> configureInterceptor = null)
     {
         services.AddScoped(typeof(ICrudService<>), typeof(CrudService<>))
-            .AddScoped<IUserService, UserService>()
-            .AddScoped<PublishEventService>();
+            .AddScoped<IUserService, UserService>();
 
         if (configureInterceptor != null)
         {
