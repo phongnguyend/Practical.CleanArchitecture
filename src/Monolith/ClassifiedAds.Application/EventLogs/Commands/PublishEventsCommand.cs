@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Application.FileEntries.DTOs;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.Application.FileEntries.DTOs;
 using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
@@ -6,19 +7,25 @@ using ClassifiedAds.Domain.Repositories;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Application.EventLogs;
+namespace ClassifiedAds.Application.EventLogs.Commands;
 
-public class PublishEventService
+public class PublishEventsCommand : ICommand
 {
-    private readonly ILogger<PublishEventService> _logger;
+    public int SentEventsCount { get; set; }
+}
+
+public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
+{
+    private readonly ILogger<PublishEventsCommandHandler> _logger;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
     private readonly IMessageSender<FileUploadedEvent> _fileUploadedEventSender;
     private readonly IMessageSender<FileDeletedEvent> _fileDeletedEventSender;
 
-    public PublishEventService(ILogger<PublishEventService> logger,
+    public PublishEventsCommandHandler(ILogger<PublishEventsCommandHandler> logger,
         IDateTimeProvider dateTimeProvider,
         IRepository<OutboxEvent, long> outboxEventRepository,
         IMessageSender<FileUploadedEvent> fileUploadedEventSender,
@@ -31,7 +38,7 @@ public class PublishEventService
         _fileDeletedEventSender = fileDeletedEventSender;
     }
 
-    public async Task<int> PublishEvents()
+    public async Task HandleAsync(PublishEventsCommand command, CancellationToken cancellationToken = default)
     {
         var events = _outboxEventRepository.GetAll()
             .Where(x => !x.Published)
@@ -43,11 +50,11 @@ public class PublishEventService
         {
             if (eventLog.EventType == "FILEENTRY_CREATED")
             {
-                await _fileUploadedEventSender.SendAsync(new FileUploadedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(eventLog.Message) });
+                await _fileUploadedEventSender.SendAsync(new FileUploadedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(eventLog.Message) }, cancellationToken: cancellationToken);
             }
             else if (eventLog.EventType == "FILEENTRY_DELETED")
             {
-                await _fileDeletedEventSender.SendAsync(new FileDeletedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(eventLog.Message) });
+                await _fileDeletedEventSender.SendAsync(new FileDeletedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(eventLog.Message) }, cancellationToken: cancellationToken);
             }
             else
             {
@@ -56,9 +63,9 @@ public class PublishEventService
 
             eventLog.Published = true;
             eventLog.UpdatedDateTime = _dateTimeProvider.OffsetNow;
-            await _outboxEventRepository.UnitOfWork.SaveChangesAsync();
+            await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
 
-        return events.Count;
+        command.SentEventsCount = events.Count;
     }
 }
