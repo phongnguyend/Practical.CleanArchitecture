@@ -3,6 +3,9 @@ using ClassifiedAds.Modules.Identity;
 using ClassifiedAds.Modules.Identity.Authorization;
 using ClassifiedAds.Modules.Identity.ConfigurationOptions;
 using ClassifiedAds.Modules.Identity.Entities;
+using ClassifiedAds.Modules.Identity.HostedServices;
+using ClassifiedAds.Modules.Identity.IdentityProviders.Auth0;
+using ClassifiedAds.Modules.Identity.IdentityProviders.Azure;
 using ClassifiedAds.Modules.Identity.PasswordValidators;
 using ClassifiedAds.Modules.Identity.Repositories;
 using ClassifiedAds.Modules.Identity.Services;
@@ -82,6 +85,16 @@ public static class IdentityModuleServiceCollectionExtensions
 
         services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
+        if (settings.Providers?.Auth0?.Enabled ?? false)
+        {
+            services.AddSingleton(new Auth0Manager(settings.Providers.Auth0));
+        }
+
+        if (settings.Providers?.AzureActiveDirectoryB2C?.Enabled ?? false)
+        {
+            services.AddSingleton(new AzureActiveDirectoryB2CManager(settings.Providers.AzureActiveDirectoryB2C));
+        }
+
         return services;
     }
 
@@ -145,5 +158,12 @@ public static class IdentityModuleServiceCollectionExtensions
         {
             serviceScope.ServiceProvider.GetRequiredService<IdentityDbContext>().Database.Migrate();
         }
+    }
+
+    public static IServiceCollection AddHostedServicesIdentityModule(this IServiceCollection services)
+    {
+        services.AddHostedService<SyncUsersWorker>();
+
+        return services;
     }
 }

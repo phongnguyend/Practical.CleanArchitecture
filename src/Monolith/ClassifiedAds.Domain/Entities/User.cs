@@ -33,6 +33,10 @@ public class User : Entity<Guid>, IAggregateRoot
 
     public int AccessFailedCount { get; set; }
 
+    public string Auth0UserId { get; set; }
+
+    public string AzureAdB2CUserId { get; set; }
+
     public IList<UserToken> Tokens { get; set; }
 
     public IList<UserClaim> Claims { get; set; }

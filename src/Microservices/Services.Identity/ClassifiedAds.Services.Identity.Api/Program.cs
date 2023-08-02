@@ -60,6 +60,7 @@ services.AddDateTimeProvider();
 services.AddApplicationServices();
 
 services.AddIdentityModuleCore(appSettings);
+services.AddHostedServicesIdentityModule();
 
 services.AddDataProtection()
         .PersistKeysToDbContext<IdentityDbContext>()

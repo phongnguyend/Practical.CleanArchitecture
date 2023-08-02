@@ -2,7 +2,9 @@
 using ClassifiedAds.BackgroundServer.Identity;
 using ClassifiedAds.Contracts.Identity.Services;
 using ClassifiedAds.Infrastructure.Logging;
+using ClassifiedAds.Modules.Identity.Repositories;
 using ClassifiedAds.Modules.Storage.DTOs;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -41,10 +43,15 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
 
         services
         .AddAuditLogModule(opt => configuration.GetSection("Modules:AuditLog").Bind(opt))
+        .AddIdentityModuleCore(opt => configuration.GetSection("Modules:Identity").Bind(opt))
         .AddNotificationModule(opt => configuration.GetSection("Modules:Notification").Bind(opt))
         .AddProductModule(opt => configuration.GetSection("Modules:Product").Bind(opt))
         .AddStorageModule(opt => configuration.GetSection("Modules:Storage").Bind(opt))
         .AddApplicationServices();
+
+        services.AddDataProtection()
+        .PersistKeysToDbContext<IdentityDbContext>()
+        .SetApplicationName("ClassifiedAds");
 
         services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker);
         services.AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker);
@@ -52,6 +59,7 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
         services.AddMessageBusReceiver<FileUploadedEvent>(appSettings.MessageBroker);
         services.AddMessageBusReceiver<FileDeletedEvent>(appSettings.MessageBroker);
 
+        services.AddHostedServicesIdentityModule();
         services.AddHostedServicesNotificationModule();
         services.AddHostedServicesProductModule();
         services.AddHostedServicesStorageModule();

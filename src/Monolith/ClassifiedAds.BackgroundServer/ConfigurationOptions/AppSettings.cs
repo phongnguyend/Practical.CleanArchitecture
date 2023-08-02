@@ -1,4 +1,6 @@
-﻿using ClassifiedAds.Infrastructure.Logging;
+﻿using ClassifiedAds.Infrastructure.IdentityProviders.Auth0;
+using ClassifiedAds.Infrastructure.IdentityProviders.Azure;
+using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Notification;
 using ClassifiedAds.Infrastructure.Storages;
@@ -22,6 +24,8 @@ public class AppSettings
 
     public NotificationOptions Notification { get; set; }
 
+    public IdentityProvidersOptions IdentityProviders { get; set; }
+
     public ValidateOptionsResult Validate()
     {
         return ValidateOptionsResult.Success;
@@ -35,3 +39,11 @@ public class AppSettingsValidation : IValidateOptions<AppSettings>
         return options.Validate();
     }
 }
+
+public class IdentityProvidersOptions
+{
+    public Auth0Options Auth0 { get; set; }
+
+    public AzureAdB2COptions AzureActiveDirectoryB2C { get; set; }
+}
+

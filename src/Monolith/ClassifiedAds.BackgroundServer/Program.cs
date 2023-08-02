@@ -3,6 +3,9 @@ using ClassifiedAds.BackgroundServer.ConfigurationOptions;
 using ClassifiedAds.BackgroundServer.HostedServices;
 using ClassifiedAds.BackgroundServer.Identity;
 using ClassifiedAds.Domain.Identity;
+using ClassifiedAds.Domain.IdentityProviders;
+using ClassifiedAds.Infrastructure.IdentityProviders.Auth0;
+using ClassifiedAds.Infrastructure.IdentityProviders.Azure;
 using ClassifiedAds.Infrastructure.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -61,10 +64,21 @@ public class Program
 
             services.AddWebNotification<SendTaskStatusMessage>(appSettings.Notification.Web);
 
+            if (appSettings.IdentityProviders?.Auth0?.Enabled ?? false)
+            {
+                services.AddSingleton<IAuth0Manager>(new Auth0Manager(appSettings.IdentityProviders.Auth0));
+            }
+
+            if (appSettings.IdentityProviders?.AzureActiveDirectoryB2C?.Enabled ?? false)
+            {
+                services.AddSingleton<IAzureActiveDirectoryB2CManager>(new AzureActiveDirectoryB2CManager(appSettings.IdentityProviders.AzureActiveDirectoryB2C));
+            }
+
             services.AddHostedService<MessageBusReceiver>();
             services.AddHostedService<PublishEventWorker>();
             services.AddHostedService<SendEmailWorker>();
             services.AddHostedService<SendSmsWorker>();
             services.AddHostedService<ScheduleCronJobWorker>();
+            services.AddHostedService<SyncUsersWorker>();
         });
 }
