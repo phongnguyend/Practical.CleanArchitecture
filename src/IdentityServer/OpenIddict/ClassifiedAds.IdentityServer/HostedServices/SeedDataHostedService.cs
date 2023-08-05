@@ -56,6 +56,43 @@ public class SeedDataHostedService : IHostedService
 
         await UpsertClientApplication(manager, new OpenIddictApplicationDescriptor
         {
+            ClientId = "ReverseProxy.Yarp",
+            ClientSecret = "secret",
+            DisplayName = "ReverseProxy Yarp",
+            RedirectUris =
+            {
+                new Uri("https://localhost:44348/signin-oidc")
+            },
+            PostLogoutRedirectUris =
+            {
+                new Uri("https://localhost:44348/signout-callback-oidc")
+            },
+            Permissions =
+            {
+                OpenIddictConstants.Permissions.Endpoints.Authorization,
+                OpenIddictConstants.Permissions.Endpoints.Token,
+                OpenIddictConstants.Permissions.Endpoints.Logout,
+
+                OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
+                OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
+                OpenIddictConstants.Permissions.GrantTypes.Password,
+                OpenIddictConstants.Permissions.GrantTypes.RefreshToken,
+
+                OpenIddictConstants.Permissions.Prefixes.Scope + "openid",
+                OpenIddictConstants.Permissions.Scopes.Profile,
+                OpenIddictConstants.Permissions.Prefixes.Scope + "ClassifiedAds.WebAPI",
+                OpenIddictConstants.Permissions.Prefixes.Scope + "offline_access",
+                OpenIddictConstants.Permissions.ResponseTypes.Code
+            },
+            Requirements =
+            {
+                OpenIddictConstants.Requirements.Features.ProofKeyForCodeExchange
+            },
+            Type = OpenIddictConstants.ClientTypes.Confidential,
+        }, cancellationToken);
+
+        await UpsertClientApplication(manager, new OpenIddictApplicationDescriptor
+        {
             ClientId = "ClassifiedAds.WebMVC",
             ClientSecret = "secret",
             DisplayName = "ClassifiedAds Web MVC",

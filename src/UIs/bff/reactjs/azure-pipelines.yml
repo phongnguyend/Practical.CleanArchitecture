@@ -1,0 +1,62 @@
+
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - src/UIs/reactjs
+
+resources:
+- repo: self
+
+variables:
+  
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build
+  jobs:
+  - job: Build
+    displayName: Build ReactJs
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - checkout: self
+    - task: NodeTool@0
+      displayName: Use Node 14.x
+      inputs:
+        versionSpec: 14.x
+        checkLatest: true
+    - task: Npm@1
+      displayName: npm install
+      inputs:
+        workingDir: src/UIs/reactjs
+    - task: Npm@1
+      displayName: npm audit --audit-level=critical
+      inputs:
+        command: 'custom'
+        workingDir: 'src/UIs/reactjs'
+        customCommand: 'audit --audit-level=critical'
+    - task: Npm@1
+      displayName: run build
+      inputs:
+        command: custom
+        workingDir: src/UIs/reactjs
+        customCommand: run build
+    - task: ArchiveFiles@2
+      displayName: Archive
+      inputs:
+        rootFolderOrFile: 'src/UIs/reactjs/build'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/reactjs.$(Build.BuildId).zip'
+        replaceExistingArchive: true
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Pipeline Artifact
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+        artifact: 'ReactJs'
+        publishLocation: 'pipeline'

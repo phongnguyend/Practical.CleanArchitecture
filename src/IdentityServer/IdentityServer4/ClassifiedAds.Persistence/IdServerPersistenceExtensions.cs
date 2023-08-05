@@ -85,6 +85,37 @@ namespace Microsoft.Extensions.DependencyInjection
                     });
                 }
 
+                if (!context.Clients.Any(x => x.ClientId == "ReverseProxy.Yarp"))
+                {
+                    clients.Add(new Client
+                    {
+                        ClientId = "ReverseProxy.Yarp",
+                        ClientName = "ReverseProxy Yarp",
+                        AllowedGrantTypes = GrantTypes.Code.Combines(GrantTypes.ResourceOwnerPassword),
+                        RequirePkce = true,
+                        RedirectUris =
+                        {
+                            "https://localhost:44348/signin-oidc"
+                        },
+                        PostLogoutRedirectUris =
+                        {
+                            "https://localhost:44348/signout-callback-oidc"
+                        },
+                        AllowedScopes =
+                        {
+                            IdentityServerConstants.StandardScopes.OpenId,
+                            IdentityServerConstants.StandardScopes.Profile,
+                            "ClassifiedAds.WebAPI",
+                        },
+                        ClientSecrets =
+                        {
+                            new Secret("secret".Sha256()),
+                        },
+                        AllowOfflineAccess = true,
+                        RequireConsent = true,
+                    });
+                }
+
                 if (!context.Clients.Any(x => x.ClientId == "ClassifiedAds.WebMVC"))
                 {
                     clients.Add(new Client
