@@ -16,7 +16,7 @@ namespace ClassifiedAds.Persistence.Repositories
 
         public IQueryable<Role> Get(RoleQueryOptions queryOptions)
         {
-            var query = GetAll();
+            var query = GetQueryableSet();
 
             if (queryOptions.IncludeClaims)
             {

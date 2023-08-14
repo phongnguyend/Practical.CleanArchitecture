@@ -16,7 +16,7 @@ namespace ClassifiedAds.Persistence.Repositories
 
         public IQueryable<AuditLogEntry> Get(AuditLogEntryQueryOptions queryOptions)
         {
-            var query = GetAll();
+            var query = GetQueryableSet();
 
             if (queryOptions.UserId != Guid.Empty)
             {

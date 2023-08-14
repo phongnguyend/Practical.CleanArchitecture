@@ -66,7 +66,7 @@ namespace ClassifiedAds.Persistence.Repositories
             DbSet.Remove(entity);
         }
 
-        public IQueryable<T> GetAll()
+        public IQueryable<T> GetQueryableSet()
         {
             return _dbContext.Set<T>();
         }

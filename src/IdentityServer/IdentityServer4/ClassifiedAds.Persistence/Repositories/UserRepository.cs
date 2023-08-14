@@ -16,7 +16,7 @@ namespace ClassifiedAds.Persistence.Repositories
 
         public IQueryable<User> Get(UserQueryOptions queryOptions)
         {
-            var query = GetAll();
+            var query = GetQueryableSet();
 
             if (queryOptions.IncludePasswordHistories)
             {

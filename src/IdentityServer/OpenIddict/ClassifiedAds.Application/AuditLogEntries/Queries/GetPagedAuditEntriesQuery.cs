@@ -29,7 +29,7 @@ internal class GetPagedAuditEntriesQueryHandler : IQueryHandler<GetPagedAuditEnt
     public async Task<Paged<AuditLogEntryDTO>> HandleAsync(GetPagedAuditEntriesQuery queryOptions, CancellationToken cancellationToken = default)
     {
         var query = _auditLogEntryRepository.Get(queryOptions);
-        var users = _userRepository.GetAll();
+        var users = _userRepository.GetQueryableSet();
 
         var result = new Paged<AuditLogEntryDTO>
         {

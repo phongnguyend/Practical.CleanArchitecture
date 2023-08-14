@@ -27,7 +27,7 @@ namespace ClassifiedAds.Application
 
         public async Task<TEntity> HandleAsync(GetEntityByIdQuery<TEntity> query, CancellationToken cancellationToken = default)
         {
-            var entity = await _repository.FirstOrDefaultAsync(_repository.GetAll().Where(x => x.Id == query.Id));
+            var entity = await _repository.FirstOrDefaultAsync(_repository.GetQueryableSet().Where(x => x.Id == query.Id));
 
             if (query.ThrowNotFoundIfNull && entity == null)
             {

@@ -16,7 +16,7 @@ public class UserRepository : Repository<User, Guid>, IUserRepository
 
     public IQueryable<User> Get(UserQueryOptions queryOptions)
     {
-        var query = GetAll();
+        var query = GetQueryableSet();
 
         if (queryOptions.IncludePasswordHistories)
         {
