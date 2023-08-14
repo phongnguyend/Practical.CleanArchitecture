@@ -25,7 +25,7 @@ internal class GetAuditEntriesQueryHandler : IQueryHandler<GetAuditEntriesQuery,
     public async Task<List<AuditLogEntryDTO>> HandleAsync(GetAuditEntriesQuery query, CancellationToken cancellationToken = default)
     {
         var auditLogs = _auditLogEntryRepository.Get(query);
-        var users = _userRepository.GetAll();
+        var users = _userRepository.GetQueryableSet();
 
         var rs = auditLogs.Join(users, x => x.UserId, y => y.Id,
             (x, y) => new AuditLogEntryDTO

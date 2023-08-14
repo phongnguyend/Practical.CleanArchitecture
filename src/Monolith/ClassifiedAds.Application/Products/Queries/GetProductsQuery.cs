@@ -27,6 +27,6 @@ internal class GetProductsQueryHandler : IQueryHandler<GetProductsQuery, List<Pr
 
     public async Task<List<Product>> HandleAsync(GetProductsQuery query, CancellationToken cancellationToken = default)
     {
-        return await _productRepository.ToListAsync(_productRepository.GetAll());
+        return await _productRepository.ToListAsync(_productRepository.GetQueryableSet());
     }
 }

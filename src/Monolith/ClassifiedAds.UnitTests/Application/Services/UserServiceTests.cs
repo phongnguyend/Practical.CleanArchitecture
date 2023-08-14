@@ -30,7 +30,7 @@ public class UserServiceTests
     {
         // Arrange
         var users = new List<User>();
-        _userRepository.Setup(x => x.GetAll()).Returns(users.AsQueryable());
+        _userRepository.Setup(x => x.GetQueryableSet()).Returns(users.AsQueryable());
 
         // Act
         var user = await _userService.GetByIdAsync(Guid.NewGuid());
@@ -55,7 +55,7 @@ public class UserServiceTests
         // Arrange
         var userId = Guid.NewGuid();
         var users = new List<User> { new User { Id = userId, UserName = "XXX" } }.AsQueryable();
-        _userRepository.Setup(x => x.GetAll()).Returns(users);
+        _userRepository.Setup(x => x.GetQueryableSet()).Returns(users);
         _userRepository.Setup(x => x.FirstOrDefaultAsync(It.IsAny<IQueryable<User>>()))
             .Returns(Task.FromResult(users.FirstOrDefault(x => x.Id == userId)));
 

@@ -21,6 +21,6 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, List<En
 
     public Task<List<Entities.Product>> Handle(GetProductsQuery query, CancellationToken cancellationToken = default)
     {
-        return _productRepository.ToListAsync(_productRepository.GetAll());
+        return _productRepository.ToListAsync(_productRepository.GetQueryableSet());
     }
 }

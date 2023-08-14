@@ -15,7 +15,7 @@ public class RoleRepository : Repository<Role, Guid>, IRoleRepository
 
     public IQueryable<Role> Get(RoleQueryOptions queryOptions)
     {
-        var query = GetAll();
+        var query = GetQueryableSet();
 
         if (queryOptions.IncludeClaims)
         {

@@ -67,7 +67,7 @@ public class DbContextRepository<TDbContext, TEntity, TKey> : IRepository<TEntit
         DbSet.Remove(entity);
     }
 
-    public IQueryable<TEntity> GetAll()
+    public IQueryable<TEntity> GetQueryableSet()
     {
         return _dbContext.Set<TEntity>();
     }

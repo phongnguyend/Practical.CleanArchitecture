@@ -53,7 +53,7 @@ public class SendEmailMessagesCommandHandler : ICommandHandler<SendEmailMessages
         var dateTime = _dateTimeProvider.OffsetNow;
         var defaultAttemptCount = 5;
 
-        var messages = _repository.GetAll()
+        var messages = _repository.GetQueryableSet()
             .Where(x => x.SentDateTime == null)
             .Where(x => x.ExpiredDateTime == null || x.ExpiredDateTime > dateTime)
             .Where(x => (x.MaxAttemptCount == 0 && x.AttemptCount < defaultAttemptCount) || x.AttemptCount < x.MaxAttemptCount)

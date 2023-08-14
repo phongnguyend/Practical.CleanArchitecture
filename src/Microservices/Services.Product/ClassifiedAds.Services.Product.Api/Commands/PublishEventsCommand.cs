@@ -42,7 +42,7 @@ public class PublishEventsCommandHandler : IRequestHandler<PublishEventsCommand>
 
     public async Task Handle(PublishEventsCommand command, CancellationToken cancellationToken = default)
     {
-        var events = _outboxEventRepository.GetAll()
+        var events = _outboxEventRepository.GetQueryableSet()
             .Where(x => !x.Published)
             .OrderBy(x => x.CreatedDateTime)
             .Take(50)

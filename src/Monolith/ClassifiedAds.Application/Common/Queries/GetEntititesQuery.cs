@@ -25,6 +25,6 @@ where TEntity : Entity<Guid>, IAggregateRoot
 
     public async Task<List<TEntity>> HandleAsync(GetEntititesQuery<TEntity> query, CancellationToken cancellationToken = default)
     {
-        return await _repository.ToListAsync(_repository.GetAll());
+        return await _repository.ToListAsync(_repository.GetQueryableSet());
     }
 }

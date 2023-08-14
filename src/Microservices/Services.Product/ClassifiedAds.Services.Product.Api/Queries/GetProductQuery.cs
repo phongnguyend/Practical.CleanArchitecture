@@ -25,7 +25,7 @@ public class GetProductQueryHandler : IRequestHandler<GetProductQuery, Entities.
 
     public async Task<Entities.Product> Handle(GetProductQuery query, CancellationToken cancellationToken = default)
     {
-        var product = await _productRepository.FirstOrDefaultAsync(_productRepository.GetAll().Where(x => x.Id == query.Id));
+        var product = await _productRepository.FirstOrDefaultAsync(_productRepository.GetQueryableSet().Where(x => x.Id == query.Id));
 
         if (query.ThrowNotFoundIfNull && product == null)
         {

@@ -13,7 +13,7 @@ public interface IRepository<TEntity, TKey> : IConcurrencyHandler<TEntity>
 {
     IUnitOfWork UnitOfWork { get; }
 
-    IQueryable<TEntity> GetAll();
+    IQueryable<TEntity> GetQueryableSet();
 
     Task AddOrUpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
 

@@ -41,7 +41,7 @@ public class SyncUsersCommandHandler : ICommandHandler<SyncUsersCommand>
             return;
         }
 
-        var users = _userRepository.GetAll()
+        var users = _userRepository.GetQueryableSet()
              .Where(x => x.AzureAdB2CUserId == null)
              .Take(50)
              .ToList();
@@ -85,7 +85,7 @@ public class SyncUsersCommandHandler : ICommandHandler<SyncUsersCommand>
             return;
         }
 
-        var users = _userRepository.GetAll()
+        var users = _userRepository.GetQueryableSet()
             .Where(x => x.Auth0UserId == null)
             .Take(50)
             .ToList();

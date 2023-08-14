@@ -26,13 +26,13 @@ public class CrudService<T> : ICrudService<T>
 
     public Task<List<T>> GetAsync(CancellationToken cancellationToken = default)
     {
-        return _repository.ToListAsync(_repository.GetAll());
+        return _repository.ToListAsync(_repository.GetQueryableSet());
     }
 
     public Task<T> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         ValidationException.Requires(id != Guid.Empty, "Invalid Id");
-        return _repository.FirstOrDefaultAsync(_repository.GetAll().Where(x => x.Id == id));
+        return _repository.FirstOrDefaultAsync(_repository.GetQueryableSet().Where(x => x.Id == id));
     }
 
     public async Task AddOrUpdateAsync(T entity, CancellationToken cancellationToken = default)
