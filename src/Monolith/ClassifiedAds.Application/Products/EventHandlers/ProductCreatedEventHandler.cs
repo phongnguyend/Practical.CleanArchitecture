@@ -13,11 +13,11 @@ public class ProductCreatedEventHandler : IDomainEventHandler<EntityCreatedEvent
 {
     private readonly ICrudService<AuditLogEntry> _auditSerivce;
     private readonly ICurrentUser _currentUser;
-    private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
+    private readonly IRepository<OutboxEvent, Guid> _outboxEventRepository;
 
     public ProductCreatedEventHandler(ICrudService<AuditLogEntry> auditSerivce,
         ICurrentUser currentUser,
-        IRepository<OutboxEvent, long> outboxEventRepository)
+        IRepository<OutboxEvent, Guid> outboxEventRepository)
     {
         _auditSerivce = auditSerivce;
         _currentUser = currentUser;

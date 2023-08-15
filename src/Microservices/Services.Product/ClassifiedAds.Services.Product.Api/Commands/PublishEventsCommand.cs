@@ -23,13 +23,13 @@ public class PublishEventsCommandHandler : IRequestHandler<PublishEventsCommand>
 {
     private readonly ILogger<PublishEventsCommandHandler> _logger;
     private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
+    private readonly IRepository<OutboxEvent, Guid> _outboxEventRepository;
     private readonly IMessageSender<AuditLogCreatedEvent> _auditLogCreatedEventSender;
     private readonly DaprClient _daprClient;
 
     public PublishEventsCommandHandler(ILogger<PublishEventsCommandHandler> logger,
         IDateTimeProvider dateTimeProvider,
-        IRepository<OutboxEvent, long> outboxEventRepository,
+        IRepository<OutboxEvent, Guid> outboxEventRepository,
         IMessageSender<AuditLogCreatedEvent> auditLogCreatedEventSender,
         DaprClient daprClient)
     {

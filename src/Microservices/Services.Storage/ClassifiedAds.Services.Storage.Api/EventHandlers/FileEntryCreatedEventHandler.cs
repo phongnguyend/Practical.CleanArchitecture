@@ -15,11 +15,11 @@ public class FileEntryCreatedEventHandler : IDomainEventHandler<EntityCreatedEve
 {
     private readonly Dispatcher _dispatcher;
     private readonly ICurrentUser _currentUser;
-    private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
+    private readonly IRepository<OutboxEvent, Guid> _outboxEventRepository;
 
     public FileEntryCreatedEventHandler(Dispatcher dispatcher,
         ICurrentUser currentUser,
-        IRepository<OutboxEvent, long> outboxEventRepository)
+        IRepository<OutboxEvent, Guid> outboxEventRepository)
     {
         _dispatcher = dispatcher;
         _currentUser = currentUser;

@@ -35,7 +35,7 @@ public static class ProductModuleServiceCollectionExtensions
             .AddScoped<IRepository<Product, Guid>, Repository<Product, Guid>>()
             .AddScoped(typeof(IProductRepository), typeof(ProductRepository))
             .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>()
-            .AddScoped<IRepository<OutboxEvent, long>, Repository<OutboxEvent, long>>();
+            .AddScoped<IRepository<OutboxEvent, Guid>, Repository<OutboxEvent, Guid>>();
 
         services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 

@@ -3,7 +3,7 @@ using System;
 
 namespace ClassifiedAds.Services.Storage.Entities;
 
-public class OutboxEvent : Entity<long>, IAggregateRoot
+public class OutboxEvent : Entity<Guid>, IAggregateRoot
 {
     public string EventType { get; set; }
 

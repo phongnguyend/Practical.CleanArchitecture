@@ -5,6 +5,7 @@ using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Services.Product.Commands;
 using ClassifiedAds.Services.Product.Entities;
 using MediatR;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,11 +15,11 @@ public class ProductDeletedEventHandler : IDomainEventHandler<EntityDeletedEvent
 {
     private readonly IMediator _dispatcher;
     private readonly ICurrentUser _currentUser;
-    private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
+    private readonly IRepository<OutboxEvent, Guid> _outboxEventRepository;
 
     public ProductDeletedEventHandler(IMediator dispatcher,
         ICurrentUser currentUser,
-        IRepository<OutboxEvent, long> outboxEventRepository)
+        IRepository<OutboxEvent, Guid> outboxEventRepository)
     {
         _dispatcher = dispatcher;
         _currentUser = currentUser;

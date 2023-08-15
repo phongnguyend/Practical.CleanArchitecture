@@ -3,6 +3,7 @@ using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.Repositories;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,11 +13,11 @@ public class ProductDeletedEventHandler : IDomainEventHandler<EntityDeletedEvent
 {
     private readonly ICrudService<AuditLogEntry> _auditSerivce;
     private readonly ICurrentUser _currentUser;
-    private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
+    private readonly IRepository<OutboxEvent, Guid> _outboxEventRepository;
 
     public ProductDeletedEventHandler(ICrudService<AuditLogEntry> auditSerivce,
         ICurrentUser currentUser,
-        IRepository<OutboxEvent, long> outboxEventRepository)
+        IRepository<OutboxEvent, Guid> outboxEventRepository)
     {
         _auditSerivce = auditSerivce;
         _currentUser = currentUser;

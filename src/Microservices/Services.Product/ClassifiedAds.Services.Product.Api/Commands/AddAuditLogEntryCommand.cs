@@ -17,12 +17,12 @@ public class AddAuditLogEntryCommandHandler : IRequestHandler<AddAuditLogEntryCo
 {
     private readonly ICurrentUser _currentUser;
     private readonly IRepository<AuditLogEntry, Guid> _auditLogRepository;
-    private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
+    private readonly IRepository<OutboxEvent, Guid> _outboxEventRepository;
 
     public AddAuditLogEntryCommandHandler(
         ICurrentUser currentUser,
         IRepository<AuditLogEntry, Guid> auditLogRepository,
-        IRepository<OutboxEvent, long> outboxEventRepository)
+        IRepository<OutboxEvent, Guid> outboxEventRepository)
     {
         _currentUser = currentUser;
         _auditLogRepository = auditLogRepository;

@@ -9,6 +9,6 @@ public class OutboxEventConfiguration : IEntityTypeConfiguration<OutboxEvent>
     public void Configure(EntityTypeBuilder<OutboxEvent> builder)
     {
         builder.ToTable("OutboxEvents");
-        builder.Property(x => x.Id).UseIdentityColumn();
+        builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
     }
 }

@@ -29,7 +29,7 @@ public static class StorageModuleServiceCollectionExtensions
         }))
             .AddScoped<IRepository<FileEntry, Guid>, Repository<FileEntry, Guid>>()
             .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>()
-            .AddScoped<IRepository<OutboxEvent, long>, Repository<OutboxEvent, long>>();
+            .AddScoped<IRepository<OutboxEvent, Guid>, Repository<OutboxEvent, Guid>>();
 
         services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 

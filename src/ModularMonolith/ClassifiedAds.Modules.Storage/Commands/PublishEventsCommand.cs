@@ -6,6 +6,7 @@ using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Modules.Storage.DTOs;
 using ClassifiedAds.Modules.Storage.Entities;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
@@ -22,14 +23,14 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
 {
     private readonly ILogger<PublishEventsCommandHandler> _logger;
     private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly IRepository<OutboxEvent, long> _outboxEventRepository;
+    private readonly IRepository<OutboxEvent, Guid> _outboxEventRepository;
     private readonly IMessageSender<FileUploadedEvent> _fileUploadedEventSender;
     private readonly IMessageSender<FileDeletedEvent> _fileDeletedEventSender;
     private readonly IAuditLogService _externalAuditLogService;
 
     public PublishEventsCommandHandler(ILogger<PublishEventsCommandHandler> logger,
         IDateTimeProvider dateTimeProvider,
-        IRepository<OutboxEvent, long> outboxEventRepository,
+        IRepository<OutboxEvent, Guid> outboxEventRepository,
         IMessageSender<FileUploadedEvent> fileUploadedEventSender,
         IMessageSender<FileDeletedEvent> fileDeletedEventSender,
         IAuditLogService externalAuditLogService)
