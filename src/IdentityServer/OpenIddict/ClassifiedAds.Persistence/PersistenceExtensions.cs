@@ -56,8 +56,6 @@ public static class PersistenceExtensions
     {
         services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
                 .AddScoped(typeof(IAuditLogEntryRepository), typeof(AuditLogEntryRepository))
-                .AddScoped(typeof(IEmailMessageRepository), typeof(EmailMessageRepository))
-                .AddScoped(typeof(ISmsMessageRepository), typeof(SmsMessageRepository))
                 .AddScoped(typeof(IUserRepository), typeof(UserRepository))
                 .AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
 
