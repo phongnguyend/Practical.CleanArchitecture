@@ -1,4 +1,4 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -263,21 +263,21 @@ namespace IdentityServerHost.Quickstart.UI
             var message = "Your security code is: " + code;
             if (model.SelectedProvider == "Email")
             {
-                await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
-                {
-                    From = "phong@gmail.com",
-                    Tos = user.Email,
-                    Subject = "Security Code",
-                    Body = message,
-                }));
+                //await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
+                //{
+                //    From = "phong@gmail.com",
+                //    Tos = user.Email,
+                //    Subject = "Security Code",
+                //    Body = message,
+                //}));
             }
             else if (model.SelectedProvider == "Phone")
             {
-                await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<SmsMessage>(new SmsMessage
-                {
-                    PhoneNumber = user.PhoneNumber,
-                    Message = message,
-                }));
+                //await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<SmsMessage>(new SmsMessage
+                //{
+                //    PhoneNumber = user.PhoneNumber,
+                //    Message = message,
+                //}));
             }
 
             return RedirectToAction(nameof(VerifyCode), new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
@@ -623,14 +623,14 @@ namespace IdentityServerHost.Quickstart.UI
             var confirmationEmail = Url.Action("ConfirmEmailAddress", "Account",
                 new { token = token, email = user.Email }, Request.Scheme);
 
-            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
-            {
-                From = "phong@gmail.com",
-                Tos = user.Email,
-                Subject = "Confirmation Email",
-                Body = string.Format("Confirmation Email: {0}", confirmationEmail),
-            }
-            ));
+            //await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
+            //{
+            //    From = "phong@gmail.com",
+            //    Tos = user.Email,
+            //    Subject = "Confirmation Email",
+            //    Body = string.Format("Confirmation Email: {0}", confirmationEmail),
+            //}
+            //));
 
             return View("Success");
         }
@@ -674,13 +674,13 @@ namespace IdentityServerHost.Quickstart.UI
                     var resetUrl = Url.Action("ResetPassword", "Account",
                         new { token = token, email = user.Email }, Request.Scheme);
 
-                    await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
-                    {
-                        From = "phong@gmail.com",
-                        Tos = user.Email,
-                        Subject = "Forgot Password",
-                        Body = string.Format("Reset Url: {0}", resetUrl),
-                    }));
+                    //await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
+                    //{
+                    //    From = "phong@gmail.com",
+                    //    Tos = user.Email,
+                    //    Subject = "Forgot Password",
+                    //    Body = string.Format("Reset Url: {0}", resetUrl),
+                    //}));
                 }
                 else
                 {
