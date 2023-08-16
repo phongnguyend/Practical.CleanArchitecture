@@ -1,7 +1,7 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.OS;
+﻿using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using System;
 
-namespace ClassifiedAds.Infrastructure.OS
+namespace ClassifiedAds.Infrastructure.DateTimes
 {
     public class DateTimeProvider : IDateTimeProvider
     {

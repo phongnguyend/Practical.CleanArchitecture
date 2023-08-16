@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.OS;
+﻿using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using ClassifiedAds.Modules.Notification.Entities;
 using System;
 

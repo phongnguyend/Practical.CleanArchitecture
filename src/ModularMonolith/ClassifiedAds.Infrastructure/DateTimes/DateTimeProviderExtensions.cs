@@ -1,5 +1,5 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.OS;
-using ClassifiedAds.Infrastructure.OS;
+﻿using ClassifiedAds.CrossCuttingConcerns.DateTimes;
+using ClassifiedAds.Infrastructure.DateTimes;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

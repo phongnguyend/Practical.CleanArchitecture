@@ -1,5 +1,5 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
-using ClassifiedAds.CrossCuttingConcerns.OS;
+using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Domain.Repositories;
 using Microsoft.Extensions.Logging;

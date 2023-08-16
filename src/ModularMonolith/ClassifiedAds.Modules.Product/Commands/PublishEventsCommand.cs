@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Contracts.AuditLog.Services;
-using ClassifiedAds.CrossCuttingConcerns.OS;
+using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Modules.Product.Entities;
 using Microsoft.Extensions.Logging;

@@ -1,5 +1,5 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
-using ClassifiedAds.CrossCuttingConcerns.OS;
+using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;

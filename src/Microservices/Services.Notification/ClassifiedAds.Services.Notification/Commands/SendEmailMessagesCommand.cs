@@ -1,5 +1,5 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.CrossCuttingConcerns.OS;
+using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using ClassifiedAds.Infrastructure.Notification.Email;
 using ClassifiedAds.Services.Notification.DTOs;
 using ClassifiedAds.Services.Notification.Repositories;

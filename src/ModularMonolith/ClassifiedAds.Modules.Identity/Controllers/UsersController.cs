@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Contracts.Notification.DTOs;
 using ClassifiedAds.Contracts.Notification.Services;
-using ClassifiedAds.CrossCuttingConcerns.OS;
+using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using ClassifiedAds.Modules.Identity.Authorization;
 using ClassifiedAds.Modules.Identity.Commands.Users;
 using ClassifiedAds.Modules.Identity.ConfigurationOptions;
