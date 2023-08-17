@@ -1,9 +1,11 @@
 ﻿using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Persistence.Interceptors;
 using ClassifiedAds.Persistence.Locks;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 using System.Reflection;
@@ -14,11 +16,15 @@ namespace ClassifiedAds.Persistence;
 
 public class AdsDbContext : DbContext, IUnitOfWork, IDataProtectionKeyContext
 {
+    private readonly ILogger<AdsDbContext> _logger;
+
     private IDbContextTransaction _dbContextTransaction;
 
-    public AdsDbContext(DbContextOptions<AdsDbContext> options)
+    public AdsDbContext(DbContextOptions<AdsDbContext> options,
+        ILogger<AdsDbContext> logger)
         : base(options)
     {
+        _logger = logger;
     }
 
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
@@ -48,9 +54,15 @@ public class AdsDbContext : DbContext, IUnitOfWork, IDataProtectionKeyContext
         await _dbContextTransaction.CommitAsync(cancellationToken);
     }
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(builder);
-        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.AddInterceptors(new SelectWithoutWhereCommandInterceptor(_logger));
+        optionsBuilder.AddInterceptors(new SelectWhereInCommandInterceptor(_logger));
     }
 }
