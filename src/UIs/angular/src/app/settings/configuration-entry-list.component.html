@@ -10,20 +10,14 @@
         Add
       </button>
       &nbsp;
-      <button
-        class="btn btn-primary"
-        (click)="openImportExcelModal(import_excel_modal_template)"
-      >
+      <button class="btn btn-primary" (click)="openImportExcelModal(import_excel_modal_template)">
         Import Excel
       </button>
     </div>
   </div>
   <div class="card-body">
     <div class="table-responsive">
-      <table
-        class="table"
-        *ngIf="configurationEntries && configurationEntries.length"
-      >
+      <table class="table" *ngIf="configurationEntries && configurationEntries.length">
         <thead>
           <tr>
             <th>Key</th>
@@ -40,18 +34,11 @@
             <td>{{ entry.description }}</td>
             <td>{{ entry.updatedDateTime | date: "dd/MM/yyyy hh:mm:ss" }}</td>
             <td>
-              <button
-                class="btn btn-primary"
-                (click)="updateEntry(addupdatetemplate, entry)"
-              >
+              <button class="btn btn-primary" (click)="updateEntry(addupdatetemplate, entry)">
                 Edit
               </button>
               &nbsp;
-              <button
-                type="button"
-                class="btn btn-primary btn-danger"
-                (click)="deleteEntry(deletetemplate, entry)"
-              >
+              <button type="button" class="btn btn-primary btn-danger" (click)="deleteEntry(deletetemplate, entry)">
                 Delete
               </button>
             </td>
@@ -85,75 +72,43 @@
     <h4 class="modal-title pull-left">
       {{ selectedEntry.id == GuidEmpty ? "Add" : "Update" }}
     </h4>
-    <button
-      type="button"
-      class="close pull-right"
-      aria-label="Close"
-      (click)="addUpdateModalRef.hide()"
-    >
+    <button type="button" class="btn-close pull-right" aria-label="Close" (click)="addUpdateModalRef.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     <form #form="ngForm" (ngSubmit)="confirmAddUpdate(form)">
-      <div class="form-group row">
+      <div class="mb-3 row">
         <label for="key" class="col-sm-3 col-form-label">Key</label>
         <div class="col-sm-9">
-          <input
-            id="key"
-            name="key"
-            class="form-control"
-            required
-            [(ngModel)]="selectedEntry.key"
-            #keyField="ngModel"
-            [class.is-invalid]="form.submitted && keyField.invalid"
-          />
+          <input id="key" name="key" class="form-control" required [(ngModel)]="selectedEntry.key" #keyField="ngModel"
+            [class.is-invalid]="form.submitted && keyField.invalid" />
           <span class="invalid-feedback"> Enter a key </span>
         </div>
       </div>
-      <div class="form-group row">
+      <div class="mb-3 row">
         <label for="value" class="col-sm-3 col-form-label">Value</label>
         <div class="col-sm-9">
-          <input
-            id="value"
-            name="value"
-            class="form-control"
-            required
-            [(ngModel)]="selectedEntry.value"
-            #valueField="ngModel"
-            [class.is-invalid]="form.submitted && valueField.invalid"
-          />
+          <input id="value" name="value" class="form-control" required [(ngModel)]="selectedEntry.value"
+            #valueField="ngModel" [class.is-invalid]="form.submitted && valueField.invalid" />
           <span class="invalid-feedback"> Enter a value </span>
         </div>
       </div>
-      <div class="form-group row">
-        <label for="description" class="col-sm-3 col-form-label"
-          >Description</label
-        >
+      <div class="mb-3 row">
+        <label for="description" class="col-sm-3 col-form-label">Description</label>
         <div class="col-sm-9">
-          <input
-            id="description"
-            name="description"
-            class="form-control"
-            [(ngModel)]="selectedEntry.description"
-            #descriptionField="ngModel"
-            [class.is-invalid]="form.submitted && descriptionField.invalid"
-          />
+          <input id="description" name="description" class="form-control" [(ngModel)]="selectedEntry.description"
+            #descriptionField="ngModel" [class.is-invalid]="form.submitted && descriptionField.invalid" />
           <span class="invalid-feedback"> Enter a description </span>
         </div>
       </div>
-      <div class="form-group row">
+      <div class="mb-3 row">
         <label for="sensitive" class="col-sm-3 col-form-label">Sensitive</label>
         <div class="col-sm-9">
-          <input
-            type="checkbox"
-            id="sensitive"
-            name="sensitive"
-            [(ngModel)]="selectedEntry.isSensitive"
-          />
+          <input type="checkbox" id="sensitive" name="sensitive" [(ngModel)]="selectedEntry.isSensitive" />
         </div>
       </div>
-      <div class="form-group row">
+      <div class="mb-3 row">
         <label class="col-sm-3 col-form-label"></label>
         <div class="col-sm-9">
           <button class="btn btn-primary">Save</button>
@@ -166,32 +121,20 @@
 <ng-template #import_excel_modal_template>
   <div class="modal-header">
     <h4 class="modal-title pull-left">Import Excel</h4>
-    <button
-      type="button"
-      class="close pull-right"
-      aria-label="Close"
-      (click)="importExcelModalRef.hide()"
-    >
+    <button type="button" class="btn-close pull-right" aria-label="Close" (click)="importExcelModalRef.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     <form #form="ngForm" (ngSubmit)="confirmImportExcelFile(form)">
-      <div class="form-group row">
+      <div class="mb-3 row">
         <div class="col-sm-12">
-          <input
-            id="importingFile"
-            type="file"
-            name="importingFile"
-            class="form-control"
-            required
-            (change)="handleFileInput($event.target.files)"
-            [class.is-invalid]="form.submitted && !importingFile"
-          />
+          <input id="importingFile" type="file" name="importingFile" class="form-control" required
+            (change)="handleFileInput($event.target.files)" [class.is-invalid]="form.submitted && !importingFile" />
           <span class="invalid-feedback"> Select a file </span>
         </div>
       </div>
-      <div class="form-group row">
+      <div class="mb-3 row">
         <div class="col-sm-12" style="text-align: center">
           <button class="btn btn-primary">Import</button>
         </div>

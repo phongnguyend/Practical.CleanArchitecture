@@ -10,18 +10,11 @@
         Export as Csv
       </button>
       &nbsp;
-      <a
-        class="btn btn-primary"
-        routerLinkActive="active"
-        [routerLink]="['/products/add']"
-      >
+      <a class="btn btn-primary" routerLinkActive="active" [routerLink]="['/products/add']">
         Add Product
       </a>
       &nbsp;
-      <button
-        class="btn btn-primary"
-        (click)="openImportCsvModal(import_csv_modal_template)"
-      >
+      <button class="btn btn-primary" (click)="openImportCsvModal(import_csv_modal_template)">
         Import Csv
       </button>
     </div>
@@ -58,13 +51,8 @@
         <tbody>
           <tr *ngFor="let product of filteredProducts">
             <td>
-              <img
-                *ngIf="showImage"
-                [src]="product.imageUrl || '/assets/images/logo.png'"
-                [title]="product.name"
-                [style.width.px]="imageWidth"
-                [style.margin.px]="imageMargin"
-              />
+              <img *ngIf="showImage" [src]="product.imageUrl || '/assets/images/logo.png'" [title]="product.name"
+                [style.width.px]="imageWidth" [style.margin.px]="imageMargin" />
             </td>
             <td>
               <a [routerLink]="['/products', product.id]">
@@ -75,33 +63,19 @@
             <td>{{ product.description }}</td>
             <td>{{ product.price || 5 | currency: "USD":"symbol" }}</td>
             <td>
-              <pm-star
-                [rating]="product.starRating || 4"
-                (ratingClicked)="onRatingClicked($event)"
-              >
+              <pm-star [rating]="product.starRating || 4" (ratingClicked)="onRatingClicked($event)">
               </pm-star>
             </td>
             <td>
-              <a
-                class="btn btn-primary"
-                routerLinkActive="active"
-                [routerLink]="['/products/edit', product.id]"
-              >
+              <a class="btn btn-primary" routerLinkActive="active" [routerLink]="['/products/edit', product.id]">
                 Edit
               </a>
               &nbsp;
-              <button
-                type="button"
-                class="btn btn-primary btn-secondary"
-                (click)="viewAuditLogs(template, product.id)"
-              >
+              <button type="button" class="btn btn-primary btn-secondary" (click)="viewAuditLogs(template, product.id)">
                 View Audit Logs
               </button>
               &nbsp;
-              <app-delete-product
-                [product]="product"
-                (confirmed)="onDeleteConfirmed($event)"
-              ></app-delete-product>
+              <app-delete-product [product]="product" (confirmed)="onDeleteConfirmed($event)"></app-delete-product>
             </td>
           </tr>
         </tbody>
@@ -153,32 +127,20 @@
 <ng-template #import_csv_modal_template>
   <div class="modal-header">
     <h4 class="modal-title pull-left">Import Csv</h4>
-    <button
-      type="button"
-      class="close pull-right"
-      aria-label="Close"
-      (click)="importCsvModalRef.hide()"
-    >
+    <button type="button" class="btn-close pull-right" aria-label="Close" (click)="importCsvModalRef.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     <form #form="ngForm" (ngSubmit)="confirmImportCsvFile(form)">
-      <div class="form-group row">
+      <div class="mb-3 row">
         <div class="col-sm-12">
-          <input
-            id="importingFile"
-            type="file"
-            name="importingFile"
-            class="form-control"
-            required
-            (change)="handleFileInput($event.target.files)"
-            [class.is-invalid]="form.submitted && !importingFile"
-          />
+          <input id="importingFile" type="file" name="importingFile" class="form-control" required
+            (change)="handleFileInput($event.target.files)" [class.is-invalid]="form.submitted && !importingFile" />
           <span class="invalid-feedback"> Select a file </span>
         </div>
       </div>
-      <div class="form-group row">
+      <div class="mb-3 row">
         <div class="col-sm-12" style="text-align: center">
           <button class="btn btn-primary">Import</button>
         </div>
