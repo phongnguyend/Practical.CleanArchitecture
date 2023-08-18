@@ -1,0 +1,30 @@
+@page
+@model IdentityServerHost.Pages.Logout.LoggedOut
+
+<div class="logged-out-page">
+    <h1>
+        Logout
+        <small>You are now logged out</small>
+    </h1>
+
+    @if (Model.View.PostLogoutRedirectUri != null)
+    {
+        <div>
+            Click <a class="PostLogoutRedirectUri" href="@Model.View.PostLogoutRedirectUri">here</a> to return to the
+            <span>@Model.View.ClientName</span> application.
+        </div>
+    }
+
+    @if (Model.View.SignOutIframeUrl != null)
+    {
+        <iframe width="0" height="0" class="signout" src="@Model.View.SignOutIframeUrl"></iframe>
+    }
+</div>
+
+@section scripts
+{
+    @if (Model.View.AutomaticRedirectAfterSignOut)
+    {
+        <script src="~/js/signout-redirect.js"></script>
+    }
+}

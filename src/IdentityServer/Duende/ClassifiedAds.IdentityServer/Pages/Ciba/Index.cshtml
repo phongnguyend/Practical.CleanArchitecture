@@ -1,0 +1,30 @@
+@page
+@model IdentityServerHost.Pages.Ciba.IndexModel
+@{
+}
+
+<div class="ciba-page">
+    <div class="lead">
+        @if (Model.LoginRequest.Client.LogoUri != null)
+        {
+            <div class="client-logo"><img src="@Model.LoginRequest.Client.LogoUri"></div>
+        }
+        <h1>
+            @Model.LoginRequest.Client.ClientName
+            <small class="text-muted">is requesting your permission</small>
+        </h1>
+        
+        <h3>
+            Verify that this identifier matches what the client is displaying:
+            <em class="text-primary">@Model.LoginRequest.BindingMessage</em>
+        </h3>
+
+        <p>
+            Do you wish to continue?
+        </p>
+        <div>
+            <a class="btn btn-primary" asp-page="/Ciba/Consent" asp-route-id="@Model.LoginRequest.InternalId">Yes, Continue</a>
+        </div>
+        
+    </div>
+</div>

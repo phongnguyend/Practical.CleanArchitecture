@@ -1,0 +1,61 @@
+@page
+@model IdentityServerHost.Pages.Diagnostics.Index
+
+<div class="diagnostics-page">
+    <div class="lead">
+        <h1>Authentication Cookie</h1>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Claims</h2>
+                </div>
+                <div class="card-body">
+                    <dl>
+                        @foreach (var claim in Model.View.AuthenticateResult.Principal.Claims)
+                        {
+                            <dt>@claim.Type</dt>
+                            <dd>@claim.Value</dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Properties</h2>
+                </div>
+                <div class="card-body">
+                    <dl>
+                        @foreach (var prop in Model.View.AuthenticateResult.Properties.Items)
+                        {
+                            <dt>@prop.Key</dt>
+                            <dd>@prop.Value</dd>
+                        }
+                        @if (Model.View.Clients.Any())
+                        {
+                            <dt>Clients</dt>
+                            <dd>
+                                @{
+                                    var clients = Model.View.Clients.ToArray();
+                                    for(var i = 0; i < clients.Length; i++)
+                                    {
+                                        <text>@clients[i]</text>
+                                        if (i < clients.Length - 1)
+                                        {
+                                            <text>, </text>
+                                        }
+                                    }
+                                }
+                            </dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
