@@ -132,11 +132,7 @@ class ListConfigurationEntries extends Component<any, any> {
 
     let isValid = true;
     for (let fieldName in this.state.controls) {
-      isValid =
-        this.checkFieldValidity(
-          fieldName,
-          this.state.selectingEntry[fieldName]
-        ) && isValid;
+      isValid = this.checkFieldValidity(fieldName, this.state.selectingEntry[fieldName]) && isValid;
     }
 
     if (isValid) {
@@ -215,10 +211,7 @@ class ListConfigurationEntries extends Component<any, any> {
         <td>{entry.description}</td>
         <td>{this.formatDateTime(entry.updatedDateTime)}</td>
         <td>
-          <button
-            className="btn btn-primary"
-            onClick={() => this.openUpdateModal(entry)}
-          >
+          <button className="btn btn-primary" onClick={() => this.openUpdateModal(entry)}>
             Edit
           </button>
           &nbsp;
@@ -274,13 +267,11 @@ class ListConfigurationEntries extends Component<any, any> {
         onHide={this.addUpdateCanceled}
       >
         <Modal.Header closeButton>
-          <Modal.Title>
-            {!this.state.selectingEntry?.id ? "Add" : "Update"}
-          </Modal.Title>
+          <Modal.Title>{!this.state.selectingEntry?.id ? "Add" : "Update"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={this.addUpdateConfirmed}>
-            <div className="form-group row">
+            <div className="mb-3 row">
               <label htmlFor="key" className="col-sm-3 col-form-label">
                 Key
               </label>
@@ -290,8 +281,7 @@ class ListConfigurationEntries extends Component<any, any> {
                   name="key"
                   className={
                     "form-control " +
-                    (this.state.addUpdateFormSubmitted &&
-                    !this.state.controls["key"].valid
+                    (this.state.addUpdateFormSubmitted && !this.state.controls["key"].valid
                       ? "is-invalid"
                       : "")
                   }
@@ -299,13 +289,11 @@ class ListConfigurationEntries extends Component<any, any> {
                   onChange={(event) => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
-                  {this.state.controls["key"].error.required ? (
-                    <span>Enter a key</span>
-                  ) : null}
+                  {this.state.controls["key"].error.required ? <span>Enter a key</span> : null}
                 </span>
               </div>
             </div>
-            <div className="form-group row">
+            <div className="mb-3 row">
               <label htmlFor="value" className="col-sm-3 col-form-label">
                 Value
               </label>
@@ -315,8 +303,7 @@ class ListConfigurationEntries extends Component<any, any> {
                   name="value"
                   className={
                     "form-control " +
-                    (this.state.addUpdateFormSubmitted &&
-                    !this.state.controls["value"].valid
+                    (this.state.addUpdateFormSubmitted && !this.state.controls["value"].valid
                       ? "is-invalid"
                       : "")
                   }
@@ -324,13 +311,11 @@ class ListConfigurationEntries extends Component<any, any> {
                   onChange={(event) => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
-                  {this.state.controls["value"].error.required ? (
-                    <span>Enter a value</span>
-                  ) : null}
+                  {this.state.controls["value"].error.required ? <span>Enter a value</span> : null}
                 </span>
               </div>
             </div>
-            <div className="form-group row">
+            <div className="mb-3 row">
               <label htmlFor="description" className="col-sm-3 col-form-label">
                 Description
               </label>
@@ -344,7 +329,7 @@ class ListConfigurationEntries extends Component<any, any> {
                 />
               </div>
             </div>
-            <div className="form-group row">
+            <div className="mb-3 row">
               <label htmlFor="isSensitive" className="col-sm-3 col-form-label">
                 Sensitive
               </label>
@@ -358,7 +343,7 @@ class ListConfigurationEntries extends Component<any, any> {
                 />
               </div>
             </div>
-            <div className="form-group row">
+            <div className="mb-3 row">
               <label className="col-sm-3 col-form-label"></label>
               <div className="col-sm-9">
                 <button className="btn btn-primary">Save</button>
@@ -370,16 +355,13 @@ class ListConfigurationEntries extends Component<any, any> {
     );
 
     const importExcelModal = (
-      <Modal
-        show={this.state.importExcelModalOpen}
-        onHide={this.importExcelCanceled}
-      >
+      <Modal show={this.state.importExcelModalOpen} onHide={this.importExcelCanceled}>
         <Modal.Header closeButton>
           <Modal.Title>Import Excel</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={this.importExcelConfirmed}>
-            <div className="form-group row">
+            <div className="mb-3 row">
               <div className="col-sm-12">
                 <input
                   id="importingFile"
@@ -387,8 +369,7 @@ class ListConfigurationEntries extends Component<any, any> {
                   name="importingFile"
                   className={
                     "form-control " +
-                    (this.state.importExcelFormSubmitted &&
-                    !this.state.importingFile
+                    (this.state.importExcelFormSubmitted && !this.state.importingFile
                       ? "is-invalid"
                       : "")
                   }
@@ -397,7 +378,7 @@ class ListConfigurationEntries extends Component<any, any> {
                 <span className="invalid-feedback"> Select a file </span>
               </div>
             </div>
-            <div className="form-group row">
+            <div className="mb-3 row">
               <div className="col-sm-12" style={{ textAlign: "center" }}>
                 <button className="btn btn-primary">Import</button>
               </div>
@@ -413,25 +394,15 @@ class ListConfigurationEntries extends Component<any, any> {
           <div className="card-header">
             Settings
             <div style={{ float: "right" }}>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={this.exportAsExcel}
-              >
+              <button type="button" className="btn btn-secondary" onClick={this.exportAsExcel}>
                 Export as Excel
               </button>
               &nbsp;
-              <button
-                className="btn btn-primary"
-                onClick={() => this.openAddModal()}
-              >
+              <button className="btn btn-primary" onClick={() => this.openAddModal()}>
                 Add
               </button>
               &nbsp;
-              <button
-                className="btn btn-primary"
-                onClick={() => this.openImportExcelModal()}
-              >
+              <button className="btn btn-primary" onClick={() => this.openImportExcelModal()}>
                 Import Excel
               </button>
             </div>
@@ -441,9 +412,7 @@ class ListConfigurationEntries extends Component<any, any> {
           </div>
         </div>
         {this.props.errorMessage ? (
-          <div className="alert alert-danger">
-            Error: {this.props.errorMessage}
-          </div>
+          <div className="alert alert-danger">Error: {this.props.errorMessage}</div>
         ) : null}
         {deleteModal}
         {addUpdateModal}
@@ -462,16 +431,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchConfigurationEntries: () =>
-      dispatch(actions.fetchConfigurationEntries()),
-    saveConfigurationEntry: (entry) =>
-      dispatch(actions.saveConfigurationEntry(entry)),
-    deleteConfigurationEntry: (entry) =>
-      dispatch(actions.deleteConfigurationEntry(entry)),
+    fetchConfigurationEntries: () => dispatch(actions.fetchConfigurationEntries()),
+    saveConfigurationEntry: (entry) => dispatch(actions.saveConfigurationEntry(entry)),
+    deleteConfigurationEntry: (entry) => dispatch(actions.deleteConfigurationEntry(entry)),
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ListConfigurationEntries);
+export default connect(mapStateToProps, mapDispatchToProps)(ListConfigurationEntries);

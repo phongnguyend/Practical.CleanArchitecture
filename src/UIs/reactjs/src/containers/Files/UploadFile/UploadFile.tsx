@@ -108,9 +108,7 @@ class UploadFile extends Component<Props, any> {
     this.setState({ submitted: true });
     let isValid = true;
     for (let fieldName in this.state.controls) {
-      isValid =
-        this.checkFieldValidity(fieldName, this.props.file[fieldName]) &&
-        isValid;
+      isValid = this.checkFieldValidity(fieldName, this.props.file[fieldName]) && isValid;
     }
 
     if (isValid && this.state.hasFile) {
@@ -130,12 +128,10 @@ class UploadFile extends Component<Props, any> {
         <div className="card-header">{this.state.title}</div>
         <div className="card-body">
           {this.state.errorMessage ? (
-            <div className="row alert alert-danger">
-              {this.state.errorMessage}
-            </div>
+            <div className="row alert alert-danger">{this.state.errorMessage}</div>
           ) : null}
           <form onSubmit={this.onSubmit}>
-            <div className="form-group row">
+            <div className="mb-3 row">
               <label htmlFor="name" className="col-sm-2 col-form-label">
                 Name
               </label>
@@ -145,24 +141,20 @@ class UploadFile extends Component<Props, any> {
                   name="name"
                   className={
                     "form-control " +
-                    (this.state.submitted && !this.state.controls["name"].valid
-                      ? "is-invalid"
-                      : "")
+                    (this.state.submitted && !this.state.controls["name"].valid ? "is-invalid" : "")
                   }
                   value={this.props.file?.name}
                   onChange={(event) => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
-                  {this.state.controls["name"].error.required ? (
-                    <span>Enter a name</span>
-                  ) : null}
+                  {this.state.controls["name"].error.required ? <span>Enter a name</span> : null}
                   {this.state.controls["name"].error.minLength ? (
                     <span>The name must be longer than 3 characters.</span>
                   ) : null}
                 </span>
               </div>
             </div>
-            <div className="form-group row">
+            <div className="mb-3 row">
               <label htmlFor="description" className="col-sm-2 col-form-label">
                 Description
               </label>
@@ -172,8 +164,7 @@ class UploadFile extends Component<Props, any> {
                   name="description"
                   className={
                     "form-control " +
-                    (this.state.submitted &&
-                    !this.state.controls["description"].valid
+                    (this.state.submitted && !this.state.controls["description"].valid
                       ? "is-invalid"
                       : "")
                   }
@@ -190,7 +181,7 @@ class UploadFile extends Component<Props, any> {
                 </span>
               </div>
             </div>
-            <div className="form-group row">
+            <div className="mb-3 row">
               <label htmlFor="formFile" className="col-sm-2 col-form-label">
                 File
               </label>
@@ -201,16 +192,14 @@ class UploadFile extends Component<Props, any> {
                   name="formFile"
                   className={
                     "form-control " +
-                    (this.state.submitted && !this.state.hasFile
-                      ? "is-invalid"
-                      : "")
+                    (this.state.submitted && !this.state.hasFile ? "is-invalid" : "")
                   }
                   onChange={this.handleFileInput}
                 />
                 <span className="invalid-feedback">Select a file</span>
               </div>
             </div>
-            <div className="form-group row">
+            <div className="mb-3 row">
               <label htmlFor="encrypted" className="col-sm-2 col-form-label">
                 Encrypted
               </label>
@@ -224,11 +213,8 @@ class UploadFile extends Component<Props, any> {
                 />
               </div>
             </div>
-            <div className="form-group row">
-              <label
-                htmlFor="description"
-                className="col-sm-2 col-form-label"
-              ></label>
+            <div className="mb-3 row">
+              <label htmlFor="description" className="col-sm-2 col-form-label"></label>
               <div className="col-sm-10">
                 <button className="btn btn-primary">Save</button>
               </div>
@@ -236,11 +222,7 @@ class UploadFile extends Component<Props, any> {
           </form>
         </div>
         <div className="card-footer">
-          <NavLink
-            className="btn btn-outline-secondary"
-            to="/files"
-            style={{ width: "80px" }}
-          >
+          <NavLink className="btn btn-outline-secondary" to="/files" style={{ width: "80px" }}>
             <i className="fa fa-chevron-left"></i> Back
           </NavLink>
         </div>

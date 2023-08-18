@@ -163,10 +163,7 @@ class ListProducts extends Component<any, any> {
           ></Star>
         </td>
         <td>
-          <NavLink
-            className="btn btn-primary"
-            to={"/products/edit/" + product.id}
-          >
+          <NavLink className="btn btn-primary" to={"/products/edit/" + product.id}>
             Edit
           </NavLink>
           &nbsp;
@@ -214,12 +211,8 @@ class ListProducts extends Component<any, any> {
         <td>{this.formatDateTime(auditLog.createdDateTime)}</td>
         <td>{auditLog.userName}</td>
         <td>{auditLog.action}</td>
-        <td style={{ color: auditLog.highLight.code ? "red" : "" }}>
-          {auditLog.data.code}
-        </td>
-        <td style={{ color: auditLog.highLight.name ? "red" : "" }}>
-          {auditLog.data.name}
-        </td>
+        <td style={{ color: auditLog.highLight.code ? "red" : "" }}>{auditLog.data.code}</td>
+        <td style={{ color: auditLog.highLight.name ? "red" : "" }}>{auditLog.data.name}</td>
         <td style={{ color: auditLog.highLight.description ? "red" : "" }}>
           {auditLog.data.description}
         </td>
@@ -272,16 +265,13 @@ class ListProducts extends Component<any, any> {
     );
 
     const importCsvModal = (
-      <Modal
-        show={this.state.importCsvModalOpen}
-        onHide={this.importCsvCanceled}
-      >
+      <Modal show={this.state.importCsvModalOpen} onHide={this.importCsvCanceled}>
         <Modal.Header closeButton>
           <Modal.Title>Import Csv</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={this.importCsvConfirmed}>
-            <div className="form-group row">
+            <div className="mb-3 row">
               <div className="col-sm-12">
                 <input
                   id="importingFile"
@@ -289,8 +279,7 @@ class ListProducts extends Component<any, any> {
                   name="importingFile"
                   className={
                     "form-control " +
-                    (this.state.importCsvFormSubmitted &&
-                    !this.state.importingFile
+                    (this.state.importCsvFormSubmitted && !this.state.importingFile
                       ? "is-invalid"
                       : "")
                   }
@@ -299,7 +288,7 @@ class ListProducts extends Component<any, any> {
                 <span className="invalid-feedback"> Select a file </span>
               </div>
             </div>
-            <div className="form-group row">
+            <div className="mb-3 row">
               <div className="col-sm-12" style={{ textAlign: "center" }}>
                 <button className="btn btn-primary">Import</button>
               </div>
@@ -315,19 +304,11 @@ class ListProducts extends Component<any, any> {
           <div className="card-header">
             {this.state.pageTitle}
             <div style={{ float: "right" }}>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={this.exportAsPdf}
-              >
+              <button type="button" className="btn btn-secondary" onClick={this.exportAsPdf}>
                 Export as Pdf
               </button>
               &nbsp;
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={this.exportAsCsv}
-              >
+              <button type="button" className="btn btn-secondary" onClick={this.exportAsCsv}>
                 Export as Csv
               </button>
               &nbsp;
@@ -335,10 +316,7 @@ class ListProducts extends Component<any, any> {
                 Add Product
               </NavLink>
               &nbsp;
-              <button
-                className="btn btn-primary"
-                onClick={() => this.openImportCsvModal()}
-              >
+              <button className="btn btn-primary" onClick={() => this.openImportCsvModal()}>
                 Import Csv
               </button>
             </div>
@@ -365,9 +343,7 @@ class ListProducts extends Component<any, any> {
           </div>
         </div>
         {this.props.errorMessage ? (
-          <div className="alert alert-danger">
-            Error: {this.props.errorMessage}
-          </div>
+          <div className="alert alert-danger">Error: {this.props.errorMessage}</div>
         ) : null}
         {deleteModal}
         {auditLogsModal}

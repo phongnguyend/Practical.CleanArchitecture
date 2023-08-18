@@ -6,7 +6,6 @@ import { Modal } from "react-bootstrap";
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
 
-
 const EditFile = (props) => {
   const [state, setState] = useState({
     title: "Edit File",
@@ -58,14 +57,12 @@ const EditFile = (props) => {
   }, []);
 
   const fieldChanged = (event) => {
-
     checkFieldValidity(event.target.name, event.target.value);
 
     updateFile({
       ...file,
       [event.target.name]: event.target.value,
     });
-
   };
 
   const checkFieldValidity = (name, value) => {
@@ -93,9 +90,7 @@ const EditFile = (props) => {
     setState({ ...state, submitted: true });
     let isValid = true;
     for (let fieldName in state.controls) {
-      isValid =
-        checkFieldValidity(fieldName, file[fieldName]) &&
-        isValid;
+      isValid = checkFieldValidity(fieldName, file[fieldName]) && isValid;
     }
 
     if (isValid) {
@@ -119,12 +114,10 @@ const EditFile = (props) => {
       <div className="card-header">{state.title}</div>
       <div className="card-body">
         {state.errorMessage ? (
-          <div className="row alert alert-danger">
-            {state.errorMessage}
-          </div>
+          <div className="row alert alert-danger">{state.errorMessage}</div>
         ) : null}
         <form onSubmit={onSubmit}>
-          <div className="form-group row">
+          <div className="mb-3 row">
             <label htmlFor="name" className="col-sm-2 col-form-label">
               Name
             </label>
@@ -134,24 +127,20 @@ const EditFile = (props) => {
                 name="name"
                 className={
                   "form-control " +
-                  (state.submitted && !state.controls["name"].valid
-                    ? "is-invalid"
-                    : "")
+                  (state.submitted && !state.controls["name"].valid ? "is-invalid" : "")
                 }
                 value={file?.name}
                 onChange={(event) => fieldChanged(event)}
               />
               <span className="invalid-feedback">
-                {state.controls["name"].error.required ? (
-                  <span>Enter a name</span>
-                ) : null}
+                {state.controls["name"].error.required ? <span>Enter a name</span> : null}
                 {state.controls["name"].error.minLength ? (
                   <span>The name must be longer than 3 characters.</span>
                 ) : null}
               </span>
             </div>
           </div>
-          <div className="form-group row">
+          <div className="mb-3 row">
             <label htmlFor="description" className="col-sm-2 col-form-label">
               Description
             </label>
@@ -161,10 +150,7 @@ const EditFile = (props) => {
                 name="description"
                 className={
                   "form-control " +
-                  (state.submitted &&
-                    !state.controls["description"].valid
-                    ? "is-invalid"
-                    : "")
+                  (state.submitted && !state.controls["description"].valid ? "is-invalid" : "")
                 }
                 value={file?.description}
                 onChange={(event) => fieldChanged(event)}
@@ -179,7 +165,7 @@ const EditFile = (props) => {
               </span>
             </div>
           </div>
-          <div className="form-group row">
+          <div className="mb-3 row">
             <label htmlFor="formFile" className="col-sm-2 col-form-label">
               File
             </label>
@@ -193,7 +179,7 @@ const EditFile = (props) => {
               />
             </div>
           </div>
-          <div className="form-group row">
+          <div className="mb-3 row">
             <label htmlFor="encrypted" className="col-sm-2 col-form-label">
               Encrypted
             </label>
@@ -207,11 +193,8 @@ const EditFile = (props) => {
               />
             </div>
           </div>
-          <div className="form-group row">
-            <label
-              htmlFor="description"
-              className="col-sm-2 col-form-label"
-            ></label>
+          <div className="mb-3 row">
+            <label htmlFor="description" className="col-sm-2 col-form-label"></label>
             <div className="col-sm-10">
               <button className="btn btn-primary">Save</button>
             </div>
@@ -219,11 +202,7 @@ const EditFile = (props) => {
         </form>
       </div>
       <div className="card-footer">
-        <NavLink
-          className="btn btn-outline-secondary"
-          to="/files"
-          style={{ width: "80px" }}
-        >
+        <NavLink className="btn btn-outline-secondary" to="/files" style={{ width: "80px" }}>
           <i className="fa fa-chevron-left"></i> Back
         </NavLink>
         &nbsp;
@@ -243,15 +222,11 @@ const EditFile = (props) => {
       <td>{formatDateTime(auditLog.createdDateTime)}</td>
       <td>{auditLog.userName}</td>
       <td>{auditLog.action}</td>
-      <td style={{ color: auditLog.highLight.name ? "red" : "" }}>
-        {auditLog.data.name}
-      </td>
+      <td style={{ color: auditLog.highLight.name ? "red" : "" }}>{auditLog.data.name}</td>
       <td style={{ color: auditLog.highLight.description ? "red" : "" }}>
         {auditLog.data.description}
       </td>
-      <td style={{ color: auditLog.highLight.fileName ? "red" : "" }}>
-        {auditLog.data.fileName}
-      </td>
+      <td style={{ color: auditLog.highLight.fileName ? "red" : "" }}>{auditLog.data.fileName}</td>
       <td style={{ color: auditLog.highLight.fileLocation ? "red" : "" }}>
         {auditLog.data.fileLocation}
       </td>
@@ -292,6 +267,6 @@ const EditFile = (props) => {
       {auditLogsModal}
     </div>
   );
-}
+};
 
 export default EditFile;
