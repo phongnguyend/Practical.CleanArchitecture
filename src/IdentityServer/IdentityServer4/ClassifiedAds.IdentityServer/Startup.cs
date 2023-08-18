@@ -84,7 +84,7 @@ namespace ClassifiedAds.IdentityServer
                     })
                     .AddSigningCredential(AppSettings.IdentityServer.Certificate.FindCertificate())
                     .AddAspNetIdentity<User>()
-                    .AddIdServerPersistence(AppSettings.ConnectionStrings.ClassifiedAds);
+                    .AddIdServerPersistence(AppSettings.ConnectionStrings.IdentityServer);
 
             services.AddDataProtection()
                 .PersistKeysToDbContext<AdsDbContext>()

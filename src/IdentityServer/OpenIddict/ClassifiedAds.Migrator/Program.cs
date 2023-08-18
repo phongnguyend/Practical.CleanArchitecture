@@ -39,7 +39,7 @@ public class Program
 
         services.AddDbContext<OpenIddictDbContext>(options =>
         {
-            options.UseSqlServer(configuration["ConnectionStrings:ClassifiedAds"], sql =>
+            options.UseSqlServer(configuration["ConnectionStrings:IdentityServer"], sql =>
             {
                 sql.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name);
             });

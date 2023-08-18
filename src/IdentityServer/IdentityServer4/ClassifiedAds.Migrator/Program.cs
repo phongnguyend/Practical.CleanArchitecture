@@ -36,7 +36,7 @@ namespace ClassifiedAds.Migrator
                 Assembly.GetExecutingAssembly().GetName().Name);
 
             services.AddIdentityServer()
-                .AddIdServerPersistence(configuration.GetConnectionString("ClassifiedAds"),
+                .AddIdServerPersistence(configuration.GetConnectionString("IdentityServer"),
                 Assembly.GetExecutingAssembly().GetName().Name);
 
             // Configure the HTTP request pipeline.

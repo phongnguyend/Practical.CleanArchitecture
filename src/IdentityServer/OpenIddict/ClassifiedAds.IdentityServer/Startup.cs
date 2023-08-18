@@ -66,7 +66,7 @@ public class Startup
 
         services.AddDbContext<OpenIddictDbContext>(options =>
         {
-            options.UseSqlServer(AppSettings.ConnectionStrings.ClassifiedAds);
+            options.UseSqlServer(AppSettings.ConnectionStrings.IdentityServer);
 
             // Register the entity sets needed by OpenIddict.
             options.UseOpenIddict();
