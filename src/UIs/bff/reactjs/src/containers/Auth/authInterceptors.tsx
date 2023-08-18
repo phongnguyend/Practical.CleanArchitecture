@@ -2,11 +2,13 @@ import { login, logout } from "./authService";
 
 const addAuthInterceptors = (axios) => {
   axios.interceptors.request.use((config) => {
-    const xsrfToken = document
-      .cookie!.split("; ")!
-      .find((row) => row.startsWith("PHONG-XSRF-TOKEN="))!
-      .split("=")[1];
-    config.headers["X-XSRF-TOKEN"] = xsrfToken;
+    try {
+      const xsrfToken = document
+        .cookie!.split("; ")!
+        .find((row) => row.startsWith("PHONG-XSRF-TOKEN="))!
+        .split("=")[1];
+      config.headers["X-XSRF-TOKEN"] = xsrfToken;
+    } catch {}
     return config;
   });
   axios.interceptors.response.use(

@@ -6,9 +6,11 @@ import classes from "./Nav.module.css";
 
 const Nav = () => {
   const pageTitle = "ClassifiedAds.React";
-
   return (
-    <nav className={"navbar navbar-expand navbar-light bg-light " + classes.Nav}>
+    <nav
+      className={"navbar navbar-expand navbar-light bg-light " + classes.Nav}
+      style={{ paddingLeft: "1rem", paddingRight: "1rem" }}
+    >
       <a className="navbar-brand" href="/">
         {pageTitle + " " + React.version}
       </a>

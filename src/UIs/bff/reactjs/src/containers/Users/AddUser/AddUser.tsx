@@ -108,20 +108,14 @@ const AddUser = () => {
 
     let isValid = true;
     for (let fieldName in state.controls) {
-      isValid =
-        checkFieldValidity(fieldName, user[fieldName]) &&
-        isValid;
+      isValid = checkFieldValidity(fieldName, user[fieldName]) && isValid;
     }
 
     if (isValid) {
       saveUser({
         ...user,
-        accessFailedCount: user.accessFailedCount
-          ? parseInt(user.accessFailedCount)
-          : 0,
-        lockoutEnd: user.lockoutEnd
-          ? user.lockoutEnd
-          : null,
+        accessFailedCount: user.accessFailedCount ? parseInt(user.accessFailedCount) : 0,
+        lockoutEnd: user.lockoutEnd ? user.lockoutEnd : null,
       });
     }
   };
@@ -131,14 +125,10 @@ const AddUser = () => {
       <div className="card-header">{state.title}</div>
       <div className="card-body">
         {state.errorMessage ? (
-          <div
-            className="row alert alert-danger"
-          >
-            {state.errorMessage}
-          </div>
+          <div className="row alert alert-danger">{state.errorMessage}</div>
         ) : null}
         <form onSubmit={onSubmit}>
-          <div className="form-group row">
+          <div className="mb-3 row">
             <label htmlFor="userName" className="col-sm-3 col-form-label">
               User Name
             </label>
@@ -148,25 +138,20 @@ const AddUser = () => {
                 name="userName"
                 className={
                   "form-control " +
-                  (state.submitted &&
-                    !state.controls["userName"].valid
-                    ? "is-invalid"
-                    : "")
+                  (state.submitted && !state.controls["userName"].valid ? "is-invalid" : "")
                 }
                 value={user?.userName}
                 onChange={(event) => fieldChanged(event)}
               />
               <span className="invalid-feedback">
-                {state.controls["userName"].error.required ? (
-                  <span>Enter an user name</span>
-                ) : null}
+                {state.controls["userName"].error.required ? <span>Enter an user name</span> : null}
                 {state.controls["userName"].error.minLength ? (
                   <span>The user name must be longer than 3 characters.</span>
                 ) : null}
               </span>
             </div>
           </div>
-          <div className="form-group row">
+          <div className="mb-3 row">
             <label htmlFor="email" className="col-sm-3 col-form-label">
               Email
             </label>
@@ -176,28 +161,21 @@ const AddUser = () => {
                 name="email"
                 className={
                   "form-control " +
-                  (state.submitted && !state.controls["email"].valid
-                    ? "is-invalid"
-                    : "")
+                  (state.submitted && !state.controls["email"].valid ? "is-invalid" : "")
                 }
                 value={user?.email}
                 onChange={(event) => fieldChanged(event)}
               />
               <span className="invalid-feedback">
-                {state.controls["email"].error.required ? (
-                  <span>Enter an email</span>
-                ) : null}
+                {state.controls["email"].error.required ? <span>Enter an email</span> : null}
                 {state.controls["email"].error.minLength ? (
                   <span>The email must be longer than 3 characters.</span>
                 ) : null}
               </span>
             </div>
           </div>
-          <div className="form-group row">
-            <label
-              htmlFor="emailConfirmed"
-              className="col-sm-3 col-form-label"
-            >
+          <div className="mb-3 row">
+            <label htmlFor="emailConfirmed" className="col-sm-3 col-form-label">
               Email Confirmed
             </label>
             <div className="col-sm-9">
@@ -210,7 +188,7 @@ const AddUser = () => {
               />
             </div>
           </div>
-          <div className="form-group row">
+          <div className="mb-3 row">
             <label htmlFor="phoneNumber" className="col-sm-3 col-form-label">
               Phone Number
             </label>
@@ -224,11 +202,8 @@ const AddUser = () => {
               />
             </div>
           </div>
-          <div className="form-group row">
-            <label
-              htmlFor="phoneNumberConfirmed"
-              className="col-sm-3 col-form-label"
-            >
+          <div className="mb-3 row">
+            <label htmlFor="phoneNumberConfirmed" className="col-sm-3 col-form-label">
               Phone Number Confirmed
             </label>
             <div className="col-sm-9">
@@ -241,11 +216,8 @@ const AddUser = () => {
               />
             </div>
           </div>
-          <div className="form-group row">
-            <label
-              htmlFor="twoFactorEnabled"
-              className="col-sm-3 col-form-label"
-            >
+          <div className="mb-3 row">
+            <label htmlFor="twoFactorEnabled" className="col-sm-3 col-form-label">
               Two Factor Enabled
             </label>
             <div className="col-sm-9">
@@ -258,11 +230,8 @@ const AddUser = () => {
               />
             </div>
           </div>
-          <div className="form-group row">
-            <label
-              htmlFor="lockoutEnabled"
-              className="col-sm-3 col-form-label"
-            >
+          <div className="mb-3 row">
+            <label htmlFor="lockoutEnabled" className="col-sm-3 col-form-label">
               Lockout Enabled
             </label>
             <div className="col-sm-9">
@@ -275,11 +244,8 @@ const AddUser = () => {
               />
             </div>
           </div>
-          <div className="form-group row">
-            <label
-              htmlFor="accessFailedCount"
-              className="col-sm-3 col-form-label"
-            >
+          <div className="mb-3 row">
+            <label htmlFor="accessFailedCount" className="col-sm-3 col-form-label">
               Access Failed Count
             </label>
             <div className="col-sm-9">
@@ -293,7 +259,7 @@ const AddUser = () => {
               />
             </div>
           </div>
-          <div className="form-group row">
+          <div className="mb-3 row">
             <label htmlFor="lockoutEnd" className="col-sm-3 col-form-label">
               Lockout End
             </label>
@@ -303,11 +269,7 @@ const AddUser = () => {
                 name="lockoutEnd"
                 className="form-control"
                 autoComplete="off"
-                selected={
-                  user?.lockoutEnd
-                    ? new Date(user?.lockoutEnd)
-                    : null
-                }
+                selected={user?.lockoutEnd ? new Date(user?.lockoutEnd) : null}
                 onChange={(date) => updateLockoutEnd(date)}
                 timeInputLabel="Time:"
                 dateFormat="MM/dd/yyyy h:mm aa"
@@ -315,11 +277,8 @@ const AddUser = () => {
               />
             </div>
           </div>
-          <div className="form-group row">
-            <label
-              htmlFor="description"
-              className="col-sm-3 col-form-label"
-            ></label>
+          <div className="mb-3 row">
+            <label htmlFor="description" className="col-sm-3 col-form-label"></label>
             <div className="col-sm-9">
               <button className="btn btn-primary">Save</button>
             </div>
@@ -327,22 +286,14 @@ const AddUser = () => {
         </form>
       </div>
       <div className="card-footer">
-        <NavLink
-          className="btn btn-outline-secondary"
-          to="/users"
-          style={{ width: "80px" }}
-        >
+        <NavLink className="btn btn-outline-secondary" to="/users" style={{ width: "80px" }}>
           <i className="fa fa-chevron-left"></i> Back
         </NavLink>
       </div>
     </div>
   );
 
-  return state.submitted && saved ? (
-    <Navigate to={"/users/" + user.id} />
-  ) : (
-    form
-  );
-}
+  return state.submitted && saved ? <Navigate to={"/users/" + user.id} /> : form;
+};
 
 export default AddUser;

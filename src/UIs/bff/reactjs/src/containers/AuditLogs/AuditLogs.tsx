@@ -24,7 +24,7 @@ const AuditLogs = () => {
   const pageSelected = (page) => {
     setCurrentPage(page);
     dispatch(actions.fetchAuditLogs(page, pageSize));
-  }
+  };
 
   const rows = auditLogs?.map((auditLog) => (
     <tr key={auditLog.id}>
@@ -49,16 +49,25 @@ const AuditLogs = () => {
     </table>
   ) : null;
 
-  const pagination = (<div style={{ float: "right" }}>
-    <Pagination pageSelected={pageSelected} totalItems={totalItems} pageSize={pageSize} currentPage={currentPage} />
-  </div>);
+  const pagination = (
+    <div style={{ float: "right" }}>
+      <Pagination
+        pageSelected={pageSelected}
+        totalItems={totalItems}
+        pageSize={pageSize}
+        currentPage={currentPage}
+      />
+    </div>
+  );
 
   return (
     <div className="card">
       <div className="card-header">{pageTitle}</div>
       <div className="card-body">
         {pagination}
-        <div className="table-responsive">{table}</div>
+        <div className="table-responsive" style={{ width: "100%" }}>
+          {table}
+        </div>
         {pagination}
       </div>
     </div>

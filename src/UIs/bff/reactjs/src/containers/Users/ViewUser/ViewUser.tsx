@@ -46,15 +46,19 @@ const ViewUser = () => {
 
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, error: postError, savedPassword, sentPasswordResetEmail, sentEmailAddressConfirmationEmail } = useSelector((state: any) => state.user);
+  const {
+    user,
+    error: postError,
+    savedPassword,
+    sentPasswordResetEmail,
+    sentEmailAddressConfirmationEmail,
+  } = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
   const fetchUser = (id) => dispatch(actions.fetchUser(id));
   const setPasswordInit = () => dispatch(actions.setPasswordInit());
   const setPassword = (password) => dispatch(actions.setPassword(password));
-  const sendPasswordResetEmailInit = () =>
-    dispatch(actions.sendPasswordResetEmailInit());
-  const sendPasswordResetEmail = (id) =>
-    dispatch(actions.sendPasswordResetEmail(id));
+  const sendPasswordResetEmailInit = () => dispatch(actions.sendPasswordResetEmailInit());
+  const sendPasswordResetEmail = (id) => dispatch(actions.sendPasswordResetEmail(id));
   const sendEmailAddressConfirmationEmailInit = () =>
     dispatch(actions.sendEmailAddressConfirmationEmailInit());
   const sendEmailAddressConfirmationEmail = (id) =>
@@ -68,7 +72,7 @@ const ViewUser = () => {
         setPasswordModel: {
           ...state.setPasswordModel,
           id: id,
-        }
+        },
       });
     }
   }, []);
@@ -163,17 +167,10 @@ const ViewUser = () => {
 
     let isValid = true;
     for (let fieldName in state.controls) {
-      isValid =
-        checkFieldValidity(
-          fieldName,
-          state.setPasswordModel[fieldName]
-        ) && isValid;
+      isValid = checkFieldValidity(fieldName, state.setPasswordModel[fieldName]) && isValid;
     }
 
-    isValid =
-      isValid &&
-      state.setPasswordModel.password ==
-      state.setPasswordModel.confirmPassword;
+    isValid = isValid && state.setPasswordModel.password == state.setPasswordModel.confirmPassword;
 
     if (isValid) {
       setPassword(state.setPasswordModel);
@@ -181,16 +178,11 @@ const ViewUser = () => {
   };
 
   const passwordErrors = postError?.response?.data
-    ? postError?.response?.data?.map((error) => (
-      <li key={error.code}>{error.description}</li>
-    ))
+    ? postError?.response?.data?.map((error) => <li key={error.code}>{error.description}</li>)
     : null;
 
   const setPasswordModal = (
-    <Modal
-      show={state.showSetPasswordModal && !savedPassword}
-      onHide={cancelSetPassword}
-    >
+    <Modal show={state.showSetPasswordModal && !savedPassword} onHide={cancelSetPassword}>
       <Modal.Header closeButton>
         <Modal.Title>Set Password</Modal.Title>
       </Modal.Header>
@@ -201,18 +193,16 @@ const ViewUser = () => {
           </div>
         ) : null}
         {postError && !passwordErrors ? (
-          <div className="row alert alert-danger">
-            {postError?.response?.status}
-          </div>
+          <div className="row alert alert-danger">{postError?.response?.status}</div>
         ) : null}
         <form onSubmit={confirmSetPassword}>
-          <div className="form-group row">
+          <div className="mb-3 row">
             <label htmlFor="userName" className="col-sm-4 col-form-label">
               User Name
             </label>
             <div className="col-sm-8">{user?.userName}</div>
           </div>
-          <div className="form-group row">
+          <div className="mb-3 row">
             <label htmlFor="password" className="col-sm-4 col-form-label">
               Password
             </label>
@@ -223,26 +213,18 @@ const ViewUser = () => {
                 name="password"
                 className={
                   "form-control " +
-                  (state.submitted &&
-                    !state.controls["password"].valid
-                    ? "is-invalid"
-                    : "")
+                  (state.submitted && !state.controls["password"].valid ? "is-invalid" : "")
                 }
                 value={state.setPasswordModel?.password}
                 onChange={(event) => fieldChanged(event)}
               />
               <span className="invalid-feedback">
-                {state.controls["password"].error.required ? (
-                  <span>Enter a password</span>
-                ) : null}
+                {state.controls["password"].error.required ? <span>Enter a password</span> : null}
               </span>
             </div>
           </div>
-          <div className="form-group row">
-            <label
-              htmlFor="confirmPassword"
-              className="col-sm-4 col-form-label"
-            >
+          <div className="mb-3 row">
+            <label htmlFor="confirmPassword" className="col-sm-4 col-form-label">
               Confirm Password
             </label>
             <div className="col-sm-8">
@@ -253,20 +235,17 @@ const ViewUser = () => {
                 className={
                   "form-control " +
                   (state.submitted &&
-                    state.setPasswordModel?.password !=
-                    state.setPasswordModel?.confirmPassword
+                  state.setPasswordModel?.password != state.setPasswordModel?.confirmPassword
                     ? "is-invalid"
                     : "")
                 }
                 value={state.setPasswordModel?.confirmPassword}
                 onChange={(event) => fieldChanged(event)}
               />
-              <span className="invalid-feedback">
-                Confirm Password does not match
-              </span>
+              <span className="invalid-feedback">Confirm Password does not match</span>
             </div>
           </div>
-          <div className="form-group row">
+          <div className="mb-3 row">
             <label className="col-sm-4 col-form-label"></label>
             <div className="col-sm-8">
               <button className="btn btn-primary">Save</button>
@@ -279,10 +258,7 @@ const ViewUser = () => {
 
   const sendPasswordResetEmailModal = (
     <Modal
-      show={
-        state.showSendPasswordResetEmailModal &&
-        !sentPasswordResetEmail
-      }
+      show={state.showSendPasswordResetEmailModal && !sentPasswordResetEmail}
       onHide={cancelSendPasswordResetEmail}
     >
       <Modal.Header closeButton>
@@ -293,18 +269,10 @@ const ViewUser = () => {
         <strong> {user?.userName}</strong>
       </Modal.Body>
       <Modal.Footer>
-        <Button
-          variant="secondary"
-          onClick={cancelSendPasswordResetEmail}
-        >
+        <Button variant="secondary" onClick={cancelSendPasswordResetEmail}>
           No
         </Button>
-        <Button
-          variant="primary"
-          onClick={() =>
-            sendPasswordResetEmail(user.id)
-          }
-        >
+        <Button variant="primary" onClick={() => sendPasswordResetEmail(user.id)}>
           Yes
         </Button>
       </Modal.Footer>
@@ -313,10 +281,7 @@ const ViewUser = () => {
 
   const sendEmailAddressConfirmationEmailModal = (
     <Modal
-      show={
-        state.showSendEmailAddressConfirmationEmailModal &&
-        !sentEmailAddressConfirmationEmail
-      }
+      show={state.showSendEmailAddressConfirmationEmailModal && !sentEmailAddressConfirmationEmail}
       onHide={cancelSendEmailAddressConfirmationEmail}
     >
       <Modal.Header closeButton>
@@ -327,18 +292,10 @@ const ViewUser = () => {
         <strong> {user?.userName}</strong>
       </Modal.Body>
       <Modal.Footer>
-        <Button
-          variant="secondary"
-          onClick={cancelSendEmailAddressConfirmationEmail}
-        >
+        <Button variant="secondary" onClick={cancelSendEmailAddressConfirmationEmail}>
           No
         </Button>
-        <Button
-          variant="primary"
-          onClick={() =>
-            sendEmailAddressConfirmationEmail(user.id)
-          }
-        >
+        <Button variant="primary" onClick={() => sendEmailAddressConfirmationEmail(user.id)}>
           Yes
         </Button>
       </Modal.Footer>
@@ -347,9 +304,7 @@ const ViewUser = () => {
 
   const page = user ? (
     <div className="card">
-      <div className="card-header">
-        {"User Detail: " + user.userName}
-      </div>
+      <div className="card-header">{"User Detail: " + user.userName}</div>
 
       <div className="card-body">
         <div className="row">
@@ -364,9 +319,7 @@ const ViewUser = () => {
             </div>
             <div className="row">
               <div className="col-md-4">Email Confirmed:</div>
-              <div className="col-md-8">
-                {user.emailConfirmed ? "true" : "false"}
-              </div>
+              <div className="col-md-8">{user.emailConfirmed ? "true" : "false"}</div>
             </div>
             <div className="row">
               <div className="col-md-4">Phone Number:</div>
@@ -374,27 +327,19 @@ const ViewUser = () => {
             </div>
             <div className="row">
               <div className="col-md-4">Phone Number Confirmed:</div>
-              <div className="col-md-8">
-                {user.phoneNumberConfirmed ? "true" : "false"}
-              </div>
+              <div className="col-md-8">{user.phoneNumberConfirmed ? "true" : "false"}</div>
             </div>
             <div className="row">
               <div className="col-md-4">Two Factor Enabled:</div>
-              <div className="col-md-8">
-                {user.twoFactorEnabled ? "true" : "false"}
-              </div>
+              <div className="col-md-8">{user.twoFactorEnabled ? "true" : "false"}</div>
             </div>
             <div className="row">
               <div className="col-md-4">Lockout Enabled:</div>
-              <div className="col-md-8">
-                {user.lockoutEnabled ? "true" : "false"}
-              </div>
+              <div className="col-md-8">{user.lockoutEnabled ? "true" : "false"}</div>
             </div>
             <div className="row">
               <div className="col-md-4">Access Failed Count:</div>
-              <div className="col-md-8">
-                {user.accessFailedCount}
-              </div>
+              <div className="col-md-8">{user.accessFailedCount}</div>
             </div>
             <div className="row">
               <div className="col-md-4">Lockout End:</div>
@@ -414,26 +359,15 @@ const ViewUser = () => {
       </div>
 
       <div className="card-footer">
-        <button
-          className="btn btn-outline-secondary"
-          onClick={back}
-          style={{ width: "80px" }}
-        >
+        <button className="btn btn-outline-secondary" onClick={back} style={{ width: "80px" }}>
           <i className="fa fa-chevron-left"></i> Back
         </button>
         &nbsp;
-        <NavLink
-          className="btn btn-primary"
-          to={"/users/edit/" + user.id}
-        >
+        <NavLink className="btn btn-primary" to={"/users/edit/" + user.id}>
           Edit
         </NavLink>
         &nbsp;
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={() => showSetPasswordModal()}
-        >
+        <button type="button" className="btn btn-secondary" onClick={() => showSetPasswordModal()}>
           Set Password
         </button>
         &nbsp;
@@ -460,6 +394,6 @@ const ViewUser = () => {
     </div>
   ) : null;
   return page;
-}
+};
 
 export default ViewUser;
