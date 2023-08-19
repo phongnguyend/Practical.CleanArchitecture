@@ -31,6 +31,7 @@ public static class AuditLogModuleServiceCollectionExtensions
             }
         }))
             .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>()
+            .AddScoped<IRepository<IdempotentRequest, Guid>, Repository<IdempotentRequest, Guid>>()
             .AddScoped(typeof(IAuditLogService), typeof(AuditLogService));
 
         services.AddMessageHandlers(Assembly.GetExecutingAssembly());

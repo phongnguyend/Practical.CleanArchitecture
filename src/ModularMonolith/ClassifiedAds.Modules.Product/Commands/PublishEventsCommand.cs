@@ -48,7 +48,7 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
             if (eventLog.EventType == "AUDIT_LOG_ENTRY_CREATED")
             {
                 var logEntry = JsonSerializer.Deserialize<Contracts.AuditLog.DTOs.AuditLogEntryDTO>(eventLog.Message);
-                await _externalAuditLogService.AddAsync(logEntry);
+                await _externalAuditLogService.AddAsync(logEntry, eventLog.Id.ToString());
             }
             else
             {
