@@ -53,7 +53,11 @@ public class PublishEventsCommandHandler : IRequestHandler<PublishEventsCommand>
             if (eventLog.EventType == "AUDIT_LOG_ENTRY_CREATED")
             {
                 var logEntry = JsonSerializer.Deserialize<AuditLogEntry>(eventLog.Message);
-                await _auditLogCreatedEventSender.SendAsync(new AuditLogCreatedEvent { AuditLog = logEntry });
+                await _auditLogCreatedEventSender.SendAsync(new AuditLogCreatedEvent { AuditLog = logEntry },
+                    new MetaData
+                    {
+                        MessageId = eventLog.Id.ToString(),
+                    });
 
                 if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("DAPR_HTTP_PORT")))
                 {

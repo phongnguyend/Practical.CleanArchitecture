@@ -22,7 +22,8 @@ public static class AuditLogModuleServiceCollectionExtensions
                 sql.MigrationsAssembly(appSettings.ConnectionStrings.MigrationsAssembly);
             }
         }))
-            .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>();
+            .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>()
+            .AddScoped<IRepository<IdempotentRequest, Guid>, Repository<IdempotentRequest, Guid>>();
 
         services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 

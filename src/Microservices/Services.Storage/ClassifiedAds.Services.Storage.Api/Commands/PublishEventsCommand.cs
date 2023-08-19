@@ -63,7 +63,11 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
             else if (eventLog.EventType == "AUDIT_LOG_ENTRY_CREATED")
             {
                 var logEntry = JsonSerializer.Deserialize<AuditLogEntry>(eventLog.Message);
-                await _auditLogCreatedEventSender.SendAsync(new AuditLogCreatedEvent { AuditLog = logEntry });
+                await _auditLogCreatedEventSender.SendAsync(new AuditLogCreatedEvent { AuditLog = logEntry },
+                    new MetaData
+                    {
+                        MessageId = eventLog.Id.ToString(),
+                    });
             }
             else
             {
