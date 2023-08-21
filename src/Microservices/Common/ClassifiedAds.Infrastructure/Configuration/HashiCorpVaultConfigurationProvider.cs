@@ -36,3 +36,60 @@ internal class HashiCorpVaultConfigurationProvider : ConfigurationProvider
         Data = secrets.Data.Data.ToDictionary(x => x.Key, x => x.Value.ToString());
     }
 }
+
+public class HashiCorpVaultOptions
+{
+    public bool IsEnabled { get; set; }
+
+    public string Address { get; set; }
+
+    public string SecretEnginePath { get; set; }
+
+    public string SecretPath { get; set; }
+
+    public string AuthMethod { get; set; }
+
+    public HashiCorpVaultAuthOptions Auth { get; set; }
+}
+
+public class HashiCorpVaultAuthOptions
+{
+    public HashiCorpVaultTokenAuthOptions Token { get; set; }
+
+    public HashiCorpVaultUserPassAuthOptions UserPass { get; set; }
+}
+
+public class HashiCorpVaultUserPassAuthOptions
+{
+    public string UserName { get; set; }
+
+    public string Password { get; set; }
+}
+
+public class HashiCorpVaultTokenAuthOptions
+{
+    public string Token { get; set; }
+}
+
+public class HashiCorpVaultConfigurationSource : IConfigurationSource
+{
+    private readonly HashiCorpVaultOptions _options;
+
+    public HashiCorpVaultConfigurationSource(HashiCorpVaultOptions options)
+    {
+        _options = options;
+    }
+
+    public IConfigurationProvider Build(IConfigurationBuilder builder)
+    {
+        return new HashiCorpVaultConfigurationProvider(_options);
+    }
+}
+
+public static class HashiCorpVaultConfigurationExtensions
+{
+    public static IConfigurationBuilder AddHashiCorpVault(this IConfigurationBuilder builder, HashiCorpVaultOptions options)
+    {
+        return builder.Add(new HashiCorpVaultConfigurationSource(options));
+    }
+}
