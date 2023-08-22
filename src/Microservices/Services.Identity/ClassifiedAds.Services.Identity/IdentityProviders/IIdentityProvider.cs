@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Identity.IdentityProviders;
 
-public interface IUserManager
+public interface IIdentityProvider
 {
     Task<IList<IUser>> GetUsersAsync();
 

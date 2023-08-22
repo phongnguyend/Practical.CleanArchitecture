@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.IdentityProviders.Auth0;
 
-public class Auth0Manager : IAuth0Manager
+public class Auth0IdentityProvider : IAuth0IdentityProvider
 {
     private readonly Auth0Options _options;
     private HttpClient _httpClient = new HttpClient();
 
-    public Auth0Manager(Auth0Options options)
+    public Auth0IdentityProvider(Auth0Options options)
     {
         _options = options;
     }

@@ -36,9 +36,9 @@ public class SyncUsersCommandHandler : ICommandHandler<SyncUsersCommand>
 
     private async Task SyncToAzureAdB2C(SyncUsersCommand command)
     {
-        var manager = (AzureActiveDirectoryB2CManager)_serviceProvider.GetService(typeof(AzureActiveDirectoryB2CManager));
+        var provider = (AzureActiveDirectoryB2CIdentityProvider)_serviceProvider.GetService(typeof(AzureActiveDirectoryB2CIdentityProvider));
 
-        if (manager is null)
+        if (provider is null)
         {
             return;
         }
@@ -50,7 +50,7 @@ public class SyncUsersCommandHandler : ICommandHandler<SyncUsersCommand>
 
         foreach (var user in users)
         {
-            var existingUser = await manager.GetUserByUsernameAsync(user.UserName);
+            var existingUser = await provider.GetUserByUsernameAsync(user.UserName);
 
             if (existingUser != null)
             {
@@ -67,7 +67,7 @@ public class SyncUsersCommandHandler : ICommandHandler<SyncUsersCommand>
                     LastName = "LastName"
                 };
 
-                await manager.CreateUserAsync(newUser);
+                await provider.CreateUserAsync(newUser);
 
                 user.AzureAdB2CUserId = newUser.Id;
             }
@@ -80,9 +80,9 @@ public class SyncUsersCommandHandler : ICommandHandler<SyncUsersCommand>
 
     private async Task SyncToAuth0(SyncUsersCommand command)
     {
-        var manager = (Auth0Manager)_serviceProvider.GetService(typeof(Auth0Manager));
+        var provider = (Auth0IdentityProvider)_serviceProvider.GetService(typeof(Auth0IdentityProvider));
 
-        if (manager is null)
+        if (provider is null)
         {
             return;
         }
@@ -94,7 +94,7 @@ public class SyncUsersCommandHandler : ICommandHandler<SyncUsersCommand>
 
         foreach (var user in users)
         {
-            var existingUser = await manager.GetUserByUsernameAsync(user.UserName);
+            var existingUser = await provider.GetUserByUsernameAsync(user.UserName);
 
             if (existingUser != null)
             {
@@ -109,7 +109,7 @@ public class SyncUsersCommandHandler : ICommandHandler<SyncUsersCommand>
                     Password = Guid.NewGuid().ToString()
                 };
 
-                await manager.CreateUserAsync(newUser);
+                await provider.CreateUserAsync(newUser);
 
                 user.Auth0UserId = newUser.Id;
             }

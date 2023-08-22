@@ -2,6 +2,6 @@
 
 namespace ClassifiedAds.Domain.IdentityProviders;
 
-public interface IAuth0Manager : IUserManager
+public interface IAzureActiveDirectoryB2CIdentityProvider : IIdentityProvider
 {
 }

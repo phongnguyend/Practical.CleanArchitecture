@@ -6,14 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Services.Identity.IdentityProviders.Azure;
+namespace ClassifiedAds.Modules.Identity.IdentityProviders.Azure;
 
-public class AzureActiveDirectoryB2CManager : IUserManager
+public class AzureActiveDirectoryB2CIdentityProvider : IIdentityProvider
 {
     private readonly AzureAdB2COptions _options;
     private readonly GraphServiceClient _graphServiceClient;
 
-    public AzureActiveDirectoryB2CManager(AzureAdB2COptions options)
+    public AzureActiveDirectoryB2CIdentityProvider(AzureAdB2COptions options)
     {
         _options = options;
 

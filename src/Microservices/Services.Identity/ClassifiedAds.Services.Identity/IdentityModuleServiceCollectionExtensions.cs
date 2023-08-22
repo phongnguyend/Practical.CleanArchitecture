@@ -73,12 +73,12 @@ public static class IdentityModuleServiceCollectionExtensions
 
         if (appSettings.Providers?.Auth0?.Enabled ?? false)
         {
-            services.AddSingleton(new Auth0Manager(appSettings.Providers.Auth0));
+            services.AddSingleton(new Auth0IdentityProvider(appSettings.Providers.Auth0));
         }
 
         if (appSettings.Providers?.AzureActiveDirectoryB2C?.Enabled ?? false)
         {
-            services.AddSingleton(new AzureActiveDirectoryB2CManager(appSettings.Providers.AzureActiveDirectoryB2C));
+            services.AddSingleton(new AzureActiveDirectoryB2CIdentityProvider(appSettings.Providers.AzureActiveDirectoryB2C));
         }
 
         return services;

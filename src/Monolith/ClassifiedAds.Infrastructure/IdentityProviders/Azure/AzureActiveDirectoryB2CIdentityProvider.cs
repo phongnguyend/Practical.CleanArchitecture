@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.IdentityProviders.Azure;
 
-public class AzureActiveDirectoryB2CManager : IAzureActiveDirectoryB2CManager
+public class AzureActiveDirectoryB2CIdentityProvider : IAzureActiveDirectoryB2CIdentityProvider
 {
     private readonly AzureAdB2COptions _options;
     private readonly GraphServiceClient _graphServiceClient;
 
-    public AzureActiveDirectoryB2CManager(AzureAdB2COptions options)
+    public AzureActiveDirectoryB2CIdentityProvider(AzureAdB2COptions options)
     {
         _options = options;
 

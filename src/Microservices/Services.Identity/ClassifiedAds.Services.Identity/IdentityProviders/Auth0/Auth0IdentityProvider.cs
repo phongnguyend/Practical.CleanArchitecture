@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Identity.IdentityProviders.Auth0;
 
-public class Auth0Manager : IUserManager
+public class Auth0IdentityProvider : IIdentityProvider
 {
     private readonly Auth0Options _options;
     private HttpClient _httpClient = new HttpClient();
 
-    public Auth0Manager(Auth0Options options)
+    public Auth0IdentityProvider(Auth0Options options)
     {
         _options = options;
     }

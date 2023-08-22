@@ -66,12 +66,12 @@ public class Program
 
             if (appSettings.IdentityProviders?.Auth0?.Enabled ?? false)
             {
-                services.AddSingleton<IAuth0Manager>(new Auth0Manager(appSettings.IdentityProviders.Auth0));
+                services.AddSingleton<IAuth0IdentityProvider>(new Auth0IdentityProvider(appSettings.IdentityProviders.Auth0));
             }
 
             if (appSettings.IdentityProviders?.AzureActiveDirectoryB2C?.Enabled ?? false)
             {
-                services.AddSingleton<IAzureActiveDirectoryB2CManager>(new AzureActiveDirectoryB2CManager(appSettings.IdentityProviders.AzureActiveDirectoryB2C));
+                services.AddSingleton<IAzureActiveDirectoryB2CIdentityProvider>(new AzureActiveDirectoryB2CIdentityProvider(appSettings.IdentityProviders.AzureActiveDirectoryB2C));
             }
 
             services.AddHostedService<MessageBusReceiver>();
