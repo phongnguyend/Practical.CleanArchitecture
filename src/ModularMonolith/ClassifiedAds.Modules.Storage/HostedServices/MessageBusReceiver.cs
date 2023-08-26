@@ -1,7 +1,10 @@
 ﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Modules.Storage.DTOs;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,15 +12,20 @@ namespace ClassifiedAds.Modules.Storage.HostedServices;
 
 internal class MessageBusReceiver : BackgroundService
 {
+    private static readonly HttpClient _httpClient = new HttpClient();
+
     private readonly ILogger<MessageBusReceiver> _logger;
+    private readonly IConfiguration _configuration;
     private readonly IMessageReceiver<FileUploadedEvent> _fileUploadedEventMessageReceiver;
     private readonly IMessageReceiver<FileDeletedEvent> _fileDeletedEventMessageReceiver;
 
     public MessageBusReceiver(ILogger<MessageBusReceiver> logger,
+        IConfiguration configuration,
         IMessageReceiver<FileUploadedEvent> fileUploadedEventMessageReceiver,
         IMessageReceiver<FileDeletedEvent> fileDeletedEventMessageReceiver)
     {
         _logger = logger;
+        _configuration = configuration;
         _fileUploadedEventMessageReceiver = fileUploadedEventMessageReceiver;
         _fileDeletedEventMessageReceiver = fileDeletedEventMessageReceiver;
     }
@@ -26,20 +34,14 @@ internal class MessageBusReceiver : BackgroundService
     {
         _fileUploadedEventMessageReceiver?.ReceiveAsync(async (data, metaData) =>
         {
-            string message = data.FileEntry.Id.ToString();
-
-            _logger.LogInformation("{Message}", message);
-
-            await Task.Delay(5000); // simulate long running task
+            var url = _configuration["Modules:Storage:Webhooks:FileUploadedEvent:PayloadUrl"];
+            await _httpClient.PostAsJsonAsync(url, data.FileEntry);
         }, stoppingToken);
 
         _fileDeletedEventMessageReceiver?.ReceiveAsync(async (data, metaData) =>
         {
-            string message = data.FileEntry.Id.ToString();
-
-            _logger.LogInformation("{Message}", message);
-
-            await Task.Delay(5000); // simulate long running task
+            var url = _configuration["Modules:Storage:Webhooks:FileDeletedEvent:PayloadUrl"];
+            await _httpClient.PostAsJsonAsync(url, data.FileEntry);
         }, stoppingToken);
 
         return Task.CompletedTask;
