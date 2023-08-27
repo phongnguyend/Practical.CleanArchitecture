@@ -8,6 +8,8 @@ public class StorageOptions
 {
     public string Provider { get; set; }
 
+    public string MasterEncryptionKey { get; set; }
+
     public LocalOptions Local { get; set; }
 
     public AzureBlobOption Azure { get; set; }

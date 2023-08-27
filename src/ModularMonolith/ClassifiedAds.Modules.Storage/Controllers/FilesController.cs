@@ -2,6 +2,7 @@
 using ClassifiedAds.Contracts.AuditLog.DTOs;
 using ClassifiedAds.Infrastructure.Storages;
 using ClassifiedAds.Modules.Storage.Authorization;
+using ClassifiedAds.Modules.Storage.ConfigurationOptions;
 using ClassifiedAds.Modules.Storage.Entities;
 using ClassifiedAds.Modules.Storage.Models;
 using ClassifiedAds.Modules.Storage.Queries;
@@ -10,6 +11,7 @@ using CryptographyHelper.SymmetricAlgorithms;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,13 +31,17 @@ namespace ClassifiedAds.Modules.Storage.Controllers;
 public class FilesController : Controller
 {
     private readonly Dispatcher _dispatcher;
+    private readonly StorageModuleOptions _options;
     private readonly IFileStorageManager _fileManager;
     private readonly IAuthorizationService _authorizationService;
 
-    public FilesController(Dispatcher dispatcher, IFileStorageManager fileManager,
+    public FilesController(Dispatcher dispatcher,
+        IOptions<StorageModuleOptions> options,
+        IFileStorageManager fileManager,
         IAuthorizationService authorizationService)
     {
         _dispatcher = dispatcher;
+        _options = options.Value;
         _fileManager = fileManager;
         _authorizationService = authorizationService;
     }
@@ -85,16 +91,19 @@ public class FilesController : Controller
                 await _fileManager.CreateAsync(fileEntryDTO, encryptedStream);
             }
 
-            // TODO: EncryptionKey should be encrypted as well
-            fileEntry.EncryptionKey = key.ToBase64String();
+            var masterEncryptionKey = _options.MasterEncryptionKey;
+            var encryptedKey = key
+                .UseAES(masterEncryptionKey.FromBase64String())
+                .WithCipher(CipherMode.ECB)
+                .Encrypt();
+
+            fileEntry.EncryptionKey = encryptedKey.ToBase64String();
             fileEntry.EncryptionIV = iv.ToBase64String();
         }
         else
         {
-            using (var stream = model.FormFile.OpenReadStream())
-            {
-                await _fileManager.CreateAsync(fileEntryDTO, stream);
-            }
+            using var stream = model.FormFile.OpenReadStream();
+            await _fileManager.CreateAsync(fileEntryDTO, stream);
         }
 
         await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
@@ -135,10 +144,16 @@ public class FilesController : Controller
             return Forbid();
         }
 
+        var masterEncryptionKey = _options.MasterEncryptionKey;
+        var encryptionKey = fileEntry.EncryptionKey.FromBase64String()
+                  .UseAES(masterEncryptionKey.FromBase64String())
+                  .WithCipher(CipherMode.ECB)
+                  .Decrypt();
+
         var rawData = await _fileManager.ReadAsync(fileEntry.ToModel());
         var content = fileEntry.Encrypted && fileEntry.FileLocation != "Fake.txt"
             ? rawData
-            .UseAES(fileEntry.EncryptionKey.FromBase64String())
+            .UseAES(encryptionKey)
             .WithCipher(CipherMode.CBC)
             .WithIV(fileEntry.EncryptionIV.FromBase64String())
             .WithPadding(PaddingMode.PKCS7)
