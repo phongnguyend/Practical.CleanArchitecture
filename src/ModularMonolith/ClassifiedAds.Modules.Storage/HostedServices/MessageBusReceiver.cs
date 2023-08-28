@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Modules.Storage.DTOs;
+using ClassifiedAds.Modules.Storage.MessageBusConsumers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -16,13 +17,13 @@ internal class MessageBusReceiver : BackgroundService
 
     private readonly ILogger<MessageBusReceiver> _logger;
     private readonly IConfiguration _configuration;
-    private readonly IMessageReceiver<FileUploadedEvent> _fileUploadedEventMessageReceiver;
-    private readonly IMessageReceiver<FileDeletedEvent> _fileDeletedEventMessageReceiver;
+    private readonly IMessageReceiver<WebhookConsumer, FileUploadedEvent> _fileUploadedEventMessageReceiver;
+    private readonly IMessageReceiver<WebhookConsumer, FileDeletedEvent> _fileDeletedEventMessageReceiver;
 
     public MessageBusReceiver(ILogger<MessageBusReceiver> logger,
         IConfiguration configuration,
-        IMessageReceiver<FileUploadedEvent> fileUploadedEventMessageReceiver,
-        IMessageReceiver<FileDeletedEvent> fileDeletedEventMessageReceiver)
+        IMessageReceiver<WebhookConsumer, FileUploadedEvent> fileUploadedEventMessageReceiver,
+        IMessageReceiver<WebhookConsumer, FileDeletedEvent> fileDeletedEventMessageReceiver)
     {
         _logger = logger;
         _configuration = configuration;

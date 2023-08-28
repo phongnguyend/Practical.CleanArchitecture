@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
 
-public class AzureQueueReceiver<T> : IMessageReceiver<T>
+public class AzureQueueReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>
 {
     private readonly string _connectionString;
     private readonly string _queueName;

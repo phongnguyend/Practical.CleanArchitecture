@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventHub;
 
-public class AzureEventHubReceiver<T> : IMessageReceiver<T>, IDisposable
+public class AzureEventHubReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, IDisposable
 {
     private readonly string _eventHubConnectionString;
     private readonly string _eventHubName;
