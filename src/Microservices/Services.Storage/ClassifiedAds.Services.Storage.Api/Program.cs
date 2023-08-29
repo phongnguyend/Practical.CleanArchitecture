@@ -15,6 +15,7 @@ using Polly;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,8 @@ builder.WebHost.UseClassifiedAdsLogger(configuration =>
 
 var appSettings = new AppSettings();
 configuration.Bind(appSettings);
+
+services.Configure<AppSettings>(configuration);
 
 appSettings.ConnectionStrings.MigrationsAssembly = Assembly.GetExecutingAssembly().GetName().Name;
 
