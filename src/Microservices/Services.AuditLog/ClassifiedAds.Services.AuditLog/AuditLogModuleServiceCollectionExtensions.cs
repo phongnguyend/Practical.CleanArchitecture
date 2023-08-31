@@ -29,7 +29,7 @@ public static class AuditLogModuleServiceCollectionExtensions
 
         services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
 
-        services.AddMessageBusReceiver<AuditLogCreatedEvent>(appSettings.MessageBroker);
+        services.AddMessageBusReceiver<AuditLogAggregationConsumer, AuditLogCreatedEvent>(appSettings.MessageBroker);
 
         return services;
     }

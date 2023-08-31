@@ -57,8 +57,8 @@ public class Program
             services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker);
             services.AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker);
 
-            services.AddMessageBusReceiver<FileUploadedEvent>(appSettings.MessageBroker);
-            services.AddMessageBusReceiver<FileDeletedEvent>(appSettings.MessageBroker);
+            services.AddMessageBusReceiver<WebhookConsumer, FileUploadedEvent>(appSettings.MessageBroker);
+            services.AddMessageBusReceiver<WebhookConsumer, FileDeletedEvent>(appSettings.MessageBroker);
 
             services.AddNotificationServices(appSettings.Notification);
 

@@ -4,7 +4,7 @@ using ClassifiedAds.Contracts.Identity.Services;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Modules.Identity.Repositories;
 using ClassifiedAds.Modules.Storage.DTOs;
-using ClassifiedAds.Modules.Storage.MessageBusConsumers;
+using ClassifiedAds.Modules.Storage.HostedServices;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

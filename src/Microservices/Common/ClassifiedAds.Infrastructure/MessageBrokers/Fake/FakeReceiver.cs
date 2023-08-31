@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.Fake;
 
-public class FakeReceiver<T> : IMessageReceiver<T>
+public class FakeReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>
 {
     public Task ReceiveAsync(Func<T, MetaData, Task> action, CancellationToken cancellationToken)
     {

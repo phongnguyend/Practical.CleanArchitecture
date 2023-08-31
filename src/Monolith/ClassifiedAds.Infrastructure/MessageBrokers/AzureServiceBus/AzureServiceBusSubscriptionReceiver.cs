@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
 
-public class AzureServiceBusSubscriptionReceiver<T> : IMessageReceiver<T>
+public class AzureServiceBusSubscriptionReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>
 {
     private readonly string _connectionString;
     private readonly string _topicName;

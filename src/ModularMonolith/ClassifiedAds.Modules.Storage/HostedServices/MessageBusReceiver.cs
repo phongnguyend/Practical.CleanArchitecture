@@ -1,6 +1,5 @@
 ﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Modules.Storage.DTOs;
-using ClassifiedAds.Modules.Storage.MessageBusConsumers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -47,4 +46,8 @@ internal class MessageBusReceiver : BackgroundService
 
         return Task.CompletedTask;
     }
+}
+
+public sealed class WebhookConsumer
+{
 }

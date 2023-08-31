@@ -14,11 +14,11 @@ internal class MessageBusReceiver : BackgroundService
 {
     private readonly ILogger<MessageBusReceiver> _logger;
     private readonly IServiceProvider _serviceProvider;
-    private readonly IMessageReceiver<AuditLogCreatedEvent> _auditLogCreatedEventReceiver;
+    private readonly IMessageReceiver<AuditLogAggregationConsumer, AuditLogCreatedEvent> _auditLogCreatedEventReceiver;
 
     public MessageBusReceiver(ILogger<MessageBusReceiver> logger,
         IServiceProvider serviceProvider,
-        IMessageReceiver<AuditLogCreatedEvent> auditLogCreatedEventReceiver)
+        IMessageReceiver<AuditLogAggregationConsumer, AuditLogCreatedEvent> auditLogCreatedEventReceiver)
     {
         _logger = logger;
         _serviceProvider = serviceProvider;
@@ -69,4 +69,8 @@ internal class MessageBusReceiver : BackgroundService
 
         await uow.CommitTransactionAsync();
     }
+}
+
+public sealed class AuditLogAggregationConsumer
+{
 }

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ;
 
-public class RabbitMQReceiver<T> : IMessageReceiver<T>, IDisposable
+public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, IDisposable
 {
     private readonly RabbitMQReceiverOptions _options;
     private readonly IConnection _connection;
@@ -113,7 +113,7 @@ public class RabbitMQReceiver<T> : IMessageReceiver<T>, IDisposable
 
     public void Dispose()
     {
-        _channel.Dispose();
-        _connection.Dispose();
+        _channel?.Dispose();
+        _connection?.Dispose();
     }
 }

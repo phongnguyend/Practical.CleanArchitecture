@@ -14,7 +14,7 @@ public class RabbitMQOptions
 
     public Dictionary<string, string> RoutingKeys { get; set; }
 
-    public Dictionary<string, string> QueueNames { get; set; }
+    public Dictionary<string, Dictionary<string, string>> Consumers { get; set; }
 
     public string ConnectionString
     {

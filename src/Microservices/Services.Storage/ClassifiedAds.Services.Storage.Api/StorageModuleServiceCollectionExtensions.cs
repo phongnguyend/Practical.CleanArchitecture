@@ -41,8 +41,8 @@ public static class StorageModuleServiceCollectionExtensions
         services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker)
                 .AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker)
                 .AddMessageBusSender<AuditLogCreatedEvent>(appSettings.MessageBroker)
-                .AddMessageBusReceiver<FileUploadedEvent>(appSettings.MessageBroker)
-                .AddMessageBusReceiver<FileDeletedEvent>(appSettings.MessageBroker);
+                .AddMessageBusReceiver<WebhookConsumer, FileUploadedEvent>(appSettings.MessageBroker)
+                .AddMessageBusReceiver<WebhookConsumer, FileDeletedEvent>(appSettings.MessageBroker);
 
         return services;
     }
