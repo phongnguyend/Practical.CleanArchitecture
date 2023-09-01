@@ -195,62 +195,48 @@ public static class MessageBrokersCollectionExtensions
         return services;
     }
 
-    public static IHealthChecksBuilder AddMessageBusHealthCheck<T>(this IHealthChecksBuilder healthChecksBuilder, MessageBrokerOptions options, HashSet<string> checkDulicated = null)
+    public static IHealthChecksBuilder AddMessageBusHealthCheck(this IHealthChecksBuilder healthChecksBuilder, MessageBrokerOptions options)
     {
         if (options.UsedRabbitMQ())
         {
-            if (healthChecksBuilder != null)
+            var name = "Message Broker (RabbitMQ)";
+
+            healthChecksBuilder.AddRabbitMQ(new RabbitMQHealthCheckOptions
             {
-                var name = "Message Broker (RabbitMQ)";
-
-                healthChecksBuilder.AddRabbitMQ(new RabbitMQHealthCheckOptions
-                {
-                    HostName = options.RabbitMQ.HostName,
-                    UserName = options.RabbitMQ.UserName,
-                    Password = options.RabbitMQ.Password,
-                },
-                name: name,
-                failureStatus: HealthStatus.Degraded);
-
-                checkDulicated?.Add(name);
-            }
+                HostName = options.RabbitMQ.HostName,
+                UserName = options.RabbitMQ.UserName,
+                Password = options.RabbitMQ.Password,
+            },
+            name: name,
+            failureStatus: HealthStatus.Degraded);
         }
         else if (options.UsedKafka())
         {
-            if (healthChecksBuilder != null)
-            {
-                var name = "Message Broker (Kafka)";
-
-                if (checkDulicated == null || !checkDulicated.Contains(name))
-                {
-                    healthChecksBuilder.AddKafka(
-                        bootstrapServers: options.Kafka.BootstrapServers,
-                        topic: "healthcheck",
-                        name: name,
-                        failureStatus: HealthStatus.Degraded);
-                }
-
-                checkDulicated?.Add(name);
-            }
+            var name = "Message Broker (Kafka)";
+            healthChecksBuilder.AddKafka(
+                bootstrapServers: options.Kafka.BootstrapServers,
+                topic: "healthcheck",
+                name: name,
+                failureStatus: HealthStatus.Degraded);
         }
         else if (options.UsedAzureQueue())
         {
-            if (healthChecksBuilder != null)
+            foreach (var queueName in options.AzureQueue.QueueNames)
             {
                 healthChecksBuilder.AddAzureQueueStorage(connectionString: options.AzureQueue.ConnectionString,
-                    queueName: options.AzureQueue.QueueNames[typeof(T).Name],
-                    name: $"Message Broker (Azure Queue) {typeof(T).Name}",
+                    queueName: queueName.Value,
+                    name: $"Message Broker (Azure Queue) {queueName.Key}",
                     failureStatus: HealthStatus.Degraded);
             }
         }
         else if (options.UsedAzureServiceBus())
         {
-            if (healthChecksBuilder != null)
+            foreach (var queueName in options.AzureServiceBus.QueueNames)
             {
                 healthChecksBuilder.AddAzureServiceBusQueue(
                     connectionString: options.AzureServiceBus.ConnectionString,
-                    queueName: options.AzureServiceBus.QueueNames[typeof(T).Name],
-                    name: $"Message Broker (Azure Service Bus) {typeof(T).Name}",
+                    queueName: queueName.Value,
+                    name: $"Message Broker (Azure Service Bus) {queueName.Key}",
                     failureStatus: HealthStatus.Degraded);
             }
         }
