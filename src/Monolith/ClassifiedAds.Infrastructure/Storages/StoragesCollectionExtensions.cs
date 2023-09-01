@@ -38,12 +38,32 @@ public static class StoragesCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddStorageManager(this IServiceCollection services, StorageOptions options, IHealthChecksBuilder healthChecksBuilder = null)
+    public static IServiceCollection AddStorageManager(this IServiceCollection services, StorageOptions options)
     {
         if (options.UsedAzure())
         {
             services.AddAzureBlobStorageManager(options.Azure);
+        }
+        else if (options.UsedAmazon())
+        {
+            services.AddAmazonS3StorageManager(options.Amazon);
+        }
+        else if (options.UsedLocal())
+        {
+            services.AddLocalStorageManager(options.Local);
+        }
+        else
+        {
+            services.AddFakeStorageManager();
+        }
 
+        return services;
+    }
+
+    public static IHealthChecksBuilder AddStorageManagerHealthCheck(this IHealthChecksBuilder healthChecksBuilder, StorageOptions options)
+    {
+        if (options.UsedAzure())
+        {
             if (healthChecksBuilder != null)
             {
                 healthChecksBuilder.AddAzureBlobStorage(
@@ -54,8 +74,6 @@ public static class StoragesCollectionExtensions
         }
         else if (options.UsedAmazon())
         {
-            services.AddAmazonS3StorageManager(options.Amazon);
-
             if (healthChecksBuilder != null)
             {
                 healthChecksBuilder.AddAmazonS3(
@@ -66,8 +84,6 @@ public static class StoragesCollectionExtensions
         }
         else if (options.UsedLocal())
         {
-            services.AddLocalStorageManager(options.Local);
-
             if (healthChecksBuilder != null)
             {
                 healthChecksBuilder.AddLocalFile(new LocalFileHealthCheckOptions
@@ -80,9 +96,8 @@ public static class StoragesCollectionExtensions
         }
         else
         {
-            services.AddFakeStorageManager();
         }
 
-        return services;
+        return healthChecksBuilder;
     }
 }

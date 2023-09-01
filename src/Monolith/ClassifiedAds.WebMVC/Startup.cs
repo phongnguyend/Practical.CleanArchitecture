@@ -134,6 +134,7 @@ public class Startup
 
         services.AddCaches(AppSettings.Caching);
 
+        var checkDuplicatedHeathChecks = new HashSet<string>();
         var healthChecksBuilder = services.AddHealthChecks()
             .AddSqlServer(connectionString: AppSettings.ConnectionStrings.ClassifiedAds,
                 healthQuery: "SELECT 1;",
@@ -144,7 +145,10 @@ public class Startup
                 failureStatus: HealthStatus.Degraded)
             .AddHttp(AppSettings.ResourceServer.Endpoint,
                 name: "Resource (Web API) Server",
-                failureStatus: HealthStatus.Degraded);
+                failureStatus: HealthStatus.Degraded)
+            .AddStorageManagerHealthCheck(AppSettings.Storage)
+            .AddMessageBusHealthCheck<FileUploadedEvent>(AppSettings.MessageBroker, checkDuplicatedHeathChecks)
+            .AddMessageBusHealthCheck<FileDeletedEvent>(AppSettings.MessageBroker, checkDuplicatedHeathChecks);
 
         services.AddHealthChecksUI(setupSettings: setup =>
         {
@@ -155,11 +159,9 @@ public class Startup
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddScoped<ICurrentUser, CurrentWebUser>();
 
-        services.AddStorageManager(AppSettings.Storage, healthChecksBuilder);
-
-        var checkDuplicatedHeathChecks = new HashSet<string>();
-        services.AddMessageBusSender<FileUploadedEvent>(AppSettings.MessageBroker, healthChecksBuilder, checkDuplicatedHeathChecks);
-        services.AddMessageBusSender<FileDeletedEvent>(AppSettings.MessageBroker, healthChecksBuilder, checkDuplicatedHeathChecks);
+        services.AddStorageManager(AppSettings.Storage);
+        services.AddMessageBusSender<FileUploadedEvent>(AppSettings.MessageBroker);
+        services.AddMessageBusSender<FileDeletedEvent>(AppSettings.MessageBroker);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

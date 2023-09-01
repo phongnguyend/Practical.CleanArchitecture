@@ -3,7 +3,6 @@ using ClassifiedAds.Infrastructure.Storages.Amazon;
 using ClassifiedAds.Infrastructure.Storages.Azure;
 using ClassifiedAds.Infrastructure.Storages.Fake;
 using ClassifiedAds.Infrastructure.Storages.Local;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -37,45 +36,19 @@ public static class StoragesCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddStorageManager(this IServiceCollection services, StorageOptions options, IHealthChecksBuilder healthChecksBuilder = null)
+    public static IServiceCollection AddStorageManager(this IServiceCollection services, StorageOptions options)
     {
         if (options.UsedAzure())
         {
             services.AddAzureBlobStorageManager(options.Azure);
-
-            if (healthChecksBuilder != null)
-            {
-                healthChecksBuilder.AddAzureBlobStorage(
-                    options.Azure,
-                    name: "Storage (Azure Blob)",
-                    failureStatus: HealthStatus.Degraded);
-            }
         }
         else if (options.UsedAmazon())
         {
             services.AddAmazonS3StorageManager(options.Amazon);
-
-            if (healthChecksBuilder != null)
-            {
-                healthChecksBuilder.AddAmazonS3(
-                options.Amazon,
-                name: "Storage (Amazon S3)",
-                failureStatus: HealthStatus.Degraded);
-            }
         }
         else if (options.UsedLocal())
         {
             services.AddLocalStorageManager(options.Local);
-
-            if (healthChecksBuilder != null)
-            {
-                healthChecksBuilder.AddLocalFile(new LocalFileHealthCheckOptions
-                {
-                    Path = options.Local.Path,
-                },
-                name: "Storage (Local Directory)",
-                failureStatus: HealthStatus.Degraded);
-            }
         }
         else
         {
