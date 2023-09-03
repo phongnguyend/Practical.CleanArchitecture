@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.BackgroundServer.ConfigurationOptions;
 using ClassifiedAds.BackgroundServer.Identity;
 using ClassifiedAds.Contracts.Identity.Services;
+using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Modules.Identity.Repositories;
 using ClassifiedAds.Modules.Storage.DTOs;
@@ -54,9 +55,9 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
         .PersistKeysToDbContext<IdentityDbContext>()
         .SetApplicationName("ClassifiedAds");
 
+        services.AddTransient<IMessageBus, MessageBus>();
         services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker);
         services.AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker);
-
         services.AddMessageBusReceiver<WebhookConsumer, FileUploadedEvent>(appSettings.MessageBroker);
         services.AddMessageBusReceiver<WebhookConsumer, FileDeletedEvent>(appSettings.MessageBroker);
 
