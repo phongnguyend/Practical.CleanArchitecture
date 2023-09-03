@@ -41,6 +41,7 @@ public static class PersistenceExtensions
                 {
                     return services.GetRequiredService<AdsDbContextMultiTenant>();
                 })
+                .AddDbContextFactory<AdsDbContext>((Action<DbContextOptionsBuilder>)null, ServiceLifetime.Scoped)
                 .AddRepositories();
 
         services.AddScoped(typeof(IDistributedLock), services =>
