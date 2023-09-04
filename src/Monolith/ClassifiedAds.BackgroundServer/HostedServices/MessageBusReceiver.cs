@@ -16,29 +16,26 @@ internal sealed class MessageBusReceiver : BackgroundService
 
     private readonly ILogger<MessageBusReceiver> _logger;
     private readonly IConfiguration _configuration;
-    private readonly IMessageReceiver<WebhookConsumer, FileUploadedEvent> _fileUploadedEventMessageReceiver;
-    private readonly IMessageReceiver<WebhookConsumer, FileDeletedEvent> _fileDeletedEventMessageReceiver;
+    private readonly IMessageBus _messageBus;
 
     public MessageBusReceiver(ILogger<MessageBusReceiver> logger,
         IConfiguration configuration,
-        IMessageReceiver<WebhookConsumer, FileUploadedEvent> fileUploadedEventMessageReceiver,
-        IMessageReceiver<WebhookConsumer, FileDeletedEvent> fileDeletedEventMessageReceiver)
+        IMessageBus messageBus)
     {
         _logger = logger;
         _configuration = configuration;
-        _fileUploadedEventMessageReceiver = fileUploadedEventMessageReceiver;
-        _fileDeletedEventMessageReceiver = fileDeletedEventMessageReceiver;
+        _messageBus = messageBus;
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _fileUploadedEventMessageReceiver?.ReceiveAsync(async (data, metaData) =>
+        _messageBus.ReceiveAsync<WebhookConsumer, FileUploadedEvent>(async (data, metaData) =>
         {
             var url = _configuration["Webhooks:FileUploadedEvent:PayloadUrl"];
             await _httpClient.PostAsJsonAsync(url, data.FileEntry);
         }, stoppingToken);
 
-        _fileDeletedEventMessageReceiver?.ReceiveAsync(async (data, metaData) =>
+        _messageBus.ReceiveAsync<WebhookConsumer, FileDeletedEvent>(async (data, metaData) =>
         {
             var url = _configuration["Webhooks:FileDeletedEvent:PayloadUrl"];
             await _httpClient.PostAsJsonAsync(url, data.FileEntry);

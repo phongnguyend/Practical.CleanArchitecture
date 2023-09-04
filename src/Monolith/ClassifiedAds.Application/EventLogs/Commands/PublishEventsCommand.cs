@@ -1,5 +1,4 @@
-﻿using ClassifiedAds.Application;
-using ClassifiedAds.Application.FileEntries.DTOs;
+﻿using ClassifiedAds.Application.FileEntries.DTOs;
 using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
@@ -23,20 +22,17 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
     private readonly ILogger<PublishEventsCommandHandler> _logger;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IRepository<OutboxEvent, Guid> _outboxEventRepository;
-    private readonly IMessageSender<FileUploadedEvent> _fileUploadedEventSender;
-    private readonly IMessageSender<FileDeletedEvent> _fileDeletedEventSender;
+    private readonly IMessageBus _messageBus;
 
     public PublishEventsCommandHandler(ILogger<PublishEventsCommandHandler> logger,
         IDateTimeProvider dateTimeProvider,
         IRepository<OutboxEvent, Guid> outboxEventRepository,
-        IMessageSender<FileUploadedEvent> fileUploadedEventSender,
-        IMessageSender<FileDeletedEvent> fileDeletedEventSender)
+        IMessageBus messageBus)
     {
         _logger = logger;
         _dateTimeProvider = dateTimeProvider;
         _outboxEventRepository = outboxEventRepository;
-        _fileUploadedEventSender = fileUploadedEventSender;
-        _fileDeletedEventSender = fileDeletedEventSender;
+        _messageBus = messageBus;
     }
 
     public async Task HandleAsync(PublishEventsCommand command, CancellationToken cancellationToken = default)
@@ -51,11 +47,11 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
         {
             if (eventLog.EventType == "FILEENTRY_CREATED")
             {
-                await _fileUploadedEventSender.SendAsync(new FileUploadedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(eventLog.Message) }, cancellationToken: cancellationToken);
+                await _messageBus.SendAsync(new FileUploadedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(eventLog.Message) }, cancellationToken: cancellationToken);
             }
             else if (eventLog.EventType == "FILEENTRY_DELETED")
             {
-                await _fileDeletedEventSender.SendAsync(new FileDeletedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(eventLog.Message) }, cancellationToken: cancellationToken);
+                await _messageBus.SendAsync(new FileDeletedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(eventLog.Message) }, cancellationToken: cancellationToken);
             }
             else
             {
