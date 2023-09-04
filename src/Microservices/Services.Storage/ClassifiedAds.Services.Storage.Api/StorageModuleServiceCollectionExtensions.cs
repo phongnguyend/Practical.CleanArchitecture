@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Domain.Repositories;
+﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Services.Storage.Authorization;
 using ClassifiedAds.Services.Storage.ConfigurationOptions;
@@ -38,7 +39,8 @@ public static class StorageModuleServiceCollectionExtensions
 
         services.AddStorageManager(appSettings.Storage);
 
-        services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker)
+        services.AddTransient<IMessageBus, MessageBus>()
+                .AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker)
                 .AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker)
                 .AddMessageBusSender<AuditLogCreatedEvent>(appSettings.MessageBroker)
                 .AddMessageBusReceiver<WebhookConsumer, FileUploadedEvent>(appSettings.MessageBroker)

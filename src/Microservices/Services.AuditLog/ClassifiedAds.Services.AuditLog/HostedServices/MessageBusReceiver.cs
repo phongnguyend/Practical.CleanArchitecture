@@ -14,20 +14,20 @@ internal class MessageBusReceiver : BackgroundService
 {
     private readonly ILogger<MessageBusReceiver> _logger;
     private readonly IServiceProvider _serviceProvider;
-    private readonly IMessageReceiver<AuditLogAggregationConsumer, AuditLogCreatedEvent> _auditLogCreatedEventReceiver;
+    private readonly IMessageBus _messageBus;
 
     public MessageBusReceiver(ILogger<MessageBusReceiver> logger,
         IServiceProvider serviceProvider,
-        IMessageReceiver<AuditLogAggregationConsumer, AuditLogCreatedEvent> auditLogCreatedEventReceiver)
+        IMessageBus messageBus)
     {
         _logger = logger;
         _serviceProvider = serviceProvider;
-        _auditLogCreatedEventReceiver = auditLogCreatedEventReceiver;
+        _messageBus = messageBus;
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _auditLogCreatedEventReceiver?.ReceiveAsync(async (data, metaData) =>
+        _messageBus.ReceiveAsync<AuditLogAggregationConsumer, AuditLogCreatedEvent>(async (data, metaData) =>
         {
             using var scope = _serviceProvider.CreateScope();
             await ProcessMessage(scope, data, metaData);

@@ -24,19 +24,19 @@ public class PublishEventsCommandHandler : IRequestHandler<PublishEventsCommand>
     private readonly ILogger<PublishEventsCommandHandler> _logger;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IRepository<OutboxEvent, Guid> _outboxEventRepository;
-    private readonly IMessageSender<AuditLogCreatedEvent> _auditLogCreatedEventSender;
+    private readonly IMessageBus _messageBus;
     private readonly DaprClient _daprClient;
 
     public PublishEventsCommandHandler(ILogger<PublishEventsCommandHandler> logger,
         IDateTimeProvider dateTimeProvider,
         IRepository<OutboxEvent, Guid> outboxEventRepository,
-        IMessageSender<AuditLogCreatedEvent> auditLogCreatedEventSender,
+        IMessageBus messageBus,
         DaprClient daprClient)
     {
         _logger = logger;
         _dateTimeProvider = dateTimeProvider;
         _outboxEventRepository = outboxEventRepository;
-        _auditLogCreatedEventSender = auditLogCreatedEventSender;
+        _messageBus = messageBus;
         _daprClient = daprClient;
     }
 
@@ -53,7 +53,7 @@ public class PublishEventsCommandHandler : IRequestHandler<PublishEventsCommand>
             if (eventLog.EventType == "AUDIT_LOG_ENTRY_CREATED")
             {
                 var logEntry = JsonSerializer.Deserialize<AuditLogEntry>(eventLog.Message);
-                await _auditLogCreatedEventSender.SendAsync(new AuditLogCreatedEvent { AuditLog = logEntry },
+                await _messageBus.SendAsync(new AuditLogCreatedEvent { AuditLog = logEntry },
                     new MetaData
                     {
                         MessageId = eventLog.Id.ToString(),

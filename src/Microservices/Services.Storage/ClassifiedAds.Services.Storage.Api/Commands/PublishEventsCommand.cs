@@ -23,23 +23,17 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
     private readonly ILogger<PublishEventsCommandHandler> _logger;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IRepository<OutboxEvent, Guid> _outboxEventRepository;
-    private readonly IMessageSender<FileUploadedEvent> _fileUploadedEventSender;
-    private readonly IMessageSender<FileDeletedEvent> _fileDeletedEventSender;
-    private readonly IMessageSender<AuditLogCreatedEvent> _auditLogCreatedEventSender;
+    private readonly IMessageBus _messageBus;
 
     public PublishEventsCommandHandler(ILogger<PublishEventsCommandHandler> logger,
         IDateTimeProvider dateTimeProvider,
         IRepository<OutboxEvent, Guid> outboxEventRepository,
-        IMessageSender<FileUploadedEvent> fileUploadedEventSender,
-        IMessageSender<FileDeletedEvent> fileDeletedEventSender,
-        IMessageSender<AuditLogCreatedEvent> auditLogCreatedEventSender)
+        IMessageBus messageBus)
     {
         _logger = logger;
         _dateTimeProvider = dateTimeProvider;
         _outboxEventRepository = outboxEventRepository;
-        _fileUploadedEventSender = fileUploadedEventSender;
-        _fileDeletedEventSender = fileDeletedEventSender;
-        _auditLogCreatedEventSender = auditLogCreatedEventSender;
+        _messageBus = messageBus;
     }
 
     public async Task HandleAsync(PublishEventsCommand command, CancellationToken cancellationToken = default)
@@ -54,16 +48,16 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
         {
             if (eventLog.EventType == "FILEENTRY_CREATED")
             {
-                await _fileUploadedEventSender.SendAsync(new FileUploadedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(eventLog.Message) });
+                await _messageBus.SendAsync(new FileUploadedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(eventLog.Message) });
             }
             else if (eventLog.EventType == "FILEENTRY_DELETED")
             {
-                await _fileDeletedEventSender.SendAsync(new FileDeletedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(eventLog.Message) });
+                await _messageBus.SendAsync(new FileDeletedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(eventLog.Message) });
             }
             else if (eventLog.EventType == "AUDIT_LOG_ENTRY_CREATED")
             {
                 var logEntry = JsonSerializer.Deserialize<AuditLogEntry>(eventLog.Message);
-                await _auditLogCreatedEventSender.SendAsync(new AuditLogCreatedEvent { AuditLog = logEntry },
+                await _messageBus.SendAsync(new AuditLogCreatedEvent { AuditLog = logEntry },
                     new MetaData
                     {
                         MessageId = eventLog.Id.ToString(),

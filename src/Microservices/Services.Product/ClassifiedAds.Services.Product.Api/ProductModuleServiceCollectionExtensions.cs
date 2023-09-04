@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Csv;
+using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Csv;
 using ClassifiedAds.Infrastructure.Identity;
@@ -46,7 +47,8 @@ public static class ProductModuleServiceCollectionExtensions
         services.AddScoped(typeof(ICsvReader<>), typeof(CsvReader<>));
         services.AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>));
 
-        services.AddMessageBusSender<AuditLogCreatedEvent>(appSettings.MessageBroker);
+        services.AddTransient<IMessageBus, MessageBus>()
+                .AddMessageBusSender<AuditLogCreatedEvent>(appSettings.MessageBroker);
 
         return services;
     }
