@@ -2,6 +2,7 @@
 using ClassifiedAds.Contracts.AuditLog.Services;
 using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Modules.Product.Constants;
 using ClassifiedAds.Modules.Product.Entities;
 using Microsoft.Extensions.Logging;
 using System;
@@ -45,7 +46,7 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
 
         foreach (var eventLog in events)
         {
-            if (eventLog.EventType == "AUDIT_LOG_ENTRY_CREATED")
+            if (eventLog.EventType == EventTypeConstants.AuditLogEntryCreated)
             {
                 var logEntry = JsonSerializer.Deserialize<Contracts.AuditLog.DTOs.AuditLogEntryDTO>(eventLog.Message);
                 await _externalAuditLogService.AddAsync(logEntry, eventLog.Id.ToString());

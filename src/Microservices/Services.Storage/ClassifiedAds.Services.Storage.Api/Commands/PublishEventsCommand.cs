@@ -2,6 +2,7 @@
 using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Services.Storage.Constants;
 using ClassifiedAds.Services.Storage.DTOs;
 using ClassifiedAds.Services.Storage.Entities;
 using Microsoft.Extensions.Logging;
@@ -46,15 +47,15 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
 
         foreach (var eventLog in events)
         {
-            if (eventLog.EventType == "FILEENTRY_CREATED")
+            if (eventLog.EventType == EventTypeConstants.FileEntryCreated)
             {
                 await _messageBus.SendAsync(new FileUploadedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(eventLog.Message) });
             }
-            else if (eventLog.EventType == "FILEENTRY_DELETED")
+            else if (eventLog.EventType == EventTypeConstants.FileEntryDeleted)
             {
                 await _messageBus.SendAsync(new FileDeletedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(eventLog.Message) });
             }
-            else if (eventLog.EventType == "AUDIT_LOG_ENTRY_CREATED")
+            else if (eventLog.EventType == EventTypeConstants.AuditLogEntryCreated)
             {
                 var logEntry = JsonSerializer.Deserialize<AuditLogEntry>(eventLog.Message);
                 await _messageBus.SendAsync(new AuditLogCreatedEvent { AuditLog = logEntry },

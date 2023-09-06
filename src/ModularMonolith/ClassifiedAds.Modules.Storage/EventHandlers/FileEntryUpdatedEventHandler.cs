@@ -2,6 +2,7 @@
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Modules.Storage.Constants;
 using ClassifiedAds.Modules.Storage.Entities;
 using System;
 using System.Threading;
@@ -40,7 +41,7 @@ public class FileEntryUpdatedEventHandler : IDomainEventHandler<EntityUpdatedEve
 
         await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
         {
-            EventType = "AUDIT_LOG_ENTRY_CREATED",
+            EventType = EventTypeConstants.AuditLogEntryCreated,
             TriggeredById = _currentUser.UserId,
             CreatedDateTime = auditLog.CreatedDateTime,
             ObjectId = auditLog.Id.ToString(),
@@ -50,7 +51,7 @@ public class FileEntryUpdatedEventHandler : IDomainEventHandler<EntityUpdatedEve
 
         await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
         {
-            EventType = "FILEENTRY_UPDATED",
+            EventType = EventTypeConstants.FileEntryUpdated,
             TriggeredById = _currentUser.UserId,
             CreatedDateTime = domainEvent.EventDateTime,
             ObjectId = domainEvent.Entity.Id.ToString(),

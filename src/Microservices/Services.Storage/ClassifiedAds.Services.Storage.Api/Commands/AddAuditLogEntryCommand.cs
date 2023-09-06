@@ -2,6 +2,7 @@
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Identity;
+using ClassifiedAds.Services.Storage.Constants;
 using ClassifiedAds.Services.Storage.Entities;
 using System;
 using System.Threading;
@@ -45,7 +46,7 @@ public class AddAuditLogEntryCommandHandler : ICommandHandler<AddAuditLogEntryCo
 
         await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
         {
-            EventType = "AUDIT_LOG_ENTRY_CREATED",
+            EventType = EventTypeConstants.AuditLogEntryCreated,
             TriggeredById = _currentUser.UserId,
             CreatedDateTime = auditLog.CreatedDateTime,
             ObjectId = auditLog.Id.ToString(),

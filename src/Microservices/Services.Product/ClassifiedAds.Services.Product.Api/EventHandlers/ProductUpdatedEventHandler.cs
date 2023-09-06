@@ -3,6 +3,7 @@ using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Services.Product.Commands;
+using ClassifiedAds.Services.Product.Constants;
 using ClassifiedAds.Services.Product.Entities;
 using MediatR;
 using System;
@@ -42,7 +43,7 @@ public class ProductUpdatedEventHandler : IDomainEventHandler<EntityUpdatedEvent
 
         await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
         {
-            EventType = "PRODUCT_UPDATED",
+            EventType = EventTypeConstants.ProductUpdated,
             TriggeredById = _currentUser.UserId,
             CreatedDateTime = domainEvent.EventDateTime,
             ObjectId = domainEvent.Entity.Id.ToString(),

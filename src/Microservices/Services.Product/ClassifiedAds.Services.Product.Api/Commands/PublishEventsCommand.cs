@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Services.Product.Constants;
 using ClassifiedAds.Services.Product.DTOs;
 using ClassifiedAds.Services.Product.Entities;
 using Dapr.Client;
@@ -50,7 +51,7 @@ public class PublishEventsCommandHandler : IRequestHandler<PublishEventsCommand>
 
         foreach (var eventLog in events)
         {
-            if (eventLog.EventType == "AUDIT_LOG_ENTRY_CREATED")
+            if (eventLog.EventType == EventTypeConstants.AuditLogEntryCreated)
             {
                 var logEntry = JsonSerializer.Deserialize<AuditLogEntry>(eventLog.Message);
                 await _messageBus.SendAsync(new AuditLogCreatedEvent { AuditLog = logEntry },

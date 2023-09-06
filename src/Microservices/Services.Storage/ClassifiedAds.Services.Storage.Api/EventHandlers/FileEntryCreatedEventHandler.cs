@@ -4,6 +4,7 @@ using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Services.Storage.Commands;
+using ClassifiedAds.Services.Storage.Constants;
 using ClassifiedAds.Services.Storage.Entities;
 using System;
 using System.Threading;
@@ -42,7 +43,7 @@ public class FileEntryCreatedEventHandler : IDomainEventHandler<EntityCreatedEve
 
         await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
         {
-            EventType = "FILEENTRY_CREATED",
+            EventType = EventTypeConstants.FileEntryCreated,
             TriggeredById = _currentUser.UserId,
             CreatedDateTime = domainEvent.EventDateTime,
             ObjectId = domainEvent.Entity.Id.ToString(),

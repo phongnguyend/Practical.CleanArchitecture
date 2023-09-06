@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
+using ClassifiedAds.Domain.Constants;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Identity;
@@ -37,7 +38,7 @@ public class FileEntryDeletedEventHandler : IDomainEventHandler<EntityDeletedEve
 
         await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
         {
-            EventType = "FILEENTRY_DELETED",
+            EventType = EventTypeConstants.FileEntryDeleted,
             TriggeredById = _currentUser.UserId,
             CreatedDateTime = domainEvent.EventDateTime,
             ObjectId = domainEvent.Entity.Id.ToString(),
