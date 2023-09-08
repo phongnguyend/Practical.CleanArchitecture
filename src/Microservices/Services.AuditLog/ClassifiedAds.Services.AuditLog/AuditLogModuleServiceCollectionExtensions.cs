@@ -1,10 +1,11 @@
 ﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Infrastructure.HostedServices;
 using ClassifiedAds.Services.AuditLog.Authorization;
 using ClassifiedAds.Services.AuditLog.ConfigurationOptions;
 using ClassifiedAds.Services.AuditLog.DTOs;
 using ClassifiedAds.Services.AuditLog.Entities;
-using ClassifiedAds.Services.AuditLog.HostedServices;
+using ClassifiedAds.Services.AuditLog.MessageBusConsumers;
 using ClassifiedAds.Services.AuditLog.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -46,7 +47,10 @@ public static class AuditLogModuleServiceCollectionExtensions
 
     public static IServiceCollection AddHostedServicesAuditLogModule(this IServiceCollection services)
     {
-        services.AddHostedService<MessageBusReceiver>();
+        services.AddMessageBusConsumers(Assembly.GetExecutingAssembly());
+        services.AddOutboxEventPublishers(Assembly.GetExecutingAssembly());
+
+        services.AddHostedService<MessageBusConsumerBackgroundService<AuditLogAggregationConsumer, AuditLogCreatedEvent>>();
 
         return services;
     }

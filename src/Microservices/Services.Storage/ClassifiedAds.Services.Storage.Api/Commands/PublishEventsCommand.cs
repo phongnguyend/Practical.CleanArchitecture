@@ -2,13 +2,10 @@
 using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Services.Storage.Constants;
-using ClassifiedAds.Services.Storage.DTOs;
 using ClassifiedAds.Services.Storage.Entities;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -47,27 +44,15 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
 
         foreach (var eventLog in events)
         {
-            if (eventLog.EventType == EventTypeConstants.FileEntryCreated)
+            var outbox = new PublishingOutBoxEvent
             {
-                await _messageBus.SendAsync(new FileUploadedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(eventLog.Message) });
-            }
-            else if (eventLog.EventType == EventTypeConstants.FileEntryDeleted)
-            {
-                await _messageBus.SendAsync(new FileDeletedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(eventLog.Message) });
-            }
-            else if (eventLog.EventType == EventTypeConstants.AuditLogEntryCreated)
-            {
-                var logEntry = JsonSerializer.Deserialize<AuditLogEntry>(eventLog.Message);
-                await _messageBus.SendAsync(new AuditLogCreatedEvent { AuditLog = logEntry },
-                    new MetaData
-                    {
-                        MessageId = eventLog.Id.ToString(),
-                    });
-            }
-            else
-            {
-                // TODO: Take Note
-            }
+                Id = eventLog.Id.ToString(),
+                EventType = eventLog.EventType,
+                EventSource = typeof(PublishEventsCommand).Assembly.GetName().Name,
+                Payload = eventLog.Message,
+            };
+
+            await _messageBus.SendAsync(outbox, cancellationToken);
 
             eventLog.Published = true;
             eventLog.UpdatedDateTime = _dateTimeProvider.OffsetNow;

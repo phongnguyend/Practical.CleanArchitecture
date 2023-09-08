@@ -1,13 +1,11 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.Contracts.AuditLog.Services;
 using ClassifiedAds.CrossCuttingConcerns.DateTimes;
+using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Modules.Product.Constants;
 using ClassifiedAds.Modules.Product.Entities;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,17 +21,17 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
     private readonly ILogger<PublishEventsCommandHandler> _logger;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IRepository<OutboxEvent, Guid> _outboxEventRepository;
-    private readonly IAuditLogService _externalAuditLogService;
+    private readonly IMessageBus _messageBus;
 
     public PublishEventsCommandHandler(ILogger<PublishEventsCommandHandler> logger,
         IDateTimeProvider dateTimeProvider,
         IRepository<OutboxEvent, Guid> outboxEventRepository,
-        IAuditLogService externalAuditLogService)
+        IMessageBus messageBus)
     {
         _logger = logger;
         _dateTimeProvider = dateTimeProvider;
         _outboxEventRepository = outboxEventRepository;
-        _externalAuditLogService = externalAuditLogService;
+        _messageBus = messageBus;
     }
 
     public async Task HandleAsync(PublishEventsCommand command, CancellationToken cancellationToken = default)
@@ -46,15 +44,15 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
 
         foreach (var eventLog in events)
         {
-            if (eventLog.EventType == EventTypeConstants.AuditLogEntryCreated)
+            var outbox = new PublishingOutBoxEvent
             {
-                var logEntry = JsonSerializer.Deserialize<Contracts.AuditLog.DTOs.AuditLogEntryDTO>(eventLog.Message);
-                await _externalAuditLogService.AddAsync(logEntry, eventLog.Id.ToString());
-            }
-            else
-            {
-                // TODO: Take Note
-            }
+                Id = eventLog.Id.ToString(),
+                EventType = eventLog.EventType,
+                EventSource = typeof(PublishEventsCommand).Assembly.GetName().Name,
+                Payload = eventLog.Message,
+            };
+
+            await _messageBus.SendAsync(outbox, cancellationToken);
 
             eventLog.Published = true;
             eventLog.UpdatedDateTime = _dateTimeProvider.OffsetNow;

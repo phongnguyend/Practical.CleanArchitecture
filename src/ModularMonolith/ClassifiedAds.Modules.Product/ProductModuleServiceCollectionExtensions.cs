@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Csv;
+using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Csv;
 using ClassifiedAds.Modules.Product.Authorization;
@@ -67,6 +68,9 @@ public static class ProductModuleServiceCollectionExtensions
 
     public static IServiceCollection AddHostedServicesProductModule(this IServiceCollection services)
     {
+        services.AddMessageBusConsumers(Assembly.GetExecutingAssembly());
+        services.AddOutboxEventPublishers(Assembly.GetExecutingAssembly());
+
         services.AddHostedService<PublishEventWorker>();
 
         return services;

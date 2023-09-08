@@ -63,6 +63,9 @@ public static class ProductModuleServiceCollectionExtensions
 
     public static IServiceCollection AddHostedServicesProductModule(this IServiceCollection services)
     {
+        services.AddMessageBusConsumers(Assembly.GetExecutingAssembly());
+        services.AddOutboxEventPublishers(Assembly.GetExecutingAssembly());
+
         services.AddHostedService<PublishEventWorker>();
 
         return services;

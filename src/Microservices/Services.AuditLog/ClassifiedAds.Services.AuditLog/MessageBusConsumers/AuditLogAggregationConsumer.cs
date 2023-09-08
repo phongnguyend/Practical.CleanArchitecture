@@ -5,41 +5,26 @@ using ClassifiedAds.Services.AuditLog.DTOs;
 using ClassifiedAds.Services.AuditLog.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace ClassifiedAds.Services.AuditLog.HostedServices;
+namespace ClassifiedAds.Services.AuditLog.MessageBusConsumers;
 
-internal class MessageBusReceiver : BackgroundService
+public sealed class AuditLogAggregationConsumer : IMessageBusConsumer<AuditLogAggregationConsumer, AuditLogCreatedEvent>
 {
-    private readonly ILogger<MessageBusReceiver> _logger;
+    private readonly ILogger<AuditLogAggregationConsumer> _logger;
     private readonly IServiceProvider _serviceProvider;
-    private readonly IMessageBus _messageBus;
 
-    public MessageBusReceiver(ILogger<MessageBusReceiver> logger,
-        IServiceProvider serviceProvider,
-        IMessageBus messageBus)
+    public AuditLogAggregationConsumer(ILogger<AuditLogAggregationConsumer> logger,
+        IServiceProvider serviceProvider)
     {
         _logger = logger;
         _serviceProvider = serviceProvider;
-        _messageBus = messageBus;
     }
 
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    public async Task HandleAsync(AuditLogCreatedEvent data, MetaData metaData, CancellationToken cancellationToken = default)
     {
-        _messageBus.ReceiveAsync<AuditLogAggregationConsumer, AuditLogCreatedEvent>(async (data, metaData) =>
-        {
-            using var scope = _serviceProvider.CreateScope();
-            await ProcessMessage(scope, data, metaData);
-        }, stoppingToken);
-
-        return Task.CompletedTask;
-    }
-
-    private async Task ProcessMessage(IServiceScope scope, AuditLogCreatedEvent data, MetaData metaData)
-    {
-        var dispatcher = scope.ServiceProvider.GetRequiredService<Dispatcher>();
-        var idempotentRequestRepository = scope.ServiceProvider.GetRequiredService<IRepository<IdempotentRequest, Guid>>();
+        var dispatcher = _serviceProvider.GetRequiredService<Dispatcher>();
+        var idempotentRequestRepository = _serviceProvider.GetRequiredService<IRepository<IdempotentRequest, Guid>>();
 
         var requestType = "ADD_AUDIT_LOG_ENTRY";
 
@@ -69,8 +54,4 @@ internal class MessageBusReceiver : BackgroundService
 
         await uow.CommitTransactionAsync();
     }
-}
-
-public sealed class AuditLogAggregationConsumer
-{
 }

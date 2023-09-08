@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClassifiedAds.Domain.Entities;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,6 +12,11 @@ public interface IMessageBus
 
     Task ReceiveAsync<TConsumer, T>(Func<T, MetaData, Task> action, CancellationToken cancellationToken = default)
         where T : IMessageBusMessage;
+
+    Task ReceiveAsync<TConsumer, T>(CancellationToken cancellationToken = default)
+        where T : IMessageBusMessage;
+
+    Task SendAsync(PublishingOutBoxEvent outbox, CancellationToken cancellationToken = default);
 }
 
 public interface IMessageBusMessage

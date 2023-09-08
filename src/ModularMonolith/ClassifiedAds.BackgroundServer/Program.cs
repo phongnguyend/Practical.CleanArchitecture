@@ -5,64 +5,63 @@ using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Modules.Identity.Repositories;
 using ClassifiedAds.Modules.Storage.DTOs;
-using ClassifiedAds.Modules.Storage.HostedServices;
+using ClassifiedAds.Modules.Storage.MessageBusConsumers;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 
-CreateHostBuilder(args).Build().Run();
+Host.CreateDefaultBuilder(args)
+.UseWindowsService()
+.UseClassifiedAdsLogger(configuration =>
+{
+    var appSettings = new AppSettings();
+    configuration.Bind(appSettings);
+    return appSettings.Logging;
+})
+.ConfigureServices((hostContext, services) =>
+{
+    var serviceProvider = services.BuildServiceProvider();
+    var configuration = serviceProvider.GetService<IConfiguration>();
 
-static IHostBuilder CreateHostBuilder(string[] args) =>
-    Host.CreateDefaultBuilder(args)
-    .UseWindowsService()
-    .UseClassifiedAdsLogger(configuration =>
+    var appSettings = new AppSettings();
+    configuration.Bind(appSettings);
+
+    var validationResult = appSettings.Validate();
+    if (validationResult.Failed)
     {
-        var appSettings = new AppSettings();
-        configuration.Bind(appSettings);
-        return appSettings.Logging;
-    })
-    .ConfigureServices((hostContext, services) =>
-    {
-        var serviceProvider = services.BuildServiceProvider();
-        var configuration = serviceProvider.GetService<IConfiguration>();
+        throw new Exception(validationResult.FailureMessage);
+    }
 
-        var appSettings = new AppSettings();
-        configuration.Bind(appSettings);
+    services.Configure<AppSettings>(configuration);
 
-        var validationResult = appSettings.Validate();
-        if (validationResult.Failed)
-        {
-            throw new Exception(validationResult.FailureMessage);
-        }
+    services.AddScoped<ICurrentUser, CurrentUser>();
 
-        services.Configure<AppSettings>(configuration);
+    services.AddDateTimeProvider();
 
-        services.AddScoped<ICurrentUser, CurrentUser>();
+    services
+    .AddAuditLogModule(opt => configuration.GetSection("Modules:AuditLog").Bind(opt))
+    .AddIdentityModuleCore(opt => configuration.GetSection("Modules:Identity").Bind(opt))
+    .AddNotificationModule(opt => configuration.GetSection("Modules:Notification").Bind(opt))
+    .AddProductModule(opt => configuration.GetSection("Modules:Product").Bind(opt))
+    .AddStorageModule(opt => configuration.GetSection("Modules:Storage").Bind(opt))
+    .AddApplicationServices();
 
-        services.AddDateTimeProvider();
+    services.AddDataProtection()
+    .PersistKeysToDbContext<IdentityDbContext>()
+    .SetApplicationName("ClassifiedAds");
 
-        services
-        .AddAuditLogModule(opt => configuration.GetSection("Modules:AuditLog").Bind(opt))
-        .AddIdentityModuleCore(opt => configuration.GetSection("Modules:Identity").Bind(opt))
-        .AddNotificationModule(opt => configuration.GetSection("Modules:Notification").Bind(opt))
-        .AddProductModule(opt => configuration.GetSection("Modules:Product").Bind(opt))
-        .AddStorageModule(opt => configuration.GetSection("Modules:Storage").Bind(opt))
-        .AddApplicationServices();
+    services.AddTransient<IMessageBus, MessageBus>();
+    services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker);
+    services.AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker);
+    services.AddMessageBusReceiver<WebhookConsumer, FileUploadedEvent>(appSettings.MessageBroker);
+    services.AddMessageBusReceiver<WebhookConsumer, FileDeletedEvent>(appSettings.MessageBroker);
 
-        services.AddDataProtection()
-        .PersistKeysToDbContext<IdentityDbContext>()
-        .SetApplicationName("ClassifiedAds");
-
-        services.AddTransient<IMessageBus, MessageBus>();
-        services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker);
-        services.AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker);
-        services.AddMessageBusReceiver<WebhookConsumer, FileUploadedEvent>(appSettings.MessageBroker);
-        services.AddMessageBusReceiver<WebhookConsumer, FileDeletedEvent>(appSettings.MessageBroker);
-
-        services.AddHostedServicesIdentityModule();
-        services.AddHostedServicesNotificationModule();
-        services.AddHostedServicesProductModule();
-        services.AddHostedServicesStorageModule();
-    });
+    services.AddHostedServicesIdentityModule();
+    services.AddHostedServicesNotificationModule();
+    services.AddHostedServicesProductModule();
+    services.AddHostedServicesStorageModule();
+})
+.Build()
+.Run();

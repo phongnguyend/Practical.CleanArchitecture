@@ -1,8 +1,12 @@
-﻿using ClassifiedAds.Domain.Repositories;
+﻿using ClassifiedAds.Infrastructure.HostedServices;
+using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Modules.Storage.Authorization;
 using ClassifiedAds.Modules.Storage.ConfigurationOptions;
+using ClassifiedAds.Modules.Storage.DTOs;
 using ClassifiedAds.Modules.Storage.Entities;
 using ClassifiedAds.Modules.Storage.HostedServices;
+using ClassifiedAds.Modules.Storage.MessageBusConsumers;
 using ClassifiedAds.Modules.Storage.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -55,7 +59,11 @@ public static class StorageModuleServiceCollectionExtensions
 
     public static IServiceCollection AddHostedServicesStorageModule(this IServiceCollection services)
     {
-        services.AddHostedService<MessageBusReceiver>();
+        services.AddMessageBusConsumers(Assembly.GetExecutingAssembly());
+        services.AddOutboxEventPublishers(Assembly.GetExecutingAssembly());
+
+        services.AddHostedService<MessageBusConsumerBackgroundService<WebhookConsumer, FileUploadedEvent>>();
+        services.AddHostedService<MessageBusConsumerBackgroundService<WebhookConsumer, FileDeletedEvent>>();
         services.AddHostedService<PublishEventWorker>();
 
         return services;

@@ -1,15 +1,11 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.Contracts.AuditLog.Services;
 using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Modules.Storage.Constants;
-using ClassifiedAds.Modules.Storage.DTOs;
 using ClassifiedAds.Modules.Storage.Entities;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,19 +22,16 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IRepository<OutboxEvent, Guid> _outboxEventRepository;
     private readonly IMessageBus _messageBus;
-    private readonly IAuditLogService _externalAuditLogService;
 
     public PublishEventsCommandHandler(ILogger<PublishEventsCommandHandler> logger,
         IDateTimeProvider dateTimeProvider,
         IRepository<OutboxEvent, Guid> outboxEventRepository,
-        IMessageBus messageBus,
-        IAuditLogService externalAuditLogService)
+        IMessageBus messageBus)
     {
         _logger = logger;
         _dateTimeProvider = dateTimeProvider;
         _outboxEventRepository = outboxEventRepository;
         _messageBus = messageBus;
-        _externalAuditLogService = externalAuditLogService;
     }
 
     public async Task HandleAsync(PublishEventsCommand command, CancellationToken cancellationToken = default)
@@ -51,23 +44,15 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
 
         foreach (var eventLog in events)
         {
-            if (eventLog.EventType == EventTypeConstants.FileEntryCreated)
+            var outbox = new PublishingOutBoxEvent
             {
-                await _messageBus.SendAsync(new FileUploadedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(eventLog.Message) });
-            }
-            else if (eventLog.EventType == EventTypeConstants.FileEntryDeleted)
-            {
-                await _messageBus.SendAsync(new FileDeletedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(eventLog.Message) });
-            }
-            else if (eventLog.EventType == EventTypeConstants.AuditLogEntryCreated)
-            {
-                var logEntry = JsonSerializer.Deserialize<Contracts.AuditLog.DTOs.AuditLogEntryDTO>(eventLog.Message);
-                await _externalAuditLogService.AddAsync(logEntry, eventLog.Id.ToString());
-            }
-            else
-            {
-                // TODO: Take Note
-            }
+                Id = eventLog.Id.ToString(),
+                EventType = eventLog.EventType,
+                EventSource = typeof(PublishEventsCommand).Assembly.GetName().Name,
+                Payload = eventLog.Message,
+            };
+
+            await _messageBus.SendAsync(outbox, cancellationToken);
 
             eventLog.Published = true;
             eventLog.UpdatedDateTime = _dateTimeProvider.OffsetNow;
