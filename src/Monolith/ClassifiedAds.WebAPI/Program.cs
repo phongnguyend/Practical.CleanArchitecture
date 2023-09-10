@@ -8,6 +8,7 @@ using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Infrastructure.Localization;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.Monitoring;
+using ClassifiedAds.Infrastructure.Web.Endpoints;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Persistence;
 using ClassifiedAds.WebAPI.Authorization;
@@ -281,5 +282,8 @@ app.UseMonitoringServices(appSettings.Monitoring);
 
 app.MapControllers();
 app.MapHub<NotificationHub>("/hubs/notification").RequireCors("SignalRHubs");
+
+app.MapProcessInforEndpoint();
+app.MapThreadPoolInforEndpoint();
 
 app.Run();
