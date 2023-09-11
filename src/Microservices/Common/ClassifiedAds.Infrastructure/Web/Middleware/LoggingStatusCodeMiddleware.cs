@@ -31,7 +31,12 @@ public class LoggingStatusCodeMiddleware
 
         if (statusCodes.Contains(statusCode))
         {
-            _logger.LogWarning($"StatusCode: {statusCode}, UserId: {userId}, Path: {path}, Method: {method}, IP: {remoteIp}");
+            _logger.LogWarning($"StatusCode: {statusCode}, UserId: {ReplaceCRLF(userId)}, Path: {ReplaceCRLF(path)}, Method: {ReplaceCRLF(method)}, IP: {remoteIp}");
         }
+    }
+
+    private static string ReplaceCRLF(string text)
+    {
+        return text?.Replace("\r", "\\r").Replace("\n", "\\n");
     }
 }
