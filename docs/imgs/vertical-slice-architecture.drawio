@@ -1,0 +1,28 @@
+<mxfile host="app.diagrams.net" modified="2023-09-13T04:30:39.069Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36" etag="VW8QJug0ocXYGfhG451S" version="21.7.4" type="device">
+  <diagram id="rOsOsXzstShcfSepX0iM" name="Page-1">
+    <mxGraphModel dx="1434" dy="768" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="hoIVqcJ50_7qzDen5r93-2" value="Presentation" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="240" y="160" width="280" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="hoIVqcJ50_7qzDen5r93-3" value="Application" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="240" y="220" width="280" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="hoIVqcJ50_7qzDen5r93-4" value="Domain" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="240" y="280" width="280" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="hoIVqcJ50_7qzDen5r93-5" value="Database" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;fontStyle=1;spacingTop=3;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="240" y="400" width="280" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="hoIVqcJ50_7qzDen5r93-14" value="Infrastructure" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="240" y="340" width="280" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="hoIVqcJ50_7qzDen5r93-22" value="Feature" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1;fillColor=#d5e8d4;strokeColor=#82b366;rotation=90;" parent="1" vertex="1">
+          <mxGeometry x="107.5" y="277.5" width="325" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
