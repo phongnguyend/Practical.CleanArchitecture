@@ -44,9 +44,12 @@ public class RabbitMQSender<T> : IMessageSender<T>
 
             if (_options.MessageEncryptionEnabled)
             {
-                body = body.UseAES(_options.MessageEncryptionKey.FromBase64String())
-                .WithCipher(CipherMode.ECB)
-                .Encrypt();
+                var iv = SymmetricCrypto.GenerateKey(16);
+                body = (iv.ToBase64String() + "." + body.UseAES(_options.MessageEncryptionKey.FromBase64String())
+                .WithCipher(CipherMode.CBC)
+                .WithIV(iv)
+                .WithPadding(PaddingMode.PKCS7)
+                .Encrypt().ToBase64String()).GetBytes();
             }
 
             var properties = channel.CreateBasicProperties();

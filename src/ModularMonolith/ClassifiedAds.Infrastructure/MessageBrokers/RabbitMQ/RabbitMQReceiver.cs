@@ -82,8 +82,15 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
 
                 if (_options.MessageEncryptionEnabled)
                 {
-                    bodyText = ea.Body.Span.ToArray().UseAES(_options.MessageEncryptionKey.FromBase64String())
-                    .WithCipher(CipherMode.ECB)
+                    var parts = Encoding.UTF8.GetString(ea.Body.Span).Split('.');
+
+                    var iv = parts[0].FromBase64String();
+                    var encryptedBytes = parts[1].FromBase64String();
+
+                    bodyText = encryptedBytes.UseAES(_options.MessageEncryptionKey.FromBase64String())
+                    .WithCipher(CipherMode.CBC)
+                    .WithIV(iv)
+                    .WithPadding(PaddingMode.PKCS7)
                     .Decrypt()
                     .GetString();
                 }
