@@ -94,7 +94,9 @@ public class FilesController : Controller
             var masterEncryptionKey = _options.MasterEncryptionKey;
             var encryptedKey = key
                 .UseAES(masterEncryptionKey.FromBase64String())
-                .WithCipher(CipherMode.ECB)
+                .WithCipher(CipherMode.CBC)
+                .WithIV(iv)
+                .WithPadding(PaddingMode.PKCS7)
                 .Encrypt();
 
             fileEntry.EncryptionKey = encryptedKey.ToBase64String();
@@ -144,21 +146,28 @@ public class FilesController : Controller
             return Forbid();
         }
 
-        var masterEncryptionKey = _options.MasterEncryptionKey;
-        var encryptionKey = fileEntry.EncryptionKey.FromBase64String()
-                  .UseAES(masterEncryptionKey.FromBase64String())
-                  .WithCipher(CipherMode.ECB)
-                  .Decrypt();
-
         var rawData = await _fileManager.ReadAsync(fileEntry.ToModel());
-        var content = fileEntry.Encrypted && fileEntry.FileLocation != "Fake.txt"
-            ? rawData
-            .UseAES(encryptionKey)
-            .WithCipher(CipherMode.CBC)
-            .WithIV(fileEntry.EncryptionIV.FromBase64String())
-            .WithPadding(PaddingMode.PKCS7)
-            .Decrypt()
-            : rawData;
+        var content = rawData;
+
+        if (fileEntry.Encrypted)
+        {
+            var masterEncryptionKey = _options.MasterEncryptionKey;
+            var encryptionKey = fileEntry.EncryptionKey.FromBase64String()
+                      .UseAES(masterEncryptionKey.FromBase64String())
+                      .WithCipher(CipherMode.CBC)
+                      .WithIV(fileEntry.EncryptionIV.FromBase64String())
+                      .WithPadding(PaddingMode.PKCS7)
+                      .Decrypt();
+
+            content = fileEntry.FileLocation != "Fake.txt"
+                ? rawData
+                .UseAES(encryptionKey)
+                .WithCipher(CipherMode.CBC)
+                .WithIV(fileEntry.EncryptionIV.FromBase64String())
+                .WithPadding(PaddingMode.PKCS7)
+                .Decrypt()
+                : rawData;
+        }
 
         return File(content, MediaTypeNames.Application.Octet, WebUtility.HtmlEncode(fileEntry.FileName));
     }
