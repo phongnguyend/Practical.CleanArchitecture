@@ -20,6 +20,7 @@ public static class ProcessInforEndpoint
                 Timestamp = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss.fff zzz", CultureInfo.InvariantCulture),
                 MachineName = Environment.MachineName,
                 ProcessId = Environment.ProcessId,
+                UserName = Environment.UserName,
                 TotalProcessorTime = currentProcess.TotalProcessorTime.TotalSeconds,
                 PrivateMemorySize64 = currentProcess.PrivateMemorySize64 / 1024 / 1024,
                 VirtualMemorySize64 = currentProcess.VirtualMemorySize64 / 1024 / 1024,
