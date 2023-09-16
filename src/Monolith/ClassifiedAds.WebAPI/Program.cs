@@ -285,5 +285,6 @@ app.MapHub<NotificationHub>("/hubs/notification").RequireCors("SignalRHubs");
 
 app.MapProcessInforEndpoint();
 app.MapThreadPoolInforEndpoint();
+app.MapGcInforEndpoint();
 
 app.Run();
