@@ -4,7 +4,16 @@ using System.Collections.Generic;
 
 namespace ClassifiedAds.Modules.Notification.Entities;
 
-public class EmailMessage : Entity<Guid>, IAggregateRoot
+public class EmailMessage : EmailMessageBase, IAggregateRoot
+{
+    public ICollection<EmailMessageAttachment> EmailMessageAttachments { get; set; }
+}
+
+public class ArchivedEmailMessage : EmailMessageBase, IAggregateRoot
+{
+}
+
+public abstract class EmailMessageBase : Entity<Guid>
 {
     public string From { get; set; }
 
@@ -31,6 +40,4 @@ public class EmailMessage : Entity<Guid>, IAggregateRoot
     public DateTimeOffset? SentDateTime { get; set; }
 
     public Guid? CopyFromId { get; set; }
-
-    public ICollection<EmailMessageAttachment> EmailMessageAttachments { get; set; }
 }

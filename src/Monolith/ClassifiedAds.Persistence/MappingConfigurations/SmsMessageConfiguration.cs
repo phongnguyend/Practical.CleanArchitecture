@@ -12,3 +12,11 @@ public class SmsMessageConfiguration : IEntityTypeConfiguration<SmsMessage>
         builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
     }
 }
+
+public class ArchivedSmsMessageConfiguration : IEntityTypeConfiguration<ArchivedSmsMessage>
+{
+    public void Configure(EntityTypeBuilder<ArchivedSmsMessage> builder)
+    {
+        builder.ToTable("ArchivedSmsMessages");
+    }
+}

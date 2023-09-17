@@ -3,7 +3,15 @@ using System;
 
 namespace ClassifiedAds.Domain.Entities;
 
-public class SmsMessage : Entity<Guid>, IAggregateRoot, ISmsMessage
+public class SmsMessage : SmsMessageBase, IAggregateRoot, ISmsMessage
+{
+}
+
+public class ArchivedSmsMessage : SmsMessageBase, IAggregateRoot
+{
+}
+
+public abstract class SmsMessageBase : Entity<Guid>
 {
     public string Message { get; set; }
 

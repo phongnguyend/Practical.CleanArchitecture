@@ -37,7 +37,7 @@ public static class ApplicationServicesExtensions
             }
         }
 
-        var aggregateRootTypes = assembly.GetTypes().Where(x => x.BaseType == typeof(Entity<Guid>) && x.GetInterfaces().Contains(typeof(IAggregateRoot))).ToList();
+        var aggregateRootTypes = assembly.GetTypes().Where(x => x.IsSubclassOf(typeof(Entity<Guid>)) && x.GetInterfaces().Contains(typeof(IAggregateRoot))).ToList();
 
         var genericHandlerTypes = new[]
         {

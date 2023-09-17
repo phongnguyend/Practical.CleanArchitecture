@@ -12,3 +12,11 @@ public class OutboxEventConfiguration : IEntityTypeConfiguration<OutboxEvent>
         builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
     }
 }
+
+public class ArchivedOutboxEventConfiguration : IEntityTypeConfiguration<ArchivedOutboxEvent>
+{
+    public void Configure(EntityTypeBuilder<ArchivedOutboxEvent> builder)
+    {
+        builder.ToTable("ArchivedOutboxEvents");
+    }
+}
