@@ -75,6 +75,7 @@ public class HostApplicationLifetimeEventsHostedService : IHostedService
 
         var message = $"{DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss.fff zzz} [MachineName: {Environment.MachineName}] [ProcessId: {Environment.ProcessId}]";
 
+        message += $" [UserName: {Environment.UserName}]";
         message += $" [TotalProcessorTime: {currentProcess.TotalProcessorTime.TotalSeconds} Seconds]";
         message += $" [PrivateMemorySize64: {currentProcess.PrivateMemorySize64 / 1024 / 1024} MB]";
         message += $" [VirtualMemorySize64: {currentProcess.VirtualMemorySize64 / 1024 / 1024} MB]";
