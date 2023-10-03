@@ -42,9 +42,11 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AuthorizedAction">Authorized Action</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="File" asp-action="Index">File Storage</a>
-                        </li>
+                        <feature name="@FeatureManagement.FileManagement">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="File" asp-action="Index">File Storage</a>
+                            </li>
+                        </feature>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
@@ -57,9 +59,11 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
                             </li>
                         }
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/healthchecks-ui#/healthchecks">Health Checks UI</a>
-                        </li>
+                        <feature name="@FeatureManagement.HealthChecksUI">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/healthchecks-ui#/healthchecks">Health Checks UI</a>
+                            </li>
+                        </feature>
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="@appSettings.Value.ResourceServer.PublicEndpoint/profiler/results">API</a>
                         </li>

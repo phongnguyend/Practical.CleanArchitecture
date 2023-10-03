@@ -28,6 +28,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -164,6 +165,8 @@ services.AddScoped<ICurrentUser, CurrentWebUser>();
 services.AddStorageManager(appSettings.Storage);
 services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker);
 services.AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker);
+
+services.AddFeatureManagement();
 
 var app = builder.Build();
 

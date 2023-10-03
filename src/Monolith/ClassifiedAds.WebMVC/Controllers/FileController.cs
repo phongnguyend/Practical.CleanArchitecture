@@ -6,24 +6,37 @@ using System.Threading.Tasks;
 using ClassifiedAds.Application;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.Storages;
+using ClassifiedAds.WebMVC.ConfigurationOptions;
 using ClassifiedAds.WebMVC.Models.File;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.FeatureManagement;
+using Microsoft.FeatureManagement.Mvc;
 
 namespace ClassifiedAds.WebMVC.Controllers;
 
+[FeatureGate(FeatureManagement.FileManagement)]
 public class FileController : Controller
 {
     private readonly Dispatcher _dispatcher;
     private readonly IFileStorageManager _fileManager;
+    private readonly IFeatureManager _featureManager;
 
-    public FileController(Dispatcher dispatcher, IFileStorageManager fileManager)
+    public FileController(Dispatcher dispatcher,
+        IFileStorageManager fileManager,
+        IFeatureManager featureManager)
     {
         _dispatcher = dispatcher;
         _fileManager = fileManager;
+        _featureManager = featureManager;
     }
 
     public async Task<IActionResult> Index()
     {
+        if (await _featureManager.IsEnabledAsync(FeatureManagement.FileManagement))
+        {
+            // Run the following code
+        }
+
         return View(await _dispatcher.DispatchAsync(new GetEntititesQuery<FileEntry>()));
     }
 
