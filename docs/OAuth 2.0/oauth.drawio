@@ -1,0 +1,725 @@
+<mxfile host="app.diagrams.net" modified="2023-10-06T10:43:12.782Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36" etag="_rI7zFnrHByggkkFUVLC" version="22.0.3" type="device">
+  <diagram name="Page-1" id="rOP6ctR5yddBFuTEChVt">
+    <mxGraphModel dx="1434" dy="768" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-197" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" vertex="1" parent="1">
+          <mxGeometry x="171.51999999999998" y="9130" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--1" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" parent="1" vertex="1">
+          <mxGeometry x="699" y="360" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--4" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/secure-server-128.png" parent="1" vertex="1">
+          <mxGeometry x="671" y="80" width="128" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--5" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.azure.user" parent="1" vertex="1">
+          <mxGeometry x="127" y="410" width="47.01" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--7" value="" style="points=[[0.03,0.03,0],[0.5,0,0],[0.97,0.03,0],[1,0.4,0],[0.97,0.745,0],[0.5,1,0],[0.03,0.745,0],[0,0.4,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.workstation;fillColor=#005073;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="135" y="105" width="50" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--8" value="" style="points=[[0.13,0.02,0],[0.5,0,0],[0.87,0.02,0],[0.885,0.4,0],[0.985,0.985,0],[0.5,1,0],[0.015,0.985,0],[0.115,0.4,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.laptop;fillColor=#005073;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="135" y="173" width="50" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--9" value="" style="sketch=0;points=[[0.015,0.015,0],[0.985,0.015,0],[0.985,0.985,0],[0.015,0.985,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];verticalLabelPosition=bottom;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.cell_phone;fillColor=#005073;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="227" y="130" width="25" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--10" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/ssl-certificate-128.png" parent="1" vertex="1">
+          <mxGeometry x="20" y="100" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--11" value="Client" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="215.51" y="200" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--12" value="Resource Owner" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="85.50999999999999" y="470" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--13" value="Resource Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="671" y="470" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--14" value="Authorization Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="669" y="40" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--15" value="Confidential/ Public" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="85.51" y="50" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--16" value="Trusted/ Untrusted" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="70.50999999999999" y="240" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--17" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="140" as="sourcePoint" />
+            <mxPoint x="660" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--19" value="" style="endArrow=none;html=1;rounded=0;startArrow=classic;startFill=1;endFill=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="300" y="173" as="sourcePoint" />
+            <mxPoint x="660" y="173" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--20" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="155" y="380" as="sourcePoint" />
+            <mxPoint x="155" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--21" value="uses" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" parent="1" vertex="1">
+          <mxGeometry x="145" y="318" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--23" value="is registered with" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" parent="1" vertex="1">
+          <mxGeometry x="405" y="98" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--24" value="authorizes" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" parent="1" vertex="1">
+          <mxGeometry x="430" y="180" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--25" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="729" y="330" as="sourcePoint" />
+            <mxPoint x="729" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--26" value="trusts" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" parent="1" vertex="1">
+          <mxGeometry x="719" y="268" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--27" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="225" y="430" as="sourcePoint" />
+            <mxPoint x="655" y="432" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--28" value="owns a resource" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" parent="1" vertex="1">
+          <mxGeometry x="390" y="390" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--29" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="230.51" y="250" as="sourcePoint" />
+            <mxPoint x="655" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--30" value="accesses" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=15;" parent="ISEMEK32AtSjPsTAnuX--29" vertex="1" connectable="0">
+          <mxGeometry x="-0.1376" y="1" relative="1" as="geometry">
+            <mxPoint y="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ISEMEK32AtSjPsTAnuX--31" value="OAuth 2.0" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-1" value="1.1. Authorization Code Flow (Web Application Clients)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry y="560" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-2" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.azure.user" vertex="1" parent="1">
+          <mxGeometry x="127" y="920" width="47.01" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-3" value="Resource Owner" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="85.50999999999999" y="980" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-4" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/ssl-certificate-128.png" vertex="1" parent="1">
+          <mxGeometry x="189.5" y="880" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-5" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" vertex="1" parent="1">
+          <mxGeometry x="100.50999999999999" y="660" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-6" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" vertex="1" parent="1">
+          <mxGeometry x="530" y="660" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-7" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="215.51" y="720" as="sourcePoint" />
+            <mxPoint x="520" y="722" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-8" value="Resource Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="490" y="620" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-9" value="Web Application (Client)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="59.5" y="620" width="140.5" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-10" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="180" y="900" as="sourcePoint" />
+            <mxPoint x="130" y="780" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-11" value="1.2. Authorization Code Flow (Authorization Request)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry y="1050" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-12" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.azure.user" vertex="1" parent="1">
+          <mxGeometry x="127" y="1410" width="47.01" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-13" value="Resource Owner" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="85.50999999999999" y="1470" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-14" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/ssl-certificate-128.png" vertex="1" parent="1">
+          <mxGeometry x="189.5" y="1370" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-15" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" vertex="1" parent="1">
+          <mxGeometry x="100.50999999999999" y="1150" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-17" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="215.51" y="1210" as="sourcePoint" />
+            <mxPoint x="520" y="1212" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-19" value="Web Application (Client)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="59.5" y="1110" width="140.5" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-20" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;exitX=1;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="ym7iFBfE9K6HRXhtIgnz-14" target="ym7iFBfE9K6HRXhtIgnz-21">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="180" y="1390" as="sourcePoint" />
+            <mxPoint x="130" y="1270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-21" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/secure-server-128.png" vertex="1" parent="1">
+          <mxGeometry x="532" y="1160" width="128" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-22" value="Authorization Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="530" y="1110" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-23" value="&lt;b style=&quot;font-size: 15px;&quot;&gt;GET &lt;/b&gt;/authorize?client_id=webapp&amp;amp;scope=resource&amp;amp;redirect_uri=https://webapp/cb&amp;amp;response_type=&lt;b style=&quot;font-size: 15px;&quot;&gt;&lt;font color=&quot;#ff0000&quot; style=&quot;font-size: 15px;&quot;&gt;code&lt;/font&gt;&lt;/b&gt;&amp;amp;state=123" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="11.009999999999991" y="1320" width="810" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-24" value="1.3. Authorization Code Flow (Authorization Response)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry y="1570" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-25" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.azure.user" vertex="1" parent="1">
+          <mxGeometry x="127" y="1930" width="47.01" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-26" value="Resource Owner" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="85.50999999999999" y="1990" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-27" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/ssl-certificate-128.png" vertex="1" parent="1">
+          <mxGeometry x="189.5" y="1890" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-28" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" vertex="1" parent="1">
+          <mxGeometry x="100.50999999999999" y="1670" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-29" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="215.51" y="1730" as="sourcePoint" />
+            <mxPoint x="520" y="1732" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-30" value="Web Application (Client)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="59.5" y="1630" width="140.5" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-31" value="" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="ym7iFBfE9K6HRXhtIgnz-27">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="180" y="1910" as="sourcePoint" />
+            <mxPoint x="150" y="1780" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-32" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/secure-server-128.png" vertex="1" parent="1">
+          <mxGeometry x="532" y="1680" width="128" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-33" value="Authorization Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="530" y="1630" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-34" value="&lt;b style=&quot;font-size: 15px;&quot;&gt;GET &lt;/b&gt;/cb?code=xyz&amp;amp;state=123" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="165" y="1808" width="230" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-35" value="1.4. Authorization Code Flow (Token Request)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry y="2130" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-36" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.azure.user" vertex="1" parent="1">
+          <mxGeometry x="127" y="2490" width="47.01" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-37" value="Resource Owner" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="85.50999999999999" y="2550" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-38" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/ssl-certificate-128.png" vertex="1" parent="1">
+          <mxGeometry x="189.5" y="2450" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-39" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" vertex="1" parent="1">
+          <mxGeometry x="100.50999999999999" y="2230" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-40" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="215.51" y="2290" as="sourcePoint" />
+            <mxPoint x="520" y="2292" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-41" value="Web Application (Client)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="59.5" y="2190" width="140.5" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-43" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/secure-server-128.png" vertex="1" parent="1">
+          <mxGeometry x="532" y="2240" width="128" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-44" value="Authorization Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="530" y="2190" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-45" value="&lt;b style=&quot;font-size: 15px;&quot;&gt;POST &lt;/b&gt;/token&lt;br style=&quot;font-size: 15px;&quot;&gt;&lt;br style=&quot;font-size: 15px;&quot;&gt;Authorization: Basic (client_id:secret)" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="216.51" y="2310" width="270" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-46" value="grant_type=authorization_code&amp;amp;code=xyz&amp;amp;redirect_uri=https://webapp/cb" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="216.51" y="2385" width="520" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-47" value="1.5. Authorization Code Flow (Token Response)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry y="2690" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-48" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.azure.user" vertex="1" parent="1">
+          <mxGeometry x="127" y="3050" width="47.01" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-49" value="Resource Owner" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="85.50999999999999" y="3110" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-50" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/ssl-certificate-128.png" vertex="1" parent="1">
+          <mxGeometry x="189.5" y="3010" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-51" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" vertex="1" parent="1">
+          <mxGeometry x="100.50999999999999" y="2790" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-52" value="" style="endArrow=none;html=1;rounded=0;startArrow=classic;startFill=1;endFill=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="215.51" y="2850" as="sourcePoint" />
+            <mxPoint x="520" y="2852" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-53" value="Web Application (Client)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="59.5" y="2750" width="140.5" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-54" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/secure-server-128.png" vertex="1" parent="1">
+          <mxGeometry x="532" y="2800" width="128" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-55" value="Authorization Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="530" y="2750" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-56" value="&lt;b style=&quot;font-size: 15px;&quot;&gt;{&lt;br style=&quot;font-size: 15px;&quot;&gt;&lt;span style=&quot;white-space: pre; font-size: 15px;&quot;&gt;&#x9;&lt;/span&gt;&quot;&lt;font color=&quot;#ff0000&quot; style=&quot;font-size: 15px;&quot;&gt;access_token&lt;/font&gt;&quot;: &quot;abc&quot;,&lt;br style=&quot;font-size: 15px;&quot;&gt;&lt;span style=&quot;white-space: pre; font-size: 15px;&quot;&gt;&#x9;&lt;/span&gt;&quot;expires_in&quot;:&quot;3600&quot;,&lt;br style=&quot;font-size: 15px;&quot;&gt;&lt;span style=&quot;white-space: pre; font-size: 15px;&quot;&gt;&#x9;&lt;/span&gt;&quot;token_type&quot;:&quot;Bearer&quot;,&lt;br style=&quot;font-size: 15px;&quot;&gt;&lt;span style=&quot;white-space: pre; font-size: 15px;&quot;&gt;&#x9;&lt;/span&gt;&quot;&lt;font color=&quot;#ff0000&quot; style=&quot;font-size: 15px;&quot;&gt;refresh_token&lt;/font&gt;&quot;: &quot;xyz&quot;&lt;br style=&quot;font-size: 15px;&quot;&gt;}&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="262" y="2860" width="220" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-58" value="1.6. Authorization Code Flow (Resource Access)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry y="3250" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-59" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.azure.user" vertex="1" parent="1">
+          <mxGeometry x="127" y="3610" width="47.01" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-60" value="Resource Owner" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="85.50999999999999" y="3670" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-61" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/ssl-certificate-128.png" vertex="1" parent="1">
+          <mxGeometry x="189.5" y="3570" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-62" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" vertex="1" parent="1">
+          <mxGeometry x="100.50999999999999" y="3350" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-63" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" vertex="1" parent="1">
+          <mxGeometry x="530" y="3350" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-64" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="215.51" y="3410" as="sourcePoint" />
+            <mxPoint x="520" y="3412" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-65" value="Resource Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="490" y="3310" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-66" value="Web Application (Client)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="59.5" y="3310" width="140.5" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-68" value="&lt;b style=&quot;font-size: 15px;&quot;&gt;GET &lt;/b&gt;/resource&lt;br style=&quot;font-size: 15px;&quot;&gt;&lt;br style=&quot;font-size: 15px;&quot;&gt;Authorization: Bearer access_token" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="242" y="3430" width="260" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-69" value="1.7. Authorization Code Flow (Refreshing the Token)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1" y="3810" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-70" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.azure.user" vertex="1" parent="1">
+          <mxGeometry x="128" y="4170" width="47.01" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-71" value="Resource Owner" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="86.50999999999999" y="4230" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-72" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/ssl-certificate-128.png" vertex="1" parent="1">
+          <mxGeometry x="190.5" y="4130" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-73" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" vertex="1" parent="1">
+          <mxGeometry x="101.50999999999999" y="3910" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-74" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="216.51" y="3970" as="sourcePoint" />
+            <mxPoint x="521" y="3972" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-75" value="Web Application (Client)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="60.5" y="3870" width="140.5" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-76" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/secure-server-128.png" vertex="1" parent="1">
+          <mxGeometry x="533" y="3920" width="128" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-77" value="Authorization Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="531" y="3870" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-78" value="&lt;b style=&quot;font-size: 15px;&quot;&gt;POST &lt;/b&gt;/token&lt;br style=&quot;font-size: 15px;&quot;&gt;&lt;br style=&quot;font-size: 15px;&quot;&gt;Authorization: Basic (client_id:secret)" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="230.51" y="3990" width="270" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-79" value="grant_type=refresh_token&amp;amp;refresh_token=xyz" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="230.51" y="4065" width="330" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-80" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" vertex="1" parent="1">
+          <mxGeometry x="253.5" y="4440" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-82" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.azure.user" vertex="1" parent="1">
+          <mxGeometry x="108" y="4740" width="47.01" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-83" value="" style="points=[[0.03,0.03,0],[0.5,0,0],[0.97,0.03,0],[1,0.4,0],[0.97,0.745,0],[0.5,1,0],[0.03,0.745,0],[0,0.4,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.workstation;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="305.5" y="4725" width="50" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-84" value="" style="points=[[0.13,0.02,0],[0.5,0,0],[0.87,0.02,0],[0.885,0.4,0],[0.985,0.985,0],[0.5,1,0],[0.015,0.985,0],[0.115,0.4,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.laptop;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="305.5" y="4793" width="50" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-85" value="" style="sketch=0;points=[[0.015,0.015,0],[0.985,0.015,0],[0.985,0.985,0],[0.015,0.985,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];verticalLabelPosition=bottom;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.cell_phone;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="397.5" y="4750" width="25" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-86" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/ssl-certificate-128.png" vertex="1" parent="1">
+          <mxGeometry x="190.5" y="4720" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-87" value="Client" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="386.01" y="4820" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-88" value="Resource Owner" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="65.74999999999999" y="4810" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-89" value="Resource Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="225.5" y="4550" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-94" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="279.5" y="4700" as="sourcePoint" />
+            <mxPoint x="279.5" y="4600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-104" value="2.1. Implicit Flow (Native / Local Clients)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry y="4370" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-105" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" vertex="1" parent="1">
+          <mxGeometry x="246.51" y="5010" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-106" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.azure.user" vertex="1" parent="1">
+          <mxGeometry x="108" y="5300" width="47.01" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-107" value="" style="points=[[0.03,0.03,0],[0.5,0,0],[0.97,0.03,0],[1,0.4,0],[0.97,0.745,0],[0.5,1,0],[0.03,0.745,0],[0,0.4,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.workstation;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="305.5" y="5285" width="50" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-108" value="" style="points=[[0.13,0.02,0],[0.5,0,0],[0.87,0.02,0],[0.885,0.4,0],[0.985,0.985,0],[0.5,1,0],[0.015,0.985,0],[0.115,0.4,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.laptop;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="305.5" y="5353" width="50" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-109" value="" style="sketch=0;points=[[0.015,0.015,0],[0.985,0.015,0],[0.985,0.985,0],[0.015,0.985,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];verticalLabelPosition=bottom;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.cell_phone;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="397.5" y="5310" width="25" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-110" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/ssl-certificate-128.png" vertex="1" parent="1">
+          <mxGeometry x="190.5" y="5280" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-111" value="Client" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="386.01" y="5380" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-112" value="Resource Owner" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="66.50999999999999" y="5370" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-113" value="Resource Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="216.51" y="4970" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-114" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.008;entryY=0.617;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="ym7iFBfE9K6HRXhtIgnz-116">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="360" y="5260" as="sourcePoint" />
+            <mxPoint x="279.5" y="5160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-118" value="&lt;b style=&quot;font-size: 15px;&quot;&gt;GET &lt;/b&gt;/authorize?client_id=nativeapp&amp;amp;scope=resource&amp;amp;redirect_uri=http://localhost/cb&amp;amp;response_type=&lt;b&gt;&lt;font color=&quot;#ff0000&quot;&gt;token&lt;/font&gt;&lt;/b&gt;&amp;amp;state=123" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=15;" vertex="1" connectable="0" parent="ym7iFBfE9K6HRXhtIgnz-114">
+          <mxGeometry x="-0.116" y="-2" relative="1" as="geometry">
+            <mxPoint x="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-115" value="2.2. Implicit Flow (Authorization Request)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry y="4930" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-116" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/secure-server-128.png" vertex="1" parent="1">
+          <mxGeometry x="571" y="5010" width="128" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-117" value="Authorization Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="569" y="4960" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-119" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" vertex="1" parent="1">
+          <mxGeometry x="246.51" y="5610" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-120" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.azure.user" vertex="1" parent="1">
+          <mxGeometry x="108" y="5900" width="47.01" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-121" value="" style="points=[[0.03,0.03,0],[0.5,0,0],[0.97,0.03,0],[1,0.4,0],[0.97,0.745,0],[0.5,1,0],[0.03,0.745,0],[0,0.4,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.workstation;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="305.5" y="5885" width="50" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-122" value="" style="points=[[0.13,0.02,0],[0.5,0,0],[0.87,0.02,0],[0.885,0.4,0],[0.985,0.985,0],[0.5,1,0],[0.015,0.985,0],[0.115,0.4,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.laptop;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="305.5" y="5953" width="50" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-123" value="" style="sketch=0;points=[[0.015,0.015,0],[0.985,0.015,0],[0.985,0.985,0],[0.015,0.985,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];verticalLabelPosition=bottom;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.cell_phone;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="397.5" y="5910" width="25" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-124" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/ssl-certificate-128.png" vertex="1" parent="1">
+          <mxGeometry x="190.5" y="5880" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-125" value="Client" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="386.01" y="5980" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-126" value="Resource Owner" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="66.50999999999999" y="5970" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-127" value="Resource Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="216.51" y="5570" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-128" value="" style="endArrow=none;html=1;rounded=0;entryX=0.008;entryY=0.617;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=classic;startFill=1;endFill=0;" edge="1" parent="1" target="ym7iFBfE9K6HRXhtIgnz-131">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="360" y="5860" as="sourcePoint" />
+            <mxPoint x="279.5" y="5760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-129" value="&lt;b style=&quot;font-size: 15px;&quot;&gt;GET &lt;/b&gt;/cb#access_token=abc&amp;amp;expires_in=3600&amp;amp;state=123" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=15;" vertex="1" connectable="0" parent="ym7iFBfE9K6HRXhtIgnz-128">
+          <mxGeometry x="-0.116" y="-2" relative="1" as="geometry">
+            <mxPoint x="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-130" value="2.3. Implicit Flow (Token Response)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry y="5530" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-131" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/secure-server-128.png" vertex="1" parent="1">
+          <mxGeometry x="571" y="5610" width="128" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-132" value="Authorization Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="569" y="5560" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-133" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" vertex="1" parent="1">
+          <mxGeometry x="254.5" y="6160" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-134" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.azure.user" vertex="1" parent="1">
+          <mxGeometry x="109" y="6460" width="47.01" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-135" value="" style="points=[[0.03,0.03,0],[0.5,0,0],[0.97,0.03,0],[1,0.4,0],[0.97,0.745,0],[0.5,1,0],[0.03,0.745,0],[0,0.4,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.workstation;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="306.5" y="6445" width="50" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-136" value="" style="points=[[0.13,0.02,0],[0.5,0,0],[0.87,0.02,0],[0.885,0.4,0],[0.985,0.985,0],[0.5,1,0],[0.015,0.985,0],[0.115,0.4,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.laptop;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="306.5" y="6513" width="50" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-137" value="" style="sketch=0;points=[[0.015,0.015,0],[0.985,0.015,0],[0.985,0.985,0],[0.015,0.985,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];verticalLabelPosition=bottom;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.cell_phone;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="398.5" y="6470" width="25" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-138" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/ssl-certificate-128.png" vertex="1" parent="1">
+          <mxGeometry x="191.5" y="6440" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-139" value="Client" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="387.01" y="6540" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-140" value="Resource Owner" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="66.74999999999999" y="6530" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-141" value="Resource Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="226.5" y="6270" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-142" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="280.5" y="6420" as="sourcePoint" />
+            <mxPoint x="280.5" y="6320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-143" value="2.4. Implicit Flow (Resource Access)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1" y="6090" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-144" value="&lt;b style=&quot;font-size: 15px;&quot;&gt;GET &lt;/b&gt;/resource&lt;br style=&quot;font-size: 15px;&quot;&gt;&lt;br style=&quot;font-size: 15px;&quot;&gt;Authorization: Bearer access_token" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="35.50999999999999" y="6330" width="260" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-145" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" vertex="1" parent="1">
+          <mxGeometry x="253.5" y="6800" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-146" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.azure.user" vertex="1" parent="1">
+          <mxGeometry x="108" y="7100" width="47.01" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-147" value="" style="points=[[0.03,0.03,0],[0.5,0,0],[0.97,0.03,0],[1,0.4,0],[0.97,0.745,0],[0.5,1,0],[0.03,0.745,0],[0,0.4,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.workstation;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="305.5" y="7085" width="50" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-148" value="" style="points=[[0.13,0.02,0],[0.5,0,0],[0.87,0.02,0],[0.885,0.4,0],[0.985,0.985,0],[0.5,1,0],[0.015,0.985,0],[0.115,0.4,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.laptop;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="305.5" y="7153" width="50" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-149" value="" style="sketch=0;points=[[0.015,0.015,0],[0.985,0.015,0],[0.985,0.985,0],[0.015,0.985,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];verticalLabelPosition=bottom;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.cell_phone;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="397.5" y="7110" width="25" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-150" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/ssl-certificate-128.png" vertex="1" parent="1">
+          <mxGeometry x="190.5" y="7080" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-151" value="Client" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="386.01" y="7180" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-152" value="Resource Owner" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="65.74999999999999" y="7170" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-153" value="Resource Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="225.5" y="6910" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-154" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="279.5" y="7060" as="sourcePoint" />
+            <mxPoint x="279.5" y="6960" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-155" value="3.1 Resource Owner Password Credentials (Trusted Application)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry y="6730" width="370" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-156" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" vertex="1" parent="1">
+          <mxGeometry x="247.51" y="7370" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-157" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.azure.user" vertex="1" parent="1">
+          <mxGeometry x="109" y="7660" width="47.01" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-158" value="" style="points=[[0.03,0.03,0],[0.5,0,0],[0.97,0.03,0],[1,0.4,0],[0.97,0.745,0],[0.5,1,0],[0.03,0.745,0],[0,0.4,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.workstation;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="306.5" y="7645" width="50" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-159" value="" style="points=[[0.13,0.02,0],[0.5,0,0],[0.87,0.02,0],[0.885,0.4,0],[0.985,0.985,0],[0.5,1,0],[0.015,0.985,0],[0.115,0.4,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.laptop;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="306.5" y="7713" width="50" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-160" value="" style="sketch=0;points=[[0.015,0.015,0],[0.985,0.015,0],[0.985,0.985,0],[0.015,0.985,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];verticalLabelPosition=bottom;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.cell_phone;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="398.5" y="7670" width="25" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-161" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/ssl-certificate-128.png" vertex="1" parent="1">
+          <mxGeometry x="191.5" y="7640" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-162" value="Client" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="387.01" y="7740" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-163" value="Resource Owner" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="67.50999999999999" y="7730" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-164" value="Resource Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="217.51" y="7330" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-165" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.008;entryY=0.617;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="ym7iFBfE9K6HRXhtIgnz-168">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="361" y="7620" as="sourcePoint" />
+            <mxPoint x="280.5" y="7520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-166" value="&lt;b style=&quot;font-size: 15px;&quot;&gt;POST&amp;nbsp;&lt;/b&gt;/token&lt;br&gt;&lt;br&gt;Authorization: Basic (client_id:secret)&lt;br&gt;&lt;br&gt;grant_type=password&amp;amp;scope=resource&amp;amp;user_name=owner&amp;amp;password=password" style="edgeLabel;html=1;align=left;verticalAlign=middle;resizable=0;points=[];fontSize=15;" vertex="1" connectable="0" parent="ym7iFBfE9K6HRXhtIgnz-165">
+          <mxGeometry x="-0.116" y="-2" relative="1" as="geometry">
+            <mxPoint x="-295" y="-6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-167" value="3.2. Resource Owner Password Credentials (Token Request)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1" y="7290" width="349" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-168" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/secure-server-128.png" vertex="1" parent="1">
+          <mxGeometry x="572" y="7370" width="128" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-169" value="Authorization Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="570" y="7320" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-170" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" vertex="1" parent="1">
+          <mxGeometry x="247.51" y="7930" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-171" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.azure.user" vertex="1" parent="1">
+          <mxGeometry x="109" y="8220" width="47.01" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-172" value="" style="points=[[0.03,0.03,0],[0.5,0,0],[0.97,0.03,0],[1,0.4,0],[0.97,0.745,0],[0.5,1,0],[0.03,0.745,0],[0,0.4,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.workstation;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="306.5" y="8205" width="50" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-173" value="" style="points=[[0.13,0.02,0],[0.5,0,0],[0.87,0.02,0],[0.885,0.4,0],[0.985,0.985,0],[0.5,1,0],[0.015,0.985,0],[0.115,0.4,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.laptop;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="306.5" y="8273" width="50" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-174" value="" style="sketch=0;points=[[0.015,0.015,0],[0.985,0.015,0],[0.985,0.985,0],[0.015,0.985,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];verticalLabelPosition=bottom;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.cell_phone;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="398.5" y="8230" width="25" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-175" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/ssl-certificate-128.png" vertex="1" parent="1">
+          <mxGeometry x="191.5" y="8200" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-176" value="Client" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="387.01" y="8300" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-177" value="Resource Owner" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="67.50999999999999" y="8290" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-178" value="Resource Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="217.51" y="7890" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-179" value="" style="endArrow=none;html=1;rounded=0;entryX=0.008;entryY=0.617;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=classic;startFill=1;endFill=0;" edge="1" parent="1" target="ym7iFBfE9K6HRXhtIgnz-182">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="361" y="8180" as="sourcePoint" />
+            <mxPoint x="280.5" y="8080" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-181" value="3.3. Resource Owner Password Credentials (Token Response)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1" y="7850" width="359" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-182" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/secure-server-128.png" vertex="1" parent="1">
+          <mxGeometry x="572" y="7930" width="128" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-183" value="Authorization Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="570" y="7880" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-184" value="&lt;b style=&quot;font-size: 15px;&quot;&gt;{&lt;br style=&quot;font-size: 15px;&quot;&gt;&lt;span style=&quot;white-space: pre; font-size: 15px;&quot;&gt;&#x9;&lt;/span&gt;&quot;&lt;font color=&quot;#ff0000&quot; style=&quot;font-size: 15px;&quot;&gt;access_token&lt;/font&gt;&quot;: &quot;abc&quot;,&lt;br style=&quot;font-size: 15px;&quot;&gt;&lt;span style=&quot;white-space: pre; font-size: 15px;&quot;&gt;&#x9;&lt;/span&gt;&quot;expires_in&quot;:&quot;3600&quot;,&lt;br style=&quot;font-size: 15px;&quot;&gt;&lt;span style=&quot;white-space: pre; font-size: 15px;&quot;&gt;&#x9;&lt;/span&gt;&quot;token_type&quot;:&quot;Bearer&quot;,&lt;br style=&quot;font-size: 15px;&quot;&gt;&lt;span style=&quot;white-space: pre; font-size: 15px;&quot;&gt;&#x9;&lt;/span&gt;&quot;&lt;font color=&quot;#ff0000&quot; style=&quot;font-size: 15px;&quot;&gt;refresh_token&lt;/font&gt;&quot;: &quot;xyz&quot;&lt;br style=&quot;font-size: 15px;&quot;&gt;}&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="85.50999999999999" y="8050" width="220" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-185" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.servers.web_server_green;" vertex="1" parent="1">
+          <mxGeometry x="253.5" y="8480" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-186" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.azure.user" vertex="1" parent="1">
+          <mxGeometry x="108" y="8780" width="47.01" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-187" value="" style="points=[[0.03,0.03,0],[0.5,0,0],[0.97,0.03,0],[1,0.4,0],[0.97,0.745,0],[0.5,1,0],[0.03,0.745,0],[0,0.4,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.workstation;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="305.5" y="8765" width="50" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-188" value="" style="points=[[0.13,0.02,0],[0.5,0,0],[0.87,0.02,0],[0.885,0.4,0],[0.985,0.985,0],[0.5,1,0],[0.015,0.985,0],[0.115,0.4,0]];verticalLabelPosition=bottom;sketch=0;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.laptop;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="305.5" y="8833" width="50" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-189" value="" style="sketch=0;points=[[0.015,0.015,0],[0.985,0.015,0],[0.985,0.985,0],[0.015,0.985,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];verticalLabelPosition=bottom;html=1;verticalAlign=top;aspect=fixed;align=center;pointerEvents=1;shape=mxgraph.cisco19.cell_phone;fillColor=#005073;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="397.5" y="8790" width="25" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-190" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/ssl-certificate-128.png" vertex="1" parent="1">
+          <mxGeometry x="190.5" y="8760" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-191" value="Client" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="386.01" y="8860" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-192" value="Resource Owner" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="65.74999999999999" y="8850" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-193" value="Resource Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="225.5" y="8590" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-194" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="279.5" y="8740" as="sourcePoint" />
+            <mxPoint x="279.5" y="8640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-195" value="3.4. Resource Owner Password Credentials (Resource Access)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry y="8410" width="370" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-196" value="&lt;b style=&quot;font-size: 15px;&quot;&gt;GET &lt;/b&gt;/resource&lt;br style=&quot;font-size: 15px;&quot;&gt;&lt;br style=&quot;font-size: 15px;&quot;&gt;Authorization: Bearer access_token" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="34.50999999999999" y="8650" width="260" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-205" value="Client" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="136.51" y="9090" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-206" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.008;entryY=0.617;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="ym7iFBfE9K6HRXhtIgnz-209">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="290" y="9210" as="sourcePoint" />
+            <mxPoint x="279.5" y="9280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-207" value="&lt;b style=&quot;font-size: 15px;&quot;&gt;POST&amp;nbsp;&lt;/b&gt;/token&lt;br&gt;&lt;br&gt;Authorization: Basic (client_id:secret)&lt;br&gt;&lt;br&gt;grant_type=client_credentials&amp;amp;scope=resource" style="edgeLabel;html=1;align=left;verticalAlign=middle;resizable=0;points=[];fontSize=15;" vertex="1" connectable="0" parent="ym7iFBfE9K6HRXhtIgnz-206">
+          <mxGeometry x="-0.116" y="-2" relative="1" as="geometry">
+            <mxPoint x="-143" y="88" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-208" value="4. Client Credentials Flow (No human involved at all)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry y="9050" width="349" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-209" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/whcompare-isometric-web-hosting-servers/50/secure-server-128.png" vertex="1" parent="1">
+          <mxGeometry x="571" y="9130" width="128" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-210" value="Authorization Server" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="569" y="9080" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ym7iFBfE9K6HRXhtIgnz-211" value="" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#0080F0;shadow=0;dashed=0;shape=mxgraph.ios7.icons.settings;" vertex="1" parent="1">
+          <mxGeometry x="136.51" y="9177" width="55" height="55" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

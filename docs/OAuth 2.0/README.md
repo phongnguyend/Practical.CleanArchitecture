@@ -1,4 +1,4 @@
-[Introduction to OAuth2, OpenID Connect and JSON Web Tokens (JWT) | Dominick Baier | Pluralsight](https://app.pluralsight.com/library/courses/oauth2-json-web-tokens-openid-connect-introduction/table-of-contents)
+[*(open on draw.io)*](https://app.diagrams.net/#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fphongnguyend%2FPractical.CleanArchitecture%2Fmaster%2Fdocs%2FOAuth%25202.0%2Foauth.drawio)
 
 # OAuth 2.0
 ![alt text](imgs/OAuth2.png)
@@ -67,14 +67,3 @@
 
 # 4. Client Credentials Flow (No human involved at all):
 ![alt text](imgs/Client-Credentials-Flow.png)
-
-#
-
-# Implicit vs Authorization Code Flow
-
-### Implicit Flow
-![alt text](imgs/Implicit-Flow-In-Details.png)
-
-
-### Authorization Code Flow
-![alt text](imgs/Authorization-Code-Flow-In-Details.png)
