@@ -1,0 +1,20 @@
+title = "gitleaks config"
+
+[allowlist]
+description = "global allow lists"
+paths = ['''gitleaks.toml''']
+
+[[rules]]
+	id = "BadWords"
+	description = "Bad Words"
+	regex = '''.*(hell|heck).*'''
+
+[[rules]]
+	id = "Storage.Amazon.AccessKeyID"
+	description = "Storage.Amazon.AccessKeyID"
+	regex = '''AKI.{5,20}3SQ'''
+
+[[rules]]
+	id = "Storage.Amazon.SecretAccessKey"
+	description = "Storage.Amazon.SecretAccessKey"
+	regex = '''TzX.{5,100}NXl'''
