@@ -1,0 +1,12 @@
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: |
+      docker pull zricethezav/gitleaks:latest
+      echo $GITHUB_WORKSPACE
+      docker run -v $(Build.SourcesDirectory):/path zricethezav/gitleaks:latest detect --source="/path" --config="/path/gitleaks.toml" --verbose --no-git
+  displayName: 'Gitleaks'

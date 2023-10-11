@@ -7,7 +7,7 @@ paths = ['''gitleaks.toml''']
 [[rules]]
 	id = "BadWords"
 	description = "Bad Words"
-	regex = '''.*(hell|heck).*'''
+	regex = '''.*the\s+(hell|heck).*'''
 
 [[rules]]
 	id = "Storage.Amazon.AccessKeyID"
