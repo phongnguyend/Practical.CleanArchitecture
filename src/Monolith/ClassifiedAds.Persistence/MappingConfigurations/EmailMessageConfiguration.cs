@@ -10,6 +10,8 @@ public class EmailMessageConfiguration : IEntityTypeConfiguration<EmailMessage>
     {
         builder.ToTable("EmailMessages");
         builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
+        builder.HasIndex(x => x.SentDateTime).IncludeProperties(x => new { x.ExpiredDateTime, x.AttemptCount, x.MaxAttemptCount, x.NextAttemptDateTime });
+        builder.HasIndex(x => x.CreatedDateTime);
     }
 }
 
@@ -18,5 +20,6 @@ public class ArchivedEmailMessageConfiguration : IEntityTypeConfiguration<Archiv
     public void Configure(EntityTypeBuilder<ArchivedEmailMessage> builder)
     {
         builder.ToTable("ArchivedEmailMessages");
+        builder.HasIndex(x => x.CreatedDateTime);
     }
 }
