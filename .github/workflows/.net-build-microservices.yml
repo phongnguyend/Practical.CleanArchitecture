@@ -22,7 +22,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 7.0.101
+        dotnet-version: 8.0.100
     
     - name: Build
       run: dotnet build --configuration Release 
@@ -61,58 +61,58 @@ jobs:
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.Services.AuditLog.Api
-        path: src/Microservices/Services.AuditLog/ClassifiedAds.Services.AuditLog.Api/bin/Release/net7.0/publish
+        path: src/Microservices/Services.AuditLog/ClassifiedAds.Services.AuditLog.Api/bin/Release/net8.0/publish
 
     - name: Upload ClassifiedAds.Services.AuditLog.Grpc
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.Services.AuditLog.Grpc
-        path: src/Microservices/Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/bin/Release/net7.0/publish
+        path: src/Microservices/Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/bin/Release/net8.0/publish
 
     - name: Upload ClassifiedAds.Services.Identity.Api
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.Services.Identity.Api
-        path: src/Microservices/Services.Identity/ClassifiedAds.Services.Identity.Api/bin/Release/net7.0/publish
+        path: src/Microservices/Services.Identity/ClassifiedAds.Services.Identity.Api/bin/Release/net8.0/publish
 
     - name: Upload ClassifiedAds.Services.Identity.Grpc
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.Services.Identity.Grpc
-        path: src/Microservices/Services.Identity/ClassifiedAds.Services.Identity.Grpc/bin/Release/net7.0/publish
+        path: src/Microservices/Services.Identity/ClassifiedAds.Services.Identity.Grpc/bin/Release/net8.0/publish
 
     - name: Upload ClassifiedAds.Services.Notification.Api
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.Services.Notification.Api
-        path: src/Microservices/Services.Notification/ClassifiedAds.Services.Notification.Api/bin/Release/net7.0/publish
+        path: src/Microservices/Services.Notification/ClassifiedAds.Services.Notification.Api/bin/Release/net8.0/publish
 
     - name: Upload ClassifiedAds.Services.Notification.Background
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.Services.Notification.Background
-        path: src/Microservices/Services.Notification/ClassifiedAds.Services.Notification.Background/bin/Release/net7.0/publish
+        path: src/Microservices/Services.Notification/ClassifiedAds.Services.Notification.Background/bin/Release/net8.0/publish
 
     - name: Upload ClassifiedAds.Services.Notification.Grpc
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.Services.Notification.Grpc
-        path: src/Microservices/Services.Notification/ClassifiedAds.Services.Notification.Grpc/bin/Release/net7.0/publish
+        path: src/Microservices/Services.Notification/ClassifiedAds.Services.Notification.Grpc/bin/Release/net8.0/publish
 
     - name: Upload ClassifiedAds.Services.Product.Api
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.Services.Product.Api
-        path: src/Microservices/Services.Product/ClassifiedAds.Services.Product.Api/bin/Release/net7.0/publish
+        path: src/Microservices/Services.Product/ClassifiedAds.Services.Product.Api/bin/Release/net8.0/publish
 
     - name: Upload ClassifiedAds.Services.Storage.Api
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.Services.Storage.Api
-        path: src/Microservices/Services.Storage/ClassifiedAds.Services.Storage.Api/bin/Release/net7.0/publish
+        path: src/Microservices/Services.Storage/ClassifiedAds.Services.Storage.Api/bin/Release/net8.0/publish
 
     - name: Upload ClassifiedAds.Gateways.WebAPI
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.Gateways.WebAPI
-        path: src/Microservices/Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI/bin/Release/net7.0/publish
+        path: src/Microservices/Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI/bin/Release/net8.0/publish

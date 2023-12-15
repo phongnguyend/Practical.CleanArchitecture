@@ -209,22 +209,22 @@ services:
           context: .
           dockerfile: ./Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI/Dockerfile
         ports:
-            - "9002:80"
+            - "9002:8080"
         depends_on:
           - db
         environment:
           ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
           ProxyProvider: "Ocelot"
           Ocelot__DefaultDownstreamScheme: "http"
-          Ocelot__Routes__Products__Downstream: "http://product-api"
-          Ocelot__Routes__Files__Downstream: "http://storage-api"
-          Ocelot__Routes__AuditLogs__Downstream: "http://auditlog-api"
-          Ocelot__Routes__Users__Downstream: "http://identity-api"
-          Ocelot__Routes__Configurations__Downstream: "http://configuration-api"
-          Ocelot__Routes__Hubs__Downstream: "ws://notification-api"
-          Yarp__Clusters__Products__Destinations__destination1__Address: "http://product-api"
-          Yarp__Clusters__Files__Destinations__destination1__Address: "http://storage-api"
-          Yarp__Clusters__AuditLogs__Destinations__destination1__Address: "http://auditlog-api"
-          Yarp__Clusters__Users__Destinations__destination1__Address: "http://identity-api"
-          Yarp__Clusters__Configurations__Destinations__destination1__Address: "http://configuration-api"
-          Yarp__Clusters__Hubs__Destinations__destination1__Address: "http://notification-api"
+          Ocelot__Routes__Products__Downstream: "http://product-api:8080"
+          Ocelot__Routes__Files__Downstream: "http://storage-api:8080"
+          Ocelot__Routes__AuditLogs__Downstream: "http://auditlog-api:8080"
+          Ocelot__Routes__Users__Downstream: "http://identity-api:8080"
+          Ocelot__Routes__Configurations__Downstream: "http://configuration-api:8080"
+          Ocelot__Routes__Hubs__Downstream: "ws://notification-api:8080"
+          Yarp__Clusters__Products__Destinations__destination1__Address: "http://product-api:8080"
+          Yarp__Clusters__Files__Destinations__destination1__Address: "http://storage-api:8080"
+          Yarp__Clusters__AuditLogs__Destinations__destination1__Address: "http://auditlog-api:8080"
+          Yarp__Clusters__Users__Destinations__destination1__Address: "http://identity-api:8080"
+          Yarp__Clusters__Configurations__Destinations__destination1__Address: "http://configuration-api:8080"
+          Yarp__Clusters__Hubs__Destinations__destination1__Address: "http://notification-api:8080"

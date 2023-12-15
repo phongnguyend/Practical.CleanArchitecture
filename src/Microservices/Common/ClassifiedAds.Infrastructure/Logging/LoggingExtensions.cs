@@ -32,7 +32,6 @@ public static class LoggingExtensions
         loggerConfiguration = loggerConfiguration
             .MinimumLevel.Debug()
             .Enrich.FromLogContext()
-            .Enrich.With<ActivityEnricher>()
             .Enrich.WithMachineName()
             .Enrich.WithEnvironmentUserName()
             .Enrich.WithProperty("ProcessId", Environment.ProcessId)
@@ -249,7 +248,6 @@ public static class LoggingExtensions
         loggerConfiguration = loggerConfiguration
             .MinimumLevel.Debug()
             .Enrich.FromLogContext()
-            .Enrich.With<ActivityEnricher>()
             .Enrich.WithMachineName()
             .Enrich.WithEnvironmentUserName()
             .Enrich.WithProperty("ProcessId", Environment.ProcessId)

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Infrastructure.IdentityProviders;
+namespace ClassifiedAds.Domain.IdentityProviders;
 
 public interface IIdentityProvider
 {

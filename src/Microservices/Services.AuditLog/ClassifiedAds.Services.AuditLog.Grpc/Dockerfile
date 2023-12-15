@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /ClassifiedAds.Microservices
 
 # Copy csproj and restore as distinct layers
@@ -20,7 +20,7 @@ COPY . ./
 RUN dotnet publish ./Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/ClassifiedAds.Services.AuditLog.Grpc.csproj -c Release -o out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /ClassifiedAds.Microservices
 COPY --from=build-env /ClassifiedAds.Microservices/out .
 

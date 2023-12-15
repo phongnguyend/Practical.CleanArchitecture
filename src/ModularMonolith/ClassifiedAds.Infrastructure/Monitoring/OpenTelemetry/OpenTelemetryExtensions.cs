@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -35,15 +34,6 @@ public static class OpenTelemetryExtensions
                 .AddEntityFrameworkCoreInstrumentation()
                 .AddHttpClientInstrumentation();
 
-                if (options?.Jaeger?.IsEnabled ?? false)
-                {
-                    builder.AddJaegerExporter(jaegerOptions =>
-                     {
-                         jaegerOptions.AgentHost = options.Jaeger.AgentHost;
-                         jaegerOptions.AgentPort = options.Jaeger.AgentPort;
-                     });
-                }
-
                 if (options?.Zipkin?.IsEnabled ?? false)
                 {
                     builder.AddZipkinExporter(zipkinOptions =>
@@ -75,8 +65,7 @@ public static class OpenTelemetryExtensions
                         otlpOptions.Endpoint = new Uri(options.Otlp.Endpoint);
                     });
                 }
-            })
-            .StartWithHost();
+            });
 
         return services;
     }

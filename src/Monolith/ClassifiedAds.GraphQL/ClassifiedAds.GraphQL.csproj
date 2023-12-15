@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AnalysisMode>Recommended</AnalysisMode>
     <AnalysisModeSecurity>All</AnalysisModeSecurity>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GraphQL.Server.All" Version="7.1.1" />
+    <PackageReference Include="GraphQL.Server.All" Version="7.6.0" />
   </ItemGroup>
 
   <ItemGroup>

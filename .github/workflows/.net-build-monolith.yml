@@ -22,7 +22,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 7.0.101
+        dotnet-version: 8.0.100
     
     - name: Build
       run: dotnet build --configuration Release 
@@ -52,40 +52,40 @@ jobs:
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.BackgroundServer
-        path: src/Monolith/ClassifiedAds.BackgroundServer/bin/Release/net7.0/publish
+        path: src/Monolith/ClassifiedAds.BackgroundServer/bin/Release/net8.0/publish
         
     - name: Upload ClassifiedAds.GraphQL
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.GraphQL
-        path: src/Monolith/ClassifiedAds.GraphQL/bin/Release/net7.0/publish
+        path: src/Monolith/ClassifiedAds.GraphQL/bin/Release/net8.0/publish
 
     - name: Upload ClassifiedAds.Migrator
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.Migrator
-        path: src/Monolith/ClassifiedAds.Migrator/bin/Release/net7.0/publish
+        path: src/Monolith/ClassifiedAds.Migrator/bin/Release/net8.0/publish
 
     - name: Upload ClassifiedAds.WebAPI
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.WebAPI
-        path: src/Monolith/ClassifiedAds.WebAPI/bin/Release/net7.0/publish
+        path: src/Monolith/ClassifiedAds.WebAPI/bin/Release/net8.0/publish
         
     - name: Upload ClassifiedAds.WebMVC
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.WebMVC
-        path: src/Monolith/ClassifiedAds.WebMVC/bin/Release/net7.0/publish
+        path: src/Monolith/ClassifiedAds.WebMVC/bin/Release/net8.0/publish
 
     - name: Upload ClassifiedAds.BlazorServerSide
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.BlazorServerSide
-        path: src/Monolith/ClassifiedAds.BlazorServerSide/bin/Release/net7.0/publish
+        path: src/Monolith/ClassifiedAds.BlazorServerSide/bin/Release/net8.0/publish
 
     - name: Upload ClassifiedAds.BlazorWebAssembly
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.BlazorWebAssembly
-        path: src/Monolith/ClassifiedAds.BlazorWebAssembly/bin/Release/net7.0/publish
+        path: src/Monolith/ClassifiedAds.BlazorWebAssembly/bin/Release/net8.0/publish

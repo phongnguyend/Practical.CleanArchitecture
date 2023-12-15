@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-		<PackageReference Include="ClosedXML" Version="0.97.0" />
-		<PackageReference Include="EPPlus" Version="6.1.1" />
+		<PackageReference Include="ClosedXML" Version="0.102.1" />
+		<PackageReference Include="EPPlus" Version="7.0.3" />
 		<PackageReference Include="ExcelDataReader" Version="3.6.0" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 			<PrivateAssets>all</PrivateAssets>

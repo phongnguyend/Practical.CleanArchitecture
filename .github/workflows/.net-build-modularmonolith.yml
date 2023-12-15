@@ -22,7 +22,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 7.0.101
+        dotnet-version: 8.0.100
     
     - name: Build
       run: dotnet build --configuration Release 
@@ -40,16 +40,16 @@ jobs:
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.BackgroundServer
-        path: src/ModularMonolith/ClassifiedAds.BackgroundServer/bin/Release/net7.0/publish
+        path: src/ModularMonolith/ClassifiedAds.BackgroundServer/bin/Release/net8.0/publish
 
     - name: Upload ClassifiedAds.Migrator
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.Migrator
-        path: src/ModularMonolith/ClassifiedAds.Migrator/bin/Release/net7.0/publish
+        path: src/ModularMonolith/ClassifiedAds.Migrator/bin/Release/net8.0/publish
 
     - name: Upload ClassifiedAds.WebAPI
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ClassifiedAds.WebAPI
-        path: src/ModularMonolith/ClassifiedAds.WebAPI/bin/Release/net7.0/publish
+        path: src/ModularMonolith/ClassifiedAds.WebAPI/bin/Release/net8.0/publish

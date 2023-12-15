@@ -1,34 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<UserSecretsId>0de8f61d-276a-4df2-a419-89d3cbb127ff</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<Protobuf Include="..\..\Contracts\AuditLog\Protos\auditlog.proto" GrpcServices="Client" Link="Protos\auditlog.proto" />
 		<Protobuf Include="..\..\Contracts\Identity\Protos\user.proto" GrpcServices="Client" Link="Protos\user.proto" />
-		<PackageReference Include="Dapr.AspNetCore" Version="1.9.0" />
+		<PackageReference Include="Dapr.AspNetCore" Version="1.12.0" />
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-		<PackageReference Include="Grpc.Tools" Version="2.51.0">
+		<PackageReference Include="Grpc.Tools" Version="2.60.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="MediatR" Version="12.0.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.1" />
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.8" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.1">
+		<PackageReference Include="MediatR" Version="12.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Polly" Version="7.2.3" />
+		<PackageReference Include="Polly" Version="8.2.0" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 	</ItemGroup>
 
 	<ItemGroup>

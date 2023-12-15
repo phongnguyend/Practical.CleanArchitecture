@@ -1,74 +1,70 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>ClassifiedAds.Infrastructure</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="AWSSDK.S3" Version="3.7.101.39" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.304.8" />
     <PackageReference Include="Azure.Communication.Sms" Version="1.0.1" />
-    <PackageReference Include="Azure.Data.AppConfiguration" Version="1.2.0" />
-    <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.2.2" />
-    <PackageReference Include="Azure.Identity" Version="1.8.0" />
-    <PackageReference Include="Azure.Messaging.EventGrid" Version="4.12.0" />
-    <PackageReference Include="Azure.Messaging.EventHubs" Version="5.7.5" />
-    <PackageReference Include="Azure.Messaging.EventHubs.Processor" Version="5.7.5" />
-    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.11.1" />
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.14.1" />
-    <PackageReference Include="Azure.Storage.Queues" Version="12.12.0" />
-    <PackageReference Include="Castle.Core" Version="5.1.0" />
-    <PackageReference Include="Confluent.Kafka" Version="1.9.3" />
-    <PackageReference Include="CryptographyHelper" Version="1.0.0" />
+    <PackageReference Include="Azure.Data.AppConfiguration" Version="1.3.0" />
+    <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.3.0" />
+    <PackageReference Include="Azure.Identity" Version="1.10.4" />
+    <PackageReference Include="Azure.Messaging.EventGrid" Version="4.21.0" />
+    <PackageReference Include="Azure.Messaging.EventHubs" Version="5.10.0" />
+    <PackageReference Include="Azure.Messaging.EventHubs.Processor" Version="5.10.0" />
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.17.1" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.19.1" />
+    <PackageReference Include="Azure.Storage.Queues" Version="12.17.1" />
+    <PackageReference Include="Castle.Core" Version="5.1.1" />
+    <PackageReference Include="Confluent.Kafka" Version="2.3.0" />
+    <PackageReference Include="CryptographyHelper" Version="2.0.0" />
     <PackageReference Include="CsvHelper" Version="30.0.1" />
-    <PackageReference Include="Dapper.StrongName" Version="2.0.123" />
+    <PackageReference Include="Dapper.StrongName" Version="2.1.24" />
     <PackageReference Include="DinkToPdf" Version="1.0.8" />
-    <PackageReference Include="Google.Protobuf" Version="3.21.12" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.50.0" />
-    <PackageReference Include="EntityFrameworkCore.SqlServer.SimpleBulks" Version="6.5.0" />
-    <PackageReference Include="IdentityModel" Version="6.0.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="7.0.1" />
-    <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="5.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.1" />
+    <PackageReference Include="EntityFrameworkCore.SqlServer.SimpleBulks" Version="6.9.0" />
+    <PackageReference Include="IdentityModel" Version="6.2.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="7.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="7.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="7.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="7.0.0" />
-    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.2.22" />
-    <PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.2.22" />
-    <PackageReference Include="MiniProfiler.Providers.SqlServer" Version="4.2.22" />
-    <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.4.0-rc.1" />
-    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.4.0-rc.1" />
-    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol.Logs" Version="1.4.0-rc.1" />
-    <PackageReference Include="OpenTelemetry.Exporter.Zipkin" Version="1.4.0-rc.1" />
-    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.4.0-rc.1" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9.10" />
+    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="8.0.0" />
+    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.3.8" />
+    <PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.3.8" />
+    <PackageReference Include="MiniProfiler.Providers.SqlServer" Version="4.3.8" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.7.0" />
+    <PackageReference Include="OpenTelemetry.Exporter.Zipkin" Version="1.7.0" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.7.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.7.0" />
     <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.0.0-beta.3" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc9.10" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.Process" Version="1.0.0-alpha.3" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.1.0-beta.2" />
-    <PackageReference Include="PuppeteerSharp" Version="8.0.0" />
-    <PackageReference Include="Quartz" Version="3.5.0" />
-    <PackageReference Include="RabbitMQ.Client" Version="6.4.0" />
-    <PackageReference Include="RazorLight" Version="2.3.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.7.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Process" Version="0.5.0-beta.3" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.5.1" />
+    <PackageReference Include="PuppeteerSharp" Version="13.0.2" />
+    <PackageReference Include="Quartz" Version="3.8.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
+    <PackageReference Include="RazorLight" Version="2.3.1" />
     <PackageReference Include="SendGrid" Version="9.28.1" />
-    <PackageReference Include="Serilog" Version="2.12.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
-    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
+    <PackageReference Include="Serilog" Version="3.1.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.3.0" />
     <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
-    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.4.1" />
+    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="9.0.3" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Twilio" Version="6.2.0" />
-    <PackageReference Include="VaultSharp" Version="1.12.2" />
+    <PackageReference Include="Twilio" Version="6.15.2" />
+    <PackageReference Include="VaultSharp" Version="1.13.0.1" />
   </ItemGroup>
 
   <ItemGroup>

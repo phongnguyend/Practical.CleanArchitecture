@@ -1,6 +1,5 @@
 ﻿using ClassifiedAds.Domain.IdentityProviders;
 using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Infrastructure.IdentityProviders;
 using System;
 using System.Linq;
 using System.Threading;

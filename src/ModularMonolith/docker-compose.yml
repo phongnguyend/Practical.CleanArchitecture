@@ -3,7 +3,7 @@ services:
     db:
         image: "mcr.microsoft.com/mssql/server:2017-latest"
         ports:
-            - "1434:1433"
+            - "1433:1433"
         environment:
             SA_PASSWORD: "sqladmin123!@#"
             MSSQL_PID: "Developer"
@@ -57,7 +57,7 @@ services:
           context: .
           dockerfile: ./ClassifiedAds.WebAPI/Dockerfile
         ports:
-            - "9002:80"
+            - "9002:8080"
         depends_on:
           - db
           - migrator
@@ -81,8 +81,6 @@ services:
         build:
           context: .
           dockerfile: ./ClassifiedAds.BackgroundServer/Dockerfile
-        ports:
-            - "9004:80"
         depends_on:
           - db
           - migrator
@@ -91,7 +89,7 @@ services:
         environment:
           DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT}
           CheckDependency__Enabled: "true"
-          CheckDependency__Host: "migrator:80,rabbitmq:5672"
+          CheckDependency__Host: "migrator:8080,rabbitmq:5672"
           MessageBroker__Provider: ${MessageBroker__Provider}
           MessageBroker__RabbitMQ__HostName: ${MessageBroker__RabbitMQ__HostName}
           Modules__AuditLog__ConnectionStrings__Default: ${Modules__AuditLog__ConnectionStrings__Default}

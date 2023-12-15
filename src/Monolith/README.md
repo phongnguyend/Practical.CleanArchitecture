@@ -55,7 +55,7 @@
 
 - Build
   ```
-  docker-compose build
+  docker compose build
   ```
 
 - Tag

@@ -3,7 +3,7 @@ services:
     db:
         image: "mcr.microsoft.com/mssql/server:2017-latest"
         ports:
-            - "1434:1433"
+            - "1433:1433"
         environment:
             SA_PASSWORD: "sqladmin123!@#"
             MSSQL_PID: "Developer"
@@ -61,6 +61,7 @@ services:
         environment:
           ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
           ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
+          ConnectionStrings__IdentityServer: ${ConnectionStrings__IdentityServer_IdentityServer4}
           CookiePolicyOptions__IsEnabled: "true"
           CookiePolicyOptions__MinimumSameSitePolicy: "Lax"
           CookiePolicyOptions__Secure: "None"
@@ -70,7 +71,7 @@ services:
           context: .
           dockerfile: ./ClassifiedAds.WebAPI/Dockerfile
         ports:
-            - "9002:80"
+            - "9002:8080"
         depends_on:
           - db
           - migrator
@@ -97,7 +98,7 @@ services:
           context: .
           dockerfile: ./ClassifiedAds.WebMVC/Dockerfile
         ports:
-            - "9003:80"
+            - "9003:8080"
         depends_on:
           - db
           - migrator
@@ -112,7 +113,7 @@ services:
           CookiePolicyOptions__MinimumSameSitePolicy: "Lax"
           CookiePolicyOptions__Secure: "None"          
           CheckDependency__Enabled: "true"
-          CheckDependency__Host: "migrator:80"
+          CheckDependency__Host: "migrator:8080"
           OpenIdConnect__Authority: "http://host.docker.internal:9000"
           OpenIdConnect__RequireHttpsMetadata: "false"
           ResourceServer__Endpoint: ${ResourceServer__Endpoint}
@@ -136,7 +137,7 @@ services:
           context: .
           dockerfile: ./ClassifiedAds.BlazorServerSide/Dockerfile
         ports:
-            - "9008:80"
+            - "9008:8080"
         depends_on:
           - identityserver
           - webapi
@@ -154,8 +155,6 @@ services:
         build:
           context: .
           dockerfile: ./ClassifiedAds.BackgroundServer/Dockerfile
-        ports:
-            - "9004:80"
         depends_on:
           - db
           - migrator
@@ -165,7 +164,7 @@ services:
           DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT}
           ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
           CheckDependency__Enabled: "true"
-          CheckDependency__Host: "migrator:80,rabbitmq:5672"
+          CheckDependency__Host: "migrator:8080,rabbitmq:5672"
           MessageBroker__Provider: ${MessageBroker__Provider}
           MessageBroker__RabbitMQ__HostName: ${MessageBroker__RabbitMQ__HostName}
           MessageBroker__Kafka__BootstrapServers: ${MessageBroker__Kafka__BootstrapServers}
@@ -185,7 +184,7 @@ services:
           context: .
           dockerfile: ./ClassifiedAds.GraphQL/Dockerfile
         ports:
-            - "9006:80"
+            - "9006:8080"
         depends_on:
           - webapi
         environment:

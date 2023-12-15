@@ -1,4 +1,4 @@
-﻿namespace ClassifiedAds.Infrastructure.IdentityProviders;
+﻿namespace ClassifiedAds.Domain.IdentityProviders;
 
 public interface IUser
 {

@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AnalysisMode>Recommended</AnalysisMode>
     <AnalysisModeSecurity>All</AnalysisModeSecurity>
   </PropertyGroup>
 
 
   <ItemGroup>
-    <PackageReference Include="IdentityModel" Version="6.0.0" />
+    <PackageReference Include="IdentityModel" Version="6.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="7.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
   </ItemGroup>
 
 

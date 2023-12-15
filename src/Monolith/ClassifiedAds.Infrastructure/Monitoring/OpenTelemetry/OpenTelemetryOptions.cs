@@ -8,8 +8,6 @@ public class OpenTelemetryOptions
 
     public ZipkinOptions Zipkin { get; set; }
 
-    public JaegerOptions Jaeger { get; set; }
-
     public OtlpOptions Otlp { get; set; }
 }
 
@@ -18,15 +16,6 @@ public class ZipkinOptions
     public bool IsEnabled { get; set; }
 
     public string Endpoint { get; set; }
-}
-
-public class JaegerOptions
-{
-    public bool IsEnabled { get; set; }
-
-    public string AgentHost { get; set; }
-
-    public int AgentPort { get; set; }
 }
 
 public class OtlpOptions
