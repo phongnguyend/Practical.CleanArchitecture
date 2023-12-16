@@ -37,7 +37,7 @@ import { SettingModule } from "./settings/setting.module";
       name: "Practical.CleanArchitecture App DevTools",
       maxAge: 25,
       logOnly: environment.production,
-    }),
+    connectInZone: true}),
     EffectsModule.forRoot([]),
   ],
   providers: [
