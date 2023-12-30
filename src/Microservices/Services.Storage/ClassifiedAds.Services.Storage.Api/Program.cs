@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.Monitoring;
-using ClassifiedAds.Infrastructure.Web.Filters;
+using ClassifiedAds.Infrastructure.Web.ExceptionHandlers;
 using ClassifiedAds.Services.Storage.ConfigurationOptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -15,7 +15,6 @@ using Polly;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,9 +37,10 @@ appSettings.ConnectionStrings.MigrationsAssembly = Assembly.GetExecutingAssembly
 
 services.AddMonitoringServices(appSettings.Monitoring);
 
+services.AddExceptionHandler<GlobalExceptionHandler>();
+
 services.AddControllers(configure =>
 {
-    configure.Filters.Add(typeof(GlobalExceptionFilter));
 })
 .ConfigureApiBehaviorOptions(options =>
 {
@@ -190,6 +190,8 @@ if (builder.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+
+app.UseExceptionHandler(options => { });
 
 app.UseRouting();
 

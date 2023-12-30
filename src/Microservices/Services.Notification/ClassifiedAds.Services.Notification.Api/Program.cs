@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.Monitoring;
-using ClassifiedAds.Infrastructure.Web.Filters;
+using ClassifiedAds.Infrastructure.Web.ExceptionHandlers;
 using ClassifiedAds.Services.Notification.ConfigurationOptions;
 using ClassifiedAds.Services.Notification.HostedServices;
 using ClassifiedAds.Services.Notification.Hubs;
@@ -36,9 +36,10 @@ appSettings.ConnectionStrings.MigrationsAssembly = Assembly.GetExecutingAssembly
 
 services.AddMonitoringServices(appSettings.Monitoring);
 
+services.AddExceptionHandler<GlobalExceptionHandler>();
+
 services.AddControllers(configure =>
 {
-    configure.Filters.Add(typeof(GlobalExceptionFilter));
 })
 .ConfigureApiBehaviorOptions(options =>
 {
@@ -195,6 +196,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+
+app.UseExceptionHandler(options => { });
 
 app.UseRouting();
 
