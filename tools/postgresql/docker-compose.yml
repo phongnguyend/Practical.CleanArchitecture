@@ -1,0 +1,14 @@
+version: '3.6'
+services:
+  db:
+    image: postgres:11-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+networks:
+  default:
+    external:
+      name: phongnguyend
