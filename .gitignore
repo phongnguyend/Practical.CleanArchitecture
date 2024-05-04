@@ -375,3 +375,9 @@ MigrationBackup/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
