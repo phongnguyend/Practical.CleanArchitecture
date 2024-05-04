@@ -212,19 +212,19 @@ az appservice plan create --resource-group "ClassifiedAds_DEV" \
 az webapp create --resource-group "ClassifiedAds_DEV" \
                  --plan ClassifiedAds-Hosts \
                  --name identityserver-classifiedads \
-                 --runtime "DOTNETCORE|3.1" \
+                 --runtime "DOTNET|8.0" \
                  --tags "Environment=Development" "Project=ClassifiedAds" "Department=SD"
 
 az webapp create --resource-group "ClassifiedAds_DEV" \
                  --plan ClassifiedAds-Hosts \
                  --name webapi-classifiedads \
-                 --runtime "DOTNETCORE|3.1" \
+                 --runtime "DOTNET|8.0" \
                  --tags "Environment=Development" "Project=ClassifiedAds" "Department=SD"
                  
 az webapp create --resource-group "ClassifiedAds_DEV" \
                  --plan ClassifiedAds-Hosts \
                  --name webmvc-classifiedads \
-                 --runtime "DOTNETCORE|3.1" \
+                 --runtime "DOTNET|8.0" \
                  --tags "Environment=Development" "Project=ClassifiedAds" "Department=SD"                 
 ```
 
