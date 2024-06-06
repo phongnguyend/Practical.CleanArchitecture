@@ -1,0 +1,65 @@
+otelcol.receiver.otlp "example" {
+  grpc {
+    endpoint = "127.0.0.1:4317"
+  }
+
+  http {
+    endpoint = "127.0.0.1:4318"
+  }
+
+  output {
+    metrics = [otelcol.processor.batch.example.input]
+    logs    = [otelcol.processor.batch.example.input]
+    traces  = [otelcol.processor.batch.example.input]
+  }
+}
+
+otelcol.processor.batch "example" {
+  output {
+    metrics = [otelcol.exporter.prometheus.grafana_cloud_prometheus.input]
+    logs    = [otelcol.exporter.loki.grafana_cloud_loki.input]
+    traces  = [otelcol.exporter.otlp.grafana_cloud_tempo.input]
+  }
+}
+
+otelcol.exporter.otlp "grafana_cloud_tempo" {
+	client {
+		endpoint = "https://tempo-prod-xx-prod-ap-southeast-1.grafana.net/tempo"
+		auth     = otelcol.auth.basic.grafana_cloud_tempo.handler
+	}
+}
+
+otelcol.auth.basic "grafana_cloud_tempo" {
+	username = "xxx"
+	password = "xxx"
+}
+
+otelcol.exporter.prometheus "grafana_cloud_prometheus" {
+        forward_to = [prometheus.remote_write.grafana_cloud_prometheus.receiver]
+    }
+
+prometheus.remote_write "grafana_cloud_prometheus" {
+  endpoint {
+    url = "https://prometheus-prod-xx-prod-ap-southeast-1.grafana.net/api/prom/push"
+
+    basic_auth {
+      username = "xxx"
+      password = "xxx"
+    }
+  }
+}
+
+otelcol.exporter.loki "grafana_cloud_loki" {
+	forward_to = [loki.write.grafana_cloud_loki.receiver]
+}
+
+loki.write "grafana_cloud_loki" {
+	endpoint {
+        url = "https://logs-prod-xxx.grafana.net/loki/api/v1/push"
+
+        basic_auth {
+            username = "xxx"
+            password = "xxx"
+        }
+	}
+}
