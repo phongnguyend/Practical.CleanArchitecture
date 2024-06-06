@@ -8,9 +8,6 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Exceptions;
-using Serilog.Formatting.Json;
-using Serilog.Sinks.Elasticsearch;
-using Serilog.Sinks.File;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,8 +40,7 @@ public static class LoggingExtensions
             .Enrich.WithExceptionDetails()
             .Filter.ByIncludingOnly((logEvent) =>
             {
-                if (logEvent.Level >= options.File.MinimumLogEventLevel
-                || logEvent.Level >= options.Elasticsearch.MinimumLogEventLevel)
+                if (logEvent.Level >= options.File.MinimumLogEventLevel)
                 {
                     var sourceContext = logEvent.Properties.ContainsKey("SourceContext")
                          ? logEvent.Properties["SourceContext"].ToString()
@@ -65,22 +61,6 @@ public static class LoggingExtensions
                 outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] [TraceId: {TraceId}] [MachineName: {MachineName}] [ProcessId: {ProcessId}] {Message:lj}{NewLine}{Exception}",
                 restrictedToMinimumLevel: options.File.MinimumLogEventLevel);
 
-        if (options.Elasticsearch != null && options.Elasticsearch.IsEnabled)
-        {
-            loggerConfiguration = loggerConfiguration
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(options.Elasticsearch.Host))
-                {
-                    MinimumLogEventLevel = options.Elasticsearch.MinimumLogEventLevel,
-                    AutoRegisterTemplate = true,
-                    AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv6,
-                    IndexFormat = options.Elasticsearch.IndexFormat + "-{0:yyyy.MM.dd}",
-                    // BufferBaseFilename = Path.Combine(env.ContentRootPath, "logs", "buffer"),
-                    InlineFields = true,
-                    EmitEventFailure = EmitEventFailureHandling.WriteToFailureSink,
-                    FailureSink = new FileSink(Path.Combine(logsPath, "elasticsearch-failures.txt"), new JsonFormatter(), null),
-                });
-        }
-
         Log.Logger = loggerConfiguration.CreateLogger();
     }
 
@@ -99,12 +79,6 @@ public static class LoggingExtensions
 
         options.File ??= new FileOptions
         {
-            MinimumLogEventLevel = Serilog.Events.LogEventLevel.Warning,
-        };
-
-        options.Elasticsearch ??= new ElasticsearchOptions
-        {
-            IsEnabled = false,
             MinimumLogEventLevel = Serilog.Events.LogEventLevel.Warning,
         };
 
@@ -258,8 +232,7 @@ public static class LoggingExtensions
             .Enrich.WithExceptionDetails()
             .Filter.ByIncludingOnly((logEvent) =>
             {
-                if (logEvent.Level >= options.File.MinimumLogEventLevel
-                || logEvent.Level >= options.Elasticsearch.MinimumLogEventLevel)
+                if (logEvent.Level >= options.File.MinimumLogEventLevel)
                 {
                     var sourceContext = logEvent.Properties.ContainsKey("SourceContext")
                          ? logEvent.Properties["SourceContext"].ToString()
@@ -279,22 +252,6 @@ public static class LoggingExtensions
                 flushToDiskInterval: TimeSpan.FromSeconds(1),
                 outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] [TraceId: {TraceId}] [MachineName: {MachineName}] [ProcessId: {ProcessId}] {Message:lj}{NewLine}{Exception}",
                 restrictedToMinimumLevel: options.File.MinimumLogEventLevel);
-
-        if (options.Elasticsearch != null && options.Elasticsearch.IsEnabled)
-        {
-            loggerConfiguration = loggerConfiguration
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(options.Elasticsearch.Host))
-                {
-                    MinimumLogEventLevel = options.Elasticsearch.MinimumLogEventLevel,
-                    AutoRegisterTemplate = true,
-                    AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv6,
-                    IndexFormat = options.Elasticsearch.IndexFormat + "-{0:yyyy.MM.dd}",
-                    // BufferBaseFilename = Path.Combine(env.ContentRootPath, "logs", "buffer"),
-                    InlineFields = true,
-                    EmitEventFailure = EmitEventFailureHandling.WriteToFailureSink,
-                    FailureSink = new FileSink(Path.Combine(logsPath, "elasticsearch-failures.txt"), new JsonFormatter(), null),
-                });
-        }
 
         Log.Logger = loggerConfiguration.CreateLogger();
     }
