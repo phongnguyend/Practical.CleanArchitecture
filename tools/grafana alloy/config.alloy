@@ -24,7 +24,7 @@ otelcol.processor.batch "example" {
 
 otelcol.exporter.otlp "grafana_cloud_tempo" {
 	client {
-		endpoint = "https://tempo-prod-xx-prod-ap-southeast-1.grafana.net/tempo"
+		endpoint = "tempo-prod-xx-prod-ap-southeast-1.grafana.net:443"
 		auth     = otelcol.auth.basic.grafana_cloud_tempo.handler
 	}
 }
