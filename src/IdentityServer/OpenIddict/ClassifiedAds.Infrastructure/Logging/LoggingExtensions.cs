@@ -5,9 +5,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.EventLog;
 using Serilog;
 using Serilog.Exceptions;
-using Serilog.Formatting.Json;
-using Serilog.Sinks.Elasticsearch;
-using Serilog.Sinks.File;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,9 +26,9 @@ public static class LoggingExtensions
         loggerConfiguration = loggerConfiguration
             .MinimumLevel.Debug()
             .Enrich.FromLogContext()
-            .Enrich.With<ActivityEnricher>()
             .Enrich.WithMachineName()
             .Enrich.WithEnvironmentUserName()
+            .Enrich.WithProperty("ProcessId", Environment.ProcessId)
             .Enrich.WithProperty("Assembly", assemblyName)
             .Enrich.WithProperty("Application", env.ApplicationName)
             .Enrich.WithProperty("EnvironmentName", env.EnvironmentName)
@@ -40,8 +37,7 @@ public static class LoggingExtensions
             .Enrich.WithExceptionDetails()
             .Filter.ByIncludingOnly((logEvent) =>
             {
-                if (logEvent.Level >= options.File.MinimumLogEventLevel
-                || logEvent.Level >= options.Elasticsearch.MinimumLogEventLevel)
+                if (logEvent.Level >= options.File.MinimumLogEventLevel)
                 {
                     var sourceContext = logEvent.Properties.ContainsKey("SourceContext")
                          ? logEvent.Properties["SourceContext"].ToString()
@@ -59,24 +55,8 @@ public static class LoggingExtensions
                 rollOnFileSizeLimit: true,
                 shared: true,
                 flushToDiskInterval: TimeSpan.FromSeconds(1),
-                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] [TraceId: {TraceId}] {Message:lj}{NewLine}{Exception}",
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] [TraceId: {TraceId}] [MachineName: {MachineName}] [ProcessId: {ProcessId}] {Message:lj}{NewLine}{Exception}",
                 restrictedToMinimumLevel: options.File.MinimumLogEventLevel);
-
-        if (options.Elasticsearch != null && options.Elasticsearch.IsEnabled)
-        {
-            loggerConfiguration = loggerConfiguration
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(options.Elasticsearch.Host))
-                {
-                    MinimumLogEventLevel = options.Elasticsearch.MinimumLogEventLevel,
-                    AutoRegisterTemplate = true,
-                    AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv6,
-                    IndexFormat = options.Elasticsearch.IndexFormat + "-{0:yyyy.MM.dd}",
-                    // BufferBaseFilename = Path.Combine(env.ContentRootPath, "logs", "buffer"),
-                    InlineFields = true,
-                    EmitEventFailure = EmitEventFailureHandling.WriteToFailureSink,
-                    FailureSink = new FileSink(Path.Combine(logsPath, "elasticsearch-failures.txt"), new JsonFormatter(), null),
-                });
-        }
 
         Log.Logger = loggerConfiguration.CreateLogger();
     }
@@ -96,12 +76,6 @@ public static class LoggingExtensions
 
         options.File ??= new FileOptions
         {
-            MinimumLogEventLevel = Serilog.Events.LogEventLevel.Warning,
-        };
-
-        options.Elasticsearch ??= new ElasticsearchOptions
-        {
-            IsEnabled = false,
             MinimumLogEventLevel = Serilog.Events.LogEventLevel.Warning,
         };
 
@@ -141,7 +115,7 @@ public static class LoggingExtensions
 
             LoggingOptions options = SetDefault(logOptions(context.Configuration));
 
-            if (options.EventLog != null && options.EventLog.IsEnabled)
+            if (options.EventLog != null && options.EventLog.IsEnabled && OperatingSystem.IsWindows())
             {
                 logging.AddEventLog(new EventLogSettings
                 {
@@ -152,7 +126,12 @@ public static class LoggingExtensions
 
             if (options?.ApplicationInsights?.IsEnabled ?? false)
             {
-                logging.AddApplicationInsights(options.ApplicationInsights.InstrumentationKey);
+                logging.AddApplicationInsights(
+                    configureTelemetryConfiguration: (config) =>
+                    {
+                        config.ConnectionString = options.ApplicationInsights.InstrumentationKey;
+                    },
+                    configureApplicationInsightsLoggerOptions: (options) => { });
             }
 
             context.HostingEnvironment.UseClassifiedAdsLogger(options);
@@ -176,7 +155,7 @@ public static class LoggingExtensions
 
             LoggingOptions options = SetDefault(logOptions(context.Configuration));
 
-            if (options.EventLog != null && options.EventLog.IsEnabled)
+            if (options.EventLog != null && options.EventLog.IsEnabled && OperatingSystem.IsWindows())
             {
                 logging.AddEventLog(new EventLogSettings
                 {
@@ -187,7 +166,12 @@ public static class LoggingExtensions
 
             if (options?.ApplicationInsights?.IsEnabled ?? false)
             {
-                logging.AddApplicationInsights(options.ApplicationInsights.InstrumentationKey);
+                logging.AddApplicationInsights(
+                    configureTelemetryConfiguration: (config) =>
+                    {
+                        config.ConnectionString = options.ApplicationInsights.InstrumentationKey;
+                    },
+                    configureApplicationInsightsLoggerOptions: (options) => { });
             }
 
             context.HostingEnvironment.UseClassifiedAdsLogger(options);
@@ -207,9 +191,9 @@ public static class LoggingExtensions
         loggerConfiguration = loggerConfiguration
             .MinimumLevel.Debug()
             .Enrich.FromLogContext()
-            .Enrich.With<ActivityEnricher>()
             .Enrich.WithMachineName()
             .Enrich.WithEnvironmentUserName()
+            .Enrich.WithProperty("ProcessId", Environment.ProcessId)
             .Enrich.WithProperty("Assembly", assemblyName)
             .Enrich.WithProperty("Application", env.ApplicationName)
             .Enrich.WithProperty("EnvironmentName", env.EnvironmentName)
@@ -217,8 +201,7 @@ public static class LoggingExtensions
             .Enrich.WithExceptionDetails()
             .Filter.ByIncludingOnly((logEvent) =>
             {
-                if (logEvent.Level >= options.File.MinimumLogEventLevel
-                || logEvent.Level >= options.Elasticsearch.MinimumLogEventLevel)
+                if (logEvent.Level >= options.File.MinimumLogEventLevel)
                 {
                     var sourceContext = logEvent.Properties.ContainsKey("SourceContext")
                          ? logEvent.Properties["SourceContext"].ToString()
@@ -236,24 +219,8 @@ public static class LoggingExtensions
                 rollOnFileSizeLimit: true,
                 shared: true,
                 flushToDiskInterval: TimeSpan.FromSeconds(1),
-                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] [TraceId: {TraceId}] {Message:lj}{NewLine}{Exception}",
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] [TraceId: {TraceId}] [MachineName: {MachineName}] [ProcessId: {ProcessId}] {Message:lj}{NewLine}{Exception}",
                 restrictedToMinimumLevel: options.File.MinimumLogEventLevel);
-
-        if (options.Elasticsearch != null && options.Elasticsearch.IsEnabled)
-        {
-            loggerConfiguration = loggerConfiguration
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(options.Elasticsearch.Host))
-                {
-                    MinimumLogEventLevel = options.Elasticsearch.MinimumLogEventLevel,
-                    AutoRegisterTemplate = true,
-                    AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv6,
-                    IndexFormat = options.Elasticsearch.IndexFormat + "-{0:yyyy.MM.dd}",
-                    // BufferBaseFilename = Path.Combine(env.ContentRootPath, "logs", "buffer"),
-                    InlineFields = true,
-                    EmitEventFailure = EmitEventFailureHandling.WriteToFailureSink,
-                    FailureSink = new FileSink(Path.Combine(logsPath, "elasticsearch-failures.txt"), new JsonFormatter(), null),
-                });
-        }
 
         Log.Logger = loggerConfiguration.CreateLogger();
     }
