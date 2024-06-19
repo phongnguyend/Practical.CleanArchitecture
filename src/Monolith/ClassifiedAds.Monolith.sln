@@ -53,6 +53,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.ContractTests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.ArchTests", "ClassifiedAds.ArchTests\ClassifiedAds.ArchTests.csproj", "{16D3179E-608B-43A9-8254-B3834E0917FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClasssifiedAds.AspireAppHost", "ClasssifiedAds.AspireAppHost\ClasssifiedAds.AspireAppHost.csproj", "{739FD03C-2211-4867-96B8-95C450E6691F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -131,6 +133,10 @@ Global
 		{16D3179E-608B-43A9-8254-B3834E0917FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16D3179E-608B-43A9-8254-B3834E0917FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16D3179E-608B-43A9-8254-B3834E0917FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{739FD03C-2211-4867-96B8-95C450E6691F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{739FD03C-2211-4867-96B8-95C450E6691F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{739FD03C-2211-4867-96B8-95C450E6691F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{739FD03C-2211-4867-96B8-95C450E6691F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -156,6 +162,7 @@ Global
 		{C2646CBE-029A-47EA-809E-57C9EE3ABD9B} = {4B31AB94-7016-4C77-951E-84792D6EBEAC}
 		{65832FF6-24CE-4DAA-BEB6-EBFE76FC46F0} = {60BC7A82-187C-43E2-8C37-DE610700A7FA}
 		{16D3179E-608B-43A9-8254-B3834E0917FC} = {60BC7A82-187C-43E2-8C37-DE610700A7FA}
+		{739FD03C-2211-4867-96B8-95C450E6691F} = {C6061573-0203-4860-AD42-4C6C2CF55110}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2C23354-4AAD-41AC-9E06-0A6F210ACEEF}

@@ -16,15 +16,13 @@ public static class OpenTelemetryExtensions
             return services;
         }
 
-        var resourceBuilder = ResourceBuilder.CreateDefault().AddService(options.ServiceName);
-
         services.AddOpenTelemetry()
             .ConfigureResource(configureResource =>
             {
                 configureResource.AddService(
                     serviceName: options.ServiceName,
                     serviceVersion: Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "unknown",
-                    serviceInstanceId: Environment.MachineName);
+                    serviceInstanceId: options.ServiceName + "-" + Environment.MachineName);
             })
             .WithTracing(builder =>
             {

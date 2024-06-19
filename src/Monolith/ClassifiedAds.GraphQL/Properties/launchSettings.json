@@ -16,14 +16,14 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "ClassifiedAds.GraphQL": {
+    "https": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "ui/playground",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+      "applicationUrl": "https://localhost:44392"
     }
   }
 }
