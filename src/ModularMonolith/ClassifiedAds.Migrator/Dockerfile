@@ -7,23 +7,20 @@ COPY ./ClassifiedAds.CrossCuttingConcerns/*.csproj ./ClassifiedAds.CrossCuttingC
 COPY ./ClassifiedAds.Domain/*.csproj ./ClassifiedAds.Domain/
 COPY ./ClassifiedAds.Infrastructure/*.csproj ./ClassifiedAds.Infrastructure/
 
+RUN dotnet restore ./ClassifiedAds.Application/ClassifiedAds.Application.csproj
+RUN dotnet restore ./ClassifiedAds.Infrastructure/ClassifiedAds.Infrastructure.csproj
+
 COPY ./ClassifiedAds.Contracts/*.csproj ./ClassifiedAds.Contracts/
 COPY ./ClassifiedAds.Modules.AuditLog/*.csproj ./ClassifiedAds.Modules.AuditLog/
 COPY ./ClassifiedAds.Modules.Configuration/*.csproj ./ClassifiedAds.Modules.Configuration/
 COPY ./ClassifiedAds.Modules.Identity/*.csproj ./ClassifiedAds.Modules.Identity/
 COPY ./ClassifiedAds.Modules.Notification/*.csproj ./ClassifiedAds.Modules.Notification/
 COPY ./ClassifiedAds.Modules.Product/*.csproj ./ClassifiedAds.Modules.Product/
-COPY ./ClassifiedAds.Modules.Product.EndToEndTests/*.csproj ./ClassifiedAds.Modules.Product.EndToEndTests/
-COPY ./ClassifiedAds.Modules.Product.IntegrationTests/*.csproj ./ClassifiedAds.Modules.Product.IntegrationTests/
-COPY ./ClassifiedAds.Modules.Product.UnitTests/*.csproj ./ClassifiedAds.Modules.Product.UnitTests/
 COPY ./ClassifiedAds.Modules.Storage/*.csproj ./ClassifiedAds.Modules.Storage/
 
-COPY ./ClassifiedAds.BackgroundServer/*.csproj ./ClassifiedAds.BackgroundServer/
 COPY ./ClassifiedAds.Migrator/*.csproj ./ClassifiedAds.Migrator/
-COPY ./ClassifiedAds.WebAPI/*.csproj ./ClassifiedAds.WebAPI/
 
-COPY ./ClassifiedAds.ModularMonolith.sln .
-RUN dotnet restore
+RUN dotnet restore ./ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj
 
 # Copy everything else and build
 COPY . ./

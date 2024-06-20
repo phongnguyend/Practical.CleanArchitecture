@@ -57,6 +57,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Contracts", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contracts", "Contracts", "{F7978955-2598-49D1-BB01-293F061004F1}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.AspireAppHost", "ClassifiedAds.AspireAppHost\ClassifiedAds.AspireAppHost.csproj", "{F836AAB2-BB6D-4725-BD4D-36E425BA7AB7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -131,6 +133,10 @@ Global
 		{00E6AFF5-98AA-4302-A33D-E3E4B9D15504}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00E6AFF5-98AA-4302-A33D-E3E4B9D15504}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00E6AFF5-98AA-4302-A33D-E3E4B9D15504}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F836AAB2-BB6D-4725-BD4D-36E425BA7AB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F836AAB2-BB6D-4725-BD4D-36E425BA7AB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F836AAB2-BB6D-4725-BD4D-36E425BA7AB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F836AAB2-BB6D-4725-BD4D-36E425BA7AB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -159,6 +165,7 @@ Global
 		{B556F32D-D996-4296-9075-E7E2E2F4B8C3} = {ECEF010F-6A7B-4418-83FF-1BEBA02A7F96}
 		{ECEF010F-6A7B-4418-83FF-1BEBA02A7F96} = {38967FEA-2C16-4297-8028-1B83DC14AC3F}
 		{00E6AFF5-98AA-4302-A33D-E3E4B9D15504} = {F7978955-2598-49D1-BB01-293F061004F1}
+		{F836AAB2-BB6D-4725-BD4D-36E425BA7AB7} = {62A1AB08-A2DB-404F-B073-0F89CA780F45}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2C23354-4AAD-41AC-9E06-0A6F210ACEEF}

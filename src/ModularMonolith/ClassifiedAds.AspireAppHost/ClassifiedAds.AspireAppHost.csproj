@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ClassifiedAds.BackgroundServer\ClassifiedAds.BackgroundServer.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.Migrator\ClassifiedAds.Migrator.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.WebAPI\ClassifiedAds.WebAPI.csproj" />
+  </ItemGroup>
+
+</Project>
