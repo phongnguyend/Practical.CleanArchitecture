@@ -5,10 +5,13 @@ WORKDIR /ClassifiedAds.Monolith
 COPY ./ClassifiedAds.Application/*.csproj ./ClassifiedAds.Application/
 COPY ./ClassifiedAds.CrossCuttingConcerns/*.csproj ./ClassifiedAds.CrossCuttingConcerns/
 COPY ./ClassifiedAds.Domain/*.csproj ./ClassifiedAds.Domain/
-COPY ./ClassifiedAds.GraphQL/*.csproj ./ClassifiedAds.GraphQL/
 COPY ./ClassifiedAds.Infrastructure/*.csproj ./ClassifiedAds.Infrastructure/
 COPY ./ClassifiedAds.Persistence/*.csproj ./ClassifiedAds.Persistence/
 
+RUN dotnet restore ./ClassifiedAds.Application/ClassifiedAds.Application.csproj
+RUN dotnet restore ./ClassifiedAds.Infrastructure/ClassifiedAds.Infrastructure.csproj
+
+COPY ./ClassifiedAds.GraphQL/*.csproj ./ClassifiedAds.GraphQL/
 RUN dotnet restore ./ClassifiedAds.GraphQL/ClassifiedAds.GraphQL.csproj
 
 # Copy everything else and build

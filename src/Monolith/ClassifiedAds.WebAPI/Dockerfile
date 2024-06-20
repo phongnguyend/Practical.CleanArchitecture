@@ -7,8 +7,11 @@ COPY ./ClassifiedAds.CrossCuttingConcerns/*.csproj ./ClassifiedAds.CrossCuttingC
 COPY ./ClassifiedAds.Domain/*.csproj ./ClassifiedAds.Domain/
 COPY ./ClassifiedAds.Infrastructure/*.csproj ./ClassifiedAds.Infrastructure/
 COPY ./ClassifiedAds.Persistence/*.csproj ./ClassifiedAds.Persistence/
-COPY ./ClassifiedAds.WebAPI/*.csproj ./ClassifiedAds.WebAPI/
 
+RUN dotnet restore ./ClassifiedAds.Application/ClassifiedAds.Application.csproj
+RUN dotnet restore ./ClassifiedAds.Infrastructure/ClassifiedAds.Infrastructure.csproj
+
+COPY ./ClassifiedAds.WebAPI/*.csproj ./ClassifiedAds.WebAPI/
 RUN dotnet restore ./ClassifiedAds.WebAPI/ClassifiedAds.WebAPI.csproj
 
 # Copy everything else and build
