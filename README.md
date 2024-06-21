@@ -790,7 +790,7 @@
   + Navigate to folder: [UIs/reactjs/](/src/UIs/reactjs/)
     ```
     npm install
-    npm run start
+    npm run dev
     ```
   + Update [environment.dev.js](/src/UIs/reactjs/src/environments/environment.dev.js) & [environment.js](/src/UIs/reactjs/src/environments/environment.js) 
     ```js

@@ -49,7 +49,7 @@ stages:
     - task: ArchiveFiles@2
       displayName: Archive
       inputs:
-        rootFolderOrFile: 'src/UIs/reactjs/build'
+        rootFolderOrFile: 'src/UIs/reactjs/dist'
         includeRootFolder: false
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/reactjs.$(Build.BuildId).zip'

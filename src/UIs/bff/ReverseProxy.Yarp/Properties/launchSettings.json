@@ -15,11 +15,11 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Practical.ReverseProxy.Yarp": {
+    "https": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5122",
+      "applicationUrl": "https://localhost:44348",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
