@@ -1,6 +1,6 @@
 ﻿{
   "profiles": {
-    "ClassifiedAds.Services.AuditLog.Grpc": {
+    "https": {
       "commandName": "Project",
       "launchBrowser": false,
       "applicationUrl": "https://localhost:5002",

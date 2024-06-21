@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Gateways.GraphQL\ClassifiedAds.Gateways.GraphQL\ClassifiedAds.Gateways.GraphQL.csproj" />
+    <ProjectReference Include="..\Gateways.WebAPI\ClassifiedAds.Gateways.WebAPI\ClassifiedAds.Gateways.WebAPI.csproj" />
+    <ProjectReference Include="..\Services.AuditLog\ClassifiedAds.Services.AuditLog.Api\ClassifiedAds.Services.AuditLog.Api.csproj" />
+    <ProjectReference Include="..\Services.AuditLog\ClassifiedAds.Services.AuditLog.Grpc\ClassifiedAds.Services.AuditLog.Grpc.csproj" />
+    <ProjectReference Include="..\Services.Configuration\ClassifiedAds.Services.Configuration.Api\ClassifiedAds.Services.Configuration.Api.csproj" />
+    <ProjectReference Include="..\Services.Identity\ClassifiedAds.Services.Identity.Api\ClassifiedAds.Services.Identity.Api.csproj" />
+    <ProjectReference Include="..\Services.Identity\ClassifiedAds.Services.Identity.Grpc\ClassifiedAds.Services.Identity.Grpc.csproj" />
+    <ProjectReference Include="..\Services.Notification\ClassifiedAds.Services.Notification.Api\ClassifiedAds.Services.Notification.Api.csproj" />
+    <ProjectReference Include="..\Services.Notification\ClassifiedAds.Services.Notification.Background\ClassifiedAds.Services.Notification.Background.csproj" />
+    <ProjectReference Include="..\Services.Notification\ClassifiedAds.Services.Notification.Grpc\ClassifiedAds.Services.Notification.Grpc.csproj" />
+    <ProjectReference Include="..\Services.Product\ClassifiedAds.Services.Product.Api\ClassifiedAds.Services.Product.Api.csproj" />
+    <ProjectReference Include="..\Services.Storage\ClassifiedAds.Services.Storage.Api\ClassifiedAds.Services.Storage.Api.csproj" />
+  </ItemGroup>
+
+</Project>
