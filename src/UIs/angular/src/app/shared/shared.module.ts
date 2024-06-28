@@ -7,11 +7,19 @@ import { StarComponent } from "./star.component";
 import { AppendVersionPipe } from "./append-version.pipe";
 import { AppendCurrentDateTimePipe } from "./append-current-datetime.pipe";
 import { TimerComponent } from "./timer.component";
+import { PaginationComponent } from "./pagination.component";
 
 @NgModule({
   imports: [CommonModule],
-  declarations: [StarComponent, TimerComponent, AppendVersionPipe, AppendCurrentDateTimePipe],
+  declarations: [
+    PaginationComponent,
+    StarComponent,
+    TimerComponent,
+    AppendVersionPipe,
+    AppendCurrentDateTimePipe,
+  ],
   exports: [
+    PaginationComponent,
     StarComponent,
     TimerComponent,
     AppendVersionPipe,

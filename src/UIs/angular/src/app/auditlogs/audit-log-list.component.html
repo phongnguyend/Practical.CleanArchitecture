@@ -1,13 +1,15 @@
 <div class="card">
-  <div class="card-header">
-    Audit Logs
-  </div>
+  <div class="card-header">Audit Logs</div>
   <div class="card-body">
     <div class="table-responsive">
-      <div style="float: right;">
-        <pagination [totalItems]="totalItems" [itemsPerPage]="5" [maxSize]="5" (pageChanged)="pageChanged($event)"
-          [boundaryLinks]="true" [(ngModel)]="currentPage">
-        </pagination>
+      <div style="float: right">
+        <app-pagination
+          [totalItems]="totalItems"
+          [currentPage]="currentPage"
+          [pageSize]="5"
+          (pageSelected)="pageChanged($event)"
+        >
+        </app-pagination>
       </div>
       <table class="table" *ngIf="auditLogs">
         <thead>
@@ -29,10 +31,14 @@
           </tr>
         </tbody>
       </table>
-      <div style="float: right;">
-        <pagination [totalItems]="totalItems" [itemsPerPage]="5" [maxSize]="5" (pageChanged)="pageChanged($event)"
-          [boundaryLinks]="true" [(ngModel)]="currentPage">
-        </pagination>
+      <div style="float: right">
+        <app-pagination
+          [totalItems]="totalItems"
+          [currentPage]="currentPage"
+          [pageSize]="5"
+          (pageSelected)="pageChanged($event)"
+        >
+        </app-pagination>
       </div>
     </div>
   </div>

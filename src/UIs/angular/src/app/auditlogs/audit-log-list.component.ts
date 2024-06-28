@@ -3,7 +3,6 @@ import { IAuditLogEntry } from "./audit-log";
 import { Store } from "@ngrx/store";
 import { AuditLogState } from "./audit-log.reducer";
 import * as actions from "./audit-log.actions";
-import { PageChangedEvent } from "ngx-bootstrap/pagination";
 
 @Component({
   selector: "app-audit-log-list",
@@ -13,8 +12,8 @@ import { PageChangedEvent } from "ngx-bootstrap/pagination";
 export class AuditLogListComponent implements OnInit {
   auditLogs: IAuditLogEntry[] = [];
   totalItems: number = 0;
-  currentPage: number = 0;
-  constructor(private store: Store<{ auditLog: AuditLogState }>) { }
+  currentPage: number = 1;
+  constructor(private store: Store<{ auditLog: AuditLogState }>) {}
 
   ngOnInit(): void {
     this.store
@@ -24,17 +23,17 @@ export class AuditLogListComponent implements OnInit {
           this.auditLogs = auditLog.auditLogs;
           this.totalItems = auditLog.totalItems;
         },
-        error: (err) => { },
+        error: (err) => {},
       });
     this.store.dispatch(actions.fetchAuditLogsStart());
     this.store.dispatch(actions.fetchAuditLogs({ page: 1, pageSize: 5 }));
   }
 
-  pageChanged(event: PageChangedEvent): void {
-    if (this.currentPage !== event.page) {
+  pageChanged(page: number): void {
+    if (this.currentPage !== page) {
       this.store.dispatch(actions.fetchAuditLogsStart());
-      this.store.dispatch(actions.fetchAuditLogs({ page: event.page, pageSize: 5 }));
-      this.currentPage = event.page;
+      this.store.dispatch(actions.fetchAuditLogs({ page: page, pageSize: 5 }));
+      this.currentPage = page;
     }
   }
 }
