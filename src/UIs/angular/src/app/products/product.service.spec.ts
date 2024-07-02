@@ -1,13 +1,10 @@
 import { TestBed } from "@angular/core/testing";
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-  TestRequest,
-} from "@angular/common/http/testing";
+import { HttpTestingController, TestRequest, provideHttpClientTesting } from "@angular/common/http/testing";
 import { ProductService } from "./product.service";
 import { IProduct } from "./product";
 import { environment } from "src/environments/environment";
 import { GuidEmpty } from "../shared/constants";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("ProductService Tests", () => {
   let productService: ProductService;
@@ -48,9 +45,9 @@ describe("ProductService Tests", () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [ProductService],
-    });
+    imports: [],
+    providers: [ProductService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
     productService = TestBed.get(ProductService);
     httpTestingController = TestBed.get(HttpTestingController);

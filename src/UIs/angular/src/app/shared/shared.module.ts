@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 import { StarComponent } from "./star.component";
 import { AppendVersionPipe } from "./append-version.pipe";
@@ -27,7 +27,7 @@ import { PaginationComponent } from "./pagination.component";
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
   ],
+  providers: [provideHttpClient(withInterceptorsFromDi())],
 })
 export class SharedModule {}

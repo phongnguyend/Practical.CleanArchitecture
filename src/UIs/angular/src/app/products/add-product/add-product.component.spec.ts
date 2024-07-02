@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
 import { AddProductComponent } from "./add-product.component";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { RouterTestingModule } from "@angular/router/testing";
 import { FormsModule } from "@angular/forms";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("AddProductComponent", () => {
   let component: AddProductComponent;
@@ -11,9 +12,10 @@ describe("AddProductComponent", () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule, FormsModule],
-      declarations: [AddProductComponent]
-    }).compileComponents();
+    declarations: [AddProductComponent],
+    imports: [RouterTestingModule, FormsModule],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
   }));
 
   beforeEach(() => {
