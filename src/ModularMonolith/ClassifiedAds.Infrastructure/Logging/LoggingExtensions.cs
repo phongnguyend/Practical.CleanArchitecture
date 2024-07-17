@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Azure.Monitor.OpenTelemetry.Exporter;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,7 @@ using Serilog;
 using Serilog.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -54,6 +56,7 @@ public static class LoggingExtensions
                 return false;
             })
             .WriteTo.File(Path.Combine(logsPath, "log.txt"),
+                formatProvider: CultureInfo.InvariantCulture,
                 fileSizeLimitBytes: 10 * 1024 * 1024,
                 rollOnFileSizeLimit: true,
                 shared: true,
@@ -77,12 +80,12 @@ public static class LoggingExtensions
             options.LogLevel["Default"] = "Warning";
         }
 
-        options.File ??= new FileOptions
+        options.File ??= new LoggingOptions.FileOptions
         {
             MinimumLogEventLevel = Serilog.Events.LogEventLevel.Warning,
         };
 
-        options.EventLog ??= new EventLogOptions
+        options.EventLog ??= new LoggingOptions.EventLogOptions
         {
             IsEnabled = false,
         };
@@ -143,11 +146,23 @@ public static class LoggingExtensions
 
                 logging.AddOpenTelemetry(configure =>
                 {
-                    configure.SetResourceBuilder(resourceBuilder)
-                    .AddOtlpExporter(otlpOptions =>
+                    configure.SetResourceBuilder(resourceBuilder);
+
+                    if (options?.OpenTelemetry?.Otlp?.IsEnabled ?? false)
                     {
-                        otlpOptions.Endpoint = new Uri(options.OpenTelemetry.Otlp.Endpoint);
-                    });
+                        configure.AddOtlpExporter(otlpOptions =>
+                        {
+                            otlpOptions.Endpoint = new Uri(options.OpenTelemetry.Otlp.Endpoint);
+                        });
+                    }
+
+                    if (options?.OpenTelemetry?.AzureMonitor?.IsEnabled ?? false)
+                    {
+                        configure.AddAzureMonitorLogExporter(opts =>
+                        {
+                            opts.ConnectionString = options.OpenTelemetry.AzureMonitor.ConnectionString;
+                        });
+                    }
                 });
             }
 
@@ -197,11 +212,23 @@ public static class LoggingExtensions
 
                 logging.AddOpenTelemetry(configure =>
                 {
-                    configure.SetResourceBuilder(resourceBuilder)
-                    .AddOtlpExporter(otlpOptions =>
+                    configure.SetResourceBuilder(resourceBuilder);
+
+                    if (options?.OpenTelemetry?.Otlp?.IsEnabled ?? false)
                     {
-                        otlpOptions.Endpoint = new Uri(options.OpenTelemetry.Otlp.Endpoint);
-                    });
+                        configure.AddOtlpExporter(otlpOptions =>
+                        {
+                            otlpOptions.Endpoint = new Uri(options.OpenTelemetry.Otlp.Endpoint);
+                        });
+                    }
+
+                    if (options?.OpenTelemetry?.AzureMonitor?.IsEnabled ?? false)
+                    {
+                        configure.AddAzureMonitorLogExporter(opts =>
+                        {
+                            opts.ConnectionString = options.OpenTelemetry.AzureMonitor.ConnectionString;
+                        });
+                    }
                 });
             }
 
@@ -246,6 +273,7 @@ public static class LoggingExtensions
                 return false;
             })
             .WriteTo.File(Path.Combine(logsPath, "log.txt"),
+                formatProvider: CultureInfo.InvariantCulture,
                 fileSizeLimitBytes: 10 * 1024 * 1024,
                 rollOnFileSizeLimit: true,
                 shared: true,

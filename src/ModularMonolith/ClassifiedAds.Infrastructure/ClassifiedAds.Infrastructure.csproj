@@ -16,6 +16,7 @@
     <PackageReference Include="Azure.Messaging.EventHubs" Version="5.10.0" />
     <PackageReference Include="Azure.Messaging.EventHubs.Processor" Version="5.10.0" />
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.17.1" />
+    <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.2.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.19.1" />
     <PackageReference Include="Azure.Storage.Queues" Version="12.17.1" />
     <PackageReference Include="Castle.Core" Version="5.1.1" />

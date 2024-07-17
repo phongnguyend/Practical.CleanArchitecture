@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Azure.Monitor.OpenTelemetry.Exporter;
+using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -47,6 +48,14 @@ public static class OpenTelemetryExtensions
                         otlpOptions.Endpoint = new Uri(options.Otlp.Endpoint);
                     });
                 }
+
+                if (options?.AzureMonitor?.IsEnabled ?? false)
+                {
+                    builder.AddAzureMonitorTraceExporter(opts =>
+                    {
+                        opts.ConnectionString = options.AzureMonitor.ConnectionString;
+                    });
+                }
             })
             .WithMetrics(builder =>
             {
@@ -61,6 +70,14 @@ public static class OpenTelemetryExtensions
                     builder.AddOtlpExporter(otlpOptions =>
                     {
                         otlpOptions.Endpoint = new Uri(options.Otlp.Endpoint);
+                    });
+                }
+
+                if (options?.AzureMonitor?.IsEnabled ?? false)
+                {
+                    builder.AddAzureMonitorMetricExporter(opts =>
+                    {
+                        opts.ConnectionString = options.AzureMonitor.ConnectionString;
                     });
                 }
             });
