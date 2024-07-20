@@ -13,6 +13,8 @@ public class LoggingOptions
 
     public ApplicationInsightsOptions ApplicationInsights { get; set; }
 
+    public AwsCloudWatchOptions AwsCloudWatch { get; set; }
+
     public OpenTelemetryOptions OpenTelemetry { get; set; }
 
     public class FileOptions
@@ -34,6 +36,21 @@ public class LoggingOptions
         public bool IsEnabled { get; set; }
 
         public string InstrumentationKey { get; set; }
+    }
+
+    public class AwsCloudWatchOptions
+    {
+        public bool IsEnabled { get; set; }
+
+        public string LogGroup { get; set; }
+
+        public string LogStreamNamePrefix { get; set; }
+
+        public string Region { get; set; }
+
+        public string AccessKey { get; set; }
+
+        public string SecretKey { get; set; }
     }
 
     public class OpenTelemetryOptions

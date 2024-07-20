@@ -1,4 +1,7 @@
-﻿using Azure.Monitor.OpenTelemetry.Exporter;
+﻿using Amazon.Runtime;
+using AWS.Logger;
+using AWS.Logger.SeriLog;
+using Azure.Monitor.OpenTelemetry.Exporter;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -9,6 +12,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Exceptions;
+using Serilog.Formatting.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -63,6 +67,19 @@ public static class LoggingExtensions
                 flushToDiskInterval: TimeSpan.FromSeconds(1),
                 outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] [TraceId: {TraceId}] [MachineName: {MachineName}] [ProcessId: {ProcessId}] {Message:lj}{NewLine}{Exception}",
                 restrictedToMinimumLevel: options.File.MinimumLogEventLevel);
+
+        if (options?.AwsCloudWatch?.IsEnabled ?? false)
+        {
+            loggerConfiguration
+                .WriteTo.AWSSeriLog(new AWSLoggerConfig(options.AwsCloudWatch.LogGroup)
+                {
+                    LogStreamNamePrefix = options.AwsCloudWatch.LogStreamNamePrefix,
+                    Region = options.AwsCloudWatch.Region,
+                    Credentials = new BasicAWSCredentials(options.AwsCloudWatch.AccessKey, options.AwsCloudWatch.SecretKey),
+                },
+                iFormatProvider: null,
+                textFormatter: new JsonFormatter());
+        }
 
         Log.Logger = loggerConfiguration.CreateLogger();
     }
@@ -280,6 +297,19 @@ public static class LoggingExtensions
                 flushToDiskInterval: TimeSpan.FromSeconds(1),
                 outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] [TraceId: {TraceId}] [MachineName: {MachineName}] [ProcessId: {ProcessId}] {Message:lj}{NewLine}{Exception}",
                 restrictedToMinimumLevel: options.File.MinimumLogEventLevel);
+
+        if (options?.AwsCloudWatch?.IsEnabled ?? false)
+        {
+            loggerConfiguration
+            .WriteTo.AWSSeriLog(new AWSLoggerConfig(options.AwsCloudWatch.LogGroup)
+                {
+                    LogStreamName = options.AwsCloudWatch.LogStreamNamePrefix,
+                    Region = options.AwsCloudWatch.Region,
+                    Credentials = new BasicAWSCredentials(options.AwsCloudWatch.AccessKey, options.AwsCloudWatch.SecretKey),
+                },
+                iFormatProvider: null,
+                textFormatter: new JsonFormatter());
+        }
 
         Log.Logger = loggerConfiguration.CreateLogger();
     }
