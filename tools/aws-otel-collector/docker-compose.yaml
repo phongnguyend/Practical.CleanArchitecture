@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  aws-ot-collector:
+    image: public.ecr.aws/aws-observability/aws-otel-collector:latest
+    command: ["--config=/etc/otel-agent-config.yaml"]
+    environment:
+      - AWS_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    volumes:
+      - ./config.yaml:/etc/otel-agent-config.yaml
+    ports:
+      - "4317:4317"   # OTLP gRPC receiver
+networks:
+  default:
+    name: phongnguyend
+    external: true

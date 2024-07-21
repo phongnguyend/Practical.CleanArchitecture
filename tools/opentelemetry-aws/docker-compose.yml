@@ -1,0 +1,18 @@
+version: "3.7"
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    command: ["--config=/etc/otel-config.yaml"]
+    volumes:
+      - ./etc/otel-config.yaml:/etc/otel-config.yaml
+    environment:
+      - AWS_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    ports:
+      - "4317:4317"
+networks:
+  default:
+    name: phongnguyend
+    external: true
+

@@ -1,0 +1,41 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+processors:
+  batch: null
+exporters:
+  awscloudwatchlogs:
+    region: ap-southeast-1
+    log_group_name: ddddotnet/logs
+    log_stream_name: otel-stream
+    log_retention: 7
+  awsemf:
+    region: ap-southeast-1
+    log_retention: 7
+  awsxray:
+    region: ap-southeast-1
+service:
+  pipelines:
+    logs:
+      receivers:
+        - otlp
+      processors:
+        - batch
+      exporters:
+        - awscloudwatchlogs
+    metrics:
+      receivers:
+        - otlp
+      processors:
+        - batch
+      exporters:
+        - awsemf
+    traces:
+      receivers:
+        - otlp
+      processors:
+        - batch
+      exporters:
+        - awsxray
