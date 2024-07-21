@@ -18,7 +18,7 @@ services:
 
   # Collector
   otel-collector:
-    image: otel/opentelemetry-collector-contrib-dev:latest
+    image: otel/opentelemetry-collector-contrib:latest
     command: ["--config=/etc/otel-collector-config.yaml"]
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
@@ -59,12 +59,8 @@ services:
       - "5601:5601"
       - "9200:9200"
       - "5044:5044"
-    ulimits:
-      nofile:
-       soft: 65536
-       hard: 65536
 
 networks:
   default:
-    external:
-      name: phongnguyend
+    name: phongnguyend
+    external: true
