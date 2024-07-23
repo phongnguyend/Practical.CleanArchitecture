@@ -1,0 +1,11 @@
+title = "gitleaks config"
+
+[[rules]]
+	id = "Storage.Amazon.AccessKeyID"
+	description = "Storage.Amazon.AccessKeyID"
+	regex = '''Abc.{5,20}Xyz'''
+
+[[rules]]
+	id = "Storage.Amazon.SecretAccessKey"
+	description = "Storage.Amazon.SecretAccessKey"
+	regex = '''Abc.{5,100}Xyz'''
