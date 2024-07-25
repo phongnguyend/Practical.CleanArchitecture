@@ -1,11 +1,12 @@
-﻿using Serilog.Events;
+﻿using Microsoft.Extensions.Logging;
+using Serilog.Events;
 using System.Collections.Generic;
 
 namespace ClassifiedAds.Infrastructure.Logging;
 
 public class LoggingOptions
 {
-    public Dictionary<string, string> LogLevel { get; set; }
+    public Dictionary<string, LogLevel> LogLevel { get; set; }
 
     public FileOptions File { get; set; }
 

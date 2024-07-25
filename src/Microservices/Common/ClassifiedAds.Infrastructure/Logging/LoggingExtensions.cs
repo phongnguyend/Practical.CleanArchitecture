@@ -11,13 +11,13 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Serilog;
+using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Formatting.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 
 namespace ClassifiedAds.Infrastructure.Logging;
@@ -32,8 +32,20 @@ public static class LoggingExtensions
         Directory.CreateDirectory(logsPath);
         var loggerConfiguration = new LoggerConfiguration();
 
+        foreach (var logLevel in options.LogLevel)
+        {
+            var serilogLevel = ConvertToSerilogLevel(logLevel.Value);
+
+            if (logLevel.Key == "Default")
+            {
+                loggerConfiguration.MinimumLevel.Is(serilogLevel);
+                continue;
+            }
+
+            loggerConfiguration.MinimumLevel.Override(logLevel.Key, serilogLevel);
+        }
+
         loggerConfiguration = loggerConfiguration
-            .MinimumLevel.Debug()
             .Enrich.FromLogContext()
             .Enrich.WithMachineName()
             .Enrich.WithEnvironmentUserName()
@@ -46,18 +58,7 @@ public static class LoggingExtensions
             .Enrich.WithExceptionDetails()
             .Filter.ByIncludingOnly((logEvent) =>
             {
-                if (logEvent.Level >= options.File.MinimumLogEventLevel)
-                {
-                    var sourceContext = logEvent.Properties.ContainsKey("SourceContext")
-                         ? logEvent.Properties["SourceContext"].ToString()
-                         : null;
-
-                    var logLevel = GetLogLevel(sourceContext, options);
-
-                    return logEvent.Level >= logLevel;
-                }
-
-                return false;
+                return true;
             })
             .WriteTo.File(Path.Combine(logsPath, "log.txt"),
                 formatProvider: CultureInfo.InvariantCulture,
@@ -90,37 +91,24 @@ public static class LoggingExtensions
         {
         };
 
-        options.LogLevel ??= new Dictionary<string, string>();
+        options.LogLevel ??= new Dictionary<string, LogLevel>();
 
         if (!options.LogLevel.ContainsKey("Default"))
         {
-            options.LogLevel["Default"] = "Warning";
+            options.LogLevel["Default"] = LogLevel.Warning;
         }
 
         options.File ??= new LoggingOptions.FileOptions
         {
-            MinimumLogEventLevel = Serilog.Events.LogEventLevel.Warning,
+            MinimumLogEventLevel = LogEventLevel.Warning,
         };
 
         options.EventLog ??= new LoggingOptions.EventLogOptions
         {
             IsEnabled = false,
         };
+
         return options;
-    }
-
-    private static Serilog.Events.LogEventLevel GetLogLevel(string context, LoggingOptions options)
-    {
-        context = context.Replace("\"", string.Empty);
-        string level = "Default";
-        var matches = options.LogLevel.Keys.Where(k => context.StartsWith(k, StringComparison.OrdinalIgnoreCase));
-
-        if (matches.Any())
-        {
-            level = matches.Max();
-        }
-
-        return (Serilog.Events.LogEventLevel)Enum.Parse(typeof(Serilog.Events.LogEventLevel), options.LogLevel[level], true);
     }
 
     public static IWebHostBuilder UseClassifiedAdsLogger(this IWebHostBuilder builder, Func<IConfiguration, LoggingOptions> logOptions)
@@ -129,7 +117,6 @@ public static class LoggingExtensions
         {
             logging.Configure(options =>
             {
-                // options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId | ActivityTrackingOptions.TraceId | ActivityTrackingOptions.ParentId;
             });
 
             logging.AddAzureWebAppDiagnostics();
@@ -195,7 +182,6 @@ public static class LoggingExtensions
         {
             logging.Configure(options =>
             {
-                // options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId | ActivityTrackingOptions.TraceId | ActivityTrackingOptions.ParentId;
             });
 
             logging.AddAzureWebAppDiagnostics();
@@ -263,8 +249,20 @@ public static class LoggingExtensions
         Directory.CreateDirectory(logsPath);
         var loggerConfiguration = new LoggerConfiguration();
 
+        foreach (var logLevel in options.LogLevel)
+        {
+            var serilogLevel = ConvertToSerilogLevel(logLevel.Value);
+
+            if (logLevel.Key == "Default")
+            {
+                loggerConfiguration.MinimumLevel.Is(serilogLevel);
+                continue;
+            }
+
+            loggerConfiguration.MinimumLevel.Override(logLevel.Key, serilogLevel);
+        }
+
         loggerConfiguration = loggerConfiguration
-            .MinimumLevel.Debug()
             .Enrich.FromLogContext()
             .Enrich.WithMachineName()
             .Enrich.WithEnvironmentUserName()
@@ -276,18 +274,7 @@ public static class LoggingExtensions
             .Enrich.WithExceptionDetails()
             .Filter.ByIncludingOnly((logEvent) =>
             {
-                if (logEvent.Level >= options.File.MinimumLogEventLevel)
-                {
-                    var sourceContext = logEvent.Properties.ContainsKey("SourceContext")
-                         ? logEvent.Properties["SourceContext"].ToString()
-                         : null;
-
-                    var logLevel = GetLogLevel(sourceContext, options);
-
-                    return logEvent.Level >= logLevel;
-                }
-
-                return false;
+                return true;
             })
             .WriteTo.File(Path.Combine(logsPath, "log.txt"),
                 formatProvider: CultureInfo.InvariantCulture,
@@ -302,15 +289,30 @@ public static class LoggingExtensions
         {
             loggerConfiguration
             .WriteTo.AWSSeriLog(new AWSLoggerConfig(options.AwsCloudWatch.LogGroup)
-                {
-                    LogStreamName = options.AwsCloudWatch.LogStreamNamePrefix,
-                    Region = options.AwsCloudWatch.Region,
-                    Credentials = new BasicAWSCredentials(options.AwsCloudWatch.AccessKey, options.AwsCloudWatch.SecretKey),
-                },
+            {
+                LogStreamName = options.AwsCloudWatch.LogStreamNamePrefix,
+                Region = options.AwsCloudWatch.Region,
+                Credentials = new BasicAWSCredentials(options.AwsCloudWatch.AccessKey, options.AwsCloudWatch.SecretKey),
+            },
                 iFormatProvider: null,
                 textFormatter: new JsonFormatter());
         }
 
         Log.Logger = loggerConfiguration.CreateLogger();
+    }
+
+    private static LogEventLevel ConvertToSerilogLevel(LogLevel logLevel)
+    {
+        return logLevel switch
+        {
+            LogLevel.Trace => LogEventLevel.Verbose,
+            LogLevel.Debug => LogEventLevel.Debug,
+            LogLevel.Information => LogEventLevel.Information,
+            LogLevel.Warning => LogEventLevel.Warning,
+            LogLevel.Error => LogEventLevel.Error,
+            LogLevel.Critical => LogEventLevel.Fatal,
+            LogLevel.None => LogEventLevel.Fatal,
+            _ => LogEventLevel.Fatal
+        };
     }
 }
