@@ -4,6 +4,7 @@ using AWS.Logger.SeriLog;
 using Azure.Monitor.OpenTelemetry.Exporter;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.EventLog;
@@ -18,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace ClassifiedAds.Infrastructure.Logging;
@@ -125,12 +127,12 @@ public static class LoggingExtensions
 
             LoggingOptions options = SetDefault(logOptions(context.Configuration));
 
-            if (options.EventLog != null && options.EventLog.IsEnabled && OperatingSystem.IsWindows())
+            if (options.EventLog.IsEnabled && OperatingSystem.IsWindows())
             {
-                logging.AddEventLog(new EventLogSettings
+                logging.AddEventLog(configure =>
                 {
-                    LogName = options.EventLog.LogName,
-                    SourceName = options.EventLog.SourceName,
+                    configure.LogName = options.EventLog.LogName;
+                    configure.SourceName = options.EventLog.SourceName;
                 });
             }
 
@@ -190,13 +192,34 @@ public static class LoggingExtensions
 
             LoggingOptions options = SetDefault(logOptions(context.Configuration));
 
-            if (options.EventLog != null && options.EventLog.IsEnabled && OperatingSystem.IsWindows())
+            if (OperatingSystem.IsWindows())
             {
-                logging.AddEventLog(new EventLogSettings
+                if (options.EventLog.IsEnabled)
                 {
-                    LogName = options.EventLog.LogName,
-                    SourceName = options.EventLog.SourceName,
-                });
+                    logging.AddEventLog(configure =>
+                    {
+                        configure.LogName = options.EventLog.LogName;
+                        configure.SourceName = options.EventLog.SourceName;
+                    });
+
+                    logging.Services.Configure<LoggerFilterOptions>(options =>
+                    {
+                        // remove the logging.AddFilter<EventLogLoggerProvider>(level => level >= LogLevel.Warning); added by calling Host.CreateDefaultBuilder(args)
+                        // remember to review this in any future update
+                        var toRemove = options.Rules.FirstOrDefault(rule => rule.ProviderName == "Microsoft.Extensions.Logging.EventLog.EventLogLoggerProvider");
+
+                        if (toRemove is not null)
+                        {
+                            options.Rules.Remove(toRemove);
+                        }
+                    });
+                }
+                else
+                {
+                    // remove the EventLogLoggerProvider added by calling Host.CreateDefaultBuilder(args) or UseWindowsService()
+                    // remember to review this in any future update
+                    logging.RemoveEventLog();
+                }
             }
 
             if (options?.ApplicationInsights?.IsEnabled ?? false)
@@ -314,5 +337,20 @@ public static class LoggingExtensions
             LogLevel.None => LogEventLevel.Fatal,
             _ => LogEventLevel.Fatal
         };
+    }
+
+    public static ILoggingBuilder RemoveEventLog(this ILoggingBuilder builder)
+    {
+        var providers = builder.Services.Where(x => x.ServiceType == typeof(ILoggerProvider)).ToList();
+
+        foreach (var provider in providers)
+        {
+            if (provider.ImplementationType == typeof(EventLogLoggerProvider))
+            {
+                builder.Services.Remove(provider);
+            }
+        }
+
+        return builder;
     }
 }
