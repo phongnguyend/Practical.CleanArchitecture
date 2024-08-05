@@ -16,10 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: docker-compose build
+      - name: docker compose build
         run: |
           cd src/Microservices
-          docker-compose build
+          docker compose build
       - name: Log into Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
       - name: Tag and Push Images

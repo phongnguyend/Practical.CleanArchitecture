@@ -65,6 +65,25 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
                 arguments["x-single-active-consumer"] = true;
             }
 
+            if (_options.DeadLetter != null)
+            {
+                if (!string.IsNullOrEmpty(_options.DeadLetter.ExchangeName))
+                {
+                    arguments["x-dead-letter-exchange"] = _options.DeadLetter.ExchangeName;
+                }
+
+                if (!string.IsNullOrEmpty(_options.DeadLetter.RoutingKey))
+                {
+                    arguments["x-dead-letter-routing-key"] = _options.DeadLetter.RoutingKey;
+                }
+
+                if (_options.DeadLetter.AutomaticCreateEnabled && !string.IsNullOrEmpty(_options.DeadLetter.QueueName))
+                {
+                    _channel.QueueDeclare(_options.DeadLetter.QueueName, true, false, false, null);
+                    _channel.QueueBind(_options.DeadLetter.QueueName, _options.DeadLetter.ExchangeName, _options.DeadLetter.RoutingKey, null);
+                }
+            }
+
             arguments = arguments.Count == 0 ? null : arguments;
 
             _channel.QueueDeclare(_options.QueueName, true, false, false, arguments);
@@ -108,6 +127,8 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
             catch (Exception ex)
             {
                 // TODO: log here
+                await Task.Delay(1000);
+                _channel.BasicNack(deliveryTag: ea.DeliveryTag, multiple: false, requeue: _options.RequeueOnFailure);
             }
         };
 
