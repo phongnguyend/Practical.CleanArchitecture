@@ -144,6 +144,9 @@ visual_basic_preferred_modifier_order = Partial,Default,Private,Protected,Public
 ###############################
 [*.cs]
 
+# SA0001: XML comment analysis is disabled due to project configuration
+dotnet_diagnostic.SA0001.severity = none
+
 # SA1027: Use tabs correctly
 dotnet_diagnostic.SA1027.severity = none
 
