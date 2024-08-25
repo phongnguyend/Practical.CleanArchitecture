@@ -55,22 +55,15 @@
 
       ```  
 
-# Build & Run Locally using Tye
+# Build & Run Locally with Aspire
 
-- Install Tye
-  ```
-  dotnet tool install -g Microsoft.Tye --version "0.5.0-alpha.20555.1"
-  dotnet tool update -g Microsoft.Tye --version "0.5.0-alpha.20555.1"
-  ```
-
-- Install [Tye for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-tye)
-  
 - Run
   ```
-  tye run
+  dotnet build
+  dotnet run --project ClassifiedAds.AspireAppHost
   ```
   
-- Open Tye Dashboard: http://localhost:8000/
+- Open Aspire Dashboard: https://localhost:17063/login?t=xxx
 
 # Build & Deploy to Kubernetes
 
