@@ -45,7 +45,7 @@ public class GetAuditEntriesQueryHandler : IQueryHandler<GetAuditEntriesQuery, L
             query = query.AsNoTracking();
         }
 
-        var auditLogs = await query.ToListAsync();
+        var auditLogs = await query.ToListAsync(cancellationToken: cancellationToken);
         var users = await _dispatcher.DispatchAsync(new GetUsersQuery(), cancellationToken);
 
         var rs = auditLogs.Join(users, x => x.UserId, y => y.Id,

@@ -57,8 +57,8 @@ public static class NotificationModuleServiceCollectionExtensions
 
     public static IServiceCollection AddHostedServicesNotificationModule(this IServiceCollection services)
     {
-        services.AddHostedService<SendEmailWoker>();
-        services.AddHostedService<SendSmsWoker>();
+        services.AddHostedService<SendEmailWorker>();
+        services.AddHostedService<SendSmsWorker>();
 
         return services;
     }

@@ -52,12 +52,12 @@ public class GetPagedAuditEntriesQueryHandler : IQueryHandler<GetPagedAuditEntri
 
         var result = new Paged<AuditLogEntryDTO>
         {
-            TotalItems = await query.CountAsync(),
+            TotalItems = await query.CountAsync(cancellationToken: cancellationToken),
         };
 
         var auditLogs = await query.OrderByDescending(x => x.CreatedDateTime)
             .Paged(queryOptions.Page, queryOptions.PageSize)
-            .ToListAsync();
+            .ToListAsync(cancellationToken: cancellationToken);
 
         var users = await _dispatcher.DispatchAsync(new GetUsersQuery(), cancellationToken);
 

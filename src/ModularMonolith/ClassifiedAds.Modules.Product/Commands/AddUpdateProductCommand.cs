@@ -20,6 +20,6 @@ public class AddUpdateProductCommandHandler : ICommandHandler<AddUpdateProductCo
 
     public async Task HandleAsync(AddUpdateProductCommand command, CancellationToken cancellationToken = default)
     {
-        await _productService.AddOrUpdateAsync(command.Product);
+        await _productService.AddOrUpdateAsync(command.Product, cancellationToken);
     }
 }

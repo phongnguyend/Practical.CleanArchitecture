@@ -9,42 +9,42 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Notification.HostedServices;
 
-public class SendSmsWoker : BackgroundService
+public class SendSmsWorker : BackgroundService
 {
     private readonly IServiceProvider _services;
-    private readonly ILogger<SendSmsWoker> _logger;
+    private readonly ILogger<SendSmsWorker> _logger;
 
-    public SendSmsWoker(IServiceProvider services,
-        ILogger<SendSmsWoker> logger)
+    public SendSmsWorker(IServiceProvider services,
+        ILogger<SendSmsWorker> logger)
     {
         _services = services;
         _logger = logger;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         _logger.LogDebug("SendSmsService is starting.");
-        await DoWork(stoppingToken);
+        await DoWork(cancellationToken);
     }
 
-    private async Task DoWork(CancellationToken stoppingToken)
+    private async Task DoWork(CancellationToken cancellationToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
+        while (!cancellationToken.IsCancellationRequested)
         {
             _logger.LogDebug($"SendSms task doing background work.");
 
-            var sendSmsesCommand = new SendSmsMessagesCommand();
+            var sendSmsCommand = new SendSmsMessagesCommand();
 
             using (var scope = _services.CreateScope())
             {
                 var dispatcher = scope.ServiceProvider.GetRequiredService<Dispatcher>();
 
-                await dispatcher.DispatchAsync(sendSmsesCommand);
+                await dispatcher.DispatchAsync(sendSmsCommand, cancellationToken);
             }
 
-            if (sendSmsesCommand.SentMessagesCount == 0)
+            if (sendSmsCommand.SentMessagesCount == 0)
             {
-                await Task.Delay(10000, stoppingToken);
+                await Task.Delay(10000, cancellationToken);
             }
         }
 

@@ -20,7 +20,7 @@ public class HttpHealthCheck : IHealthCheck
     {
         try
         {
-            var response = await _httpClient.GetAsync(_uri);
+            var response = await _httpClient.GetAsync(_uri, cancellationToken);
             if (response.IsSuccessStatusCode)
             {
                 return HealthCheckResult.Healthy($"Uri: '{_uri}', StatusCode: '{response.StatusCode}'");

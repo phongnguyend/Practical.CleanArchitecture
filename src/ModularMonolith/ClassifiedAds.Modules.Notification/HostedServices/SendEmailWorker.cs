@@ -9,27 +9,27 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Notification.HostedServices;
 
-public class SendEmailWoker : BackgroundService
+public class SendEmailWorker : BackgroundService
 {
     private readonly IServiceProvider _services;
-    private readonly ILogger<SendEmailWoker> _logger;
+    private readonly ILogger<SendEmailWorker> _logger;
 
-    public SendEmailWoker(IServiceProvider services,
-        ILogger<SendEmailWoker> logger)
+    public SendEmailWorker(IServiceProvider services,
+        ILogger<SendEmailWorker> logger)
     {
         _services = services;
         _logger = logger;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         _logger.LogDebug("SendEmailService is starting.");
-        await DoWork(stoppingToken);
+        await DoWork(cancellationToken);
     }
 
-    private async Task DoWork(CancellationToken stoppingToken)
+    private async Task DoWork(CancellationToken cancellationToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
+        while (!cancellationToken.IsCancellationRequested)
         {
             _logger.LogDebug($"SendEmail task doing background work.");
 
@@ -39,12 +39,12 @@ public class SendEmailWoker : BackgroundService
             {
                 var dispatcher = scope.ServiceProvider.GetRequiredService<Dispatcher>();
 
-                await dispatcher.DispatchAsync(sendEmailsCommand);
+                await dispatcher.DispatchAsync(sendEmailsCommand, cancellationToken);
             }
 
             if (sendEmailsCommand.SentMessagesCount == 0)
             {
-                await Task.Delay(10000, stoppingToken);
+                await Task.Delay(10000, cancellationToken);
             }
         }
 

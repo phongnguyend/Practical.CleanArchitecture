@@ -76,7 +76,7 @@ public class SendEmailMessagesCommandHandler : ICommandHandler<SendEmailMessages
                         BCCs = email.BCCs,
                         Subject = email.Subject,
                         Body = email.Body,
-                    });
+                    }, cancellationToken);
 
                     email.SentDateTime = _dateTimeProvider.OffsetNow;
                     email.Log += log + "Succeed.";
@@ -96,7 +96,7 @@ public class SendEmailMessagesCommandHandler : ICommandHandler<SendEmailMessages
                     email.MaxAttemptCount = defaultAttemptCount;
                 }
 
-                await _repository.UnitOfWork.SaveChangesAsync();
+                await _repository.UnitOfWork.SaveChangesAsync(cancellationToken);
             }
         }
         else
