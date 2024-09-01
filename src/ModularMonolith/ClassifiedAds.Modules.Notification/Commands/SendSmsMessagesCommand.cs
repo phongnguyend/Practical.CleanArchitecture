@@ -72,7 +72,7 @@ public class SendSmsMessagesCommandHandler : ICommandHandler<SendSmsMessagesComm
                     {
                         Message = sms.Message,
                         PhoneNumber = sms.PhoneNumber,
-                    });
+                    }, cancellationToken);
 
                     sms.SentDateTime = _dateTimeProvider.OffsetNow;
                     sms.Log += log + "Succeed.";
@@ -92,7 +92,7 @@ public class SendSmsMessagesCommandHandler : ICommandHandler<SendSmsMessagesComm
                     sms.MaxAttemptCount = defaultAttemptCount;
                 }
 
-                await _repository.UnitOfWork.SaveChangesAsync();
+                await _repository.UnitOfWork.SaveChangesAsync(cancellationToken);
             }
         }
         else

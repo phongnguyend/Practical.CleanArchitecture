@@ -21,17 +21,17 @@ public class PublishEventWorker : BackgroundService
         _logger = logger;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        _logger.LogDebug("PushlishEventWorker is starting.");
-        await DoWork(stoppingToken);
+        _logger.LogDebug("PublishEventWorker is starting.");
+        await DoWork(cancellationToken);
     }
 
-    private async Task DoWork(CancellationToken stoppingToken)
+    private async Task DoWork(CancellationToken cancellationToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
+        while (!cancellationToken.IsCancellationRequested)
         {
-            _logger.LogDebug($"PushlishEvent task doing background work.");
+            _logger.LogDebug($"PublishEventWorker task doing background work.");
 
             try
             {
@@ -41,21 +41,21 @@ public class PublishEventWorker : BackgroundService
                 {
                     var dispatcher = scope.ServiceProvider.GetRequiredService<Dispatcher>();
 
-                    await dispatcher.DispatchAsync(publishEventsCommand);
+                    await dispatcher.DispatchAsync(publishEventsCommand, cancellationToken);
                 }
 
                 if (publishEventsCommand.SentEventsCount == 0)
                 {
-                    await Task.Delay(10000, stoppingToken);
+                    await Task.Delay(10000, cancellationToken);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"");
-                await Task.Delay(10000, stoppingToken);
+                await Task.Delay(10000, cancellationToken);
             }
         }
 
-        _logger.LogDebug($"PushlishEventWorker background task is stopping.");
+        _logger.LogDebug($"PublishEventWorker background task is stopping.");
     }
 }

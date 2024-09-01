@@ -127,7 +127,7 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
             catch (Exception ex)
             {
                 // TODO: log here
-                await Task.Delay(1000);
+                await Task.Delay(1000, cancellationToken);
                 _channel.BasicNack(deliveryTag: ea.DeliveryTag, multiple: false, requeue: _options.RequeueOnFailure);
             }
         };

@@ -56,7 +56,7 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
 
             eventLog.Published = true;
             eventLog.UpdatedDateTime = _dateTimeProvider.OffsetNow;
-            await _outboxEventRepository.UnitOfWork.SaveChangesAsync();
+            await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         command.SentEventsCount = events.Count;

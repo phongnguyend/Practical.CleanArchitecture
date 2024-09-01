@@ -22,7 +22,7 @@ public class AddUpdateRoleCommandHandler : ICommandHandler<AddUpdateRoleCommand>
 
     public async Task HandleAsync(AddUpdateRoleCommand command, CancellationToken cancellationToken = default)
     {
-        await _roleRepository.AddOrUpdateAsync(command.Role);
+        await _roleRepository.AddOrUpdateAsync(command.Role, cancellationToken);
         await _roleRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

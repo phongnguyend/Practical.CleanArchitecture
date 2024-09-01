@@ -36,7 +36,7 @@ public class ProductCreatedEventHandler : IDomainEventHandler<EntityCreatedEvent
             Log = domainEvent.Entity.AsJsonString(),
         };
 
-        await _auditLogRepository.AddOrUpdateAsync(auditLog);
+        await _auditLogRepository.AddOrUpdateAsync(auditLog, cancellationToken);
         await _auditLogRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent

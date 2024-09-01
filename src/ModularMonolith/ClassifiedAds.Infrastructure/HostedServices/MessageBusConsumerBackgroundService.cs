@@ -19,9 +19,9 @@ public sealed class MessageBusConsumerBackgroundService<TConsumer, T> : Backgrou
         _messageBus = messageBus;
     }
 
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        _messageBus.ReceiveAsync<TConsumer, T>(stoppingToken);
+        _messageBus.ReceiveAsync<TConsumer, T>(cancellationToken);
         return Task.CompletedTask;
     }
 }

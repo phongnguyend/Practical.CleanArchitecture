@@ -21,11 +21,11 @@ public class SyncUsersWorker : BackgroundService
         _logger = logger;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         _logger.LogDebug("SyncUsersWorker is starting.");
 
-        while (!stoppingToken.IsCancellationRequested)
+        while (!cancellationToken.IsCancellationRequested)
         {
             _logger.LogDebug($"SyncUsersWorker doing background work.");
 
@@ -35,12 +35,12 @@ public class SyncUsersWorker : BackgroundService
             {
                 var dispatcher = scope.ServiceProvider.GetRequiredService<Dispatcher>();
 
-                await dispatcher.DispatchAsync(syncUsersCommand, stoppingToken);
+                await dispatcher.DispatchAsync(syncUsersCommand, cancellationToken);
             }
 
             if (syncUsersCommand.SyncedUsersCount == 0)
             {
-                await Task.Delay(10000, stoppingToken);
+                await Task.Delay(10000, cancellationToken);
             }
         }
 
