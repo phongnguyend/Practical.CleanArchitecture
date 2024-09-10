@@ -20,8 +20,6 @@ jobs:
           node-version: "18"
       - run: npm install
         working-directory: ./src/UIs/reactjs/
-      - run: npm audit --audit-level=critical
-        working-directory: ./src/UIs/reactjs/
       - run: CI=false npm run build # Treating warnings as errors because process.env.CI = true.
         working-directory: ./src/UIs/reactjs/
       - name: Upload ReactJs

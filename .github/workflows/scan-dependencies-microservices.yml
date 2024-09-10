@@ -1,0 +1,36 @@
+name: Scan Dependencies Microservices
+
+on:
+  push:
+    paths: 
+      - 'src/Microservices/**'
+  pull_request:
+    paths: 
+      - 'src/Microservices/**'
+  schedule:
+    - cron: '0 * * * *'
+
+jobs:
+  build:
+
+    defaults: 
+      run:
+        working-directory: src/Microservices
+        
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 8.0.100
+
+    - name: Install Aspire
+      run: dotnet workload install aspire
+
+    - name: dotnet restore
+      run: dotnet restore
+
+    - name: dotnet list package --vulnerable
+      run: dotnet list package --vulnerable  
