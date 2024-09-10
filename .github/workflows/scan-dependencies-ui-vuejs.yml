@@ -22,3 +22,4 @@ jobs:
         with:
           node-version: "18"
       - run: npm audit --audit-level=critical
+        working-directory: ./src/UIs/vuejs/
