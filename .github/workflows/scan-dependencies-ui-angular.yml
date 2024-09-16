@@ -8,7 +8,7 @@ on:
     paths:
       - "src/UIs/angular/**"
   schedule:
-    - cron: '0 * * * *'
+    - cron: '0 0 * * *'
 
 env:
   WORKING_DIRECTORY: ./src/UIs/angular/
