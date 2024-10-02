@@ -23,7 +23,7 @@ jobs:
       - run: CI=false npm run build # Treating warnings as errors because process.env.CI = true.
         working-directory: ./src/UIs/reactjs/
       - name: Upload ReactJs
-        uses: actions/upload-artifact@v1.0.0
+        uses: actions/upload-artifact@v4
         with:
           name: ReactJs
           path: ./src/UIs/reactjs/dist
