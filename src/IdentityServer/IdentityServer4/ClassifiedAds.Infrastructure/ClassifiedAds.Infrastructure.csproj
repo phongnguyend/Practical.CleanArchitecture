@@ -11,7 +11,7 @@
     <PackageReference Include="Azure.Communication.Sms" Version="1.0.1" />
     <PackageReference Include="Azure.Data.AppConfiguration" Version="1.2.0" />
     <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.2.1" />
-    <PackageReference Include="Azure.Identity" Version="1.5.0" />
+    <PackageReference Include="Azure.Identity" Version="1.11.4" />
     <PackageReference Include="Castle.Core" Version="4.4.1" />
     <PackageReference Include="CryptographyHelper" Version="1.0.0" />
     <PackageReference Include="Dapper.StrongName" Version="2.0.123" />
