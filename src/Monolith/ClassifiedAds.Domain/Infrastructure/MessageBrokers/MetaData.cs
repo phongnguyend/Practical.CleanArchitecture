@@ -13,6 +13,4 @@ public class MetaData
     public DateTimeOffset? CreationDateTime { get; set; }
 
     public DateTimeOffset? EnqueuedDateTime { get; set; }
-
-    public string AccessToken { get; set; }
 }
