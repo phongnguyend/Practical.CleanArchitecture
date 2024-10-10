@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.Csv;
+﻿using ClassifiedAds.Application.Products.DTOs;
+using ClassifiedAds.CrossCuttingConcerns.Csv;
 using ClassifiedAds.CrossCuttingConcerns.Excel;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Identity;
@@ -228,8 +229,8 @@ services.AddHtmlGenerator();
 services.AddDinkToPdfConverter();
 services.AddClassifiedAdsLocalization();
 
-services.AddScoped(typeof(ICsvReader<>), typeof(CsvReader<>));
-services.AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>));
+services.AddScoped<ICsvReader<ImportProductsFromCsv>, ImportProductsFromCsvHandler>();
+services.AddScoped<ICsvWriter<ExportProductsToCsv>, ExportProductsToCsvHandler>();
 services.AddScoped<IExcelReader<List<ConfigurationEntry>>, ConfigurationEntryExcelReader>();
 services.AddScoped<IExcelWriter<List<ConfigurationEntry>>, ConfigurationEntryExcelWriter>();
 

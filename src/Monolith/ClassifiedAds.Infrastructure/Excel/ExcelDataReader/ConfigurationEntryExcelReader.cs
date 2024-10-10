@@ -5,12 +5,22 @@ using ExcelDataReader;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.Excel.ExcelDataReader;
 
 public class ConfigurationEntryExcelReader : IExcelReader<List<ConfigurationEntry>>
 {
-    public List<ConfigurationEntry> Read(Stream stream)
+    private static Dictionary<int, string> GetCorrectHeaders()
+    {
+        return new Dictionary<int, string>
+        {
+            { 0, "Key" },
+            { 1, "Value" },
+        };
+    }
+
+    public Task<List<ConfigurationEntry>> ReadAsync(Stream stream)
     {
         var rows = new List<ConfigurationEntry>();
         int headerIndex = 0;
@@ -63,15 +73,6 @@ public class ConfigurationEntryExcelReader : IExcelReader<List<ConfigurationEntr
             while (reader.NextResult());
         }
 
-        return rows;
-    }
-
-    private static Dictionary<int, string> GetCorrectHeaders()
-    {
-        return new Dictionary<int, string>
-        {
-            { 0, "Key" },
-            { 1, "Value" },
-        };
+        return Task.FromResult(rows);
     }
 }

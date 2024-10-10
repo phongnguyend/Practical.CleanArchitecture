@@ -3,12 +3,13 @@ using ClassifiedAds.Domain.Entities;
 using ClosedXML.Excel;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.Excel.ClosedXML;
 
 public class ConfigurationEntryExcelWriter : IExcelWriter<List<ConfigurationEntry>>
 {
-    public void Write(List<ConfigurationEntry> data, Stream stream)
+    public Task WriteAsync(List<ConfigurationEntry> data, Stream stream)
     {
         using var workbook = new XLWorkbook();
         var worksheet = workbook.Worksheets.Add("Sheet1");
@@ -26,5 +27,7 @@ public class ConfigurationEntryExcelWriter : IExcelWriter<List<ConfigurationEntr
         }
 
         workbook.SaveAs(stream);
+
+        return Task.CompletedTask;
     }
 }

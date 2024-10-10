@@ -1,8 +1,9 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.CrossCuttingConcerns.Excel;
 
 public interface IExcelWriter<T>
 {
-    void Write(T data, Stream stream);
+    Task WriteAsync(T data, Stream stream);
 }

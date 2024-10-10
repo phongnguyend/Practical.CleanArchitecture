@@ -1,8 +1,9 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.CrossCuttingConcerns.Excel;
 
 public interface IExcelReader<T>
 {
-    T Read(Stream stream);
+    Task<T> ReadAsync(Stream stream);
 }

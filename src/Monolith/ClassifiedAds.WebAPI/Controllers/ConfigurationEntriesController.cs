@@ -131,15 +131,15 @@ public class ConfigurationEntriesController : ControllerBase
     {
         var entries = await _dispatcher.DispatchAsync(new GetEntititesQuery<ConfigurationEntry>());
         using var stream = new MemoryStream();
-        _configurationEntriesExcelWriter.Write(entries, stream);
+        await _configurationEntriesExcelWriter.WriteAsync(entries, stream);
         return File(stream.ToArray(), MediaTypeNames.Application.Octet, "ConfigurationEntries.xlsx");
     }
 
     [HttpPost("ImportExcel")]
-    public IActionResult ImportExcel([FromForm] UploadFileModel model)
+    public async Task<IActionResult> ImportExcel([FromForm] UploadFileModel model)
     {
         using var stream = model.FormFile.OpenReadStream();
-        var entries = _configurationEntriesExcelReader.Read(stream);
+        var entries = await _configurationEntriesExcelReader.ReadAsync(stream);
 
         // TODO: import to database
         return Ok(entries);
