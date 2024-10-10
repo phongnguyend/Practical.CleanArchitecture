@@ -1,7 +1,7 @@
-﻿using ClassifiedAds.Application.Products.DTOs;
+﻿using ClassifiedAds.Application.ConfigurationEntries.DTOs;
+using ClassifiedAds.Application.Products.DTOs;
 using ClassifiedAds.CrossCuttingConcerns.Csv;
 using ClassifiedAds.CrossCuttingConcerns.Excel;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Infrastructure.Csv;
 using ClassifiedAds.Infrastructure.Excel.ClosedXML;
@@ -231,8 +231,8 @@ services.AddClassifiedAdsLocalization();
 
 services.AddScoped<ICsvReader<ImportProductsFromCsv>, ImportProductsFromCsvHandler>();
 services.AddScoped<ICsvWriter<ExportProductsToCsv>, ExportProductsToCsvHandler>();
-services.AddScoped<IExcelReader<List<ConfigurationEntry>>, ConfigurationEntryExcelReader>();
-services.AddScoped<IExcelWriter<List<ConfigurationEntry>>, ConfigurationEntryExcelWriter>();
+services.AddScoped<IExcelReader<ImportConfigurationEntriesFromExcel>, ImportConfigurationEntriesFromExcelHandler>();
+services.AddScoped<IExcelWriter<ExportConfigurationEntriesToExcel>, ExportConfigurationEntriesToExcelHandler>();
 
 // Configure the HTTP request pipeline.
 var app = builder.Build();

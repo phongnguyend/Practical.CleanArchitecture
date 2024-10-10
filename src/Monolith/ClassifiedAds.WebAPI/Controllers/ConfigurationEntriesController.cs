@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Application;
+using ClassifiedAds.Application.ConfigurationEntries.DTOs;
 using ClassifiedAds.CrossCuttingConcerns.Excel;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Authorization;
@@ -29,14 +30,14 @@ public class ConfigurationEntriesController : ControllerBase
     private readonly Dispatcher _dispatcher;
     private readonly ILogger _logger;
     private readonly AppSettings _appSettings;
-    private readonly IExcelWriter<List<ConfigurationEntry>> _configurationEntriesExcelWriter;
-    private readonly IExcelReader<List<ConfigurationEntry>> _configurationEntriesExcelReader;
+    private readonly IExcelWriter<ExportConfigurationEntriesToExcel> _configurationEntriesExcelWriter;
+    private readonly IExcelReader<ImportConfigurationEntriesFromExcel> _configurationEntriesExcelReader;
 
     public ConfigurationEntriesController(Dispatcher dispatcher,
         ILogger<ConfigurationEntriesController> logger,
         IOptionsSnapshot<AppSettings> appSettings,
-        IExcelWriter<List<ConfigurationEntry>> configurationEntriesExcelWriter,
-        IExcelReader<List<ConfigurationEntry>> configurationEntriesExcelReader)
+        IExcelWriter<ExportConfigurationEntriesToExcel> configurationEntriesExcelWriter,
+        IExcelReader<ImportConfigurationEntriesFromExcel> configurationEntriesExcelReader)
     {
         _dispatcher = dispatcher;
         _logger = logger;
@@ -131,7 +132,7 @@ public class ConfigurationEntriesController : ControllerBase
     {
         var entries = await _dispatcher.DispatchAsync(new GetEntititesQuery<ConfigurationEntry>());
         using var stream = new MemoryStream();
-        await _configurationEntriesExcelWriter.WriteAsync(entries, stream);
+        await _configurationEntriesExcelWriter.WriteAsync(new ExportConfigurationEntriesToExcel { ConfigurationEntries = entries }, stream);
         return File(stream.ToArray(), MediaTypeNames.Application.Octet, "ConfigurationEntries.xlsx");
     }
 
@@ -142,6 +143,6 @@ public class ConfigurationEntriesController : ControllerBase
         var entries = await _configurationEntriesExcelReader.ReadAsync(stream);
 
         // TODO: import to database
-        return Ok(entries);
+        return Ok(entries.ConfigurationEntries);
     }
 }

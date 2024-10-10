@@ -1,15 +1,16 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.Excel;
+﻿using ClassifiedAds.Application.ConfigurationEntries.DTOs;
+using ClassifiedAds.CrossCuttingConcerns.Excel;
 using ClassifiedAds.CrossCuttingConcerns.Exceptions;
 using ClassifiedAds.Domain.Entities;
-using ClosedXML.Excel;
+using OfficeOpenXml;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Infrastructure.Excel.ClosedXML;
+namespace ClassifiedAds.Infrastructure.Excel.EPPlus;
 
-public class ConfigurationEntryExcelReader : IExcelReader<List<ConfigurationEntry>>
+public class ImportConfigurationEntriesFromExcelHandler : IExcelReader<ImportConfigurationEntriesFromExcel>
 {
     private static Dictionary<string, string> GetCorrectHeaders()
     {
@@ -20,10 +21,10 @@ public class ConfigurationEntryExcelReader : IExcelReader<List<ConfigurationEntr
         };
     }
 
-    public Task<List<ConfigurationEntry>> ReadAsync(Stream stream)
+    public Task<ImportConfigurationEntriesFromExcel> ReadAsync(Stream stream)
     {
-        using var workbook = new XLWorkbook(stream);
-        var worksheet = workbook.Worksheets.First();
+        using var pck = new ExcelPackage(stream);
+        var worksheet = pck.Workbook.Worksheets.First();
 
         string result = worksheet.VerifyHeader(1, GetCorrectHeaders());
         if (!string.IsNullOrEmpty(result))
@@ -33,17 +34,17 @@ public class ConfigurationEntryExcelReader : IExcelReader<List<ConfigurationEntr
 
         var rows = new List<ConfigurationEntry>();
 
-        for (var i = 2; i <= worksheet.LastRowUsed().RowNumber(); i++)
+        for (var i = 2; i <= worksheet.Dimension.End.Row; i++)
         {
             var row = new ConfigurationEntry
             {
-                Key = worksheet.Cell("A" + i).GetString(),
-                Value = worksheet.Cell("B" + i).GetString(),
+                Key = worksheet.GetCellValue("A", i),
+                Value = worksheet.GetCellValue("B", i),
             };
 
             rows.Add(row);
         }
 
-        return Task.FromResult(rows);
+        return Task.FromResult(new ImportConfigurationEntriesFromExcel { ConfigurationEntries = rows });
     }
 }

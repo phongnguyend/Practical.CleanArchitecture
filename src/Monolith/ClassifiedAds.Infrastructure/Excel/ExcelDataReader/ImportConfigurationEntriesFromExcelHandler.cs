@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.Excel;
+﻿using ClassifiedAds.Application.ConfigurationEntries.DTOs;
+using ClassifiedAds.CrossCuttingConcerns.Excel;
 using ClassifiedAds.CrossCuttingConcerns.Exceptions;
 using ClassifiedAds.Domain.Entities;
 using ExcelDataReader;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.Excel.ExcelDataReader;
 
-public class ConfigurationEntryExcelReader : IExcelReader<List<ConfigurationEntry>>
+public class ImportConfigurationEntriesFromExcelHandler : IExcelReader<ImportConfigurationEntriesFromExcel>
 {
     private static Dictionary<int, string> GetCorrectHeaders()
     {
@@ -20,7 +21,7 @@ public class ConfigurationEntryExcelReader : IExcelReader<List<ConfigurationEntr
         };
     }
 
-    public Task<List<ConfigurationEntry>> ReadAsync(Stream stream)
+    public Task<ImportConfigurationEntriesFromExcel> ReadAsync(Stream stream)
     {
         var rows = new List<ConfigurationEntry>();
         int headerIndex = 0;
@@ -73,6 +74,6 @@ public class ConfigurationEntryExcelReader : IExcelReader<List<ConfigurationEntr
             while (reader.NextResult());
         }
 
-        return Task.FromResult(rows);
+        return Task.FromResult(new ImportConfigurationEntriesFromExcel { ConfigurationEntries = rows });
     }
 }
