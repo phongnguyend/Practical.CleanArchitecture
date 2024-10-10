@@ -225,8 +225,8 @@ services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 services.AddScoped<ICurrentUser, CurrentWebUser>();
 
 services.AddStorageManager(appSettings.Storage);
-services.AddHtmlGenerator();
-services.AddDinkToPdfConverter();
+services.AddHtmlWriters();
+services.AddDinkToPdfWriters();
 services.AddClassifiedAdsLocalization();
 
 services.AddScoped<ICsvReader<ImportProductsFromCsv>, ImportProductsFromCsvHandler>();

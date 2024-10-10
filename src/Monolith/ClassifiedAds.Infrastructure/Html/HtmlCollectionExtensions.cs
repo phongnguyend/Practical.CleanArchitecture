@@ -1,13 +1,14 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.HtmlGenerator;
-using ClassifiedAds.Infrastructure.HtmlGenerators;
+﻿using ClassifiedAds.Application.Products.DTOs;
+using ClassifiedAds.CrossCuttingConcerns.Html;
+using ClassifiedAds.Infrastructure.Html;
 using RazorLight;
 using System;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-public static class HtmlGeneratorCollectionExtensions
+public static class HtmlCollectionExtensions
 {
-    public static IServiceCollection AddHtmlGenerator(this IServiceCollection services)
+    public static IServiceCollection AddHtmlWriters(this IServiceCollection services)
     {
         var engine = new RazorLightEngineBuilder()
                .UseFileSystemProject(Environment.CurrentDirectory)
@@ -15,7 +16,7 @@ public static class HtmlGeneratorCollectionExtensions
                .Build();
 
         services.AddSingleton<IRazorLightEngine>(engine);
-        services.AddSingleton<IHtmlGenerator, HtmlGenerator>();
+        services.AddSingleton<IHtmlWriter<ExportProductsToHtml>, ExportProductsToHtmlHandler>();
 
         return services;
     }

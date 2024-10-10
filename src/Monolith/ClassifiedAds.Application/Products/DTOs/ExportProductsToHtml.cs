@@ -1,10 +1,10 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.Csv;
+﻿using ClassifiedAds.CrossCuttingConcerns.Html;
 using ClassifiedAds.Domain.Entities;
 using System.Collections.Generic;
 
 namespace ClassifiedAds.Application.Products.DTOs;
 
-public record ExportProductsToCsv : ICsvRequest
+public record ExportProductsToHtml : IHtmlRequest
 {
     public List<Product> Products { get; set; }
 }
