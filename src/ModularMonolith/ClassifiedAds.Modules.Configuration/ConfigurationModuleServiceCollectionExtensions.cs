@@ -3,12 +3,12 @@ using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Modules.Configuration.Authorization;
 using ClassifiedAds.Modules.Configuration.ConfigurationOptions;
 using ClassifiedAds.Modules.Configuration.Entities;
+using ClassifiedAds.Modules.Configuration.Excel;
 using ClassifiedAds.Modules.Configuration.Excel.ClosedXML;
 using ClassifiedAds.Modules.Configuration.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -35,8 +35,8 @@ public static class ConfigurationModuleServiceCollectionExtensions
 
         services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
 
-        services.AddScoped<IExcelReader<List<ConfigurationEntry>>, ConfigurationEntryExcelReader>();
-        services.AddScoped<IExcelWriter<List<ConfigurationEntry>>, ConfigurationEntryExcelWriter>();
+        services.AddScoped<IExcelReader<ImportConfigurationEntriesFromExcel>, ImportConfigurationEntriesFromExcelHandler>();
+        services.AddScoped<IExcelWriter<ExportConfigurationEntriesToExcel>, ExportConfigurationEntriesToExcelHandler>();
 
         return services;
     }

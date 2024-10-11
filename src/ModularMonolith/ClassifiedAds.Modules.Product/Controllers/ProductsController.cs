@@ -5,6 +5,7 @@ using ClassifiedAds.CrossCuttingConcerns.HtmlGenerator;
 using ClassifiedAds.CrossCuttingConcerns.PdfConverter;
 using ClassifiedAds.Modules.Product.Authorization;
 using ClassifiedAds.Modules.Product.Commands;
+using ClassifiedAds.Modules.Product.Csv;
 using ClassifiedAds.Modules.Product.Models;
 using ClassifiedAds.Modules.Product.Queries;
 using ClassifiedAds.Modules.Product.RateLimiterPolicies;
@@ -34,15 +35,15 @@ public class ProductsController : ControllerBase
     private readonly ILogger _logger;
     private readonly IHtmlGenerator _htmlGenerator;
     private readonly IPdfConverter _pdfConverter;
-    private readonly ICsvWriter<ProductModel> _productCsvWriter;
-    private readonly ICsvReader<ProductModel> _productCsvReader;
+    private readonly ICsvWriter<ExportProductsToCsv> _productCsvWriter;
+    private readonly ICsvReader<ImportProductsFromCsv> _productCsvReader;
 
     public ProductsController(Dispatcher dispatcher,
         ILogger<ProductsController> logger,
         IHtmlGenerator htmlGenerator,
         IPdfConverter pdfConverter,
-        ICsvWriter<ProductModel> productCsvWriter,
-        ICsvReader<ProductModel> productCsvReader)
+        ICsvWriter<ExportProductsToCsv> productCsvWriter,
+        ICsvReader<ImportProductsFromCsv> productCsvReader)
     {
         _dispatcher = dispatcher;
         _logger = logger;
@@ -170,19 +171,18 @@ public class ProductsController : ControllerBase
     public async Task<IActionResult> ExportAsCsv()
     {
         var products = await _dispatcher.DispatchAsync(new GetProductsQuery());
-        var model = products.ToModels();
         using var stream = new MemoryStream();
-        _productCsvWriter.Write(model, stream);
+        await _productCsvWriter.WriteAsync(new ExportProductsToCsv { Products = products }, stream);
         return File(stream.ToArray(), MediaTypeNames.Application.Octet, "Products.csv");
     }
 
     [HttpPost("importcsv")]
-    public IActionResult ImportCsv([FromForm] UploadFileModel model)
+    public async Task<IActionResult> ImportCsv([FromForm] UploadFileModel model)
     {
         using var stream = model.FormFile.OpenReadStream();
-        var products = _productCsvReader.Read(stream);
+        var result = await _productCsvReader.ReadAsync(stream);
 
         // TODO: import to database
-        return Ok(products);
+        return Ok(result.Products);
     }
 }

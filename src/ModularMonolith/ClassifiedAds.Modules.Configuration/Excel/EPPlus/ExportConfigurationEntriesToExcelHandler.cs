@@ -1,14 +1,13 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Excel;
-using ClassifiedAds.Modules.Configuration.Entities;
 using OfficeOpenXml;
-using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Configuration.Excel.EPPlus;
 
-public class ConfigurationEntryExcelWriter : IExcelWriter<List<ConfigurationEntry>>
+public class ExportConfigurationEntriesToExcelHandler : IExcelWriter<ExportConfigurationEntriesToExcel>
 {
-    public void Write(List<ConfigurationEntry> data, Stream stream)
+    public Task WriteAsync(ExportConfigurationEntriesToExcel data, Stream stream)
     {
         using var pck = new ExcelPackage();
         var worksheet = pck.Workbook.Worksheets.Add("Sheet1");
@@ -18,7 +17,7 @@ public class ConfigurationEntryExcelWriter : IExcelWriter<List<ConfigurationEntr
         worksheet.Cells["A1:B1"].Style.Font.Bold = true;
 
         int i = 2;
-        foreach (var row in data)
+        foreach (var row in data.ConfigurationEntries)
         {
             worksheet.Cells["A" + i].Value = row.Key;
             worksheet.Cells["B" + i].Value = row.Value;
@@ -26,5 +25,7 @@ public class ConfigurationEntryExcelWriter : IExcelWriter<List<ConfigurationEntr
         }
 
         pck.SaveAs(stream);
+
+        return Task.CompletedTask;
     }
 }

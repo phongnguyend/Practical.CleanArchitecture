@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.CrossCuttingConcerns.Csv;
 
 public interface ICsvReader<T>
+    where T : ICsvResponse
 {
-    IEnumerable<T> Read(Stream stream);
+    Task<T> ReadAsync(Stream stream);
+}
+
+public interface ICsvResponse
+{
 }

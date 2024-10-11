@@ -1,9 +1,9 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Csv;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Infrastructure.Csv;
 using ClassifiedAds.Modules.Product.Authorization;
 using ClassifiedAds.Modules.Product.ConfigurationOptions;
+using ClassifiedAds.Modules.Product.Csv;
 using ClassifiedAds.Modules.Product.Entities;
 using ClassifiedAds.Modules.Product.HostedServices;
 using ClassifiedAds.Modules.Product.RateLimiterPolicies;
@@ -47,8 +47,8 @@ public static class ProductModuleServiceCollectionExtensions
             options.AddPolicy<string, DefaultRateLimiterPolicy>(RateLimiterPolicyNames.DefaultPolicy);
         });
 
-        services.AddScoped(typeof(ICsvReader<>), typeof(CsvReader<>));
-        services.AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>));
+        services.AddScoped<ICsvReader<ImportProductsFromCsv>, ImportProductsFromCsvHandler>();
+        services.AddScoped<ICsvWriter<ExportProductsToCsv>, ExportProductsToCsvHandler>();
 
         return services;
     }
