@@ -92,7 +92,7 @@ services.AddAuditLogModule(opt => configuration.GetSection("Modules:AuditLog").B
 .AddStorageModule(opt => configuration.GetSection("Modules:Storage").Bind(opt))
 .AddApplicationServices();
 
-services.AddHtmlGenerator();
+services.AddHtmlRazorLightEngine();
 services.AddDinkToPdfConverter();
 
 services.AddDataProtection()

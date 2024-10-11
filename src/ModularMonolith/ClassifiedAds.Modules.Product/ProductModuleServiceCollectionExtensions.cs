@@ -1,4 +1,6 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Csv;
+using ClassifiedAds.CrossCuttingConcerns.Html;
+using ClassifiedAds.CrossCuttingConcerns.Pdf;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Modules.Product.Authorization;
@@ -6,6 +8,9 @@ using ClassifiedAds.Modules.Product.ConfigurationOptions;
 using ClassifiedAds.Modules.Product.Csv;
 using ClassifiedAds.Modules.Product.Entities;
 using ClassifiedAds.Modules.Product.HostedServices;
+using ClassifiedAds.Modules.Product.Html;
+using ClassifiedAds.Modules.Product.Pdf;
+using ClassifiedAds.Modules.Product.Pdf.DinkToPdf;
 using ClassifiedAds.Modules.Product.RateLimiterPolicies;
 using ClassifiedAds.Modules.Product.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -49,6 +54,10 @@ public static class ProductModuleServiceCollectionExtensions
 
         services.AddScoped<ICsvReader<ImportProductsFromCsv>, ImportProductsFromCsvHandler>();
         services.AddScoped<ICsvWriter<ExportProductsToCsv>, ExportProductsToCsvHandler>();
+
+        services.AddScoped<IHtmlWriter<ExportProductsToHtml>, ExportProductsToHtmlHandler>();
+
+        services.AddScoped<IPdfWriter<ExportProductsToPdf>, ExportProductsToPdfHandler>();
 
         return services;
     }
