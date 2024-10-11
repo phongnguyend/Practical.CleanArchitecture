@@ -3,6 +3,7 @@ using ClassifiedAds.CrossCuttingConcerns.Excel;
 using ClassifiedAds.Services.Configuration.Authorization;
 using ClassifiedAds.Services.Configuration.ConfigurationOptions;
 using ClassifiedAds.Services.Configuration.Entities;
+using ClassifiedAds.Services.Configuration.Excel;
 using ClassifiedAds.Services.Configuration.Models;
 using CryptographyHelper;
 using CryptographyHelper.AsymmetricAlgorithms;
@@ -29,14 +30,14 @@ public class ConfigurationEntriesController : ControllerBase
     private readonly Dispatcher _dispatcher;
     private readonly ILogger _logger;
     private readonly AppSettings _appSettings;
-    private readonly IExcelWriter<List<ConfigurationEntry>> _configurationEntriesExcelWriter;
-    private readonly IExcelReader<List<ConfigurationEntry>> _configurationEntriesExcelReader;
+    private readonly IExcelWriter<ExportConfigurationEntriesToExcel> _configurationEntriesExcelWriter;
+    private readonly IExcelReader<ImportConfigurationEntriesFromExcel> _configurationEntriesExcelReader;
 
     public ConfigurationEntriesController(Dispatcher dispatcher,
         ILogger<ConfigurationEntriesController> logger,
         IOptionsSnapshot<AppSettings> appSettings,
-        IExcelWriter<List<ConfigurationEntry>> configurationEntriesExcelWriter,
-        IExcelReader<List<ConfigurationEntry>> configurationEntriesExcelReader)
+        IExcelWriter<ExportConfigurationEntriesToExcel> configurationEntriesExcelWriter,
+        IExcelReader<ImportConfigurationEntriesFromExcel> configurationEntriesExcelReader)
     {
         _dispatcher = dispatcher;
         _logger = logger;
@@ -131,17 +132,17 @@ public class ConfigurationEntriesController : ControllerBase
     {
         var entries = await _dispatcher.DispatchAsync(new GetEntititesQuery<ConfigurationEntry>());
         using var stream = new MemoryStream();
-        _configurationEntriesExcelWriter.Write(entries, stream);
+        await _configurationEntriesExcelWriter.WriteAsync(new ExportConfigurationEntriesToExcel { ConfigurationEntries = entries }, stream);
         return File(stream.ToArray(), MediaTypeNames.Application.Octet, "ConfigurationEntries.xlsx");
     }
 
     [HttpPost("ImportExcel")]
-    public IActionResult ImportExcel([FromForm] UploadFileModel model)
+    public async Task<IActionResult> ImportExcel([FromForm] UploadFileModel model)
     {
         using var stream = model.FormFile.OpenReadStream();
-        var entries = _configurationEntriesExcelReader.Read(stream);
+        var entries = await _configurationEntriesExcelReader.ReadAsync(stream);
 
         // TODO: import to database
-        return Ok(entries);
+        return Ok(entries.ConfigurationEntries);
     }
 }

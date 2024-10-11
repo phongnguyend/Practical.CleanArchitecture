@@ -1,7 +1,6 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.HtmlGenerator;
-using ClassifiedAds.CrossCuttingConcerns.PdfConverter;
+﻿using ClassifiedAds.CrossCuttingConcerns.Pdf;
 using ClassifiedAds.Infrastructure.Web.MinimalApis;
-using ClassifiedAds.Services.Product.Models;
+using ClassifiedAds.Services.Product.Pdf;
 using ClassifiedAds.Services.Product.Queries;
 using ClassifiedAds.Services.Product.RateLimiterPolicies;
 using MediatR;
@@ -9,9 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.OpenApi.Models;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.Mime;
 using System.Threading.Tasks;
 
@@ -32,17 +29,11 @@ public class ExportProductsAsPdfRequest : IEndpointHandler
         });
     }
 
-    private static async Task<IResult> HandleAsync(IMediator dispatcher,
-        IHtmlGenerator htmlGenerator,
-        IPdfConverter pdfConverter)
+    private static async Task<IResult> HandleAsync(IMediator dispatcher, IPdfWriter<ExportProductsToPdf> pdfWriter)
     {
         var products = await dispatcher.Send(new GetProductsQuery());
-        var model = products.ToModels();
+        var bytes = await pdfWriter.GetBytesAsync(new ExportProductsToPdf { Products = products });
 
-        var template = Path.Combine(Environment.CurrentDirectory, $"Templates/ProductList.cshtml");
-        var html = await htmlGenerator.GenerateAsync(template, model);
-        var pdf = await pdfConverter.ConvertAsync(html);
-
-        return Results.File(pdf, MediaTypeNames.Application.Octet, "Products.pdf");
+        return Results.File(bytes, MediaTypeNames.Application.Octet, "Products.pdf");
     }
 }

@@ -5,12 +5,22 @@ using ClosedXML.Excel;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Configuration.Excel.ClosedXML;
 
-public class ConfigurationEntryExcelReader : IExcelReader<List<ConfigurationEntry>>
+public class ImportConfigurationEntriesFromExcelHandler : IExcelReader<ImportConfigurationEntriesFromExcel>
 {
-    public List<ConfigurationEntry> Read(Stream stream)
+    private static Dictionary<string, string> GetCorrectHeaders()
+    {
+        return new Dictionary<string, string>
+        {
+            { "A", "Key" },
+            { "B", "Value" },
+        };
+    }
+
+    public Task<ImportConfigurationEntriesFromExcel> ReadAsync(Stream stream)
     {
         using var workbook = new XLWorkbook(stream);
         var worksheet = workbook.Worksheets.First();
@@ -34,15 +44,6 @@ public class ConfigurationEntryExcelReader : IExcelReader<List<ConfigurationEntr
             rows.Add(row);
         }
 
-        return rows;
-    }
-
-    private static Dictionary<string, string> GetCorrectHeaders()
-    {
-        return new Dictionary<string, string>
-        {
-            { "A", "Key" },
-            { "B", "Value" },
-        };
+        return Task.FromResult(new ImportConfigurationEntriesFromExcel { ConfigurationEntries = rows });
     }
 }

@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.CrossCuttingConcerns.Csv;
 
 public interface ICsvWriter<T>
+    where T : ICsvRequest
 {
-    void Write(IEnumerable<T> collection, Stream stream);
+    Task WriteAsync(T data, Stream stream);
+}
+
+public interface ICsvRequest
+{
 }

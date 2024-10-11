@@ -65,7 +65,7 @@ services.AddCors(options =>
 services.AddDateTimeProvider();
 services.AddApplicationServices();
 
-services.AddHtmlGenerator();
+services.AddHtmlRazorLightEngine();
 services.AddDinkToPdfConverter();
 
 services.AddProductModule(appSettings);

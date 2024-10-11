@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Csv;
 using ClassifiedAds.Infrastructure.Web.MinimalApis;
-using ClassifiedAds.Services.Product.Models;
+using ClassifiedAds.Services.Product.Csv;
 using ClassifiedAds.Services.Product.Queries;
 using ClassifiedAds.Services.Product.RateLimiterPolicies;
 using MediatR;
@@ -31,12 +31,11 @@ public class ExportProductsAsCsvRequest : IEndpointHandler
     }
 
     private static async Task<IResult> HandleAsync(IMediator dispatcher,
-        ICsvWriter<ProductModel> productCsvWriter)
+        ICsvWriter<ExportProductsToCsv> productCsvWriter)
     {
         var products = await dispatcher.Send(new GetProductsQuery());
-        var model = products.ToModels();
         using var stream = new MemoryStream();
-        productCsvWriter.Write(model, stream);
+        await productCsvWriter.WriteAsync(new ExportProductsToCsv { Products = products }, stream);
         return Results.File(stream.ToArray(), MediaTypeNames.Application.Octet, "Products.csv");
     }
 }

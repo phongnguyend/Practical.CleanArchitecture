@@ -1,13 +1,18 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Csv;
+using ClassifiedAds.CrossCuttingConcerns.Html;
+using ClassifiedAds.CrossCuttingConcerns.Pdf;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Infrastructure.Csv;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Services.Product.Authorization;
 using ClassifiedAds.Services.Product.ConfigurationOptions;
+using ClassifiedAds.Services.Product.Csv;
 using ClassifiedAds.Services.Product.DTOs;
 using ClassifiedAds.Services.Product.Entities;
 using ClassifiedAds.Services.Product.HostedServices;
+using ClassifiedAds.Services.Product.Html;
+using ClassifiedAds.Services.Product.Pdf;
+using ClassifiedAds.Services.Product.Pdf.DinkToPdf;
 using ClassifiedAds.Services.Product.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -44,8 +49,12 @@ public static class ProductModuleServiceCollectionExtensions
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddScoped<ICurrentUser, CurrentWebUser>();
 
-        services.AddScoped(typeof(ICsvReader<>), typeof(CsvReader<>));
-        services.AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>));
+        services.AddScoped<ICsvReader<ImportProductsFromCsv>, ImportProductsFromCsvHandler>();
+        services.AddScoped<ICsvWriter<ExportProductsToCsv>, ExportProductsToCsvHandler>();
+
+        services.AddScoped<IHtmlWriter<ExportProductsToHtml>, ExportProductsToHtmlHandler>();
+
+        services.AddScoped<IPdfWriter<ExportProductsToPdf>, ExportProductsToPdfHandler>();
 
         services.AddTransient<IMessageBus, MessageBus>()
                 .AddMessageBusSender<AuditLogCreatedEvent>(appSettings.MessageBroker);

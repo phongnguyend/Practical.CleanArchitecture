@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Csv;
 using ClassifiedAds.Infrastructure.Web.MinimalApis;
-using ClassifiedAds.Services.Product.Models;
+using ClassifiedAds.Services.Product.Csv;
 using ClassifiedAds.Services.Product.RateLimiterPolicies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -34,12 +34,12 @@ public class ImportCsvRequestHandler : IEndpointHandler
         .DisableAntiforgery();
     }
 
-    private static Task<IResult> HandleAsync(ICsvReader<ProductModel> productCsvReader, [FromForm] ImportCsvRequest request)
+    private static async Task<IResult> HandleAsync(ICsvReader<ImportProductsFromCsv> productCsvReader, [FromForm] ImportCsvRequest request)
     {
         using var stream = request.FormFile.OpenReadStream();
-        var products = productCsvReader.Read(stream);
+        var result = await productCsvReader.ReadAsync(stream);
 
         // TODO: import to database
-        return Task.FromResult(Results.Ok(products));
+        return Results.Ok(result.Products);
     }
 }
