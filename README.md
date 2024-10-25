@@ -695,9 +695,6 @@
     ```
 </details>
 
-## Set Startup Projects
-![alt text](/docs/imgs/startup-projects.png)
-
 ## Run or Debug the Solution
 - Web MVC Home Page: https://localhost:44364/
 
