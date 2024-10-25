@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: background
+  name: background
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: background
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: background
+    spec:
+      containers:
+      - env:
+        - name: CheckDependency__Enabled
+          value: "true"
+        - name: CheckDependency__Host
+          value: migrator:80,rabbitmq:5672
+        envFrom:
+        - configMapRef:
+            name: shared
+        image: phongnguyend/classifiedads.modularmonolith.background
+        name: background
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+status: {}

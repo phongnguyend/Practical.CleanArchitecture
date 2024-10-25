@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "ClassifiedAds.BackgroundServer",
+            "name": "ClassifiedAds.Background",
             "type": "coreclr",
             "request": "launch",
             //"preLaunchTask": "build",
-            "program": "${workspaceFolder}/ClassifiedAds.BackgroundServer/bin/Debug/net6.0/ClassifiedAds.BackgroundServer.dll",
+            "program": "${workspaceFolder}/ClassifiedAds.Background/bin/Debug/net6.0/ClassifiedAds.Background.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/ClassifiedAds.BackgroundServer",
+            "cwd": "${workspaceFolder}/ClassifiedAds.Background",
             "stopAtEntry": false,
             "console": "internalConsole",
             "env": {
@@ -174,7 +174,7 @@
     "compounds": [
         {
             "name": "ClassifiedAds.Monolith",
-            "configurations": ["ClassifiedAds.BackgroundServer", "ClassifiedAds.GraphQL", "ClassifiedAds.Migrator", "ClassifiedAds.WebAPI","ClassifiedAds.BlazorServerSide","ClassifiedAds.BlazorWebAssembly","ClassifiedAds.IdentityServer","ClassifiedAds.WebMVC"]
+            "configurations": ["ClassifiedAds.Background", "ClassifiedAds.GraphQL", "ClassifiedAds.Migrator", "ClassifiedAds.WebAPI","ClassifiedAds.BlazorServerSide","ClassifiedAds.BlazorWebAssembly","ClassifiedAds.IdentityServer","ClassifiedAds.WebMVC"]
         }
     ]
 }

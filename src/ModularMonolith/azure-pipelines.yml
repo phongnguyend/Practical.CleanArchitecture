@@ -83,7 +83,7 @@ stages:
           command: 'publish'
           publishWebProjects: false
           projects: |
-            src/ModularMonolith/ClassifiedAds.BackgroundServer/*.csproj
+            src/ModularMonolith/ClassifiedAds.Background/*.csproj
             src/ModularMonolith/ClassifiedAds.Migrator/*.csproj
             src/ModularMonolith/ClassifiedAds.NotificationServer/*.csproj
             src/ModularMonolith/ClassifiedAds.WebAPI/*.csproj

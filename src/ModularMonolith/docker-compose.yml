@@ -76,11 +76,11 @@ services:
           Modules__Storage__ConnectionStrings__Default: ${Modules__Storage__ConnectionStrings__Default}
           Modules__Storage__Provider: ${Storage__Provider}
           Modules__Storage__Local__Path: ${Storage__Local__Path}
-    backgroundserver:
-        image: classifiedads.modularmonolith.backgroundserver
+    background:
+        image: classifiedads.modularmonolith.background
         build:
           context: .
-          dockerfile: ./ClassifiedAds.BackgroundServer/Dockerfile
+          dockerfile: ./ClassifiedAds.Background/Dockerfile
         depends_on:
           - db
           - migrator

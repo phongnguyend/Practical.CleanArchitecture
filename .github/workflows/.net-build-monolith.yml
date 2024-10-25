@@ -30,8 +30,8 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release 
     
-    - name: Publish ClassifiedAds.BackgroundServer
-      run: dotnet publish ClassifiedAds.BackgroundServer/*.csproj --configuration Release
+    - name: Publish ClassifiedAds.Background
+      run: dotnet publish ClassifiedAds.Background/*.csproj --configuration Release
  
     - name: Publish ClassifiedAds.GraphQL
       run: dotnet publish ClassifiedAds.GraphQL/*.csproj --configuration Release
@@ -51,11 +51,11 @@ jobs:
     - name: Publish ClassifiedAds.BlazorWebAssembly
       run: dotnet publish ClassifiedAds.BlazorWebAssembly/*.csproj --configuration Release
       
-    - name: Upload ClassifiedAds.BackgroundServer
+    - name: Upload ClassifiedAds.Background
       uses: actions/upload-artifact@v4
       with:
-        name: ClassifiedAds.BackgroundServer
-        path: src/Monolith/ClassifiedAds.BackgroundServer/bin/Release/net8.0/publish
+        name: ClassifiedAds.Background
+        path: src/Monolith/ClassifiedAds.Background/bin/Release/net8.0/publish
         
     - name: Upload ClassifiedAds.GraphQL
       uses: actions/upload-artifact@v4

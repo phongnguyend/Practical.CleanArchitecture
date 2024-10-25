@@ -1,15 +1,15 @@
 
-docker build -f "ClassifiedAds.BackgroundServer\Dockerfile" -t classifiedads.modularmonolith.backgroundserver .
+docker build -f "ClassifiedAds.Background\Dockerfile" -t classifiedads.modularmonolith.background .
 docker build -f "ClassifiedAds.Migrator\Dockerfile" -t classifiedads.modularmonolith.migrator .
 docker build -f "ClassifiedAds.WebAPI\Dockerfile" -t classifiedads.modularmonolith.webapi .
 docker build -f "ClassifiedAds.IdentityServer\Dockerfile" -t classifiedads.modularmonolith.identityserver .
 
-docker tag classifiedads.modularmonolith.backgroundserver phongnguyend/classifiedads.modularmonolith.backgroundserver
+docker tag classifiedads.modularmonolith.background phongnguyend/classifiedads.modularmonolith.background
 docker tag classifiedads.modularmonolith.migrator phongnguyend/classifiedads.modularmonolith.migrator
 docker tag classifiedads.modularmonolith.webapi phongnguyend/classifiedads.modularmonolith.webapi
 docker tag classifiedads.modularmonolith.identityserver phongnguyend/classifiedads.modularmonolith.identityserver
 
-docker push phongnguyend/classifiedads.modularmonolith.backgroundserver
+docker push phongnguyend/classifiedads.modularmonolith.background
 docker push phongnguyend/classifiedads.modularmonolith.migrator
 docker push phongnguyend/classifiedads.modularmonolith.webapi
 docker push phongnguyend/classifiedads.modularmonolith.identityserver

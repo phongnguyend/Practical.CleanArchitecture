@@ -47,7 +47,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Modules.Produ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Modules.Product.EndToEndTests", "ClassifiedAds.Modules.Product.EndToEndTests\ClassifiedAds.Modules.Product.EndToEndTests.csproj", "{4795E8FC-5D27-48AB-A148-3E44B13D4AE0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.BackgroundServer", "ClassifiedAds.BackgroundServer\ClassifiedAds.BackgroundServer.csproj", "{4CE975AB-01F3-4D67-94D8-CA049D691E27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Background", "ClassifiedAds.Background\ClassifiedAds.Background.csproj", "{4CE975AB-01F3-4D67-94D8-CA049D691E27}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Modules.Configuration", "ClassifiedAds.Modules.Configuration\ClassifiedAds.Modules.Configuration.csproj", "{B556F32D-D996-4296-9075-E7E2E2F4B8C3}"
 EndProject

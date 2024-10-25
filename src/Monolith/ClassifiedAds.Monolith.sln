@@ -27,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{60BC7A82
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.GraphQL", "ClassifiedAds.GraphQL\ClassifiedAds.GraphQL.csproj", "{FDBA0506-A4E7-405B-918D-66A195F16C95}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.BackgroundServer", "ClassifiedAds.BackgroundServer\ClassifiedAds.BackgroundServer.csproj", "{72E42908-63F6-4981-9023-6018C66604D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.Background", "ClassifiedAds.Background\ClassifiedAds.Background.csproj", "{72E42908-63F6-4981-9023-6018C66604D8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BackEnds", "BackEnds", "{62A1AB08-A2DB-404F-B073-0F89CA780F45}"
 EndProject

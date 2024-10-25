@@ -10,6 +10,6 @@ services:
         volumes:
             - D:\\ClassifiedAds.ModularMonolith\\Logs\\WebAPI:/ClassifiedAds.ModularMonolith/logs
             - D:\\ClassifiedAds.ModularMonolith\\Files:/files
-    backgroundserver:
+    background:
         volumes:
-            - D:\\ClassifiedAds.ModularMonolith\\Logs\\BackgroundServer:/ClassifiedAds.ModularMonolith/logs
+            - D:\\ClassifiedAds.ModularMonolith\\Logs\\Background:/ClassifiedAds.ModularMonolith/logs

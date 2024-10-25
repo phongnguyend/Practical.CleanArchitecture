@@ -1,7 +1,7 @@
 ﻿var builder = DistributedApplication.CreateBuilder(args);
 
 var migrator = builder.AddProject<Projects.ClassifiedAds_Migrator>("ClassifiedAds-Migrator");
-var background = builder.AddProject<Projects.ClassifiedAds_BackgroundServer>("ClassifiedAds-BackgroundServer");
+var background = builder.AddProject<Projects.ClassifiedAds_Background>("ClassifiedAds-Background");
 var webApi = builder.AddProject<Projects.ClassifiedAds_WebAPI>("ClassifiedAds-WebAPI");
 
 var identityServer = builder

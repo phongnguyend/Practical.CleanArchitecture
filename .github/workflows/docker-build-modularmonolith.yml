@@ -40,12 +40,12 @@ jobs:
           
           echo VERSION=$VERSION
           
-          docker tag classifiedads.modularmonolith.backgroundserver $REPO_NAME/classifiedads.modularmonolith.backgroundserver:$VERSION
+          docker tag classifiedads.modularmonolith.background $REPO_NAME/classifiedads.modularmonolith.background:$VERSION
           docker tag classifiedads.modularmonolith.migrator $REPO_NAME/classifiedads.modularmonolith.migrator:$VERSION
           docker tag classifiedads.modularmonolith.webapi $REPO_NAME/classifiedads.modularmonolith.webapi:$VERSION
           docker tag classifiedads.modularmonolith.identityserver $REPO_NAME/classifiedads.modularmonolith.identityserver:$VERSION
           
-          docker push $REPO_NAME/classifiedads.modularmonolith.backgroundserver:$VERSION
+          docker push $REPO_NAME/classifiedads.modularmonolith.background:$VERSION
           docker push $REPO_NAME/classifiedads.modularmonolith.migrator:$VERSION
           docker push $REPO_NAME/classifiedads.modularmonolith.webapi:$VERSION
           docker push $REPO_NAME/classifiedads.modularmonolith.identityserver:$VERSION

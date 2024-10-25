@@ -63,6 +63,9 @@ services.AddAuditLogModule(opt =>
 })
 .AddApplicationServices();
 
+services.AddHtmlRazorLightEngine();
+services.AddDinkToPdfConverter();
+
 services.AddDataProtection()
     .PersistKeysToDbContext<IdentityDbContext>()
     .SetApplicationName("ClassifiedAds");

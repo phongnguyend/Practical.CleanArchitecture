@@ -23,7 +23,7 @@ pipeline {
     stage('Publish') {
       steps {
         dir('src/Monolith') {
-          sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.BackgroundServer/*.csproj --configuration Release"
+          sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.Background/*.csproj --configuration Release"
           sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.GraphQL/*.csproj --configuration Release"
           sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.Migrator/*.csproj --configuration Release"
           sh "dotnet publish -p:Version=${VERSION} ClassifiedAds.WebAPI/*.csproj --configuration Release"

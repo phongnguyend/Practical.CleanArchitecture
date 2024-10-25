@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ClassifiedAds.BackgroundServer\ClassifiedAds.BackgroundServer.csproj" />
+    <ProjectReference Include="..\ClassifiedAds.Background\ClassifiedAds.Background.csproj" />
     <ProjectReference Include="..\ClassifiedAds.BlazorServerSide\ClassifiedAds.BlazorServerSide.csproj" />
     <ProjectReference Include="..\ClassifiedAds.BlazorWebAssembly\ClassifiedAds.BlazorWebAssembly.csproj" />
     <ProjectReference Include="..\ClassifiedAds.GraphQL\ClassifiedAds.GraphQL.csproj" />

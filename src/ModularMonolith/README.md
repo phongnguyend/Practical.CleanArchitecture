@@ -8,7 +8,7 @@
   | Project  | Configuration File | Configuration Key |
   | -------- | ------------------ | ----------------- |
   | ClassifiedAds.Migrator | [appsettings.json](ClassifiedAds.Migrator/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.BackgroundServer | [appsettings.json](ClassifiedAds.BackgroundServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
+  | ClassifiedAds.Background | [appsettings.json](ClassifiedAds.Background/appsettings.json) | ConnectionStrings:ClassifiedAds |
   | ClassifiedAds.IdentityServer | [appsettings.json](../IdentityServer/IdentityServer4/ClassifiedAds.IdentityServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
   | ClassifiedAds.WebAPI | [appsettings.json](ClassifiedAds.WebAPI/appsettings.json) | ConnectionStrings:ClassifiedAds |
 
@@ -74,7 +74,7 @@
 
 - Tag
   ```
-  docker tag classifiedads.modularmonolith.backgroundserver phongnguyend/classifiedads.modularmonolith.backgroundserver
+  docker tag classifiedads.modularmonolith.background phongnguyend/classifiedads.modularmonolith.background
   docker tag classifiedads.modularmonolith.migrator phongnguyend/classifiedads.modularmonolith.migrator
   docker tag classifiedads.modularmonolith.webapi phongnguyend/classifiedads.modularmonolith.webapi
   docker tag classifiedads.modularmonolith.identityserver phongnguyend/classifiedads.modularmonolith.identityserver
@@ -82,7 +82,7 @@
 
 - Push
   ```
-  docker push phongnguyend/classifiedads.modularmonolith.backgroundserver
+  docker push phongnguyend/classifiedads.modularmonolith.background
   docker push phongnguyend/classifiedads.modularmonolith.migrator
   docker push phongnguyend/classifiedads.modularmonolith.webapi
   docker push phongnguyend/classifiedads.modularmonolith.identityserver
@@ -131,7 +131,7 @@
   dotnet build -p:Version=1.0.0.1 -c Release
 
   dotnet publish -p:Version=1.0.0.1 -c Release ../IdentityServer/IdentityServer4/ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj -o ./publish/ClassifiedAds.IdentityServer
-  dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.BackgroundServer/ClassifiedAds.BackgroundServer.csproj -o ./publish/ClassifiedAds.BackgroundServer
+  dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.Background/ClassifiedAds.Background.csproj -o ./publish/ClassifiedAds.Background
   dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj -o ./publish/ClassifiedAds.Migrator
   dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.WebAPI/ClassifiedAds.WebAPI.csproj -o ./publish/ClassifiedAds.WebAPI
   ```
@@ -139,7 +139,7 @@
 - Pack
   ```
   dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.IdentityServer --basePath=./publish/ClassifiedAds.IdentityServer
-  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.BackgroundServer --basePath=./publish/ClassifiedAds.BackgroundServer
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Background --basePath=./publish/ClassifiedAds.Background
   dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Migrator --basePath=./publish/ClassifiedAds.Migrator
   dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.WebAPI --basePath=./publish/ClassifiedAds.WebAPI
   ```

@@ -17,8 +17,6 @@ spec:
     spec:
       containers:
       - env:
-        - name: BackgroundServer__Endpoint
-          value: http://{{ .Release.Name}}-backgroundserver
         - name: CheckDependency__Enabled
           value: "true"
         - name: CheckDependency__Host

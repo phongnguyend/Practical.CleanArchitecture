@@ -121,7 +121,7 @@ stages:
           command: 'publish'
           publishWebProjects: false
           projects: |
-            src/Monolith/ClassifiedAds.BackgroundServer/*.csproj
+            src/Monolith/ClassifiedAds.Background/*.csproj
             src/Monolith/ClassifiedAds.GraphQL/*.csproj
             src/Monolith/ClassifiedAds.Migrator/*.csproj
             src/Monolith/ClassifiedAds.WebAPI/*.csproj
@@ -195,7 +195,7 @@ stages:
         command: 'publish'
         publishWebProjects: false
         projects: |
-          src/Monolith/ClassifiedAds.BackgroundServer/*.csproj
+          src/Monolith/ClassifiedAds.Background/*.csproj
           src/Monolith/ClassifiedAds.GraphQL/*.csproj
           src/Monolith/ClassifiedAds.Migrator/*.csproj
           src/Monolith/ClassifiedAds.WebAPI/*.csproj
@@ -210,7 +210,7 @@ stages:
       displayName: dotnet octo pack
       inputs:
         script: |
-          dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.BackgroundServer --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.BackgroundServer
+          dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.Background --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.Background
           dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.GraphQL --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.GraphQL
           dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.Migrator --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.Migrator
           dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.WebAPI --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.WebAPI

@@ -152,11 +152,11 @@ services:
           CookiePolicyOptions__IsEnabled: "true"
           CookiePolicyOptions__MinimumSameSitePolicy: "Lax"
           CookiePolicyOptions__Secure: "None" 
-    backgroundserver:
-        image: classifiedads.backgroundserver
+    background:
+        image: classifiedads.background
         build:
           context: .
-          dockerfile: ./ClassifiedAds.BackgroundServer/Dockerfile
+          dockerfile: ./ClassifiedAds.Background/Dockerfile
         depends_on:
           - db
           - migrator
