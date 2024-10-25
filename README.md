@@ -66,49 +66,6 @@
 # How to Run:
 ## Update Configuration
 <details>
-  <summary><b>Database</b></summary>
-  
-- Update Connection Strings:
-
-  | Project  | Configuration File | Configuration Key |
-  | -------- | ------------------ | ----------------- |
-  | ClassifiedAds.Migrator | [appsettings.json](/src/Monolith/ClassifiedAds.Migrator/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.BackgroundServer | [appsettings.json](/src/Monolith/ClassifiedAds.BackgroundServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.IdentityServer | [appsettings.json](/src/Monolith/ClassifiedAds.IdentityServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.WebAPI | [appsettings.json](/src/Monolith/ClassifiedAds.WebAPI/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.WebMVC | [appsettings.json](/src/Monolith/ClassifiedAds.WebMVC/appsettings.json) | ConnectionStrings:ClassifiedAds |
-
-
-- Run Migration:
-  + Option 1: Using dotnet cli:
-    + Install **dotnet-ef** cli:
-      ```
-      dotnet tool install --global dotnet-ef --version="5.0"
-      ```
-    + Navigate to [ClassifiedAds.Migrator](/src/Monolith/ClassifiedAds.Migrator/) and run these commands:
-      ```
-      dotnet ef migrations add Init --context AdsDbContext -o Migrations/AdsDb
-      dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
-      dotnet ef migrations add Init --context PersistedGrantDbContext -o Migrations/PersistedGrantDb
-      dotnet ef database update --context AdsDbContext
-      dotnet ef database update --context ConfigurationDbContext
-      dotnet ef database update --context PersistedGrantDbContext
-      ```
-  + Option 2: Using Package Manager Console:
-    + Set **ClassifiedAds.Migrator** as StartUp Project
-    + Open Package Manager Console, select **ClassifiedAds.Migrator** as Default Project
-    + Run these commands:
-      ```
-      Add-Migration -Context AdsDbContext Init -OutputDir Migrations/AdsDb
-      Add-Migration -Context ConfigurationDbContext Init -OutputDir Migrations/ConfigurationDb
-      Add-Migration -Context PersistedGrantDbContext Init -OutputDir Migrations/PersistedGrantDb
-      Update-Database -Context AdsDbContext
-      Update-Database -Context ConfigurationDbContext
-      Update-Database -Context PersistedGrantDbContext
-      ```
-</details>
-
-<details>
   <summary><b>Additional Configuration Sources</b></summary>
   
   - Open [ClassifiedAds.WebMVC/appsettings.json](/src/Monolith/ClassifiedAds.WebMVC/appsettings.json) and jump to **ConfigurationSources** section.
