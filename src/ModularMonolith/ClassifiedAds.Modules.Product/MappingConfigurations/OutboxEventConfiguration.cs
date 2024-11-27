@@ -10,7 +10,7 @@ public class OutboxEventConfiguration : IEntityTypeConfiguration<OutboxEvent>
     {
         builder.ToTable("OutboxEvents");
         builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
-        builder.HasIndex(x => x.Published);
+        builder.HasIndex(x => new { x.Published, x.CreatedDateTime });
         builder.HasIndex(x => x.CreatedDateTime);
     }
 }
