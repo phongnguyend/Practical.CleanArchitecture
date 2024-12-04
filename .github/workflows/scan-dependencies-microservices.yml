@@ -26,9 +26,6 @@ jobs:
       with:
         dotnet-version: 8.0.100
 
-    - name: Install Aspire
-      run: dotnet workload install aspire
-
     - name: dotnet restore
       run: dotnet restore
 

@@ -33,9 +33,6 @@ jobs:
       with:
         languages: ${{ matrix.language }}
 
-    - name: Install Aspire
-      run: dotnet workload install aspire
-
     - name: Autobuild
       uses: github/codeql-action/autobuild@v2
 
