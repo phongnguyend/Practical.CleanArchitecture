@@ -169,10 +169,7 @@
   <summary><b>Message Broker</b></summary>
   
   - Open below files and jump to **MessageBroker** section:
-    + [ClassifiedAds.IdentityServer/appsettings.json](/src/Monolith/ClassifiedAds.IdentityServer/appsettings.json)
-    + [ClassifiedAds.WebMVC/appsettings.json](/src/Monolith/ClassifiedAds.WebMVC/appsettings.json)
-    + [ClassifiedAds.WebAPI/appsettings.json](/src/Monolith/ClassifiedAds.WebAPI/appsettings.json)
-    + [ClassifiedAds.BackgroundServer/appsettings.json](/src/Monolith/ClassifiedAds.BackgroundServer/appsettings.json)
+    + [ClassifiedAds.Background/appsettings.json](/src/Monolith/ClassifiedAds.Background/appsettings.json)
     ```js
     "MessageBroker": {
       "Provider": "RabbitMQ",
@@ -299,8 +296,7 @@
   - Open and jump to **Logging** section of below files:
     + [ClassifiedAds.WebAPI/appsettings.json](/src/Monolith/ClassifiedAds.WebAPI/appsettings.json)
     + [ClassifiedAds.WebMVC/appsettings.json](/src/Monolith/ClassifiedAds.WebMVC/appsettings.json)
-    + [ClassifiedAds.IdentityServer/appsettings.json](/src/Monolith/ClassifiedAds.IdentityServer/appsettings.json)
-    + [ClassifiedAds.BackgroundServer/appsettings.json](/src/Monolith/ClassifiedAds.BackgroundServer/appsettings.json)
+    + [ClassifiedAds.Background/appsettings.json](/src/Monolith/ClassifiedAds.Background/appsettings.json)
     ```js
     "Logging": {
       "LogLevel": {
@@ -381,7 +377,6 @@
   - Open and jump to **Caching** section of below files:
     + [ClassifiedAds.WebAPI/appsettings.json](/src/Monolith/ClassifiedAds.WebAPI/appsettings.json)
     + [ClassifiedAds.WebMVC/appsettings.json](/src/Monolith/ClassifiedAds.WebMVC/appsettings.json)
-    + [ClassifiedAds.IdentityServer/appsettings.json](/src/Monolith/ClassifiedAds.IdentityServer/appsettings.json)
     ```js
     "Caching": {
       "InMemory": {
@@ -448,7 +443,6 @@
   - Open and jump to **Monitoring** section of below files:
     + [ClassifiedAds.WebAPI/appsettings.json](/src/Monolith/ClassifiedAds.WebAPI/appsettings.json)
     + [ClassifiedAds.WebMVC/appsettings.json](/src/Monolith/ClassifiedAds.WebMVC/appsettings.json)
-    + [ClassifiedAds.IdentityServer/appsettings.json](/src/Monolith/ClassifiedAds.IdentityServer/appsettings.json)
     ```js
     "Monitoring": {
       "MiniProfiler": {
@@ -555,8 +549,7 @@
   - Open and jump to **Interceptors** section of below files:
     + [ClassifiedAds.WebAPI/appsettings.json](/src/Monolith/ClassifiedAds.WebAPI/appsettings.json)
     + [ClassifiedAds.WebMVC/appsettings.json](/src/Monolith/ClassifiedAds.WebMVC/appsettings.json)
-    + [ClassifiedAds.IdentityServer/appsettings.json](/src/Monolith/ClassifiedAds.IdentityServer/appsettings.json)
-    + [ClassifiedAds.BackgroundServer/appsettings.json](/src/Monolith/ClassifiedAds.BackgroundServer/appsettings.json)
+    + [ClassifiedAds.Background/appsettings.json](/src/Monolith/ClassifiedAds.Background/appsettings.json)
     ```js
     "Interceptors": {
       "LoggingInterceptor": true,
@@ -602,12 +595,6 @@
       "AllowedOrigins": [ "http://localhost:4200", "http://localhost:3000", "http://localhost:8080" ]
     },
     ```
-  - Open [ClassifiedAds.NotificationServer/appsettings.json](/src/Monolith/ClassifiedAds.NotificationServer/appsettings.json) and jump to **CORS** section:
-    ```js
-    "CORS": {
-      "AllowedOrigins": [ "https://localhost:44364", "http://host.docker.internal:9003" ]
-    }
-    ```
 </details>
 
 <details>
@@ -644,7 +631,7 @@
 <details>
   <summary><b>Sending Email</b></summary>
   
-  - Open [ClassifiedAds.BackgroundServer/appsettings.json](/src/Monolith/ClassifiedAds.BackgroundServer/appsettings.json) and jump to **Notification -> Email** section:
+  - Open [ClassifiedAds.Background/appsettings.json](/src/Monolith/ClassifiedAds.Background/appsettings.json) and jump to **Notification -> Email** section:
     ```js
     "Notification": {
       "Email": {
@@ -672,7 +659,7 @@
 <details>
   <summary><b>Sending SMS</b></summary>
   
-  - Open [ClassifiedAds.BackgroundServer/appsettings.json](/src/Monolith/ClassifiedAds.BackgroundServer/appsettings.json) and jump to **Notification -> Sms** section:
+  - Open [ClassifiedAds.Background/appsettings.json](/src/Monolith/ClassifiedAds.Background/appsettings.json) and jump to **Notification -> Sms** section:
     ```js
     "Notification": {
       "Sms": {

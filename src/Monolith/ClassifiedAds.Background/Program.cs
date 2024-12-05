@@ -13,6 +13,7 @@ using ClassifiedAds.Infrastructure.IdentityProviders.Azure;
 using ClassifiedAds.Infrastructure.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
@@ -70,6 +71,13 @@ Host.CreateDefaultBuilder(args)
         services.AddSingleton<IAzureActiveDirectoryB2CIdentityProvider>(new AzureActiveDirectoryB2CIdentityProvider(appSettings.IdentityProviders.AzureActiveDirectoryB2C));
     }
 
+    services.AddHealthChecks()
+    .AddSqlServer(connectionString: appSettings.ConnectionStrings.ClassifiedAds,
+        healthQuery: "SELECT 1;",
+        name: "Sql Server",
+        failureStatus: HealthStatus.Degraded)
+    .AddMessageBusHealthCheck(appSettings.MessageBroker);
+
     services.AddHostedService<MessageBusConsumerBackgroundService<WebhookConsumer, FileUploadedEvent>>();
     services.AddHostedService<MessageBusConsumerBackgroundService<WebhookConsumer, FileDeletedEvent>>();
     services.AddHostedService<PublishEventWorker>();
@@ -77,6 +85,8 @@ Host.CreateDefaultBuilder(args)
     services.AddHostedService<SendSmsWorker>();
     services.AddHostedService<ScheduleCronJobWorker>();
     services.AddHostedService<SyncUsersWorker>();
+    services.AddHostedService<HealthChecksBackgroundService>();
+
 })
 .Build()
 .Run();

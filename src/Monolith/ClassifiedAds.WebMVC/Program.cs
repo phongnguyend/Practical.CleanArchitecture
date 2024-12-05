@@ -1,5 +1,4 @@
-﻿using ClassifiedAds.Application.FileEntries.DTOs;
-using ClassifiedAds.CrossCuttingConcerns.Exceptions;
+﻿using ClassifiedAds.CrossCuttingConcerns.Exceptions;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Infrastructure.Configuration;
 using ClassifiedAds.Infrastructure.HealthChecks;
@@ -139,7 +138,7 @@ services.AddHttpClient(string.Empty)
 
 services.AddCaches(appSettings.Caching);
 
-var healthChecksBuilder = services.AddHealthChecks()
+services.AddHealthChecks()
     .AddSqlServer(connectionString: appSettings.ConnectionStrings.ClassifiedAds,
         healthQuery: "SELECT 1;",
         name: "Sql Server",
@@ -150,8 +149,7 @@ var healthChecksBuilder = services.AddHealthChecks()
     .AddHttp(appSettings.ResourceServer.Endpoint,
         name: "Resource (Web API) Server",
         failureStatus: HealthStatus.Degraded)
-    .AddStorageManagerHealthCheck(appSettings.Storage)
-    .AddMessageBusHealthCheck(appSettings.MessageBroker);
+    .AddStorageManagerHealthCheck(appSettings.Storage);
 
 services.AddHealthChecksUI(setupSettings: setup =>
 {
@@ -163,8 +161,6 @@ services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 services.AddScoped<ICurrentUser, CurrentWebUser>();
 
 services.AddStorageManager(appSettings.Storage);
-services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker);
-services.AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker);
 
 services.AddFeatureManagement();
 

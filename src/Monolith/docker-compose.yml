@@ -90,10 +90,6 @@ services:
           Storage__Amazon__SecretAccessKey: ${Storage__Amazon__SecretAccessKey}
           Storage__Amazon__BucketName: ${Storage__Amazon__BucketName}
           Storage__Amazon__RegionEndpoint: ${Storage__Amazon__RegionEndpoint}
-          MessageBroker__Provider: ${MessageBroker__Provider}
-          MessageBroker__RabbitMQ__HostName: ${MessageBroker__RabbitMQ__HostName}
-          MessageBroker__Kafka__BootstrapServers: ${MessageBroker__Kafka__BootstrapServers}
-          MessageBroker__AzureQueue__ConnectionString: ${MessageBroker__AzureQueue__ConnectionString}
     webmvc:
         image: classifiedads.webmvc
         build:
@@ -129,10 +125,6 @@ services:
           Storage__Amazon__SecretAccessKey: ${Storage__Amazon__SecretAccessKey}
           Storage__Amazon__BucketName: ${Storage__Amazon__BucketName}
           Storage__Amazon__RegionEndpoint: ${Storage__Amazon__RegionEndpoint}
-          MessageBroker__Provider: ${MessageBroker__Provider}
-          MessageBroker__RabbitMQ__HostName: ${MessageBroker__RabbitMQ__HostName}
-          MessageBroker__Kafka__BootstrapServers: ${MessageBroker__Kafka__BootstrapServers}
-          MessageBroker__AzureQueue__ConnectionString: ${MessageBroker__AzureQueue__ConnectionString}
     blazor:
         image: classifiedads.blazor
         build:

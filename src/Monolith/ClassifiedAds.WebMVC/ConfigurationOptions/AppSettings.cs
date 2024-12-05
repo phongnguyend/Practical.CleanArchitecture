@@ -2,7 +2,6 @@
 using ClassifiedAds.Infrastructure.Configuration;
 using ClassifiedAds.Infrastructure.Interceptors;
 using ClassifiedAds.Infrastructure.Logging;
-using ClassifiedAds.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Storages;
 using Microsoft.Extensions.Options;
@@ -33,8 +32,6 @@ public class AppSettings
     public ConfigurationProviders ConfigurationProviders { get; set; }
 
     public StorageOptions Storage { get; set; }
-
-    public MessageBrokerOptions MessageBroker { get; set; }
 
     public CookiePolicyOptions CookiePolicyOptions { get; set; }
 
