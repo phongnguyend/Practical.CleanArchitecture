@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.IO;
 using System.Text;
@@ -15,14 +16,17 @@ public class HealthChecksBackgroundService : BackgroundService
     private readonly IServiceProvider _services;
     private readonly ILogger<HealthChecksBackgroundService> _logger;
     private readonly HealthCheckService _healthCheckService;
+    private readonly HealthChecksBackgroundServiceOptions _options;
 
     public HealthChecksBackgroundService(IServiceProvider services,
         ILogger<HealthChecksBackgroundService> logger,
-        HealthCheckService healthCheckService)
+        HealthCheckService healthCheckService,
+        IOptions<HealthChecksBackgroundServiceOptions> options)
     {
         _services = services;
         _logger = logger;
         _healthCheckService = healthCheckService;
+        _options = options.Value;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -78,7 +82,12 @@ public class HealthChecksBackgroundService : BackgroundService
                 _logger.LogError(json);
             }
 
-            await Task.Delay(60_000, stoppingToken);
+            await Task.Delay(_options.Interval, stoppingToken);
         }
     }
+}
+
+public class HealthChecksBackgroundServiceOptions
+{
+    public TimeSpan Interval { get; set; } = TimeSpan.FromMinutes(10);
 }

@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Reflection;
 
 Host.CreateDefaultBuilder(args)
@@ -85,6 +86,8 @@ Host.CreateDefaultBuilder(args)
     services.AddHostedService<SendSmsWorker>();
     services.AddHostedService<ScheduleCronJobWorker>();
     services.AddHostedService<SyncUsersWorker>();
+
+    services.Configure<HealthChecksBackgroundServiceOptions>(x => x.Interval = TimeSpan.FromMinutes(10));
     services.AddHostedService<HealthChecksBackgroundService>();
 
 })
