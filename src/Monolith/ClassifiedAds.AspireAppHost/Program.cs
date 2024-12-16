@@ -2,10 +2,10 @@
 
 var migrator = builder.AddProject<Projects.ClassifiedAds_Migrator>("ClassifiedAds-Migrator");
 var background = builder.AddProject<Projects.ClassifiedAds_Background>("ClassifiedAds-Background");
-var graphQL = builder.AddProject<Projects.ClassifiedAds_GraphQL>("ClassifiedAds-GraphQL");
-var webApi = builder.AddProject<Projects.ClassifiedAds_WebAPI>("ClassifiedAds-WebAPI");
+var graphQL = builder.AddProject<Projects.ClassifiedAds_GraphQL>("ClassifiedAds-GraphQL").WithHttpsHealthCheck("/healthz");
+var webApi = builder.AddProject<Projects.ClassifiedAds_WebAPI>("ClassifiedAds-WebAPI").WithHttpsHealthCheck("/healthz");
 var webMvc = builder.AddProject<Projects.ClassifiedAds_WebMVC>("ClassifiedAds-WebMVC").WithHttpsHealthCheck("/healthz");
-var blazorServerSide = builder.AddProject<Projects.ClassifiedAds_BlazorServerSide>("ClassifiedAds-BlazorServerSide");
+var blazorServerSide = builder.AddProject<Projects.ClassifiedAds_BlazorServerSide>("ClassifiedAds-BlazorServerSide").WithHttpsHealthCheck("/healthz");
 var blazorWebAssembly = builder.AddProject<Projects.ClassifiedAds_BlazorWebAssembly>("ClassifiedAds-BlazorWebAssembly");
 
 var identityServer = builder

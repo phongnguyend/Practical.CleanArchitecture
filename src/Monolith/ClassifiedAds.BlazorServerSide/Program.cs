@@ -6,14 +6,19 @@ using ClassifiedAds.Blazor.Modules.Settings.Services;
 using ClassifiedAds.Blazor.Modules.Users.Services;
 using ClassifiedAds.BlazorServerSide.ConfigurationOptions;
 using ClassifiedAds.BlazorServerSide.Services;
+using ClassifiedAds.Infrastructure.HealthChecks;
+using ClassifiedAds.Infrastructure.HostedServices;
 using ClassifiedAds.Infrastructure.HttpMessageHandlers;
 using ClassifiedAds.Infrastructure.Logging;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using System;
 
@@ -116,6 +121,13 @@ services.AddAuthentication(options =>
     options.RequireHttpsMetadata = appSettings.OpenIdConnect.RequireHttpsMetadata;
 });
 
+services.AddHealthChecks()
+    .AddHttp(appSettings.OpenIdConnect.Authority, name: "Identity Server", failureStatus: HealthStatus.Degraded)
+    .AddHttp(appSettings.ResourceServer.Endpoint, name: "Resource (Web API) Server", failureStatus: HealthStatus.Degraded);
+
+services.Configure<HealthChecksBackgroundServiceOptions>(x => x.Interval = TimeSpan.FromMinutes(10));
+services.AddHostedService<HealthChecksBackgroundService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -146,5 +158,17 @@ app.UseAuthorization();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
+
+app.UseHealthChecks("/healthz", new HealthCheckOptions
+{
+    Predicate = _ => true,
+    ResponseWriter = HealthChecksResponseWriter.WriteReponse,
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+        [HealthStatus.Degraded] = StatusCodes.Status500InternalServerError,
+        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable,
+    },
+});
 
 app.Run();
