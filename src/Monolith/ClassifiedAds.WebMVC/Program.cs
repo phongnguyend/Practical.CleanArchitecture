@@ -2,6 +2,7 @@
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Infrastructure.Configuration;
 using ClassifiedAds.Infrastructure.HealthChecks;
+using ClassifiedAds.Infrastructure.HostedServices;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.Monitoring;
@@ -12,7 +13,6 @@ using ClassifiedAds.WebMVC.Configurations;
 using ClassifiedAds.WebMVC.Filters;
 using ClassifiedAds.WebMVC.HttpMessageHandlers;
 using ClassifiedAds.WebMVC.Middleware;
-using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -151,11 +151,8 @@ services.AddHealthChecks()
         failureStatus: HealthStatus.Degraded)
     .AddStorageManagerHealthCheck(appSettings.Storage);
 
-services.AddHealthChecksUI(setupSettings: setup =>
-{
-    setup.AddHealthCheckEndpoint("Basic Health Check", $"{appSettings.CurrentUrl}/healthz");
-    setup.DisableDatabaseMigrations();
-}).AddInMemoryStorage();
+services.Configure<HealthChecksBackgroundServiceOptions>(x => x.Interval = TimeSpan.FromMinutes(10));
+services.AddHostedService<HealthChecksBackgroundService>();
 
 services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 services.AddScoped<ICurrentUser, CurrentWebUser>();
@@ -204,7 +201,7 @@ app.UseMonitoringServices(appSettings.Monitoring);
 app.UseHealthChecks("/healthz", new HealthCheckOptions
 {
     Predicate = _ => true,
-    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+    ResponseWriter = HealthChecksResponseWriter.WriteReponse,
     ResultStatusCodes =
     {
         [HealthStatus.Healthy] = StatusCodes.Status200OK,
@@ -212,8 +209,6 @@ app.UseHealthChecks("/healthz", new HealthCheckOptions
         [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable,
     },
 });
-
-app.UseHealthChecksUI(); // /healthchecks-ui#/healthchecks
 
 app.MapDefaultControllerRoute();
 app.MapClassifiedAdsHubs();

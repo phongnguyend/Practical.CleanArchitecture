@@ -79,6 +79,9 @@ Host.CreateDefaultBuilder(args)
         failureStatus: HealthStatus.Degraded)
     .AddMessageBusHealthCheck(appSettings.MessageBroker);
 
+    services.Configure<HealthChecksBackgroundServiceOptions>(x => x.Interval = TimeSpan.FromMinutes(10));
+    services.AddHostedService<HealthChecksBackgroundService>();
+
     services.AddHostedService<MessageBusConsumerBackgroundService<WebhookConsumer, FileUploadedEvent>>();
     services.AddHostedService<MessageBusConsumerBackgroundService<WebhookConsumer, FileDeletedEvent>>();
     services.AddHostedService<PublishEventWorker>();
@@ -86,10 +89,6 @@ Host.CreateDefaultBuilder(args)
     services.AddHostedService<SendSmsWorker>();
     services.AddHostedService<ScheduleCronJobWorker>();
     services.AddHostedService<SyncUsersWorker>();
-
-    services.Configure<HealthChecksBackgroundServiceOptions>(x => x.Interval = TimeSpan.FromMinutes(10));
-    services.AddHostedService<HealthChecksBackgroundService>();
-
 })
 .Build()
 .Run();
