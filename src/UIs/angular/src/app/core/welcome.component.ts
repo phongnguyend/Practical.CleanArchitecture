@@ -2,7 +2,8 @@ import { Component, VERSION } from "@angular/core";
 import { Title } from "@angular/platform-browser";
 
 @Component({
-  templateUrl: "./welcome.component.html"
+    templateUrl: "./welcome.component.html",
+    standalone: false
 })
 export class WelcomeComponent {
   public pageTitle = "Welcome ClassifiedAds Angular";

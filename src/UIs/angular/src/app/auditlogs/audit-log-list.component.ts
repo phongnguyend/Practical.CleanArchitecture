@@ -5,9 +5,10 @@ import { AuditLogState } from "./audit-log.reducer";
 import * as actions from "./audit-log.actions";
 
 @Component({
-  selector: "app-audit-log-list",
-  templateUrl: "./audit-log-list.component.html",
-  styleUrls: ["./audit-log-list.component.css"],
+    selector: "app-audit-log-list",
+    templateUrl: "./audit-log-list.component.html",
+    styleUrls: ["./audit-log-list.component.css"],
+    standalone: false
 })
 export class AuditLogListComponent implements OnInit {
   auditLogs: IAuditLogEntry[] = [];

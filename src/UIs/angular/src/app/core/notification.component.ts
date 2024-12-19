@@ -6,8 +6,9 @@ import { AuthService } from "../auth/auth.service";
 import { environment } from "src/environments/environment";
 
 @Component({
-  selector: "app-notification",
-  template: "",
+    selector: "app-notification",
+    template: "",
+    standalone: false
 })
 export class NotificationComponent implements OnInit {
   constructor(public auth: AuthService, private toastr: ToastrService) {}

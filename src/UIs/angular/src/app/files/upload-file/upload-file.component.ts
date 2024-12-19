@@ -6,9 +6,10 @@ import { NgModel, NgForm } from "@angular/forms";
 import { GuidEmpty } from "src/app/shared/constants";
 
 @Component({
-  selector: "app-upload-file",
-  templateUrl: "./upload-file.component.html",
-  styleUrls: ["./upload-file.component.css"],
+    selector: "app-upload-file",
+    templateUrl: "./upload-file.component.html",
+    styleUrls: ["./upload-file.component.css"],
+    standalone: false
 })
 export class UploadFileComponent implements OnInit {
   file: IFile = {

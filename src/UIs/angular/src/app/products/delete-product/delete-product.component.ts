@@ -10,9 +10,10 @@ import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { IProduct } from "../product";
 
 @Component({
-  selector: "app-delete-product",
-  templateUrl: "./delete-product.component.html",
-  styleUrls: ["./delete-product.component.css"]
+    selector: "app-delete-product",
+    templateUrl: "./delete-product.component.html",
+    styleUrls: ["./delete-product.component.css"],
+    standalone: false
 })
 export class DeleteProductComponent implements OnInit {
   @Input() product: IProduct;

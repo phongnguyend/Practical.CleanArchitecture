@@ -6,8 +6,9 @@ import { Router } from "@angular/router";
 import { GuidEmpty } from "src/app/shared/constants";
 
 @Component({
-  templateUrl: "./add-product.component.html",
-  styleUrls: ["./add-product.component.css"],
+    templateUrl: "./add-product.component.html",
+    styleUrls: ["./add-product.component.css"],
+    standalone: false
 })
 export class AddProductComponent implements OnInit {
   product: IProduct = {

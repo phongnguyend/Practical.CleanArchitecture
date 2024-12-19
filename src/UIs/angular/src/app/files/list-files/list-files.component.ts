@@ -5,9 +5,10 @@ import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { IAuditLogEntry } from "src/app/auditlogs/audit-log";
 
 @Component({
-  selector: "app-list-files",
-  templateUrl: "./list-files.component.html",
-  styleUrls: ["./list-files.component.css"],
+    selector: "app-list-files",
+    templateUrl: "./list-files.component.html",
+    styleUrls: ["./list-files.component.css"],
+    standalone: false
 })
 export class ListFilesComponent implements OnInit {
   files: IFile[] = [];

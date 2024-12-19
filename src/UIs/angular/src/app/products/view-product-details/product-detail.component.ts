@@ -7,8 +7,9 @@ import { BsModalService } from "ngx-bootstrap/modal";
 import { IAuditLogEntry } from "../../auditlogs/audit-log";
 
 @Component({
-  templateUrl: "./product-detail.component.html",
-  styleUrls: ["./product-detail.component.css"],
+    templateUrl: "./product-detail.component.html",
+    styleUrls: ["./product-detail.component.css"],
+    standalone: false
 })
 export class ProductDetailComponent implements OnInit {
   pageTitle = "Product Detail";

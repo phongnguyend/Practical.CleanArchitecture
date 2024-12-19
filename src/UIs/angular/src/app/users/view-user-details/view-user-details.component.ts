@@ -6,9 +6,10 @@ import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { NgForm } from "@angular/forms";
 
 @Component({
-  selector: "app-view-user-details",
-  templateUrl: "./view-user-details.component.html",
-  styleUrls: ["./view-user-details.component.css"],
+    selector: "app-view-user-details",
+    templateUrl: "./view-user-details.component.html",
+    styleUrls: ["./view-user-details.component.css"],
+    standalone: false
 })
 export class ViewUserDetailsComponent implements OnInit {
   user: IUser = null;

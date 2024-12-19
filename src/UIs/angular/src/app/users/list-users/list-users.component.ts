@@ -5,9 +5,10 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { UserService } from "../user.service";
 
 @Component({
-  selector: "app-list-users",
-  templateUrl: "./list-users.component.html",
-  styleUrls: ["./list-users.component.css"],
+    selector: "app-list-users",
+    templateUrl: "./list-users.component.html",
+    styleUrls: ["./list-users.component.css"],
+    standalone: false
 })
 export class ListUsersComponent implements OnInit {
   users: IUser[] = [];

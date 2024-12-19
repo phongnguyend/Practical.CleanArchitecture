@@ -8,8 +8,9 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { NgForm } from "@angular/forms";
 
 @Component({
-  templateUrl: "./list-products.component.html",
-  styleUrls: ["./list-products.component.css"],
+    templateUrl: "./list-products.component.html",
+    styleUrls: ["./list-products.component.css"],
+    standalone: false
 })
 export class ListProductsComponent implements OnInit {
   pageTitle = "Product List";

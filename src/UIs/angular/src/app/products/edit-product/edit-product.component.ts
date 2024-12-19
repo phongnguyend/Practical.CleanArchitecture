@@ -7,9 +7,10 @@ import { IProduct } from "../product";
 import { ProductService } from "../product.service";
 
 @Component({
-  selector: "app-edit-product",
-  templateUrl: "./edit-product.component.html",
-  styleUrls: ["./edit-product.component.css"]
+    selector: "app-edit-product",
+    templateUrl: "./edit-product.component.html",
+    styleUrls: ["./edit-product.component.css"],
+    standalone: false
 })
 export class EditProductComponent implements OnInit {
   product: IProduct;

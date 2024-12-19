@@ -8,9 +8,10 @@ import { BsModalService } from "ngx-bootstrap/modal";
 import { GuidEmpty } from "src/app/shared/constants";
 
 @Component({
-  selector: "app-edit-file",
-  templateUrl: "./edit-file.component.html",
-  styleUrls: ["./edit-file.component.css"],
+    selector: "app-edit-file",
+    templateUrl: "./edit-file.component.html",
+    styleUrls: ["./edit-file.component.css"],
+    standalone: false
 })
 export class EditFileComponent implements OnInit {
   file: IFile = {

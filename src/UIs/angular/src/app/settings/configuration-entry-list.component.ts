@@ -6,9 +6,10 @@ import { NgForm } from "@angular/forms";
 import { GuidEmpty } from "../shared/constants";
 
 @Component({
-  selector: "app-configuration-entry-list",
-  templateUrl: "./configuration-entry-list.component.html",
-  styleUrls: ["./configuration-entry-list.component.css"],
+    selector: "app-configuration-entry-list",
+    templateUrl: "./configuration-entry-list.component.html",
+    styleUrls: ["./configuration-entry-list.component.css"],
+    standalone: false
 })
 export class ConfigurationEntryListComponent implements OnInit {
   GuidEmpty = GuidEmpty;
