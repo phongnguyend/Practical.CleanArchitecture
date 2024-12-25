@@ -1,44 +1,61 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import { NavLink } from "react-router-dom";
-import { connect } from "react-redux";
 import { Modal, Button } from "react-bootstrap";
-
-import * as actions from "../actions";
-
-type Props = {
-  downloadFile: any,
-  fetchFiles: any,
-  deleteFile: any,
-  files: any,
-  errorMessage: any,
-  fetchAuditLogs: any,
-  auditLogs: any,
-}
+import axios from "../axios";
 
 type State = {
-  pageTitle: string,
-  showDeleteModal: boolean,
-  deletingFile: any,
-  showAuditLogsModal: boolean,
-}
+  pageTitle: string;
+  showDeleteModal: boolean;
+  deletingFile: {};
+  showAuditLogsModal: boolean;
+  files: [];
+  auditLogs: [];
+  errorMessage: string;
+};
 
-class ListFiles extends Component<Props, State> {
+class ListFiles extends Component<State> {
   state = {
     pageTitle: "Files",
     showDeleteModal: false,
     deletingFile: {
-      name: null
+      name: null,
     },
     showAuditLogsModal: false,
   };
 
-  downloadFile = (file) => {
-    this.props.downloadFile(file);
+  fetchFiles = async () => {
+    try {
+      const response = await axios.get("");
+      this.setState({ files: response.data });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  viewAuditLogs = (file) => {
-    this.props.fetchAuditLogs(file);
-    this.setState({ showAuditLogsModal: true });
+  downloadFile = async (file) => {
+    try {
+      const response = await axios.get(file.id + "/download", {
+        responseType: "blob",
+      });
+      const url = window.URL.createObjectURL(response.data);
+      const element = document.createElement("a");
+      element.href = url;
+      element.download = file.fileName;
+      document.body.appendChild(element);
+      element.click();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  viewAuditLogs = async (file) => {
+    try {
+      const response = await axios.get(file.id + "/auditLogs");
+      this.setState({ auditLogs: response.data });
+      this.setState({ showAuditLogsModal: true });
+    } catch (error) {
+      //
+    }
   };
 
   deleteFile = (file) => {
@@ -49,28 +66,32 @@ class ListFiles extends Component<Props, State> {
     this.setState({ showDeleteModal: false, deletingFile: {} });
   };
 
-  deleteConfirmed = () => {
-    this.props.deleteFile(this.state.deletingFile);
-    this.setState({ showDeleteModal: false, deletingFile: {} });
+  deleteConfirmed = async () => {
+    const file = this.state.deletingFile;
+    try {
+      await axios.delete(file.id, file);
+      await this.fetchFiles();
+      this.setState({ showDeleteModal: false, deletingFile: {} });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  formatDateTime = (value) => {
+  formatDateTime = (value: string) => {
     if (!value) return value;
-    var date = new Date(value);
+    const date = new Date(value);
     return date.toLocaleDateString() + " " + date.toLocaleTimeString();
   };
 
   componentDidMount() {
-    this.props.fetchFiles();
+    this.fetchFiles();
   }
 
   render() {
-    const rows = this.props.files?.map((file) => (
+    const rows = this.state.files?.map((file) => (
       <tr key={file.id}>
         <td>
-          <NavLink to={"/files/" + file.id}>
-            {file.name + " (" + file.fileName + ")"}
-          </NavLink>
+          <NavLink to={"/files/" + file.id}>{file.name + " (" + file.fileName + ")"}</NavLink>
         </td>
         <td>{file.description}</td>
         <td>{file.size}</td>
@@ -107,7 +128,7 @@ class ListFiles extends Component<Props, State> {
       </tr>
     ));
 
-    const table = this.props.files ? (
+    const table = this.state.files ? (
       <table className="table">
         <thead>
           <tr>
@@ -121,14 +142,12 @@ class ListFiles extends Component<Props, State> {
         <tbody>{rows}</tbody>
       </table>
     ) : null;
-    const auditLogRows = this.props.auditLogs?.map((auditLog) => (
+    const auditLogRows = this.state.auditLogs?.map((auditLog) => (
       <tr key={auditLog.id}>
         <td>{this.formatDateTime(auditLog.createdDateTime)}</td>
         <td>{auditLog.userName}</td>
         <td>{auditLog.action}</td>
-        <td style={{ color: auditLog.highLight.name ? "red" : "" }}>
-          {auditLog.data.name}
-        </td>
+        <td style={{ color: auditLog.highLight.name ? "red" : "" }}>{auditLog.data.name}</td>
         <td style={{ color: auditLog.highLight.description ? "red" : "" }}>
           {auditLog.data.description}
         </td>
@@ -192,11 +211,7 @@ class ListFiles extends Component<Props, State> {
         <div className="card">
           <div className="card-header">
             {this.state.pageTitle}
-            <NavLink
-              className="btn btn-primary"
-              style={{ float: "right" }}
-              to="/files/upload"
-            >
+            <NavLink className="btn btn-primary" style={{ float: "right" }} to="/files/upload">
               Upload File
             </NavLink>
           </div>
@@ -204,10 +219,8 @@ class ListFiles extends Component<Props, State> {
             <div className="table-responsive">{table}</div>
           </div>
         </div>
-        {this.props.errorMessage ? (
-          <div className="alert alert-danger">
-            Error: {this.props.errorMessage}
-          </div>
+        {this.state.errorMessage ? (
+          <div className="alert alert-danger">Error: {this.state.errorMessage}</div>
         ) : null}
         {deleteModal}
         {auditLogsModal}
@@ -216,21 +229,4 @@ class ListFiles extends Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    files: state.file.files,
-    auditLogs: state.file.auditLogs,
-    errorMessage: state.file.errorMessage
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    fetchFiles: () => dispatch(actions.fetchFiles()),
-    deleteFile: (file) => dispatch(actions.deleteFile(file)),
-    downloadFile: (file) => dispatch(actions.downloadFile(file)),
-    fetchAuditLogs: (file) => dispatch(actions.fetchAuditLogs(file)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ListFiles);
+export default ListFiles;

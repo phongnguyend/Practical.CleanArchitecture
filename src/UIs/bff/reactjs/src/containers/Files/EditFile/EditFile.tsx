@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { NavLink, Navigate, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "react-bootstrap";
 
-import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
+import axios from "../axios";
 
-const EditFile = (props) => {
+const EditFile = () => {
   const [state, setState] = useState({
     title: "Edit File",
     controls: {
@@ -39,18 +38,38 @@ const EditFile = (props) => {
     submitted: false,
     showAuditLogsModal: false,
     errorMessage: null,
+    saved: false,
   });
+
+  const [file, setFile] = useState({});
+  const [auditLogs, setAuditLogs] = useState([]);
+
   const { id } = useParams();
-  const { file, saved, auditLogs } = useSelector((state: any) => state.file);
-  const dispatch = useDispatch();
-  const fetchFile = (id) => dispatch(actions.fetchFile(id));
-  const updateFile = (file) => dispatch(actions.updateFile(file));
-  const resetFile = () => dispatch(actions.resetFile());
-  const saveFile = (file) => dispatch(actions.saveFile(file));
-  const fetchAuditLogs = (file) => dispatch(actions.fetchAuditLogs(file));
+
+  const fetchFile = async (id) => {
+    try {
+      const response = await axios.get(id);
+      setFile(response.data);
+    } catch (error) {
+      //
+    }
+  };
+  const updateFile = (file) => {
+    setFile(file);
+  };
+  const saveFile = async (file) => {
+    try {
+      const response = await axios.put(file.id, file);
+      setFile(response.data);
+      setState((preState) => {
+        return { ...preState, saved: true };
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    resetFile();
     if (id) {
       fetchFile(id);
     }
@@ -85,7 +104,7 @@ const EditFile = (props) => {
     return validationRs.isValid;
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
     setState({ ...state, submitted: true });
     let isValid = true;
@@ -94,18 +113,23 @@ const EditFile = (props) => {
     }
 
     if (isValid) {
-      saveFile(file);
+      await saveFile(file);
     }
   };
 
-  const viewAuditLogs = () => {
-    fetchAuditLogs(file);
-    setState({ ...state, showAuditLogsModal: true });
+  const viewAuditLogs = async () => {
+    try {
+      const response = await axios.get(file.id + "/auditLogs");
+      setAuditLogs(response.data);
+      setState({ ...state, showAuditLogsModal: true });
+    } catch (error) {
+      //
+    }
   };
 
   const formatDateTime = (value) => {
     if (!value) return value;
-    var date = new Date(value);
+    const date = new Date(value);
     return date.toLocaleDateString() + " " + date.toLocaleTimeString();
   };
 
@@ -259,7 +283,7 @@ const EditFile = (props) => {
     </Modal>
   );
 
-  return state.submitted && saved ? (
+  return state.submitted && state.saved ? (
     <Navigate to={"/files"} />
   ) : (
     <div>
