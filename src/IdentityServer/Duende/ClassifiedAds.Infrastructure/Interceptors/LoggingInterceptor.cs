@@ -7,78 +7,77 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Infrastructure.Interceptors
+namespace ClassifiedAds.Infrastructure.Interceptors;
+
+public class LoggingInterceptor : IInterceptor
 {
-    public class LoggingInterceptor : IInterceptor
+    private readonly ILogger _logger;
+
+    public LoggingInterceptor(ILogger<LoggingInterceptor> logger)
     {
-        private readonly ILogger _logger;
+        _logger = logger;
+    }
 
-        public LoggingInterceptor(ILogger<LoggingInterceptor> logger)
+    public void Intercept(IInvocation invocation)
+    {
+        var method = invocation.Method;
+        var className = method.DeclaringType.Name;
+        var methodName = method.Name;
+
+        var arguments = JsonSerializer.Serialize(invocation.Arguments.Where(x => x.GetType() != typeof(CancellationToken)), new JsonSerializerOptions()
         {
-            _logger = logger;
-        }
+            WriteIndented = false,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            ReferenceHandler = ReferenceHandler.IgnoreCycles,
+        });
 
-        public void Intercept(IInvocation invocation)
+        _logger.LogDebug($"Start calling method: {className}.{methodName} with ({arguments}).");
+
+        var watch = new Stopwatch();
+        watch.Start();
+
+        var returnType = invocation.Method.ReturnType;
+        if (returnType == typeof(Task))
         {
-            var method = invocation.Method;
-            var className = method.DeclaringType.Name;
-            var methodName = method.Name;
-
-            var arguments = JsonSerializer.Serialize(invocation.Arguments.Where(x => x.GetType() != typeof(CancellationToken)), new JsonSerializerOptions()
-            {
-                WriteIndented = false,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                ReferenceHandler = ReferenceHandler.IgnoreCycles,
-            });
-
-            _logger.LogDebug($"Start calling method: {className}.{methodName} with ({arguments}).");
-
-            var watch = new Stopwatch();
-            watch.Start();
-
-            var returnType = invocation.Method.ReturnType;
-            if (returnType == typeof(Task))
-            {
-                invocation.Proceed();
-                invocation.ReturnValue = InterceptResultAsync((dynamic)invocation.ReturnValue, watch, className, methodName);
-            }
-            else if (returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>))
-            {
-                invocation.Proceed();
-                invocation.ReturnValue = InterceptResultAsync((dynamic)invocation.ReturnValue, watch, className, methodName);
-            }
-            else
-            {
-                invocation.Proceed();
-                InterceptResult(invocation.ReturnValue, watch, className, methodName);
-            }
+            invocation.Proceed();
+            invocation.ReturnValue = InterceptResultAsync((dynamic)invocation.ReturnValue, watch, className, methodName);
         }
-
-        private void InterceptResult(object returnValue, Stopwatch watch, string className, string methodName)
+        else if (returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>))
         {
-            watch.Stop();
-
-            _logger.LogDebug($"Finished calling method: {className}.{methodName}. Took: {watch.ElapsedMilliseconds} milliseconds");
+            invocation.Proceed();
+            invocation.ReturnValue = InterceptResultAsync((dynamic)invocation.ReturnValue, watch, className, methodName);
         }
-
-        private async Task InterceptResultAsync(Task task, Stopwatch watch, string className, string methodName)
+        else
         {
-            await task.ConfigureAwait(false);
-
-            watch.Stop();
-
-            _logger.LogDebug($"Finished calling method: {className}.{methodName}. Took: {watch.ElapsedMilliseconds} milliseconds");
+            invocation.Proceed();
+            InterceptResult(invocation.ReturnValue, watch, className, methodName);
         }
+    }
 
-        private async Task<T> InterceptResultAsync<T>(Task<T> task, Stopwatch watch, string className, string methodName)
-        {
-            T result = await task.ConfigureAwait(false);
+    private void InterceptResult(object returnValue, Stopwatch watch, string className, string methodName)
+    {
+        watch.Stop();
 
-            watch.Stop();
+        _logger.LogDebug($"Finished calling method: {className}.{methodName}. Took: {watch.ElapsedMilliseconds} milliseconds");
+    }
 
-            _logger.LogDebug($"Finished calling method: {className}.{methodName}. Took: {watch.ElapsedMilliseconds} milliseconds");
+    private async Task InterceptResultAsync(Task task, Stopwatch watch, string className, string methodName)
+    {
+        await task.ConfigureAwait(false);
 
-            return result;
-        }
+        watch.Stop();
+
+        _logger.LogDebug($"Finished calling method: {className}.{methodName}. Took: {watch.ElapsedMilliseconds} milliseconds");
+    }
+
+    private async Task<T> InterceptResultAsync<T>(Task<T> task, Stopwatch watch, string className, string methodName)
+    {
+        T result = await task.ConfigureAwait(false);
+
+        watch.Stop();
+
+        _logger.LogDebug($"Finished calling method: {className}.{methodName}. Took: {watch.ElapsedMilliseconds} milliseconds");
+
+        return result;
     }
 }

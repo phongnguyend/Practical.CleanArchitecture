@@ -1,9 +1,8 @@
 ﻿using ClassifiedAds.Domain.Entities;
 
-namespace ClassifiedAds.Domain.Identity
+namespace ClassifiedAds.Domain.Identity;
+
+public interface IPasswordHasher
 {
-    public interface IPasswordHasher
-    {
-        bool VerifyHashedPassword(User user, string hashedPassword, string providedPassword);
-    }
+    bool VerifyHashedPassword(User user, string hashedPassword, string providedPassword);
 }

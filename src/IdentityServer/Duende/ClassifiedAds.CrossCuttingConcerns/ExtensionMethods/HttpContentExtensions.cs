@@ -3,35 +3,34 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.CrossCuttingConcerns.ExtensionMethods
+namespace ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
+
+public static class HttpContentExtensions
 {
-    public static class HttpContentExtensions
+    public static async Task<T> ReadAs<T>(this HttpContent httpContent)
     {
-        public static async Task<T> ReadAs<T>(this HttpContent httpContent)
+        var json = await httpContent.ReadAsStringAsync();
+
+        if (string.IsNullOrWhiteSpace(json))
         {
-            var json = await httpContent.ReadAsStringAsync();
-
-            if (string.IsNullOrWhiteSpace(json))
-            {
-                return default;
-            }
-
-            return JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-            });
+            return default;
         }
 
-        public static StringContent AsStringContent(this object obj, string contentType)
+        return JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions
         {
-            var content = new StringContent(JsonSerializer.Serialize(obj));
-            content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
-            return content;
-        }
+            PropertyNameCaseInsensitive = true,
+        });
+    }
 
-        public static StringContent AsJsonContent(this object obj)
-        {
-            return obj.AsStringContent("application/json");
-        }
+    public static StringContent AsStringContent(this object obj, string contentType)
+    {
+        var content = new StringContent(JsonSerializer.Serialize(obj));
+        content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
+        return content;
+    }
+
+    public static StringContent AsJsonContent(this object obj)
+    {
+        return obj.AsStringContent("application/json");
     }
 }

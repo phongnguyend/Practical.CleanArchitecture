@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace ClassifiedAds.CrossCuttingConcerns.CircuitBreakers
+namespace ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
+
+public interface ICircuitBreakerManager
 {
-    public interface ICircuitBreakerManager
-    {
-        ICircuitBreaker GetCircuitBreaker(string name, TimeSpan openTime);
+    ICircuitBreaker GetCircuitBreaker(string name, TimeSpan openTime);
 
-        void LogSuccess(ICircuitBreaker circuitBreaker);
+    void LogSuccess(ICircuitBreaker circuitBreaker);
 
-        void LogFailure(ICircuitBreaker circuitBreaker, int maximumNumberOfFailures, TimeSpan period);
-    }
+    void LogFailure(ICircuitBreaker circuitBreaker, int maximumNumberOfFailures, TimeSpan period);
 }

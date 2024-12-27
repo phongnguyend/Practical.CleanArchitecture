@@ -2,38 +2,37 @@
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 
-namespace ClassifiedAds.Infrastructure.Monitoring.AzureApplicationInsights
+namespace ClassifiedAds.Infrastructure.Monitoring.AzureApplicationInsights;
+
+public class CustomTelemetryProcessor : ITelemetryProcessor
 {
-    public class CustomTelemetryProcessor : ITelemetryProcessor
+    private ITelemetryProcessor Next { get; set; }
+
+    public CustomTelemetryProcessor(ITelemetryProcessor next)
     {
-        private ITelemetryProcessor Next { get; set; }
+        Next = next;
+    }
 
-        public CustomTelemetryProcessor(ITelemetryProcessor next)
+    public void Process(ITelemetry item)
+    {
+        if (!OKtoSend(item))
         {
-            Next = next;
+            return;
         }
 
-        public void Process(ITelemetry item)
-        {
-            if (!OKtoSend(item))
-            {
-                return;
-            }
+        Next.Process(item);
+    }
 
-            Next.Process(item);
+    private bool OKtoSend(ITelemetry item)
+    {
+        if (item is RequestTelemetry request)
+        {
         }
 
-        private bool OKtoSend(ITelemetry item)
+        if (item is DependencyTelemetry dependency)
         {
-            if (item is RequestTelemetry request)
-            {
-            }
-
-            if (item is DependencyTelemetry dependency)
-            {
-            }
-
-            return true;
         }
+
+        return true;
     }
 }

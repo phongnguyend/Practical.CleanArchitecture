@@ -1,0 +1,12 @@
+﻿@using ClassifiedAds.IdentityServer.Models.ClientModels
+@model ClientModel
+
+<div class="col-md-12 action-butons">
+    <button class="client-save-button btn btn-primary">Save</button>
+
+    @if (Model.Id != 0)
+    {
+        <a asp-action="Clone" asp-route-id="@Model.Id" class="btn btn-outline-primary">Clone</a>
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+    }
+</div>

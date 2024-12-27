@@ -2,14 +2,13 @@
 using ClassifiedAds.Infrastructure.Notification.Sms;
 using ClassifiedAds.Infrastructure.Notification.Web;
 
-namespace ClassifiedAds.Infrastructure.Notification
+namespace ClassifiedAds.Infrastructure.Notification;
+
+public class NotificationOptions
 {
-    public class NotificationOptions
-    {
-        public EmailOptions Email { get; set; }
+    public EmailOptions Email { get; set; }
 
-        public SmsOptions Sms { get; set; }
+    public SmsOptions Sms { get; set; }
 
-        public WebOptions Web { get; set; }
-    }
+    public WebOptions Web { get; set; }
 }

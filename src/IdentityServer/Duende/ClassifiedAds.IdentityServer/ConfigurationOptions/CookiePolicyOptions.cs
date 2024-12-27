@@ -1,7 +1,6 @@
-﻿namespace ClassifiedAds.IdentityServer.ConfigurationOptions
+﻿namespace ClassifiedAds.IdentityServer.ConfigurationOptions;
+
+public class CookiePolicyOptions: Microsoft.AspNetCore.Builder.CookiePolicyOptions
 {
-    public class CookiePolicyOptions: Microsoft.AspNetCore.Builder.CookiePolicyOptions
-    {
-        public bool IsEnabled { get; set; }
-    }
+    public bool IsEnabled { get; set; }
 }

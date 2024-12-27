@@ -4,30 +4,29 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Infrastructure.HostedServices
+namespace ClassifiedAds.Infrastructure.HostedServices;
+
+public abstract class CronJobBackgroundService : BackgroundService
 {
-    public abstract class CronJobBackgroundService : BackgroundService
+    protected string Cron { get; set; }
+
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        protected string Cron { get; set; }
+        var cron = new CronExpression(Cron);
+        var next = cron.GetNextValidTimeAfter(DateTimeOffset.Now);
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        while (!stoppingToken.IsCancellationRequested)
         {
-            var cron = new CronExpression(Cron);
-            var next = cron.GetNextValidTimeAfter(DateTimeOffset.Now);
-
-            while (!stoppingToken.IsCancellationRequested)
+            if (DateTimeOffset.Now > next)
             {
-                if (DateTimeOffset.Now > next)
-                {
-                    await DoWork(stoppingToken);
+                await DoWork(stoppingToken);
 
-                    next = cron.GetNextValidTimeAfter(DateTimeOffset.Now);
-                }
-
-                await Task.Delay(1000, stoppingToken);
+                next = cron.GetNextValidTimeAfter(DateTimeOffset.Now);
             }
-        }
 
-        protected abstract Task DoWork(CancellationToken stoppingToken);
+            await Task.Delay(1000, stoppingToken);
+        }
     }
+
+    protected abstract Task DoWork(CancellationToken stoppingToken);
 }

@@ -45,6 +45,7 @@ if (appSettings.CookiePolicyOptions?.IsEnabled ?? false)
 
 services.AddMonitoringServices(appSettings.Monitoring);
 
+services.AddControllersWithViews();
 services.AddRazorPages();
 
 services.AddCors();
@@ -181,6 +182,7 @@ app.UseAuthorization();
 
 app.UseMonitoringServices(appSettings.Monitoring);
 
+app.MapDefaultControllerRoute();
 app.MapRazorPages();
 
 app.Run();
