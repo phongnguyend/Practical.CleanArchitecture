@@ -1,9 +1,8 @@
 ﻿using CryptographyHelper.Certificates;
 
-namespace ClassifiedAds.IdentityServer.ConfigurationOptions
+namespace ClassifiedAds.IdentityServer.ConfigurationOptions;
+
+public class IdentityServerOptions : IdentityServer4.Configuration.IdentityServerOptions
 {
-    public class IdentityServerOptions : IdentityServer4.Configuration.IdentityServerOptions
-    {
-        public CertificateOption Certificate { get; set; }
-    }
+    public CertificateOption Certificate { get; set; }
 }

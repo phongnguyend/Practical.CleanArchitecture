@@ -2,14 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ClassifiedAds.Persistence.MappingConfigurations
+namespace ClassifiedAds.Persistence.MappingConfigurations;
+
+public class CircuitBreakerConfiguration : IEntityTypeConfiguration<CircuitBreaker>
 {
-    public class CircuitBreakerConfiguration : IEntityTypeConfiguration<CircuitBreaker>
+    public void Configure(EntityTypeBuilder<CircuitBreaker> builder)
     {
-        public void Configure(EntityTypeBuilder<CircuitBreaker> builder)
-        {
-            builder.ToTable("CircuitBreakers");
-            builder.HasIndex(x => new { x.Name }).IsUnique();
-        }
+        builder.ToTable("CircuitBreakers");
+        builder.HasIndex(x => new { x.Name }).IsUnique();
     }
 }

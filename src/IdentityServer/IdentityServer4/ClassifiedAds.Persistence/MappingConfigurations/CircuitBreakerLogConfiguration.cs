@@ -2,13 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ClassifiedAds.Persistence.MappingConfigurations
+namespace ClassifiedAds.Persistence.MappingConfigurations;
+
+public class CircuitBreakerLogConfiguration : IEntityTypeConfiguration<CircuitBreakerLog>
 {
-    public class CircuitBreakerLogConfiguration : IEntityTypeConfiguration<CircuitBreakerLog>
+    public void Configure(EntityTypeBuilder<CircuitBreakerLog> builder)
     {
-        public void Configure(EntityTypeBuilder<CircuitBreakerLog> builder)
-        {
-            builder.ToTable("CircuitBreakerLogs");
-        }
+        builder.ToTable("CircuitBreakerLogs");
     }
 }

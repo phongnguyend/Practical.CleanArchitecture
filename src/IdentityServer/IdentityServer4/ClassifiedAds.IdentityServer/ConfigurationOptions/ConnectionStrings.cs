@@ -1,9 +1,8 @@
-﻿namespace ClassifiedAds.IdentityServer.ConfigurationOptions
-{
-    public class ConnectionStrings
-    {
-        public string ClassifiedAds { get; set; }
+﻿namespace ClassifiedAds.IdentityServer.ConfigurationOptions;
 
-        public string IdentityServer { get; set; }
-    }
+public class ConnectionStrings
+{
+    public string ClassifiedAds { get; set; }
+
+    public string IdentityServer { get; set; }
 }

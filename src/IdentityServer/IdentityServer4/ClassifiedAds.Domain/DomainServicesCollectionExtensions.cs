@@ -1,13 +1,12 @@
 ﻿using ClassifiedAds.Domain.Services;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace Microsoft.Extensions.DependencyInjection;
+
+public static class DomainServicesCollectionExtensions
 {
-    public static class DomainServicesCollectionExtensions
+    public static IServiceCollection AddDomainServices(this IServiceCollection services)
     {
-        public static IServiceCollection AddDomainServices(this IServiceCollection services)
-        {
-            services.AddScoped<ProductService, ProductService>();
-            return services;
-        }
+        services.AddScoped<ProductService, ProductService>();
+        return services;
     }
 }

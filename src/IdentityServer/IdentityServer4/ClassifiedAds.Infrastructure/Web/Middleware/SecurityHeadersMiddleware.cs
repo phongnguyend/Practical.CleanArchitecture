@@ -2,27 +2,26 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Infrastructure.Web.Middleware
+namespace ClassifiedAds.Infrastructure.Web.Middleware;
+
+public class SecurityHeadersMiddleware
 {
-    public class SecurityHeadersMiddleware
+    private readonly RequestDelegate _next;
+    private readonly Dictionary<string, string> _headers;
+
+    public SecurityHeadersMiddleware(RequestDelegate next, Dictionary<string, string> headers)
     {
-        private readonly RequestDelegate _next;
-        private readonly Dictionary<string, string> _headers;
+        _next = next;
+        _headers = headers;
+    }
 
-        public SecurityHeadersMiddleware(RequestDelegate next, Dictionary<string, string> headers)
+    public async Task Invoke(HttpContext context)
+    {
+        foreach (var header in _headers)
         {
-            _next = next;
-            _headers = headers;
+            context.Response.Headers[header.Key] = header.Value;
         }
 
-        public async Task Invoke(HttpContext context)
-        {
-            foreach (var header in _headers)
-            {
-                context.Response.Headers[header.Key] = header.Value;
-            }
-
-            await _next(context);
-        }
+        await _next(context);
     }
 }

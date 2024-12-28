@@ -2,23 +2,22 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace ClassifiedAds.IdentityServer.TagHelpers
+namespace ClassifiedAds.IdentityServer.TagHelpers;
+
+[HtmlTargetElement("toggle-button")]
+public class SwitchTagHelper : TagHelper
 {
-    [HtmlTargetElement("toggle-button")]
-    public class SwitchTagHelper : TagHelper
+    public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
     {
-        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
-        {
-            var childContent = await output.GetChildContentAsync();
+        var childContent = await output.GetChildContentAsync();
 
-            var divSlider = new TagBuilder("div");
-            divSlider.AddCssClass("slider round");
+        var divSlider = new TagBuilder("div");
+        divSlider.AddCssClass("slider round");
 
-            output.TagName = "label";
-            output.Attributes.Add("class", "switch");
-            output.Content.AppendHtml(childContent);
-            output.Content.AppendHtml(divSlider);
-            output.TagMode = TagMode.StartTagAndEndTag;
-        }
+        output.TagName = "label";
+        output.Attributes.Add("class", "switch");
+        output.Content.AppendHtml(childContent);
+        output.Content.AppendHtml(divSlider);
+        output.TagMode = TagMode.StartTagAndEndTag;
     }
 }

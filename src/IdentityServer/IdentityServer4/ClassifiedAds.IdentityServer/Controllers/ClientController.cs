@@ -8,336 +8,335 @@ using IdentityServer4.EntityFramework.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace ClassifiedAds.IdentityServer.Controllers
+namespace ClassifiedAds.IdentityServer.Controllers;
+
+public class ClientController : Controller
 {
-    public class ClientController : Controller
+    private readonly ConfigurationDbContext _configurationDbContext;
+
+    public ClientController(ConfigurationDbContext configurationDbContext)
     {
-        private readonly ConfigurationDbContext _configurationDbContext;
+        _configurationDbContext = configurationDbContext;
+    }
 
-        public ClientController(ConfigurationDbContext configurationDbContext)
+    public IActionResult Index()
+    {
+        var clients = _configurationDbContext.Clients
+        .Include(x => x.AllowedGrantTypes)
+        .Include(x => x.RedirectUris)
+        .Include(x => x.PostLogoutRedirectUris)
+        .Include(x => x.AllowedScopes)
+        .Include(x => x.ClientSecrets)
+        .Include(x => x.Claims)
+        .Include(x => x.IdentityProviderRestrictions)
+        .Include(x => x.AllowedCorsOrigins)
+        .Include(x => x.Properties)
+        .AsNoTracking()
+        .ToList();
+
+        var models = clients.Select(x => ClientModel.FromEntity(x)).ToList();
+
+        return View(models);
+    }
+
+    public IActionResult Add()
+    {
+        var client = new ClientModel();
+        return View(nameof(Edit), client);
+    }
+
+    public IActionResult Edit(int id)
+    {
+        var client = _configurationDbContext.Clients
+        .Include(x => x.AllowedGrantTypes)
+        .Include(x => x.RedirectUris)
+        .Include(x => x.PostLogoutRedirectUris)
+        .Include(x => x.AllowedScopes)
+        .Include(x => x.ClientSecrets)
+        .Include(x => x.Claims)
+        .Include(x => x.IdentityProviderRestrictions)
+        .Include(x => x.AllowedCorsOrigins)
+        .Include(x => x.Properties)
+        .Where(x => x.Id == id)
+        .AsNoTracking()
+        .FirstOrDefault();
+
+        var model = ClientModel.FromEntity(client);
+
+        return View(model);
+    }
+
+    [HttpPost]
+    public IActionResult Edit(ClientModel model)
+    {
+        Client client;
+        if (model.Id == 0)
         {
-            _configurationDbContext = configurationDbContext;
-        }
-
-        public IActionResult Index()
-        {
-            var clients = _configurationDbContext.Clients
-            .Include(x => x.AllowedGrantTypes)
-            .Include(x => x.RedirectUris)
-            .Include(x => x.PostLogoutRedirectUris)
-            .Include(x => x.AllowedScopes)
-            .Include(x => x.ClientSecrets)
-            .Include(x => x.Claims)
-            .Include(x => x.IdentityProviderRestrictions)
-            .Include(x => x.AllowedCorsOrigins)
-            .Include(x => x.Properties)
-            .AsNoTracking()
-            .ToList();
-
-            var models = clients.Select(x => ClientModel.FromEntity(x)).ToList();
-
-            return View(models);
-        }
-
-        public IActionResult Add()
-        {
-            var client = new ClientModel();
-            return View(nameof(Edit), client);
-        }
-
-        public IActionResult Edit(int id)
-        {
-            var client = _configurationDbContext.Clients
-            .Include(x => x.AllowedGrantTypes)
-            .Include(x => x.RedirectUris)
-            .Include(x => x.PostLogoutRedirectUris)
-            .Include(x => x.AllowedScopes)
-            .Include(x => x.ClientSecrets)
-            .Include(x => x.Claims)
-            .Include(x => x.IdentityProviderRestrictions)
-            .Include(x => x.AllowedCorsOrigins)
-            .Include(x => x.Properties)
-            .Where(x => x.Id == id)
-            .AsNoTracking()
-            .FirstOrDefault();
-
-            var model = ClientModel.FromEntity(client);
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public IActionResult Edit(ClientModel model)
-        {
-            Client client;
-            if (model.Id == 0)
-            {
-                model.SetDefaultValues();
-                client = new Client();
-                _configurationDbContext.Clients.Add(client);
-            }
-            else
-            {
-                model.ConvertItemsToList();
-
-                client = _configurationDbContext.Clients
-                        .Include(x => x.AllowedGrantTypes)
-                        .Include(x => x.RedirectUris)
-                        .Include(x => x.PostLogoutRedirectUris)
-                        .Include(x => x.AllowedScopes)
-                        .Include(x => x.ClientSecrets)
-                        .Include(x => x.Claims)
-                        .Include(x => x.IdentityProviderRestrictions)
-                        .Include(x => x.AllowedCorsOrigins)
-                        .Include(x => x.Properties)
-                        .Where(x => x.Id == model.Id)
-                        .FirstOrDefault();
-                client.Updated = DateTime.UtcNow;
-            }
-
-            model.UpdateEntity(client);
-            _configurationDbContext.SaveChanges();
-
-            return RedirectToAction(nameof(Edit), new { id = client.Id });
-        }
-
-        public IActionResult Clone(int id)
-        {
-            var client = _configurationDbContext.Clients
-            .Include(x => x.AllowedGrantTypes)
-            .Include(x => x.RedirectUris)
-            .Include(x => x.PostLogoutRedirectUris)
-            .Include(x => x.AllowedScopes)
-            .Include(x => x.ClientSecrets)
-            .Include(x => x.Claims)
-            .Include(x => x.IdentityProviderRestrictions)
-            .Include(x => x.AllowedCorsOrigins)
-            .Include(x => x.Properties)
-            .Where(x => x.Id == id)
-            .AsNoTracking()
-            .FirstOrDefault();
-
-            var model = ClientModel.FromEntity(client);
-            model.OriginalClientId = model.ClientId;
-            model.ClientId = $"Clone_From_{model.ClientId}_{DateTime.Now.ToString("yyyyMMddhhmmssfff")}";
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public IActionResult Clone(ClientModel model)
-        {
-            Client client = new Client();
-            model.ConvertItemsToList();
-            model.UpdateEntity(client);
-
+            model.SetDefaultValues();
+            client = new Client();
             _configurationDbContext.Clients.Add(client);
-            _configurationDbContext.SaveChanges();
+        }
+        else
+        {
+            model.ConvertItemsToList();
 
-            return RedirectToAction(nameof(Edit), new { id = client.Id });
+            client = _configurationDbContext.Clients
+                    .Include(x => x.AllowedGrantTypes)
+                    .Include(x => x.RedirectUris)
+                    .Include(x => x.PostLogoutRedirectUris)
+                    .Include(x => x.AllowedScopes)
+                    .Include(x => x.ClientSecrets)
+                    .Include(x => x.Claims)
+                    .Include(x => x.IdentityProviderRestrictions)
+                    .Include(x => x.AllowedCorsOrigins)
+                    .Include(x => x.Properties)
+                    .Where(x => x.Id == model.Id)
+                    .FirstOrDefault();
+            client.Updated = DateTime.UtcNow;
         }
 
-        public IActionResult Delete(int id)
-        {
-            var client = _configurationDbContext.Clients
-            .Where(x => x.Id == id)
-            .AsNoTracking()
-            .FirstOrDefault();
+        model.UpdateEntity(client);
+        _configurationDbContext.SaveChanges();
 
-            var model = ClientModel.FromEntity(client);
+        return RedirectToAction(nameof(Edit), new { id = client.Id });
+    }
 
-            return View(model);
-        }
+    public IActionResult Clone(int id)
+    {
+        var client = _configurationDbContext.Clients
+        .Include(x => x.AllowedGrantTypes)
+        .Include(x => x.RedirectUris)
+        .Include(x => x.PostLogoutRedirectUris)
+        .Include(x => x.AllowedScopes)
+        .Include(x => x.ClientSecrets)
+        .Include(x => x.Claims)
+        .Include(x => x.IdentityProviderRestrictions)
+        .Include(x => x.AllowedCorsOrigins)
+        .Include(x => x.Properties)
+        .Where(x => x.Id == id)
+        .AsNoTracking()
+        .FirstOrDefault();
 
-        [HttpPost]
-        public IActionResult Delete(ClientModel model)
-        {
-            var client = _configurationDbContext.Clients
-            .FirstOrDefault(x => x.Id == model.Id);
+        var model = ClientModel.FromEntity(client);
+        model.OriginalClientId = model.ClientId;
+        model.ClientId = $"Clone_From_{model.ClientId}_{DateTime.Now.ToString("yyyyMMddhhmmssfff")}";
 
-            _configurationDbContext.Clients.Remove(client);
-            _configurationDbContext.SaveChanges();
+        return View(model);
+    }
 
-            return RedirectToAction(nameof(Index));
-        }
+    [HttpPost]
+    public IActionResult Clone(ClientModel model)
+    {
+        Client client = new Client();
+        model.ConvertItemsToList();
+        model.UpdateEntity(client);
 
-        public IActionResult GetScopes()
-        {
-            var identityResources = _configurationDbContext.IdentityResources
-                .Select(x => x.Name).ToList();
+        _configurationDbContext.Clients.Add(client);
+        _configurationDbContext.SaveChanges();
 
-            var apiScopes = _configurationDbContext.ApiResources
-                .Select(x => x.Name).ToList();
+        return RedirectToAction(nameof(Edit), new { id = client.Id });
+    }
 
-            var scopes = identityResources.Concat(apiScopes).ToList();
+    public IActionResult Delete(int id)
+    {
+        var client = _configurationDbContext.Clients
+        .Where(x => x.Id == id)
+        .AsNoTracking()
+        .FirstOrDefault();
 
-            return Ok(scopes);
-        }
+        var model = ClientModel.FromEntity(client);
 
-        public IActionResult GetGrantTypes()
-        {
-            var allowedGrantypes = new List<string>
-                {
-                    "implicit",
-                    "client_credentials",
-                    "authorization_code",
-                    "hybrid",
-                    "password",
-                    "urn:ietf:params:oauth:grant-type:device_code",
-                };
+        return View(model);
+    }
 
-            return Ok(allowedGrantypes);
-        }
+    [HttpPost]
+    public IActionResult Delete(ClientModel model)
+    {
+        var client = _configurationDbContext.Clients
+        .FirstOrDefault(x => x.Id == model.Id);
 
-        public IActionResult Properties(int id)
-        {
-            var client = _configurationDbContext.Clients
-                .Include(x => x.Properties)
-                .FirstOrDefault(x => x.Id == id);
-            return View(PropertiesModel.FromEntity(client));
-        }
+        _configurationDbContext.Clients.Remove(client);
+        _configurationDbContext.SaveChanges();
 
-        [HttpPost]
-        public IActionResult AddProperty(PropertiesModel model)
-        {
-            var client = _configurationDbContext.Clients
-                .Include(x => x.Properties)
-                .FirstOrDefault(x => x.Id == model.Client.Id);
+        return RedirectToAction(nameof(Index));
+    }
 
-            client.Properties.Add(new ClientProperty
+    public IActionResult GetScopes()
+    {
+        var identityResources = _configurationDbContext.IdentityResources
+            .Select(x => x.Name).ToList();
+
+        var apiScopes = _configurationDbContext.ApiResources
+            .Select(x => x.Name).ToList();
+
+        var scopes = identityResources.Concat(apiScopes).ToList();
+
+        return Ok(scopes);
+    }
+
+    public IActionResult GetGrantTypes()
+    {
+        var allowedGrantypes = new List<string>
             {
-                Key = model.Key,
-                Value = model.Value,
-            });
-
-            _configurationDbContext.SaveChanges();
-
-            return RedirectToAction(nameof(Properties), new { id = client.Id });
-        }
-
-        [HttpGet]
-        public IActionResult DeleteProperty(int id)
-        {
-            var prop = _configurationDbContext.Set<ClientProperty>()
-                .Include(x => x.Client)
-                .FirstOrDefault(x => x.Id == id);
-            return View(PropertyModel.FromEntity(prop));
-        }
-
-        [HttpPost]
-        public IActionResult DeleteProperty(PropertyModel model)
-        {
-            var client = _configurationDbContext.Clients
-                            .Include(x => x.Properties)
-                            .FirstOrDefault(x => x.Id == model.Client.Id);
-            var prop = client.Properties.FirstOrDefault(x => x.Id == model.Id);
-            client.Properties.Remove(prop);
-            _configurationDbContext.SaveChanges();
-
-            return RedirectToAction(nameof(Properties), new { id = client.Id });
-        }
-
-        public IActionResult Secrets(int id)
-        {
-            var client = _configurationDbContext.Clients
-                .Include(x => x.ClientSecrets)
-                .FirstOrDefault(x => x.Id == id);
-            return View(SecretsModel.FromEntity(client));
-        }
-
-        [HttpPost]
-        public IActionResult Secrets(SecretsModel model)
-        {
-            var client = _configurationDbContext.Clients
-                .Include(x => x.ClientSecrets)
-                .FirstOrDefault(x => x.Id == model.Client.Id);
-
-            var secret = new ClientSecret
-            {
-                Created = DateTime.UtcNow,
+                "implicit",
+                "client_credentials",
+                "authorization_code",
+                "hybrid",
+                "password",
+                "urn:ietf:params:oauth:grant-type:device_code",
             };
 
-            model.HashSecret();
-            model.UpdateEntity(secret);
-            client.ClientSecrets.Add(secret);
+        return Ok(allowedGrantypes);
+    }
 
-            _configurationDbContext.SaveChanges();
+    public IActionResult Properties(int id)
+    {
+        var client = _configurationDbContext.Clients
+            .Include(x => x.Properties)
+            .FirstOrDefault(x => x.Id == id);
+        return View(PropertiesModel.FromEntity(client));
+    }
 
-            return RedirectToAction(nameof(Secrets), new { id = client.Id });
-        }
+    [HttpPost]
+    public IActionResult AddProperty(PropertiesModel model)
+    {
+        var client = _configurationDbContext.Clients
+            .Include(x => x.Properties)
+            .FirstOrDefault(x => x.Id == model.Client.Id);
 
-        [HttpGet]
-        public IActionResult DeleteSecret(int id)
+        client.Properties.Add(new ClientProperty
         {
-            var secret = _configurationDbContext.Set<ClientSecret>()
-                .Include(x => x.Client)
-                .FirstOrDefault(x => x.Id == id);
-            return View(SecretModel.FromEntity(secret));
-        }
+            Key = model.Key,
+            Value = model.Value,
+        });
 
-        [HttpPost]
-        public IActionResult DeleteSecret(SecretModel model)
+        _configurationDbContext.SaveChanges();
+
+        return RedirectToAction(nameof(Properties), new { id = client.Id });
+    }
+
+    [HttpGet]
+    public IActionResult DeleteProperty(int id)
+    {
+        var prop = _configurationDbContext.Set<ClientProperty>()
+            .Include(x => x.Client)
+            .FirstOrDefault(x => x.Id == id);
+        return View(PropertyModel.FromEntity(prop));
+    }
+
+    [HttpPost]
+    public IActionResult DeleteProperty(PropertyModel model)
+    {
+        var client = _configurationDbContext.Clients
+                        .Include(x => x.Properties)
+                        .FirstOrDefault(x => x.Id == model.Client.Id);
+        var prop = client.Properties.FirstOrDefault(x => x.Id == model.Id);
+        client.Properties.Remove(prop);
+        _configurationDbContext.SaveChanges();
+
+        return RedirectToAction(nameof(Properties), new { id = client.Id });
+    }
+
+    public IActionResult Secrets(int id)
+    {
+        var client = _configurationDbContext.Clients
+            .Include(x => x.ClientSecrets)
+            .FirstOrDefault(x => x.Id == id);
+        return View(SecretsModel.FromEntity(client));
+    }
+
+    [HttpPost]
+    public IActionResult Secrets(SecretsModel model)
+    {
+        var client = _configurationDbContext.Clients
+            .Include(x => x.ClientSecrets)
+            .FirstOrDefault(x => x.Id == model.Client.Id);
+
+        var secret = new ClientSecret
         {
-            var client = _configurationDbContext.Clients
-                            .Include(x => x.ClientSecrets)
-                            .FirstOrDefault(x => x.Id == model.Client.Id);
-            var secret = client.ClientSecrets.FirstOrDefault(x => x.Id == model.Id);
-            client.ClientSecrets.Remove(secret);
-            _configurationDbContext.SaveChanges();
+            Created = DateTime.UtcNow,
+        };
 
-            return RedirectToAction(nameof(Secrets), new { id = client.Id });
-        }
+        model.HashSecret();
+        model.UpdateEntity(secret);
+        client.ClientSecrets.Add(secret);
 
-        public IActionResult Claims(int id)
+        _configurationDbContext.SaveChanges();
+
+        return RedirectToAction(nameof(Secrets), new { id = client.Id });
+    }
+
+    [HttpGet]
+    public IActionResult DeleteSecret(int id)
+    {
+        var secret = _configurationDbContext.Set<ClientSecret>()
+            .Include(x => x.Client)
+            .FirstOrDefault(x => x.Id == id);
+        return View(SecretModel.FromEntity(secret));
+    }
+
+    [HttpPost]
+    public IActionResult DeleteSecret(SecretModel model)
+    {
+        var client = _configurationDbContext.Clients
+                        .Include(x => x.ClientSecrets)
+                        .FirstOrDefault(x => x.Id == model.Client.Id);
+        var secret = client.ClientSecrets.FirstOrDefault(x => x.Id == model.Id);
+        client.ClientSecrets.Remove(secret);
+        _configurationDbContext.SaveChanges();
+
+        return RedirectToAction(nameof(Secrets), new { id = client.Id });
+    }
+
+    public IActionResult Claims(int id)
+    {
+        var client = _configurationDbContext.Clients
+            .Include(x => x.Claims)
+            .FirstOrDefault(x => x.Id == id);
+
+        return View(ClaimsModel.FromEntity(client));
+    }
+
+    [HttpPost]
+    public IActionResult Claims(ClaimModel model)
+    {
+        var client = _configurationDbContext.Clients
+            .Include(x => x.Claims)
+            .FirstOrDefault(x => x.Id == model.Client.Id);
+
+        client.Claims.Add(new ClientClaim
         {
-            var client = _configurationDbContext.Clients
-                .Include(x => x.Claims)
-                .FirstOrDefault(x => x.Id == id);
+            Type = model.Type,
+            Value = model.Value,
+        });
 
-            return View(ClaimsModel.FromEntity(client));
-        }
+        _configurationDbContext.SaveChanges();
 
-        [HttpPost]
-        public IActionResult Claims(ClaimModel model)
-        {
-            var client = _configurationDbContext.Clients
-                .Include(x => x.Claims)
-                .FirstOrDefault(x => x.Id == model.Client.Id);
+        return RedirectToAction(nameof(Claims), new { id = client.Id });
+    }
 
-            client.Claims.Add(new ClientClaim
-            {
-                Type = model.Type,
-                Value = model.Value,
-            });
+    public IActionResult DeleteClaim(int id)
+    {
+        var claim = _configurationDbContext.Set<ClientClaim>()
+            .Include(x => x.Client)
+            .FirstOrDefault(x => x.Id == id);
 
-            _configurationDbContext.SaveChanges();
+        return View(ClaimModel.FromEntity(claim));
+    }
 
-            return RedirectToAction(nameof(Claims), new { id = client.Id });
-        }
+    [HttpPost]
+    public IActionResult DeleteClaim(ClaimModel model)
+    {
+        var client = _configurationDbContext.Clients
+            .Include(x => x.Claims)
+            .FirstOrDefault(x => x.Id == model.Client.Id);
 
-        public IActionResult DeleteClaim(int id)
-        {
-            var claim = _configurationDbContext.Set<ClientClaim>()
-                .Include(x => x.Client)
-                .FirstOrDefault(x => x.Id == id);
+        var claim = client.Claims.FirstOrDefault(x => x.Id == model.Id);
 
-            return View(ClaimModel.FromEntity(claim));
-        }
+        client.Claims.Remove(claim);
 
-        [HttpPost]
-        public IActionResult DeleteClaim(ClaimModel model)
-        {
-            var client = _configurationDbContext.Clients
-                .Include(x => x.Claims)
-                .FirstOrDefault(x => x.Id == model.Client.Id);
+        _configurationDbContext.SaveChanges();
 
-            var claim = client.Claims.FirstOrDefault(x => x.Id == model.Id);
-
-            client.Claims.Remove(claim);
-
-            _configurationDbContext.SaveChanges();
-
-            return RedirectToAction(nameof(Claims), new { id = client.Id });
-        }
+        return RedirectToAction(nameof(Claims), new { id = client.Id });
     }
 }

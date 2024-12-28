@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace ClassifiedAds.CrossCuttingConcerns.Exceptions
-{
-    public class NotFoundException : Exception
-    {
-        public NotFoundException()
-            : base()
-        {
-        }
+namespace ClassifiedAds.CrossCuttingConcerns.Exceptions;
 
-        public NotFoundException(string message)
-            : base(message)
-        {
-        }
+public class NotFoundException : Exception
+{
+    public NotFoundException()
+        : base()
+    {
+    }
+
+    public NotFoundException(string message)
+        : base(message)
+    {
     }
 }

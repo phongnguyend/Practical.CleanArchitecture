@@ -1,9 +1,8 @@
-﻿namespace ClassifiedAds.CrossCuttingConcerns.Tenants
-{
-    public interface IConnectionStringResolver<TDbContext>
-    {
-        string ConnectionString { get; }
+﻿namespace ClassifiedAds.CrossCuttingConcerns.Tenants;
 
-        string MigrationsAssembly { get; }
-    }
+public interface IConnectionStringResolver<TDbContext>
+{
+    string ConnectionString { get; }
+
+    string MigrationsAssembly { get; }
 }

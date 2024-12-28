@@ -1,19 +1,18 @@
 ﻿using System;
 
-namespace ClassifiedAds.CrossCuttingConcerns.Locks
+namespace ClassifiedAds.CrossCuttingConcerns.Locks;
+
+public interface ILockManager
 {
-    public interface ILockManager
-    {
-        bool AcquireLock(string entityName, string entityId, string ownerId, TimeSpan expirationIn);
+    bool AcquireLock(string entityName, string entityId, string ownerId, TimeSpan expirationIn);
 
-        bool ExtendLock(string entityName, string entityId, string ownerId, TimeSpan expirationIn);
+    bool ExtendLock(string entityName, string entityId, string ownerId, TimeSpan expirationIn);
 
-        bool ReleaseLock(string entityName, string entityId, string ownerId);
+    bool ReleaseLock(string entityName, string entityId, string ownerId);
 
-        bool ReleaseLocks(string ownerId);
+    bool ReleaseLocks(string ownerId);
 
-        bool ReleaseExpiredLocks();
+    bool ReleaseExpiredLocks();
 
-        void EnsureAcquiringLock(string entityName, string entityId, string ownerId, TimeSpan expirationIn);
-    }
+    void EnsureAcquiringLock(string entityName, string entityId, string ownerId, TimeSpan expirationIn);
 }

@@ -2,21 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassifiedAds.IdentityServer.Models.ClientModels
+namespace ClassifiedAds.IdentityServer.Models.ClientModels;
+
+public class ClaimsModel : ClaimModel
 {
-    public class ClaimsModel : ClaimModel
+    public List<ClaimModel> Claims { get; set; }
+
+    public static ClaimsModel FromEntity(Client client)
     {
-        public List<ClaimModel> Claims { get; set; }
+        var clientModel = ClientModel.FromEntity(client);
 
-        public static ClaimsModel FromEntity(Client client)
+        return new ClaimsModel
         {
-            var clientModel = ClientModel.FromEntity(client);
-
-            return new ClaimsModel
-            {
-                Client = clientModel,
-                Claims = client.Claims?.Select(x => FromEntity(x))?.ToList(),
-            };
-        }
+            Client = clientModel,
+            Claims = client.Claims?.Select(x => FromEntity(x))?.ToList(),
+        };
     }
 }

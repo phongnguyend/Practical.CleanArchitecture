@@ -1,8 +1,7 @@
 ﻿using System;
 
-namespace ClassifiedAds.CrossCuttingConcerns.CircuitBreakers
+namespace ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
+
+public class CircuitBreakerOpenException : Exception
 {
-    public class CircuitBreakerOpenException : Exception
-    {
-    }
 }

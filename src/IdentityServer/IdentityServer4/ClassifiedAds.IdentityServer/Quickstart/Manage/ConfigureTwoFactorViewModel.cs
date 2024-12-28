@@ -4,12 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace ClassifiedAds.IdentityServer.Manage.Models
-{
-    public class ConfigureTwoFactorViewModel
-    {
-        public string SelectedProvider { get; set; }
+namespace ClassifiedAds.IdentityServer.Manage.Models;
 
-        public ICollection<SelectListItem> Providers { get; set; }
-    }
+public class ConfigureTwoFactorViewModel
+{
+    public string SelectedProvider { get; set; }
+
+    public ICollection<SelectListItem> Providers { get; set; }
 }

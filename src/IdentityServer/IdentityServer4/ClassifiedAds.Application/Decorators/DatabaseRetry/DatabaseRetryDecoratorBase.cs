@@ -1,67 +1,66 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Application.Decorators.DatabaseRetry
+namespace ClassifiedAds.Application.Decorators.DatabaseRetry;
+
+public abstract class DatabaseRetryDecoratorBase
 {
-    public abstract class DatabaseRetryDecoratorBase
+    protected DatabaseRetryAttribute DatabaseRetryOptions { get; set; }
+
+    protected void WrapExecution(Action action)
     {
-        protected DatabaseRetryAttribute DatabaseRetryOptions { get; set; }
+        int executedTimes = 0;
 
-        protected void WrapExecution(Action action)
+        while (true)
         {
-            int executedTimes = 0;
-
-            while (true)
+            try
             {
-                try
+                executedTimes++;
+                action();
+                return;
+            }
+            catch (Exception ex)
+            {
+                if (executedTimes >= DatabaseRetryOptions.RetryTimes || !IsDatabaseException(ex))
                 {
-                    executedTimes++;
-                    action();
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    if (executedTimes >= DatabaseRetryOptions.RetryTimes || !IsDatabaseException(ex))
-                    {
-                        throw;
-                    }
+                    throw;
                 }
             }
         }
+    }
 
-        protected async Task WrapExecutionAsync(Func<Task> action)
+    protected async Task WrapExecutionAsync(Func<Task> action)
+    {
+        int executedTimes = 0;
+
+        while (true)
         {
-            int executedTimes = 0;
-
-            while (true)
+            try
             {
-                try
+                executedTimes++;
+                await action();
+                return;
+            }
+            catch (Exception ex)
+            {
+                if (executedTimes >= DatabaseRetryOptions.RetryTimes || !IsDatabaseException(ex))
                 {
-                    executedTimes++;
-                    await action();
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    if (executedTimes >= DatabaseRetryOptions.RetryTimes || !IsDatabaseException(ex))
-                    {
-                        throw;
-                    }
+                    throw;
                 }
             }
         }
+    }
 
-        private static bool IsDatabaseException(Exception exception)
+    private static bool IsDatabaseException(Exception exception)
+    {
+        string message = exception.InnerException?.Message;
+
+        if (message == null)
         {
-            string message = exception.InnerException?.Message;
-
-            if (message == null)
-            {
-                return false;
-            }
-
-            return message.Contains("The connection is broken and recovery is not possible")
-                || message.Contains("error occurred while establishing a connection");
+            return false;
         }
+
+        return message.Contains("The connection is broken and recovery is not possible")
+            || message.Contains("error occurred while establishing a connection");
     }
 }

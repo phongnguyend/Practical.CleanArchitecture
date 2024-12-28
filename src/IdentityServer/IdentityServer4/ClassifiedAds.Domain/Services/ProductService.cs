@@ -1,6 +1,5 @@
-﻿namespace ClassifiedAds.Domain.Services
+﻿namespace ClassifiedAds.Domain.Services;
+
+public class ProductService
 {
-    public class ProductService
-    {
-    }
 }

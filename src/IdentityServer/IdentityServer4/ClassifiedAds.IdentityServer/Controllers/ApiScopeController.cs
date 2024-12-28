@@ -7,104 +7,103 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 
-namespace ClassifiedAds.IdentityServer.Controllers
+namespace ClassifiedAds.IdentityServer.Controllers;
+
+public class ApiScopeController : Controller
 {
-    public class ApiScopeController : Controller
+    private readonly ConfigurationDbContext _configurationDbContext;
+
+    public ApiScopeController(ConfigurationDbContext configurationDbContext)
     {
-        private readonly ConfigurationDbContext _configurationDbContext;
+        _configurationDbContext = configurationDbContext;
+    }
 
-        public ApiScopeController(ConfigurationDbContext configurationDbContext)
-        {
-            _configurationDbContext = configurationDbContext;
-        }
+    public IActionResult Scopes(int id)
+    {
+        var api = _configurationDbContext.ApiScopes
+            .Include(x => x.UserClaims)
+            .Include(x => x.Properties)
+            .FirstOrDefault(x => x.Id == id);
+        return View(ApiScopeModel.FromEntity(api));
+    }
 
-        public IActionResult Scopes(int id)
+    public IActionResult Edit(int id)
+    {
+        if (id != 0)
         {
             var api = _configurationDbContext.ApiScopes
-                .Include(x => x.UserClaims)
-                .Include(x => x.Properties)
-                .FirstOrDefault(x => x.Id == id);
+                        .Include(x => x.UserClaims)
+                        .Include(x => x.Properties)
+                        .FirstOrDefault(x => x.Id == id);
+
             return View(ApiScopeModel.FromEntity(api));
         }
-
-        public IActionResult Edit(int id)
+        else
         {
-            if (id != 0)
+            return View(new ApiScopeModel
             {
-                var api = _configurationDbContext.ApiScopes
-                            .Include(x => x.UserClaims)
-                            .Include(x => x.Properties)
-                            .FirstOrDefault(x => x.Id == id);
+            });
+        }
+    }
 
-                return View(ApiScopeModel.FromEntity(api));
-            }
-            else
+    [HttpPost]
+    public IActionResult Edit(ApiScopeModel model)
+    {
+        ApiScope api;
+
+        if (model.Id == 0)
+        {
+            api = new ApiScope
             {
-                return View(new ApiScopeModel
-                {
-                });
-            }
+
+            };
+        }
+        else
+        {
+            api = _configurationDbContext.ApiScopes
+            .Include(x => x.UserClaims)
+            .Include(x => x.Properties)
+            .FirstOrDefault(x => x.Id == model.Id);
         }
 
-        [HttpPost]
-        public IActionResult Edit(ApiScopeModel model)
+        model.UpdateEntity(api);
+
+        if (!string.IsNullOrEmpty(model.UserClaimsItems))
         {
-            ApiScope api;
+            var userClaims = JsonSerializer.Deserialize<List<string>>(model.UserClaimsItems);
 
-            if (model.Id == 0)
+            api.UserClaims.AddRange(userClaims.Select(x => new ApiScopeClaim
             {
-                api = new ApiScope
-                {
-
-                };
-            }
-            else
-            {
-                api = _configurationDbContext.ApiScopes
-                .Include(x => x.UserClaims)
-                .Include(x => x.Properties)
-                .FirstOrDefault(x => x.Id == model.Id);
-            }
-
-            model.UpdateEntity(api);
-
-            if (!string.IsNullOrEmpty(model.UserClaimsItems))
-            {
-                var userClaims = JsonSerializer.Deserialize<List<string>>(model.UserClaimsItems);
-
-                api.UserClaims.AddRange(userClaims.Select(x => new ApiScopeClaim
-                {
-                    Type = x,
-                }));
-            }
-
-            _configurationDbContext.SaveChanges();
-
-            return RedirectToAction(nameof(Scopes), new { id = api.Id });
+                Type = x,
+            }));
         }
 
-        [HttpGet]
-        public IActionResult Delete(int id)
-        {
-            var api = _configurationDbContext.ApiScopes
-                                        .Include(x => x.UserClaims)
-                                        .Include(x => x.Properties)
-                                        .FirstOrDefault(x => x.Id == id);
-            return View(ApiScopeModel.FromEntity(api));
-        }
+        _configurationDbContext.SaveChanges();
 
-        [HttpPost]
-        public IActionResult Delete(ApiScopeModel model)
-        {
-            var api = _configurationDbContext.ApiScopes
-                                        .Include(x => x.UserClaims)
-                                        .Include(x => x.Properties)
-                                        .FirstOrDefault(x => x.Id == model.Id);
+        return RedirectToAction(nameof(Scopes), new { id = api.Id });
+    }
 
-            _configurationDbContext.ApiScopes.Remove(api);
-            _configurationDbContext.SaveChanges();
+    [HttpGet]
+    public IActionResult Delete(int id)
+    {
+        var api = _configurationDbContext.ApiScopes
+                                    .Include(x => x.UserClaims)
+                                    .Include(x => x.Properties)
+                                    .FirstOrDefault(x => x.Id == id);
+        return View(ApiScopeModel.FromEntity(api));
+    }
 
-            return RedirectToAction(nameof(Scopes), new { id = api.Id });
-        }
+    [HttpPost]
+    public IActionResult Delete(ApiScopeModel model)
+    {
+        var api = _configurationDbContext.ApiScopes
+                                    .Include(x => x.UserClaims)
+                                    .Include(x => x.Properties)
+                                    .FirstOrDefault(x => x.Id == model.Id);
+
+        _configurationDbContext.ApiScopes.Remove(api);
+        _configurationDbContext.SaveChanges();
+
+        return RedirectToAction(nameof(Scopes), new { id = api.Id });
     }
 }

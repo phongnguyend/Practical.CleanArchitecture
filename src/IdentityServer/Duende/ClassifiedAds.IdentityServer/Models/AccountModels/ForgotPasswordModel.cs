@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ClassifiedAds.IdentityServer.Models;
+namespace ClassifiedAds.IdentityServer.Models.AccountModels;
 
 public class ForgotPasswordModel
 {

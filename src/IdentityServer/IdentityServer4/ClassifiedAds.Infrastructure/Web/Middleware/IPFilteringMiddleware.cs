@@ -2,25 +2,24 @@
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Infrastructure.Web.Middleware
+namespace ClassifiedAds.Infrastructure.Web.Middleware;
+
+public class IPFilteringMiddleware
 {
-    public class IPFilteringMiddleware
+    private readonly RequestDelegate _next;
+    private readonly ILogger<IPFilteringMiddleware> _logger;
+
+    public IPFilteringMiddleware(RequestDelegate next, ILogger<IPFilteringMiddleware> logger)
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<IPFilteringMiddleware> _logger;
+        _next = next;
+        _logger = logger;
+    }
 
-        public IPFilteringMiddleware(RequestDelegate next, ILogger<IPFilteringMiddleware> logger)
-        {
-            _next = next;
-            _logger = logger;
-        }
+    public async Task InvokeAsync(HttpContext context)
+    {
+        var remoteIp = context.Connection.RemoteIpAddress;
+        _logger.LogInformation($"Request from Remote IP address: {remoteIp}");
 
-        public async Task InvokeAsync(HttpContext context)
-        {
-            var remoteIp = context.Connection.RemoteIpAddress;
-            _logger.LogInformation($"Request from Remote IP address: {remoteIp}");
-
-            await _next(context);
-        }
+        await _next(context);
     }
 }

@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace ClassifiedAds.Domain.Infrastructure.MessageBrokers
+namespace ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+
+public interface IMessageReceiver<T>
 {
-    public interface IMessageReceiver<T>
-    {
-        void Receive(Action<T, MetaData> action);
-    }
+    void Receive(Action<T, MetaData> action);
 }

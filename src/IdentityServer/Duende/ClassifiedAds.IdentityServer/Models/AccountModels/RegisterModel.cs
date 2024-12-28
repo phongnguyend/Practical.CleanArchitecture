@@ -1,12 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ClassifiedAds.IdentityServer.Models;
+namespace ClassifiedAds.IdentityServer.Models.AccountModels;
 
-public class ResetPasswordModel
+public class RegisterModel
 {
-    public string Token { get; set; }
-
-    public string Email { get; set; }
+    public string UserName { get; set; }
 
     [DataType(DataType.Password)]
     public string Password { get; set; }

@@ -2,19 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassifiedAds.IdentityServer.Models.RoleModels
-{
-    public class ClaimsModel : ClaimModel
-    {
-        public List<ClaimModel> Claims { get; set; }
+namespace ClassifiedAds.IdentityServer.Models.RoleModels;
 
-        public static ClaimsModel FromEntity(Role role)
+public class ClaimsModel : ClaimModel
+{
+    public List<ClaimModel> Claims { get; set; }
+
+    public static ClaimsModel FromEntity(Role role)
+    {
+        return new ClaimsModel
         {
-            return new ClaimsModel
-            {
-                Role = role,
-                Claims = role.Claims?.Select(x => FromEntity(x))?.ToList(),
-            };
-        }
+            Role = role,
+            Claims = role.Claims?.Select(x => FromEntity(x))?.ToList(),
+        };
     }
 }

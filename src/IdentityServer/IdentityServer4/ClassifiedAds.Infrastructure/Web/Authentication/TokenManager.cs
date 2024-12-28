@@ -4,52 +4,51 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Infrastructure.Web.Authentication
+namespace ClassifiedAds.Infrastructure.Web.Authentication;
+
+public class TokenManager
 {
-    public class TokenManager
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly OpenIdConnectOptions _options;
+
+    public TokenManager(IHttpClientFactory httpClientFactory, OpenIdConnectOptions options)
     {
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly OpenIdConnectOptions _options;
+        _httpClientFactory = httpClientFactory;
+        _options = options;
+    }
 
-        public TokenManager(IHttpClientFactory httpClientFactory, OpenIdConnectOptions options)
+    public async Task<TokenModel> RefreshToken(string refreshToken)
+    {
+        var httpClient = _httpClientFactory.CreateClient();
+        var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
         {
-            _httpClientFactory = httpClientFactory;
-            _options = options;
-        }
+            Address = _options.Authority,
+            Policy = { RequireHttps = _options.RequireHttpsMetadata },
+        });
 
-        public async Task<TokenModel> RefreshToken(string refreshToken)
+        var response = await httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
         {
-            var httpClient = _httpClientFactory.CreateClient();
-            var metaDataResponse = await httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
-            {
-                Address = _options.Authority,
-                Policy = { RequireHttps = _options.RequireHttpsMetadata },
-            });
+            Address = metaDataResponse.TokenEndpoint,
+            ClientId = _options.ClientId,
+            ClientSecret = _options.ClientSecret,
+            RefreshToken = refreshToken,
+        });
 
-            var response = await httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
+        if (response.IsError)
+        {
+            if (response.HttpStatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-                Address = metaDataResponse.TokenEndpoint,
-                ClientId = _options.ClientId,
-                ClientSecret = _options.ClientSecret,
-                RefreshToken = refreshToken,
-            });
-
-            if (response.IsError)
-            {
-                if (response.HttpStatusCode == System.Net.HttpStatusCode.BadRequest)
-                {
-                    return null;
-                }
-
-                throw new Exception(response.Raw);
+                return null;
             }
 
-            return new TokenModel
-            {
-                AccessToken = response.AccessToken,
-                RefreshToken = response.RefreshToken,
-                ExpiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(response.ExpiresIn),
-            };
+            throw new Exception(response.Raw);
         }
+
+        return new TokenModel
+        {
+            AccessToken = response.AccessToken,
+            RefreshToken = response.RefreshToken,
+            ExpiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(response.ExpiresIn),
+        };
     }
 }

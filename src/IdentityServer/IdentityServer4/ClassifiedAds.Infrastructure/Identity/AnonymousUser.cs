@@ -1,12 +1,11 @@
 ﻿using ClassifiedAds.Domain.Identity;
 using System;
 
-namespace ClassifiedAds.Infrastructure.Identity
-{
-    public class AnonymousUser : ICurrentUser
-    {
-        public bool IsAuthenticated => false;
+namespace ClassifiedAds.Infrastructure.Identity;
 
-        public Guid UserId => Guid.Empty;
-    }
+public class AnonymousUser : ICurrentUser
+{
+    public bool IsAuthenticated => false;
+
+    public Guid UserId => Guid.Empty;
 }

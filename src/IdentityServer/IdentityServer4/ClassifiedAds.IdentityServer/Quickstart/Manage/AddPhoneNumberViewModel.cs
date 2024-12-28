@@ -4,13 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.IdentityServer.Manage.Models
+namespace ClassifiedAds.IdentityServer.Manage.Models;
+
+public class AddPhoneNumberViewModel
 {
-    public class AddPhoneNumberViewModel
-    {
-        [Required]
-        [Phone]
-        [Display(Name = "Phone number")]
-        public string PhoneNumber { get; set; }
-    }
+    [Required]
+    [Phone]
+    [Display(Name = "Phone number")]
+    public string PhoneNumber { get; set; }
 }

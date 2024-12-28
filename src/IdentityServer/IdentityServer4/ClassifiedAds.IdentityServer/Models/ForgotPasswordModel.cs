@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ClassifiedAds.IdentityServer.Models
+namespace ClassifiedAds.IdentityServer.Models;
+
+public class ForgotPasswordModel
 {
-    public class ForgotPasswordModel
-    {
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
-    }
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; }
 }

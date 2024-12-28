@@ -8,24 +8,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace ClassifiedAds.IdentityServer.Areas.Identity.Pages.Account.Manage
+namespace ClassifiedAds.IdentityServer.Areas.Identity.Pages.Account.Manage;
+
+public class ShowRecoveryCodesModel : PageModel
 {
-    public class ShowRecoveryCodesModel : PageModel
+    [TempData]
+    public string[] RecoveryCodes { get; set; }
+
+    [TempData]
+    public string StatusMessage { get; set; }
+
+    public IActionResult OnGet()
     {
-        [TempData]
-        public string[] RecoveryCodes { get; set; }
-
-        [TempData]
-        public string StatusMessage { get; set; }
-
-        public IActionResult OnGet()
+        if (RecoveryCodes == null || RecoveryCodes.Length == 0)
         {
-            if (RecoveryCodes == null || RecoveryCodes.Length == 0)
-            {
-                return RedirectToPage("./TwoFactorAuthentication");
-            }
-
-            return Page();
+            return RedirectToPage("./TwoFactorAuthentication");
         }
+
+        return Page();
     }
 }
