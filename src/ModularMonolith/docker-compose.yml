@@ -64,13 +64,13 @@ services:
           - rabbitmq
         environment:
           ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
-          IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
-          IdentityServerAuthentication__RequireHttpsMetadata: "false"
+          Authentication__IdentityServer__Authority: "http://host.docker.internal:9000"
+          Authentication__IdentityServer__RequireHttpsMetadata: "false"
           Modules__AuditLog__ConnectionStrings__Default: ${Modules__AuditLog__ConnectionStrings__Default}
           Modules__Configuration__ConnectionStrings__Default: ${Modules__Configuration__ConnectionStrings__Default}
           Modules__Identity__ConnectionStrings__Default: ${Modules__Identity__ConnectionStrings__Default}
-          Modules__Identity__IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
-          Modules__Identity__IdentityServerAuthentication__RequireHttpsMetadata: "false"
+          Modules__Identity__IdentityServer__Authority: "http://host.docker.internal:9000"
+          Modules__Identity__IdentityServer__RequireHttpsMetadata: "false"
           Modules__Notification__ConnectionStrings__Default: ${Modules__Notification__ConnectionStrings__Default}
           Modules__Product__ConnectionStrings__Default: ${Modules__Product__ConnectionStrings__Default}
           Modules__Storage__ConnectionStrings__Default: ${Modules__Storage__ConnectionStrings__Default}
@@ -95,8 +95,6 @@ services:
           Modules__AuditLog__ConnectionStrings__Default: ${Modules__AuditLog__ConnectionStrings__Default}
           Modules__Configuration__ConnectionStrings__Default: ${Modules__Configuration__ConnectionStrings__Default}
           Modules__Identity__ConnectionStrings__Default: ${Modules__Identity__ConnectionStrings__Default}
-          Modules__Identity__IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
-          Modules__Identity__IdentityServerAuthentication__RequireHttpsMetadata: "false"
           Modules__Notification__ConnectionStrings__Default: ${Modules__Notification__ConnectionStrings__Default}
           Modules__Notification__Email__Provider: "SmtpClient"
           Modules__Notification__Email__SmtpClient__Host: "mailhog"

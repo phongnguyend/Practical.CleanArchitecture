@@ -28,8 +28,8 @@ services:
         environment:
           ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices.AuditLog;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False"
-          IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
-          IdentityServerAuthentication__RequireHttpsMetadata: "false"
+          Authentication__IdentityServer__Authority: "http://host.docker.internal:9000"
+          Authentication__IdentityServer__RequireHttpsMetadata: "false"
           Services__AuditLog__Grpc: ${Services__AuditLog__Grpc}
           Services__Identity__Grpc: ${Services__Identity__Grpc}
           Services__Notification__Grpc: ${Services__Notification__Grpc}
@@ -44,8 +44,8 @@ services:
           ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
           ASPNETCORE_URLS: "https://+"
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices.AuditLog;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False"
-          IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
-          IdentityServerAuthentication__RequireHttpsMetadata: "false"
+          Authentication__IdentityServer__Authority: "http://host.docker.internal:9000"
+          Authentication__IdentityServer__RequireHttpsMetadata: "false"
           Services__AuditLog__Grpc: ${Services__AuditLog__Grpc}
           Services__Identity__Grpc: ${Services__Identity__Grpc}
           Services__Notification__Grpc: ${Services__Notification__Grpc}
@@ -59,8 +59,8 @@ services:
         environment:
           ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices.Configuration;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False"
-          IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
-          IdentityServerAuthentication__RequireHttpsMetadata: "false"
+          Authentication__IdentityServer__Authority: "http://host.docker.internal:9000"
+          Authentication__IdentityServer__RequireHttpsMetadata: "false"
           Services__AuditLog__Grpc: ${Services__AuditLog__Grpc}
           Services__Identity__Grpc: ${Services__Identity__Grpc}
           Services__Notification__Grpc: ${Services__Notification__Grpc}
@@ -74,8 +74,8 @@ services:
         environment:
           ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices.Identity;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False"
-          IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
-          IdentityServerAuthentication__RequireHttpsMetadata: "false"
+          Authentication__IdentityServer__Authority: "http://host.docker.internal:9000"
+          Authentication__IdentityServer__RequireHttpsMetadata: "false"
           Services__AuditLog__Grpc: ${Services__AuditLog__Grpc}
           Services__Identity__Grpc: ${Services__Identity__Grpc}
           Services__Notification__Grpc: ${Services__Notification__Grpc}
@@ -105,8 +105,8 @@ services:
           ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
           ASPNETCORE_URLS: "https://+"
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices.Identity;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False"
-          IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
-          IdentityServerAuthentication__RequireHttpsMetadata: "false"
+          Authentication__IdentityServer__Authority: "http://host.docker.internal:9000"
+          Authentication__IdentityServer__RequireHttpsMetadata: "false"
           Services__AuditLog__Grpc: ${Services__AuditLog__Grpc}
           Services__Identity__Grpc: ${Services__Identity__Grpc}
           Services__Notification__Grpc: ${Services__Notification__Grpc}
@@ -120,8 +120,8 @@ services:
         environment:
           ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices.Notification;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False"
-          IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
-          IdentityServerAuthentication__RequireHttpsMetadata: "false"
+          Authentication__IdentityServer__Authority: "http://host.docker.internal:9000"
+          Authentication__IdentityServer__RequireHttpsMetadata: "false"
           MessageBroker__Provider: "RabbitMQ"
           MessageBroker__RabbitMQ__HostName: "rabbitmq"
           Services__AuditLog__Grpc: ${Services__AuditLog__Grpc}
@@ -137,8 +137,8 @@ services:
         environment:
           DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT}
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices.Notification;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False"
-          IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
-          IdentityServerAuthentication__RequireHttpsMetadata: "false"
+          Authentication__IdentityServer__Authority: "http://host.docker.internal:9000"
+          Authentication__IdentityServer__RequireHttpsMetadata: "false"
           MessageBroker__Provider: "RabbitMQ"
           MessageBroker__RabbitMQ__HostName: "rabbitmq"
           Notification__Email__Provider: "SmtpClient"
@@ -162,8 +162,8 @@ services:
           ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
           ASPNETCORE_URLS: "https://+"
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices.Notification;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False"
-          IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
-          IdentityServerAuthentication__RequireHttpsMetadata: "false"
+          Authentication__IdentityServer__Authority: "http://host.docker.internal:9000"
+          Authentication__IdentityServer__RequireHttpsMetadata: "false"
           MessageBroker__Provider: "RabbitMQ"
           MessageBroker__RabbitMQ__HostName: "rabbitmq"
           Services__AuditLog__Grpc: ${Services__AuditLog__Grpc}
@@ -179,8 +179,8 @@ services:
         environment:
           ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices.Product;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False"
-          IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
-          IdentityServerAuthentication__RequireHttpsMetadata: "false"
+          Authentication__IdentityServer__Authority: "http://host.docker.internal:9000"
+          Authentication__IdentityServer__RequireHttpsMetadata: "false"
           Services__AuditLog__Grpc: ${Services__AuditLog__Grpc}
           Services__Identity__Grpc: ${Services__Identity__Grpc}
           Services__Notification__Grpc: ${Services__Notification__Grpc}
@@ -194,8 +194,8 @@ services:
         environment:
           ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices.Storage;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False"
-          IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
-          IdentityServerAuthentication__RequireHttpsMetadata: "false"
+          Authentication__IdentityServer__Authority: "http://host.docker.internal:9000"
+          Authentication__IdentityServer__RequireHttpsMetadata: "false"
           MessageBroker__Provider: "RabbitMQ"
           MessageBroker__RabbitMQ__HostName: "rabbitmq"
           Storage__Provider: "Local"

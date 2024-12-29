@@ -17,7 +17,7 @@ public class AppSettings
 
     public MonitoringOptions Monitoring { get; set; }
 
-    public IdentityServerAuthentication IdentityServerAuthentication { get; set; }
+    public AuthenticationOptions Authentication { get; set; }
 
     public string AllowedHosts { get; set; }
 

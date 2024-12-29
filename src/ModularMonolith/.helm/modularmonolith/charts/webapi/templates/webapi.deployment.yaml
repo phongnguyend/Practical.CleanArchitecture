@@ -17,9 +17,9 @@ spec:
     spec:
       containers:
       - env:
-        - name: IdentityServerAuthentication__Authority
+        - name: Authentication__IdentityServer__Authority
           value: http://{{ .Release.Name}}-identityserver
-        - name: IdentityServerAuthentication__RequireHttpsMetadata
+        - name: Authentication__IdentityServer__RequireHttpsMetadata
           value: "false"
         envFrom:
         - configMapRef:

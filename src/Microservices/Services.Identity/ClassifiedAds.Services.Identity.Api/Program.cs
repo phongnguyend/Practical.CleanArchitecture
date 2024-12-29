@@ -69,26 +69,26 @@ services.AddDataProtection()
 
 services.AddAuthentication(options =>
 {
-    options.DefaultScheme = appSettings.IdentityServerAuthentication.Provider switch
+    options.DefaultScheme = appSettings.Authentication.Provider switch
     {
-        "OpenIddict" => "OpenIddict",
+        "Jwt" => "Jwt",
         _ => JwtBearerDefaults.AuthenticationScheme
     };
 })
 .AddJwtBearer(options =>
 {
-    options.Authority = appSettings.IdentityServerAuthentication.Authority;
-    options.Audience = appSettings.IdentityServerAuthentication.ApiName;
-    options.RequireHttpsMetadata = appSettings.IdentityServerAuthentication.RequireHttpsMetadata;
+    options.Authority = appSettings.Authentication.IdentityServer.Authority;
+    options.Audience = appSettings.Authentication.IdentityServer.Audience;
+    options.RequireHttpsMetadata = appSettings.Authentication.IdentityServer.RequireHttpsMetadata;
 })
-.AddJwtBearer("OpenIddict", options =>
+.AddJwtBearer("Jwt", options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateAudience = false,
-        ValidIssuer = appSettings.IdentityServerAuthentication.OpenIddict.IssuerUri,
-        TokenDecryptionKey = new X509SecurityKey(appSettings.IdentityServerAuthentication.OpenIddict.TokenDecryptionCertificate.FindCertificate()),
-        IssuerSigningKey = new X509SecurityKey(appSettings.IdentityServerAuthentication.OpenIddict.IssuerSigningCertificate.FindCertificate()),
+        ValidIssuer = appSettings.Authentication.Jwt.IssuerUri,
+        ValidAudience = appSettings.Authentication.Jwt.Audience,
+        TokenDecryptionKey = new X509SecurityKey(appSettings.Authentication.Jwt.TokenDecryptionCertificate.FindCertificate()),
+        IssuerSigningKey = new X509SecurityKey(appSettings.Authentication.Jwt.IssuerSigningCertificate.FindCertificate()),
     };
 });
 
@@ -129,8 +129,8 @@ services.AddSwaggerGen(setupAction =>
         {
             AuthorizationCode = new OpenApiOAuthFlow
             {
-                TokenUrl = new Uri(appSettings.IdentityServerAuthentication.Authority + "/connect/token", UriKind.Absolute),
-                AuthorizationUrl = new Uri(appSettings.IdentityServerAuthentication.Authority + "/connect/authorize", UriKind.Absolute),
+                TokenUrl = new Uri(appSettings.Authentication.IdentityServer.Authority + "/connect/token", UriKind.Absolute),
+                AuthorizationUrl = new Uri(appSettings.Authentication.IdentityServer.Authority + "/connect/authorize", UriKind.Absolute),
                 Scopes = new Dictionary<string, string>
                 {
                             { "openid", "OpenId" },
@@ -140,7 +140,7 @@ services.AddSwaggerGen(setupAction =>
             },
             ClientCredentials = new OpenApiOAuthFlow
             {
-                TokenUrl = new Uri(appSettings.IdentityServerAuthentication.Authority + "/connect/token", UriKind.Absolute),
+                TokenUrl = new Uri(appSettings.Authentication.IdentityServer.Authority + "/connect/token", UriKind.Absolute),
                 Scopes = new Dictionary<string, string>
                 {
                             { "ClassifiedAds.WebAPI", "ClassifiedAds WebAPI" },

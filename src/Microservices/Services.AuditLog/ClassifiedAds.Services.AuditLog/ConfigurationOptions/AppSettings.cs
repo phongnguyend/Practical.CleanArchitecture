@@ -19,7 +19,7 @@ public class AppSettings
 
     public MonitoringOptions Monitoring { get; set; }
 
-    public IdentityServerAuthentication IdentityServerAuthentication { get; set; }
+    public AuthenticationOptions Authentication { get; set; }
 
     public StorageOptions Storage { get; set; }
 
@@ -37,22 +37,29 @@ public class ConnectionStrings
     public string MigrationsAssembly { get; set; }
 }
 
-public class IdentityServerAuthentication
+public class AuthenticationOptions
 {
     public string Provider { get; set; }
 
-    public string Authority { get; set; }
+    public IdentityServerOptions IdentityServer { get; set; }
 
-    public string ApiName { get; set; }
-
-    public bool RequireHttpsMetadata { get; set; }
-
-    public OpenIddictOptions OpenIddict { get; set; }
+    public JwtOptions Jwt { get; set; }
 }
 
-public class OpenIddictOptions
+public class IdentityServerOptions
+{
+    public string Authority { get; set; }
+
+    public string Audience { get; set; }
+
+    public bool RequireHttpsMetadata { get; set; }
+}
+
+public class JwtOptions
 {
     public string IssuerUri { get; set; }
+
+    public string Audience { get; set; }
 
     public CertificateOption TokenDecryptionCertificate { get; set; }
 

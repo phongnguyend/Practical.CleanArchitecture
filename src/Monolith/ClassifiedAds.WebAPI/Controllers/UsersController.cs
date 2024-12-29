@@ -158,7 +158,7 @@ public class UsersController : ControllerBase
         if (user != null)
         {
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var resetUrl = $"{_appSettings.IdentityServerAuthentication.Authority}/Account/ResetPassword?token={HttpUtility.UrlEncode(token)}&email={user.Email}";
+            var resetUrl = $"{_appSettings.Authentication.IdentityServer.Authority}/Account/ResetPassword?token={HttpUtility.UrlEncode(token)}&email={user.Email}";
 
             await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
             {
@@ -186,7 +186,7 @@ public class UsersController : ControllerBase
         {
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-            var confirmationEmail = $"{_appSettings.IdentityServerAuthentication.Authority}/Account/ConfirmEmailAddress?token={HttpUtility.UrlEncode(token)}&email={user.Email}";
+            var confirmationEmail = $"{_appSettings.Authentication.IdentityServer.Authority}/Account/ConfirmEmailAddress?token={HttpUtility.UrlEncode(token)}&email={user.Email}";
 
             await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<EmailMessage>(new EmailMessage
             {

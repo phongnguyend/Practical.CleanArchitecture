@@ -5,8 +5,8 @@ metadata:
 data:
   ASPNETCORE_ENVIRONMENT: "Development"
   DOTNET_ENVIRONMENT: "Development"
-  IdentityServerAuthentication__Authority: "http://identityserver"
-  IdentityServerAuthentication__RequireHttpsMetadata: "false"
+  Authentication__IdentityServer__Authority: "http://identityserver"
+  Authentication__IdentityServer__RequireHttpsMetadata: "false"
   Services__AuditLog__Grpc: "https://auditlog-grpc"
   Services__Identity__Grpc: "https://identity-grpc"
   Services__Notification__Grpc: "https://notification-grpc"

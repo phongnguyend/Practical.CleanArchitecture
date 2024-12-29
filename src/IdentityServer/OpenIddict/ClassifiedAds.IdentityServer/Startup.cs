@@ -117,6 +117,8 @@ public class Startup
                 .EnableAuthorizationEndpointPassthrough()
                 .EnableLogoutEndpointPassthrough()
                 .EnableUserinfoEndpointPassthrough();
+
+            options.DisableAccessTokenEncryption();
         })
         .AddValidation(options =>
         {

@@ -1,6 +1,6 @@
 ﻿namespace ClassifiedAds.Modules.Identity.ConfigurationOptions;
 
-public class IdentityServerAuthentication
+public class IdentityServerOptions
 {
     public string Authority { get; set; }
 

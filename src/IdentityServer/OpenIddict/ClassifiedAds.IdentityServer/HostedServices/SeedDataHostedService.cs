@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using OpenIddict.Abstractions;
 using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,6 +21,13 @@ public class SeedDataHostedService : IHostedService
     {
         using var scope = _serviceProvider.CreateScope();
 
+        await RegisterApplicationsAsync(scope, cancellationToken);
+
+        await RegisterScopesAsync(scope.ServiceProvider);
+    }
+
+    private static async Task RegisterApplicationsAsync(IServiceScope scope, CancellationToken cancellationToken)
+    {
         var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
         await UpsertClientApplication(manager, new OpenIddictApplicationDescriptor
@@ -318,6 +326,32 @@ public class SeedDataHostedService : IHostedService
         else
         {
             await manager.UpdateAsync(client, openIddictApplicationDescriptor, cancellationToken);
+        }
+    }
+
+    static async Task RegisterScopesAsync(IServiceProvider provider)
+    {
+        var manager = provider.GetRequiredService<IOpenIddictScopeManager>();
+
+        var scope = await manager.FindByNameAsync("ClassifiedAds.WebAPI");
+
+        if (scope is null)
+        {
+            await manager.CreateAsync(new OpenIddictScopeDescriptor
+            {
+                Name = "ClassifiedAds.WebAPI",
+                DisplayName = "ClassifiedAds WebAPI",
+                Resources = { "ClassifiedAds.WebAPI" }
+            });
+        }
+        else
+        {
+            await manager.UpdateAsync(scope, new OpenIddictScopeDescriptor
+            {
+                Name = "ClassifiedAds.WebAPI",
+                DisplayName = "ClassifiedAds WebAPI",
+                Resources = { "ClassifiedAds.WebAPI" }
+            });
         }
     }
 }

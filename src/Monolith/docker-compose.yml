@@ -80,8 +80,8 @@ services:
         environment:
           ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
           ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
-          IdentityServerAuthentication__Authority: "http://host.docker.internal:9000"
-          IdentityServerAuthentication__RequireHttpsMetadata: "false"
+          Authentication__IdentityServer__Authority: "http://host.docker.internal:9000"
+          Authentication__IdentityServer__RequireHttpsMetadata: "false"
           Storage__Provider: ${Storage__Provider}
           Storage__Local__Path: ${Storage__Local__Path}
           Storage__Azure__ConnectionString: ${Storage__Azure__ConnectionString}

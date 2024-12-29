@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.IdentityServer.Extensions;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -19,13 +20,16 @@ public class AuthorizationController : Controller
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
+    private readonly IOpenIddictScopeManager _scopeManager;
 
     public AuthorizationController(
         UserManager<User> userManager,
-        SignInManager<User> signInManager)
+        SignInManager<User> signInManager,
+        IOpenIddictScopeManager scopeManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _scopeManager = scopeManager;
     }
 
     [HttpGet("~/connect/authorize")]
@@ -66,6 +70,7 @@ public class AuthorizationController : Controller
 
         // Set requested scopes (this is not done automatically)
         claimsPrincipal.SetScopes(request.GetScopes());
+        claimsPrincipal.SetResources(await _scopeManager.ListResourcesAsync(claimsPrincipal.GetScopes()).ToListAsync());
 
         // Signing in with the OpenIddict authentiction scheme trigger OpenIddict to issue a code (which can be exchanged for an access token)
         return SignIn(claimsPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
