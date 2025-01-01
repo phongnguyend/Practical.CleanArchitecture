@@ -3,9 +3,12 @@
     <div class="card-header">Audit Logs</div>
     <div class="card-body">
       <div style="float: right">
-        <b-pagination v-model="currentPage" :total-rows="totalItems" :per-page="pageSize" first-number last-number
-          @page-click="pagedSelected">
-        </b-pagination>
+        <app-pagination
+          :currentPage="currentPage"
+          :totalItems="totalItems"
+          :pageSize="pageSize"
+          @pageSelected="pagedSelected"
+        />
       </div>
       <div class="table-responsive">
         <table class="table" v-if="auditLogs">
@@ -28,9 +31,12 @@
         </table>
       </div>
       <div style="float: right">
-        <b-pagination v-model="currentPage" :total-rows="totalItems" :per-page="pageSize" first-number last-number
-          @page-click="pagedSelected">
-        </b-pagination>
+        <app-pagination
+          :currentPage="currentPage"
+          :totalItems="totalItems"
+          :pageSize="pageSize"
+          @pageSelected="pagedSelected"
+        />
       </div>
     </div>
   </div>
@@ -40,8 +46,12 @@
 import { defineComponent } from "vue";
 import axios from "./axios";
 import { IAuditLogEntry } from "./AuditLog";
+import Pagination from "../../components/Pagination.vue";
 
 export default defineComponent({
+  components: {
+    appPagination: Pagination,
+  },
   data() {
     return {
       pageTitle: "Audit Logs" as string,
@@ -49,7 +59,7 @@ export default defineComponent({
       totalItems: 0 as number,
       currentPage: 1 as number,
       pageSize: 5 as number,
-      errorMessage: "" as string
+      errorMessage: "" as string,
     };
   },
   computed: {},
@@ -60,7 +70,8 @@ export default defineComponent({
         this.totalItems = rs.data.totalItems;
       });
     },
-    pagedSelected(bvEvent: any, page: number) {
+    pagedSelected(page: number) {
+      this.currentPage = page;
       this.loadAuditLogs(page);
     },
     lowercase: function (value: string) {
@@ -70,12 +81,11 @@ export default defineComponent({
       if (!value) return value;
       var date = new Date(value);
       return date.toLocaleDateString() + " " + date.toLocaleTimeString();
-    }
+    },
   },
-  components: {},
   created() {
     this.loadAuditLogs(this.currentPage);
-  }
+  },
 });
 </script>
 
