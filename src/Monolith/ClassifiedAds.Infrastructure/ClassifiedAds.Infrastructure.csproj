@@ -24,7 +24,7 @@
     <PackageReference Include="Castle.Core" Version="5.1.1" />
     <PackageReference Include="ClosedXML" Version="0.102.1" />
     <PackageReference Include="Confluent.Kafka" Version="2.3.0" />
-    <PackageReference Include="CryptographyHelper" Version="2.0.0" />
+    <PackageReference Include="CryptographyHelper" Version="3.0.0" />
     <PackageReference Include="CsvHelper" Version="30.0.1" />
     <PackageReference Include="Dapper.StrongName" Version="2.1.24" />
     <PackageReference Include="DinkToPdf" Version="1.0.8" />

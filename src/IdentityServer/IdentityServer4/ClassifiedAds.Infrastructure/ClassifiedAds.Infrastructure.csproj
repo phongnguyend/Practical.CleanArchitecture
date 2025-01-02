@@ -13,7 +13,7 @@
     <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.2.1" />
     <PackageReference Include="Azure.Identity" Version="1.5.0" />
     <PackageReference Include="Castle.Core" Version="4.4.1" />
-    <PackageReference Include="CryptographyHelper" Version="1.0.0" />
+    <PackageReference Include="CryptographyHelper" Version="2.0.0" />
     <PackageReference Include="Dapper.StrongName" Version="2.0.123" />
     <PackageReference Include="IdentityModel" Version="5.2.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
