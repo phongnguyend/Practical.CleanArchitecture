@@ -1,5 +1,8 @@
 <template>
-  <nav class="navbar navbar-expand navbar-light bg-light">
+  <nav
+    class="navbar navbar-expand navbar-light bg-light"
+    :style="{ paddingLeft: '1rem', paddingRight: '1rem' }"
+  >
     <a class="navbar-brand" href="/">{{ appendVersion(pageTitle) }}</a>
     <ul class="nav nav-pills">
       <li>
@@ -31,33 +34,33 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, version } from "vue";
-import { useStore } from 'vuex';
+import { defineComponent, version } from 'vue'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   setup() {
     return { store: useStore() }
   },
   data() {
-    return { pageTitle: "ClassifiedAds.Vue" };
+    return { pageTitle: 'ClassifiedAds.Vue' }
   },
   computed: {
     isAuthenticated(): boolean {
-      return this.store.state.authService.isAuthenticated();
-    }
+      return this.store.state.authService.isAuthenticated()
+    },
   },
   methods: {
     login() {
-      this.store.state.authService.login("");
+      this.store.state.authService.login('')
     },
     logout() {
-      this.store.state.authService.logout();
+      this.store.state.authService.logout()
     },
     appendVersion(value: string) {
-      return value + " " + version;
-    }
-  }
-});
+      return value + ' ' + version
+    },
+  },
+})
 </script>
 
 <style scoped>

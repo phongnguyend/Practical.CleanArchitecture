@@ -1,33 +1,32 @@
-import { AxiosInstance } from "axios";
+import { Axios } from 'axios'
 
-import env from "../../environments";
-import authService from "./authService";
+import env from '../../environments'
+import authService from './authService'
 
-const addAuthInterceptors = (axios: AxiosInstance) => {
+const addAuthInterceptors = (axios: Axios) => {
   {
-    axios.interceptors.request.use(config => {
+    axios.interceptors.request.use((config) => {
       if (
         config.baseURL?.startsWith(env.ResourceServer.Endpoint) ||
         config.url?.startsWith(env.ResourceServer.Endpoint)
       ) {
-        config.headers!["Authorization"] =
-          "Bearer " + authService.getAccessToken();
+        config.headers!['Authorization'] = 'Bearer ' + authService.getAccessToken()
       }
-      return config;
-    });
+      return config
+    })
     axios.interceptors.response.use(
-      response => {
-        return response;
+      (response) => {
+        return response
       },
-      error => {
+      (error) => {
         if (401 === error.response.status) {
-          authService.login(window.location.href);
+          authService.login(window.location.href)
         } else {
-          return Promise.reject(error);
+          return Promise.reject(error)
         }
-      }
-    );
+      },
+    )
   }
-};
+}
 
-export default addAuthInterceptors;
+export default addAuthInterceptors

@@ -6,7 +6,7 @@
         {{ postErrorMessage }}
       </div>
       <form @submit.prevent="onSubmit">
-        <div class="form-group row">
+        <div class="mb-3 row">
           <label for="userName" class="col-sm-3 col-form-label">User Name</label>
           <div class="col-sm-9">
             <input
@@ -27,7 +27,7 @@
             </span>
           </div>
         </div>
-        <div class="form-group row">
+        <div class="mb-3 row">
           <label for="email" class="col-sm-3 col-form-label">Email</label>
           <div class="col-sm-9">
             <input
@@ -46,7 +46,7 @@
             </span>
           </div>
         </div>
-        <div class="form-group row">
+        <div class="mb-3 row">
           <label for="emailConfirmed" class="col-sm-3 col-form-label">Email Confirmed</label>
           <div class="col-sm-9">
             <input
@@ -57,7 +57,7 @@
             />
           </div>
         </div>
-        <div class="form-group row">
+        <div class="mb-3 row">
           <label for="phoneNumber" class="col-sm-3 col-form-label">Phone Number</label>
           <div class="col-sm-9">
             <input
@@ -69,7 +69,7 @@
             <span class="invalid-feedback">Enter a phone number</span>
           </div>
         </div>
-        <div class="form-group row">
+        <div class="mb-3 row">
           <label for="phoneNumberConfirmed" class="col-sm-3 col-form-label"
             >Phone Number Confirmed</label
           >
@@ -82,7 +82,7 @@
             />
           </div>
         </div>
-        <div class="form-group row">
+        <div class="mb-3 row">
           <label for="twoFactorEnabled" class="col-sm-3 col-form-label">Two Factor Enabled</label>
           <div class="col-sm-9">
             <input
@@ -93,7 +93,7 @@
             />
           </div>
         </div>
-        <div class="form-group row">
+        <div class="mb-3 row">
           <label for="lockoutEnabled" class="col-sm-3 col-form-label">Lockout Enabled</label>
           <div class="col-sm-9">
             <input
@@ -104,7 +104,7 @@
             />
           </div>
         </div>
-        <div class="form-group row">
+        <div class="mb-3 row">
           <label for="accessFailedCount" class="col-sm-3 col-form-label">Access Failed Count</label>
           <div class="col-sm-9">
             <input
@@ -116,13 +116,13 @@
             />
           </div>
         </div>
-        <div class="form-group row">
+        <div class="mb-3 row">
           <label for="lockoutEnd" class="col-sm-3 col-form-label">Lockout End</label>
           <div class="col-sm-9">
             <VueDatePicker v-model="user.lockoutEnd" />
           </div>
         </div>
-        <div class="form-group row">
+        <div class="mb-3 row">
           <label for="description" class="col-sm-3 col-form-label"></label>
           <div class="col-sm-9">
             <button class="btn btn-primary">Save</button>
@@ -139,42 +139,42 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import useVuelidate from "@vuelidate/core";
-import { required, minLength } from "@vuelidate/validators";
-import axios from "./axios";
+import { defineComponent } from 'vue'
+import useVuelidate from '@vuelidate/core'
+import { required, minLength } from '@vuelidate/validators'
+import axios from './axios'
 
 interface IEditUser {
-  id: string;
-  userName: string;
-  email: string;
-  emailConfirmed: boolean;
-  phoneNumber: string;
-  phoneNumberConfirmed: boolean;
-  twoFactorEnabled: boolean;
-  lockoutEnabled: boolean;
-  lockoutEnd?: Date;
-  accessFailedCount: number;
+  id: string
+  userName: string
+  email: string
+  emailConfirmed: boolean
+  phoneNumber: string
+  phoneNumberConfirmed: boolean
+  twoFactorEnabled: boolean
+  lockoutEnabled: boolean
+  lockoutEnd?: Date
+  accessFailedCount: number
 }
 
 export default defineComponent({
   setup() {
-    return { v$: useVuelidate() };
+    return { v$: useVuelidate() }
   },
   data() {
     return {
-      user: { userName: "", email: "" } as IEditUser,
+      user: { userName: '', email: '' } as IEditUser,
       postError: false,
-      postErrorMessage: "",
+      postErrorMessage: '',
       isSubmitted: false,
-    };
+    }
   },
   computed: {
     title(): string {
-      return this.$route.params.id ? "Edit User" : "Add User";
+      return this.$route.params.id ? 'Edit User' : 'Add User'
     },
     id(): string {
-      return this.$route.params.id as string;
+      return this.$route.params.id as string
     },
   },
   validations: {
@@ -191,31 +191,31 @@ export default defineComponent({
   },
   methods: {
     onSubmit() {
-      this.isSubmitted = true;
+      this.isSubmitted = true
       if (this.v$.user.$invalid) {
-        return;
+        return
       }
 
-      this.user.lockoutEnd = this.user.lockoutEnd ? this.user.lockoutEnd : undefined;
-      this.user.accessFailedCount = this.user.accessFailedCount ? this.user.accessFailedCount : 0;
+      this.user.lockoutEnd = this.user.lockoutEnd ? this.user.lockoutEnd : undefined
+      this.user.accessFailedCount = this.user.accessFailedCount ? this.user.accessFailedCount : 0
 
-      const promise = this.id ? axios.put(this.id, this.user) : axios.post("", this.user);
+      const promise = this.id ? axios.put(this.id, this.user) : axios.post('', this.user)
 
       promise.then((rs) => {
-        const id = this.id ? this.id : rs.data.id;
-        this.$router.push("/users/" + id);
-      });
+        const id = this.id ? this.id : rs.data.id
+        this.$router.push('/users/' + id)
+      })
     },
   },
   created() {
-    const id = this.$route.params.id as string;
+    const id = this.$route.params.id as string
     if (id) {
       axios.get(id).then((rs) => {
-        this.user = rs.data;
-      });
+        this.user = rs.data
+      })
     }
   },
-});
+})
 </script>
 
 <style scoped>

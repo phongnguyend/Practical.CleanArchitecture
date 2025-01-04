@@ -10,7 +10,7 @@
           @pageSelected="pagedSelected"
         />
       </div>
-      <div class="table-responsive">
+      <div class="table-responsive" :style="{ width: '100%' }">
         <table class="table" v-if="auditLogs">
           <thead>
             <tr>
@@ -43,10 +43,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import axios from "./axios";
-import { IAuditLogEntry } from "./AuditLog";
-import Pagination from "../../components/Pagination.vue";
+import { defineComponent } from 'vue'
+import axios from './axios'
+import { IAuditLogEntry } from './AuditLog'
+import Pagination from '../../components/Pagination.vue'
 
 export default defineComponent({
   components: {
@@ -54,39 +54,39 @@ export default defineComponent({
   },
   data() {
     return {
-      pageTitle: "Audit Logs" as string,
+      pageTitle: 'Audit Logs' as string,
       auditLogs: [] as IAuditLogEntry[],
       totalItems: 0 as number,
       currentPage: 1 as number,
       pageSize: 5 as number,
-      errorMessage: "" as string,
-    };
+      errorMessage: '' as string,
+    }
   },
   computed: {},
   methods: {
     loadAuditLogs(page: number) {
-      axios.get("paged?page=" + page + "&pageSize=" + this.pageSize).then((rs: any) => {
-        this.auditLogs = rs.data.items;
-        this.totalItems = rs.data.totalItems;
-      });
+      axios.get('paged?page=' + page + '&pageSize=' + this.pageSize).then((rs: any) => {
+        this.auditLogs = rs.data.items
+        this.totalItems = rs.data.totalItems
+      })
     },
     pagedSelected(page: number) {
-      this.currentPage = page;
-      this.loadAuditLogs(page);
+      this.currentPage = page
+      this.loadAuditLogs(page)
     },
     lowercase: function (value: string) {
-      return value.toLowerCase();
+      return value.toLowerCase()
     },
     formatedDateTime: function (value: string) {
-      if (!value) return value;
-      var date = new Date(value);
-      return date.toLocaleDateString() + " " + date.toLocaleTimeString();
+      if (!value) return value
+      var date = new Date(value)
+      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
     },
   },
   created() {
-    this.loadAuditLogs(this.currentPage);
+    this.loadAuditLogs(this.currentPage)
   },
-});
+})
 </script>
 
 <style scoped>

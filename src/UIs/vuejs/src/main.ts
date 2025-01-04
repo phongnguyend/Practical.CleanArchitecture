@@ -1,34 +1,32 @@
-import { createApp } from "vue";
-import axios from "axios";
-import Vuelidate from "@vuelidate/core";
-import { BootstrapVue } from "bootstrap-vue";
-import VueToastr from "vue-toastr";
-import VueDatePicker from "@vuepic/vue-datepicker";
+import { createApp } from 'vue'
+import axios from 'axios'
+import { createBootstrap } from 'bootstrap-vue-next'
+import Toast from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
+import VueDatePicker from '@vuepic/vue-datepicker'
 
-import App from "./App.vue";
-import "./registerServiceWorker";
-import router from "./router";
-import store from "./store";
-import authService from "./auth/authService";
-import addAuthInterceptors from "./auth/authInterceptors";
+import App from './App.vue'
+import router from './router'
+import store from './store'
+import authService from './auth/authService'
+import addAuthInterceptors from './auth/authInterceptors'
 
-import "bootstrap/dist/css/bootstrap.min.css";
-import "font-awesome/css/font-awesome.min.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
-import "@vuepic/vue-datepicker/dist/main.css";
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
+import 'font-awesome/css/font-awesome.min.css'
+import '@vuepic/vue-datepicker/dist/main.css'
 
-addAuthInterceptors(axios);
+addAuthInterceptors(axios)
 
 authService.loadUser().then((user) => {
-  store.dispatch("tryAutoLogin", authService);
+  store.dispatch('tryAutoLogin', authService)
   if (authService.isAuthenticated()) {
   }
   createApp(App)
     .use(router)
     .use(store)
-    .use(Vuelidate)
-    .use(BootstrapVue)
-    .use(VueToastr)
-    .component("VueDatePicker", VueDatePicker)
-    .mount("#app");
-});
+    .use(createBootstrap())
+    .use(Toast)
+    .component('VueDatePicker', VueDatePicker)
+    .mount('#app')
+})

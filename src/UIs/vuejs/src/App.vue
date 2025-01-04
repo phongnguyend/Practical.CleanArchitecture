@@ -9,20 +9,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue'
 
-import Nav from "./views/Nav.vue";
-import Notification from "./components/Notification.vue";
+import Nav from './views/Nav.vue'
+import Notification from './components/Notification.vue'
 
 export default defineComponent({
   components: {
     appNav: Nav,
-    appNotification: Notification
-  }
-});
+    appNotification: Notification,
+  },
+})
 </script>
 
-<style lang="scss">
+<style lang="css">
 div.card-header {
   font-size: large;
 }

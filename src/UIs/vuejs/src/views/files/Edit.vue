@@ -6,42 +6,71 @@
         {{ postErrorMessage }}
       </div>
       <form @submit.prevent="onSubmit">
-        <div class="form-group row">
+        <div class="mb-3 row">
           <label for="name" class="col-sm-2 col-form-label">Name</label>
           <div class="col-sm-10">
-            <input id="name" name="name" class="form-control" v-model="file.name"
-              :class="{ 'is-invalid': isSubmitted && v$.file.name.$invalid }" @input="v$.file.name.$touch()" />
+            <input
+              id="name"
+              name="name"
+              class="form-control"
+              v-model="file.name"
+              :class="{ 'is-invalid': isSubmitted && v$.file.name.$invalid }"
+              @input="v$.file.name.$touch()"
+            />
             <span class="invalid-feedback">
               <span v-if="v$.file.name.required.$invalid">Enter a name</span>
-              <span v-if="v$.file.name.minLength.$invalid">The name must be longer than 3 characters.</span>
+              <span v-if="v$.file.name.minLength.$invalid"
+                >The name must be longer than 3 characters.</span
+              >
             </span>
           </div>
         </div>
-        <div class="form-group row">
+        <div class="mb-3 row">
           <label for="description" class="col-sm-2 col-form-label">Description</label>
           <div class="col-sm-10">
-            <input id="description" name="description" class="form-control" v-model="file.description" :class="{
-              'is-invalid': isSubmitted && v$.file.description.$invalid
-            }" @input="v$.file.description.$touch()" />
+            <input
+              id="description"
+              name="description"
+              class="form-control"
+              v-model="file.description"
+              :class="{
+                'is-invalid': isSubmitted && v$.file.description.$invalid,
+              }"
+              @input="v$.file.description.$touch()"
+            />
             <span class="invalid-feedback">
               <span v-if="v$.file.description.required.$invalid">Enter a description</span>
-              <span v-if="v$.file.description.maxLength.$invalid">The code must be less than 100 characters.</span>
+              <span v-if="v$.file.description.maxLength.$invalid"
+                >The code must be less than 100 characters.</span
+              >
             </span>
           </div>
         </div>
-        <div class="form-group row">
+        <div class="mb-3 row">
           <label for="formFile" class="col-sm-2 col-form-label">File</label>
           <div class="col-sm-10">
-            <input id="formFile" name="formFile" class="form-control" :value="file.fileName" disabled />
+            <input
+              id="formFile"
+              name="formFile"
+              class="form-control"
+              :value="file.fileName"
+              disabled
+            />
           </div>
         </div>
-        <div class="form-group row">
+        <div class="mb-3 row">
           <label for="encrypted" class="col-sm-2 col-form-label">Encrypted</label>
           <div class="col-sm-10">
-            <input type="checkbox" id="encrypted" name="encrypted" v-model="file.encrypted" disabled />
+            <input
+              type="checkbox"
+              id="encrypted"
+              name="encrypted"
+              v-model="file.encrypted"
+              disabled
+            />
           </div>
         </div>
-        <div class="form-group row">
+        <div class="mb-3 row">
           <label for="description" class="col-sm-2 col-form-label"></label>
           <div class="col-sm-10">
             <button class="btn btn-primary">Save</button>
@@ -50,14 +79,15 @@
       </form>
     </div>
     <div class="card-footer">
-      <router-link class="btn btn-outline-secondary" to="/files" style="width:80px">
-        <i class="fa fa-chevron-left"></i> Back </router-link>&nbsp;
+      <router-link class="btn btn-outline-secondary" to="/files" style="width: 80px">
+        <i class="fa fa-chevron-left"></i> Back </router-link
+      >&nbsp;
       <button type="button" class="btn btn-primary btn-secondary" @click="viewAuditLogs(file)">
         View Audit Logs
       </button>
     </div>
-    <b-modal ref="modal-audit-logs" hide-footer hide-header size="xl">
-      <div class="table-responsive">
+    <b-modal v-model="modalAuditLogs" no-footer no-header size="xl">
+      <div class="table-responsive" :style="{ width: '100%' }">
         <table class="table">
           <thead>
             <tr>
@@ -96,13 +126,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-import { required, minLength, maxLength } from "@vuelidate/validators";
-import { BModal } from "bootstrap-vue";
+import { required, minLength, maxLength } from '@vuelidate/validators'
 
-import axios from "./axios";
-import { IFile } from "./File";
+import axios from './axios'
+import { IFile } from './File'
 
 export default defineComponent({
   setup() {
@@ -110,68 +139,67 @@ export default defineComponent({
   },
   data() {
     return {
-      file: { name: "", description: "" } as IFile,
+      file: { name: '', description: '' } as IFile,
       auditLogs: [],
       postError: false,
-      postErrorMessage: "",
-      isSubmitted: false
-    };
+      postErrorMessage: '',
+      isSubmitted: false,
+      modalAuditLogs: ref(false),
+    }
   },
   computed: {
     title() {
-      return this.$route.params.id ? "Edit File" : "Upload File";
+      return this.$route.params.id ? 'Edit File' : 'Upload File'
     },
     id() {
-      return this.$route.params.id as string;
-    }
+      return this.$route.params.id as string
+    },
   },
   validations: {
     file: {
       name: {
         required,
-        minLength: minLength(3)
+        minLength: minLength(3),
       },
-      description: { required, maxLength: maxLength(100) }
-    }
+      description: { required, maxLength: maxLength(100) },
+    },
   },
   methods: {
     onSubmit() {
-      this.isSubmitted = true;
+      this.isSubmitted = true
 
       if (this.v$.file.$invalid) {
-        return;
+        return
       }
 
-      const promise = this.id
-        ? axios.put(this.id, this.file)
-        : axios.post("", this.file);
+      const promise = this.id ? axios.put(this.id, this.file) : axios.post('', this.file)
 
-      promise.then(rs => {
-        const id = this.id ? this.id : rs.data.id;
-        this.$router.push("/files");
-      });
+      promise.then((rs) => {
+        const id = this.id ? this.id : rs.data.id
+        this.$router.push('/files')
+      })
     },
     viewAuditLogs(file: IFile) {
-      axios.get(file.id + "/auditLogs").then(rs => {
-        this.auditLogs = rs.data;
-        (this.$refs["modal-audit-logs"] as BModal).show();
-      });
+      axios.get(file.id + '/auditLogs').then((rs) => {
+        this.auditLogs = rs.data
+        this.modalAuditLogs = true
+      })
     },
     formatedDateTime(value: string) {
-      if (!value) return value;
-      var date = new Date(value);
-      return date.toLocaleDateString() + " " + date.toLocaleTimeString();
-    }
+      if (!value) return value
+      var date = new Date(value)
+      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
+    },
   },
   created() {
-    const id = this.$route.params.id as string;
+    const id = this.$route.params.id as string
     if (id) {
-      axios.get(id).then(rs => {
-        this.file = rs.data;
-      });
+      axios.get(id).then((rs) => {
+        this.file = rs.data
+      })
     }
-  }
-});
+  },
+})
 </script>
 
 <style scoped>
