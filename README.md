@@ -733,7 +733,7 @@
     npm install
     npm run dev
     ```
-  + Update [environment.dev.js](/src/UIs/reactjs/src/environments/environment.dev.js) & [environment.js](/src/UIs/reactjs/src/environments/environment.js) 
+  + Update [environment.dev.tsx](/src/UIs/reactjs/src/environments/environment.dev.tsx) & [environment.tsx](/src/UIs/reactjs/src/environments/environment.tsx) 
     ```js
     const environment = {
         OpenIdConnect: {
@@ -755,9 +755,9 @@
   + Navigate to folder: [UIs/vuejs/](/src/UIs/vuejs/)
     ```
     npm install
-    npm run serve
+    npm run dev
     ```
-  + Update [environment.dev.js](/src/UIs/vuejs/environments/environment.dev.js) & [environment.dev.js](/src/UIs/vuejs/environments/environment.js) 
+  + Update [environment.dev.ts](/src/UIs/vuejs/environments/environment.dev.ts) & [environment.dev.ts](/src/UIs/vuejs/environments/environment.ts) 
     ```js
     const environment = {
         OpenIdConnect: {

@@ -17,7 +17,7 @@
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^14.5.2",
     "@types/jest": "^29.5.14",
-    "@types/node": "^22.10.2",
+    "@types/node": "^22.10.5",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "font-awesome": "^4.7.0",
@@ -25,7 +25,7 @@
     "oidc-client-ts": "^3.1.0",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.7",
-    "react-datepicker": "^7.5.0",
+    "react-datepicker": "^7.6.0",
     "react-dom": "^19.0.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.1",
@@ -36,14 +36,14 @@
   "devDependencies": {
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
-    "@typescript-eslint/eslint-plugin": "^8.18.2",
-    "@typescript-eslint/parser": "^8.18.2",
+    "@typescript-eslint/eslint-plugin": "^8.19.0",
+    "@typescript-eslint/parser": "^8.19.0",
     "@vitejs/plugin-react-swc": "^3.7.2",
     "eslint": "^9.17.0",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.16",
     "prettier": "3.4.2",
     "typescript": "^5.7.2",
-    "vite": "^6.0.5"
+    "vite": "^6.0.7"
   }
 }

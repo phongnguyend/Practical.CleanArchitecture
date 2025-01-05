@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "22"
-      - run: npm install --legacy-peer-deps
+      - run: npm install
         working-directory: ./src/UIs/reactjs/
       - run: CI=false npm run build # Treating warnings as errors because process.env.CI = true.
         working-directory: ./src/UIs/reactjs/
