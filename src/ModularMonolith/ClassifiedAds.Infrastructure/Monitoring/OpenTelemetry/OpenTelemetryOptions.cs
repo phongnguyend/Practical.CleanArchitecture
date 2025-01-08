@@ -6,6 +6,10 @@ public class OpenTelemetryOptions
 
     public string ServiceName { get; set; }
 
+    public bool TraceEnabled { get; set; }
+
+    public bool MetricEnabled { get; set; }
+
     public ZipkinOptions Zipkin { get; set; }
 
     public OtlpOptions Otlp { get; set; }

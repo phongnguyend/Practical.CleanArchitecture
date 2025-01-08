@@ -3,6 +3,7 @@ using ClassifiedAds.Background.Identity;
 using ClassifiedAds.Contracts.Identity.Services;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Logging;
+using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Modules.Identity.Repositories;
 using ClassifiedAds.Modules.Storage.DTOs;
 using ClassifiedAds.Modules.Storage.MessageBusConsumers;
@@ -35,6 +36,8 @@ Host.CreateDefaultBuilder(args)
     }
 
     services.Configure<AppSettings>(configuration);
+
+    services.AddMonitoringServices(appSettings.Monitoring);
 
     services.AddScoped<ICurrentUser, CurrentUser>();
 
