@@ -2,6 +2,7 @@
 using ClassifiedAds.Infrastructure.IdentityProviders.Azure;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.MessageBrokers;
+using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Notification;
 using ClassifiedAds.Infrastructure.Storages;
 using Microsoft.Extensions.Options;
@@ -14,9 +15,7 @@ public class AppSettings
 
     public LoggingOptions Logging { get; set; }
 
-    public string AllowedHosts { get; set; }
-
-    public string CurrentUrl { get; set; }
+    public MonitoringOptions Monitoring { get; set; }
 
     public StorageOptions Storage { get; set; }
 

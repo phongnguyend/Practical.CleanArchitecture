@@ -11,6 +11,7 @@ using ClassifiedAds.Infrastructure.HostedServices;
 using ClassifiedAds.Infrastructure.IdentityProviders.Auth0;
 using ClassifiedAds.Infrastructure.IdentityProviders.Azure;
 using ClassifiedAds.Infrastructure.Logging;
+using ClassifiedAds.Infrastructure.Monitoring;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -41,6 +42,8 @@ Host.CreateDefaultBuilder(args)
     }
 
     services.Configure<AppSettings>(configuration);
+
+    services.AddMonitoringServices(appSettings.Monitoring);
 
     services.AddScoped<ICurrentUser, CurrentUser>();
 
