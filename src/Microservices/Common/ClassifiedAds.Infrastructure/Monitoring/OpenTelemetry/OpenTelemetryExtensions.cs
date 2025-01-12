@@ -17,15 +17,23 @@ public static class OpenTelemetryExtensions
             return services;
         }
 
-        services.AddOpenTelemetry()
-            .ConfigureResource(configureResource =>
-            {
-                configureResource.AddService(
-                    serviceName: options.ServiceName,
-                    serviceVersion: Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "unknown",
-                    serviceInstanceId: options.ServiceName + "-" + Environment.MachineName);
-            })
-            .WithTracing(builder =>
+        if (!options.TraceEnabled && !options.MetricEnabled)
+        {
+            return services;
+        }
+
+        var openTelemetry = services.AddOpenTelemetry()
+              .ConfigureResource(configureResource =>
+              {
+                  configureResource.AddService(
+                      serviceName: options.ServiceName,
+                      serviceVersion: Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "unknown",
+                      serviceInstanceId: options.ServiceName + "-" + Environment.MachineName);
+              });
+
+        if (options.TraceEnabled)
+        {
+            openTelemetry.WithTracing(builder =>
             {
                 builder
                 .SetSampler(new AlwaysOnSampler())
@@ -56,8 +64,12 @@ public static class OpenTelemetryExtensions
                         opts.ConnectionString = options.AzureMonitor.ConnectionString;
                     });
                 }
-            })
-            .WithMetrics(builder =>
+            });
+        }
+
+        if (options.MetricEnabled)
+        {
+            openTelemetry.WithMetrics(builder =>
             {
                 builder
                 .AddRuntimeInstrumentation()
@@ -81,6 +93,7 @@ public static class OpenTelemetryExtensions
                     });
                 }
             });
+        }
 
         return services;
     }

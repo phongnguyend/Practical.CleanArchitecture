@@ -18,7 +18,7 @@
   + Option 1: Using dotnet cli:
     + Install **dotnet-ef** cli:
       ```
-      dotnet tool install --global dotnet-ef --version="5.0"
+      dotnet tool install --global dotnet-ef --version="8.0"
       ```
     + Navigate to [ClassifiedAds.Migrator](ClassifiedAds.Migrator/) and run these commands:
       ```

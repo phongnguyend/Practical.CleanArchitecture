@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.BackgroundServer.Identity;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Infrastructure.Logging;
+using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Services.Notification.Background.HostedServices;
 using ClassifiedAds.Services.Notification.ConfigurationOptions;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +26,8 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
 
            var appSettings = new AppSettings();
            configuration.Bind(appSettings);
+
+           services.AddMonitoringServices(appSettings.Monitoring);
 
            services.AddDateTimeProvider();
            services.AddApplicationServices();

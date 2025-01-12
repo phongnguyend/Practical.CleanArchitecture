@@ -1,6 +1,6 @@
 ﻿https://docs.microsoft.com/en-us/ef/core/cli/dotnet
 
-dotnet tool install --global dotnet-ef --version="5.0"
+dotnet tool install --global dotnet-ef --version="8.0"
 
 dotnet ef migrations add Init --context AuditLogDbContext -o Migrations/AuditLogDb
 dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
