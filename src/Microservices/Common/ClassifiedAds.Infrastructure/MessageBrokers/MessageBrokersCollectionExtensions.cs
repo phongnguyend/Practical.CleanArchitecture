@@ -1,7 +1,5 @@
 ﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.MessageBrokers;
-using ClassifiedAds.Infrastructure.MessageBrokers.AzureEventGrid;
-using ClassifiedAds.Infrastructure.MessageBrokers.AzureEventHub;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
 using ClassifiedAds.Infrastructure.MessageBrokers.Fake;
@@ -12,33 +10,6 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class MessageBrokersCollectionExtensions
 {
-    public static IServiceCollection AddAzureEventGridSender<T>(this IServiceCollection services, AzureEventGridOptions options)
-    {
-        services.AddSingleton<IMessageSender<T>>(new AzureEventGridSender<T>(
-                            options.DomainEndpoint,
-                            options.DomainKey,
-                            options.Topics[typeof(T).Name]));
-        return services;
-    }
-
-    public static IServiceCollection AddAzureEventHubSender<T>(this IServiceCollection services, AzureEventHubOptions options)
-    {
-        services.AddSingleton<IMessageSender<T>>(new AzureEventHubSender<T>(
-                            options.ConnectionString,
-                            options.Hubs[typeof(T).Name]));
-        return services;
-    }
-
-    public static IServiceCollection AddAzureEventHubReceiver<TConsumer, T>(this IServiceCollection services, AzureEventHubOptions options)
-    {
-        services.AddTransient<IMessageReceiver<TConsumer, T>>(x => new AzureEventHubReceiver<TConsumer, T>(
-                            options.ConnectionString,
-                            options.Hubs[typeof(T).Name],
-                            options.StorageConnectionString,
-                            options.StorageContainerNames[typeof(T).Name]));
-        return services;
-    }
-
     public static IServiceCollection AddAzureQueueSender<T>(this IServiceCollection services, AzureQueueOptions options)
     {
         services.AddSingleton<IMessageSender<T>>(new AzureQueueSender<T>(
@@ -147,14 +118,6 @@ public static class MessageBrokersCollectionExtensions
         {
             services.AddAzureServiceBusSender<T>(options.AzureServiceBus);
         }
-        else if (options.UsedAzureEventGrid())
-        {
-            services.AddAzureEventGridSender<T>(options.AzureEventGrid);
-        }
-        else if (options.UsedAzureEventHub())
-        {
-            services.AddAzureEventHubSender<T>(options.AzureEventHub);
-        }
         else if (options.UsedFake())
         {
             services.AddFakeSender<T>();
@@ -180,10 +143,6 @@ public static class MessageBrokersCollectionExtensions
         else if (options.UsedAzureServiceBus())
         {
             services.AddAzureServiceBusReceiver<TConsumer, T>(options.AzureServiceBus);
-        }
-        else if (options.UsedAzureEventHub())
-        {
-            services.AddAzureEventHubReceiver<TConsumer, T>(options.AzureEventHub);
         }
         else if (options.UsedFake())
         {

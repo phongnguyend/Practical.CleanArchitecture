@@ -14,9 +14,6 @@
     <PackageReference Include="Azure.Data.AppConfiguration" Version="1.3.0" />
     <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.3.0" />
     <PackageReference Include="Azure.Identity" Version="1.10.4" />
-    <PackageReference Include="Azure.Messaging.EventGrid" Version="4.21.0" />
-    <PackageReference Include="Azure.Messaging.EventHubs" Version="5.10.0" />
-    <PackageReference Include="Azure.Messaging.EventHubs.Processor" Version="5.10.0" />
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.17.1" />
     <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.2.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.19.1" />

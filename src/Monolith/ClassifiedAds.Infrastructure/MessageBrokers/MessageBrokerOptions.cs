@@ -1,6 +1,4 @@
-﻿using ClassifiedAds.Infrastructure.MessageBrokers.AzureEventGrid;
-using ClassifiedAds.Infrastructure.MessageBrokers.AzureEventHub;
-using ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
+﻿using ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
 using ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
 using ClassifiedAds.Infrastructure.MessageBrokers.Kafka;
 using ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ;
@@ -18,10 +16,6 @@ public class MessageBrokerOptions
     public AzureQueueOptions AzureQueue { get; set; }
 
     public AzureServiceBusOptions AzureServiceBus { get; set; }
-
-    public AzureEventGridOptions AzureEventGrid { get; set; }
-
-    public AzureEventHubOptions AzureEventHub { get; set; }
 
     public bool UsedRabbitMQ()
     {
@@ -41,16 +35,6 @@ public class MessageBrokerOptions
     public bool UsedAzureServiceBus()
     {
         return Provider == "AzureServiceBus";
-    }
-
-    public bool UsedAzureEventGrid()
-    {
-        return Provider == "AzureEventGrid";
-    }
-
-    public bool UsedAzureEventHub()
-    {
-        return Provider == "AzureEventHub";
     }
 
     public bool UsedFake()

@@ -248,46 +248,6 @@
       }
     }
     ```
-	
-  - Use Azure Event Grid:
-    ```js
-    "MessageBroker": {
-      "Provider": "AzureEventGrid",
-      "AzureEventGrid": {
-        "DomainEndpoint": "https://xxx.xxx-1.eventgrid.azure.net/api/events",
-        "DomainKey": "xxxx",
-        "Topics": {
-          "FileUploadedEvent": "classifiedadds_fileuploaded",
-          "FileDeletedEvent": "classifiedadds_filedeleted"
-          "EmailMessageCreatedEvent": "classifiedadds_emailcreated",
-          "SmsMessageCreatedEvent": "classifiedadds_smscreated"
-        }
-      }
-    }
-    ```
-	
-  - Use Azure Event Hubs:
-    ```js
-    "MessageBroker": {
-      "Provider": "AzureEventHub",
-      "AzureEventHub": {
-        "ConnectionString": "Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=xxx;SharedAccessKey=xxx",
-        "Hubs": {
-          "FileUploadedEvent": "classifiedadds_fileuploaded",
-          "FileDeletedEvent": "classifiedadds_filedeleted",
-          "EmailMessageCreatedEvent": "classifiedadds_emailcreated",
-          "SmsMessageCreatedEvent": "classifiedadds_smscreated"
-        },
-        "StorageConnectionString": "DefaultEndpointsProtocol=https;AccountName=xxx;AccountKey=xxx;EndpointSuffix=core.windows.net",
-        "StorageContainerNames": {
-          "FileUploadedEvent": "eventhub-fileuploaded",
-          "FileDeletedEvent": "eventhub-filedeleted",
-          "EmailMessageCreatedEvent": "eventhub-emailcreated",
-          "SmsMessageCreatedEvent": "eventhub-smscreated"
-        }
-      }
-    }
-    ```
 </details>
 
 <details>
@@ -477,31 +437,6 @@
       }
 	},
     ```
-  - Use AppMetrics:
-    ```js
-	"Monitoring": {
-      "AppMetrics": {
-        "IsEnabled": true,
-        "MetricsOptions": {
-          "DefaultContextLabel": "ClassifiedAds.WebAPI",
-          "Enabled": true,
-          "ReportingEnabled": true
-        },
-        "MetricsWebTrackingOptions": {
-          "ApdexTrackingEnabled": true,
-          "ApdexTSeconds": 0.1,
-          "IgnoredHttpStatusCodes": [ 404 ],
-          "IgnoredRoutesRegexPatterns": [],
-          "OAuth2TrackingEnabled": true
-        },
-        "MetricEndpointsOptions": {
-          "MetricsEndpointEnabled": true,
-          "MetricsTextEndpointEnabled": true,
-          "EnvironmentInfoEndpointEnabled": true
-        }
-      }
-	},
-    ```
   - Use Both:
     ```js
     "Monitoring": {
@@ -518,26 +453,6 @@
         "IsEnabled": true,
         "InstrumentationKey": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         "EnableSqlCommandTextInstrumentation": true
-      },
-      "AppMetrics": {
-        "IsEnabled": true,
-        "MetricsOptions": {
-          "DefaultContextLabel": "ClassifiedAds.WebAPI",
-          "Enabled": true,
-          "ReportingEnabled": true
-        },
-        "MetricsWebTrackingOptions": {
-          "ApdexTrackingEnabled": true,
-          "ApdexTSeconds": 0.1,
-          "IgnoredHttpStatusCodes": [ 404 ],
-          "IgnoredRoutesRegexPatterns": [],
-          "OAuth2TrackingEnabled": true
-        },
-        "MetricEndpointsOptions": {
-          "MetricsEndpointEnabled": true,
-          "MetricsTextEndpointEnabled": true,
-          "EnvironmentInfoEndpointEnabled": true
-        }
       }
     },
     ```
@@ -783,18 +698,16 @@
 - Add Migrations if you haven't done on previous steps:
   + Install **dotnet-ef** cli:
     ```
-    dotnet tool install --global dotnet-ef --version="5.0"
+    dotnet tool install --global dotnet-ef --version="8.0"
     ```
   + Navigate to [ClassifiedAds.Migrator](/src/Monolith/ClassifiedAds.Migrator/) and run these commands:
     ```
     dotnet ef migrations add Init --context AdsDbContext -o Migrations/AdsDb
-    dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
-    dotnet ef migrations add Init --context PersistedGrantDbContext -o Migrations/PersistedGrantDb
     ```
 - Navigate to [Monolith](/src/Monolith/) and run:
   ```
-  docker-compose build
-  docker-compose up
+  docker compose build
+  docker compose up
   ```
 - Open Web MVC Home Page at: http://host.docker.internal:9003
 
@@ -824,9 +737,6 @@
     },
     "WebAPI": {
       "Endpoint": "https://localhost:44312"
-    },
-    "GraphQL": {
-      "Endpoint": "https://localhost:44392/graphql"
     },
     "Login": {
       "UserName": "phong@gmail.com",
