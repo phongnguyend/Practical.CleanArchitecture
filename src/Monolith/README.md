@@ -56,7 +56,6 @@
   docker tag classifiedads.background phongnguyend/classifiedads.background
   docker tag classifiedads.migrator phongnguyend/classifiedads.migrator
   docker tag classifiedads.webapi phongnguyend/classifiedads.webapi
-  docker tag classifiedads.graphql phongnguyend/classifiedads.graphql
   docker tag classifiedads.blazor phongnguyend/classifiedads.blazor
   docker tag classifiedads.identityserver phongnguyend/classifiedads.identityserver
   docker tag classifiedads.webmvc phongnguyend/classifiedads.webmvc
@@ -67,7 +66,6 @@
   docker push phongnguyend/classifiedads.background
   docker push phongnguyend/classifiedads.migrator
   docker push phongnguyend/classifiedads.webapi
-  docker push phongnguyend/classifiedads.graphql
   docker push phongnguyend/classifiedads.blazor
   docker push phongnguyend/classifiedads.identityserver
   docker push phongnguyend/classifiedads.webmvc
@@ -117,7 +115,6 @@
 
   dotnet publish -p:Version=1.0.0.1 -c Release ../IdentityServer/IdentityServer4/ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj -o ./publish/ClassifiedAds.IdentityServer
   dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.Background/ClassifiedAds.Background.csproj -o ./publish/ClassifiedAds.Background
-  dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.GraphQL/ClassifiedAds.GraphQL.csproj -o ./publish/ClassifiedAds.GraphQL
   dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj -o ./publish/ClassifiedAds.Migrator
   dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.WebAPI/ClassifiedAds.WebAPI.csproj -o ./publish/ClassifiedAds.WebAPI
   dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.BlazorServerSide/ClassifiedAds.BlazorServerSide.csproj -o ./publish/ClassifiedAds.BlazorServerSide
@@ -128,8 +125,7 @@
 - Pack
   ```
   dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.IdentityServer --basePath=./publish/ClassifiedAds.IdentityServer
-  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Background --basePath=./publish/ClassifiedAds.Background 
-  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.GraphQL --basePath=./publish/ClassifiedAds.GraphQL
+  dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Background --basePath=./publish/ClassifiedAds.Background
   dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.Migrator --basePath=./publish/ClassifiedAds.Migrator
   dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.WebAPI --basePath=./publish/ClassifiedAds.WebAPI
   dotnet octo pack --version=1.0.0.1 --outFolder=./publish --overwrite --id=ClassifiedAds.BlazorServerSide --basePath=./publish/ClassifiedAds.BlazorServerSide

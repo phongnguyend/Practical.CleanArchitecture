@@ -43,7 +43,6 @@ jobs:
           docker tag classifiedads.background $REPO_NAME/classifiedads.background:$VERSION
           docker tag classifiedads.migrator $REPO_NAME/classifiedads.migrator:$VERSION
           docker tag classifiedads.webapi $REPO_NAME/classifiedads.webapi:$VERSION
-          docker tag classifiedads.graphql $REPO_NAME/classifiedads.graphql:$VERSION
           docker tag classifiedads.blazor $REPO_NAME/classifiedads.blazor:$VERSION
           docker tag classifiedads.identityserver $REPO_NAME/classifiedads.identityserver:$VERSION
           docker tag classifiedads.webmvc $REPO_NAME/classifiedads.webmvc:$VERSION
@@ -51,7 +50,6 @@ jobs:
           docker push $REPO_NAME/classifiedads.background:$VERSION
           docker push $REPO_NAME/classifiedads.migrator:$VERSION
           docker push $REPO_NAME/classifiedads.webapi:$VERSION
-          docker push $REPO_NAME/classifiedads.graphql:$VERSION
           docker push $REPO_NAME/classifiedads.blazor:$VERSION
           docker push $REPO_NAME/classifiedads.identityserver:$VERSION
           docker push $REPO_NAME/classifiedads.webmvc:$VERSION

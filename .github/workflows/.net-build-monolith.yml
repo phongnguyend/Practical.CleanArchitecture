@@ -30,10 +30,7 @@ jobs:
     
     - name: Publish ClassifiedAds.Background
       run: dotnet publish ClassifiedAds.Background/*.csproj --configuration Release
- 
-    - name: Publish ClassifiedAds.GraphQL
-      run: dotnet publish ClassifiedAds.GraphQL/*.csproj --configuration Release
-      
+
     - name: Publish ClassifiedAds.Migrator
       run: dotnet publish ClassifiedAds.Migrator/*.csproj --configuration Release
  
@@ -54,12 +51,6 @@ jobs:
       with:
         name: ClassifiedAds.Background
         path: src/Monolith/ClassifiedAds.Background/bin/Release/net8.0/publish
-        
-    - name: Upload ClassifiedAds.GraphQL
-      uses: actions/upload-artifact@v4
-      with:
-        name: ClassifiedAds.GraphQL
-        path: src/Monolith/ClassifiedAds.GraphQL/bin/Release/net8.0/publish
 
     - name: Upload ClassifiedAds.Migrator
       uses: actions/upload-artifact@v4
@@ -72,7 +63,7 @@ jobs:
       with:
         name: ClassifiedAds.WebAPI
         path: src/Monolith/ClassifiedAds.WebAPI/bin/Release/net8.0/publish
-        
+
     - name: Upload ClassifiedAds.WebMVC
       uses: actions/upload-artifact@v4
       with:

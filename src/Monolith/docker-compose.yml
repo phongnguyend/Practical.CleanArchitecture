@@ -172,16 +172,3 @@ services:
           Notification__Sms__Twilio__FromNumber: ""
           Notification__Web__Provider: "Fake"
           Notification__Web__SignalR__Endpoint: "http://webmvc"
-    graphql:
-        image: classifiedads.graphql
-        build:
-          context: .
-          dockerfile: ./ClassifiedAds.GraphQL/Dockerfile
-        ports:
-            - "9006:8080"
-        depends_on:
-          - webapi
-        environment:
-          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
-          ResourceServer__Endpoint: ${ResourceServer__Endpoint}
-          ResourceServer__PublicEndpoint: ${ResourceServer__PublicEndpoint}

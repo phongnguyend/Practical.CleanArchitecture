@@ -1,4 +1,0 @@
-apiVersion: v2
-name: graphql
-version: 1.0.0
-type: application

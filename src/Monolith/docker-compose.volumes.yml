@@ -20,6 +20,3 @@ services:
     background:
         volumes:
             - D:\\ClassifiedAds.Monolith\\Logs\\Background:/ClassifiedAds.Monolith/logs
-    graphql:
-        volumes:
-            - D:\\ClassifiedAds.Monolith\\Logs\\GraphQL:/ClassifiedAds.Monolith/logs

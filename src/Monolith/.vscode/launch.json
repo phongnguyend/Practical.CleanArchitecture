@@ -19,27 +19,6 @@
             },
         },
         {
-            "name": "ClassifiedAds.GraphQL",
-            "type": "coreclr",
-            "request": "launch",
-            //"preLaunchTask": "build",
-            "program": "${workspaceFolder}/ClassifiedAds.GraphQL/bin/Debug/net6.0/ClassifiedAds.GraphQL.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/ClassifiedAds.GraphQL",
-            "stopAtEntry": false,
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development",
-                "ASPNETCORE_URLS": "https://localhost:44392/"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            }
-        },
-        {
             "name": "ClassifiedAds.Migrator",
             "type": "coreclr",
             "request": "launch",
@@ -174,7 +153,7 @@
     "compounds": [
         {
             "name": "ClassifiedAds.Monolith",
-            "configurations": ["ClassifiedAds.Background", "ClassifiedAds.GraphQL", "ClassifiedAds.Migrator", "ClassifiedAds.WebAPI","ClassifiedAds.BlazorServerSide","ClassifiedAds.BlazorWebAssembly","ClassifiedAds.IdentityServer","ClassifiedAds.WebMVC"]
+            "configurations": ["ClassifiedAds.Background", "ClassifiedAds.Migrator", "ClassifiedAds.WebAPI","ClassifiedAds.BlazorServerSide","ClassifiedAds.BlazorWebAssembly","ClassifiedAds.IdentityServer","ClassifiedAds.WebMVC"]
         }
     ]
 }

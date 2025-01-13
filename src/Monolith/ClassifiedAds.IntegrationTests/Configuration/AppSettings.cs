@@ -6,8 +6,6 @@ public class AppSettings
 
     public ResourceServer WebAPI { get; set; }
 
-    public ResourceServer GraphQL { get; set; }
-
     public LoginOptions Login { get; set; }
 
     public string DownloadsFolder { get; set; }

@@ -17,13 +17,11 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.25.1" />
-    <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="6.0.2" />
     <PackageReference Include="Grpc.Net.Client" Version="2.59.0" />
     <PackageReference Include="Grpc.Tools" Version="2.60.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="GraphQL.Client" Version="6.0.2" />
     <PackageReference Include="IdentityModel" Version="6.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0" />
