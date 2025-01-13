@@ -876,10 +876,4 @@ For the production environment, it is necessary to get a specific license, if yo
 The source code under [/src/IdentityServer/Duende](/src/IdentityServer/Duende) folder uses the source code from https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI which is under the terms of the following
 [**license**](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI/blob/main/LICENSE).
 
-### EPPLus License 🔑
-
-**EPPlus 5** can be used under Polyform Noncommercial license or a commercial license.
-
-For the production environment, it is necessary to get a specific license, if you would like more information about the licensing of **EPPlus 5** - please check [this link](https://www.epplussoftware.com/en/LicenseOverview).
-
 ##

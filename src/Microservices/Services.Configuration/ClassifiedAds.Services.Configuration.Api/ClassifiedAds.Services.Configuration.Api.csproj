@@ -7,7 +7,6 @@
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 		<PackageReference Include="ClosedXML" Version="0.102.1" />
-		<PackageReference Include="EPPlus" Version="7.0.4" />
 		<PackageReference Include="ExcelDataReader" Version="3.6.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
