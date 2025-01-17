@@ -99,6 +99,7 @@ public class AuthorizationController : Controller
             claimsPrincipal = new ClaimsPrincipal(identity);
 
             claimsPrincipal.SetScopes(request.GetScopes());
+            claimsPrincipal.SetResources(await _scopeManager.ListResourcesAsync(claimsPrincipal.GetScopes()).ToListAsync());
         }
         else if (request.IsAuthorizationCodeGrantType())
         {

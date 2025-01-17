@@ -97,8 +97,8 @@ public class Startup
             options
                 .SetTokenEndpointUris("connect/token")
                 .SetAuthorizationEndpointUris("connect/authorize")
-                .SetLogoutEndpointUris("connect/logout")
-                .SetUserinfoEndpointUris("connect/userinfo");
+                .SetEndSessionEndpointUris("connect/logout")
+                .SetUserInfoEndpointUris("connect/userinfo");
 
             options.AllowAuthorizationCodeFlow()
                    .AllowHybridFlow()
@@ -115,8 +115,8 @@ public class Startup
                 .UseAspNetCore()
                 .EnableTokenEndpointPassthrough()
                 .EnableAuthorizationEndpointPassthrough()
-                .EnableLogoutEndpointPassthrough()
-                .EnableUserinfoEndpointPassthrough();
+                .EnableEndSessionEndpointPassthrough()
+                .EnableUserInfoEndpointPassthrough();
 
             options.DisableAccessTokenEncryption();
         })

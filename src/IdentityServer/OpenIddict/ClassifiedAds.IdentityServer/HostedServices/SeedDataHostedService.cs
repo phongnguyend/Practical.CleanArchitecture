@@ -43,7 +43,7 @@ public class SeedDataHostedService : IHostedService
             {
                 OpenIddictConstants.Permissions.Endpoints.Authorization,
                 OpenIddictConstants.Permissions.Endpoints.Token,
-                OpenIddictConstants.Permissions.Endpoints.Logout,
+                OpenIddictConstants.Permissions.Endpoints.EndSession,
 
                 OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
                 OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
@@ -59,7 +59,7 @@ public class SeedDataHostedService : IHostedService
             {
                 OpenIddictConstants.Requirements.Features.ProofKeyForCodeExchange
             },
-            Type = OpenIddictConstants.ClientTypes.Confidential,
+            ClientType = OpenIddictConstants.ClientTypes.Confidential,
         }, cancellationToken);
 
         await UpsertClientApplication(manager, new OpenIddictApplicationDescriptor
@@ -79,7 +79,7 @@ public class SeedDataHostedService : IHostedService
             {
                 OpenIddictConstants.Permissions.Endpoints.Authorization,
                 OpenIddictConstants.Permissions.Endpoints.Token,
-                OpenIddictConstants.Permissions.Endpoints.Logout,
+                OpenIddictConstants.Permissions.Endpoints.EndSession,
 
                 OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
                 OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
@@ -96,7 +96,7 @@ public class SeedDataHostedService : IHostedService
             {
                 OpenIddictConstants.Requirements.Features.ProofKeyForCodeExchange
             },
-            Type = OpenIddictConstants.ClientTypes.Confidential,
+            ClientType = OpenIddictConstants.ClientTypes.Confidential,
         }, cancellationToken);
 
         await UpsertClientApplication(manager, new OpenIddictApplicationDescriptor
@@ -116,7 +116,7 @@ public class SeedDataHostedService : IHostedService
             {
                 OpenIddictConstants.Permissions.Endpoints.Authorization,
                 OpenIddictConstants.Permissions.Endpoints.Token,
-                OpenIddictConstants.Permissions.Endpoints.Logout,
+                OpenIddictConstants.Permissions.Endpoints.EndSession,
 
                 OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
                 OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
@@ -133,7 +133,7 @@ public class SeedDataHostedService : IHostedService
             {
                 OpenIddictConstants.Requirements.Features.ProofKeyForCodeExchange
             },
-            Type = OpenIddictConstants.ClientTypes.Confidential,
+            ClientType = OpenIddictConstants.ClientTypes.Confidential,
         }, cancellationToken);
 
         await UpsertClientApplication(manager, new OpenIddictApplicationDescriptor
@@ -153,7 +153,7 @@ public class SeedDataHostedService : IHostedService
             {
                 OpenIddictConstants.Permissions.Endpoints.Authorization,
                 OpenIddictConstants.Permissions.Endpoints.Token,
-                OpenIddictConstants.Permissions.Endpoints.Logout,
+                OpenIddictConstants.Permissions.Endpoints.EndSession,
 
                 OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
                 OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
@@ -169,7 +169,7 @@ public class SeedDataHostedService : IHostedService
             {
                 OpenIddictConstants.Requirements.Features.ProofKeyForCodeExchange
             },
-            Type = OpenIddictConstants.ClientTypes.Confidential,
+            ClientType = OpenIddictConstants.ClientTypes.Confidential,
         }, cancellationToken);
 
         await UpsertClientApplication(manager, new OpenIddictApplicationDescriptor
@@ -188,7 +188,7 @@ public class SeedDataHostedService : IHostedService
             {
                 OpenIddictConstants.Permissions.Endpoints.Authorization,
                 OpenIddictConstants.Permissions.Endpoints.Token,
-                OpenIddictConstants.Permissions.Endpoints.Logout,
+                OpenIddictConstants.Permissions.Endpoints.EndSession,
 
                 OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
                 OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
@@ -204,7 +204,7 @@ public class SeedDataHostedService : IHostedService
             {
                 OpenIddictConstants.Requirements.Features.ProofKeyForCodeExchange
             },
-            Type = OpenIddictConstants.ClientTypes.Public,
+            ClientType = OpenIddictConstants.ClientTypes.Public,
         }, cancellationToken);
 
         await UpsertClientApplication(manager, new OpenIddictApplicationDescriptor
@@ -223,7 +223,7 @@ public class SeedDataHostedService : IHostedService
             {
                 OpenIddictConstants.Permissions.Endpoints.Authorization,
                 OpenIddictConstants.Permissions.Endpoints.Token,
-                OpenIddictConstants.Permissions.Endpoints.Logout,
+                OpenIddictConstants.Permissions.Endpoints.EndSession,
 
                 OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
                 OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
@@ -239,7 +239,7 @@ public class SeedDataHostedService : IHostedService
             {
                 OpenIddictConstants.Requirements.Features.ProofKeyForCodeExchange
             },
-            Type = OpenIddictConstants.ClientTypes.Public,
+            ClientType = OpenIddictConstants.ClientTypes.Public,
         }, cancellationToken);
 
         await UpsertClientApplication(manager, new OpenIddictApplicationDescriptor
@@ -258,7 +258,7 @@ public class SeedDataHostedService : IHostedService
             {
                 OpenIddictConstants.Permissions.Endpoints.Authorization,
                 OpenIddictConstants.Permissions.Endpoints.Token,
-                OpenIddictConstants.Permissions.Endpoints.Logout,
+                OpenIddictConstants.Permissions.Endpoints.EndSession,
 
                 OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
                 OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
@@ -274,7 +274,7 @@ public class SeedDataHostedService : IHostedService
             {
                 OpenIddictConstants.Requirements.Features.ProofKeyForCodeExchange
             },
-            Type = OpenIddictConstants.ClientTypes.Public,
+            ClientType = OpenIddictConstants.ClientTypes.Public,
         }, cancellationToken);
 
         await UpsertClientApplication(manager, new OpenIddictApplicationDescriptor
@@ -293,7 +293,7 @@ public class SeedDataHostedService : IHostedService
             {
                 OpenIddictConstants.Permissions.Endpoints.Authorization,
                 OpenIddictConstants.Permissions.Endpoints.Token,
-                OpenIddictConstants.Permissions.Endpoints.Logout,
+                OpenIddictConstants.Permissions.Endpoints.EndSession,
 
                 OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
                 OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
@@ -309,7 +309,7 @@ public class SeedDataHostedService : IHostedService
             {
                 OpenIddictConstants.Requirements.Features.ProofKeyForCodeExchange
             },
-            Type = OpenIddictConstants.ClientTypes.Public,
+            ClientType = OpenIddictConstants.ClientTypes.Public,
         }, cancellationToken);
     }
 

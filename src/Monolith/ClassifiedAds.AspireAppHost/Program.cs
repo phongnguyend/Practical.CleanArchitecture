@@ -8,6 +8,6 @@ var blazorServerSide = builder.AddProject<Projects.ClassifiedAds_BlazorServerSid
 var blazorWebAssembly = builder.AddProject<Projects.ClassifiedAds_BlazorWebAssembly>("ClassifiedAds-BlazorWebAssembly");
 
 var identityServer = builder
-    .AddExecutable("ClassifiedAds-IdentityServer", "dotnet", "../../IdentityServer/IdentityServer4/ClassifiedAds.IdentityServer", "run", $"--urls=https://localhost:44367");
+    .AddExecutable("ClassifiedAds-IdentityServer", "dotnet", "../../IdentityServer/OpenIddict/ClassifiedAds.IdentityServer", "run", $"--urls=https://localhost:44367");
 
 builder.Build().Run();
