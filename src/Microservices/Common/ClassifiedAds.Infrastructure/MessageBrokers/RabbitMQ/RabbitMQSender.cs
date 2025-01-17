@@ -11,7 +11,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ;
 public class RabbitMQSender<T> : IMessageSender<T>
 {
     private readonly RabbitMQSenderOptions _options;
-    private readonly IConnectionFactory _connectionFactory;
+    private readonly ConnectionFactory _connectionFactory;
     private readonly string _exchangeName;
     private readonly string _routingKey;
 
@@ -32,33 +32,34 @@ public class RabbitMQSender<T> : IMessageSender<T>
 
     public async Task SendAsync(T message, MetaData metaData = null, CancellationToken cancellationToken = default)
     {
-        await Task.Run(() =>
+        using var connection = await _connectionFactory.CreateConnectionAsync(cancellationToken);
+        using var channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken);
+        var body = new Message<T>
         {
-            using var connection = _connectionFactory.CreateConnection();
-            using var channel = connection.CreateModel();
-            var body = new Message<T>
-            {
-                Data = message,
-                MetaData = metaData,
-            }.GetBytes();
+            Data = message,
+            MetaData = metaData,
+        }.GetBytes();
 
-            if (_options.MessageEncryptionEnabled)
-            {
-                var iv = SymmetricCrypto.GenerateKey(16);
-                body = (iv.ToBase64String() + "." + body.UseAES(_options.MessageEncryptionKey.FromBase64String())
-                .WithCipher(CipherMode.CBC)
-                .WithIV(iv)
-                .WithPadding(PaddingMode.PKCS7)
-                .Encrypt().ToBase64String()).GetBytes();
-            }
+        if (_options.MessageEncryptionEnabled)
+        {
+            var iv = SymmetricCrypto.GenerateKey(16);
+            body = (iv.ToBase64String() + "." + body.UseAES(_options.MessageEncryptionKey.FromBase64String())
+            .WithCipher(CipherMode.CBC)
+            .WithIV(iv)
+            .WithPadding(PaddingMode.PKCS7)
+            .Encrypt().ToBase64String()).GetBytes();
+        }
 
-            var properties = channel.CreateBasicProperties();
-            properties.Persistent = true;
+        var properties = new BasicProperties
+        {
+            Persistent = true
+        };
 
-            channel.BasicPublish(exchange: _exchangeName,
-                                 routingKey: _routingKey,
-                                 basicProperties: properties,
-                                 body: body);
-        }, cancellationToken);
+        await channel.BasicPublishAsync(exchange: _exchangeName,
+                               routingKey: _routingKey,
+                               mandatory: true,
+                               basicProperties: properties,
+                               body: body,
+                               cancellationToken: cancellationToken);
     }
 }

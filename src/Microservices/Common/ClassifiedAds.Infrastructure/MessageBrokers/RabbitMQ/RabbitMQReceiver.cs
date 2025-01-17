@@ -16,36 +16,34 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ;
 public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, IDisposable
 {
     private readonly RabbitMQReceiverOptions _options;
-    private readonly IConnection _connection;
-    private IModel _channel;
-    private string _queueName;
+    private IConnection _connection;
+    private IChannel _channel;
 
     public RabbitMQReceiver(RabbitMQReceiverOptions options)
     {
         _options = options;
-
-        _connection = new ConnectionFactory
-        {
-            HostName = options.HostName,
-            UserName = options.UserName,
-            Password = options.Password,
-            AutomaticRecoveryEnabled = true,
-            DispatchConsumersAsync = true
-        }.CreateConnection();
-
-        _queueName = options.QueueName;
-
-        _connection.ConnectionShutdown += Connection_ConnectionShutdown;
     }
 
-    private void Connection_ConnectionShutdown(object sender, ShutdownEventArgs e)
+    private Task Connection_ConnectionShutdownAsync(object sender, ShutdownEventArgs e)
     {
         // TODO: add log here
+
+        return Task.CompletedTask;
     }
 
-    public Task ReceiveAsync(Func<T, MetaData, Task> action, CancellationToken cancellationToken = default)
+    public async Task ReceiveAsync(Func<T, MetaData, Task> action, CancellationToken cancellationToken = default)
     {
-        _channel = _connection.CreateModel();
+        _connection = await new ConnectionFactory
+        {
+            HostName = _options.HostName,
+            UserName = _options.UserName,
+            Password = _options.Password,
+            AutomaticRecoveryEnabled = true,
+        }.CreateConnectionAsync(cancellationToken);
+
+        _connection.ConnectionShutdownAsync += Connection_ConnectionShutdownAsync;
+
+        _channel = await _connection.CreateChannelAsync(cancellationToken: cancellationToken);
 
         if (_options.AutomaticCreateEnabled)
         {
@@ -79,21 +77,21 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
 
                 if (_options.DeadLetter.AutomaticCreateEnabled && !string.IsNullOrEmpty(_options.DeadLetter.QueueName))
                 {
-                    _channel.QueueDeclare(_options.DeadLetter.QueueName, true, false, false, null);
-                    _channel.QueueBind(_options.DeadLetter.QueueName, _options.DeadLetter.ExchangeName, _options.DeadLetter.RoutingKey, null);
+                    await _channel.QueueDeclareAsync(_options.DeadLetter.QueueName, true, false, false, null, cancellationToken: cancellationToken);
+                    await _channel.QueueBindAsync(_options.DeadLetter.QueueName, _options.DeadLetter.ExchangeName, _options.DeadLetter.RoutingKey, null, cancellationToken: cancellationToken);
                 }
             }
 
             arguments = arguments.Count == 0 ? null : arguments;
 
-            _channel.QueueDeclare(_options.QueueName, true, false, false, arguments);
-            _channel.QueueBind(_options.QueueName, _options.ExchangeName, _options.RoutingKey, null);
+            await _channel.QueueDeclareAsync(_options.QueueName, true, false, false, arguments, cancellationToken: cancellationToken);
+            await _channel.QueueBindAsync(_options.QueueName, _options.ExchangeName, _options.RoutingKey, null, cancellationToken: cancellationToken);
         }
 
-        _channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
+        await _channel.BasicQosAsync(prefetchSize: 0, prefetchCount: 1, global: false, cancellationToken: cancellationToken);
 
         var consumer = new AsyncEventingBasicConsumer(_channel);
-        consumer.Received += async (model, ea) =>
+        consumer.ReceivedAsync += async (model, ea) =>
         {
             try
             {
@@ -122,21 +120,17 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
 
                 await action(message.Data, message.MetaData);
 
-                _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                await _channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
             }
             catch (Exception ex)
             {
                 // TODO: log here
                 await Task.Delay(1000);
-                _channel.BasicNack(deliveryTag: ea.DeliveryTag, multiple: false, requeue: _options.RequeueOnFailure);
+                await _channel.BasicNackAsync(deliveryTag: ea.DeliveryTag, multiple: false, requeue: _options.RequeueOnFailure);
             }
         };
 
-        _channel.BasicConsume(queue: _queueName,
-                             autoAck: false,
-                             consumer: consumer);
-
-        return Task.CompletedTask;
+        await _channel.BasicConsumeAsync(queue: _options.QueueName, autoAck: false, consumer: consumer, cancellationToken: cancellationToken);
     }
 
     public void Dispose()

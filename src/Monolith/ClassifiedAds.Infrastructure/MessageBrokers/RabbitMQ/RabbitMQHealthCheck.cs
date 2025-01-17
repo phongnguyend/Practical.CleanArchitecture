@@ -15,7 +15,7 @@ public class RabbitMQHealthCheck : IHealthCheck
         _options = options;
     }
 
-    public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
+    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -26,14 +26,14 @@ public class RabbitMQHealthCheck : IHealthCheck
                 Password = _options.Password,
             };
 
-            using var connection = connectionFactory.CreateConnection();
-            using var model = connection.CreateModel();
+            using var connection = await connectionFactory.CreateConnectionAsync(cancellationToken);
+            using var channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken);
 
-            return Task.FromResult(HealthCheckResult.Healthy($"HostName: {_options.HostName}"));
+            return HealthCheckResult.Healthy($"HostName: {_options.HostName}");
         }
         catch (Exception exception)
         {
-            return Task.FromResult(new HealthCheckResult(context.Registration.FailureStatus, null, exception));
+            return new HealthCheckResult(context.Registration.FailureStatus, null, exception);
         }
     }
 }
