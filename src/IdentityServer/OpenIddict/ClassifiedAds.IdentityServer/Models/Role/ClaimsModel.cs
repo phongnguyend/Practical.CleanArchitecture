@@ -1,14 +1,13 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassifiedAds.IdentityServer.Models.RoleModels;
+namespace ClassifiedAds.IdentityServer.Models.Role;
 
 public class ClaimsModel : ClaimModel
 {
     public List<ClaimModel> Claims { get; set; }
 
-    public static ClaimsModel FromEntity(Role role)
+    public static ClaimsModel FromEntity(Domain.Entities.Role role)
     {
         return new ClaimsModel
         {

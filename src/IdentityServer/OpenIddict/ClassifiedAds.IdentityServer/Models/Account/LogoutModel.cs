@@ -1,4 +1,4 @@
-﻿namespace ClassifiedAds.IdentityServer.Models.Accounts;
+﻿namespace ClassifiedAds.IdentityServer.Models.Account;
 
 public class LogoutModel
 {

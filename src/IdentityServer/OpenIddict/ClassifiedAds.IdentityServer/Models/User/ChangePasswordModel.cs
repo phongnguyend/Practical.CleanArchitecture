@@ -1,8 +1,7 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ClassifiedAds.IdentityServer.Models.UserModels;
+namespace ClassifiedAds.IdentityServer.Models.User;
 
 public class ChangePasswordModel
 {
@@ -13,7 +12,7 @@ public class ChangePasswordModel
     [Compare(nameof(Password))]
     public string ConfirmPassword { get; set; }
 
-    public static ChangePasswordModel FromEntity(User user)
+    public static ChangePasswordModel FromEntity(Domain.Entities.User user)
     {
         return new ChangePasswordModel
         {

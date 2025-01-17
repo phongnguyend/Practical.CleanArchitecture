@@ -4,7 +4,7 @@ using ClassifiedAds.Application.Users.Commands;
 using ClassifiedAds.Application.Users.Queries;
 using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.IdentityServer.Models.UserModels;
+using ClassifiedAds.IdentityServer.Models.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

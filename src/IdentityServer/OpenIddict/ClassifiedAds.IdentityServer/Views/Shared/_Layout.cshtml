@@ -58,7 +58,17 @@
         <!--Menu item -->
         @if (User.Identity.IsAuthenticated)
         {
-            <a class="menu-item my-2 btn btn-outline-primary" asp-action="Logout" asp-controller="Account">@User.GetDisplayName() - Logout</a>
+			<div class="menu-item my-2 my-md-0 mr-md-3 dropdown">
+				<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+					@User.GetDisplayName()
+				</button>
+				<div class="dropdown-menu">
+					<a class="dropdown-item" asp-area="" asp-controller="Manage" asp-action="Index">Manage</a>
+					<a class="dropdown-item" href="/Identity/Account/Manage">Identity/Account/Manage</a>
+					<a class="menu-item my-2 btn btn-outline-primary" asp-action="Logout" asp-controller="Account"> Logout</a>
+				</div>
+			</div>
+ 
         }
     </div>
     <div class="container body-content">
