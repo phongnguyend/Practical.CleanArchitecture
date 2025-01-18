@@ -35,7 +35,7 @@ public class Callback : PageModel
         _logger = logger;
         _events = events;
     }
-        
+
     public async Task<IActionResult> OnGet()
     {
         // read external identity from the temporary cookie
@@ -57,11 +57,32 @@ public class Callback : PageModel
         // try to determine the unique id of the external user (issued by the provider)
         // the most common claim type for that are the sub claim and the NameIdentifier
         // depending on the external provider, some other claim type might be used
-        var userIdClaim = externalUser.FindFirst(JwtClaimTypes.Subject) ??
-                          externalUser.FindFirst(ClaimTypes.NameIdentifier) ??
-                          throw new Exception("Unknown userid");
 
         var provider = result.Properties.Items["scheme"];
+
+        Claim userIdClaim = null;
+
+        if (provider == "AAD")
+        {
+            userIdClaim = externalUser.FindFirst(ClaimTypes.NameIdentifier);
+        }
+        else if (provider == "Microsoft")
+        {
+            userIdClaim = externalUser.FindFirst(ClaimTypes.NameIdentifier);
+        }
+        else if (provider == "Google")
+        {
+            userIdClaim = externalUser.FindFirst(ClaimTypes.NameIdentifier);
+        }
+        else if (provider == "Facebook")
+        {
+            userIdClaim = externalUser.FindFirst(ClaimTypes.NameIdentifier);
+        }
+        else
+        {
+            userIdClaim = externalUser.FindFirst(ClaimTypes.NameIdentifier);
+        }
+
         var providerUserId = userIdClaim.Value;
 
         // find external user
@@ -109,22 +130,35 @@ public class Callback : PageModel
 
     private async Task<User> AutoProvisionUserAsync(string provider, string providerUserId, IEnumerable<Claim> claims)
     {
-        var sub = Guid.NewGuid();
-            
-        var user = new User
-        {
-            Id = sub,
-            UserName = sub.ToString(), // don't need a username, since the user will be using an external provider to login
-        };
-
         // email
-        var email = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Email)?.Value ??
-                    claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
-        if (email != null)
+        Claim emailClaim = null;
+
+        if (provider == "AAD")
         {
-            user.Email = email;
+            emailClaim = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Email) ??
+                    claims.FirstOrDefault(x => x.Type == ClaimTypes.Email);
         }
-            
+        else if (provider == "Microsoft")
+        {
+            emailClaim = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Email) ??
+                     claims.FirstOrDefault(x => x.Type == ClaimTypes.Email);
+        }
+        else if (provider == "Google")
+        {
+            emailClaim = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Email) ??
+                    claims.FirstOrDefault(x => x.Type == ClaimTypes.Email);
+        }
+        else if (provider == "Facebook")
+        {
+            emailClaim = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Email) ??
+                    claims.FirstOrDefault(x => x.Type == ClaimTypes.Email);
+        }
+        else
+        {
+            emailClaim = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Email) ??
+                     claims.FirstOrDefault(x => x.Type == ClaimTypes.Email);
+        }
+
         // create a list of claims that we want to transfer into our store
         var filtered = new List<Claim>();
 
@@ -155,17 +189,33 @@ public class Callback : PageModel
             }
         }
 
-        var identityResult = await _userManager.CreateAsync(user);
-        if (!identityResult.Succeeded) throw new Exception(identityResult.Errors.First().Description);
+        var userName = $"{provider}_{providerUserId}";
+
+        var user = await _userManager.FindByNameAsync(userName);
+
+        if (user == null)
+        {
+            user = new User
+            {
+                UserName = userName,
+                Email = emailClaim?.Value,
+            };
+
+            var createResult = await _userManager.CreateAsync(user);
+            if (!createResult.Succeeded)
+            {
+                throw new Exception(createResult.Errors.First().Description);
+            }
+        }
 
         if (filtered.Any())
         {
-            identityResult = await _userManager.AddClaimsAsync(user, filtered);
-            if (!identityResult.Succeeded) throw new Exception(identityResult.Errors.First().Description);
+            var addClaimResult = await _userManager.AddClaimsAsync(user, filtered);
+            if (!addClaimResult.Succeeded) throw new Exception(addClaimResult.Errors.First().Description);
         }
 
-        identityResult = await _userManager.AddLoginAsync(user, new UserLoginInfo(provider, providerUserId, provider));
-        if (!identityResult.Succeeded) throw new Exception(identityResult.Errors.First().Description);
+        var addLoginResult = await _userManager.AddLoginAsync(user, new UserLoginInfo(provider, providerUserId, provider));
+        if (!addLoginResult.Succeeded) throw new Exception(addLoginResult.Errors.First().Description);
 
         return user;
     }
