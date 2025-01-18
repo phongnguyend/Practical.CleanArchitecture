@@ -38,7 +38,7 @@ services:
     identityserver:
         image: classifiedads.modularmonolith.identityserver
         build:
-          context: ../IdentityServer/IdentityServer4
+          context: ../IdentityServer/OpenIddict
           dockerfile: ./ClassifiedAds.IdentityServer/Dockerfile
         ports:
             - "9000:80"

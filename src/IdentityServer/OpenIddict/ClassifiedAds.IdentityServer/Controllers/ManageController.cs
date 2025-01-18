@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -49,8 +48,7 @@ public class ManageController : Controller
             HasPassword = await _userManager.HasPasswordAsync(user),
             PhoneNumber = await _userManager.GetPhoneNumberAsync(user),
             TwoFactor = await _userManager.GetTwoFactorEnabledAsync(user),
-            //Logins = await _userManager.GetLoginsAsync(user),
-            Logins = new List<UserLoginInfo>(),
+            Logins = await _userManager.GetLoginsAsync(user),
             BrowserRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user),
             AuthenticatorKey = await _userManager.GetAuthenticatorKeyAsync(user)
         };
@@ -68,7 +66,6 @@ public class ManageController : Controller
             var result = await _userManager.RemoveLoginAsync(user, account.LoginProvider, account.ProviderKey);
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
                 message = ManageMessageId.RemoveLoginSuccess;
             }
         }

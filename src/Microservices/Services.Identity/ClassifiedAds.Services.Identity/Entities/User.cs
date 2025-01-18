@@ -1,6 +1,4 @@
 ﻿using ClassifiedAds.Domain.Entities;
-using System;
-using System.Collections.Generic;
 
 namespace ClassifiedAds.Services.Identity.Entities;
 
@@ -43,4 +41,6 @@ public class User : Entity<Guid>, IAggregateRoot
     public IList<UserClaim> Claims { get; set; }
 
     public IList<UserRole> UserRoles { get; set; }
+
+    public IList<UserLogin> UserLogins { get; set; }
 }

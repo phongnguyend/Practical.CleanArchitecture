@@ -21,6 +21,6 @@ var apiGateway = builder.AddProject<Projects.ClassifiedAds_Gateways_WebAPI>("Cla
 
 
 var identityServer = builder
-    .AddExecutable("ClassifiedAds-IdentityServer", "dotnet", "../../IdentityServer/IdentityServer4/ClassifiedAds.IdentityServer", "run", $"--urls=https://localhost:44367");
+    .AddExecutable("ClassifiedAds-IdentityServer", "dotnet", "../../IdentityServer/OpenIddict/ClassifiedAds.IdentityServer", "run", $"--urls=https://localhost:44367");
 
 builder.Build().Run();

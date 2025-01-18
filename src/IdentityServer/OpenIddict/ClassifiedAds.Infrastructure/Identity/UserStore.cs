@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,15 +20,19 @@ public class UserStore : IUserStore<User>,
                          IUserLockoutStore<User>,
                          IUserAuthenticationTokenStore<User>,
                          IUserAuthenticatorKeyStore<User>,
-                         IUserTwoFactorRecoveryCodeStore<User>
+                         IUserTwoFactorRecoveryCodeStore<User>,
+                         IUserLoginStore<User>,
+                         IUserClaimStore<User>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserRepository _userRepository;
+    private readonly IRepository<UserLogin, Guid> _userLoginRepository;
 
-    public UserStore(IUserRepository userRepository)
+    public UserStore(IUserRepository userRepository, IRepository<UserLogin, Guid> userLoginRepository)
     {
         _unitOfWork = userRepository.UnitOfWork;
         _userRepository = userRepository;
+        _userLoginRepository = userLoginRepository;
     }
 
     public void Dispose()
@@ -319,5 +324,72 @@ public class UserStore : IUserStore<User>,
         }
 
         return 0;
+    }
+
+    public async Task AddLoginAsync(User user, UserLoginInfo login, CancellationToken cancellationToken)
+    {
+        await _userLoginRepository.AddAsync(new UserLogin
+        {
+            UserId = user.Id,
+            LoginProvider = login.LoginProvider,
+            ProviderKey = login.ProviderKey,
+            ProviderDisplayName = login.ProviderDisplayName,
+        }, cancellationToken);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task RemoveLoginAsync(User user, string loginProvider, string providerKey, CancellationToken cancellationToken)
+    {
+        var userLogin = await _userLoginRepository.GetQueryableSet()
+            .Where(x => x.LoginProvider == loginProvider && x.ProviderKey == providerKey && x.UserId == user.Id).FirstOrDefaultAsync(cancellationToken);
+
+        if (userLogin != null)
+        {
+            _userLoginRepository.Delete(userLogin);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+    }
+
+    public async Task<IList<UserLoginInfo>> GetLoginsAsync(User user, CancellationToken cancellationToken)
+    {
+        return await _userLoginRepository.GetQueryableSet()
+            .Where(x => x.UserId == user.Id)
+            .Select(x => new UserLoginInfo(x.LoginProvider, x.ProviderKey, x.ProviderDisplayName))
+            .ToListAsync(cancellationToken: cancellationToken);
+    }
+
+    public async Task<User> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
+    {
+        var userLogin = await _userLoginRepository.GetQueryableSet()
+            .Where(x => x.LoginProvider == loginProvider && x.ProviderKey == providerKey)
+            .Include(x => x.User)
+            .FirstOrDefaultAsync(cancellationToken);
+        return userLogin?.User;
+    }
+
+    public Task<IList<Claim>> GetClaimsAsync(User user, CancellationToken cancellationToken)
+    {
+        return Task.FromResult<IList<Claim>>([]);
+    }
+
+    public Task AddClaimsAsync(User user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task ReplaceClaimAsync(User user, Claim claim, Claim newClaim, CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task RemoveClaimsAsync(User user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task<IList<User>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken)
+    {
+        return Task.FromResult<IList<User>>([]);
     }
 }
