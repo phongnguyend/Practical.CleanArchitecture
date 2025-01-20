@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.Infrastructure.Logging;
+﻿using ClassifiedAds.CrossCuttingConcerns.Logging;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;

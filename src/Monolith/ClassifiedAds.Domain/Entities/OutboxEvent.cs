@@ -21,4 +21,6 @@ public abstract class OutboxEventBase : Entity<Guid>
     public string Message { get; set; }
 
     public bool Published { get; set; }
+
+    public string ActivityId { get; set; }
 }

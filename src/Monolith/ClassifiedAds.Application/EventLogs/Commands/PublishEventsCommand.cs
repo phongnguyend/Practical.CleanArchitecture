@@ -49,6 +49,7 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
                 EventType = eventLog.EventType,
                 EventSource = typeof(PublishEventsCommand).Assembly.GetName().Name,
                 Payload = eventLog.Message,
+                ActivityId = eventLog.ActivityId
             };
 
             await _messageBus.SendAsync(outbox, cancellationToken);

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace ClassifiedAds.Infrastructure.Logging;
+namespace ClassifiedAds.CrossCuttingConcerns.Logging;
 
 public static class ActivityExtensions
 {
@@ -34,18 +34,15 @@ public static class ActivityExtensions
         } ?? string.Empty;
     }
 
-    public static Activity StartNew(string name)
+    public static Activity StartNew(string name, string parentId = null)
     {
         var activity = new Activity(name);
-        activity.Start();
-        return activity;
-    }
 
-    public static Activity StartNew(string name, string traceId)
-    {
-        var activity = new Activity(name);
-        activity.SetIdFormat(ActivityIdFormat.W3C);
-        activity.SetTag("TraceId", traceId);
+        if (!string.IsNullOrEmpty(parentId))
+        {
+            activity.SetParentId(parentId);
+        }
+
         activity.Start();
         return activity;
     }

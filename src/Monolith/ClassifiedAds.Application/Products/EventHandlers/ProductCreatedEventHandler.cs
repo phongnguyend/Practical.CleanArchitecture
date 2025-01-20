@@ -5,6 +5,7 @@ using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.Repositories;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,7 +35,7 @@ public class ProductCreatedEventHandler : IDomainEventHandler<EntityCreatedEvent
             Action = "CREATED_PRODUCT",
             ObjectId = domainEvent.Entity.Id.ToString(),
             Log = domainEvent.Entity.AsJsonString(),
-        });
+        }, cancellationToken);
 
         await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
         {
@@ -43,7 +44,7 @@ public class ProductCreatedEventHandler : IDomainEventHandler<EntityCreatedEvent
             CreatedDateTime = domainEvent.EventDateTime,
             ObjectId = domainEvent.Entity.Id.ToString(),
             Message = domainEvent.Entity.AsJsonString(),
-            Published = false,
+            ActivityId = Activity.Current.Id,
         }, cancellationToken);
 
         await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);

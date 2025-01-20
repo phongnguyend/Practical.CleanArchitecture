@@ -149,18 +149,15 @@ public class AuthorizationController : Controller
                     .SetClaim(OpenIddictConstants.Claims.Email, await _userManager.GetEmailAsync(user))
                     .SetClaim(OpenIddictConstants.Claims.Name, await _userManager.GetUserNameAsync(user));
 
-            // Set the list of scopes granted to the client application.
-            identity.SetScopes(new[]
-            {
-                OpenIddictConstants.Scopes.OpenId,
-                OpenIddictConstants.Scopes.Email,
-                OpenIddictConstants.Scopes.Profile,
-                OpenIddictConstants.Scopes.Roles
-            }.Intersect(request.GetScopes()));
+            claimsPrincipal = new ClaimsPrincipal(identity);
 
-            identity.SetDestinations(GetDestinations);
+            claimsPrincipal.SetScopes(request.GetScopes());
 
-            return SignIn(new ClaimsPrincipal(identity), OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+            claimsPrincipal.SetDestinations(GetDestinations);
+
+            claimsPrincipal.SetResources(await _scopeManager.ListResourcesAsync(claimsPrincipal.GetScopes()).ToListAsync());
+
+            return SignIn(claimsPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
         else
         {

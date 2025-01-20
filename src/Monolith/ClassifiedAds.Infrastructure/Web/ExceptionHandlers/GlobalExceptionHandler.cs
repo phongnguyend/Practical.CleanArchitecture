@@ -1,5 +1,5 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Exceptions;
-using ClassifiedAds.Infrastructure.Logging;
+using ClassifiedAds.CrossCuttingConcerns.Logging;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

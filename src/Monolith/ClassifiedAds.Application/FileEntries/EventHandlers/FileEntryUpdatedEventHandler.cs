@@ -5,6 +5,7 @@ using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.Repositories;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,7 +35,7 @@ public class FileEntryUpdatedEventHandler : IDomainEventHandler<EntityUpdatedEve
             Action = "UPDATED_FILEENTRY",
             ObjectId = domainEvent.Entity.Id.ToString(),
             Log = domainEvent.Entity.AsJsonString(),
-        });
+        }, cancellationToken);
 
         await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
         {
@@ -43,7 +44,7 @@ public class FileEntryUpdatedEventHandler : IDomainEventHandler<EntityUpdatedEve
             CreatedDateTime = domainEvent.EventDateTime,
             ObjectId = domainEvent.Entity.Id.ToString(),
             Message = domainEvent.Entity.AsJsonString(),
-            Published = false,
+            ActivityId = Activity.Current.Id,
         }, cancellationToken);
 
         await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
