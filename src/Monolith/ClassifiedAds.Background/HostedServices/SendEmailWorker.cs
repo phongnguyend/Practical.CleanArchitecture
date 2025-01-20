@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Application.EmailMessages.Commands;
 using ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
+using ClassifiedAds.Infrastructure.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -24,7 +25,7 @@ public class SendEmailWorker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogDebug("SendEmailService is starting.");
+        _logger.LogInformation("SendEmailService is starting.");
         await DoWork(stoppingToken);
     }
 
@@ -32,6 +33,8 @@ public class SendEmailWorker : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
+            using var activity = ActivityExtensions.StartNew("SendEmailWorker");
+
             _logger.LogDebug($"SendEmail task doing background work.");
 
             try
@@ -56,6 +59,6 @@ public class SendEmailWorker : BackgroundService
             }
         }
 
-        _logger.LogDebug($"SendEmail background task is stopping.");
+        _logger.LogInformation($"SendEmail background task is stopping.");
     }
 }

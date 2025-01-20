@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Application.Users.Commands;
+using ClassifiedAds.Infrastructure.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -23,10 +24,12 @@ public class SyncUsersWorker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogDebug("SyncUsersWorker is starting.");
+        _logger.LogInformation("SyncUsersWorker is starting.");
 
         while (!stoppingToken.IsCancellationRequested)
         {
+            using var activity = ActivityExtensions.StartNew("SyncUsersWorker");
+
             _logger.LogDebug($"SyncUsersWorker doing background work.");
 
             var syncUsersCommand = new SyncUsersCommand();
@@ -44,6 +47,6 @@ public class SyncUsersWorker : BackgroundService
             }
         }
 
-        _logger.LogDebug($"SyncUsersWorker task is stopping.");
+        _logger.LogInformation($"SyncUsersWorker task is stopping.");
     }
 }

@@ -1,32 +1,8 @@
-﻿/*
- * https://github.com/serilog/serilog-aspnetcore/issues/207
- *
- */
-
-using Serilog.Core;
-using Serilog.Events;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace ClassifiedAds.Infrastructure.Logging;
 
-public class ActivityEnricher : ILogEventEnricher
-{
-    public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
-    {
-        var activity = Activity.Current;
-
-        if (activity == null)
-        {
-            return;
-        }
-
-        logEvent.AddPropertyIfAbsent(new LogEventProperty("SpanId", new ScalarValue(activity.GetSpanId())));
-        logEvent.AddPropertyIfAbsent(new LogEventProperty("TraceId", new ScalarValue(activity.GetTraceId())));
-        logEvent.AddPropertyIfAbsent(new LogEventProperty("ParentId", new ScalarValue(activity.GetParentId())));
-    }
-}
-
-internal static class ActivityExtensions
+public static class ActivityExtensions
 {
     public static string GetSpanId(this Activity activity)
     {
@@ -56,5 +32,21 @@ internal static class ActivityExtensions
             ActivityIdFormat.W3C => activity.ParentSpanId.ToHexString(),
             _ => null,
         } ?? string.Empty;
+    }
+
+    public static Activity StartNew(string name)
+    {
+        var activity = new Activity(name);
+        activity.Start();
+        return activity;
+    }
+
+    public static Activity StartNew(string name, string traceId)
+    {
+        var activity = new Activity(name);
+        activity.SetIdFormat(ActivityIdFormat.W3C);
+        activity.SetTag("TraceId", traceId);
+        activity.Start();
+        return activity;
     }
 }

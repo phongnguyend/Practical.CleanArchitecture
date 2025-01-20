@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Application.EventLogs.Commands;
 using ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
+using ClassifiedAds.Infrastructure.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -24,7 +25,7 @@ public class PublishEventWorker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogDebug("PushlishEventWorker is starting.");
+        _logger.LogInformation("PushlishEventWorker is starting.");
         await DoWork(stoppingToken);
     }
 
@@ -32,6 +33,8 @@ public class PublishEventWorker : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
+            using var activity = ActivityExtensions.StartNew("PublishEventWorker");
+
             _logger.LogDebug($"PushlishEvent task doing background work.");
 
             try
@@ -61,6 +64,6 @@ public class PublishEventWorker : BackgroundService
             }
         }
 
-        _logger.LogDebug($"PushlishEventWorker background task is stopping.");
+        _logger.LogInformation($"PushlishEventWorker background task is stopping.");
     }
 }

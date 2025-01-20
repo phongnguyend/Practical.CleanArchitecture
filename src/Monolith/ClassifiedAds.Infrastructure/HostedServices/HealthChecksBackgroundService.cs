@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+﻿using ClassifiedAds.Infrastructure.Logging;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -35,6 +36,8 @@ public class HealthChecksBackgroundService : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested)
         {
+            using var activity = ActivityExtensions.StartNew("HealthChecksBackgroundService");
+
             var healthReport = await _healthCheckService.CheckHealthAsync(stoppingToken);
 
             using var memoryStream = new MemoryStream();

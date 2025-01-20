@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Infrastructure.HostedServices;
+using ClassifiedAds.Infrastructure.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -23,6 +24,8 @@ public class ScheduleCronJobWorker : CronJobBackgroundService
 
     protected override async Task DoWork(CancellationToken stoppingToken)
     {
+        using var activity = ActivityExtensions.StartNew("ScheduleCronJobWorker");
+
         try
         {
             _logger.LogInformation("Worker running at: {Time}", DateTimeOffset.Now);
