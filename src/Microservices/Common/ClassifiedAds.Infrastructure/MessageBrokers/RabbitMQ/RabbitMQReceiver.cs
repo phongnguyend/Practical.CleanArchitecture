@@ -86,6 +86,7 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
 
             await _channel.QueueDeclareAsync(_options.QueueName, true, false, false, arguments, cancellationToken: cancellationToken);
             await _channel.QueueBindAsync(_options.QueueName, _options.ExchangeName, _options.RoutingKey, null, cancellationToken: cancellationToken);
+            await _channel.QueueBindAsync(_options.QueueName, "amq.direct", $"direct_route_to_queue_{_options.QueueName}", null, cancellationToken: cancellationToken);
         }
 
         await _channel.BasicQosAsync(prefetchSize: 0, prefetchCount: 1, global: false, cancellationToken: cancellationToken);
