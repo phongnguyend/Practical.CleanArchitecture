@@ -43,7 +43,7 @@ public class FileEntryUpdatedEventHandler : IDomainEventHandler<EntityUpdatedEve
             TriggeredById = _currentUser.UserId,
             CreatedDateTime = domainEvent.EventDateTime,
             ObjectId = domainEvent.Entity.Id.ToString(),
-            Message = domainEvent.Entity.AsJsonString(),
+            Payload = domainEvent.Entity.AsJsonString(),
             ActivityId = Activity.Current.Id,
         }, cancellationToken);
 
