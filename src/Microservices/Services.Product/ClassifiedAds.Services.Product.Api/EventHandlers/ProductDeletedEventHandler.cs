@@ -7,6 +7,7 @@ using ClassifiedAds.Services.Product.Constants;
 using ClassifiedAds.Services.Product.Entities;
 using MediatR;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -47,8 +48,8 @@ public class ProductDeletedEventHandler : IDomainEventHandler<EntityDeletedEvent
             TriggeredById = _currentUser.UserId,
             CreatedDateTime = domainEvent.EventDateTime,
             ObjectId = domainEvent.Entity.Id.ToString(),
-            Message = domainEvent.Entity.AsJsonString(),
-            Published = false,
+            Payload = domainEvent.Entity.AsJsonString(),
+            ActivityId = Activity.Current.Id,
         }, cancellationToken);
 
         await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);

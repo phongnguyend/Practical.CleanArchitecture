@@ -21,4 +21,6 @@ public class PublishingOutBoxEvent
     public string EventSource { get; set; }
 
     public string Payload { get; set; }
+
+    public string ActivityId { get; set; }
 }

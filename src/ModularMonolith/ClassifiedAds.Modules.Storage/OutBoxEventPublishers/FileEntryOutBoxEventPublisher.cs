@@ -15,7 +15,7 @@ public class FileEntryOutBoxEventPublisher : IOutBoxEventPublisher
 
     public static string[] CanHandleEventTypes()
     {
-        return new string[] { EventTypeConstants.FileEntryCreated, EventTypeConstants.FileEntryDeleted };
+        return [EventTypeConstants.FileEntryCreated, EventTypeConstants.FileEntryDeleted];
     }
 
     public static string CanHandleEventSource()
@@ -32,11 +32,21 @@ public class FileEntryOutBoxEventPublisher : IOutBoxEventPublisher
     {
         if (outbox.EventType == EventTypeConstants.FileEntryCreated)
         {
-            await _messageBus.SendAsync(new FileUploadedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(outbox.Payload) }, cancellationToken: cancellationToken);
+            await _messageBus.SendAsync(new FileUploadedEvent
+            {
+                FileEntry = JsonSerializer.Deserialize<FileEntry>(outbox.Payload)
+            },
+            metaData: new MetaData { ActivityId = outbox.ActivityId, MessageId = outbox.Id },
+            cancellationToken: cancellationToken);
         }
         else if (outbox.EventType == EventTypeConstants.FileEntryDeleted)
         {
-            await _messageBus.SendAsync(new FileDeletedEvent { FileEntry = JsonSerializer.Deserialize<FileEntry>(outbox.Payload) }, cancellationToken: cancellationToken);
+            await _messageBus.SendAsync(new FileDeletedEvent
+            {
+                FileEntry = JsonSerializer.Deserialize<FileEntry>(outbox.Payload)
+            },
+            metaData: new MetaData { ActivityId = outbox.ActivityId, MessageId = outbox.Id },
+            cancellationToken: cancellationToken);
         }
     }
 }

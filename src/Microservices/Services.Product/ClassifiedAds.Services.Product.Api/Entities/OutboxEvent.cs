@@ -19,7 +19,9 @@ public abstract class OutboxEventBase : Entity<Guid>
 
     public string ObjectId { get; set; }
 
-    public string Message { get; set; }
+    public string Payload { get; set; }
 
     public bool Published { get; set; }
+
+    public string ActivityId { get; set; }
 }

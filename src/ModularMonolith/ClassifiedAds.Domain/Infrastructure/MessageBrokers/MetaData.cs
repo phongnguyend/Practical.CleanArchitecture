@@ -8,7 +8,7 @@ public class MetaData
 
     public string MessageVersion { get; set; }
 
-    public string CorrelationId { get; set; }
+    public string ActivityId { get; set; }
 
     public DateTimeOffset? CreationDateTime { get; set; }
 

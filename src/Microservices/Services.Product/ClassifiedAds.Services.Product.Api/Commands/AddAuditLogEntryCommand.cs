@@ -5,6 +5,7 @@ using ClassifiedAds.Services.Product.Constants;
 using ClassifiedAds.Services.Product.Entities;
 using MediatR;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 namespace ClassifiedAds.Services.Product.Commands;
@@ -50,8 +51,8 @@ public class AddAuditLogEntryCommandHandler : IRequestHandler<AddAuditLogEntryCo
             TriggeredById = _currentUser.UserId,
             CreatedDateTime = auditLog.CreatedDateTime,
             ObjectId = auditLog.Id.ToString(),
-            Message = auditLog.AsJsonString(),
-            Published = false,
+            Payload = auditLog.AsJsonString(),
+            ActivityId = Activity.Current.Id,
         }, cancellationToken);
 
         await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);

@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+﻿using ClassifiedAds.CrossCuttingConcerns.Logging;
+using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Modules.Storage.DTOs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -27,12 +28,14 @@ public sealed class WebhookConsumer :
 
     public async Task HandleAsync(FileUploadedEvent data, MetaData metaData, CancellationToken cancellationToken = default)
     {
+        using var activity = ActivityExtensions.StartNew("WebhookConsumer", metaData?.ActivityId);
         var url = _configuration["Modules:Storage:Webhooks:FileUploadedEvent:PayloadUrl"];
         await _httpClient.PostAsJsonAsync(url, data.FileEntry, cancellationToken: cancellationToken);
     }
 
     public async Task HandleAsync(FileDeletedEvent data, MetaData metaData, CancellationToken cancellationToken = default)
     {
+        using var activity = ActivityExtensions.StartNew("WebhookConsumer", metaData?.ActivityId);
         var url = _configuration["Modules:Storage:Webhooks:FileDeletedEvent:PayloadUrl"];
         await _httpClient.PostAsJsonAsync(url, data.FileEntry, cancellationToken: cancellationToken);
     }
