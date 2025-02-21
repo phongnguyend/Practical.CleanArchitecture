@@ -20,7 +20,7 @@ spec:
         - name: CheckDependency__Enabled
           value: "true"
         - name: CheckDependency__Host
-          value: {{ .Release.Name}}-migrator:80
+          value: {{ .Release.Name}}-webapi:80
         - name: CookiePolicyOptions__IsEnabled
           value: "true"
         - name: CookiePolicyOptions__MinimumSameSitePolicy

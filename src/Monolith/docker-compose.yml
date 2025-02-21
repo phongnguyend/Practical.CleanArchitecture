@@ -46,7 +46,7 @@ services:
         depends_on:
           - db
         environment:
-          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+          DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT}
           ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
           CheckDependency__Enabled: "true"
           CheckDependency__Host: "db:1433"
@@ -111,7 +111,7 @@ services:
           CookiePolicyOptions__MinimumSameSitePolicy: "Lax"
           CookiePolicyOptions__Secure: "None"          
           CheckDependency__Enabled: "true"
-          CheckDependency__Host: "migrator:8080"
+          CheckDependency__Host: "webapi:8080"
           OpenIdConnect__Authority: "http://host.docker.internal:9000"
           OpenIdConnect__RequireHttpsMetadata: "false"
           ResourceServer__Endpoint: ${ResourceServer__Endpoint}
@@ -158,7 +158,7 @@ services:
           DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT}
           ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
           CheckDependency__Enabled: "true"
-          CheckDependency__Host: "migrator:8080,rabbitmq:5672"
+          CheckDependency__Host: "rabbitmq:5672"
           MessageBroker__Provider: ${MessageBroker__Provider}
           MessageBroker__RabbitMQ__HostName: ${MessageBroker__RabbitMQ__HostName}
           MessageBroker__Kafka__BootstrapServers: ${MessageBroker__Kafka__BootstrapServers}

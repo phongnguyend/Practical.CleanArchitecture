@@ -20,7 +20,7 @@ spec:
         - name: CheckDependency__Enabled
           value: "true"
         - name: CheckDependency__Host
-          value: migrator:80,rabbitmq:5672
+          value: rabbitmq:5672
         envFrom:
         - configMapRef:
             name: shared

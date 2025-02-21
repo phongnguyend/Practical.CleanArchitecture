@@ -8,6 +8,7 @@ using ClassifiedAds.Persistence.Locks;
 using ClassifiedAds.Persistence.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -74,9 +75,18 @@ public static class PersistenceExtensions
 
     public static void MigrateAdsDb(this IApplicationBuilder app)
     {
-        using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-        {
-            serviceScope.ServiceProvider.GetRequiredService<AdsDbContext>().Database.Migrate();
-        }
+        app.ApplicationServices.MigrateAdsDb();
+    }
+
+    public static void MigrateAdsDb(this IHost app)
+    {
+        app.Services.MigrateAdsDb();
+    }
+
+    private static void MigrateAdsDb(this IServiceProvider provider)
+    {
+        using var serviceScope = provider.GetService<IServiceScopeFactory>().CreateScope();
+        using var dbContext = serviceScope.ServiceProvider.GetRequiredService<AdsDbContext>();
+        dbContext.Database.Migrate();
     }
 }

@@ -20,7 +20,7 @@ spec:
         - name: CheckDependency__Enabled
           value: "true"
         - name: CheckDependency__Host
-          value: {{ .Release.Name}}-migrator:80,{{ .Release.Name}}-rabbitmq:5672
+          value: {{ .Release.Name}}-rabbitmq:5672
         envFrom:
         - configMapRef:
             name: {{ .Release.Name}}-shared
