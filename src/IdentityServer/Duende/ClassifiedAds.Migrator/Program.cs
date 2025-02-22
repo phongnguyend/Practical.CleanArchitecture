@@ -1,53 +1,47 @@
 ﻿using ClassifiedAds.Infrastructure.HealthChecks;
 using ClassifiedAds.Infrastructure.Logging;
 using DbUp;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Polly;
 using System;
 using System.Reflection;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-var services = builder.Services;
-var configuration = builder.Configuration;
-
-builder.WebHost.UseClassifiedAdsLogger(configuration =>
+var builder = Host.CreateDefaultBuilder(args)
+.UseClassifiedAdsLogger(configuration =>
 {
     return new LoggingOptions();
+})
+.ConfigureServices((hostContext, services) =>
+{
+    var configuration = hostContext.Configuration;
+
+    if (bool.TryParse(configuration["CheckDependency:Enabled"], out var enabled) && enabled)
+    {
+        NetworkPortCheck.Wait(configuration["CheckDependency:Host"], 5);
+    }
+
+    services.AddIdentityServer()
+        .AddIdServerPersistence(configuration.GetConnectionString("IdentityServer"), Assembly.GetExecutingAssembly().GetName().Name);
+
 });
 
-if (string.Equals(configuration["CheckDependency:Enabled"], "true", StringComparison.OrdinalIgnoreCase))
-{
-    NetworkPortCheck.Wait(configuration["CheckDependency:Host"], 5);
-}
-
-services.AddDateTimeProvider();
-
-services.AddPersistence(configuration["ConnectionStrings:ClassifiedAds"],
-    Assembly.GetExecutingAssembly().GetName().Name);
-
-services.AddIdentityServer()
-    .AddIdServerPersistence(configuration.GetConnectionString("IdentityServer"),
-    Assembly.GetExecutingAssembly().GetName().Name);
-
-// Configure the HTTP request pipeline.
 var app = builder.Build();
+var configuration = app.Services.GetRequiredService<IConfiguration>();
 
-Policy.Handle<Exception>().WaitAndRetry(new[]
-{
+Policy.Handle<Exception>().WaitAndRetry(
+[
     TimeSpan.FromSeconds(10),
     TimeSpan.FromSeconds(20),
     TimeSpan.FromSeconds(30),
-})
+])
 .Execute(() =>
 {
     app.MigrateIdServerDb();
 
     var upgrader = DeployChanges.To
-    .SqlDatabase(configuration.GetConnectionString("ClassifiedAds"))
+    .SqlDatabase(configuration.GetConnectionString("IdentityServer"))
     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
     .LogToConsole()
     .Build();
@@ -59,5 +53,3 @@ Policy.Handle<Exception>().WaitAndRetry(new[]
         throw result.Error;
     }
 });
-
-app.Run();

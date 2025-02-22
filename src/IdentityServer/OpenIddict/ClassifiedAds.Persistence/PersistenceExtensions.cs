@@ -7,8 +7,8 @@ using ClassifiedAds.Persistence.CircuitBreakers;
 using ClassifiedAds.Persistence.Locks;
 using ClassifiedAds.Persistence.Repositories;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -72,20 +72,21 @@ public static class PersistenceExtensions
 
     public static void MigrateAdsDb(this IApplicationBuilder app)
     {
-        using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-        {
-            serviceScope.ServiceProvider.GetRequiredService<AdsDbContext>().Database.Migrate();
-        }
+        using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+        serviceScope.ServiceProvider.GetRequiredService<AdsDbContext>().Database.Migrate();
     }
 
     public static void MigrateOpenIddictDb(this IApplicationBuilder app)
     {
-        using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-        {
-            serviceScope.ServiceProvider.GetRequiredService<OpenIddictDbContext>().Database.Migrate();
+        using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+        var context = serviceScope.ServiceProvider.GetRequiredService<OpenIddictDbContext>();
+        context.Database.Migrate();
+    }
 
-            var context = serviceScope.ServiceProvider.GetRequiredService<OpenIddictDbContext>();
-            context.Database.Migrate();
-        }
+    public static void MigrateOpenIddictDb(this IHost app)
+    {
+        using var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
+        var context = serviceScope.ServiceProvider.GetRequiredService<OpenIddictDbContext>();
+        context.Database.Migrate();
     }
 }

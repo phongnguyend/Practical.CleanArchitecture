@@ -19,7 +19,7 @@ var builder = Host.CreateDefaultBuilder(args)
 {
     var configuration = hostContext.Configuration;
 
-    if (string.Equals(configuration["CheckDependency:Enabled"], "true", StringComparison.OrdinalIgnoreCase))
+    if (bool.TryParse(configuration["CheckDependency:Enabled"], out var enabled) && enabled)
     {
         NetworkPortCheck.Wait(configuration["CheckDependency:Host"], 5);
     }
@@ -33,6 +33,7 @@ var builder = Host.CreateDefaultBuilder(args)
 });
 
 var app = builder.Build();
+var configuration = app.Services.GetRequiredService<IConfiguration>();
 
 Policy.Handle<Exception>().WaitAndRetry(
 [
@@ -45,7 +46,7 @@ Policy.Handle<Exception>().WaitAndRetry(
     app.MigrateAdsDb();
 
     var upgrader = DeployChanges.To
-    .SqlDatabase(app.Services.GetRequiredService<IConfiguration>().GetConnectionString("ClassifiedAds"))
+    .SqlDatabase(configuration.GetConnectionString("ClassifiedAds"))
     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
     .LogToConsole()
     .Build();
