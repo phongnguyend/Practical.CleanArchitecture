@@ -8,6 +8,7 @@ using ClassifiedAds.Modules.Configuration.Excel.ClosedXML;
 using ClassifiedAds.Modules.Configuration.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Reflection;
 
@@ -48,9 +49,13 @@ public static class ConfigurationModuleServiceCollectionExtensions
 
     public static void MigrateConfigurationDb(this IApplicationBuilder app)
     {
-        using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-        {
-            serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.Migrate();
-        }
+        using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+        serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.Migrate();
+    }
+
+    public static void MigrateConfigurationDb(this IHost app)
+    {
+        using var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
+        serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.Migrate();
     }
 }

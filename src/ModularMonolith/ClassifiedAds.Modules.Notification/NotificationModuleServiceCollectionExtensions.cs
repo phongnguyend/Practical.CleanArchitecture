@@ -7,6 +7,7 @@ using ClassifiedAds.Modules.Notification.Repositories;
 using ClassifiedAds.Modules.Notification.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Reflection;
 
@@ -49,10 +50,14 @@ public static class NotificationModuleServiceCollectionExtensions
 
     public static void MigrateNotificationDb(this IApplicationBuilder app)
     {
-        using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-        {
-            serviceScope.ServiceProvider.GetRequiredService<NotificationDbContext>().Database.Migrate();
-        }
+        using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+        serviceScope.ServiceProvider.GetRequiredService<NotificationDbContext>().Database.Migrate();
+    }
+
+    public static void MigrateNotificationDb(this IHost app)
+    {
+        using var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
+        serviceScope.ServiceProvider.GetRequiredService<NotificationDbContext>().Database.Migrate();
     }
 
     public static IServiceCollection AddHostedServicesNotificationModule(this IServiceCollection services)

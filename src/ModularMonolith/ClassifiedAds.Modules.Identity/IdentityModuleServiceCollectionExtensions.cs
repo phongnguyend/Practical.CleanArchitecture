@@ -12,6 +12,7 @@ using ClassifiedAds.Modules.Identity.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Reflection;
 
@@ -154,10 +155,14 @@ public static class IdentityModuleServiceCollectionExtensions
 
     public static void MigrateIdentityDb(this IApplicationBuilder app)
     {
-        using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-        {
-            serviceScope.ServiceProvider.GetRequiredService<IdentityDbContext>().Database.Migrate();
-        }
+        using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+        serviceScope.ServiceProvider.GetRequiredService<IdentityDbContext>().Database.Migrate();
+    }
+
+    public static void MigrateIdentityDb(this IHost app)
+    {
+        using var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
+        serviceScope.ServiceProvider.GetRequiredService<IdentityDbContext>().Database.Migrate();
     }
 
     public static IServiceCollection AddHostedServicesIdentityModule(this IServiceCollection services)

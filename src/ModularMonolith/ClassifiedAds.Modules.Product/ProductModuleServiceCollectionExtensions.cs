@@ -15,6 +15,7 @@ using ClassifiedAds.Modules.Product.RateLimiterPolicies;
 using ClassifiedAds.Modules.Product.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Reflection;
 
@@ -69,10 +70,14 @@ public static class ProductModuleServiceCollectionExtensions
 
     public static void MigrateProductDb(this IApplicationBuilder app)
     {
-        using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-        {
-            serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>().Database.Migrate();
-        }
+        using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+        serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>().Database.Migrate();
+    }
+
+    public static void MigrateProductDb(this IHost app)
+    {
+        using var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
+        serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>().Database.Migrate();
     }
 
     public static IServiceCollection AddHostedServicesProductModule(this IServiceCollection services)

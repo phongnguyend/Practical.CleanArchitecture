@@ -4,86 +4,86 @@ using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Modules.Identity.Repositories;
 using ClassifiedAds.Modules.Identity.Services;
 using DbUp;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Polly;
 using System;
 using System.Reflection;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-var services = builder.Services;
-var configuration = builder.Configuration;
-
-builder.WebHost.UseClassifiedAdsLogger(configuration =>
+var builder = Host.CreateDefaultBuilder(args)
+.UseClassifiedAdsLogger(configuration =>
 {
     return new LoggingOptions();
+})
+.ConfigureServices((hostContext, services) =>
+{
+    var configuration = hostContext.Configuration;
+
+    if (string.Equals(configuration["CheckDependency:Enabled"], "true", StringComparison.OrdinalIgnoreCase))
+    {
+        NetworkPortCheck.Wait(configuration["CheckDependency:Host"], 5);
+    }
+
+    services.AddDateTimeProvider();
+
+    services.AddAuditLogModule(opt =>
+    {
+        configuration.GetSection("Modules:AuditLog").Bind(opt);
+        opt.ConnectionStrings.MigrationsAssembly = Assembly.GetExecutingAssembly().GetName().Name;
+    })
+    .AddConfigurationModule(opt =>
+    {
+        configuration.GetSection("Modules:Configuration").Bind(opt);
+        opt.ConnectionStrings.MigrationsAssembly = Assembly.GetExecutingAssembly().GetName().Name;
+    })
+    .AddIdentityModuleCore(opt =>
+    {
+        configuration.GetSection("Modules:Identity").Bind(opt);
+        opt.ConnectionStrings.MigrationsAssembly = Assembly.GetExecutingAssembly().GetName().Name;
+    })
+    .AddNotificationModule(opt =>
+    {
+        configuration.GetSection("Modules:Notification").Bind(opt);
+        opt.ConnectionStrings.MigrationsAssembly = Assembly.GetExecutingAssembly().GetName().Name;
+    })
+    .AddProductModule(opt =>
+    {
+        configuration.GetSection("Modules:Product").Bind(opt);
+        opt.ConnectionStrings.MigrationsAssembly = Assembly.GetExecutingAssembly().GetName().Name;
+    })
+    .AddStorageModule(opt =>
+    {
+        configuration.GetSection("Modules:Storage").Bind(opt);
+        opt.ConnectionStrings.MigrationsAssembly = Assembly.GetExecutingAssembly().GetName().Name;
+    })
+    .AddApplicationServices();
+
+    services.AddHtmlRazorLightEngine();
+    services.AddDinkToPdfConverter();
+
+    services.AddDataProtection()
+        .PersistKeysToDbContext<IdentityDbContext>()
+        .SetApplicationName("ClassifiedAds");
+
+    services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+    services.AddScoped<ICurrentUser, CurrentWebUser>();
 });
 
-if (string.Equals(configuration["CheckDependency:Enabled"], "true", StringComparison.OrdinalIgnoreCase))
-{
-    NetworkPortCheck.Wait(configuration["CheckDependency:Host"], 5);
-}
-
-services.AddDateTimeProvider();
-
-services.AddAuditLogModule(opt =>
-{
-    configuration.GetSection("Modules:AuditLog").Bind(opt);
-    opt.ConnectionStrings.MigrationsAssembly = Assembly.GetExecutingAssembly().GetName().Name;
-})
-.AddConfigurationModule(opt =>
-{
-    configuration.GetSection("Modules:Configuration").Bind(opt);
-    opt.ConnectionStrings.MigrationsAssembly = Assembly.GetExecutingAssembly().GetName().Name;
-})
-.AddIdentityModuleCore(opt =>
-{
-    configuration.GetSection("Modules:Identity").Bind(opt);
-    opt.ConnectionStrings.MigrationsAssembly = Assembly.GetExecutingAssembly().GetName().Name;
-})
-.AddNotificationModule(opt =>
-{
-    configuration.GetSection("Modules:Notification").Bind(opt);
-    opt.ConnectionStrings.MigrationsAssembly = Assembly.GetExecutingAssembly().GetName().Name;
-})
-.AddProductModule(opt =>
-{
-    configuration.GetSection("Modules:Product").Bind(opt);
-    opt.ConnectionStrings.MigrationsAssembly = Assembly.GetExecutingAssembly().GetName().Name;
-})
-.AddStorageModule(opt =>
-{
-    configuration.GetSection("Modules:Storage").Bind(opt);
-    opt.ConnectionStrings.MigrationsAssembly = Assembly.GetExecutingAssembly().GetName().Name;
-})
-.AddApplicationServices();
-
-services.AddHtmlRazorLightEngine();
-services.AddDinkToPdfConverter();
-
-services.AddDataProtection()
-    .PersistKeysToDbContext<IdentityDbContext>()
-    .SetApplicationName("ClassifiedAds");
-
-services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-services.AddScoped<ICurrentUser, CurrentWebUser>();
-
-// Configure the HTTP request pipeline.
 var app = builder.Build();
 
-Policy.Handle<Exception>().WaitAndRetry(new[]
-{
-            TimeSpan.FromSeconds(10),
-            TimeSpan.FromSeconds(20),
-            TimeSpan.FromSeconds(30),
-})
+Policy.Handle<Exception>().WaitAndRetry(
+[
+    TimeSpan.FromSeconds(10),
+    TimeSpan.FromSeconds(20),
+    TimeSpan.FromSeconds(30),
+])
 .Execute(() =>
 {
+    var configuration = app.Services.GetRequiredService<IConfiguration>();
+
     app.MigrateAuditLogDb();
     app.MigrateConfigurationDb();
     app.MigrateIdentityDb();
@@ -104,5 +104,3 @@ Policy.Handle<Exception>().WaitAndRetry(new[]
         throw result.Error;
     }
 });
-
-app.Run();

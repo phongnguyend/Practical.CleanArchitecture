@@ -8,6 +8,7 @@ using ClassifiedAds.Modules.AuditLog.Repositories;
 using ClassifiedAds.Modules.AuditLog.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Reflection;
 using RateLimiterPolicyNames = ClassifiedAds.Modules.AuditLog.RateLimiterPolicies.RateLimiterPolicyNames;
@@ -53,9 +54,13 @@ public static class AuditLogModuleServiceCollectionExtensions
 
     public static void MigrateAuditLogDb(this IApplicationBuilder app)
     {
-        using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-        {
-            serviceScope.ServiceProvider.GetRequiredService<AuditLogDbContext>().Database.Migrate();
-        }
+        using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+        serviceScope.ServiceProvider.GetRequiredService<AuditLogDbContext>().Database.Migrate();
+    }
+
+    public static void MigrateAuditLogDb(this IHost app)
+    {
+        using var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
+        serviceScope.ServiceProvider.GetRequiredService<AuditLogDbContext>().Database.Migrate();
     }
 }

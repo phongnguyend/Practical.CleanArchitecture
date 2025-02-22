@@ -26,7 +26,7 @@ services:
         depends_on:
           - db
         environment:
-          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+          DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT}
           Modules__AuditLog__ConnectionStrings__Default: ${Modules__AuditLog__ConnectionStrings__Default}
           Modules__Configuration__ConnectionStrings__Default: ${Modules__Configuration_ConnectionStrings__Default}
           Modules__Identity__ConnectionStrings__Default: ${Modules__Identity__ConnectionStrings__Default}
@@ -89,7 +89,7 @@ services:
         environment:
           DOTNET_ENVIRONMENT: ${DOTNET_ENVIRONMENT}
           CheckDependency__Enabled: "true"
-          CheckDependency__Host: "migrator:8080,rabbitmq:5672"
+          CheckDependency__Host: "rabbitmq:5672"
           MessageBroker__Provider: ${MessageBroker__Provider}
           MessageBroker__RabbitMQ__HostName: ${MessageBroker__RabbitMQ__HostName}
           Modules__AuditLog__ConnectionStrings__Default: ${Modules__AuditLog__ConnectionStrings__Default}

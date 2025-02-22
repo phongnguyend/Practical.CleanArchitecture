@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Reflection;
+using Microsoft.Extensions.Hosting;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -51,10 +52,14 @@ public static class StorageModuleServiceCollectionExtensions
 
     public static void MigrateStorageDb(this IApplicationBuilder app)
     {
-        using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-        {
-            serviceScope.ServiceProvider.GetRequiredService<StorageDbContext>().Database.Migrate();
-        }
+        using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+        serviceScope.ServiceProvider.GetRequiredService<StorageDbContext>().Database.Migrate();
+    }
+
+    public static void MigrateStorageDb(this IHost app)
+    {
+        using var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
+        serviceScope.ServiceProvider.GetRequiredService<StorageDbContext>().Database.Migrate();
     }
 
     public static IServiceCollection AddHostedServicesStorageModule(this IServiceCollection services)
