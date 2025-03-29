@@ -41,7 +41,7 @@ stages:
     - task: DotNetCoreCLI@2
       inputs:
         command: 'build'
-        projects: 'src/ModularMonolith/ClassifiedAds.ModularMonolith.sln'
+        projects: 'src/ModularMonolith/ClassifiedAds.ModularMonolith.slnx'
     - task: SonarCloudAnalyze@1
     - task: SonarCloudPublish@1
       inputs:
@@ -58,7 +58,7 @@ stages:
     - task: DotNetCoreCLI@2
       inputs:
         command: 'build'
-        projects: 'src/ModularMonolith/ClassifiedAds.ModularMonolith.sln'
+        projects: 'src/ModularMonolith/ClassifiedAds.ModularMonolith.slnx'
     - task: WhiteSource Bolt@20
       inputs:
         cwd: 'src/ModularMonolith/'

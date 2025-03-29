@@ -190,7 +190,7 @@
 
 - Build
   ```
-  dotnet restore ClassifiedAds.Microservices.sln
+  dotnet restore ClassifiedAds.Microservices.slnx
 
   dotnet build -p:Version=1.0.0.1 -c Release
 
@@ -236,6 +236,6 @@
 - Build & Scan
   ```
   dotnet sonarscanner begin /v:"1.0.0" /d:sonar.host.url="https://sonarcloud.io" /o:"phongnguyend" /k:"Microservices" /d:sonar.login="<token>"
-  dotnet build ClassifiedAds.Microservices.sln
+  dotnet build ClassifiedAds.Microservices.slnx
   dotnet sonarscanner end /d:sonar.login="<token>"
   ```

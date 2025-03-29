@@ -9,7 +9,7 @@ COPY ./ClassifiedAds.IdentityServer/*.csproj ./ClassifiedAds.IdentityServer/
 COPY ./ClassifiedAds.Infrastructure/*.csproj ./ClassifiedAds.Infrastructure/
 COPY ./ClassifiedAds.Migrator/*.csproj ./ClassifiedAds.Migrator/
 COPY ./ClassifiedAds.Persistence/*.csproj ./ClassifiedAds.Persistence/
-COPY ./ClassifiedAds.OpenIddict.sln .
+COPY ./ClassifiedAds.OpenIddict.slnx .
 RUN dotnet restore
 
 # Copy everything else and build

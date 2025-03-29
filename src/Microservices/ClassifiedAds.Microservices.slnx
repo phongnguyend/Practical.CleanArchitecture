@@ -1,0 +1,40 @@
+<Solution>
+  <Folder Name="/BuildingBlocks/">
+    <Project Path="Common/ClassifiedAds.Application/ClassifiedAds.Application.csproj" />
+    <Project Path="Common/ClassifiedAds.CrossCuttingConcerns/ClassifiedAds.CrossCuttingConcerns.csproj" />
+    <Project Path="Common/ClassifiedAds.Domain/ClassifiedAds.Domain.csproj" />
+    <Project Path="Common/ClassifiedAds.Infrastructure/ClassifiedAds.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Gateways/">
+    <Project Path="Gateways.GraphQL/ClassifiedAds.Gateways.GraphQL/ClassifiedAds.Gateways.GraphQL.csproj" />
+    <Project Path="Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI.csproj" />
+  </Folder>
+  <Folder Name="/Services/" />
+  <Folder Name="/Services/AuditLog/">
+    <Project Path="Services.AuditLog/ClassifiedAds.Services.AuditLog.Api/ClassifiedAds.Services.AuditLog.Api.csproj" />
+    <Project Path="Services.AuditLog/ClassifiedAds.Services.AuditLog.Grpc/ClassifiedAds.Services.AuditLog.Grpc.csproj" />
+    <Project Path="Services.AuditLog/ClassifiedAds.Services.AuditLog/ClassifiedAds.Services.AuditLog.csproj" />
+  </Folder>
+  <Folder Name="/Services/Configuration/">
+    <Project Path="Services.Configuration/ClassifiedAds.Services.Configuration.Api/ClassifiedAds.Services.Configuration.Api.csproj" />
+  </Folder>
+  <Folder Name="/Services/Identity/">
+    <Project Path="Services.Identity/ClassifiedAds.Services.Identity.Api/ClassifiedAds.Services.Identity.Api.csproj" />
+    <Project Path="Services.Identity/ClassifiedAds.Services.Identity.Grpc/ClassifiedAds.Services.Identity.Grpc.csproj" />
+    <Project Path="Services.Identity/ClassifiedAds.Services.Identity.IntegrationTests/ClassifiedAds.Services.Identity.IntegrationTests.csproj" />
+    <Project Path="Services.Identity/ClassifiedAds.Services.Identity/ClassifiedAds.Services.Identity.csproj" />
+  </Folder>
+  <Folder Name="/Services/Notification/">
+    <Project Path="Services.Notification/ClassifiedAds.Services.Notification.Api/ClassifiedAds.Services.Notification.Api.csproj" />
+    <Project Path="Services.Notification/ClassifiedAds.Services.Notification.Background/ClassifiedAds.Services.Notification.Background.csproj" />
+    <Project Path="Services.Notification/ClassifiedAds.Services.Notification.Grpc/ClassifiedAds.Services.Notification.Grpc.csproj" />
+    <Project Path="Services.Notification/ClassifiedAds.Services.Notification/ClassifiedAds.Services.Notification.csproj" />
+  </Folder>
+  <Folder Name="/Services/Product/">
+    <Project Path="Services.Product/ClassifiedAds.Services.Product.Api/ClassifiedAds.Services.Product.Api.csproj" />
+  </Folder>
+  <Folder Name="/Services/Storage/">
+    <Project Path="Services.Storage/ClassifiedAds.Services.Storage.Api/ClassifiedAds.Services.Storage.Api.csproj" />
+  </Folder>
+  <Project Path="AspireAppHost/ClassifiedAds.AspireAppHost.csproj" />
+</Solution>

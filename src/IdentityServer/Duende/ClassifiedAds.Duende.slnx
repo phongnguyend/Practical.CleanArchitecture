@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/Core/">
+    <Project Path="ClassifiedAds.Application/ClassifiedAds.Application.csproj" />
+    <Project Path="ClassifiedAds.Domain/ClassifiedAds.Domain.csproj" />
+  </Folder>
+  <Folder Name="/CrossCuttingConcerns/">
+    <Project Path="ClassifiedAds.CrossCuttingConcerns/ClassifiedAds.CrossCuttingConcerns.csproj" />
+  </Folder>
+  <Folder Name="/Hosts/">
+    <Project Path="ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj" />
+    <Project Path="ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj" />
+  </Folder>
+  <Folder Name="/Infrastructure/">
+    <Project Path="ClassifiedAds.Infrastructure/ClassifiedAds.Infrastructure.csproj" />
+    <Project Path="ClassifiedAds.Persistence/ClassifiedAds.Persistence.csproj" />
+  </Folder>
+</Solution>

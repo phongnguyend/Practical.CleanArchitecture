@@ -126,7 +126,7 @@
 
 - Build
   ```
-  dotnet restore ClassifiedAds.ModularMonolith.sln
+  dotnet restore ClassifiedAds.ModularMonolith.slnx
 
   dotnet build -p:Version=1.0.0.1 -c Release
 
@@ -156,6 +156,6 @@
 - Build & Scan
   ```
   dotnet sonarscanner begin /v:"1.0.0" /d:sonar.host.url="https://sonarcloud.io" /o:"phongnguyend" /k:"ModularMonolith" /d:sonar.login="<token>"
-  dotnet build ClassifiedAds.ModularMonolith.sln
+  dotnet build ClassifiedAds.ModularMonolith.slnx
   dotnet sonarscanner end /d:sonar.login="<token>"
   ```

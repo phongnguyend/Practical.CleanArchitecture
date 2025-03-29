@@ -1,0 +1,39 @@
+<Solution>
+  <Folder Name="/BuildingBlocks/">
+    <Project Path="ClassifiedAds.Application/ClassifiedAds.Application.csproj" />
+    <Project Path="ClassifiedAds.CrossCuttingConcerns/ClassifiedAds.CrossCuttingConcerns.csproj" />
+    <Project Path="ClassifiedAds.Domain/ClassifiedAds.Domain.csproj" />
+    <Project Path="ClassifiedAds.Infrastructure/ClassifiedAds.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Contracts/">
+    <Project Path="ClassifiedAds.Contracts/ClassifiedAds.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/Hosts/">
+    <Project Path="ClassifiedAds.AspireAppHost/ClassifiedAds.AspireAppHost.csproj" />
+    <Project Path="ClassifiedAds.Background/ClassifiedAds.Background.csproj" />
+    <Project Path="ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj" />
+    <Project Path="ClassifiedAds.WebAPI/ClassifiedAds.WebAPI.csproj" />
+  </Folder>
+  <Folder Name="/Modules/" />
+  <Folder Name="/Modules/AuditLog/">
+    <Project Path="ClassifiedAds.Modules.AuditLog/ClassifiedAds.Modules.AuditLog.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Configuration/">
+    <Project Path="ClassifiedAds.Modules.Configuration/ClassifiedAds.Modules.Configuration.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Identity/">
+    <Project Path="ClassifiedAds.Modules.Identity/ClassifiedAds.Modules.Identity.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Notification/">
+    <Project Path="ClassifiedAds.Modules.Notification/ClassifiedAds.Modules.Notification.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Product/">
+    <Project Path="ClassifiedAds.Modules.Product.EndToEndTests/ClassifiedAds.Modules.Product.EndToEndTests.csproj" />
+    <Project Path="ClassifiedAds.Modules.Product.IntegrationTests/ClassifiedAds.Modules.Product.IntegrationTests.csproj" />
+    <Project Path="ClassifiedAds.Modules.Product.UnitTests/ClassifiedAds.Modules.Product.UnitTests.csproj" />
+    <Project Path="ClassifiedAds.Modules.Product/ClassifiedAds.Modules.Product.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Storage/">
+    <Project Path="ClassifiedAds.Modules.Storage/ClassifiedAds.Modules.Storage.csproj" />
+  </Folder>
+</Solution>

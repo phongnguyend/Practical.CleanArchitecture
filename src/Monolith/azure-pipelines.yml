@@ -41,7 +41,7 @@ stages:
     - task: DotNetCoreCLI@2
       inputs:
         command: 'build'
-        projects: 'src/Monolith/ClassifiedAds.Monolith.sln'
+        projects: 'src/Monolith/ClassifiedAds.Monolith.slnx'
     - task: SonarCloudAnalyze@1
     - task: SonarCloudPublish@1
       inputs:
@@ -58,7 +58,7 @@ stages:
     - task: DotNetCoreCLI@2
       inputs:
         command: 'build'
-        projects: 'src/Monolith/ClassifiedAds.Monolith.sln'
+        projects: 'src/Monolith/ClassifiedAds.Monolith.slnx'
     - task: WhiteSource Bolt@20
       inputs:
         cwd: 'src/Monolith/'
@@ -80,7 +80,7 @@ stages:
         displayName: dotnet restore
         inputs:
           command: 'restore'
-          projects: 'src/Monolith/ClassifiedAds.Monolith.sln'
+          projects: 'src/Monolith/ClassifiedAds.Monolith.slnx'
           feedsToUse: 'select'
       - task: DotNetCoreCLI@2
         displayName: dotnet list package --vulnerable
@@ -180,7 +180,7 @@ stages:
       displayName: dotnet restore
       inputs:
         command: 'restore'
-        projects: 'src/Monolith/ClassifiedAds.Monolith.sln'
+        projects: 'src/Monolith/ClassifiedAds.Monolith.slnx'
         feedsToUse: 'select'
     - task: DotNetCoreCLI@2
       displayName: dotnet build
