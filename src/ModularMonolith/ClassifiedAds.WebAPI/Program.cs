@@ -253,8 +253,6 @@ app.UseAuthorization();
 
 app.UseRateLimiter();
 
-app.UseMonitoringServices(appSettings.Monitoring);
-
 app.MapControllers();
 app.MapHub<NotificationHub>("/hubs/notification").RequireCors("SignalRHubs");
 

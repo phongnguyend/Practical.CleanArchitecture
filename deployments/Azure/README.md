@@ -364,8 +364,7 @@ echo $instrumentationKey
 az webapp config appsettings set \
   --resource-group ClassifiedAds_DEV \
   --name webapi-classifiedads \
-  --settings "Monitoring__MiniProfiler__IsEnabled=false" \
-             "Monitoring__AzureApplicationInsights__IsEnabled=true" \
+  --settings "Monitoring__AzureApplicationInsights__IsEnabled=true" \
              "Monitoring__AzureApplicationInsights__InstrumentationKey=$instrumentationKey"
 
 ## WebMVC

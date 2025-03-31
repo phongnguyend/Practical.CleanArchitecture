@@ -405,26 +405,7 @@
     + [ClassifiedAds.WebMVC/appsettings.json](/src/Monolith/ClassifiedAds.WebMVC/appsettings.json)
     ```js
     "Monitoring": {
-      "MiniProfiler": {
-        
-      },
-      "AzureApplicationInsights": {
-        
-      }
-    },
-    ```
-  - Use MiniProfiler:
-    ```js
-    "Monitoring": {
-      "MiniProfiler": {
-        "IsEnabled": true,
-        "SqlServerStorage": {
-          "ConectionString": "Server=127.0.0.1;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False",
-          "ProfilersTable": "MiniProfilers",
-          "TimingsTable": "MiniProfilerTimings",
-          "ClientTimingsTable": "MiniProfilerClientTimings"
-        }
-      },
+
     },
     ```
   - Use Azure Application Insights:
@@ -432,27 +413,43 @@
 	"Monitoring": {
       "AzureApplicationInsights": {
         "IsEnabled": true,
-		"InstrumentationKey": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-		"EnableSqlCommandTextInstrumentation": true
+        "InstrumentationKey": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "EnableSqlCommandTextInstrumentation": true
       }
 	},
+    ```
+  - Use OpenTelemetry:
+    ```js
+    "Monitoring": {
+      "OpenTelemetry": {
+        "IsEnabled": true,
+        "ServiceName": "ClassifiedAds.WebAPI",
+        "TraceEnabled": true,
+        "MetricEnabled": true,
+        "Otlp": {
+          "IsEnabled": false,
+          "Endpoint": "http://localhost:4317"
+        }
+      }
+    },
     ```
   - Use Both:
     ```js
     "Monitoring": {
-      "MiniProfiler": {
-        "IsEnabled": true,
-        "SqlServerStorage": {
-          "ConectionString": "Server=127.0.0.1;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False",
-          "ProfilersTable": "MiniProfilers",
-          "TimingsTable": "MiniProfilerTimings",
-          "ClientTimingsTable": "MiniProfilerClientTimings"
-        }
-      },
       "AzureApplicationInsights": {
         "IsEnabled": true,
         "InstrumentationKey": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         "EnableSqlCommandTextInstrumentation": true
+      },
+      "OpenTelemetry": {
+        "IsEnabled": true,
+        "ServiceName": "ClassifiedAds.WebAPI",
+        "TraceEnabled": true,
+        "MetricEnabled": true,
+        "Otlp": {
+          "IsEnabled": false,
+          "Endpoint": "http://localhost:4317"
+        }
       }
     },
     ```
