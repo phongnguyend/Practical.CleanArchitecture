@@ -25,9 +25,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="9.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="9.0.1" />
-    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.5.4" />
-    <PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.5.4" />
-    <PackageReference Include="MiniProfiler.Providers.SqlServer" Version="4.5.4" />
     <PackageReference Include="Quartz" Version="3.13.1" />
     <PackageReference Include="Serilog" Version="4.2.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
