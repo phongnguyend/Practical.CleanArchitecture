@@ -130,10 +130,8 @@ services.AddAuthorization(options =>
 })
 .AddSingleton<IAuthorizationHandler, CustomRequirementHandler>();
 
-services.AddTransient<ProfilingHttpHandler>();
 services.AddTransient<BearerTokenHandler>();
 services.AddHttpClient(string.Empty)
-        .AddHttpMessageHandler<ProfilingHttpHandler>()
         .AddHttpMessageHandler<BearerTokenHandler>();
 
 services.AddCaches(appSettings.Caching);
@@ -195,8 +193,6 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseMonitoringServices(appSettings.Monitoring);
 
 app.UseHealthChecks("/healthz", new HealthCheckOptions
 {

@@ -39,9 +39,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="9.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="9.0.1" />
     <PackageReference Include="Microsoft.Graph" Version="5.68.0" />
-    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.5.4" />
-    <PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.5.4" />
-    <PackageReference Include="MiniProfiler.Providers.SqlServer" Version="4.5.4" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.11.0" />
     <PackageReference Include="OpenTelemetry.Exporter.Zipkin" Version="1.11.0" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.11.0" />

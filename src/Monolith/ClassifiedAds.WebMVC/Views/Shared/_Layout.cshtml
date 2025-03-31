@@ -64,9 +64,6 @@
                                 <a class="nav-link text-dark" href="/healthz">Health Checks</a>
                             </li>
                         </feature>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="@appSettings.Value.ResourceServer.PublicEndpoint/profiler/results">API</a>
-                        </li>
                     </ul>
                 </div>
             </div>
@@ -84,7 +81,6 @@
             &copy; 2020 - ClassifiedAds.WebMVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <mini-profiler />
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>

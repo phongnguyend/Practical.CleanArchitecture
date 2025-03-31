@@ -299,8 +299,6 @@ app.UseAuthorization();
 
 app.UseRateLimiter();
 
-app.UseMonitoringServices(appSettings.Monitoring);
-
 app.UseHealthChecks("/healthz", new HealthCheckOptions
 {
     Predicate = _ => true,
