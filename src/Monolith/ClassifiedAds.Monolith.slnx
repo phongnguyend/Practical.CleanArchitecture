@@ -27,7 +27,6 @@
   <Folder Name="/Tests/">
     <Project Path="ClassifiedAds.ArchTests/ClassifiedAds.ArchTests.csproj" />
     <Project Path="ClassifiedAds.ContractTests/ClassifiedAds.ContractTests.csproj" />
-    <Project Path="ClassifiedAds.EndToEndTests/ClassifiedAds.EndToEndTests.csproj" />
     <Project Path="ClassifiedAds.IntegrationTests/ClassifiedAds.IntegrationTests.csproj" />
     <Project Path="ClassifiedAds.UnitTests/ClassifiedAds.UnitTests.csproj" />
   </Folder>
