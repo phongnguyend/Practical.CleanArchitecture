@@ -746,7 +746,7 @@
 
   ![alt text](/docs/imgs/chrome_driver_path.png)
 
-- Update [ClassifiedAds.EndToEndTests/appsettings.json](/src/Monolith/ClassifiedAds.EndToEndTests/appsettings.json)
+- Update [EndToEndTests/appsettings.json](/src/EndToEndTests/Selenium/appsettings.json)
   ```js
   {
     "ChromeDriverPath": "D:\\Downloads\\chromedriver_win32\\72",
