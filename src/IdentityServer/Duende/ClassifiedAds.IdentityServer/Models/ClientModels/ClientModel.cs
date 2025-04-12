@@ -1,9 +1,7 @@
-﻿using AutoMapper;
-using Duende.IdentityServer.EntityFramework.Entities;
+﻿using Duende.IdentityServer.EntityFramework.Entities;
 using Duende.IdentityServer.EntityFramework.Mappers;
 using Duende.IdentityServer.Models;
-using System.Collections.Generic;
-using System.Linq;
+using MapItEasy;
 using System.Text.Json;
 
 namespace ClassifiedAds.IdentityServer.Models.ClientModels;
@@ -33,9 +31,9 @@ public class ClientModel : Duende.IdentityServer.Models.Client
 
     public static ClientModel FromEntity(Duende.IdentityServer.EntityFramework.Entities.Client client)
     {
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<Duende.IdentityServer.Models.Client, ClientModel>());
-        var mapper = config.CreateMapper();
-        var model = mapper.Map<ClientModel>(client.ToModel());
+        var mapper = new ExpressionMapper();
+        var model = new ClientModel();
+        mapper.Map(client.ToModel(), model);
         model.Id = client.Id;
         return model;
     }
