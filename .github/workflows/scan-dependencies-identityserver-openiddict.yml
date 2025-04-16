@@ -1,0 +1,33 @@
+name: Scan Dependencies Identity Server - OpenIddict
+
+on:
+  push:
+    paths: 
+      - 'src/IdentityServer/OpenIddict/**'
+  pull_request:
+    paths: 
+      - 'src/IdentityServer/OpenIddict/**'
+  schedule:
+    - cron: '0 * * * *'
+
+jobs:
+  build:
+
+    defaults: 
+      run:
+        working-directory: src/IdentityServer/OpenIddict
+        
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 9.0.202
+
+    - name: dotnet restore
+      run: dotnet restore
+
+    - name: dotnet list package --vulnerable
+      run: dotnet list package --vulnerable    

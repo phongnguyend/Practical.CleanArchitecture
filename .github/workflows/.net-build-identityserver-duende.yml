@@ -1,0 +1,46 @@
+name: .Net Build Identity Server - Duende
+
+on:
+  push:
+    paths: 
+      - 'src/IdentityServer/Duende/**'
+  pull_request:
+    paths: 
+      - 'src/IdentityServer/Duende/**'
+
+jobs:
+  build:
+
+    defaults: 
+      run:
+        working-directory: src/IdentityServer/Duende
+        
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 9.0.202
+
+    - name: Build
+      run: dotnet build --configuration Release 
+
+    - name: Publish ClassifiedAds.Migrator
+      run: dotnet publish ClassifiedAds.Migrator/*.csproj --configuration Release
+ 
+    - name: Publish ClassifiedAds.IdentityServer
+      run: dotnet publish ClassifiedAds.IdentityServer/*.csproj --configuration Release
+      
+    - name: Upload ClassifiedAds.Migrator
+      uses: actions/upload-artifact@v4
+      with:
+        name: ClassifiedAds.Migrator
+        path: src/IdentityServer/Duende/ClassifiedAds.Migrator/bin/Release/net9.0/publish
+
+    - name: Upload ClassifiedAds.IdentityServer
+      uses: actions/upload-artifact@v4
+      with:
+        name: ClassifiedAds.IdentityServer
+        path: src/IdentityServer/Duende/ClassifiedAds.IdentityServer/bin/Release/net9.0/publish

@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="7.1.0" />
-    <PackageReference Include="MapItEasy" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="9.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="9.0.1" />
