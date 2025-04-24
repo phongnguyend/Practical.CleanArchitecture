@@ -34,3 +34,21 @@ setx SONAR_TOKEN <token>
 set SONAR_TOKEN=<token>
 sonar-scanner.bat -D"sonar.organization=phongnguyend" -D"sonar.projectKey=UIs_Angular" -D"sonar.projectName=UIs Angular" -D"sonar.projectVersion=1.0.0.0" -D"sonar.sources=." -D"sonar.host.url=https://sonarcloud.io"
 ```
+
+### Deploy to Azure Static Web App
+- Create **staticwebapp.config.json** in the **./dist/angular/browser** folder
+```json
+{
+    "navigationFallback": {
+        "rewrite": "/index.html"
+    }
+}
+```
+- Install Azure Static Web Apps CLI
+```bash
+npm install -g @azure/static-web-apps-cli
+```
+- Deploy
+```bash
+swa deploy ./dist/angular/browser --app-name angular --env production
+```

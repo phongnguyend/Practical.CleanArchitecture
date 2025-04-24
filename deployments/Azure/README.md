@@ -228,6 +228,28 @@ az webapp create --resource-group "ClassifiedAds_DEV" \
                  --tags "Environment=Development" "Project=ClassifiedAds" "Department=SD"                 
 ```
 
+- Create Static Web Apps
+```
+az staticwebapp create --resource-group "ClassifiedAds_DEV" \
+                          --name angular \
+                          --location "eastasia" \
+                          --sku Free \
+                          --tags "Environment=Development" "Project=ClassifiedAds" "Department=SD"
+
+az staticwebapp create --resource-group "ClassifiedAds_DEV" \
+                          --name react \
+                          --location "eastasia" \
+                          --sku Free \
+                          --tags "Environment=Development" "Project=ClassifiedAds" "Department=SD"
+
+az staticwebapp create --resource-group "ClassifiedAds_DEV" \
+                          --name vue \
+                          --location "eastasia" \
+                          --sku Free \
+                          --tags "Environment=Development" "Project=ClassifiedAds" "Department=SD"
+```
+
+
 - Configure Connection String
 ```
 connectionString=$(az sql db show-connection-string -s classifiedadsdev -n classifiedadsdevdb -c ado.net --out tsv)
