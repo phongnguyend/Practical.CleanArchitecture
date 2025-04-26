@@ -52,6 +52,21 @@ az sql db create --resource-group "ClassifiedAds_DEV" \
                  --tags "Environment=Development" "Project=ClassifiedAds" "Department=SD"
 ```
 
+- Create Cosmos DB Account
+```
+az cosmosdb create --resource-group "ClassifiedAds_DEV" \
+                 --name "classifiedadsdevcosmosdb" \
+                 --enable-free-tier true
+                 --tags "Environment=Development" "Project=ClassifiedAds" "Department=SD"
+```
+
+- Create Cosmos DB
+```
+az cosmosdb sql database create --resource-group "ClassifiedAds_DEV" \
+                 --account-name "classifiedadsdevcosmosdb" \
+                 --name "cosmosdb"
+```
+
 - Create Key Vault
 ```
 az keyvault create --resource-group "ClassifiedAds_DEV" \
