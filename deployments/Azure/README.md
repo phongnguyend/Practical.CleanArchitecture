@@ -420,6 +420,34 @@ az webapp config appsettings set \
              "Monitoring__AzureApplicationInsights__InstrumentationKey=$instrumentationKey"
 ```
 
+- Create Azure Container Apps Environment
+```
+az containerapp env create \
+  --name ClassifiedAds-DEV \
+  --resource-group ClassifiedAds_DEV \
+  --location southeastasia
+```
+
+- Create Azure Container Apps
+```
+az containerapp create \
+  --name classifiedads-webmvc \
+  --resource-group ClassifiedAds_DEV \
+  --environment ClassifiedAds-DEV \
+  --image phongnguyend/classifiedads.webmvc \
+  --target-port 443 \
+  --ingress external \
+  --cpu 0.5 --memory 1.0Gi
+```
+
+- Redeploy Azure Container Apps
+```
+az containerapp update \
+  --name classifiedads-webmvc \
+  --resource-group ClassifiedAds_DEV \
+  --image phongnguyend/classifiedads.webmvc
+```
+
 - Create Kubernetes Cluster
 ```
 az aks create --resource-group "ClassifiedAds_DEV" \
