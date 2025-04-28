@@ -40,6 +40,8 @@ services.Configure<AppSettings>(configuration);
 
 services.AddExceptionHandler<GlobalExceptionHandler>();
 
+services.AddCaches(appSettings.Caching);
+
 services.AddControllers(configure =>
 {
 })

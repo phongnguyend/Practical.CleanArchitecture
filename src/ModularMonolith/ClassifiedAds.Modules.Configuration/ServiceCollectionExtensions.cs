@@ -14,7 +14,7 @@ using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-public static class ConfigurationModuleServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddConfigurationModule(this IServiceCollection services, Action<ConfigurationModuleOptions> configureOptions)
     {

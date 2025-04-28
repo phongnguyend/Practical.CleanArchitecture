@@ -15,7 +15,7 @@ using RateLimiterPolicyNames = ClassifiedAds.Modules.AuditLog.RateLimiterPolicie
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-public static class AuditLogModuleServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddAuditLogModule(this IServiceCollection services, Action<AuditLogModuleOptions> configureOptions)
     {

@@ -38,6 +38,10 @@ public static class CachingServiceCollectionExtensions
             });
         }
 
+        services.AddHybridCache(options =>
+        {
+        });
+
         return services;
     }
 }

@@ -16,7 +16,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-public static class StorageModuleServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddStorageModule(this IServiceCollection services, Action<StorageModuleOptions> configureOptions)
     {

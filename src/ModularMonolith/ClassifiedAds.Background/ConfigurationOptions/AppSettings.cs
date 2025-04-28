@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Infrastructure.Logging;
+﻿using ClassifiedAds.Infrastructure.Caching;
+using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Monitoring;
 using Microsoft.Extensions.Options;
@@ -8,6 +9,8 @@ namespace ClassifiedAds.Background.ConfigurationOptions;
 public class AppSettings
 {
     public LoggingOptions Logging { get; set; }
+
+    public CachingOptions Caching { get; set; }
 
     public MonitoringOptions Monitoring { get; set; }
 

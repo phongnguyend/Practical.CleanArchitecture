@@ -1,4 +1,6 @@
 ﻿using ClassifiedAds.Infrastructure.Web.Authorization.Requirements;
+using ClassifiedAds.Infrastructure.Web.ClaimsTransformations;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
@@ -11,6 +13,8 @@ public static class PolicyServiceCollectionExtensions
 {
     public static IServiceCollection AddAuthorizationPolicies(this IServiceCollection services, Assembly assembly, IEnumerable<string> policies)
     {
+        services.AddSingleton<IClaimsTransformation, CustomClaimsTransformation>();
+
         services.Configure<AuthorizationOptions>(options =>
         {
             foreach (var policyName in policies)
@@ -25,7 +29,7 @@ public static class PolicyServiceCollectionExtensions
             }
         });
 
-        services.AddSingleton(typeof(IAuthorizationHandler), typeof(PermissionRequirementHandler));
+        services.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>();
 
         var requirementHandlerTypes = assembly.GetTypes()
             .Where(IsAuthorizationHandler)

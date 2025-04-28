@@ -29,6 +29,8 @@ var builder = Host.CreateDefaultBuilder(args)
 
     services.AddDateTimeProvider();
 
+    services.AddCaches();
+
     services.AddAuditLogModule(opt =>
     {
         configuration.GetSection("Modules:AuditLog").Bind(opt);

@@ -22,10 +22,12 @@ using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-public static class ProductModuleServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddProductModule(this IServiceCollection services, AppSettings appSettings)
     {
+        services.AddCaches(appSettings.Caching);
+
         services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(appSettings.ConnectionStrings.ClassifiedAds, sql =>
         {
             if (!string.IsNullOrEmpty(appSettings.ConnectionStrings.MigrationsAssembly))

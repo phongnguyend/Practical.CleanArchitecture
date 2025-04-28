@@ -43,6 +43,8 @@ Host.CreateDefaultBuilder(args)
 
     services.AddDateTimeProvider();
 
+    services.AddCaches(appSettings.Caching);
+
     services
     .AddAuditLogModule(opt => configuration.GetSection("Modules:AuditLog").Bind(opt))
     .AddIdentityModuleCore(opt => configuration.GetSection("Modules:Identity").Bind(opt))

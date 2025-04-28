@@ -13,10 +13,12 @@ using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-public static class ConfigurationModuleServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddConfigurationModule(this IServiceCollection services, AppSettings appSettings)
     {
+        services.AddCaches(appSettings.Caching);
+
         services.AddDbContext<ConfigurationDbContext>(options => options.UseSqlServer(appSettings.ConnectionStrings.ClassifiedAds, sql =>
         {
             if (!string.IsNullOrEmpty(appSettings.ConnectionStrings.MigrationsAssembly))

@@ -13,10 +13,12 @@ using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-public static class AuditLogModuleServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddAuditLogModule(this IServiceCollection services, AppSettings appSettings)
     {
+        services.AddCaches(appSettings.Caching);
+
         services.AddDbContext<AuditLogDbContext>(options => options.UseSqlServer(appSettings.ConnectionStrings.ClassifiedAds, sql =>
         {
             if (!string.IsNullOrEmpty(appSettings.ConnectionStrings.MigrationsAssembly))

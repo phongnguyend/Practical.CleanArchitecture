@@ -15,10 +15,12 @@ using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-public static class IdentityModuleServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddIdentityModule(this IServiceCollection services, AppSettings appSettings)
     {
+        services.AddCaches(appSettings.Caching);
+
         services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(appSettings.ConnectionStrings.ClassifiedAds, sql =>
         {
             if (!string.IsNullOrEmpty(appSettings.ConnectionStrings.MigrationsAssembly))
@@ -50,6 +52,8 @@ public static class IdentityModuleServiceCollectionExtensions
 
     public static IServiceCollection AddIdentityModuleCore(this IServiceCollection services, AppSettings appSettings)
     {
+        services.AddCaches(appSettings.Caching);
+
         services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(appSettings.ConnectionStrings.ClassifiedAds, sql =>
         {
             if (!string.IsNullOrEmpty(appSettings.ConnectionStrings.MigrationsAssembly))

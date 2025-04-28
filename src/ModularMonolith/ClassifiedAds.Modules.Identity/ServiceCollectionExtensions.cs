@@ -18,7 +18,7 @@ using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-public static class IdentityModuleServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddIdentityModule(this IServiceCollection services, Action<IdentityModuleOptions> configureOptions)
     {

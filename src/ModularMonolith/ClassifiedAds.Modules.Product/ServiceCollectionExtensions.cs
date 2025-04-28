@@ -21,7 +21,7 @@ using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-public static class ProductModuleServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddProductModule(this IServiceCollection services, Action<ProductModuleOptions> configureOptions)
     {

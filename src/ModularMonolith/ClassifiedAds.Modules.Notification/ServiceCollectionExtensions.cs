@@ -13,7 +13,7 @@ using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-public static class NotificationModuleServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddNotificationModule(this IServiceCollection services, Action<NotificationModuleOptions> configureOptions)
     {
