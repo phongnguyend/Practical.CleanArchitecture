@@ -47,7 +47,7 @@ public class UsersController : ControllerBase
         _moduleOptions = moduleOptions.Value;
     }
 
-    [Authorize(AuthorizationPolicyNames.GetUsersPolicy)]
+    [Authorize(Permissions.GetUsers)]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<User>>> Get()
     {
@@ -56,7 +56,7 @@ public class UsersController : ControllerBase
         return Ok(model);
     }
 
-    [Authorize(AuthorizationPolicyNames.GetUserPolicy)]
+    [Authorize(Permissions.GetUser)]
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -67,7 +67,7 @@ public class UsersController : ControllerBase
         return Ok(model);
     }
 
-    [Authorize(AuthorizationPolicyNames.AddUserPolicy)]
+    [Authorize(Permissions.AddUser)]
     [HttpPost]
     [Consumes("application/json")]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -94,7 +94,7 @@ public class UsersController : ControllerBase
         return Created($"/api/users/{model.Id}", model);
     }
 
-    [Authorize(AuthorizationPolicyNames.UpdateUserPolicy)]
+    [Authorize(Permissions.UpdateUser)]
     [HttpPut("{id}")]
     [Consumes("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -121,7 +121,7 @@ public class UsersController : ControllerBase
         return Ok(model);
     }
 
-    [Authorize(AuthorizationPolicyNames.SetPasswordPolicy)]
+    [Authorize(Permissions.SetPassword)]
     [HttpPut("{id}/password")]
     [Consumes("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -141,7 +141,7 @@ public class UsersController : ControllerBase
         return BadRequest(rs.Errors);
     }
 
-    [Authorize(AuthorizationPolicyNames.DeleteUserPolicy)]
+    [Authorize(Permissions.DeleteUser)]
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -153,7 +153,7 @@ public class UsersController : ControllerBase
         return Ok();
     }
 
-    [Authorize(AuthorizationPolicyNames.SendResetPasswordEmailPolicy)]
+    [Authorize(Permissions.SendResetPasswordEmail)]
     [HttpPost("{id}/passwordresetemail")]
     public async Task<ActionResult> SendResetPasswordEmail(Guid id)
     {
@@ -180,7 +180,7 @@ public class UsersController : ControllerBase
         return Ok();
     }
 
-    [Authorize(AuthorizationPolicyNames.SendConfirmationEmailAddressEmailPolicy)]
+    [Authorize(Permissions.SendConfirmationEmailAddressEmail)]
     [HttpPost("{id}/emailaddressconfirmation")]
     public async Task<ActionResult> SendConfirmationEmailAddressEmail(Guid id)
     {

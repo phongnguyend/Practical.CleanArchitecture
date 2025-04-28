@@ -1,32 +1,24 @@
-﻿using ClassifiedAds.Infrastructure.Web.Authorization.Requirements;
+﻿using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
+using ClassifiedAds.Infrastructure.Web.Authorization.Requirements;
 using ClassifiedAds.Infrastructure.Web.ClaimsTransformations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-public static class PolicyServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddAuthorizationPolicies(this IServiceCollection services, Assembly assembly, IEnumerable<string> policies)
+    public static IServiceCollection AddAuthorizationPolicies(this IServiceCollection services, Assembly assembly)
     {
         services.AddSingleton<IClaimsTransformation, CustomClaimsTransformation>();
 
+        services.AddSingleton<IAuthorizationPolicyProvider, CustomAuthorizationPolicyProvider>();
+
         services.Configure<AuthorizationOptions>(options =>
         {
-            foreach (var policyName in policies)
-            {
-                options.AddPolicy(policyName, policy =>
-                {
-                    policy.AddRequirements(new PermissionRequirement
-                    {
-                        PermissionName = policyName
-                    });
-                });
-            }
         });
 
         services.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>();

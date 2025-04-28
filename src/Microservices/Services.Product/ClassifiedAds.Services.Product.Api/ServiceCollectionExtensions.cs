@@ -4,7 +4,6 @@ using ClassifiedAds.CrossCuttingConcerns.Pdf;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Identity;
-using ClassifiedAds.Services.Product.Authorization;
 using ClassifiedAds.Services.Product.ConfigurationOptions;
 using ClassifiedAds.Services.Product.Csv;
 using ClassifiedAds.Services.Product.DTOs;
@@ -46,7 +45,7 @@ public static class ServiceCollectionExtensions
 
         services.AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
-        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
+        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
 
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddScoped<ICurrentUser, CurrentWebUser>();

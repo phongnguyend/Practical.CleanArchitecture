@@ -26,7 +26,7 @@ public class AuditLogEntriesController : ControllerBase
     }
 
     [EnableRateLimiting(RateLimiterPolicyNames.GetAuditLogsPolicy)]
-    [Authorize(AuthorizationPolicyNames.GetAuditLogsPolicy)]
+    [Authorize(Permissions.GetAuditLogs)]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<AuditLogEntryDTO>>> Get()
     {
@@ -34,7 +34,7 @@ public class AuditLogEntriesController : ControllerBase
         return Ok(logs);
     }
 
-    [Authorize(AuthorizationPolicyNames.GetAuditLogsPolicy)]
+    [Authorize(Permissions.GetAuditLogs)]
     [HttpGet("paged")]
     public async Task<ActionResult<Paged<AuditLogEntryDTO>>> GetPaged(int page, int pageSize)
     {

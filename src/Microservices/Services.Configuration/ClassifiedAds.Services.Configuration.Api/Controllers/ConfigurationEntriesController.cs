@@ -46,7 +46,7 @@ public class ConfigurationEntriesController : ControllerBase
         _configurationEntriesExcelReader = configurationEntriesExcelReader;
     }
 
-    [Authorize(AuthorizationPolicyNames.GetConfigurationEntriesPolicy)]
+    [Authorize(Permissions.GetConfigurationEntries)]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ConfigurationEntryModel>>> Get()
     {
@@ -55,7 +55,7 @@ public class ConfigurationEntriesController : ControllerBase
         return Ok(model);
     }
 
-    [Authorize(AuthorizationPolicyNames.GetConfigurationEntryPolicy)]
+    [Authorize(Permissions.GetConfigurationEntry)]
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -66,7 +66,7 @@ public class ConfigurationEntriesController : ControllerBase
         return Ok(model);
     }
 
-    [Authorize(AuthorizationPolicyNames.AddConfigurationEntryPolicy)]
+    [Authorize(Permissions.AddConfigurationEntry)]
     [HttpPost]
     [Consumes("application/json")]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -86,7 +86,7 @@ public class ConfigurationEntriesController : ControllerBase
         return Created($"/api/ConfigurationEntries/{model.Id}", model);
     }
 
-    [Authorize(AuthorizationPolicyNames.UpdateConfigurationEntryPolicy)]
+    [Authorize(Permissions.UpdateConfigurationEntry)]
     [HttpPut("{id}")]
     [Consumes("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -114,7 +114,7 @@ public class ConfigurationEntriesController : ControllerBase
         return Ok(model);
     }
 
-    [Authorize(AuthorizationPolicyNames.DeleteConfigurationEntryPolicy)]
+    [Authorize(Permissions.DeleteConfigurationEntry)]
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

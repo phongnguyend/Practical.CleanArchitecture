@@ -50,7 +50,7 @@ public class UpdateProductRequestHandler : IEndpointHandler
     public static void MapEndpoint(IEndpointRouteBuilder builder)
     {
         builder.MapPut("api/products/{id}", HandleAsync)
-        .RequireAuthorization(AuthorizationPolicyNames.UpdateProductPolicy)
+        .RequireAuthorization(Permissions.UpdateProduct)
         .RequireRateLimiting(RateLimiterPolicyNames.DefaultPolicy)
         .WithName("UpdateProduct")
         .Produces<UpdateProductResponse>(StatusCodes.Status200OK, contentType: "application/json")

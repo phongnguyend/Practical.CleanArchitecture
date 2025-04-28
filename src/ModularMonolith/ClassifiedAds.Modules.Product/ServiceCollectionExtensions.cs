@@ -3,7 +3,6 @@ using ClassifiedAds.CrossCuttingConcerns.Html;
 using ClassifiedAds.CrossCuttingConcerns.Pdf;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Modules.Product.Authorization;
 using ClassifiedAds.Modules.Product.ConfigurationOptions;
 using ClassifiedAds.Modules.Product.Csv;
 using ClassifiedAds.Modules.Product.Entities;
@@ -46,7 +45,7 @@ public static class ServiceCollectionExtensions
 
         services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
-        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
+        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
 
         services.AddRateLimiter(options =>
         {

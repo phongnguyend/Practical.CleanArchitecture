@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.Services.Identity;
-using ClassifiedAds.Services.Identity.Authorization;
 using ClassifiedAds.Services.Identity.ConfigurationOptions;
 using ClassifiedAds.Services.Identity.Entities;
 using ClassifiedAds.Services.Identity.HostedServices;
@@ -10,7 +9,6 @@ using ClassifiedAds.Services.Identity.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -134,7 +132,7 @@ public static class ServiceCollectionExtensions
             // option.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2;
         });
 
-        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
+        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
     }
 
     public static void MigrateIdentityDb(this IApplicationBuilder app)

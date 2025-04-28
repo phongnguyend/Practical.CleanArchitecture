@@ -19,7 +19,7 @@ public class DeleteProductRequest : IEndpointHandler
     public static void MapEndpoint(IEndpointRouteBuilder builder)
     {
         builder.MapDelete("api/products/{id:guid}", HandleAsync)
-        .RequireAuthorization(AuthorizationPolicyNames.DeleteProductPolicy)
+        .RequireAuthorization(Permissions.DeleteProduct)
         .RequireRateLimiting(RateLimiterPolicyNames.DefaultPolicy)
         .WithName("DeleteProduct")
         .Produces(StatusCodes.Status200OK)

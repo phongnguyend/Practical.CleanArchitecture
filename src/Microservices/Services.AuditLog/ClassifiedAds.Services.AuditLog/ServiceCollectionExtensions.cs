@@ -1,7 +1,6 @@
 ﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.HostedServices;
-using ClassifiedAds.Services.AuditLog.Authorization;
 using ClassifiedAds.Services.AuditLog.ConfigurationOptions;
 using ClassifiedAds.Services.AuditLog.DTOs;
 using ClassifiedAds.Services.AuditLog.Entities;
@@ -31,7 +30,7 @@ public static class ServiceCollectionExtensions
 
         services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
-        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
+        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
 
         services.AddTransient<IMessageBus, MessageBus>()
                 .AddMessageBusReceiver<AuditLogAggregationConsumer, AuditLogCreatedEvent>(appSettings.MessageBroker);

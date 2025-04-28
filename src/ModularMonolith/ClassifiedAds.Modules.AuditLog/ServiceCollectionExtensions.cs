@@ -1,6 +1,5 @@
 ﻿using ClassifiedAds.Contracts.AuditLog.Services;
 using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Modules.AuditLog.Authorization;
 using ClassifiedAds.Modules.AuditLog.ConfigurationOptions;
 using ClassifiedAds.Modules.AuditLog.Entities;
 using ClassifiedAds.Modules.AuditLog.RateLimiterPolicies;
@@ -37,7 +36,7 @@ public static class ServiceCollectionExtensions
 
         services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
-        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
+        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
 
         services.AddRateLimiter(options =>
         {

@@ -49,7 +49,7 @@ public class CreateProductRequestHandler : IEndpointHandler
     public static void MapEndpoint(IEndpointRouteBuilder builder)
     {
         builder.MapPost("api/products", HandleAsync)
-        .RequireAuthorization(AuthorizationPolicyNames.AddProductPolicy)
+        .RequireAuthorization(Permissions.AddProduct)
         .RequireRateLimiting(RateLimiterPolicyNames.DefaultPolicy)
         .WithName("CreateProduct")
         .Produces<CreateProductResponse>(StatusCodes.Status201Created, contentType: "application/json")

@@ -22,7 +22,7 @@ public class GetProductAuditLogsRequest : IEndpointHandler
     public static void MapEndpoint(IEndpointRouteBuilder builder)
     {
         builder.MapGet("api/products/{id}/auditlogs", HandleAsync)
-        .RequireAuthorization(AuthorizationPolicyNames.GetProductAuditLogsPolicy)
+        .RequireAuthorization(Permissions.GetProductAuditLogs)
         .RequireRateLimiting(RateLimiterPolicyNames.DefaultPolicy)
         .WithName("GetProductAuditLogs")
         .Produces<IEnumerable<AuditLogEntryDTO>>(contentType: "application/json")

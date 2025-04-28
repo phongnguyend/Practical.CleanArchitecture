@@ -2,7 +2,6 @@
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.HostedServices;
 using ClassifiedAds.Infrastructure.Identity;
-using ClassifiedAds.Services.Storage.Authorization;
 using ClassifiedAds.Services.Storage.ConfigurationOptions;
 using ClassifiedAds.Services.Storage.DTOs;
 using ClassifiedAds.Services.Storage.Entities;
@@ -36,7 +35,7 @@ public static class ServiceCollectionExtensions
 
         services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
-        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
+        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
 
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddScoped<ICurrentUser, CurrentWebUser>();

@@ -27,7 +27,7 @@ public class RolesController : ControllerBase
         _dispatcher = dispatcher;
     }
 
-    [Authorize(AuthorizationPolicyNames.GetRolesPolicy)]
+    [Authorize(Permissions.GetRoles)]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Role>>> Get()
     {
@@ -36,7 +36,7 @@ public class RolesController : ControllerBase
         return Ok(model);
     }
 
-    [Authorize(AuthorizationPolicyNames.GetRolePolicy)]
+    [Authorize(Permissions.GetRole)]
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -47,7 +47,7 @@ public class RolesController : ControllerBase
         return Ok(model);
     }
 
-    [Authorize(AuthorizationPolicyNames.AddRolePolicy)]
+    [Authorize(Permissions.AddRole)]
     [HttpPost]
     [Consumes("application/json")]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -66,7 +66,7 @@ public class RolesController : ControllerBase
         return Created($"/api/roles/{model.Id}", model);
     }
 
-    [Authorize(AuthorizationPolicyNames.UpdateRolePolicy)]
+    [Authorize(Permissions.UpdateRole)]
     [HttpPut("{id}")]
     [Consumes("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -85,7 +85,7 @@ public class RolesController : ControllerBase
         return Ok(model);
     }
 
-    [Authorize(AuthorizationPolicyNames.DeleteRolePolicy)]
+    [Authorize(Permissions.DeleteRole)]
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

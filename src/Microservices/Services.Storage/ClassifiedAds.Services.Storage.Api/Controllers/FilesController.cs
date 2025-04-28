@@ -46,7 +46,7 @@ public class FilesController : Controller
         _authorizationService = authorizationService;
     }
 
-    [Authorize(AuthorizationPolicyNames.GetFilesPolicy)]
+    [Authorize(Permissions.GetFiles)]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get()
     {
@@ -54,7 +54,7 @@ public class FilesController : Controller
         return Ok(fileEntries.ToModels());
     }
 
-    [Authorize(AuthorizationPolicyNames.UploadFilePolicy)]
+    [Authorize(Permissions.UploadFile)]
     [HttpPost]
     public async Task<ActionResult<FileEntryModel>> Upload([FromForm] UploadFileModel model)
     {
@@ -113,7 +113,7 @@ public class FilesController : Controller
         return Ok(fileEntry.ToModel());
     }
 
-    [Authorize(AuthorizationPolicyNames.GetFilePolicy)]
+    [Authorize(Permissions.GetFile)]
     [HttpGet("{id}")]
     public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get(Guid id)
     {
@@ -134,7 +134,7 @@ public class FilesController : Controller
         return Ok(fileEntry.ToModel());
     }
 
-    [Authorize(AuthorizationPolicyNames.DownloadFilePolicy)]
+    [Authorize(Permissions.DownloadFile)]
     [HttpGet("{id}/download")]
     public async Task<IActionResult> Download(Guid id)
     {
@@ -172,7 +172,7 @@ public class FilesController : Controller
         return File(content, MediaTypeNames.Application.Octet, WebUtility.HtmlEncode(fileEntry.FileName));
     }
 
-    [Authorize(AuthorizationPolicyNames.UpdateFilePolicy)]
+    [Authorize(Permissions.UpdateFile)]
     [HttpPut("{id}")]
     [Consumes("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -195,7 +195,7 @@ public class FilesController : Controller
         return Ok(model);
     }
 
-    [Authorize(AuthorizationPolicyNames.DeleteFilePolicy)]
+    [Authorize(Permissions.DeleteFile)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
@@ -213,7 +213,7 @@ public class FilesController : Controller
         return Ok();
     }
 
-    [Authorize(AuthorizationPolicyNames.GetFileAuditLogsPolicy)]
+    [Authorize(Permissions.GetFileAuditLogs)]
     [HttpGet("{id}/auditlogs")]
     public async Task<ActionResult<IEnumerable<AuditLogEntryDTO>>> GetAuditLogs(Guid id)
     {

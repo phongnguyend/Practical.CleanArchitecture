@@ -1,7 +1,6 @@
-﻿using ClassifiedAds.Infrastructure.HostedServices;
-using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Modules.Storage.Authorization;
+using ClassifiedAds.Infrastructure.HostedServices;
 using ClassifiedAds.Modules.Storage.ConfigurationOptions;
 using ClassifiedAds.Modules.Storage.DTOs;
 using ClassifiedAds.Modules.Storage.Entities;
@@ -10,9 +9,9 @@ using ClassifiedAds.Modules.Storage.MessageBusConsumers;
 using ClassifiedAds.Modules.Storage.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Reflection;
-using Microsoft.Extensions.Hosting;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -40,7 +39,7 @@ public static class ServiceCollectionExtensions
 
         services.AddStorageManager(settings);
 
-        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
+        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
 
         return services;
     }

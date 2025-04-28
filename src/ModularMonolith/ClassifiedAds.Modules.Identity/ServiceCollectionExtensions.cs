@@ -1,6 +1,5 @@
 ﻿using ClassifiedAds.Contracts.Identity.Services;
 using ClassifiedAds.Modules.Identity;
-using ClassifiedAds.Modules.Identity.Authorization;
 using ClassifiedAds.Modules.Identity.ConfigurationOptions;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.HostedServices;
@@ -145,7 +144,7 @@ public static class ServiceCollectionExtensions
             // option.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2;
         });
 
-        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
+        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
     }
 
     public static IMvcBuilder AddIdentityModule(this IMvcBuilder builder)

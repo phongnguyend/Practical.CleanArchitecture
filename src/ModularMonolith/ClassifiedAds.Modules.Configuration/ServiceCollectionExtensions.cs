@@ -1,6 +1,5 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Excel;
 using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Modules.Configuration.Authorization;
 using ClassifiedAds.Modules.Configuration.ConfigurationOptions;
 using ClassifiedAds.Modules.Configuration.Entities;
 using ClassifiedAds.Modules.Configuration.Excel;
@@ -34,7 +33,7 @@ public static class ServiceCollectionExtensions
 
         services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
-        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
+        services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
 
         services.AddScoped<IExcelReader<ImportConfigurationEntriesFromExcel>, ImportConfigurationEntriesFromExcelHandler>();
         services.AddScoped<IExcelWriter<ExportConfigurationEntriesToExcel>, ExportConfigurationEntriesToExcelHandler>();

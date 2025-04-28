@@ -14,7 +14,6 @@ using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Web.Endpoints;
 using ClassifiedAds.Infrastructure.Web.ExceptionHandlers;
 using ClassifiedAds.Persistence;
-using ClassifiedAds.WebAPI.Authorization;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
 using ClassifiedAds.WebAPI.Hubs;
 using ClassifiedAds.WebAPI.RateLimiterPolicies;
@@ -133,7 +132,7 @@ services.AddAuthentication(options =>
     };
 });
 
-services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly(), AuthorizationPolicyNames.GetPolicyNames());
+services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
 
 services.AddRateLimiter(options =>
 {

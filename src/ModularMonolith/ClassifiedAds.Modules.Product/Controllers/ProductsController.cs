@@ -50,7 +50,7 @@ public class ProductsController : ControllerBase
         _productCsvReader = productCsvReader;
     }
 
-    [Authorize(AuthorizationPolicyNames.GetProductsPolicy)]
+    [Authorize(Permissions.GetProducts)]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Entities.Product>>> Get()
     {
@@ -60,7 +60,7 @@ public class ProductsController : ControllerBase
         return Ok(model);
     }
 
-    [Authorize(AuthorizationPolicyNames.GetProductPolicy)]
+    [Authorize(Permissions.GetProduct)]
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -71,7 +71,7 @@ public class ProductsController : ControllerBase
         return Ok(model);
     }
 
-    [Authorize(AuthorizationPolicyNames.AddProductPolicy)]
+    [Authorize(Permissions.AddProduct)]
     [HttpPost]
     [Consumes("application/json")]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -83,7 +83,7 @@ public class ProductsController : ControllerBase
         return Created($"/api/products/{model.Id}", model);
     }
 
-    [Authorize(AuthorizationPolicyNames.UpdateProductPolicy)]
+    [Authorize(Permissions.UpdateProduct)]
     [HttpPut("{id}")]
     [Consumes("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -103,7 +103,7 @@ public class ProductsController : ControllerBase
         return Ok(model);
     }
 
-    [Authorize(AuthorizationPolicyNames.DeleteProductPolicy)]
+    [Authorize(Permissions.DeleteProduct)]
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -116,7 +116,7 @@ public class ProductsController : ControllerBase
         return Ok();
     }
 
-    [Authorize(AuthorizationPolicyNames.GetProductAuditLogsPolicy)]
+    [Authorize(Permissions.GetProductAuditLogs)]
     [HttpGet("{id}/auditlogs")]
     public async Task<ActionResult<IEnumerable<AuditLogEntryDTO>>> GetAuditLogs(Guid id)
     {

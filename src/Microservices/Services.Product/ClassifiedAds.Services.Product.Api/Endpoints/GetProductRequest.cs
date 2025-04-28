@@ -19,7 +19,7 @@ public class GetProductRequest : IEndpointHandler
     public static void MapEndpoint(IEndpointRouteBuilder builder)
     {
         builder.MapGet("api/products/{id}", HandleAsync)
-        .RequireAuthorization(AuthorizationPolicyNames.GetProductPolicy)
+        .RequireAuthorization(Permissions.GetProduct)
         .RequireRateLimiting(RateLimiterPolicyNames.DefaultPolicy)
         .WithName("GetProduct")
         .Produces<ProductModel>(contentType: "application/json")
