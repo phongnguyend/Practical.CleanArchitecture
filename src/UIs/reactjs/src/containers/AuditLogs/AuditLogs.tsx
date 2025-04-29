@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import Pagination from "../../components/Pagination/Pagination";
 import axios from "./axios";
 
+import "./AuditLogs.css";
+
 const AuditLogs = () => {
   const [pageTitle] = useState("Audit Logs");
   const [currentPage, setCurrentPage] = useState(1);
@@ -35,12 +37,49 @@ const AuditLogs = () => {
     await fetchAuditLogs(page, pageSize);
   };
 
+  const copyRawData = (log: any) => {
+    navigator.clipboard
+      .writeText(log.log)
+      .then(() => {
+        const updatedAuditLogs = auditLogs.map((item) =>
+          item.id === log.id ? { ...item, coppied: "✅ coppied" } : item
+        );
+
+        setAuditLogs(updatedAuditLogs);
+      })
+      .catch((err) => {
+        const updatedAuditLogs = auditLogs.map((item) =>
+          item.id === log.id ? { ...item, coppied: "❌ cannot copy" } : item
+        );
+        setAuditLogs(updatedAuditLogs);
+      });
+
+    setTimeout(() => {
+      const updatedAuditLogs = auditLogs.map((item) =>
+        item.id === log.id ? { ...item, coppied: "" } : item
+      );
+      setAuditLogs(updatedAuditLogs);
+    }, 1000);
+  };
+
   const rows = auditLogs?.map((auditLog) => (
     <tr key={auditLog.id}>
       <td>{formatDateTime(auditLog.createdDateTime)}</td>
       <td>{auditLog.userName}</td>
       <td>{auditLog.action}</td>
-      <td>{auditLog.log}</td>
+      <td>
+        {auditLog.coppied ? (
+          <span className="copyIcon">{auditLog.coppied}</span>
+        ) : (
+          <i
+            className="copyIcon fa fa-clipboard"
+            title="Copy Data"
+            onClick={() => copyRawData(auditLog)}
+          ></i>
+        )}
+
+        {auditLog.log}
+      </td>
     </tr>
   ));
 

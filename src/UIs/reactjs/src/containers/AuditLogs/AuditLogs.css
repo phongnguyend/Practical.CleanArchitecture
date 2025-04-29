@@ -1,3 +1,12 @@
 thead {
   color: #337ab7;
 }
+.copyIcon {
+  position: absolute;
+  right: 5px;
+  cursor: pointer;
+  color: #007bff;
+}
+.copyIcon:hover {
+  color: #0056b3;
+}
