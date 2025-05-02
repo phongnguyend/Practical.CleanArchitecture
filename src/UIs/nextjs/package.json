@@ -11,7 +11,7 @@
   "dependencies": {
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
-    "next": "15.1.4",
+    "next": "15.2.3",
     "oidc-client-ts": "^3.1.0",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.7",
