@@ -1,13 +1,13 @@
 <template>
   <div class="card">
-    <div class="card-header">Audit Logs</div>
+    <div class="card-header">{{pageTitle}}</div>
     <div class="card-body">
       <div style="float: right">
         <app-pagination
-          :currentPage="currentPage"
-          :totalItems="totalItems"
-          :pageSize="pageSize"
-          @pageSelected="pagedSelected"
+          :current-page="currentPage"
+          :total-items="totalItems"
+          :page-size="pageSize"
+          @page-selected="pagedSelected"
         />
       </div>
       <div class="table-responsive" :style="{ width: '100%' }">
@@ -32,60 +32,56 @@
       </div>
       <div style="float: right">
         <app-pagination
-          :currentPage="currentPage"
-          :totalItems="totalItems"
-          :pageSize="pageSize"
-          @pageSelected="pagedSelected"
+          :current-page="currentPage"
+          :total-items="totalItems"
+          :page-size="pageSize"
+          @page-selected="pagedSelected"
         />
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import axios from './axios'
-import { IAuditLogEntry } from './AuditLog'
+import type { IAuditLogEntry } from './AuditLog'
 import Pagination from '../../components/Pagination.vue'
 
-export default defineComponent({
-  components: {
-    appPagination: Pagination,
-  },
-  data() {
-    return {
-      pageTitle: 'Audit Logs' as string,
-      auditLogs: [] as IAuditLogEntry[],
-      totalItems: 0 as number,
-      currentPage: 1 as number,
-      pageSize: 5 as number,
-      errorMessage: '' as string,
-    }
-  },
-  computed: {},
-  methods: {
-    loadAuditLogs(page: number) {
-      axios.get('paged?page=' + page + '&pageSize=' + this.pageSize).then((rs: any) => {
-        this.auditLogs = rs.data.items
-        this.totalItems = rs.data.totalItems
-      })
-    },
-    pagedSelected(page: number) {
-      this.currentPage = page
-      this.loadAuditLogs(page)
-    },
-    lowercase: function (value: string) {
-      return value.toLowerCase()
-    },
-    formatedDateTime: function (value: string) {
-      if (!value) return value
-      var date = new Date(value)
-      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
-    },
-  },
-  created() {
-    this.loadAuditLogs(this.currentPage)
-  },
+// Register the component
+const appPagination = Pagination
+
+const pageTitle = 'Audit Logs'
+const auditLogs = ref<IAuditLogEntry[]>([])
+const totalItems = ref(0)
+const currentPage = ref(1)
+const pageSize = ref(5)
+const errorMessage = ref('')
+
+const loadAuditLogs = async (page: number) => {
+  try {
+    const response = await axios.get(`paged?page=${page}&pageSize=${pageSize.value}`)
+    auditLogs.value = response.data.items
+    totalItems.value = response.data.totalItems
+  } catch (error) {
+    errorMessage.value = 'Failed to load audit logs'
+    console.error(error)
+  }
+}
+
+const pagedSelected = (page: number) => {
+  currentPage.value = page
+  loadAuditLogs(page)
+}
+
+const formatedDateTime = (value: string): string => {
+  if (!value) return value
+  const date = new Date(value)
+  return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+}
+
+onMounted(() => {
+  loadAuditLogs(currentPage.value)
 })
 </script>
 
