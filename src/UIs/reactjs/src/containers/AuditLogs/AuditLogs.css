@@ -1,12 +1,20 @@
 thead {
   color: #337ab7;
 }
-.copyIcon {
-  position: absolute;
-  right: 5px;
+.copy-icon {
   cursor: pointer;
   color: #007bff;
+  padding: 5px;
 }
-.copyIcon:hover {
+.copy-icon:hover {
+  color: #0056b3;
+}
+
+.view-json-icon {
+  cursor: pointer;
+  color: #007bff;
+  padding: 5px;
+}
+.view-json-icon:hover {
   color: #0056b3;
 }
