@@ -1,9 +1,9 @@
-﻿using ClassifiedAds.Infrastructure.Web.MinimalApis;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.Infrastructure.Web.MinimalApis;
 using ClassifiedAds.Services.Product.Authorization;
 using ClassifiedAds.Services.Product.Models;
 using ClassifiedAds.Services.Product.Queries;
 using ClassifiedAds.Services.Product.RateLimiterPolicies;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -30,9 +30,9 @@ public class GetProductRequest : IEndpointHandler
         });
     }
 
-    private static async Task<IResult> HandleAsync(IMediator dispatcher, Guid id)
+    private static async Task<IResult> HandleAsync(Dispatcher dispatcher, Guid id)
     {
-        var product = await dispatcher.Send(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
+        var product = await dispatcher.DispatchAsync(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
         var model = product.ToModel();
         return Results.Ok(model);
     }

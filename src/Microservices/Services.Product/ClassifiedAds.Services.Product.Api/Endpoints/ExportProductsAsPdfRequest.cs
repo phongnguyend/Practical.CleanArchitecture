@@ -1,9 +1,9 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.Pdf;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.CrossCuttingConcerns.Pdf;
 using ClassifiedAds.Infrastructure.Web.MinimalApis;
 using ClassifiedAds.Services.Product.Pdf;
 using ClassifiedAds.Services.Product.Queries;
 using ClassifiedAds.Services.Product.RateLimiterPolicies;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -29,9 +29,9 @@ public class ExportProductsAsPdfRequest : IEndpointHandler
         });
     }
 
-    private static async Task<IResult> HandleAsync(IMediator dispatcher, IPdfWriter<ExportProductsToPdf> pdfWriter)
+    private static async Task<IResult> HandleAsync(Dispatcher dispatcher, IPdfWriter<ExportProductsToPdf> pdfWriter)
     {
-        var products = await dispatcher.Send(new GetProductsQuery());
+        var products = await dispatcher.DispatchAsync(new GetProductsQuery());
         var bytes = await pdfWriter.GetBytesAsync(new ExportProductsToPdf { Products = products });
 
         return Results.File(bytes, MediaTypeNames.Application.Octet, "Products.pdf");

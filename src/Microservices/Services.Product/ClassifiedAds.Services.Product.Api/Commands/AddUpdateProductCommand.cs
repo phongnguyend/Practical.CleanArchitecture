@@ -1,16 +1,15 @@
 ﻿using ClassifiedAds.Application;
-using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Product.Commands;
 
-public class AddUpdateProductCommand : IRequest
+public class AddUpdateProductCommand : ICommand
 {
     public Entities.Product Product { get; set; }
 }
 
-public class AddUpdateProductCommandHandler : IRequestHandler<AddUpdateProductCommand>
+public class AddUpdateProductCommandHandler : ICommandHandler<AddUpdateProductCommand>
 {
     private readonly ICrudService<Entities.Product> _productService;
 
@@ -19,7 +18,7 @@ public class AddUpdateProductCommandHandler : IRequestHandler<AddUpdateProductCo
         _productService = productService;
     }
 
-    public async Task Handle(AddUpdateProductCommand command, CancellationToken cancellationToken = default)
+    public async Task HandleAsync(AddUpdateProductCommand command, CancellationToken cancellationToken = default)
     {
         await _productService.AddOrUpdateAsync(command.Product);
     }

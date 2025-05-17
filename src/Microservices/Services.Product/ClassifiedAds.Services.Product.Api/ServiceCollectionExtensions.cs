@@ -43,8 +43,6 @@ public static class ServiceCollectionExtensions
 
         services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
-        services.AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-
         services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
 
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

@@ -1,5 +1,5 @@
-﻿using ClassifiedAds.Services.Product.Commands;
-using MediatR;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.Services.Product.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -39,9 +39,9 @@ public class PublishEventWorker : BackgroundService
 
                 using (var scope = _services.CreateScope())
                 {
-                    var dispatcher = scope.ServiceProvider.GetRequiredService<IMediator>();
+                    var dispatcher = scope.ServiceProvider.GetRequiredService<Dispatcher>();
 
-                    await dispatcher.Send(publishEventsCommand);
+                    await dispatcher.DispatchAsync(publishEventsCommand);
                 }
 
                 if (publishEventsCommand.SentEventsCount == 0)

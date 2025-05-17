@@ -1,9 +1,9 @@
-﻿using ClassifiedAds.Infrastructure.Web.MinimalApis;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.Infrastructure.Web.MinimalApis;
 using ClassifiedAds.Services.Product.Authorization;
 using ClassifiedAds.Services.Product.Commands;
 using ClassifiedAds.Services.Product.RateLimiterPolicies;
 using FluentValidation;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -60,7 +60,7 @@ public class CreateProductRequestHandler : IEndpointHandler
         });
     }
 
-    private static async Task<IResult> HandleAsync(IMediator dispatcher, [FromBody] CreateProductRequest request, IValidator<CreateProductRequest> validator)
+    private static async Task<IResult> HandleAsync(Dispatcher dispatcher, [FromBody] CreateProductRequest request, IValidator<CreateProductRequest> validator)
     {
         var validationResult = await validator.ValidateAsync(request);
         if (!validationResult.IsValid)
@@ -76,7 +76,7 @@ public class CreateProductRequestHandler : IEndpointHandler
             Description = request.Description,
         };
 
-        await dispatcher.Send(new AddUpdateProductCommand { Product = product });
+        await dispatcher.DispatchAsync(new AddUpdateProductCommand { Product = product });
 
         var response = new CreateProductResponse
         {

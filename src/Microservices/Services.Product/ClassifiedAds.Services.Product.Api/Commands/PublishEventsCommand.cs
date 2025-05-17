@@ -1,8 +1,8 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.DateTimes;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Services.Product.Entities;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Product.Commands;
 
-public class PublishEventsCommand : IRequest
+public class PublishEventsCommand : ICommand
 {
     public int SentEventsCount { get; set; }
 }
 
-public class PublishEventsCommandHandler : IRequestHandler<PublishEventsCommand>
+public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
 {
     private readonly ILogger<PublishEventsCommandHandler> _logger;
     private readonly IDateTimeProvider _dateTimeProvider;
@@ -34,7 +34,7 @@ public class PublishEventsCommandHandler : IRequestHandler<PublishEventsCommand>
         _messageBus = messageBus;
     }
 
-    public async Task Handle(PublishEventsCommand command, CancellationToken cancellationToken = default)
+    public async Task HandleAsync(PublishEventsCommand command, CancellationToken cancellationToken = default)
     {
         var events = _outboxEventRepository.GetQueryableSet()
             .Where(x => !x.Published)

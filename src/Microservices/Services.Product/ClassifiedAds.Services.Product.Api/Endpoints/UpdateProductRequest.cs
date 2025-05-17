@@ -1,10 +1,10 @@
-﻿using ClassifiedAds.Infrastructure.Web.MinimalApis;
+﻿using ClassifiedAds.Application;
+using ClassifiedAds.Infrastructure.Web.MinimalApis;
 using ClassifiedAds.Services.Product.Authorization;
 using ClassifiedAds.Services.Product.Commands;
 using ClassifiedAds.Services.Product.Queries;
 using ClassifiedAds.Services.Product.RateLimiterPolicies;
 using FluentValidation;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -62,7 +62,7 @@ public class UpdateProductRequestHandler : IEndpointHandler
         });
     }
 
-    private static async Task<IResult> HandleAsync(IMediator dispatcher, Guid id, [FromBody] UpdateProductRequest request, IValidator<UpdateProductRequest> validator)
+    private static async Task<IResult> HandleAsync(Dispatcher dispatcher, Guid id, [FromBody] UpdateProductRequest request, IValidator<UpdateProductRequest> validator)
     {
         var validationResult = await validator.ValidateAsync(request);
         if (!validationResult.IsValid)
@@ -71,13 +71,13 @@ public class UpdateProductRequestHandler : IEndpointHandler
                 statusCode: (int)HttpStatusCode.BadRequest);
         }
 
-        var product = await dispatcher.Send(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
+        var product = await dispatcher.DispatchAsync(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
 
         product.Code = request.Code;
         product.Name = request.Name;
         product.Description = request.Description;
 
-        await dispatcher.Send(new AddUpdateProductCommand { Product = product });
+        await dispatcher.DispatchAsync(new AddUpdateProductCommand { Product = product });
 
         var response = new UpdateProductResponse
         {
