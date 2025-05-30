@@ -12,6 +12,8 @@
   </Folder>
   <Folder Name="/Infrastructure/">
     <Project Path="ClassifiedAds.Infrastructure/ClassifiedAds.Infrastructure.csproj" />
+    <Project Path="ClassifiedAds.Persistence.MySQL/ClassifiedAds.Persistence.MySQL.csproj" />
+    <Project Path="ClassifiedAds.Persistence.PostgreSQL/ClassifiedAds.Persistence.PostgreSQL.csproj" />
     <Project Path="ClassifiedAds.Persistence/ClassifiedAds.Persistence.csproj" />
   </Folder>
 </Solution>

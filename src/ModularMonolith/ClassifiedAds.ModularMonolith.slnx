@@ -4,6 +4,8 @@
     <Project Path="ClassifiedAds.CrossCuttingConcerns/ClassifiedAds.CrossCuttingConcerns.csproj" />
     <Project Path="ClassifiedAds.Domain/ClassifiedAds.Domain.csproj" />
     <Project Path="ClassifiedAds.Infrastructure/ClassifiedAds.Infrastructure.csproj" />
+    <Project Path="ClassifiedAds.Persistence.MySQL/ClassifiedAds.Persistence.MySQL.csproj" />
+    <Project Path="ClassifiedAds.Persistence.PostgreSQL/ClassifiedAds.Persistence.PostgreSQL.csproj" />
   </Folder>
   <Folder Name="/Contracts/">
     <Project Path="ClassifiedAds.Contracts/ClassifiedAds.Contracts.csproj" />

@@ -5,12 +5,14 @@ WORKDIR /ClassifiedAds.IdentityServer
 COPY ./ClassifiedAds.Application/*.csproj ./ClassifiedAds.Application/
 COPY ./ClassifiedAds.CrossCuttingConcerns/*.csproj ./ClassifiedAds.CrossCuttingConcerns/
 COPY ./ClassifiedAds.Domain/*.csproj ./ClassifiedAds.Domain/
-COPY ./ClassifiedAds.IdentityServer/*.csproj ./ClassifiedAds.IdentityServer/
 COPY ./ClassifiedAds.Infrastructure/*.csproj ./ClassifiedAds.Infrastructure/
-COPY ./ClassifiedAds.Migrator/*.csproj ./ClassifiedAds.Migrator/
 COPY ./ClassifiedAds.Persistence/*.csproj ./ClassifiedAds.Persistence/
-COPY ./ClassifiedAds.OpenIddict.slnx .
-RUN dotnet restore
+
+RUN dotnet restore ./ClassifiedAds.Application/ClassifiedAds.Application.csproj
+RUN dotnet restore ./ClassifiedAds.Infrastructure/ClassifiedAds.Infrastructure.csproj
+
+COPY ./ClassifiedAds.Migrator/*.csproj ./ClassifiedAds.Migrator/
+RUN dotnet restore ./ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj
 
 # Copy everything else and build
 COPY . ./
