@@ -1,5 +1,5 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Logging;
-using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+using ClassifiedAds.Domain.Infrastructure.Messaging;
 using ClassifiedAds.Modules.Storage.DTOs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;

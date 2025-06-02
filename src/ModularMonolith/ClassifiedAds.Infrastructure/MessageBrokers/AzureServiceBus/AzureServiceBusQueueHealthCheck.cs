@@ -4,7 +4,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
+namespace ClassifiedAds.Infrastructure.Messaging.AzureServiceBus;
 
 public class AzureServiceBusQueueHealthCheck : IHealthCheck
 {

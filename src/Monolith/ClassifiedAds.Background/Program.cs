@@ -6,7 +6,7 @@ using ClassifiedAds.Background.MessageBusConsumers;
 using ClassifiedAds.CrossCuttingConcerns.Exceptions;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.IdentityProviders;
-using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+using ClassifiedAds.Domain.Infrastructure.Messaging;
 using ClassifiedAds.Infrastructure.HostedServices;
 using ClassifiedAds.Infrastructure.IdentityProviders.Auth0;
 using ClassifiedAds.Infrastructure.IdentityProviders.Azure;
@@ -54,10 +54,10 @@ Host.CreateDefaultBuilder(args)
             .AddMessageHandlers();
 
     services.AddTransient<IMessageBus, MessageBus>();
-    services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker);
-    services.AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker);
-    services.AddMessageBusReceiver<WebhookConsumer, FileUploadedEvent>(appSettings.MessageBroker);
-    services.AddMessageBusReceiver<WebhookConsumer, FileDeletedEvent>(appSettings.MessageBroker);
+    services.AddMessageBusSender<FileUploadedEvent>(appSettings.Messaging);
+    services.AddMessageBusSender<FileDeletedEvent>(appSettings.Messaging);
+    services.AddMessageBusReceiver<WebhookConsumer, FileUploadedEvent>(appSettings.Messaging);
+    services.AddMessageBusReceiver<WebhookConsumer, FileDeletedEvent>(appSettings.Messaging);
     services.AddMessageBusConsumers(Assembly.GetExecutingAssembly());
     services.AddOutboxEventPublishers(Assembly.GetExecutingAssembly());
 
@@ -80,7 +80,7 @@ Host.CreateDefaultBuilder(args)
         healthQuery: "SELECT 1;",
         name: "Sql Server",
         failureStatus: HealthStatus.Degraded)
-    .AddMessageBusHealthCheck(appSettings.MessageBroker);
+    .AddMessageBusHealthCheck(appSettings.Messaging);
 
     services.Configure<HealthChecksBackgroundServiceOptions>(x => x.Interval = TimeSpan.FromMinutes(10));
     services.AddHostedService<HealthChecksBackgroundService>();

@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Csv;
 using ClassifiedAds.CrossCuttingConcerns.Html;
 using ClassifiedAds.CrossCuttingConcerns.Pdf;
-using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+using ClassifiedAds.Domain.Infrastructure.Messaging;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Services.Product.ConfigurationOptions;
@@ -56,7 +56,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPdfWriter<ExportProductsToPdf>, ExportProductsToPdfHandler>();
 
         services.AddTransient<IMessageBus, MessageBus>()
-                .AddMessageBusSender<AuditLogCreatedEvent>(appSettings.MessageBroker);
+                .AddMessageBusSender<AuditLogCreatedEvent>(appSettings.Messaging);
 
         return services;
     }

@@ -1,8 +1,8 @@
 ﻿using ClassifiedAds.Infrastructure.HealthChecks;
-using ClassifiedAds.Infrastructure.MessageBrokers.AzureQueue;
-using ClassifiedAds.Infrastructure.MessageBrokers.AzureServiceBus;
-using ClassifiedAds.Infrastructure.MessageBrokers.Kafka;
-using ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ;
+using ClassifiedAds.Infrastructure.Messaging.AzureQueue;
+using ClassifiedAds.Infrastructure.Messaging.AzureServiceBus;
+using ClassifiedAds.Infrastructure.Messaging.Kafka;
+using ClassifiedAds.Infrastructure.Messaging.RabbitMQ;
 using ClassifiedAds.Infrastructure.Storages.Amazon;
 using ClassifiedAds.Infrastructure.Storages.Azure;
 using ClassifiedAds.Infrastructure.Storages.Local;

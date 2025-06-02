@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+﻿using ClassifiedAds.Domain.Infrastructure.Messaging;
 using ClassifiedAds.Modules.Storage.Entities;
 
 namespace ClassifiedAds.Modules.Storage.DTOs;

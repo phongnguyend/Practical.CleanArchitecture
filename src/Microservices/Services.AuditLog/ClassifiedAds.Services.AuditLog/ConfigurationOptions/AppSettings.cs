@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.Infrastructure.Caching;
 using ClassifiedAds.Infrastructure.Interceptors;
 using ClassifiedAds.Infrastructure.Logging;
-using ClassifiedAds.Infrastructure.MessageBrokers;
+using ClassifiedAds.Infrastructure.Messaging;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Notification;
 using ClassifiedAds.Infrastructure.Storages;
@@ -23,7 +23,7 @@ public class AppSettings
 
     public StorageOptions Storage { get; set; }
 
-    public MessageBrokerOptions MessageBroker { get; set; }
+    public MessagingOptions Messaging { get; set; }
 
     public NotificationOptions Notification { get; set; }
 

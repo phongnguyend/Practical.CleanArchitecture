@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.Infrastructure.Caching;
 using ClassifiedAds.Infrastructure.Logging;
-using ClassifiedAds.Infrastructure.MessageBrokers;
+using ClassifiedAds.Infrastructure.Messaging;
 using ClassifiedAds.Infrastructure.Monitoring;
 using Microsoft.Extensions.Options;
 
@@ -14,7 +14,7 @@ public class AppSettings
 
     public MonitoringOptions Monitoring { get; set; }
 
-    public MessageBrokerOptions MessageBroker { get; set; }
+    public MessagingOptions Messaging { get; set; }
 
     public ModulesOptions Modules { get; set; }
 

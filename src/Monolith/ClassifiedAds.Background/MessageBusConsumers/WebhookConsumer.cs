@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.Application.FileEntries.DTOs;
 using ClassifiedAds.CrossCuttingConcerns.Logging;
-using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+using ClassifiedAds.Domain.Infrastructure.Messaging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;

@@ -2,7 +2,7 @@
 using ClassifiedAds.Application.FileEntries.DTOs;
 using ClassifiedAds.Domain.Constants;
 using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+using ClassifiedAds.Domain.Infrastructure.Messaging;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;

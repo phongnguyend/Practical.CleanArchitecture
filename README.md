@@ -168,17 +168,17 @@
 <details>
   <summary><b>Message Broker</b></summary>
   
-  - Open below files and jump to **MessageBroker** section:
+  - Open below files and jump to **Messaging** section:
     + [ClassifiedAds.Background/appsettings.json](/src/Monolith/ClassifiedAds.Background/appsettings.json)
     ```js
-    "MessageBroker": {
+    "Messaging": {
       "Provider": "RabbitMQ",
     }
     ```
 
   - Use RabbitMQ
     ```js
-    "MessageBroker": {
+    "Messaging": {
       "Provider": "RabbitMQ",
       "RabbitMQ": {
         "HostName": "localhost",
@@ -203,7 +203,7 @@
 
   - Use Kafka:
     ```js
-    "MessageBroker": {
+    "Messaging": {
       "Provider": "Kafka",
       "Kafka": {
         "BootstrapServers": "localhost:9092",
@@ -219,7 +219,7 @@
 
   - Use Azure Queue Storage:
     ```js
-    "MessageBroker": {
+    "Messaging": {
       "Provider": "AzureQueue",
       "AzureQueue": {
         "ConnectionString": "xxx",
@@ -235,7 +235,7 @@
 
   - Use Azure Service Bus:
     ```js
-    "MessageBroker": {
+    "Messaging": {
       "Provider": "AzureServiceBus",
       "AzureServiceBus": {
         "ConnectionString": "xxx",

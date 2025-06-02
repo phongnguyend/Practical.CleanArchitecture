@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+﻿using ClassifiedAds.Domain.Infrastructure.Messaging;
 using ClassifiedAds.Services.AuditLog.Entities;
 
 namespace ClassifiedAds.Services.AuditLog.DTOs;

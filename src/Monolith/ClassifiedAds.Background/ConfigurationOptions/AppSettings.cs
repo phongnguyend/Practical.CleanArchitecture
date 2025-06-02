@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.Infrastructure.IdentityProviders.Auth0;
 using ClassifiedAds.Infrastructure.IdentityProviders.Azure;
 using ClassifiedAds.Infrastructure.Logging;
-using ClassifiedAds.Infrastructure.MessageBrokers;
+using ClassifiedAds.Infrastructure.Messaging;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Notification;
 using ClassifiedAds.Infrastructure.Storages;
@@ -19,7 +19,7 @@ public class AppSettings
 
     public StorageOptions Storage { get; set; }
 
-    public MessageBrokerOptions MessageBroker { get; set; }
+    public MessagingOptions Messaging { get; set; }
 
     public NotificationOptions Notification { get; set; }
 

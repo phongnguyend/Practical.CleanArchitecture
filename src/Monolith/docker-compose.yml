@@ -159,10 +159,10 @@ services:
           ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
           CheckDependency__Enabled: "true"
           CheckDependency__Host: "rabbitmq:5672"
-          MessageBroker__Provider: ${MessageBroker__Provider}
-          MessageBroker__RabbitMQ__HostName: ${MessageBroker__RabbitMQ__HostName}
-          MessageBroker__Kafka__BootstrapServers: ${MessageBroker__Kafka__BootstrapServers}
-          MessageBroker__AzureQueue__ConnectionString: ${MessageBroker__AzureQueue__ConnectionString}
+          Messaging__Provider: ${Messaging__Provider}
+          Messaging__RabbitMQ__HostName: ${Messaging__RabbitMQ__HostName}
+          Messaging__Kafka__BootstrapServers: ${Messaging__Kafka__BootstrapServers}
+          Messaging__AzureQueue__ConnectionString: ${Messaging__AzureQueue__ConnectionString}
           Notification__Email__Provider: "SmtpClient"
           Notification__Email__SmtpClient__Host: "mailhog"
           Notification__Email__SmtpClient__Port: "1025"

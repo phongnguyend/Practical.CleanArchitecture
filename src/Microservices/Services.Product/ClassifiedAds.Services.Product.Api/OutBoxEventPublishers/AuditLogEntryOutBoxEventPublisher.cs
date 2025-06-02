@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+﻿using ClassifiedAds.Domain.Infrastructure.Messaging;
 using ClassifiedAds.Services.Product.Commands;
 using ClassifiedAds.Services.Product.Constants;
 using ClassifiedAds.Services.Product.DTOs;

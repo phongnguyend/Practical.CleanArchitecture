@@ -122,8 +122,8 @@ services:
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices.Notification;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False"
           Authentication__IdentityServer__Authority: "http://host.docker.internal:9000"
           Authentication__IdentityServer__RequireHttpsMetadata: "false"
-          MessageBroker__Provider: "RabbitMQ"
-          MessageBroker__RabbitMQ__HostName: "rabbitmq"
+          Messaging__Provider: "RabbitMQ"
+          Messaging__RabbitMQ__HostName: "rabbitmq"
           Services__AuditLog__Grpc: ${Services__AuditLog__Grpc}
           Services__Identity__Grpc: ${Services__Identity__Grpc}
           Services__Notification__Grpc: ${Services__Notification__Grpc}
@@ -139,8 +139,8 @@ services:
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices.Notification;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False"
           Authentication__IdentityServer__Authority: "http://host.docker.internal:9000"
           Authentication__IdentityServer__RequireHttpsMetadata: "false"
-          MessageBroker__Provider: "RabbitMQ"
-          MessageBroker__RabbitMQ__HostName: "rabbitmq"
+          Messaging__Provider: "RabbitMQ"
+          Messaging__RabbitMQ__HostName: "rabbitmq"
           Notification__Email__Provider: "SmtpClient"
           Notification__Email__SmtpClient__Host: "mailhog"
           Notification__Email__SmtpClient__Port: "1025"
@@ -164,8 +164,8 @@ services:
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices.Notification;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False"
           Authentication__IdentityServer__Authority: "http://host.docker.internal:9000"
           Authentication__IdentityServer__RequireHttpsMetadata: "false"
-          MessageBroker__Provider: "RabbitMQ"
-          MessageBroker__RabbitMQ__HostName: "rabbitmq"
+          Messaging__Provider: "RabbitMQ"
+          Messaging__RabbitMQ__HostName: "rabbitmq"
           Services__AuditLog__Grpc: ${Services__AuditLog__Grpc}
           Services__Identity__Grpc: ${Services__Identity__Grpc}
           Services__Notification__Grpc: ${Services__Notification__Grpc}
@@ -196,8 +196,8 @@ services:
           ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices.Storage;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False"
           Authentication__IdentityServer__Authority: "http://host.docker.internal:9000"
           Authentication__IdentityServer__RequireHttpsMetadata: "false"
-          MessageBroker__Provider: "RabbitMQ"
-          MessageBroker__RabbitMQ__HostName: "rabbitmq"
+          Messaging__Provider: "RabbitMQ"
+          Messaging__RabbitMQ__HostName: "rabbitmq"
           Storage__Provider: "Local"
           Storage__Local__Path: "/files"
           Services__AuditLog__Grpc: ${Services__AuditLog__Grpc}

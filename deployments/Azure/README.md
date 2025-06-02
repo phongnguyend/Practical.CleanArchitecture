@@ -318,7 +318,7 @@ az webapp config appsettings set \
              "Storage__Azure_ConnectionString=$storageConnectionString"
 ```
 
-- Configure MessageBroker
+- Configure Messaging
 ```
 storageConnectionString=$(az storage account show-connection-string  \
   --resource-group ClassifiedAds_DEV  \
@@ -333,15 +333,15 @@ echo $storageConnectionString
 az webapp config appsettings set \
   --resource-group ClassifiedAds_DEV \
   --name webapi-classifiedads \
-  --settings "MessageBroker__Provider=AzureQueue" \
-             "MessageBroker__AzureQueue_ConnectionString=$storageConnectionString"
+  --settings "Messaging__Provider=AzureQueue" \
+             "Messaging__AzureQueue_ConnectionString=$storageConnectionString"
 
 ## WebMVC
 az webapp config appsettings set \
   --resource-group ClassifiedAds_DEV \
   --name webmvc-classifiedads \
-  --settings "MessageBroker__Provider=AzureQueue" \
-             "MessageBroker__AzureQueue_ConnectionString=$storageConnectionString"
+  --settings "Messaging__Provider=AzureQueue" \
+             "Messaging__AzureQueue_ConnectionString=$storageConnectionString"
 ```
 
 - Configure Distributed Cache

@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.Background.ConfigurationOptions;
 using ClassifiedAds.Background.Identity;
 using ClassifiedAds.Contracts.Identity.Services;
-using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+using ClassifiedAds.Domain.Infrastructure.Messaging;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Modules.Identity.Repositories;
@@ -61,10 +61,10 @@ Host.CreateDefaultBuilder(args)
     .SetApplicationName("ClassifiedAds");
 
     services.AddTransient<IMessageBus, MessageBus>();
-    services.AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker);
-    services.AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker);
-    services.AddMessageBusReceiver<WebhookConsumer, FileUploadedEvent>(appSettings.MessageBroker);
-    services.AddMessageBusReceiver<WebhookConsumer, FileDeletedEvent>(appSettings.MessageBroker);
+    services.AddMessageBusSender<FileUploadedEvent>(appSettings.Messaging);
+    services.AddMessageBusSender<FileDeletedEvent>(appSettings.Messaging);
+    services.AddMessageBusReceiver<WebhookConsumer, FileUploadedEvent>(appSettings.Messaging);
+    services.AddMessageBusReceiver<WebhookConsumer, FileDeletedEvent>(appSettings.Messaging);
 
     services.AddHostedServicesIdentityModule();
     services.AddHostedServicesNotificationModule();

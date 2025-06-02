@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+﻿using ClassifiedAds.Domain.Infrastructure.Messaging;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Infrastructure.HostedServices;
 using ClassifiedAds.Infrastructure.Identity;
@@ -43,11 +43,11 @@ public static class ServiceCollectionExtensions
         services.AddStorageManager(appSettings.Storage);
 
         services.AddTransient<IMessageBus, MessageBus>()
-                .AddMessageBusSender<FileUploadedEvent>(appSettings.MessageBroker)
-                .AddMessageBusSender<FileDeletedEvent>(appSettings.MessageBroker)
-                .AddMessageBusSender<AuditLogCreatedEvent>(appSettings.MessageBroker)
-                .AddMessageBusReceiver<WebhookConsumer, FileUploadedEvent>(appSettings.MessageBroker)
-                .AddMessageBusReceiver<WebhookConsumer, FileDeletedEvent>(appSettings.MessageBroker);
+                .AddMessageBusSender<FileUploadedEvent>(appSettings.Messaging)
+                .AddMessageBusSender<FileDeletedEvent>(appSettings.Messaging)
+                .AddMessageBusSender<AuditLogCreatedEvent>(appSettings.Messaging)
+                .AddMessageBusReceiver<WebhookConsumer, FileUploadedEvent>(appSettings.Messaging)
+                .AddMessageBusReceiver<WebhookConsumer, FileDeletedEvent>(appSettings.Messaging);
 
         return services;
     }

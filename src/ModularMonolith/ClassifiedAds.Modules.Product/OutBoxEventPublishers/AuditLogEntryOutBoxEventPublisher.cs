@@ -1,5 +1,5 @@
 ﻿using ClassifiedAds.Contracts.AuditLog.Services;
-using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+using ClassifiedAds.Domain.Infrastructure.Messaging;
 using ClassifiedAds.Modules.Product.Commands;
 using ClassifiedAds.Modules.Product.Constants;
 using System.Text.Json;
