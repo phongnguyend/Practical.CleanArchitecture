@@ -156,127 +156,144 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
 import axios from './axios'
-
 import logo from '../../assets/logo.png'
-import Star from '../../components/Star.vue'
-import { IProduct } from './Product'
+import AppStar from '../../components/Star.vue'
+import type { IProduct } from './Product'
 
-export default defineComponent({
-  data() {
-    return {
-      pageTitle: 'Product List',
-      showImage: false,
-      imageWidth: 50,
-      imageMargin: 2,
-      logo: logo,
-      products: [] as IProduct[],
-      auditLogs: [],
-      selectedProduct: {} as IProduct,
-      listFilter: '',
-      errorMessage: '',
-      isImportCsvFormSubmitted: false,
-      importingFile: null as File | null,
-      modalAuditLogs: ref(false),
-      modalDelete: ref(false),
-      modalImportCsv: ref(false),
-    }
-  },
-  computed: {
-    filteredProducts(): IProduct[] {
-      if (this.listFilter) {
-        return this.products.filter(
-          (product) =>
-            product.name.toLocaleLowerCase().indexOf(this.listFilter.toLocaleLowerCase()) !== -1
-        )
-      }
-      return this.products
-    },
-  },
-  methods: {
-    toggleImage() {
-      this.showImage = !this.showImage
-    },
-    onRatingClicked(event: Event) {
-      this.pageTitle = 'Product List: ' + event
-    },
-    loadProducts() {
-      axios.get('').then((rs) => {
-        this.products = rs.data
-      })
-    },
-    deleteProduct(product: IProduct) {
-      this.selectedProduct = product
-      this.modalDelete = true
-    },
-    deleteConfirmed() {
-      axios.delete(this.selectedProduct.id).then((rs) => {
-        this.loadProducts()
-      })
-    },
-    viewAuditLogs(product: IProduct) {
-      axios.get(product.id + '/auditLogs').then((rs) => {
-        this.auditLogs = rs.data
-        this.modalAuditLogs = true
-      })
-    },
-    exportAsPdf() {
-      axios.get('/ExportAsPdf', { responseType: 'blob' }).then((rs) => {
-        const url = window.URL.createObjectURL(rs.data)
-        const element = document.createElement('a')
-        element.href = url
-        element.download = 'Products.pdf'
-        document.body.appendChild(element)
-        element.click()
-      })
-    },
-    exportAsCsv() {
-      axios.get('/ExportAsCsv', { responseType: 'blob' }).then((rs) => {
-        const url = window.URL.createObjectURL(rs.data)
-        const element = document.createElement('a')
-        element.href = url
-        element.download = 'Products.csv'
-        document.body.appendChild(element)
-        element.click()
-      })
-    },
-    openImportCsvModal() {
-      this.isImportCsvFormSubmitted = false
-      this.importingFile = null
-      this.modalImportCsv = true
-    },
-    handleFileInput(files: FileList) {
-      this.importingFile = files.item(0)
-    },
-    async confirmImportCsvFile() {
-      this.isImportCsvFormSubmitted = true
-      if (!this.importingFile) {
-        return
-      }
-      const formData = new FormData()
-      formData.append('formFile', this.importingFile)
-      const rs = await axios.post('ImportCsv', formData)
-      this.isImportCsvFormSubmitted = false
-      this.modalImportCsv = false
-      this.loadProducts()
-    },
-    formatedDateTime(value: string) {
-      if (!value) return value
-      var date = new Date(value)
-      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
-    },
-    uppercase(value: string) {
-      return value?.toUpperCase()
-    },
-  },
-  components: {
-    appStar: Star,
-  },
-  created() {
-    this.loadProducts()
-  },
+interface IAuditLog {
+  id: string
+  createdDateTime: string
+  userName: string
+  action: string
+  highLight: {
+    code?: boolean
+    name?: boolean
+    description?: boolean
+  }
+  data: {
+    code: string
+    name: string
+    description: string
+  }
+}
+
+const pageTitle = ref('Product List')
+const showImage = ref(false)
+const imageWidth = ref(50)
+const imageMargin = ref(2)
+const products = ref<IProduct[]>([])
+const auditLogs = ref<IAuditLog[]>([])
+const selectedProduct = ref<IProduct>({} as IProduct)
+const listFilter = ref('')
+const errorMessage = ref('')
+const isImportCsvFormSubmitted = ref(false)
+const importingFile = ref<File | null>(null)
+const modalAuditLogs = ref(false)
+const modalDelete = ref(false)
+const modalImportCsv = ref(false)
+
+const filteredProducts = computed((): IProduct[] => {
+  if (listFilter.value) {
+    return products.value.filter(
+      (product) =>
+        product.name.toLocaleLowerCase().indexOf(listFilter.value.toLocaleLowerCase()) !== -1
+    )
+  }
+  return products.value
+})
+
+const toggleImage = () => {
+  showImage.value = !showImage.value
+}
+
+const onRatingClicked = (event: string) => {
+  pageTitle.value = 'Product List: ' + event
+}
+
+const loadProducts = () => {
+  axios.get('').then((rs) => {
+    products.value = rs.data
+  })
+}
+
+const deleteProduct = (product: IProduct) => {
+  selectedProduct.value = product
+  modalDelete.value = true
+}
+
+const deleteConfirmed = () => {
+  axios.delete(selectedProduct.value.id).then((rs) => {
+    loadProducts()
+  })
+}
+
+const viewAuditLogs = (product: IProduct) => {
+  axios.get(product.id + '/auditLogs').then((rs) => {
+    auditLogs.value = rs.data
+    modalAuditLogs.value = true
+  })
+}
+
+const exportAsPdf = () => {
+  axios.get('/ExportAsPdf', { responseType: 'blob' }).then((rs) => {
+    const url = window.URL.createObjectURL(rs.data)
+    const element = document.createElement('a')
+    element.href = url
+    element.download = 'Products.pdf'
+    document.body.appendChild(element)
+    element.click()
+  })
+}
+
+const exportAsCsv = () => {
+  axios.get('/ExportAsCsv', { responseType: 'blob' }).then((rs) => {
+    const url = window.URL.createObjectURL(rs.data)
+    const element = document.createElement('a')
+    element.href = url
+    element.download = 'Products.csv'
+    document.body.appendChild(element)
+    element.click()
+  })
+}
+
+const openImportCsvModal = () => {
+  isImportCsvFormSubmitted.value = false
+  importingFile.value = null
+  modalImportCsv.value = true
+}
+
+const handleFileInput = (files: FileList | null) => {
+  importingFile.value = files?.item(0) || null
+}
+
+const confirmImportCsvFile = async () => {
+  isImportCsvFormSubmitted.value = true
+  if (!importingFile.value) {
+    return
+  }
+  const formData = new FormData()
+  formData.append('formFile', importingFile.value)
+  const rs = await axios.post('ImportCsv', formData)
+  isImportCsvFormSubmitted.value = false
+  modalImportCsv.value = false
+  loadProducts()
+}
+
+const formatedDateTime = (value: string) => {
+  if (!value) return value
+  const date = new Date(value)
+  return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
+}
+
+const uppercase = (value: string) => {
+  return value?.toUpperCase()
+}
+
+onMounted(() => {
+  loadProducts()
 })
 </script>
 

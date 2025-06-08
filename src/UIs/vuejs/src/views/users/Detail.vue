@@ -162,107 +162,119 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import axios from './axios'
+import type { IUser } from './User'
 
-import { IUser } from './User'
+interface PasswordValidationError {
+  code: string
+  description: string
+}
 
-export default defineComponent({
-  setup() {
-    return { v$: useVuelidate() }
-  },
-  data() {
-    return {
-      errorMessage: '',
-      postErrorMessage: '',
-      setPasswordModel: { password: null, confirmPassword: null },
-      isSubmitted: false,
-      passwordValidationErrors: [],
-      user: {} as IUser,
-      modalSetPassword: ref(false),
-      modalSendPasswordResetEmail: ref(false),
-      modalSendEmailAddressConfirmationEmail: ref(false),
-    }
-  },
-  validations: {
-    setPasswordModel: {
-      password: {
-        required,
-      },
-    },
-  },
-  methods: {
-    onBack() {
-      this.$router.push('/users')
-    },
-    setPasswordModal() {
-      this.modalSetPassword = true
-    },
-    confirmSetPassword() {
-      this.isSubmitted = true
+interface SetPasswordModel {
+  password: string | null
+  confirmPassword: string | null
+}
 
-      if (
-        !this.setPasswordModel.password ||
-        this.setPasswordModel.password != this.setPasswordModel.confirmPassword
-      ) {
-        return
-      }
+const route = useRoute()
+const router = useRouter()
 
-      axios
-        .put(this.user.id + '/password', {
-          id: this.user.id,
-          password: this.setPasswordModel.password,
-        })
-        .then((rs) => {
-          this.setPasswordModel = { password: null, confirmPassword: null }
-          this.isSubmitted = false
-          this.passwordValidationErrors = []
-          this.postErrorMessage = ''
-          this.modalSetPassword = false
-        })
-        .catch((error) => {
-          if (error?.response?.status == 400) {
-            this.passwordValidationErrors = error.response.data
-          } else {
-            this.postErrorMessage = error?.response?.status
-          }
-        })
-    },
-    sendPasswordResetEmailModal() {
-      this.modalSendPasswordResetEmail = true
-    },
-    confirmSendPasswordResetEmail() {
-      axios
-        .post(this.user.id + '/passwordresetemail', {
-          id: this.user.id,
-        })
-        .then((rs) => {
-          this.modalSendPasswordResetEmail = false
-        })
-    },
-    sendEmailAddressConfirmationEmailModal() {
-      this.modalSendEmailAddressConfirmationEmail = true
-    },
-    confirmSendEmailAddressConfirmationEmail() {
-      axios
-        .post(this.user.id + '/emailaddressconfirmation', {
-          id: this.user.id,
-        })
-        .then((rs) => {
-          this.modalSendEmailAddressConfirmationEmail = false
-        })
+const errorMessage = ref('')
+const postErrorMessage = ref('')
+const setPasswordModel = ref<SetPasswordModel>({ password: null, confirmPassword: null })
+const isSubmitted = ref(false)
+const passwordValidationErrors = ref<PasswordValidationError[]>([])
+const user = ref<IUser>({} as IUser)
+const modalSetPassword = ref(false)
+const modalSendPasswordResetEmail = ref(false)
+const modalSendEmailAddressConfirmationEmail = ref(false)
+
+const rules = {
+  setPasswordModel: {
+    password: {
+      required,
     },
   },
-  components: {},
-  created() {
-    const id = this.$route.params.id as string
-    axios.get(id).then((rs) => {
-      this.user = rs.data
+}
+
+const v$ = useVuelidate(rules, { setPasswordModel })
+
+const onBack = () => {
+  router.push('/users')
+}
+
+const setPasswordModal = () => {
+  modalSetPassword.value = true
+}
+
+const confirmSetPassword = () => {
+  isSubmitted.value = true
+
+  if (
+    !setPasswordModel.value.password ||
+    setPasswordModel.value.password != setPasswordModel.value.confirmPassword
+  ) {
+    return
+  }
+
+  axios
+    .put(user.value.id + '/password', {
+      id: user.value.id,
+      password: setPasswordModel.value.password,
     })
-  },
+    .then((rs) => {
+      setPasswordModel.value = { password: null, confirmPassword: null }
+      isSubmitted.value = false
+      passwordValidationErrors.value = []
+      postErrorMessage.value = ''
+      modalSetPassword.value = false
+    })
+    .catch((error) => {
+      if (error?.response?.status == 400) {
+        passwordValidationErrors.value = error.response.data
+      } else {
+        postErrorMessage.value = error?.response?.status
+      }
+    })
+}
+
+const sendPasswordResetEmailModal = () => {
+  modalSendPasswordResetEmail.value = true
+}
+
+const confirmSendPasswordResetEmail = () => {
+  axios
+    .post(user.value.id + '/passwordresetemail', {
+      id: user.value.id,
+    })
+    .then((rs) => {
+      modalSendPasswordResetEmail.value = false
+    })
+}
+
+const sendEmailAddressConfirmationEmailModal = () => {
+  modalSendEmailAddressConfirmationEmail.value = true
+}
+
+const confirmSendEmailAddressConfirmationEmail = () => {
+  axios
+    .post(user.value.id + '/emailaddressconfirmation', {
+      id: user.value.id,
+    })
+    .then((rs) => {
+      modalSendEmailAddressConfirmationEmail.value = false
+    })
+}
+
+onMounted(() => {
+  const id = route.params.id as string
+  axios.get(id).then((rs) => {
+    user.value = rs.data
+  })
 })
 </script>
 

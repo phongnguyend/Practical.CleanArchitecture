@@ -81,71 +81,73 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '@vuelidate/validators'
 import axios from './axios'
+import type { IProduct } from './Product'
 
-import { IProduct } from './Product'
+const route = useRoute()
+const router = useRouter()
 
-export default defineComponent({
-  setup() {
-    return { v$: useVuelidate() }
-  },
-  data() {
-    return {
-      product: { name: '', code: '', description: '' } as IProduct,
-      postError: false,
-      postErrorMessage: '',
-      isSubmitted: false,
-    }
-  },
-  computed: {
-    title() {
-      return this.$route.params.id ? 'Edit Product' : 'Add Product'
+const product = ref<IProduct>({ name: '', code: '', description: '' } as IProduct)
+const postError = ref(false)
+const postErrorMessage = ref('')
+const isSubmitted = ref(false)
+
+const title = computed(() => {
+  return route.params.id ? 'Edit Product' : 'Add Product'
+})
+
+const id = computed(() => {
+  return route.params.id as string
+})
+
+const rules = {
+  product: {
+    name: {
+      required,
+      minLength: minLength(3),
     },
-    id() {
-      return this.$route.params.id as string
+    code: {
+      required,
+      maxLength: maxLength(10),
     },
-  },
-  validations: {
-    product: {
-      name: {
-        required,
-        minLength: minLength(3),
-      },
-      code: {
-        required,
-        maxLength: maxLength(10),
-      },
-      description: { required, maxLength: maxLength(100) },
+    description: { 
+      required, 
+      maxLength: maxLength(100) 
     },
   },
-  methods: {
-    onSubmit() {
-      this.isSubmitted = true
+}
 
-      if (this.v$.product.$invalid) {
-        return
-      }
+const v$ = useVuelidate(rules, { product })
 
-      const promise = this.id ? axios.put(this.id, this.product) : axios.post('', this.product)
+const onSubmit = () => {
+  isSubmitted.value = true
 
-      promise.then((rs) => {
-        const id = this.id ? this.id : rs.data.id
-        this.$router.push('/products/' + id)
-      })
-    },
-  },
-  created() {
-    const id = this.$route.params.id as string
-    if (id) {
-      axios.get(id).then((rs) => {
-        this.product = rs.data
-      })
-    }
-  },
+  if (v$.value.product.$invalid) {
+    return
+  }
+
+  const promise = id.value 
+    ? axios.put(id.value, product.value) 
+    : axios.post('', product.value)
+
+  promise.then((rs) => {
+    const productId = id.value ? id.value : rs.data.id
+    router.push('/products/' + productId)
+  })
+}
+
+onMounted(() => {
+  const productId = route.params.id as string
+  if (productId) {
+    axios.get(productId).then((rs) => {
+      product.value = rs.data
+    })
+  }
 })
 </script>
 

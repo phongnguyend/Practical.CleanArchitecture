@@ -46,37 +46,32 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import axios from "./axios";
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import axios from './axios'
+import AppStar from '../../components/Star.vue'
+import type { IProduct } from './Product'
 
-import Star from "../../components/Star.vue";
-import { IProduct } from "./Product";
+const route = useRoute()
+const router = useRouter()
 
-export default defineComponent({
-  data() {
-    return {
-      pageTitle: "Product Detail",
-      errorMessage: "",
-      product: {} as IProduct
-    };
-  },
-  methods: {
-    onBack() {
-      this.$router.push("/products");
-    },
-    uppercase(value: string) {
-      return value?.toUpperCase();
-    }
-  },
-  components: {
-    appStar: Star
-  },
-  created() {
-    const id = this.$route.params.id as string;
-    axios.get(id).then(rs => {
-      this.product = rs.data;
-    });
-  }
-});
+const pageTitle = ref('Product Detail')
+const errorMessage = ref('')
+const product = ref<IProduct>({} as IProduct)
+
+const onBack = () => {
+  router.push('/products')
+}
+
+const uppercase = (value: string) => {
+  return value?.toUpperCase()
+}
+
+onMounted(() => {
+  const id = route.params.id as string
+  axios.get(id).then(rs => {
+    product.value = rs.data
+  })
+})
 </script>

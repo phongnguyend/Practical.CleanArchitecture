@@ -33,34 +33,28 @@
   </nav>
 </template>
 
-<script lang="ts">
-import { defineComponent, version } from 'vue'
+<script setup lang="ts">
+import { ref, computed, version } from 'vue'
 import { useStore } from 'vuex'
 
-export default defineComponent({
-  setup() {
-    return { store: useStore() }
-  },
-  data() {
-    return { pageTitle: 'ClassifiedAds.Vue' }
-  },
-  computed: {
-    isAuthenticated(): boolean {
-      return this.store.state.authService.isAuthenticated()
-    },
-  },
-  methods: {
-    login() {
-      this.store.state.authService.login('')
-    },
-    logout() {
-      this.store.state.authService.logout()
-    },
-    appendVersion(value: string) {
-      return value + ' ' + version
-    },
-  },
+const store = useStore()
+const pageTitle = ref('ClassifiedAds.Vue')
+
+const isAuthenticated = computed((): boolean => {
+  return store.state.authService.isAuthenticated()
 })
+
+const login = () => {
+  store.state.authService.login('')
+}
+
+const logout = () => {
+  store.state.authService.logout()
+}
+
+const appendVersion = (value: string) => {
+  return value + ' ' + version
+}
 </script>
 
 <style scoped>

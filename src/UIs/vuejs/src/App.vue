@@ -8,18 +8,9 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-import Nav from './views/Nav.vue'
-import Notification from './components/Notification.vue'
-
-export default defineComponent({
-  components: {
-    appNav: Nav,
-    appNotification: Notification,
-  },
-})
+<script setup lang="ts">
+import AppNav from './views/Nav.vue'
+import AppNotification from './components/Notification.vue'
 </script>
 
 <style lang="css">

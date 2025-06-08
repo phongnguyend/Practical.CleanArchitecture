@@ -55,7 +55,7 @@
               name="formFile"
               class="form-control"
               :class="{ 'is-invalid': isSubmitted && !hasFile }"
-              @change="handleFileInput($event.target.files)"
+              @change="handleFileInput(($event.target as HTMLInputElement)?.files || null)"
             />
             <span class="invalid-feedback">
               <span>Select a file</span>
@@ -84,69 +84,73 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '@vuelidate/validators'
 import axios from './axios'
+import type { IFile } from './File'
 
-import { IFile } from './File'
+const route = useRoute()
+const router = useRouter()
 
-export default defineComponent({
-  setup() {
-    return { v$: useVuelidate() }
-  },
-  data() {
-    return {
-      file: { name: '', description: '', encrypted: false } as IFile,
-      postError: false,
-      postErrorMessage: '',
-      isSubmitted: false,
-      hasFile: false,
-    }
-  },
-  computed: {
-    title() {
-      return 'Upload File'
-    },
-    id() {
-      return this.$route.params.id
-    },
-  },
-  validations: {
-    file: {
-      name: {
-        required,
-        minLength: minLength(3),
-      },
-      description: { required, maxLength: maxLength(100) },
-    },
-  },
-  methods: {
-    handleFileInput(files: any) {
-      this.file.formFile = files.item(0)
-      this.hasFile = !!this.file.formFile
-    },
-    onSubmit() {
-      this.isSubmitted = true
-      if (this.v$.file.$invalid || !this.hasFile) {
-        return
-      }
-      const formData = new FormData()
-      formData.append('formFile', this.file.formFile)
-      formData.append('name', this.file.name)
-      formData.append('description', this.file.description)
-      formData.append('encrypted', this.file.encrypted.toString())
-      const promise = axios.post('', formData)
+const file = ref<IFile>({ name: '', description: '', encrypted: false } as IFile)
+const postError = ref(false)
+const postErrorMessage = ref('')
+const isSubmitted = ref(false)
+const hasFile = ref(false)
 
-      promise.then((rs) => {
-        const id = rs.data.id
-        this.$router.push('/files/edit/' + id)
-      })
-    },
-  },
-  created() {},
+const title = computed(() => {
+  return 'Upload File'
 })
+
+const id = computed(() => {
+  return route.params.id
+})
+
+const rules = {
+  file: {
+    name: {
+      required,
+      minLength: minLength(3),
+    },
+    description: { 
+      required, 
+      maxLength: maxLength(100) 
+    },
+  },
+}
+
+const v$ = useVuelidate(rules, { file })
+
+const handleFileInput = (files: FileList | null) => {
+  if (files && files.length > 0) {
+    const selectedFile = files.item(0)
+    if (selectedFile) {
+      file.value.formFile = selectedFile
+      hasFile.value = true
+    }
+  }
+}
+
+const onSubmit = () => {
+  isSubmitted.value = true
+  if (v$.value.file.$invalid || !hasFile.value) {
+    return
+  }
+  const formData = new FormData()
+  formData.append('formFile', file.value.formFile as File)
+  formData.append('name', file.value.name)
+  formData.append('description', file.value.description)
+  formData.append('encrypted', file.value.encrypted.toString())
+  const promise = axios.post('', formData)
+
+  promise.then((rs) => {
+    const fileId = rs.data.id
+    router.push('/files/edit/' + fileId)
+  })
+}
 </script>
 
 <style scoped>

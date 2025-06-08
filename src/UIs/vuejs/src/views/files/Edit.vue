@@ -125,80 +125,103 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { useVuelidate } from '@vuelidate/core'
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '@vuelidate/validators'
-
 import axios from './axios'
-import { IFile } from './File'
+import type { IFile } from './File'
 
-export default defineComponent({
-  setup() {
-    return { v$: useVuelidate() }
-  },
-  data() {
-    return {
-      file: { name: '', description: '' } as IFile,
-      auditLogs: [],
-      postError: false,
-      postErrorMessage: '',
-      isSubmitted: false,
-      modalAuditLogs: ref(false),
-    }
-  },
-  computed: {
-    title() {
-      return this.$route.params.id ? 'Edit File' : 'Upload File'
-    },
-    id() {
-      return this.$route.params.id as string
-    },
-  },
-  validations: {
-    file: {
-      name: {
-        required,
-        minLength: minLength(3),
-      },
-      description: { required, maxLength: maxLength(100) },
-    },
-  },
-  methods: {
-    onSubmit() {
-      this.isSubmitted = true
+interface IAuditLog {
+  id: string
+  createdDateTime: string
+  userName: string
+  action: string
+  highLight: {
+    name?: boolean
+    description?: boolean
+    fileName?: boolean
+    fileLocation?: boolean
+  }
+  data: {
+    name: string
+    description: string
+    fileName: string
+    fileLocation: string
+  }
+}
 
-      if (this.v$.file.$invalid) {
-        return
-      }
+const route = useRoute()
+const router = useRouter()
 
-      const promise = this.id ? axios.put(this.id, this.file) : axios.post('', this.file)
+const file = ref<IFile>({ name: '', description: '' } as IFile)
+const auditLogs = ref<IAuditLog[]>([])
+const postError = ref(false)
+const postErrorMessage = ref('')
+const isSubmitted = ref(false)
+const modalAuditLogs = ref(false)
 
-      promise.then((rs) => {
-        const id = this.id ? this.id : rs.data.id
-        this.$router.push('/files')
-      })
+const title = computed(() => {
+  return route.params.id ? 'Edit File' : 'Upload File'
+})
+
+const id = computed(() => {
+  return route.params.id as string
+})
+
+const rules = {
+  file: {
+    name: {
+      required,
+      minLength: minLength(3),
     },
-    viewAuditLogs(file: IFile) {
-      axios.get(file.id + '/auditLogs').then((rs) => {
-        this.auditLogs = rs.data
-        this.modalAuditLogs = true
-      })
-    },
-    formatedDateTime(value: string) {
-      if (!value) return value
-      var date = new Date(value)
-      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
+    description: { 
+      required, 
+      maxLength: maxLength(100) 
     },
   },
-  created() {
-    const id = this.$route.params.id as string
-    if (id) {
-      axios.get(id).then((rs) => {
-        this.file = rs.data
-      })
-    }
-  },
+}
+
+const v$ = useVuelidate(rules, { file })
+
+const onSubmit = () => {
+  isSubmitted.value = true
+
+  if (v$.value.file.$invalid) {
+    return
+  }
+
+  const promise = id.value 
+    ? axios.put(id.value, file.value) 
+    : axios.post('', file.value)
+
+  promise.then((rs) => {
+    const fileId = id.value ? id.value : rs.data.id
+    router.push('/files')
+  })
+}
+
+const viewAuditLogs = (fileItem: IFile) => {
+  axios.get(fileItem.id + '/auditLogs').then((rs) => {
+    auditLogs.value = rs.data
+    modalAuditLogs.value = true
+  })
+}
+
+const formatedDateTime = (value: string | Date): string => {
+  if (!value) return ''
+  const date = new Date(value)
+  return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
+}
+
+onMounted(() => {
+  const fileId = route.params.id as string
+  if (fileId) {
+    axios.get(fileId).then((rs) => {
+      file.value = rs.data
+    })
+  }
 })
 </script>
 

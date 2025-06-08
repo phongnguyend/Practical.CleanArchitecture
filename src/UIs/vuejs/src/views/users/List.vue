@@ -45,42 +45,35 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import axios from './axios'
+import type { IUser } from './User'
 
-import { IUser } from './User'
+const users = ref<IUser[]>([])
+const selectedUser = ref<IUser>({} as IUser)
+const errorMessage = ref('')
+const modalDelete = ref(false)
 
-export default defineComponent({
-  data() {
-    return {
-      users: [] as IUser[],
-      selectedUser: {} as IUser,
-      errorMessage: '',
-      modalDelete: ref(false),
-    }
-  },
-  computed: {},
-  methods: {
-    loadUsers() {
-      axios.get('').then((rs) => {
-        this.users = rs.data
-      })
-    },
-    deleteUser(user: IUser) {
-      this.selectedUser = user
-      this.modalDelete = true
-    },
-    deleteConfirmed() {
-      axios.delete(this.selectedUser.id).then((rs) => {
-        this.loadUsers()
-      })
-    },
-  },
-  components: {},
-  created() {
-    this.loadUsers()
-  },
+const loadUsers = () => {
+  axios.get('').then((rs) => {
+    users.value = rs.data
+  })
+}
+
+const deleteUser = (user: IUser) => {
+  selectedUser.value = user
+  modalDelete.value = true
+}
+
+const deleteConfirmed = () => {
+  axios.delete(selectedUser.value.id).then((rs) => {
+    loadUsers()
+  })
+}
+
+onMounted(() => {
+  loadUsers()
 })
 </script>
 

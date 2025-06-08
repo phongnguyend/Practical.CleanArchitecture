@@ -29,7 +29,7 @@
               <td>{{ entry.key }}</td>
               <td>{{ entry.isSensitive ? '******' : entry.value }}</td>
               <td>{{ entry.description }}</td>
-              <td>{{ formatedDateTime(entry.updatedDateTime) }}</td>
+              <td>{{ formatedDateTime(entry.updatedDateTime || '') }}</td>
               <td>
                 <button class="btn btn-primary" @click="updateEntry(entry)">Edit</button>
                 &nbsp;
@@ -130,7 +130,7 @@
               :class="{
                 'is-invalid': isImportExcelFormSubmitted && !importingFile,
               }"
-              @change="handleFileInput($event.target.files)"
+              @change="handleFileInput(($event.target as HTMLInputElement)?.files || null)"
             />
             <span class="invalid-feedback"> Select a file </span>
           </div>
@@ -145,141 +145,144 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import axios from './axios'
+import type { IConfigurationEntry } from './ConfigurationEntry'
 
-import { IConfigurationEntry } from './ConfigurationEntry'
+const configurationEntries = ref<IConfigurationEntry[]>([])
+const selectedEntry = ref<IConfigurationEntry>({} as IConfigurationEntry)
+const isSubmitted = ref(false)
+const isImportExcelFormSubmitted = ref(false)
+const importingFile = ref<File | null>(null)
+const errorMessage = ref('')
+const modalDelete = ref(false)
+const modalAddUpdate = ref(false)
+const modalImportExcel = ref(false)
 
-export default defineComponent({
-  setup() {
-    return { v$: useVuelidate() }
-  },
-  data() {
-    return {
-      configurationEntries: [] as IConfigurationEntry[],
-      selectedEntry: {} as IConfigurationEntry,
-      isSubmitted: false,
-      isImportExcelFormSubmitted: false,
-      importingFile: null as File | null,
-      errorMessage: '',
-      modalDelete: ref(false),
-      modalAddUpdate: ref(false),
-      modalImportExcel: ref(false),
-    }
-  },
-  validations: {
-    selectedEntry: {
-      key: {
-        required,
-      },
-      value: {
-        required,
-      },
+const rules = {
+  selectedEntry: {
+    key: {
+      required,
+    },
+    value: {
+      required,
     },
   },
-  computed: {
-    title() {
-      return this.selectedEntry.id == '00000000-0000-0000-0000-000000000000' ? 'Add' : 'Update'
-    },
-  },
-  methods: {
-    loadConfigurationEntries() {
-      axios.get('').then((rs) => {
-        this.configurationEntries = rs.data
-      })
-    },
-    deleteEntry(entry: IConfigurationEntry) {
-      this.selectedEntry = entry
-      this.modalDelete = true
-    },
-    deleteConfirmed() {
-      axios.delete(this.selectedEntry.id).then((rs) => {
-        this.loadConfigurationEntries()
-      })
-    },
-    addEntry() {
-      this.selectedEntry = {
-        id: '00000000-0000-0000-0000-000000000000',
-        key: '',
-        value: '',
-        description: '',
-        isSensitive: false,
-        createdDateTime: new Date(),
-      }
-      this.isSubmitted = false
-      this.modalAddUpdate = true
-    },
-    updateEntry(entry: IConfigurationEntry) {
-      this.selectedEntry = {
-        id: entry.id,
-        key: entry.key,
-        value: entry.isSensitive ? '' : entry.value,
-        description: entry.description,
-        isSensitive: entry.isSensitive,
-        createdDateTime: new Date(),
-      }
-      this.isSubmitted = false
-      this.modalAddUpdate = true
-    },
-    confirmAddUpdate() {
-      this.isSubmitted = true
-      if (this.v$.selectedEntry.$invalid) {
-        return
-      }
+}
 
-      const promise =
-        this.selectedEntry.id != '00000000-0000-0000-0000-000000000000'
-          ? axios.put(this.selectedEntry.id, this.selectedEntry)
-          : axios.post('', this.selectedEntry)
+const v$ = useVuelidate(rules, { selectedEntry })
 
-      promise.then((rs) => {
-        this.isSubmitted = false
-        this.modalAddUpdate = false
-        this.loadConfigurationEntries()
-      })
-    },
-    async exportAsExcel() {
-      const rs = await axios.get('/ExportAsExcel', { responseType: 'blob' })
-      const url = window.URL.createObjectURL(rs.data)
-      const element = document.createElement('a')
-      element.href = url
-      element.download = 'Settings.xlsx'
-      document.body.appendChild(element)
-      element.click()
-    },
-    openImportExcelModal() {
-      this.isImportExcelFormSubmitted = false
-      this.importingFile = null
-      this.modalImportExcel = true
-    },
-    handleFileInput(files: FileList) {
-      this.importingFile = files.item(0)
-    },
-    async confirmImportExcelFile() {
-      this.isImportExcelFormSubmitted = true
-      if (!this.importingFile) {
-        return
-      }
-      const formData = new FormData()
-      formData.append('formFile', this.importingFile)
-      const rs = await axios.post('ImportExcel', formData)
-      this.isImportExcelFormSubmitted = false
-      this.modalImportExcel = false
-      this.loadConfigurationEntries()
-    },
-    formatedDateTime(value: string) {
-      if (!value) return value
-      var date = new Date(value)
-      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
-    },
-  },
-  components: {},
-  created() {
-    this.loadConfigurationEntries()
-  },
+const title = computed(() => {
+  return selectedEntry.value.id == '00000000-0000-0000-0000-000000000000' ? 'Add' : 'Update'
+})
+
+const loadConfigurationEntries = () => {
+  axios.get('').then((rs) => {
+    configurationEntries.value = rs.data
+  })
+}
+
+const deleteEntry = (entry: IConfigurationEntry) => {
+  selectedEntry.value = entry
+  modalDelete.value = true
+}
+
+const deleteConfirmed = () => {
+  axios.delete(selectedEntry.value.id).then((rs) => {
+    loadConfigurationEntries()
+  })
+}
+
+const addEntry = () => {
+  selectedEntry.value = {
+    id: '00000000-0000-0000-0000-000000000000',
+    key: '',
+    value: '',
+    description: '',
+    isSensitive: false,
+    createdDateTime: new Date(),
+  }
+  isSubmitted.value = false
+  modalAddUpdate.value = true
+}
+
+const updateEntry = (entry: IConfigurationEntry) => {
+  selectedEntry.value = {
+    id: entry.id,
+    key: entry.key,
+    value: entry.isSensitive ? '' : entry.value,
+    description: entry.description,
+    isSensitive: entry.isSensitive,
+    createdDateTime: new Date(),
+  }
+  isSubmitted.value = false
+  modalAddUpdate.value = true
+}
+
+const confirmAddUpdate = () => {
+  isSubmitted.value = true
+  if (v$.value.selectedEntry.$invalid) {
+    return
+  }
+
+  const promise =
+    selectedEntry.value.id != '00000000-0000-0000-0000-000000000000'
+      ? axios.put(selectedEntry.value.id, selectedEntry.value)
+      : axios.post('', selectedEntry.value)
+
+  promise.then((rs) => {
+    isSubmitted.value = false
+    modalAddUpdate.value = false
+    loadConfigurationEntries()
+  })
+}
+
+const exportAsExcel = async () => {
+  const rs = await axios.get('/ExportAsExcel', { responseType: 'blob' })
+  const url = window.URL.createObjectURL(rs.data)
+  const element = document.createElement('a')
+  element.href = url
+  element.download = 'Settings.xlsx'
+  document.body.appendChild(element)
+  element.click()
+}
+
+const openImportExcelModal = () => {
+  isImportExcelFormSubmitted.value = false
+  importingFile.value = null
+  modalImportExcel.value = true
+}
+
+const handleFileInput = (files: FileList | null) => {
+  if (files && files.length > 0) {
+    importingFile.value = files.item(0)
+  }
+}
+
+const confirmImportExcelFile = async () => {
+  isImportExcelFormSubmitted.value = true
+  if (!importingFile.value) {
+    return
+  }
+  const formData = new FormData()
+  formData.append('formFile', importingFile.value)
+  const rs = await axios.post('ImportExcel', formData)
+  isImportExcelFormSubmitted.value = false
+  modalImportExcel.value = false
+  loadConfigurationEntries()
+}
+
+const formatedDateTime = (value: string | Date): string => {
+  if (!value) return ''
+  const date = new Date(value)
+  return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
+}
+
+onMounted(() => {
+  loadConfigurationEntries()
 })
 </script>
 

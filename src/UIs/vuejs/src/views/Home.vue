@@ -29,29 +29,17 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, version } from "vue";
+<script setup lang="ts">
+import { ref, version } from 'vue'
+import AppTimer from '../components/Timer.vue'
 
-import Timer from "../components/Timer.vue"
+const pageTitle = ref('Welcome ClassifiedAds Vue')
 
-export default defineComponent({
-  name: "Home" as string,
-  data() {
-    return {
-      pageTitle: "Welcome ClassifiedAds Vue" as string,
-      version: version
-    };
-  },
-  components: {
-    appTimer: Timer
-  },
-  methods: {
-    appendVersion: function (value: string) {
-      return value + " " + version;
-    },
-    appendCurrentDateTime: function (value: string) {
-      return value + " " + new Date();
-    }
-  }
-});
+const appendVersion = (value: string) => {
+  return value + ' ' + version
+}
+
+const appendCurrentDateTime = (value: string) => {
+  return value + ' ' + new Date()
+}
 </script>

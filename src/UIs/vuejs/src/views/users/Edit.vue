@@ -138,8 +138,9 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength } from '@vuelidate/validators'
 import axios from './axios'
@@ -157,64 +158,63 @@ interface IEditUser {
   accessFailedCount: number
 }
 
-export default defineComponent({
-  setup() {
-    return { v$: useVuelidate() }
-  },
-  data() {
-    return {
-      user: { userName: '', email: '' } as IEditUser,
-      postError: false,
-      postErrorMessage: '',
-      isSubmitted: false,
-    }
-  },
-  computed: {
-    title(): string {
-      return this.$route.params.id ? 'Edit User' : 'Add User'
-    },
-    id(): string {
-      return this.$route.params.id as string
-    },
-  },
-  validations: {
-    user: {
-      userName: {
-        required,
-        minLength: minLength(3),
-      },
-      email: {
-        required,
-        minLength: minLength(3),
-      },
-    },
-  },
-  methods: {
-    onSubmit() {
-      this.isSubmitted = true
-      if (this.v$.user.$invalid) {
-        return
-      }
+const route = useRoute()
+const router = useRouter()
 
-      this.user.lockoutEnd = this.user.lockoutEnd ? this.user.lockoutEnd : undefined
-      this.user.accessFailedCount = this.user.accessFailedCount ? this.user.accessFailedCount : 0
+const user = ref<IEditUser>({ userName: '', email: '' } as IEditUser)
+const postError = ref(false)
+const postErrorMessage = ref('')
+const isSubmitted = ref(false)
 
-      const promise = this.id ? axios.put(this.id, this.user) : axios.post('', this.user)
+const title = computed((): string => {
+  return route.params.id ? 'Edit User' : 'Add User'
+})
 
-      promise.then((rs) => {
-        const id = this.id ? this.id : rs.data.id
-        this.$router.push('/users/' + id)
-      })
+const id = computed((): string => {
+  return route.params.id as string
+})
+
+const rules = {
+  user: {
+    userName: {
+      required,
+      minLength: minLength(3),
+    },
+    email: {
+      required,
+      minLength: minLength(3),
     },
   },
-  created() {
-    const id = this.$route.params.id as string
-    if (id) {
-      axios.get(id).then((rs) => {
-        this.user = rs.data
-      })
-    }
-  },
+}
+
+const v$ = useVuelidate(rules, { user })
+
+const onSubmit = () => {
+  isSubmitted.value = true
+  if (v$.value.user.$invalid) {
+    return
+  }
+
+  user.value.lockoutEnd = user.value.lockoutEnd ? user.value.lockoutEnd : undefined
+  user.value.accessFailedCount = user.value.accessFailedCount ? user.value.accessFailedCount : 0
+
+  const promise = id.value 
+    ? axios.put(id.value, user.value) 
+    : axios.post('', user.value)
+
+  promise.then((rs) => {
+    const userId = id.value ? id.value : rs.data.id
+    router.push('/users/' + userId)
+  })
+}
+
+onMounted(() => {
+  const userId = route.params.id as string
+  if (userId) {
+    axios.get(userId).then((rs) => {
+      user.value = rs.data
+    })
+  }
 })
 </script>
 

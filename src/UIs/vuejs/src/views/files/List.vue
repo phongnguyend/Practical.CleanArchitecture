@@ -99,66 +99,81 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import axios from './axios'
+import type { IFile } from './File'
 
-import { IFile } from './File'
+interface IAuditLog {
+  id: string
+  createdDateTime: string
+  userName: string
+  action: string
+  highLight: {
+    name?: boolean
+    description?: boolean
+    fileName?: boolean
+    fileLocation?: boolean
+  }
+  data: {
+    name: string
+    description: string
+    fileName: string
+    fileLocation: string
+  }
+}
 
-export default defineComponent({
-  data() {
-    return {
-      pageTitle: 'Files',
-      files: [] as IFile[],
-      selectedFile: {} as IFile,
-      auditLogs: [],
-      errorMessage: '',
-      modalAuditLogs: ref(false),
-      modalDelete: ref(false),
-    }
-  },
-  computed: {},
-  methods: {
-    loadFiles() {
-      axios.get('').then((rs) => {
-        this.files = rs.data
-      })
-    },
-    download(file: IFile) {
-      axios.get(file.id + '/download', { responseType: 'blob' }).then((rs) => {
-        const url = window.URL.createObjectURL(rs.data)
-        const element = document.createElement('a')
-        element.href = url
-        element.download = file.fileName
-        document.body.appendChild(element)
-        element.click()
-      })
-    },
-    deleteFile(file: IFile) {
-      this.selectedFile = file
-      this.modalDelete = true
-    },
-    deleteConfirmed() {
-      axios.delete(this.selectedFile.id).then((rs) => {
-        this.loadFiles()
-      })
-    },
-    viewAuditLogs(file: IFile) {
-      axios.get(file.id + '/auditLogs').then((rs) => {
-        this.auditLogs = rs.data
-        this.modalAuditLogs = true
-      })
-    },
-    formatedDateTime(value: string) {
-      if (!value) return value
-      var date = new Date(value)
-      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
-    },
-  },
-  components: {},
-  created() {
-    this.loadFiles()
-  },
+const pageTitle = ref('Files')
+const files = ref<IFile[]>([])
+const selectedFile = ref<IFile>({} as IFile)
+const auditLogs = ref<IAuditLog[]>([])
+const errorMessage = ref('')
+const modalAuditLogs = ref(false)
+const modalDelete = ref(false)
+
+const loadFiles = () => {
+  axios.get('').then((rs) => {
+    files.value = rs.data
+  })
+}
+
+const download = (file: IFile) => {
+  axios.get(file.id + '/download', { responseType: 'blob' }).then((rs) => {
+    const url = window.URL.createObjectURL(rs.data)
+    const element = document.createElement('a')
+    element.href = url
+    element.download = file.fileName
+    document.body.appendChild(element)
+    element.click()
+  })
+}
+
+const deleteFile = (file: IFile) => {
+  selectedFile.value = file
+  modalDelete.value = true
+}
+
+const deleteConfirmed = () => {
+  axios.delete(selectedFile.value.id).then((rs) => {
+    loadFiles()
+  })
+}
+
+const viewAuditLogs = (file: IFile) => {
+  axios.get(file.id + '/auditLogs').then((rs) => {
+    auditLogs.value = rs.data
+    modalAuditLogs.value = true
+  })
+}
+
+const formatedDateTime = (value: string | Date): string => {
+  if (!value) return ''
+  const date = new Date(value)
+  return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
+}
+
+onMounted(() => {
+  loadFiles()
 })
 </script>
 
