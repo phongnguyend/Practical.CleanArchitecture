@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { Modal, Button } from "react-bootstrap";
@@ -8,47 +8,45 @@ import * as actions from "../actions";
 import Star from "../../../components/Star/Star";
 import axios from "../axios";
 
-class ListProducts extends Component<any, any> {
-  state = {
-    pageTitle: "Product List",
-    showImage: false,
-    deleteModalOpen: false,
-    deletingProduct: {
-      name: null,
-    },
-    listFilter: "",
-    auditLogsModalOpen: false,
-    importCsvModalOpen: false,
-    importingFile: null as File | null,
-    importCsvFormSubmitted: false,
+const ListProducts = (props: any) => {
+  const [pageTitle, setPageTitle] = useState("Product List");
+  const [showImage, setShowImage] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deletingProduct, setDeletingProduct] = useState({
+    name: null,
+  });
+  const [listFilter, setListFilter] = useState("");
+  const [auditLogsModalOpen, setAuditLogsModalOpen] = useState(false);
+  const [importCsvModalOpen, setImportCsvModalOpen] = useState(false);
+  const [importingFile, setImportingFile] = useState<File | null>(null);
+  const [importCsvFormSubmitted, setImportCsvFormSubmitted] = useState(false);
+
+  const toggleImage = () => {
+    setShowImage(!showImage);
   };
 
-  toggleImage = () => {
-    this.setState({ showImage: !this.state.showImage });
+  const filterChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setListFilter(event.target.value);
   };
 
-  filterChanged = (event) => {
-    this.setState({ listFilter: event.target.value });
-  };
-
-  performFilter(filterBy) {
+  const performFilter = (filterBy: string) => {
     filterBy = filterBy.toLocaleLowerCase();
-    return this.props.products.filter(
-      (product) => product.name.toLocaleLowerCase().indexOf(filterBy) !== -1
+    return props.products.filter(
+      (product: any) => product.name.toLocaleLowerCase().indexOf(filterBy) !== -1
     );
-  }
+  };
 
-  onRatingClicked = (event) => {
+  const onRatingClicked = (event: string) => {
     const pageTitle = "Product List: " + event;
-    this.setState({ pageTitle: pageTitle });
+    setPageTitle(pageTitle);
   };
 
-  viewAuditLogs = (product) => {
-    this.props.fetchAuditLogs(product);
-    this.setState({ auditLogsModalOpen: true });
+  const viewAuditLogs = (product: any) => {
+    props.fetchAuditLogs(product);
+    setAuditLogsModalOpen(true);
   };
 
-  exportAsPdf = async () => {
+  const exportAsPdf = async () => {
     const rs = await axios.get("/ExportAsPdf", { responseType: "blob" });
     const url = window.URL.createObjectURL(rs.data);
     const element = document.createElement("a");
@@ -58,7 +56,7 @@ class ListProducts extends Component<any, any> {
     element.click();
   };
 
-  exportAsCsv = async () => {
+  const exportAsCsv = async () => {
     const rs = await axios.get("/ExportAsCsv", { responseType: "blob" });
     const url = window.URL.createObjectURL(rs.data);
     const element = document.createElement("a");
@@ -68,290 +66,267 @@ class ListProducts extends Component<any, any> {
     element.click();
   };
 
-  deleteProduct = (product) => {
-    this.setState({ deleteModalOpen: true, deletingProduct: product });
+  const deleteProduct = (product: any) => {
+    setDeleteModalOpen(true);
+    setDeletingProduct(product);
   };
 
-  deleteCanceled = () => {
-    this.setState({ deleteModalOpen: false, deletingProduct: null });
+  const deleteCanceled = () => {
+    setDeleteModalOpen(false);
+    setDeletingProduct({ name: null });
   };
 
-  deleteConfirmed = () => {
-    this.props.deleteProduct(this.state.deletingProduct);
-    this.setState({ deleteModalOpen: false, deletingProduct: null });
+  const deleteConfirmed = () => {
+    props.deleteProduct(deletingProduct);
+    setDeleteModalOpen(false);
+    setDeletingProduct({ name: null });
   };
 
-  formatDateTime = (value) => {
+  const formatDateTime = (value: string) => {
     if (!value) return value;
     var date = new Date(value);
     return date.toLocaleDateString() + " " + date.toLocaleTimeString();
   };
 
-  openImportCsvModal = () => {
-    this.setState({
-      importCsvModalOpen: true,
-      importingFile: null,
-      importCsvFormSubmitted: false,
-    });
+  const openImportCsvModal = () => {
+    setImportCsvModalOpen(true);
+    setImportingFile(null);
+    setImportCsvFormSubmitted(false);
   };
 
-  importCsvCanceled = () => {
-    this.setState({
-      importCsvModalOpen: false,
-      importingFile: null,
-      importCsvFormSubmitted: false,
-    });
+  const importCsvCanceled = () => {
+    setImportCsvModalOpen(false);
+    setImportingFile(null);
+    setImportCsvFormSubmitted(false);
   };
 
-  fileChanged = (event) => {
-    this.setState({
-      importingFile: event.target.files.item(0),
-    });
+  const fileChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setImportingFile(event.target.files?.item(0) || null);
   };
 
-  importCsvConfirmed = async (event) => {
+  const importCsvConfirmed = async (event: React.FormEvent) => {
     event.preventDefault();
-    this.setState({
-      importCsvFormSubmitted: true,
-    });
-    if (!this.state.importingFile) {
+    setImportCsvFormSubmitted(true);
+    if (!importingFile) {
       return;
     }
     const formData = new FormData();
-    formData.append("formFile", this.state.importingFile);
+    formData.append("formFile", importingFile);
     await axios.post("ImportCsv", formData);
-    this.setState({
-      importCsvModalOpen: false,
-      importingFile: null,
-      importCsvFormSubmitted: false,
-    });
+    setImportCsvModalOpen(false);
+    setImportingFile(null);
+    setImportCsvFormSubmitted(false);
 
-    this.props.fetchProducts();
+    props.fetchProducts();
   };
 
-  componentDidMount() {
-    this.props.fetchProducts();
-  }
+  useEffect(() => {
+    props.fetchProducts();
+  }, []);
 
-  render() {
-    const filteredProducts = this.state.listFilter
-      ? this.performFilter(this.state.listFilter)
-      : this.props.products;
+  const filteredProducts = listFilter ? performFilter(listFilter) : props.products;
 
-    const rows = filteredProducts?.map((product) => (
-      <tr key={product.id}>
-        <td>
-          {this.state.showImage ? (
-            <img
-              alt=""
-              src={product.imageUrl || logo}
-              title={product.name}
-              style={{ width: "50px", margin: "2px" }}
-            />
-          ) : null}
-        </td>
-        <td>
-          <NavLink to={"/products/" + product.id}>{product.name}</NavLink>
-        </td>
-        <td>{product.code?.toLocaleUpperCase()}</td>
-        <td>{product.description}</td>
-        <td>{product.price || (5).toFixed(2)}</td>
-        <td>
-          <Star
-            rating={product.starRating || 4}
-            ratingClicked={(event) => this.onRatingClicked(event)}
-          ></Star>
-        </td>
-        <td>
-          <NavLink className="btn btn-primary" to={"/products/edit/" + product.id}>
-            Edit
-          </NavLink>
-          &nbsp;
-          <button
-            type="button"
-            className="btn btn-primary btn-secondary"
-            onClick={() => this.viewAuditLogs(product)}
-          >
-            View Audit Logs
-          </button>
-          &nbsp;
-          <button
-            type="button"
-            className="btn btn-primary btn-danger"
-            onClick={() => this.deleteProduct(product)}
-          >
-            Delete
-          </button>
-        </td>
-      </tr>
-    ));
+  const rows = filteredProducts?.map((product: any) => (
+    <tr key={product.id}>
+      <td>
+        {showImage ? (
+          <img
+            alt=""
+            src={product.imageUrl || logo}
+            title={product.name}
+            style={{ width: "50px", margin: "2px" }}
+          />
+        ) : null}
+      </td>
+      <td>
+        <NavLink to={"/products/" + product.id}>{product.name}</NavLink>
+      </td>
+      <td>{product.code?.toLocaleUpperCase()}</td>
+      <td>{product.description}</td>
+      <td>{product.price || (5).toFixed(2)}</td>
+      <td>
+        <Star rating={product.starRating || 4} ratingClicked={onRatingClicked}></Star>
+      </td>
+      <td>
+        <NavLink className="btn btn-primary" to={"/products/edit/" + product.id}>
+          Edit
+        </NavLink>
+        &nbsp;
+        <button
+          type="button"
+          className="btn btn-primary btn-secondary"
+          onClick={() => viewAuditLogs(product)}
+        >
+          View Audit Logs
+        </button>
+        &nbsp;
+        <button
+          type="button"
+          className="btn btn-primary btn-danger"
+          onClick={() => deleteProduct(product)}
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  ));
 
-    const table = this.props.products ? (
-      <table className="table">
-        <thead>
-          <tr>
-            <th>
-              <button className="btn btn-primary" onClick={this.toggleImage}>
-                {this.state.showImage ? "Hide" : "Show"} Image
-              </button>
-            </th>
-            <th>Product</th>
-            <th>Code</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>5 Star Rating</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </table>
-    ) : null;
-    const auditLogRows = this.props.auditLogs?.map((auditLog) => (
-      <tr key={auditLog.id}>
-        <td>{this.formatDateTime(auditLog.createdDateTime)}</td>
-        <td>{auditLog.userName}</td>
-        <td>{auditLog.action}</td>
-        <td style={{ color: auditLog.highLight.code ? "red" : "" }}>{auditLog.data.code}</td>
-        <td style={{ color: auditLog.highLight.name ? "red" : "" }}>{auditLog.data.name}</td>
-        <td style={{ color: auditLog.highLight.description ? "red" : "" }}>
-          {auditLog.data.description}
-        </td>
-      </tr>
-    ));
-    const auditLogsModal = (
-      <Modal
-        size="xl"
-        show={this.state.auditLogsModalOpen}
-        onHide={() => this.setState({ auditLogsModalOpen: false })}
-      >
-        <Modal.Body>
-          <div className="table-responsive">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Date Time</th>
-                  <th>User Name</th>
-                  <th>Action</th>
-                  <th>Code</th>
-                  <th>Name</th>
-                  <th>Description</th>
-                </tr>
-              </thead>
-              <tbody>{auditLogRows}</tbody>
-            </table>
-          </div>
-        </Modal.Body>
-      </Modal>
-    );
+  const table = filteredProducts ? (
+    <table className="table">
+      <thead>
+        <tr>
+          <th>
+            <button className="btn btn-primary" onClick={toggleImage}>
+              {showImage ? "Hide" : "Show"} Image
+            </button>
+          </th>
+          <th>Product</th>
+          <th>Code</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>5 Star Rating</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>{rows}</tbody>
+    </table>
+  ) : null;
 
-    const deleteModal = (
-      <Modal show={this.state.deleteModalOpen} onHide={this.deleteCanceled}>
-        <Modal.Header closeButton>
-          <Modal.Title>Delete Product</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to delete
-          <strong> {this.state.deletingProduct?.name}</strong>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={this.deleteCanceled}>
-            No
-          </Button>
-          <Button variant="primary" onClick={this.deleteConfirmed}>
-            Yes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    );
+  const auditLogsRows = props.auditLogs?.map((auditLog: any) => (
+    <tr key={auditLog.id}>
+      <td>{formatDateTime(auditLog.createdDateTime)}</td>
+      <td>{auditLog.userName}</td>
+      <td>{auditLog.action}</td>
+      <td style={{ color: auditLog.highLight.code ? "red" : "" }}>{auditLog.data.code}</td>
+      <td style={{ color: auditLog.highLight.name ? "red" : "" }}>{auditLog.data.name}</td>
+      <td style={{ color: auditLog.highLight.description ? "red" : "" }}>
+        {auditLog.data.description}
+      </td>
+    </tr>
+  ));
 
-    const importCsvModal = (
-      <Modal show={this.state.importCsvModalOpen} onHide={this.importCsvCanceled}>
-        <Modal.Header closeButton>
-          <Modal.Title>Import Csv</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <form onSubmit={this.importCsvConfirmed}>
-            <div className="mb-3 row">
-              <div className="col-sm-12">
-                <input
-                  id="importingFile"
-                  type="file"
-                  name="importingFile"
-                  className={
-                    "form-control " +
-                    (this.state.importCsvFormSubmitted && !this.state.importingFile
-                      ? "is-invalid"
-                      : "")
-                  }
-                  onChange={this.fileChanged}
-                />
-                <span className="invalid-feedback"> Select a file </span>
-              </div>
-            </div>
-            <div className="mb-3 row">
-              <div className="col-sm-12" style={{ textAlign: "center" }}>
-                <button className="btn btn-primary">Import</button>
-              </div>
-            </div>
-          </form>
-        </Modal.Body>
-      </Modal>
-    );
+  const auditLogsModal = (
+    <Modal size="xl" show={auditLogsModalOpen} onHide={() => setAuditLogsModalOpen(false)}>
+      <Modal.Body>
+        <div className="table-responsive">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Date Time</th>
+                <th>User Name</th>
+                <th>Action</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>{auditLogsRows}</tbody>
+          </table>
+        </div>
+      </Modal.Body>
+    </Modal>
+  );
 
-    return (
-      <div>
-        <div className="card">
-          <div className="card-header">
-            {this.state.pageTitle}
-            <div style={{ float: "right" }}>
-              <button type="button" className="btn btn-secondary" onClick={this.exportAsPdf}>
-                Export as Pdf
-              </button>
-              &nbsp;
-              <button type="button" className="btn btn-secondary" onClick={this.exportAsCsv}>
-                Export as Csv
-              </button>
-              &nbsp;
-              <NavLink className="btn btn-primary" to="/products/add">
-                Add Product
-              </NavLink>
-              &nbsp;
-              <button className="btn btn-primary" onClick={() => this.openImportCsvModal()}>
-                Import Csv
-              </button>
+  const deleteModal = (
+    <Modal show={deleteModalOpen} onHide={deleteCanceled}>
+      <Modal.Header closeButton>
+        <Modal.Title>Delete Product</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        Are you sure you want to delete
+        <strong> {deletingProduct?.name}</strong>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={deleteCanceled}>
+          No
+        </Button>
+        <Button variant="primary" onClick={deleteConfirmed}>
+          Yes
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+
+  const importCsvModal = (
+    <Modal show={importCsvModalOpen} onHide={importCsvCanceled}>
+      <Modal.Header closeButton>
+        <Modal.Title>Import Csv</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <form onSubmit={importCsvConfirmed}>
+          <div className="mb-3 row">
+            <div className="col-sm-12">
+              <input
+                id="importingFile"
+                type="file"
+                name="importingFile"
+                className={
+                  "form-control " + (importCsvFormSubmitted && !importingFile ? "is-invalid" : "")
+                }
+                onChange={fileChanged}
+              />
+              <span className="invalid-feedback"> Select a file </span>
             </div>
           </div>
-          <div className="card-body">
-            <div className="row">
-              <div className="col-md-2">Filter by:</div>
-              <div className="col-md-4">
-                <input
-                  type="text"
-                  value={this.state.listFilter}
-                  onChange={(event) => this.filterChanged(event)}
-                />
-              </div>
+          <div className="mb-3 row">
+            <div className="col-sm-12" style={{ textAlign: "center" }}>
+              <button className="btn btn-primary">Import</button>
             </div>
-            {this.state.listFilter ? (
-              <div className="row">
-                <div className="col-md-6">
-                  <h4>Filtered by: {this.state.listFilter}</h4>
-                </div>
-              </div>
-            ) : null}
-            <div className="table-responsive">{table}</div>
+          </div>
+        </form>
+      </Modal.Body>
+    </Modal>
+  );
+
+  return (
+    <div>
+      <div className="card">
+        <div className="card-header">
+          {pageTitle}
+          <div style={{ float: "right" }}>
+            <button type="button" className="btn btn-secondary" onClick={exportAsPdf}>
+              Export as Pdf
+            </button>
+            &nbsp;
+            <button type="button" className="btn btn-secondary" onClick={exportAsCsv}>
+              Export as Csv
+            </button>
+            &nbsp;
+            <NavLink className="btn btn-primary" to="/products/add">
+              Add Product
+            </NavLink>
+            &nbsp;
+            <button className="btn btn-primary" onClick={() => openImportCsvModal()}>
+              Import Csv
+            </button>
           </div>
         </div>
-        {this.props.errorMessage ? (
-          <div className="alert alert-danger">Error: {this.props.errorMessage}</div>
-        ) : null}
-        {deleteModal}
-        {auditLogsModal}
-        {importCsvModal}
+        <div className="card-body">
+          <div className="row">
+            <div className="col-md-2">Filter by:</div>
+            <div className="col-md-4">
+              <input type="text" value={listFilter} onChange={(event) => filterChanged(event)} />
+            </div>
+          </div>
+          {listFilter ? (
+            <div className="row">
+              <div className="col-md-6">
+                <h4>Filtered by: {listFilter}</h4>
+              </div>
+            </div>
+          ) : null}
+          <div className="table-responsive">{table}</div>
+        </div>
       </div>
-    );
-  }
-}
+      {props.errorMessage ? (
+        <div className="alert alert-danger">Error: {props.errorMessage}</div>
+      ) : null}
+      {deleteModal}
+      {auditLogsModal}
+      {importCsvModal}
+    </div>
+  );
+};
 
 const mapStateToProps = (state) => {
   return {
