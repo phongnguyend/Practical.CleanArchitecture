@@ -7,5 +7,5 @@ services:
       - 8025:8025 # web ui
 networks:
   default:
-    external:
-      name: phongnguyend
+    name: phongnguyend
+    external: true
