@@ -1,4 +1,3 @@
-version: "3.7"
 services:
   aws-ot-collector:
     image: public.ecr.aws/aws-observability/aws-otel-collector:latest

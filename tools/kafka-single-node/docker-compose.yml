@@ -1,5 +1,4 @@
 ---
-version: '2'
 services:
   kafka:
     image: confluentinc/cp-kafka:latest

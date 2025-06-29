@@ -1,4 +1,3 @@
-version: '2'
 services:
   zookeeper:
     image: quay.io/debezium/zookeeper:${DEBEZIUM_VERSION}
