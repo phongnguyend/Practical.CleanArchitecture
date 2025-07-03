@@ -29,6 +29,11 @@ var builder = Host.CreateDefaultBuilder(args)
     services.AddDbContext<AdsDbContext>(options => options.UseSqlServer(configuration["ConnectionStrings:ClassifiedAds"], sql =>
     {
         sql.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name);
+
+        if (int.TryParse(configuration["CommandTimeout"], out var commandTimeout))
+        {
+            sql.CommandTimeout(commandTimeout);
+        }
     }));
 });
 

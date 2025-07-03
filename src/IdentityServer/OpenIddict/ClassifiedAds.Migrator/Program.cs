@@ -29,6 +29,11 @@ var builder = Host.CreateDefaultBuilder(args)
         options.UseSqlServer(configuration["ConnectionStrings:IdentityServer"], sql =>
         {
             sql.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name);
+
+            if (int.TryParse(configuration["CommandTimeout"], out var commandTimeout))
+            {
+                sql.CommandTimeout(commandTimeout);
+            }
         });
 
         // Register the entity sets needed by OpenIddict.
