@@ -15,7 +15,15 @@ public class AmazonS3StorageManager : IFileStorageManager
 
     public AmazonS3StorageManager(AmazonOptions options)
     {
-        _client = new AmazonS3Client(options.AccessKeyID, options.SecretAccessKey, RegionEndpoint.GetBySystemName(options.RegionEndpoint));
+        if (!string.IsNullOrWhiteSpace(options.AccessKeyID))
+        {
+            _client = new AmazonS3Client(options.AccessKeyID, options.SecretAccessKey, RegionEndpoint.GetBySystemName(options.RegionEndpoint));
+        }
+        else
+        {
+            _client = new AmazonS3Client(RegionEndpoint.GetBySystemName(options.RegionEndpoint));
+        }
+
         _options = options;
     }
 
