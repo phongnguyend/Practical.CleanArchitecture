@@ -1,5 +1,4 @@
-﻿using Amazon;
-using Amazon.S3;
+﻿using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using System.IO;
@@ -15,15 +14,7 @@ public class AmazonS3StorageManager : IFileStorageManager
 
     public AmazonS3StorageManager(AmazonOptions options)
     {
-        if (!string.IsNullOrWhiteSpace(options.AccessKeyID))
-        {
-            _client = new AmazonS3Client(options.AccessKeyID, options.SecretAccessKey, RegionEndpoint.GetBySystemName(options.RegionEndpoint));
-        }
-        else
-        {
-            _client = new AmazonS3Client(RegionEndpoint.GetBySystemName(options.RegionEndpoint));
-        }
-
+        _client = options.CreateAmazonS3Client();
         _options = options;
     }
 
