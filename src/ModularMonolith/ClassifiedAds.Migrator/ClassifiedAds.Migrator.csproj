@@ -10,11 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Scripts\Functions\" />
-    <Folder Include="Scripts\Indexes\" />
-    <Folder Include="Scripts\Types\" />
-    <Folder Include="Scripts\Stored Procedures\" />
-    <Folder Include="Scripts\Views\" />
+    <Content Include="Scripts\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
