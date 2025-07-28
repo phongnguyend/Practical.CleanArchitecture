@@ -15,13 +15,13 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class PersistenceExtensions
 {
-    public static IServiceCollection AddPersistence(this IServiceCollection services, string connectionString, string migrationsAssembly = "")
+    public static IServiceCollection AddPersistence(this IServiceCollection services, string connectionString, int? commandTimeout = null)
     {
         services.AddDbContext<AdsDbContext>(options => options.UseSqlServer(connectionString, sql =>
                 {
-                    if (!string.IsNullOrEmpty(migrationsAssembly))
+                    if (commandTimeout.HasValue)
                     {
-                        sql.MigrationsAssembly(migrationsAssembly);
+                        sql.CommandTimeout(commandTimeout);
                     }
                 }))
                 .AddDbContextFactory<AdsDbContext>((Action<DbContextOptionsBuilder>)null, ServiceLifetime.Scoped)
