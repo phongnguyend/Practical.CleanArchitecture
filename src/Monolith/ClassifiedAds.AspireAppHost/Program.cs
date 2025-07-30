@@ -10,4 +10,6 @@ var blazorWebAssembly = builder.AddProject<Projects.ClassifiedAds_BlazorWebAssem
 var identityServer = builder
     .AddExecutable("ClassifiedAds-IdentityServer", "dotnet", "../../IdentityServer/OpenIddict/ClassifiedAds.IdentityServer", "run", $"--urls=https://localhost:44367");
 
+var webhook = builder.AddExternalService("Webhook", "https://ddddotnet-webhook-server.azurewebsites.net").WithHttpHealthCheck("");
+
 builder.Build().Run();
