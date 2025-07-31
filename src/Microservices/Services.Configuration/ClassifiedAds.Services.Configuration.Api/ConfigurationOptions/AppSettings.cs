@@ -28,6 +28,8 @@ public class ConnectionStrings
     public string ClassifiedAds { get; set; }
 
     public string MigrationsAssembly { get; set; }
+
+    public int? CommandTimeout { get; set; }
 }
 
 public class AuthenticationOptions

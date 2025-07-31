@@ -25,6 +25,11 @@ public static class ServiceCollectionExtensions
             {
                 sql.MigrationsAssembly(appSettings.ConnectionStrings.MigrationsAssembly);
             }
+
+            if (appSettings.ConnectionStrings.CommandTimeout.HasValue)
+            {
+                sql.CommandTimeout(appSettings.ConnectionStrings.CommandTimeout);
+            }
         }))
             .AddScoped(typeof(IUserRepository), typeof(UserRepository))
             .AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
@@ -57,6 +62,11 @@ public static class ServiceCollectionExtensions
             if (!string.IsNullOrEmpty(appSettings.ConnectionStrings.MigrationsAssembly))
             {
                 sql.MigrationsAssembly(appSettings.ConnectionStrings.MigrationsAssembly);
+            }
+
+            if (appSettings.ConnectionStrings.CommandTimeout.HasValue)
+            {
+                sql.CommandTimeout(appSettings.ConnectionStrings.CommandTimeout);
             }
         }))
             .AddScoped(typeof(IUserRepository), typeof(UserRepository))

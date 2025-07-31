@@ -28,6 +28,11 @@ public static class ServiceCollectionExtensions
             {
                 sql.MigrationsAssembly(appSettings.ConnectionStrings.MigrationsAssembly);
             }
+
+            if (appSettings.ConnectionStrings.CommandTimeout.HasValue)
+            {
+                sql.CommandTimeout(appSettings.ConnectionStrings.CommandTimeout);
+            }
         }))
             .AddScoped<IRepository<FileEntry, Guid>, Repository<FileEntry, Guid>>()
             .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>()
