@@ -56,13 +56,13 @@ public static class ServiceCollectionExtensions
 
     public static void MigrateStorageDb(this IApplicationBuilder app)
     {
-        using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+        using var serviceScope = app.ApplicationServices.CreateScope();
         serviceScope.ServiceProvider.GetRequiredService<StorageDbContext>().Database.Migrate();
     }
 
     public static void MigrateStorageDb(this IHost app)
     {
-        using var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
+        using var serviceScope = app.Services.CreateScope();
         serviceScope.ServiceProvider.GetRequiredService<StorageDbContext>().Database.Migrate();
     }
 

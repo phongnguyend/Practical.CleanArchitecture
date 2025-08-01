@@ -6,7 +6,6 @@ using ClassifiedAds.Persistence;
 using ClassifiedAds.Persistence.CircuitBreakers;
 using ClassifiedAds.Persistence.Locks;
 using ClassifiedAds.Persistence.Repositories;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -54,9 +53,9 @@ public static class PersistenceExtensions
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
-                .AddScoped(typeof(IAuditLogEntryRepository), typeof(AuditLogEntryRepository))
-                .AddScoped(typeof(IUserRepository), typeof(UserRepository))
-                .AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
+                .AddScoped<IAuditLogEntryRepository, AuditLogEntryRepository>()
+                .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<IRoleRepository, RoleRepository>();
 
         services.AddScoped(typeof(IUnitOfWork), services =>
         {
@@ -67,13 +66,5 @@ public static class PersistenceExtensions
         services.AddScoped<ICircuitBreakerManager, CircuitBreakerManager>();
 
         return services;
-    }
-
-    public static void MigrateAdsDb(this IApplicationBuilder app)
-    {
-        using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-        {
-            serviceScope.ServiceProvider.GetRequiredService<AdsDbContext>().Database.Migrate();
-        }
     }
 }

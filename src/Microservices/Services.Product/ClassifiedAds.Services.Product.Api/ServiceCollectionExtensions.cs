@@ -68,7 +68,7 @@ public static class ServiceCollectionExtensions
 
     public static void MigrateProductDb(this IApplicationBuilder app)
     {
-        using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+        using (var serviceScope = app.ApplicationServices.CreateScope())
         {
             serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>().Database.Migrate();
         }

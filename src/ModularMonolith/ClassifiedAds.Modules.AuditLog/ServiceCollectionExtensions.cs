@@ -58,13 +58,13 @@ public static class ServiceCollectionExtensions
 
     public static void MigrateAuditLogDb(this IApplicationBuilder app)
     {
-        using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+        using var serviceScope = app.ApplicationServices.CreateScope();
         serviceScope.ServiceProvider.GetRequiredService<AuditLogDbContext>().Database.Migrate();
     }
 
     public static void MigrateAuditLogDb(this IHost app)
     {
-        using var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
+        using var serviceScope = app.Services.CreateScope();
         serviceScope.ServiceProvider.GetRequiredService<AuditLogDbContext>().Database.Migrate();
     }
 }

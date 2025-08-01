@@ -45,7 +45,7 @@ public static class ServiceCollectionExtensions
 
     public static void MigrateAuditLogDb(this IApplicationBuilder app)
     {
-        using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+        using (var serviceScope = app.ApplicationServices.CreateScope())
         {
             serviceScope.ServiceProvider.GetRequiredService<AuditLogDbContext>().Database.Migrate();
         }

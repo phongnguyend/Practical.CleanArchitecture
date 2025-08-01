@@ -55,13 +55,13 @@ public static class ServiceCollectionExtensions
 
     public static void MigrateNotificationDb(this IApplicationBuilder app)
     {
-        using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+        using var serviceScope = app.ApplicationServices.CreateScope();
         serviceScope.ServiceProvider.GetRequiredService<NotificationDbContext>().Database.Migrate();
     }
 
     public static void MigrateNotificationDb(this IHost app)
     {
-        using var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
+        using var serviceScope = app.Services.CreateScope();
         serviceScope.ServiceProvider.GetRequiredService<NotificationDbContext>().Database.Migrate();
     }
 

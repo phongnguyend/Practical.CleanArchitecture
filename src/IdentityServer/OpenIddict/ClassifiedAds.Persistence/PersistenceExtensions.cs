@@ -55,9 +55,9 @@ public static class PersistenceExtensions
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
-                .AddScoped(typeof(IAuditLogEntryRepository), typeof(AuditLogEntryRepository))
-                .AddScoped(typeof(IUserRepository), typeof(UserRepository))
-                .AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
+                .AddScoped<IAuditLogEntryRepository, AuditLogEntryRepository>()
+                .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<IRoleRepository, RoleRepository>();
 
         services.AddScoped(typeof(IUnitOfWork), services =>
         {
@@ -70,23 +70,21 @@ public static class PersistenceExtensions
         return services;
     }
 
-    public static void MigrateAdsDb(this IApplicationBuilder app)
-    {
-        using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-        serviceScope.ServiceProvider.GetRequiredService<AdsDbContext>().Database.Migrate();
-    }
-
     public static void MigrateOpenIddictDb(this IApplicationBuilder app)
     {
-        using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-        var context = serviceScope.ServiceProvider.GetRequiredService<OpenIddictDbContext>();
-        context.Database.Migrate();
+        using var serviceScope = app.ApplicationServices.CreateScope();
+        serviceScope.MigrateOpenIddictDb();
     }
 
     public static void MigrateOpenIddictDb(this IHost app)
     {
-        using var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
-        var context = serviceScope.ServiceProvider.GetRequiredService<OpenIddictDbContext>();
+        using var serviceScope = app.Services.CreateScope();
+        serviceScope.MigrateOpenIddictDb();
+    }
+
+    public static void MigrateOpenIddictDb(this IServiceScope serviceScope)
+    {
+        using var context = serviceScope.ServiceProvider.GetRequiredService<OpenIddictDbContext>();
         context.Database.Migrate();
     }
 }

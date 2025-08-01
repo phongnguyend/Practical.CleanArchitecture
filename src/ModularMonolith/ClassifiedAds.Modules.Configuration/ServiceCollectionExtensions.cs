@@ -53,13 +53,13 @@ public static class ServiceCollectionExtensions
 
     public static void MigrateConfigurationDb(this IApplicationBuilder app)
     {
-        using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+        using var serviceScope = app.ApplicationServices.CreateScope();
         serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.Migrate();
     }
 
     public static void MigrateConfigurationDb(this IHost app)
     {
-        using var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
+        using var serviceScope = app.Services.CreateScope();
         serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.Migrate();
     }
 }

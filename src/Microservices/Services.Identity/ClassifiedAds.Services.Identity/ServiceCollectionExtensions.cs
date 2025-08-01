@@ -147,7 +147,7 @@ public static class ServiceCollectionExtensions
 
     public static void MigrateIdentityDb(this IApplicationBuilder app)
     {
-        using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+        using (var serviceScope = app.ApplicationServices.CreateScope())
         {
             serviceScope.ServiceProvider.GetRequiredService<IdentityDbContext>().Database.Migrate();
         }

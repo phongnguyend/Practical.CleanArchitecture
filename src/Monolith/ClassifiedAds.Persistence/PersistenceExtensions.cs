@@ -85,7 +85,7 @@ public static class PersistenceExtensions
 
     private static void MigrateAdsDb(this IServiceProvider provider)
     {
-        using var serviceScope = provider.GetService<IServiceScopeFactory>().CreateScope();
+        using var serviceScope = provider.CreateScope();
         using var dbContext = serviceScope.ServiceProvider.GetRequiredService<AdsDbContext>();
         dbContext.Database.Migrate();
     }

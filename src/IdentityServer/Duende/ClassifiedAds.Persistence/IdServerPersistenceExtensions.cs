@@ -49,7 +49,7 @@ public static class IdServerPersistenceExtensions
 
     public static void MigrateIdServerDb(this IHost app)
     {
-        using var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
+        using var serviceScope = app.Services.CreateScope();
         serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
 
         var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
