@@ -15,6 +15,7 @@ export class OidcLoginRedirect implements OnInit {
     var config = {
       authority: environment.OpenIdConnect.Authority,
       client_id: environment.OpenIdConnect.ClientId,
+      redirect_uri: `${environment.CurrentUrl}oidc-login-redirect`,
       userStore: new WebStorageStateStore({ store: window.localStorage }),
       response_mode: "query",
     } as UserManagerSettings;

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { BsModalService } from 'ngx-bootstrap/modal';
 
 import { ProductDetailComponent } from "./product-detail.component";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -13,7 +14,17 @@ describe("ProductDetailComponent", () => {
     TestBed.configureTestingModule({
     declarations: [ProductDetailComponent],
     imports: [RouterTestingModule],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+    providers: [
+      provideHttpClient(withInterceptorsFromDi()), 
+      provideHttpClientTesting(),
+      {
+        provide: BsModalService,
+        useValue: {
+          show: jest.fn(),
+          hide: jest.fn()
+        }
+      }
+    ]
 }).compileComponents();
   }));
 

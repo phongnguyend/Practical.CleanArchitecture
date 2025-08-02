@@ -49,8 +49,8 @@ describe("ProductService Tests", () => {
     providers: [ProductService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
 });
 
-    productService = TestBed.get(ProductService);
-    httpTestingController = TestBed.get(HttpTestingController);
+    productService = TestBed.inject(ProductService);
+    httpTestingController = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
