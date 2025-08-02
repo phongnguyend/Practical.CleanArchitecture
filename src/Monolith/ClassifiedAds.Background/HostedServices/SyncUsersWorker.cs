@@ -1,5 +1,4 @@
-﻿using ClassifiedAds.Application;
-using ClassifiedAds.Application.Users.Commands;
+﻿using ClassifiedAds.Application.Users.Commands;
 using ClassifiedAds.CrossCuttingConcerns.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,7 +35,7 @@ public class SyncUsersWorker : BackgroundService
 
             using (var scope = _services.CreateScope())
             {
-                var dispatcher = scope.ServiceProvider.GetRequiredService<Dispatcher>();
+                var dispatcher = scope.ServiceProvider.GetDispatcher();
 
                 await dispatcher.DispatchAsync(syncUsersCommand, stoppingToken);
             }

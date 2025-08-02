@@ -1,5 +1,4 @@
-﻿using ClassifiedAds.Application;
-using ClassifiedAds.Modules.Notification.Commands;
+﻿using ClassifiedAds.Modules.Notification.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -37,7 +36,7 @@ public class SendEmailWorker : BackgroundService
 
             using (var scope = _services.CreateScope())
             {
-                var dispatcher = scope.ServiceProvider.GetRequiredService<Dispatcher>();
+                var dispatcher = scope.ServiceProvider.GetDispatcher();
 
                 await dispatcher.DispatchAsync(sendEmailsCommand, cancellationToken);
             }

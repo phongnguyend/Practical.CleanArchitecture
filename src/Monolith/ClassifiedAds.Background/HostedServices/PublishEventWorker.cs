@@ -1,5 +1,4 @@
-﻿using ClassifiedAds.Application;
-using ClassifiedAds.Application.EventLogs.Commands;
+﻿using ClassifiedAds.Application.EventLogs.Commands;
 using ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
 using ClassifiedAds.CrossCuttingConcerns.Logging;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,7 +42,7 @@ public class PublishEventWorker : BackgroundService
 
                 using (var scope = _services.CreateScope())
                 {
-                    var dispatcher = scope.ServiceProvider.GetRequiredService<Dispatcher>();
+                    var dispatcher = scope.ServiceProvider.GetDispatcher();
 
                     await dispatcher.DispatchAsync(publishEventsCommand, stoppingToken);
                 }

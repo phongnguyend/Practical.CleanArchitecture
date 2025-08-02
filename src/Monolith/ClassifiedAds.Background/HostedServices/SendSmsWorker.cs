@@ -1,5 +1,4 @@
-﻿using ClassifiedAds.Application;
-using ClassifiedAds.Application.SmsMessages.Commands;
+﻿using ClassifiedAds.Application.SmsMessages.Commands;
 using ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
 using ClassifiedAds.CrossCuttingConcerns.Logging;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,7 +42,7 @@ public class SendSmsWorker : BackgroundService
 
                 using (var scope = _services.CreateScope())
                 {
-                    var dispatcher = scope.ServiceProvider.GetRequiredService<Dispatcher>();
+                    var dispatcher = scope.ServiceProvider.GetDispatcher();
 
                     await dispatcher.DispatchAsync(sendSmsesCommand, stoppingToken);
                 }

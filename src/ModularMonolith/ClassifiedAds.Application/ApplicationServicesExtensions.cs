@@ -66,4 +66,9 @@ public static class ApplicationServicesExtensions
 
         return services;
     }
+
+    public static Dispatcher GetDispatcher(this IServiceProvider provider)
+    {
+        return provider.GetRequiredService<Dispatcher>();
+    }
 }

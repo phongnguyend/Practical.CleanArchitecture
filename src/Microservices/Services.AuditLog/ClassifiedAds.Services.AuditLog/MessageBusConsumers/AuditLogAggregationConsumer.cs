@@ -23,7 +23,7 @@ public sealed class AuditLogAggregationConsumer : IMessageBusConsumer<AuditLogAg
 
     public async Task HandleAsync(AuditLogCreatedEvent data, MetaData metaData, CancellationToken cancellationToken = default)
     {
-        var dispatcher = _serviceProvider.GetRequiredService<Dispatcher>();
+        var dispatcher = _serviceProvider.GetDispatcher();
         var idempotentRequestRepository = _serviceProvider.GetRequiredService<IRepository<IdempotentRequest, Guid>>();
 
         var requestType = "ADD_AUDIT_LOG_ENTRY";
