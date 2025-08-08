@@ -103,18 +103,11 @@ stages:
             src/Monolith/ClassifiedAds.ArchTests/*.csproj
             src/Monolith/ClassifiedAds.ContractTests/*.csproj
             src/Monolith/ClassifiedAds.UnitTests/*.csproj
-          arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
-      - task: reportgenerator@4
-        displayName: Generate Test Report
-        inputs:
-          reports: '$(Build.SourcesDirectory)/**/*.cobertura.xml'
-          targetdir: '$(Build.SourcesDirectory)/CoverageResults'
-          assemblyfilters: '+ClassifiedAds.Application;+ClassifiedAds.Domain'
-      - task: PublishCodeCoverageResults@1
+          arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura "/p:Include=\"[ClassifiedAds.Application]*,[ClassifiedAds.Domain]*\""'
+      - task: PublishCodeCoverageResults@2
         displayName: 'Publish Code Coverage'
         inputs:
-          codeCoverageTool: Cobertura
-          summaryFileLocation: '$(Build.SourcesDirectory)/CoverageResults/Cobertura.xml'
+          summaryFileLocation: '$(Build.SourcesDirectory)/**/*.cobertura.xml'
       - task: DotNetCoreCLI@2
         displayName: Publish
         inputs:
