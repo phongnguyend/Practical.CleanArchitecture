@@ -36,7 +36,7 @@ public class LoggingOptions
     {
         public bool IsEnabled { get; set; }
 
-        public string InstrumentationKey { get; set; }
+        public string ConnectionString { get; set; }
     }
 
     public class AwsCloudWatchOptions
