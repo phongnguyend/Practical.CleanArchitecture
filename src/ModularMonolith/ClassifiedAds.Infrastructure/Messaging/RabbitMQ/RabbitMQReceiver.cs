@@ -63,30 +63,32 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
                 arguments["x-single-active-consumer"] = true;
             }
 
-            if (_options.DeadLetter != null)
+            if (_options.DeadLetterEnabled)
             {
-                if (!string.IsNullOrEmpty(_options.DeadLetter.ExchangeName))
-                {
-                    arguments["x-dead-letter-exchange"] = _options.DeadLetter.ExchangeName;
-                }
+                arguments["x-dead-letter-exchange"] = string.Empty;
 
-                if (!string.IsNullOrEmpty(_options.DeadLetter.RoutingKey))
-                {
-                    arguments["x-dead-letter-routing-key"] = _options.DeadLetter.RoutingKey;
-                }
+                var deadLetterQueueName = _options.QueueName + "-dead-letters";
 
-                if (_options.DeadLetter.AutomaticCreateEnabled && !string.IsNullOrEmpty(_options.DeadLetter.QueueName))
-                {
-                    await _channel.QueueDeclareAsync(_options.DeadLetter.QueueName, true, false, false, null, cancellationToken: cancellationToken);
-                    await _channel.QueueBindAsync(_options.DeadLetter.QueueName, _options.DeadLetter.ExchangeName, _options.DeadLetter.RoutingKey, null, cancellationToken: cancellationToken);
-                }
+                arguments["x-dead-letter-routing-key"] = deadLetterQueueName;
+
+                await _channel.QueueDeclareAsync(deadLetterQueueName, true, false, false, null, cancellationToken: cancellationToken);
+            }
+
+            for (int i = 0; i < _options.MaxRetryCount; i++)
+            {
+                var queueName = _options.QueueName + "-retry-" + (i + 1);
+                await _channel.QueueDeclareAsync(queueName, durable: true, exclusive: false, autoDelete: false, arguments: new Dictionary<string, object>
+                 {
+                    { "x-message-ttl", 5000 * (i + 1) },
+                    { "x-dead-letter-exchange", string.Empty },
+                    { "x-dead-letter-routing-key", _options.QueueName }
+                 }, cancellationToken: cancellationToken);
             }
 
             arguments = arguments.Count == 0 ? null : arguments;
 
             await _channel.QueueDeclareAsync(_options.QueueName, true, false, false, arguments, cancellationToken: cancellationToken);
             await _channel.QueueBindAsync(_options.QueueName, _options.ExchangeName, _options.RoutingKey, null, cancellationToken: cancellationToken);
-            await _channel.QueueBindAsync(_options.QueueName, "amq.direct", $"direct_route_to_queue_{_options.QueueName}", null, cancellationToken: cancellationToken);
         }
 
         await _channel.BasicQosAsync(prefetchSize: 0, prefetchCount: 1, global: false, cancellationToken: cancellationToken);
@@ -123,11 +125,66 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
 
                 await _channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
             }
+            catch (ConsumerException ex)
+            {
+                if (ex.Retryable)
+                {
+                    if (_options.MaxRetryCount > 0)
+                    {
+                        int retryCount = GetRetryCount(ea.BasicProperties);
+
+                        if (retryCount < _options.MaxRetryCount)
+                        {
+                            var props = new BasicProperties
+                            {
+                                Persistent = true
+                            };
+
+                            props.Headers = ea.BasicProperties.Headers ?? new Dictionary<string, object>();
+                            props.Headers["x-retry"] = retryCount + 1;
+
+                            await _channel.BasicPublishAsync(string.Empty, _options.QueueName + "-retry-" + (retryCount + 1), mandatory: true, props, ea.Body.ToArray());
+                            await _channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
+                        }
+                        else
+                        {
+                            if (_options.DeadLetterEnabled)
+                            {
+                                await _channel.BasicNackAsync(deliveryTag: ea.DeliveryTag, multiple: false, requeue: false);
+                            }
+                            else
+                            {
+                                // TODO: Log and Stop
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (_options.DeadLetterEnabled)
+                        {
+                            await _channel.BasicNackAsync(deliveryTag: ea.DeliveryTag, multiple: false, requeue: false);
+                        }
+                        else
+                        {
+                            // TODO: Log and Stop
+                        }
+                    }
+                }
+                else
+                {
+                    if (_options.DeadLetterEnabled)
+                    {
+                        await _channel.BasicNackAsync(deliveryTag: ea.DeliveryTag, multiple: false, requeue: false);
+                    }
+                    else
+                    {
+                        // TODO: Log and Stop
+                    }
+                }
+            }
             catch (Exception ex)
             {
-                // TODO: log here
-                await Task.Delay(1000);
-                await _channel.BasicNackAsync(deliveryTag: ea.DeliveryTag, multiple: false, requeue: _options.RequeueOnFailure);
+                // TODO: Log and Stop
             }
         };
 
@@ -138,5 +195,20 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
     {
         _channel?.Dispose();
         _connection?.Dispose();
+    }
+
+    private static int GetRetryCount(IReadOnlyBasicProperties props)
+    {
+        if (props?.Headers != null && props.Headers.TryGetValue("x-retry", out var val))
+        {
+            if (val is byte[] bytes)
+            {
+                return int.Parse(Encoding.UTF8.GetString(bytes));
+            }
+
+            return Convert.ToInt32(val);
+        }
+
+        return 0;
     }
 }

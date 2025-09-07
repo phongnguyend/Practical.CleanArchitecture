@@ -24,18 +24,7 @@ public class RabbitMQReceiverOptions
 
     public string MessageEncryptionKey { get; set; }
 
-    public bool RequeueOnFailure { get; set; }
+    public int MaxRetryCount { get; set; }
 
-    public DeadLetterOptions DeadLetter { get; set; }
-}
-
-public class DeadLetterOptions
-{
-    public string ExchangeName { get; set; }
-
-    public string RoutingKey { get; set; }
-
-    public string QueueName { get; set; }
-
-    public bool AutomaticCreateEnabled { get; set; }
+    public bool DeadLetterEnabled { get; set; }
 }
