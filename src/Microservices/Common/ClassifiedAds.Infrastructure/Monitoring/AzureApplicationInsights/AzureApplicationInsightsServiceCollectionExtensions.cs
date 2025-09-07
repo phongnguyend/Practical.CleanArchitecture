@@ -12,7 +12,7 @@ public static class AzureApplicationInsightsServiceCollectionExtensions
         {
             services.AddApplicationInsightsTelemetry(opt =>
             {
-                opt.InstrumentationKey = azureApplicationInsightsOptions.InstrumentationKey;
+                opt.ConnectionString = azureApplicationInsightsOptions.ConnectionString;
             });
 
             services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) =>

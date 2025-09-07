@@ -141,7 +141,7 @@ public static class LoggingExtensions
                 logging.AddApplicationInsights(
                     configureTelemetryConfiguration: (config) =>
                     {
-                        config.ConnectionString = options.ApplicationInsights.InstrumentationKey;
+                        config.ConnectionString = options.ApplicationInsights.ConnectionString;
                     },
                     configureApplicationInsightsLoggerOptions: (options) => { });
             }
@@ -227,7 +227,7 @@ public static class LoggingExtensions
                 logging.AddApplicationInsights(
                     configureTelemetryConfiguration: (config) =>
                     {
-                        config.ConnectionString = options.ApplicationInsights.InstrumentationKey;
+                        config.ConnectionString = options.ApplicationInsights.ConnectionString;
                     },
                     configureApplicationInsightsLoggerOptions: (options) => { });
             }
