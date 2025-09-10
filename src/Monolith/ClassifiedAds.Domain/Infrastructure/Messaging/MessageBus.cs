@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using ClassifiedAds.CrossCuttingConcerns.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -80,6 +81,7 @@ public class MessageBus : IMessageBus
     {
         await _serviceProvider.GetRequiredService<IMessageReceiver<TConsumer, T>>().ReceiveAsync(async (data, metaData) =>
         {
+            using var activity = ActivityExtensions.StartNew("HandleAsync", metaData?.ActivityId);
             using var scope = _serviceProvider.CreateScope();
             foreach (Type handlerType in _consumers)
             {
@@ -100,7 +102,7 @@ public class MessageBus : IMessageBus
     public async Task SendAsync(PublishingOutBoxEvent outbox, CancellationToken cancellationToken = default)
     {
         var key = outbox.EventSource + ":" + outbox.EventType;
-        var handlerTypes = _outboxEventHandlers.ContainsKey(key) ? _outboxEventHandlers[key] : null;
+        var handlerTypes = _outboxEventHandlers.TryGetValue(key, out var value) ? value : null;
 
         if (handlerTypes == null)
         {
