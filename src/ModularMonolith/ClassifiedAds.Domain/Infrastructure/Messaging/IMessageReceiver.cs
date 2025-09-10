@@ -8,3 +8,15 @@ public interface IMessageReceiver<TConsumer, T>
 {
     Task ReceiveAsync(Func<T, MetaData, Task> action, CancellationToken cancellationToken);
 }
+
+public class ConsumerHandledException : Exception
+{
+    public ConsumerHandledExceptionNextAction NextAction { get; set; }
+}
+
+public enum ConsumerHandledExceptionNextAction
+{
+    Retry,
+    ReQueue,
+    DeadLetter,
+}

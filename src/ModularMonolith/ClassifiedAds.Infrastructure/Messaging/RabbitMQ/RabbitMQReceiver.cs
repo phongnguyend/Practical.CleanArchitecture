@@ -96,6 +96,11 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
         var consumer = new AsyncEventingBasicConsumer(_channel);
         consumer.ReceivedAsync += async (model, ea) =>
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             try
             {
                 var bodyText = string.Empty;
@@ -125,9 +130,9 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
 
                 await _channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
             }
-            catch (ConsumerException ex)
+            catch (ConsumerHandledException ex)
             {
-                if (ex.Retryable)
+                if (ex.NextAction == ConsumerHandledExceptionNextAction.Retry)
                 {
                     if (_options.MaxRetryCount > 0)
                     {
@@ -146,40 +151,31 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
                             await _channel.BasicPublishAsync(string.Empty, _options.QueueName + "-retry-" + (retryCount + 1), mandatory: true, props, ea.Body.ToArray());
                             await _channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
                         }
-                        else
-                        {
-                            if (_options.DeadLetterEnabled)
-                            {
-                                await _channel.BasicNackAsync(deliveryTag: ea.DeliveryTag, multiple: false, requeue: false);
-                            }
-                            else
-                            {
-                                // TODO: Log and Stop
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (_options.DeadLetterEnabled)
+                        else if (_options.DeadLetterEnabled)
                         {
                             await _channel.BasicNackAsync(deliveryTag: ea.DeliveryTag, multiple: false, requeue: false);
                         }
-                        else
-                        {
-                            // TODO: Log and Stop
-                        }
                     }
+                    else if (_options.DeadLetterEnabled)
+                    {
+                        await _channel.BasicNackAsync(deliveryTag: ea.DeliveryTag, multiple: false, requeue: false);
+                    }
+
+                    return;
                 }
-                else
+                else if (ex.NextAction == ConsumerHandledExceptionNextAction.ReQueue)
+                {
+                    await _channel.BasicNackAsync(deliveryTag: ea.DeliveryTag, multiple: false, requeue: true);
+                    return;
+                }
+                else if (ex.NextAction == ConsumerHandledExceptionNextAction.DeadLetter)
                 {
                     if (_options.DeadLetterEnabled)
                     {
                         await _channel.BasicNackAsync(deliveryTag: ea.DeliveryTag, multiple: false, requeue: false);
                     }
-                    else
-                    {
-                        // TODO: Log and Stop
-                    }
+
+                    return;
                 }
             }
             catch (Exception ex)
