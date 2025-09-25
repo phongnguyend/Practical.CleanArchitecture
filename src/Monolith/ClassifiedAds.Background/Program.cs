@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Application.FileEntries.DTOs;
+﻿using ClassifiedAds.Application.FeatureToggles;
+using ClassifiedAds.Application.FileEntries.DTOs;
 using ClassifiedAds.Background.ConfigurationOptions;
 using ClassifiedAds.Background.HostedServices;
 using ClassifiedAds.Background.Identity;
@@ -7,6 +8,7 @@ using ClassifiedAds.CrossCuttingConcerns.Exceptions;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.IdentityProviders;
 using ClassifiedAds.Domain.Infrastructure.Messaging;
+using ClassifiedAds.Infrastructure.FeatureToggles.OutboxPublishingToggle;
 using ClassifiedAds.Infrastructure.HostedServices;
 using ClassifiedAds.Infrastructure.IdentityProviders.Auth0;
 using ClassifiedAds.Infrastructure.IdentityProviders.Azure;
@@ -75,16 +77,20 @@ Host.CreateDefaultBuilder(args)
         services.AddSingleton<IAzureActiveDirectoryB2CIdentityProvider>(new AzureActiveDirectoryB2CIdentityProvider(appSettings.IdentityProviders.AzureActiveDirectoryB2C));
     }
 
-    services.AddHealthChecks()
-    .AddSqlServer(connectionString: appSettings.ConnectionStrings.ClassifiedAds,
-        healthQuery: "SELECT 1;",
-        name: "Sql Server",
-        failureStatus: HealthStatus.Degraded)
-    .AddMessageBusHealthCheck(appSettings.Messaging);
+    AddHealthChecks(services, appSettings);
+    AddFeatureToogles(services);
+    AddHostedServices(services);
+})
+.Build()
+.Run();
 
-    services.Configure<HealthChecksBackgroundServiceOptions>(x => x.Interval = TimeSpan.FromMinutes(10));
-    services.AddHostedService<HealthChecksBackgroundService>();
+static void AddFeatureToogles(IServiceCollection services)
+{
+    services.AddSingleton<IOutboxPublishingToggle, FileBasedOutboxPublishingToggle>();
+}
 
+static void AddHostedServices(IServiceCollection services)
+{
     services.AddHostedService<MessageBusConsumerBackgroundService<WebhookConsumer, FileUploadedEvent>>();
     services.AddHostedService<MessageBusConsumerBackgroundService<WebhookConsumer, FileDeletedEvent>>();
     services.AddHostedService<PublishEventWorker>();
@@ -92,6 +98,17 @@ Host.CreateDefaultBuilder(args)
     services.AddHostedService<SendSmsWorker>();
     services.AddHostedService<ScheduleCronJobWorker>();
     services.AddHostedService<SyncUsersWorker>();
-})
-.Build()
-.Run();
+}
+
+static void AddHealthChecks(IServiceCollection services, AppSettings appSettings)
+{
+    services.AddHealthChecks()
+        .AddSqlServer(connectionString: appSettings.ConnectionStrings.ClassifiedAds,
+            healthQuery: "SELECT 1;",
+            name: "Sql Server",
+            failureStatus: HealthStatus.Degraded)
+        .AddMessageBusHealthCheck(appSettings.Messaging);
+
+    services.Configure<HealthChecksBackgroundServiceOptions>(x => x.Interval = TimeSpan.FromMinutes(10));
+    services.AddHostedService<HealthChecksBackgroundService>();
+}

@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Application.EventLogs.Commands;
+using ClassifiedAds.Application.FeatureToggles;
 using ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
 using ClassifiedAds.CrossCuttingConcerns.Logging;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,12 +14,15 @@ namespace ClassifiedAds.Background.HostedServices;
 public class PublishEventWorker : BackgroundService
 {
     private readonly IServiceProvider _services;
+    private readonly IOutboxPublishingToggle _outboxPublishingToggle;
     private readonly ILogger<PublishEventWorker> _logger;
 
     public PublishEventWorker(IServiceProvider services,
+        IOutboxPublishingToggle outboxPublishingToggle,
         ILogger<PublishEventWorker> logger)
     {
         _services = services;
+        _outboxPublishingToggle = outboxPublishingToggle;
         _logger = logger;
     }
 
@@ -32,6 +36,13 @@ public class PublishEventWorker : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
+            if (!_outboxPublishingToggle.IsEnabled())
+            {
+                _logger.LogInformation("PushlishEventWorker is being paused. Retry in 10s.");
+                await Task.Delay(10000, stoppingToken);
+                continue;
+            }
+
             using var activity = ActivityExtensions.StartNew("PublishEventWorker");
 
             _logger.LogDebug($"PushlishEvent task doing background work.");
