@@ -19,12 +19,12 @@ public class AzureServiceBusReceiver<TConsumer, T> : IMessageReceiver<TConsumer,
         _queueName = queueName;
     }
 
-    public async Task ReceiveAsync(Func<T, MetaData, Task> action, CancellationToken cancellationToken)
+    public async Task ReceiveAsync(Func<T, MetaData, CancellationToken, Task> action, CancellationToken cancellationToken)
     {
         await ReceiveStringAsync(async retrievedMessage =>
         {
             var message = JsonSerializer.Deserialize<Message<T>>(retrievedMessage);
-            await action(message.Data, message.MetaData);
+            await action(message.Data, message.MetaData, cancellationToken);
         }, cancellationToken);
     }
 

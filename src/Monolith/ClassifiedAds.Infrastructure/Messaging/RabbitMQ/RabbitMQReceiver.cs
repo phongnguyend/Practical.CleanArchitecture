@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Domain.Infrastructure.Messaging;
 using CryptographyHelper;
 using CryptographyHelper.SymmetricAlgorithms;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
@@ -16,12 +17,14 @@ namespace ClassifiedAds.Infrastructure.Messaging.RabbitMQ;
 public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, IDisposable
 {
     private readonly RabbitMQReceiverOptions _options;
+    private readonly ILogger<RabbitMQReceiver<TConsumer, T>> _logger;
     private IConnection _connection;
     private IChannel _channel;
 
-    public RabbitMQReceiver(RabbitMQReceiverOptions options)
+    public RabbitMQReceiver(RabbitMQReceiverOptions options, ILogger<RabbitMQReceiver<TConsumer, T>> logger)
     {
         _options = options;
+        _logger = logger;
     }
 
     private Task Connection_ConnectionShutdownAsync(object sender, ShutdownEventArgs e)
@@ -31,7 +34,7 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
         return Task.CompletedTask;
     }
 
-    public async Task ReceiveAsync(Func<T, MetaData, Task> action, CancellationToken cancellationToken = default)
+    public async Task ReceiveAsync(Func<T, MetaData, CancellationToken, Task> action, CancellationToken cancellationToken = default)
     {
         _connection = await new ConnectionFactory
         {
@@ -74,15 +77,18 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
                 await _channel.QueueDeclareAsync(deadLetterQueueName, true, false, false, null, cancellationToken: cancellationToken);
             }
 
-            for (int i = 0; i < _options.MaxRetryCount; i++)
+            if (_options.MaxRetryCount > 0 && _options.RetryIntervals != null)
             {
-                var queueName = _options.QueueName + "-retry-" + (i + 1);
-                await _channel.QueueDeclareAsync(queueName, durable: true, exclusive: false, autoDelete: false, arguments: new Dictionary<string, object>
-                 {
-                    { "x-message-ttl", 5000 * (i + 1) },
-                    { "x-dead-letter-exchange", string.Empty },
-                    { "x-dead-letter-routing-key", _options.QueueName }
-                 }, cancellationToken: cancellationToken);
+                foreach (var intervalInSecond in _options.RetryIntervals)
+                {
+                    var queueName = _options.QueueName + "-retry-" + intervalInSecond;
+                    await _channel.QueueDeclareAsync(queueName, durable: true, exclusive: false, autoDelete: false, arguments: new Dictionary<string, object>
+                     {
+                        { "x-message-ttl", intervalInSecond * 1000 },
+                        { "x-dead-letter-exchange", string.Empty },
+                        { "x-dead-letter-routing-key", _options.QueueName }
+                     }, cancellationToken: cancellationToken);
+                }
             }
 
             arguments = arguments.Count == 0 ? null : arguments;
@@ -126,7 +132,7 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
 
                 var message = JsonSerializer.Deserialize<Message<T>>(bodyText);
 
-                await action(message.Data, message.MetaData);
+                await action(message.Data, message.MetaData, cancellationToken);
 
                 await _channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
             }
@@ -148,7 +154,7 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
                             props.Headers = ea.BasicProperties.Headers ?? new Dictionary<string, object>();
                             props.Headers["x-retry"] = retryCount + 1;
 
-                            await _channel.BasicPublishAsync(string.Empty, _options.QueueName + "-retry-" + (retryCount + 1), mandatory: true, props, ea.Body.ToArray());
+                            await _channel.BasicPublishAsync(string.Empty, _options.QueueName + "-retry-" + GetRetryQueue(retryCount + 1, _options.RetryIntervals), mandatory: true, props, ea.Body.ToArray());
                             await _channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
                         }
                         else if (_options.DeadLetterEnabled)
@@ -180,7 +186,7 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
             }
             catch (Exception ex)
             {
-                // TODO: Log and Stop
+                _logger.LogError(ex, "Error processing message from RabbitMQ. Queue Name: {QueueName}", _options.QueueName);
             }
         };
 
@@ -206,5 +212,11 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
         }
 
         return 0;
+    }
+
+    private int GetRetryQueue(int retryCount, int[] buckets)
+    {
+        int index = (retryCount - 1) % buckets.Length;
+        return buckets[index];
     }
 }

@@ -6,6 +6,7 @@ using ClassifiedAds.Infrastructure.Messaging.Fake;
 using ClassifiedAds.Infrastructure.Messaging.Kafka;
 using ClassifiedAds.Infrastructure.Messaging.RabbitMQ;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -86,7 +87,7 @@ public static class MessagingCollectionExtensions
 
     public static IServiceCollection AddRabbitMQReceiver<TConsumer, T>(this IServiceCollection services, RabbitMQOptions options)
     {
-        services.AddTransient<IMessageReceiver<TConsumer, T>>(x => new RabbitMQReceiver<TConsumer, T>(new RabbitMQReceiverOptions
+        var receiverOptions = new RabbitMQReceiverOptions
         {
             HostName = options.HostName,
             UserName = options.UserName,
@@ -97,7 +98,9 @@ public static class MessagingCollectionExtensions
             AutomaticCreateEnabled = true,
             MessageEncryptionEnabled = options.MessageEncryptionEnabled,
             MessageEncryptionKey = options.MessageEncryptionKey
-        }));
+        };
+
+        services.AddTransient<IMessageReceiver<TConsumer, T>>(x => new RabbitMQReceiver<TConsumer, T>(receiverOptions, x.GetRequiredService<ILogger<RabbitMQReceiver<TConsumer, T>>>()));
         return services;
     }
 

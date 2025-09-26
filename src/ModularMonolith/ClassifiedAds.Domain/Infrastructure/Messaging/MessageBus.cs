@@ -70,7 +70,7 @@ public class MessageBus : IMessageBus
         await _serviceProvider.GetRequiredService<IMessageSender<T>>().SendAsync(message, metaData, cancellationToken);
     }
 
-    public async Task ReceiveAsync<TConsumer, T>(Func<T, MetaData, Task> action, CancellationToken cancellationToken = default)
+    public async Task ReceiveAsync<TConsumer, T>(Func<T, MetaData, CancellationToken, Task> action, CancellationToken cancellationToken = default)
         where T : IMessageBusMessage
     {
         await _serviceProvider.GetRequiredService<IMessageReceiver<TConsumer, T>>().ReceiveAsync(action, cancellationToken);
@@ -79,7 +79,7 @@ public class MessageBus : IMessageBus
     public async Task ReceiveAsync<TConsumer, T>(CancellationToken cancellationToken = default)
         where T : IMessageBusMessage
     {
-        await _serviceProvider.GetRequiredService<IMessageReceiver<TConsumer, T>>().ReceiveAsync(async (data, metaData) =>
+        await _serviceProvider.GetRequiredService<IMessageReceiver<TConsumer, T>>().ReceiveAsync(async (data, metaData, cancellationToken) =>
         {
             using var activity = ActivityExtensions.StartNew("HandleAsync", metaData?.ActivityId);
             using var scope = _serviceProvider.CreateScope();

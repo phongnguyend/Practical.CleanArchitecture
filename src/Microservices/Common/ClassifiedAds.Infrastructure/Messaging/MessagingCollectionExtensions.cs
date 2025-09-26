@@ -5,6 +5,8 @@ using ClassifiedAds.Infrastructure.Messaging.AzureServiceBus;
 using ClassifiedAds.Infrastructure.Messaging.Fake;
 using ClassifiedAds.Infrastructure.Messaging.Kafka;
 using ClassifiedAds.Infrastructure.Messaging.RabbitMQ;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -85,7 +87,7 @@ public static class MessagingCollectionExtensions
 
     public static IServiceCollection AddRabbitMQReceiver<TConsumer, T>(this IServiceCollection services, RabbitMQOptions options)
     {
-        services.AddTransient<IMessageReceiver<TConsumer, T>>(x => new RabbitMQReceiver<TConsumer, T>(new RabbitMQReceiverOptions
+        var receiverOptions = new RabbitMQReceiverOptions
         {
             HostName = options.HostName,
             UserName = options.UserName,
@@ -96,7 +98,9 @@ public static class MessagingCollectionExtensions
             AutomaticCreateEnabled = true,
             MessageEncryptionEnabled = options.MessageEncryptionEnabled,
             MessageEncryptionKey = options.MessageEncryptionKey
-        }));
+        };
+
+        services.AddTransient<IMessageReceiver<TConsumer, T>>(x => new RabbitMQReceiver<TConsumer, T>(receiverOptions, x.GetRequiredService<ILogger<RabbitMQReceiver<TConsumer, T>>>()));
         return services;
     }
 
@@ -151,4 +155,57 @@ public static class MessagingCollectionExtensions
 
         return services;
     }
+
+    public static IHealthChecksBuilder AddMessageBusHealthCheck(this IHealthChecksBuilder healthChecksBuilder, MessagingOptions options)
+    {
+        if (options.UsedRabbitMQ())
+        {
+            var name = "Message Broker (RabbitMQ)";
+
+            healthChecksBuilder.AddRabbitMQ(new RabbitMQHealthCheckOptions
+            {
+                HostName = options.RabbitMQ.HostName,
+                UserName = options.RabbitMQ.UserName,
+                Password = options.RabbitMQ.Password,
+            },
+            name: name,
+            failureStatus: HealthStatus.Degraded);
+        }
+        else if (options.UsedKafka())
+        {
+            var name = "Message Broker (Kafka)";
+            healthChecksBuilder.AddKafka(
+                bootstrapServers: options.Kafka.BootstrapServers,
+                topic: "healthcheck",
+                name: name,
+                failureStatus: HealthStatus.Degraded);
+        }
+        else if (options.UsedAzureQueue())
+        {
+            foreach (var queueName in options.AzureQueue.QueueNames)
+            {
+                healthChecksBuilder.AddAzureQueueStorage(connectionString: options.AzureQueue.ConnectionString,
+                    queueName: queueName.Value,
+                    name: $"Message Broker (Azure Queue) {queueName.Key}",
+                    failureStatus: HealthStatus.Degraded);
+            }
+        }
+        else if (options.UsedAzureServiceBus())
+        {
+            foreach (var queueName in options.AzureServiceBus.QueueNames)
+            {
+                healthChecksBuilder.AddAzureServiceBusQueue(
+                    connectionString: options.AzureServiceBus.ConnectionString,
+                    queueName: queueName.Value,
+                    name: $"Message Broker (Azure Service Bus) {queueName.Key}",
+                    failureStatus: HealthStatus.Degraded);
+            }
+        }
+        else if (options.UsedFake())
+        {
+        }
+
+        return healthChecksBuilder;
+    }
+
 }

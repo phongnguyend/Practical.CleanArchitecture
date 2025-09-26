@@ -29,7 +29,7 @@ public class KafkaReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, IDisp
         _consumer.Dispose();
     }
 
-    public async Task ReceiveAsync(Func<T, MetaData, Task> action, CancellationToken cancellationToken)
+    public async Task ReceiveAsync(Func<T, MetaData, CancellationToken, Task> action, CancellationToken cancellationToken)
     {
         while (!cancellationToken.IsCancellationRequested)
         {
@@ -43,7 +43,7 @@ public class KafkaReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, IDisp
                 }
 
                 var message = JsonSerializer.Deserialize<Message<T>>(consumeResult.Message.Value);
-                await action(message.Data, message.MetaData);
+                await action(message.Data, message.MetaData, cancellationToken);
             }
             catch (ConsumeException e)
             {

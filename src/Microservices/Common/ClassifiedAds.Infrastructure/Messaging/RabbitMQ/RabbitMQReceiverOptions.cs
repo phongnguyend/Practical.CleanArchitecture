@@ -26,5 +26,7 @@ public class RabbitMQReceiverOptions
 
     public int MaxRetryCount { get; set; }
 
+    public int[] RetryIntervals { get; set; }
+
     public bool DeadLetterEnabled { get; set; }
 }
