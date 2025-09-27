@@ -4,11 +4,14 @@ on:
   push:
     paths:
       - "src/UIs/reactjs/**"
+      - ".github/workflows/scan-dependencies-ui-reactjs.yml"
   pull_request:
     paths:
       - "src/UIs/reactjs/**"
+      - ".github/workflows/scan-dependencies-ui-reactjs.yml"
   schedule:
     - cron: '0 0 * * *'
+  workflow_dispatch:
 
 env:
   WORKING_DIRECTORY: ./src/UIs/reactjs/

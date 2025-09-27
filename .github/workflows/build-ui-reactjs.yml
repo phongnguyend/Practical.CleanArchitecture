@@ -4,9 +4,12 @@ on:
   push:
     paths:
       - "src/UIs/reactjs/**"
+      - ".github/workflows/build-ui-reactjs.yml"
   pull_request:
     paths:
       - "src/UIs/reactjs/**"
+      - ".github/workflows/build-ui-reactjs.yml"
+  workflow_dispatch:
 env:
   WORKING_DIRECTORY: ./src/UIs/reactjs/
 

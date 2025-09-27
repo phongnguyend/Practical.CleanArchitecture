@@ -4,11 +4,14 @@ on:
   push:
     paths:
       - "src/UIs/angular/**"
+      - ".github/workflows/scan-dependencies-ui-angular.yml"
   pull_request:
     paths:
       - "src/UIs/angular/**"
+      - ".github/workflows/scan-dependencies-ui-angular.yml"
   schedule:
     - cron: '0 0 * * *'
+  workflow_dispatch:
 
 env:
   WORKING_DIRECTORY: ./src/UIs/angular/

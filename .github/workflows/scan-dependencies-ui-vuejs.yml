@@ -4,11 +4,14 @@ on:
   push:
     paths:
       - "src/UIs/vuejs/**"
+      - ".github/workflows/scan-dependencies-ui-vuejs.yml"
   pull_request:
     paths:
       - "src/UIs/vuejs/**"
+      - ".github/workflows/scan-dependencies-ui-vuejs.yml"
   schedule:
     - cron: '0 0 * * *'
+  workflow_dispatch:
 
 env:
   WORKING_DIRECTORY: ./src/UIs/vuejs/

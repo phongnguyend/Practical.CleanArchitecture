@@ -7,9 +7,12 @@ on:
       - build
     paths:
       - 'src/UIs/vuejs/**'
+      - '.github/workflows/static-code-analysis-UIs-vuejs.yml'
   pull_request:
     paths: 
       - 'src/UIs/vuejs/**'
+      - '.github/workflows/static-code-analysis-UIs-vuejs.yml'
+  workflow_dispatch:
 env:
   ENV_NAME: ENV_VALUE
 
