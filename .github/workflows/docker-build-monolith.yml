@@ -7,6 +7,8 @@ on:
       - build
     paths:
       - 'src/Monolith/**'
+      - '.github/workflows/docker-build-monolith.yml'
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: image

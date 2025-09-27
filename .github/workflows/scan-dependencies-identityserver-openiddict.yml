@@ -4,11 +4,14 @@ on:
   push:
     paths: 
       - 'src/IdentityServer/OpenIddict/**'
+      - '.github/workflows/scan-dependencies-identityserver-openiddict.yml'
   pull_request:
     paths: 
       - 'src/IdentityServer/OpenIddict/**'
+      - '.github/workflows/scan-dependencies-identityserver-openiddict.yml'
   schedule:
     - cron: '0 * * * *'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -30,4 +33,27 @@ jobs:
       run: dotnet restore
 
     - name: dotnet list package --vulnerable
-      run: dotnet list package --vulnerable    
+      run: dotnet list package --vulnerable
+
+    # Setup .NET 8 for CheckNugetPackages tool
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 8.0.x
+
+    # Install CheckNugetPackages tool
+    - name: Install CheckNugetPackages tool
+      run: dotnet tool install --global CheckNugetPackages.DotNetCliTool
+
+    # Run CheckNugetPackages
+    - name: Run CheckNugetPackages
+      run: |
+        export PATH="$PATH:$HOME/.dotnet/tools"
+        CheckNugetPackages ./
+
+    # Upload the CSV report as a workflow artifact
+    - name: Upload NuGet packages report
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget_packages.csv
+        path: src/IdentityServer/OpenIddict/packages.csv

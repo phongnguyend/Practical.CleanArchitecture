@@ -7,6 +7,8 @@ on:
       - build
     paths:
       - 'src/Microservices/**'
+      - '.github/workflows/docker-build-microservices.yml'
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: image

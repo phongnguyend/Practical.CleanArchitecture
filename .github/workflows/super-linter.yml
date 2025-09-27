@@ -11,6 +11,7 @@ on:
     branches: [ "master", "test-super-linter" ]
   pull_request:
     branches: [ "master" ]
+  workflow_dispatch:
 jobs:
   run-lint:
     runs-on: ubuntu-latest

@@ -4,9 +4,12 @@ on:
   push:
     paths:
       - "src/UIs/angular/**"
+      - ".github/workflows/build-ui-angular.yml"
   pull_request:
     paths:
       - "src/UIs/angular/**"
+      - ".github/workflows/build-ui-angular.yml"
+  workflow_dispatch:
 env:
   WORKING_DIRECTORY: ./src/UIs/angular/
 
