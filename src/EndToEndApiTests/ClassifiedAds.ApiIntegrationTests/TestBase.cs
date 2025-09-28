@@ -1,5 +1,5 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
-using ClassifiedAds.IntegrationTests.Configuration;
+﻿using ClassifiedAds.ApiIntegrationTests.Configuration;
+using ClassifiedAds.ApiIntegrationTests.ExtensionMethods;
 using IdentityModel.Client;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.IntegrationTests;
+namespace ClassifiedAds.ApiIntegrationTests;
 
 public class TestBase
 {

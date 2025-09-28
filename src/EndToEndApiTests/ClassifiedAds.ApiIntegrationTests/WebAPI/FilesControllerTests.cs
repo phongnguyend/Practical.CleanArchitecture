@@ -1,6 +1,6 @@
-﻿using ClassifiedAds.Application.AuditLogEntries.DTOs;
-using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
-using ClassifiedAds.WebAPI.Models.Files;
+﻿using ClassifiedAds.ApiIntegrationTests.ExtensionMethods;
+using ClassifiedAds.ApiIntegrationTests.Models.AuditLogEntries;
+using ClassifiedAds.ApiIntegrationTests.Models.Files;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ClassifiedAds.IntegrationTests.WebAPI;
+namespace ClassifiedAds.ApiIntegrationTests.WebAPI;
 
 public class FilesControllerTests : TestBase
 {
@@ -72,9 +72,9 @@ public class FilesControllerTests : TestBase
         await DeleteAsync($"api/files/{id}");
     }
 
-    public async Task<List<AuditLogEntryDTO>> GetAuditLogsAsync(Guid id)
+    public async Task<List<AuditLogEntryModel>> GetAuditLogsAsync(Guid id)
     {
-        var auditLogs = await GetAsync<List<AuditLogEntryDTO>>($"api/files/{id}/auditlogs");
+        var auditLogs = await GetAsync<List<AuditLogEntryModel>>($"api/files/{id}/auditlogs");
         return auditLogs;
     }
 

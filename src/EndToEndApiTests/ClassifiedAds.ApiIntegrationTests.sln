@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36212.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.ApiIntegrationTests", "ClassifiedAds.ApiIntegrationTests\ClassifiedAds.ApiIntegrationTests.csproj", "{D271EACC-1740-BE3A-3B4D-3D097B7CE603}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D271EACC-1740-BE3A-3B4D-3D097B7CE603}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D271EACC-1740-BE3A-3B4D-3D097B7CE603}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D271EACC-1740-BE3A-3B4D-3D097B7CE603}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D271EACC-1740-BE3A-3B4D-3D097B7CE603}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9C178705-520A-4048-BD4D-DCDC6D7F7941}
+	EndGlobalSection
+EndGlobal

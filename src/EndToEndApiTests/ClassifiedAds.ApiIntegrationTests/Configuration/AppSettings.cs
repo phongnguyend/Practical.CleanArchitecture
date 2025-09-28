@@ -1,4 +1,4 @@
-﻿namespace ClassifiedAds.IntegrationTests.Configuration;
+﻿namespace ClassifiedAds.ApiIntegrationTests.Configuration;
 
 public class AppSettings
 {

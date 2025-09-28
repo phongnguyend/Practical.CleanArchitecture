@@ -1,6 +1,6 @@
-using ClassifiedAds.Application.AuditLogEntries.DTOs;
-using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
-using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.ApiIntegrationTests.ExtensionMethods;
+using ClassifiedAds.ApiIntegrationTests.Models.AuditLogEntries;
+using ClassifiedAds.ApiIntegrationTests.Models.Products;
 using Polly;
 using System;
 using System.Collections.Generic;
@@ -8,11 +8,10 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ClassifiedAds.IntegrationTests.WebAPI;
+namespace ClassifiedAds.ApiIntegrationTests.WebAPI;
 
 public class ProductsControllerTests : TestBase
 {
@@ -23,33 +22,33 @@ public class ProductsControllerTests : TestBase
         _httpClient.DefaultRequestHeaders.Clear();
     }
 
-    private async Task<List<Product>> GetProductsAsync()
+    private async Task<List<ProductModel>> GetProductsAsync()
     {
-        var products = await GetAsync<List<Product>>("api/products");
+        var products = await GetAsync<List<ProductModel>>("api/products");
         return products;
     }
 
-    private async Task<Product> GetProductByIdAsync(Guid id)
+    private async Task<ProductModel> GetProductByIdAsync(Guid id)
     {
-        var product = await GetAsync<Product>($"api/products/{id}");
+        var product = await GetAsync<ProductModel>($"api/products/{id}");
         return product;
     }
 
-    private async Task<Product> CreateProductAsync(Product product)
+    private async Task<ProductModel> CreateProductAsync(ProductModel product)
     {
         var policy = Policy.Handle<Exception>().RetryAsync(5);
 
         return await policy.ExecuteAsync(async () =>
          {
-             var createdProduct = await PostAsync<Product>("api/products", product);
+             var createdProduct = await PostAsync<ProductModel>("api/products", product);
              return createdProduct;
          });
 
     }
 
-    private async Task<Product> UpdateProductAsync(Guid id, Product product)
+    private async Task<ProductModel> UpdateProductAsync(Guid id, ProductModel product)
     {
-        var updatedProduct = await PutAsync<Product>($"api/products/{id}", product);
+        var updatedProduct = await PutAsync<ProductModel>($"api/products/{id}", product);
         return updatedProduct;
     }
 
@@ -58,9 +57,9 @@ public class ProductsControllerTests : TestBase
         await DeleteAsync($"api/products/{id}");
     }
 
-    public async Task<List<AuditLogEntryDTO>> GetAuditLogsAsync(Guid id)
+    public async Task<List<AuditLogEntryModel>> GetAuditLogsAsync(Guid id)
     {
-        var auditLogs = await GetAsync<List<AuditLogEntryDTO>>($"api/products/{id}/auditlogs");
+        var auditLogs = await GetAsync<List<AuditLogEntryModel>>($"api/products/{id}/auditlogs");
         return auditLogs;
     }
 
@@ -78,7 +77,7 @@ public class ProductsControllerTests : TestBase
         await response.Content.CopyToAsync(fileStream);
     }
 
-    private async Task<List<Product>> ImportCsvAsync(string filePath)
+    private async Task<List<ProductModel>> ImportCsvAsync(string filePath)
     {
         using var form = new MultipartFormDataContent();
         using var fileContent = new ByteArrayContent(File.ReadAllBytes(filePath));
@@ -89,7 +88,7 @@ public class ProductsControllerTests : TestBase
         var response = await _httpClient.PostAsync($"api/products/ImportCsv", form);
         response.EnsureSuccessStatusCode();
 
-        var products = await response.Content.ReadAs<List<Product>>();
+        var products = await response.Content.ReadAs<List<ProductModel>>();
         return products;
     }
 
@@ -99,13 +98,13 @@ public class ProductsControllerTests : TestBase
         await GetTokenAsync();
 
         // POST
-        var product = new Product
+        var product = new ProductModel
         {
             Name = "Test",
             Code = "TEST",
             Description = "Description",
         };
-        Product createdProduct = await CreateProductAsync(product);
+        ProductModel createdProduct = await CreateProductAsync(product);
         Assert.True(product.Id != createdProduct.Id);
         Assert.Equal(product.Name, createdProduct.Name);
         Assert.Equal(product.Code, createdProduct.Code);

@@ -1,11 +1,11 @@
-﻿using ClassifiedAds.WebAPI.Models.Users;
+﻿using ClassifiedAds.ApiIntegrationTests.Models.Users;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ClassifiedAds.IntegrationTests.WebAPI;
+namespace ClassifiedAds.ApiIntegrationTests.WebAPI;
 
 public class UsersControllerTests : TestBase
 {

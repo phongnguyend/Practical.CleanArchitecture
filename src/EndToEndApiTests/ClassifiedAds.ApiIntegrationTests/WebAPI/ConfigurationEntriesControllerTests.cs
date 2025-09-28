@@ -1,5 +1,5 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
-using ClassifiedAds.WebAPI.Models.ConfigurationEntries;
+﻿using ClassifiedAds.ApiIntegrationTests.ExtensionMethods;
+using ClassifiedAds.ApiIntegrationTests.Models.ConfigurationEntries;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +8,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ClassifiedAds.IntegrationTests.WebAPI;
+namespace ClassifiedAds.ApiIntegrationTests.WebAPI;
 
 public class ConfigurationEntriesControllerTests : TestBase
 {

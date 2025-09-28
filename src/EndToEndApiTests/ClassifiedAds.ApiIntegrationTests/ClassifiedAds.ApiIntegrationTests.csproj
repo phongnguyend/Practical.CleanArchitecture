@@ -39,9 +39,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ClassifiedAds.CrossCuttingConcerns\ClassifiedAds.CrossCuttingConcerns.csproj" />
-    <ProjectReference Include="..\ClassifiedAds.WebAPI\ClassifiedAds.WebAPI.csproj" />
-  </ItemGroup>
-
 </Project>
