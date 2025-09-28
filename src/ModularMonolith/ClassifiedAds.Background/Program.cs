@@ -1,7 +1,9 @@
-﻿using ClassifiedAds.Background.ConfigurationOptions;
+﻿using ClassifiedAds.Application.FeatureToggles;
+using ClassifiedAds.Background.ConfigurationOptions;
 using ClassifiedAds.Background.Identity;
 using ClassifiedAds.Contracts.Identity.Services;
 using ClassifiedAds.Domain.Infrastructure.Messaging;
+using ClassifiedAds.Infrastructure.FeatureToggles.OutboxPublishingToggle;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Modules.Identity.Repositories;
@@ -66,10 +68,21 @@ Host.CreateDefaultBuilder(args)
     services.AddMessageBusReceiver<WebhookConsumer, FileUploadedEvent>(appSettings.Messaging);
     services.AddMessageBusReceiver<WebhookConsumer, FileDeletedEvent>(appSettings.Messaging);
 
+    AddFeatureToggles(services);
+    AddHostedServices(services);
+})
+.Build()
+.Run();
+
+static void AddFeatureToggles(IServiceCollection services)
+{
+    services.AddSingleton<IOutboxPublishingToggle, FileBasedOutboxPublishingToggle>();
+}
+
+static void AddHostedServices(IServiceCollection services)
+{
     services.AddHostedServicesIdentityModule();
     services.AddHostedServicesNotificationModule();
     services.AddHostedServicesProductModule();
     services.AddHostedServicesStorageModule();
-})
-.Build()
-.Run();
+}

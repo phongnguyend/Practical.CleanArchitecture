@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Modules.Storage.Commands;
+﻿using ClassifiedAds.Application.FeatureToggles;
+using ClassifiedAds.Modules.Storage.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -11,12 +12,15 @@ namespace ClassifiedAds.Modules.Storage.HostedServices;
 public class PublishEventWorker : BackgroundService
 {
     private readonly IServiceProvider _services;
+    private readonly IOutboxPublishingToggle _outboxPublishingToggle;
     private readonly ILogger<PublishEventWorker> _logger;
 
     public PublishEventWorker(IServiceProvider services,
+        IOutboxPublishingToggle outboxPublishingToggle,
         ILogger<PublishEventWorker> logger)
     {
         _services = services;
+        _outboxPublishingToggle = outboxPublishingToggle;
         _logger = logger;
     }
 
@@ -30,6 +34,13 @@ public class PublishEventWorker : BackgroundService
     {
         while (!cancellationToken.IsCancellationRequested)
         {
+            if (!_outboxPublishingToggle.IsEnabled())
+            {
+                _logger.LogInformation("PushlishEventWorker is being paused. Retry in 10s.");
+                await Task.Delay(10000, cancellationToken);
+                continue;
+            }
+
             _logger.LogDebug($"PublishEventWorker task doing background work.");
 
             try

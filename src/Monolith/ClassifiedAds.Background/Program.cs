@@ -78,13 +78,13 @@ Host.CreateDefaultBuilder(args)
     }
 
     AddHealthChecks(services, appSettings);
-    AddFeatureToogles(services);
+    AddFeatureToggles(services);
     AddHostedServices(services);
 })
 .Build()
 .Run();
 
-static void AddFeatureToogles(IServiceCollection services)
+static void AddFeatureToggles(IServiceCollection services)
 {
     services.AddSingleton<IOutboxPublishingToggle, FileBasedOutboxPublishingToggle>();
 }
