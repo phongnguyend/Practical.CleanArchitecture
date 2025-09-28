@@ -6,7 +6,6 @@ using ClassifiedAds.Persistence;
 using ClassifiedAds.Persistence.CircuitBreakers;
 using ClassifiedAds.Persistence.Locks;
 using ClassifiedAds.Persistence.Repositories;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -68,12 +67,6 @@ public static class PersistenceExtensions
         services.AddScoped<ICircuitBreakerManager, CircuitBreakerManager>();
 
         return services;
-    }
-
-    public static void MigrateOpenIddictDb(this IApplicationBuilder app)
-    {
-        using var serviceScope = app.ApplicationServices.CreateScope();
-        serviceScope.MigrateOpenIddictDb();
     }
 
     public static void MigrateOpenIddictDb(this IHost app)

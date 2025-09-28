@@ -6,7 +6,6 @@ using ClassifiedAds.Persistence;
 using ClassifiedAds.Persistence.CircuitBreakers;
 using ClassifiedAds.Persistence.Locks;
 using ClassifiedAds.Persistence.Repositories;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -71,11 +70,6 @@ public static class PersistenceExtensions
         services.AddScoped<ICircuitBreakerManager, CircuitBreakerManager>();
 
         return services;
-    }
-
-    public static void MigrateAdsDb(this IApplicationBuilder app)
-    {
-        app.ApplicationServices.MigrateAdsDb();
     }
 
     public static void MigrateAdsDb(this IHost app)
