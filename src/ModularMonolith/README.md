@@ -9,7 +9,7 @@
   | -------- | ------------------ | ----------------- |
   | ClassifiedAds.Migrator | [appsettings.json](ClassifiedAds.Migrator/appsettings.json) | ConnectionStrings:ClassifiedAds |
   | ClassifiedAds.Background | [appsettings.json](ClassifiedAds.Background/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.IdentityServer | [appsettings.json](../IdentityServer/OpenIddict/ClassifiedAds.IdentityServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
+  | ClassifiedAds.IdentityServer | [appsettings.json](../IdentityServers/OpenIddict/ClassifiedAds.IdentityServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
   | ClassifiedAds.WebAPI | [appsettings.json](ClassifiedAds.WebAPI/appsettings.json) | ConnectionStrings:ClassifiedAds |
 
 
@@ -130,7 +130,7 @@
 
   dotnet build -p:Version=1.0.0.1 -c Release
 
-  dotnet publish -p:Version=1.0.0.1 -c Release ../IdentityServer/OpenIddict/ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj -o ./publish/ClassifiedAds.IdentityServer
+  dotnet publish -p:Version=1.0.0.1 -c Release ../IdentityServers/OpenIddict/ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj -o ./publish/ClassifiedAds.IdentityServer
   dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.Background/ClassifiedAds.Background.csproj -o ./publish/ClassifiedAds.Background
   dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj -o ./publish/ClassifiedAds.Migrator
   dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.WebAPI/ClassifiedAds.WebAPI.csproj -o ./publish/ClassifiedAds.WebAPI

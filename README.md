@@ -746,7 +746,7 @@
 
   ![alt text](/docs/imgs/chrome_driver_path.png)
 
-- Update [EndToEndTests/appsettings.json](/src/EndToEndTests/Selenium/appsettings.json)
+- Update [EndToEndUiTests/appsettings.json](/src/EndToEndUiTests/Selenium/appsettings.json)
   ```js
   {
     "ChromeDriverPath": "D:\\Downloads\\chromedriver_win32\\72",
@@ -780,7 +780,7 @@ This repository is licensed under the [MIT](/LICENSE) license.
 
 For the production environment, it is necessary to get a specific license, if you would like more information about the licensing of **Duende.IdentityServer** - please check [this link](https://duendesoftware.com/products/identityserver#pricing).
 
-The source code under [/src/IdentityServer/Duende](/src/IdentityServer/Duende) folder uses the source code from https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI which is under the terms of the following
+The source code under [/src/IdentityServers/Duende](/src/IdentityServers/Duende) folder uses the source code from https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI which is under the terms of the following
 [**license**](https://github.com/DuendeSoftware/IdentityServer.Quickstart.UI/blob/main/LICENSE).
 
 ##

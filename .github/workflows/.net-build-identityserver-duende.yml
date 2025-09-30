@@ -3,17 +3,17 @@ name: .Net Build Identity Server - Duende
 on:
   push:
     paths: 
-      - 'src/IdentityServer/Duende/**'
+      - 'src/IdentityServers/Duende/**'
   pull_request:
     paths: 
-      - 'src/IdentityServer/Duende/**'
+      - 'src/IdentityServers/Duende/**'
 
 jobs:
   build:
 
     defaults: 
       run:
-        working-directory: src/IdentityServer/Duende
+        working-directory: src/IdentityServers/Duende
         
     runs-on: ubuntu-latest
 
@@ -37,10 +37,10 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ClassifiedAds.Migrator
-        path: src/IdentityServer/Duende/ClassifiedAds.Migrator/bin/Release/net9.0/publish
+        path: src/IdentityServers/Duende/ClassifiedAds.Migrator/bin/Release/net9.0/publish
 
     - name: Upload ClassifiedAds.IdentityServer
       uses: actions/upload-artifact@v4
       with:
         name: ClassifiedAds.IdentityServer
-        path: src/IdentityServer/Duende/ClassifiedAds.IdentityServer/bin/Release/net9.0/publish
+        path: src/IdentityServers/Duende/ClassifiedAds.IdentityServer/bin/Release/net9.0/publish

@@ -82,7 +82,7 @@ services:
     identity-authserver:
         image: classifiedads.services.identity.authserver
         build:
-          context: ../IdentityServer/OpenIddict
+          context: ../IdentityServers/OpenIddict
           dockerfile: ./ClassifiedAds.IdentityServer/Dockerfile
         ports:
           - "9000:80"

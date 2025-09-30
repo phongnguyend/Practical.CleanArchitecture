@@ -53,7 +53,7 @@ services:
     identityserver:
         image: classifiedads.identityserver
         build:
-          context: ../IdentityServer/OpenIddict
+          context: ../IdentityServers/OpenIddict
           dockerfile: ./ClassifiedAds.IdentityServer/Dockerfile
         ports:
             - "9000:80"

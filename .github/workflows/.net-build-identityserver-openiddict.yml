@@ -3,17 +3,17 @@ name: .Net Build Identity Server - OpenIddict
 on:
   push:
     paths: 
-      - 'src/IdentityServer/OpenIddict/**'
+      - 'src/IdentityServers/OpenIddict/**'
   pull_request:
     paths: 
-      - 'src/IdentityServer/OpenIddict/**'
+      - 'src/IdentityServers/OpenIddict/**'
 
 jobs:
   build:
 
     defaults: 
       run:
-        working-directory: src/IdentityServer/OpenIddict
+        working-directory: src/IdentityServers/OpenIddict
         
     runs-on: ubuntu-latest
 
@@ -37,10 +37,10 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ClassifiedAds.Migrator
-        path: src/IdentityServer/OpenIddict/ClassifiedAds.Migrator/bin/Release/net9.0/publish
+        path: src/IdentityServers/OpenIddict/ClassifiedAds.Migrator/bin/Release/net9.0/publish
 
     - name: Upload ClassifiedAds.IdentityServer
       uses: actions/upload-artifact@v4
       with:
         name: ClassifiedAds.IdentityServer
-        path: src/IdentityServer/OpenIddict/ClassifiedAds.IdentityServer/bin/Release/net9.0/publish
+        path: src/IdentityServers/OpenIddict/ClassifiedAds.IdentityServer/bin/Release/net9.0/publish
