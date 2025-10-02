@@ -1,7 +1,9 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -79,10 +81,15 @@ public class MessageBus : IMessageBus
     public async Task ReceiveAsync<TConsumer, T>(CancellationToken cancellationToken = default)
         where T : IMessageBusMessage
     {
+        var logger = _serviceProvider.GetRequiredService<ILogger<IMessageReceiver<TConsumer, T>>>();
+
         await _serviceProvider.GetRequiredService<IMessageReceiver<TConsumer, T>>().ReceiveAsync(async (data, metaData, cancellationToken) =>
         {
             using var activity = ActivityExtensions.StartNew("HandleAsync", metaData?.ActivityId);
             using var scope = _serviceProvider.CreateScope();
+
+            var startingTimestamp = Stopwatch.GetTimestamp();
+
             foreach (Type handlerType in _consumers)
             {
                 bool canHandleEvent = handlerType.GetInterfaces()
@@ -96,6 +103,11 @@ public class MessageBus : IMessageBus
                     await handler.HandleAsync((dynamic)data, metaData, cancellationToken);
                 }
             }
+
+            var stop = Stopwatch.GetElapsedTime(startingTimestamp);
+
+            logger.LogInformation("{ConsumerType} handled {MessageType} in {ElapsedMilliseconds} ms.", typeof(TConsumer).Name, typeof(T).Name, stop.TotalMilliseconds);
+
         }, cancellationToken);
     }
 
