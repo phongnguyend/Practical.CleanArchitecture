@@ -1,6 +1,5 @@
 ﻿using ClassifiedAds.Domain.Infrastructure.Messaging;
 using ClassifiedAds.Infrastructure.Messaging;
-using ClassifiedAds.Infrastructure.Messaging.AzureQueue;
 using ClassifiedAds.Infrastructure.Messaging.AzureServiceBus;
 using ClassifiedAds.Infrastructure.Messaging.Fake;
 using ClassifiedAds.Infrastructure.Messaging.Kafka;
@@ -12,22 +11,6 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class MessagingCollectionExtensions
 {
-    public static IServiceCollection AddAzureQueueSender<T>(this IServiceCollection services, AzureQueueOptions options)
-    {
-        services.AddSingleton<IMessageSender<T>>(new AzureQueueSender<T>(
-                            options.ConnectionString,
-                            options.QueueNames[typeof(T).Name]));
-        return services;
-    }
-
-    public static IServiceCollection AddAzureQueueReceiver<TConsumer, T>(this IServiceCollection services, AzureQueueOptions options)
-    {
-        services.AddTransient<IMessageReceiver<TConsumer, T>>(x => new AzureQueueReceiver<TConsumer, T>(
-                            options.ConnectionString,
-                            options.QueueNames[typeof(T).Name]));
-        return services;
-    }
-
     public static IServiceCollection AddAzureServiceBusSender<T>(this IServiceCollection services, AzureServiceBusOptions options)
     {
         services.AddSingleton<IMessageSender<T>>(new AzureServiceBusSender<T>(
@@ -114,10 +97,6 @@ public static class MessagingCollectionExtensions
         {
             services.AddKafkaSender<T>(options.Kafka);
         }
-        else if (options.UsedAzureQueue())
-        {
-            services.AddAzureQueueSender<T>(options.AzureQueue);
-        }
         else if (options.UsedAzureServiceBus())
         {
             services.AddAzureServiceBusSender<T>(options.AzureServiceBus);
@@ -139,10 +118,6 @@ public static class MessagingCollectionExtensions
         else if (options.UsedKafka())
         {
             services.AddKafkaReceiver<TConsumer, T>(options.Kafka);
-        }
-        else if (options.UsedAzureQueue())
-        {
-            services.AddAzureQueueReceiver<TConsumer, T>(options.AzureQueue);
         }
         else if (options.UsedAzureServiceBus())
         {
@@ -179,16 +154,6 @@ public static class MessagingCollectionExtensions
                 topic: "healthcheck",
                 name: name,
                 failureStatus: HealthStatus.Degraded);
-        }
-        else if (options.UsedAzureQueue())
-        {
-            foreach (var queueName in options.AzureQueue.QueueNames)
-            {
-                healthChecksBuilder.AddAzureQueueStorage(connectionString: options.AzureQueue.ConnectionString,
-                    queueName: queueName.Value,
-                    name: $"Message Broker (Azure Queue) {queueName.Key}",
-                    failureStatus: HealthStatus.Degraded);
-            }
         }
         else if (options.UsedAzureServiceBus())
         {

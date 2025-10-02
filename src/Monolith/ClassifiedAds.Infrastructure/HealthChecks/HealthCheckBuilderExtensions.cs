@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.Infrastructure.HealthChecks;
-using ClassifiedAds.Infrastructure.Messaging.AzureQueue;
 using ClassifiedAds.Infrastructure.Messaging.AzureServiceBus;
 using ClassifiedAds.Infrastructure.Messaging.Kafka;
 using ClassifiedAds.Infrastructure.Messaging.RabbitMQ;
@@ -74,25 +73,6 @@ public static class HealthCheckBuilderExtensions
         return builder.Add(new HealthCheckRegistration(
             name,
             new AzureBlobStorageHealthCheck(azureBlobOptions),
-            failureStatus,
-            tags,
-            timeout));
-    }
-
-    public static IHealthChecksBuilder AddAzureQueueStorage(
-        this IHealthChecksBuilder builder,
-        string connectionString,
-        string queueName,
-        string name = default,
-        HealthStatus? failureStatus = default,
-        IEnumerable<string> tags = default,
-        TimeSpan? timeout = default)
-    {
-        return builder.Add(new HealthCheckRegistration(
-            name,
-            new AzureQueueStorageHealthCheck(
-                connectionString: connectionString,
-                queueName: queueName),
             failureStatus,
             tags,
             timeout));

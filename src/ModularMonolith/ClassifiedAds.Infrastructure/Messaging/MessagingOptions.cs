@@ -1,5 +1,4 @@
-﻿using ClassifiedAds.Infrastructure.Messaging.AzureQueue;
-using ClassifiedAds.Infrastructure.Messaging.AzureServiceBus;
+﻿using ClassifiedAds.Infrastructure.Messaging.AzureServiceBus;
 using ClassifiedAds.Infrastructure.Messaging.Kafka;
 using ClassifiedAds.Infrastructure.Messaging.RabbitMQ;
 
@@ -13,8 +12,6 @@ public class MessagingOptions
 
     public KafkaOptions Kafka { get; set; }
 
-    public AzureQueueOptions AzureQueue { get; set; }
-
     public AzureServiceBusOptions AzureServiceBus { get; set; }
 
     public bool UsedRabbitMQ()
@@ -25,11 +22,6 @@ public class MessagingOptions
     public bool UsedKafka()
     {
         return Provider == "Kafka";
-    }
-
-    public bool UsedAzureQueue()
-    {
-        return Provider == "AzureQueue";
     }
 
     public bool UsedAzureServiceBus()
