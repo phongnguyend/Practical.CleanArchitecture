@@ -6,8 +6,10 @@ COPY ./Common/ClassifiedAds.Application/*.csproj ./Common/ClassifiedAds.Applicat
 COPY ./Common/ClassifiedAds.CrossCuttingConcerns/*.csproj ./Common/ClassifiedAds.CrossCuttingConcerns/
 COPY ./Common/ClassifiedAds.Domain/*.csproj ./Common/ClassifiedAds.Domain/
 COPY ./Common/ClassifiedAds.Infrastructure/*.csproj ./Common/ClassifiedAds.Infrastructure/
+COPY ./Common/ClassifiedAds.Persistence.SqlServer/*.csproj ./Common/ClassifiedAds.Persistence.SqlServer/
 RUN dotnet restore ./Common/ClassifiedAds.Application/ClassifiedAds.Application.csproj
 RUN dotnet restore ./Common/ClassifiedAds.Infrastructure/ClassifiedAds.Infrastructure.csproj
+RUN dotnet restore ./Common/ClassifiedAds.Persistence.SqlServer/ClassifiedAds.Persistence.SqlServer.csproj
 
 COPY ./Services.Storage/ClassifiedAds.Services.Storage.Api/*.csproj ./Services.Storage/ClassifiedAds.Services.Storage.Api/
 RUN dotnet restore ./Services.Storage/ClassifiedAds.Services.Storage.Api/ClassifiedAds.Services.Storage.Api.csproj

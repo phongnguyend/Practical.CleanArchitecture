@@ -6,6 +6,7 @@
     <Project Path="Common/ClassifiedAds.Infrastructure/ClassifiedAds.Infrastructure.csproj" />
     <Project Path="Common/ClassifiedAds.Persistence.MySQL/ClassifiedAds.Persistence.MySQL.csproj" />
     <Project Path="Common/ClassifiedAds.Persistence.PostgreSQL/ClassifiedAds.Persistence.PostgreSQL.csproj" />
+    <Project Path="Common/ClassifiedAds.Persistence.SqlServer/ClassifiedAds.Persistence.SqlServer.csproj" />
   </Folder>
   <Folder Name="/Gateways/">
     <Project Path="Gateways.GraphQL/ClassifiedAds.Gateways.GraphQL/ClassifiedAds.Gateways.GraphQL.csproj" />

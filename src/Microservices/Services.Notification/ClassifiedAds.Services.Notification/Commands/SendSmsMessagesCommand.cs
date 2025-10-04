@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using ClassifiedAds.Infrastructure.Notification.Sms;
-using ClassifiedAds.Services.Notification.Repositories;
+using ClassifiedAds.Services.Notification.Persistence;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
 

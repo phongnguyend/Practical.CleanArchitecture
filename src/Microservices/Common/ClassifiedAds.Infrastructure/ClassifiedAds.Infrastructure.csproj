@@ -22,7 +22,6 @@
     <PackageReference Include="CsvHelper" Version="33.0.1" />
     <PackageReference Include="Dapper.StrongName" Version="2.1.35" />
     <PackageReference Include="DinkToPdf" Version="1.0.8" />
-    <PackageReference Include="EntityFrameworkCore.SqlServer.SimpleBulks" Version="8.2.0" />
     <PackageReference Include="Google.Protobuf" Version="3.29.3" />
     <PackageReference Include="Grpc.Net.Client" Version="2.67.0" />
     <PackageReference Include="IdentityModel" Version="7.0.0" />

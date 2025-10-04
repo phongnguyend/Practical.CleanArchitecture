@@ -5,14 +5,14 @@ using EntityFrameworkCore.SqlServer.SimpleBulks.BulkInsert;
 using MapItEasy;
 using System.Data;
 
-namespace ClassifiedAds.Services.Notification.Repositories;
+namespace ClassifiedAds.Services.Notification.Persistence;
 
-public class EmailMessageRepository : Repository<EmailMessage, Guid>, IEmailMessageRepository
+public class SmsMessageRepository : Repository<SmsMessage, Guid>, ISmsMessageRepository
 {
     private static readonly IMapper _mapper = new ExpressionMapper();
     private readonly NotificationDbContext _dbContext;
 
-    public EmailMessageRepository(NotificationDbContext dbContext,
+    public SmsMessageRepository(NotificationDbContext dbContext,
         IDateTimeProvider dateTimeProvider)
         : base(dbContext, dateTimeProvider)
     {
@@ -23,7 +23,7 @@ public class EmailMessageRepository : Repository<EmailMessage, Guid>, IEmailMess
     {
         var archivedDate = DateTime.Now.AddDays(-30);
 
-        var messagesToArchive = _dbContext.Set<EmailMessage>()
+        var messagesToArchive = _dbContext.Set<SmsMessage>()
         .Where(x => x.CreatedDateTime < archivedDate)
         .ToList();
 
@@ -32,7 +32,7 @@ public class EmailMessageRepository : Repository<EmailMessage, Guid>, IEmailMess
             return 0;
         }
 
-        var archivedMessages = messagesToArchive.Select(x => _mapper.Map<EmailMessage, ArchivedEmailMessage>(x)).ToList();
+        var archivedMessages = messagesToArchive.Select(x => _mapper.Map<SmsMessage, ArchivedSmsMessage>(x)).ToList();
 
         using (await UnitOfWork.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken))
         {

@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Services.Product.DTOs;
 using ClassifiedAds.Services.Product.Entities;
-using ClassifiedAds.Services.Product.Repositories;
+using ClassifiedAds.Services.Product.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

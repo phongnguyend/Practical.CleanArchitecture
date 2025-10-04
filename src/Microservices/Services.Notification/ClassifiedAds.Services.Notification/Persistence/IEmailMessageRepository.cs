@@ -1,9 +1,9 @@
 ﻿using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Services.Notification.Entities;
 
-namespace ClassifiedAds.Services.Notification.Repositories;
+namespace ClassifiedAds.Services.Notification.Persistence;
 
-public interface ISmsMessageRepository : IRepository<SmsMessage, Guid>
+public interface IEmailMessageRepository : IRepository<EmailMessage, Guid>
 {
     Task<int> ArchiveMessagesAsync(CancellationToken cancellationToken = default);
 }

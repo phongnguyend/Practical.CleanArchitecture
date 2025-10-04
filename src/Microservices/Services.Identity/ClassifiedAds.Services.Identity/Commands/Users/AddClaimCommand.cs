@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Services.Identity.Entities;
-using ClassifiedAds.Services.Identity.Repositories;
+using ClassifiedAds.Services.Identity.Persistence;
 using System.Threading;
 using System.Threading.Tasks;
 

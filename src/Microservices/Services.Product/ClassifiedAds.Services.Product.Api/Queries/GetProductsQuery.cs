@@ -1,5 +1,5 @@
 ﻿using ClassifiedAds.Application;
-using ClassifiedAds.Services.Product.Repositories;
+using ClassifiedAds.Services.Product.Persistence;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

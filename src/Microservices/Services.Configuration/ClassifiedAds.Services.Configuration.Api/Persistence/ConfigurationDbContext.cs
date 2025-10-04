@@ -1,8 +1,8 @@
-﻿using ClassifiedAds.Infrastructure.Persistence;
+﻿using ClassifiedAds.Persistence.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace ClassifiedAds.Services.Configuration.Repositories;
+namespace ClassifiedAds.Services.Configuration.Persistence;
 
 public class ConfigurationDbContext : DbContextUnitOfWork<ConfigurationDbContext>
 {

@@ -1,8 +1,8 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Infrastructure.Persistence;
+using ClassifiedAds.Persistence.SqlServer;
 
-namespace ClassifiedAds.Services.Storage.Repositories;
+namespace ClassifiedAds.Services.Storage.Persistence;
 
 public class Repository<T, TKey> : DbContextRepository<StorageDbContext, T, TKey>
     where T : Entity<TKey>, IAggregateRoot

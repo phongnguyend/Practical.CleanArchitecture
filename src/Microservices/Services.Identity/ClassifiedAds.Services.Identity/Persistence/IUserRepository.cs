@@ -3,7 +3,7 @@ using ClassifiedAds.Services.Identity.Entities;
 using System;
 using System.Linq;
 
-namespace ClassifiedAds.Services.Identity.Repositories;
+namespace ClassifiedAds.Services.Identity.Persistence;
 
 public class UserQueryOptions
 {

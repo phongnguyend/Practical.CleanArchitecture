@@ -1,12 +1,12 @@
-﻿using ClassifiedAds.Infrastructure.Persistence;
+﻿using ClassifiedAds.Persistence.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace ClassifiedAds.Services.AuditLog.Repositories;
+namespace ClassifiedAds.Services.Product.Persistence;
 
-public class AuditLogDbContext : DbContextUnitOfWork<AuditLogDbContext>
+public class ProductDbContext : DbContextUnitOfWork<ProductDbContext>
 {
-    public AuditLogDbContext(DbContextOptions<AuditLogDbContext> options)
+    public ProductDbContext(DbContextOptions<ProductDbContext> options)
         : base(options)
     {
     }

@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.CrossCuttingConcerns.Exceptions;
-using ClassifiedAds.Services.Product.Repositories;
+using ClassifiedAds.Services.Product.Persistence;
 using System;
 using System.Linq;
 using System.Threading;

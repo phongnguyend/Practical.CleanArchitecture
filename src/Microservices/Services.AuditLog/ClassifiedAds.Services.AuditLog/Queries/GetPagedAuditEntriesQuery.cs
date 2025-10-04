@@ -3,7 +3,7 @@ using ClassifiedAds.Application.Common.DTOs;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Services.AuditLog.DTOs;
 using ClassifiedAds.Services.AuditLog.Entities;
-using ClassifiedAds.Services.AuditLog.Repositories;
+using ClassifiedAds.Services.AuditLog.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassifiedAds.Services.AuditLog.Queries;

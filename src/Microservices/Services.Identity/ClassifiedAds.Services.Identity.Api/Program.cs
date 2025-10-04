@@ -2,7 +2,7 @@
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Web.ExceptionHandlers;
 using ClassifiedAds.Services.Identity.ConfigurationOptions;
-using ClassifiedAds.Services.Identity.Repositories;
+using ClassifiedAds.Services.Identity.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
