@@ -44,7 +44,7 @@ public static class ServiceCollectionExtensions
             .AddScoped<IRepository<Product, Guid>, Repository<Product, Guid>>()
             .AddScoped(typeof(IProductRepository), typeof(ProductRepository))
             .AddScoped<IRepository<AuditLogEntry, Guid>, Repository<AuditLogEntry, Guid>>()
-            .AddScoped<IRepository<OutboxEvent, Guid>, Repository<OutboxEvent, Guid>>();
+            .AddScoped<IRepository<OutboxMessage, Guid>, Repository<OutboxMessage, Guid>>();
 
         services.AddMessageHandlers(Assembly.GetExecutingAssembly());
 
@@ -77,7 +77,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddHostedServicesProductModule(this IServiceCollection services)
     {
         services.AddMessageBusConsumers(Assembly.GetExecutingAssembly());
-        services.AddOutboxEventPublishers(Assembly.GetExecutingAssembly());
+        services.AddOutboxMessagePublishers(Assembly.GetExecutingAssembly());
 
         services.AddHostedService<PublishEventWorker>();
 

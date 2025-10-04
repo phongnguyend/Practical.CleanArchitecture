@@ -9,9 +9,9 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Modules.Product.OutBoxEventPublishers;
+namespace ClassifiedAds.Modules.Product.OutboxMessagePublishers;
 
-public class AuditLogEntryOutBoxEventPublisher : IOutBoxEventPublisher
+public class AuditLogEntryOutboxMessagePublisher : IOutboxMessagePublisher
 {
     private readonly IMessageBus _messageBus;
     private readonly DaprClient _daprClient;
@@ -26,14 +26,14 @@ public class AuditLogEntryOutBoxEventPublisher : IOutBoxEventPublisher
         return typeof(PublishEventsCommand).Assembly.GetName().Name;
     }
 
-    public AuditLogEntryOutBoxEventPublisher(IMessageBus messageBus,
+    public AuditLogEntryOutboxMessagePublisher(IMessageBus messageBus,
         DaprClient daprClient)
     {
         _messageBus = messageBus;
         _daprClient = daprClient;
     }
 
-    public async Task HandleAsync(PublishingOutBoxEvent outbox, CancellationToken cancellationToken = default)
+    public async Task HandleAsync(PublishingOutboxMessage outbox, CancellationToken cancellationToken = default)
     {
         if (outbox.EventType == EventTypeConstants.AuditLogEntryCreated)
         {

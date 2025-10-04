@@ -5,7 +5,6 @@ using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Services.Storage.Constants;
 using ClassifiedAds.Services.Storage.Entities;
 using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,15 +19,15 @@ public class AddAuditLogEntryCommandHandler : ICommandHandler<AddAuditLogEntryCo
 {
     private readonly ICurrentUser _currentUser;
     private readonly IRepository<AuditLogEntry, Guid> _auditLogRepository;
-    private readonly IRepository<OutboxEvent, Guid> _outboxEventRepository;
+    private readonly IRepository<OutboxMessage, Guid> _outboxMessageRepository;
 
     public AddAuditLogEntryCommandHandler(ICurrentUser currentUser,
         IRepository<AuditLogEntry, Guid> auditLogRepository,
-        IRepository<OutboxEvent, Guid> outboxEventRepository)
+        IRepository<OutboxMessage, Guid> outboxMessageRepository)
     {
         _currentUser = currentUser;
         _auditLogRepository = auditLogRepository;
-        _outboxEventRepository = outboxEventRepository;
+        _outboxMessageRepository = outboxMessageRepository;
     }
 
     public async Task HandleAsync(AddAuditLogEntryCommand command, CancellationToken cancellationToken = default)
@@ -45,16 +44,15 @@ public class AddAuditLogEntryCommandHandler : ICommandHandler<AddAuditLogEntryCo
         await _auditLogRepository.AddOrUpdateAsync(auditLog);
         await _auditLogRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
+        await _outboxMessageRepository.AddOrUpdateAsync(new OutboxMessage
         {
             EventType = EventTypeConstants.AuditLogEntryCreated,
             TriggeredById = _currentUser.UserId,
             CreatedDateTime = auditLog.CreatedDateTime,
             ObjectId = auditLog.Id.ToString(),
             Payload = auditLog.AsJsonString(),
-            ActivityId = Activity.Current.Id,
         }, cancellationToken);
 
-        await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await _outboxMessageRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

@@ -7,7 +7,6 @@ using ClassifiedAds.Services.Storage.Commands;
 using ClassifiedAds.Services.Storage.Constants;
 using ClassifiedAds.Services.Storage.Entities;
 using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,15 +16,15 @@ public class FileEntryCreatedEventHandler : IDomainEventHandler<EntityCreatedEve
 {
     private readonly Dispatcher _dispatcher;
     private readonly ICurrentUser _currentUser;
-    private readonly IRepository<OutboxEvent, Guid> _outboxEventRepository;
+    private readonly IRepository<OutboxMessage, Guid> _outboxMessageRepository;
 
     public FileEntryCreatedEventHandler(Dispatcher dispatcher,
         ICurrentUser currentUser,
-        IRepository<OutboxEvent, Guid> outboxEventRepository)
+        IRepository<OutboxMessage, Guid> outboxMessageRepository)
     {
         _dispatcher = dispatcher;
         _currentUser = currentUser;
-        _outboxEventRepository = outboxEventRepository;
+        _outboxMessageRepository = outboxMessageRepository;
     }
 
     public async Task HandleAsync(EntityCreatedEvent<FileEntry> domainEvent, CancellationToken cancellationToken = default)
@@ -42,16 +41,15 @@ public class FileEntryCreatedEventHandler : IDomainEventHandler<EntityCreatedEve
             },
         });
 
-        await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
+        await _outboxMessageRepository.AddOrUpdateAsync(new OutboxMessage
         {
             EventType = EventTypeConstants.FileEntryCreated,
             TriggeredById = _currentUser.UserId,
             CreatedDateTime = domainEvent.EventDateTime,
             ObjectId = domainEvent.Entity.Id.ToString(),
             Payload = domainEvent.Entity.AsJsonString(),
-            ActivityId = Activity.Current.Id,
         }, cancellationToken);
 
-        await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await _outboxMessageRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

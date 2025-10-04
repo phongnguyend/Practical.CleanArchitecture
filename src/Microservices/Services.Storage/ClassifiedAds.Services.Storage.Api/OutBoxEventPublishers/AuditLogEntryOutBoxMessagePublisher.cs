@@ -7,9 +7,9 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Services.Storage.OutBoxEventPublishers;
+namespace ClassifiedAds.Services.Storage.OutboxMessagePublishers;
 
-public class AuditLogEntryOutBoxEventPublisher : IOutBoxEventPublisher
+public class AuditLogEntryOutboxMessagePublisher : IOutboxMessagePublisher
 {
     private readonly IMessageBus _messageBus;
 
@@ -23,12 +23,12 @@ public class AuditLogEntryOutBoxEventPublisher : IOutBoxEventPublisher
         return typeof(PublishEventsCommand).Assembly.GetName().Name;
     }
 
-    public AuditLogEntryOutBoxEventPublisher(IMessageBus messageBus)
+    public AuditLogEntryOutboxMessagePublisher(IMessageBus messageBus)
     {
         _messageBus = messageBus;
     }
 
-    public async Task HandleAsync(PublishingOutBoxEvent outbox, CancellationToken cancellationToken = default)
+    public async Task HandleAsync(PublishingOutboxMessage outbox, CancellationToken cancellationToken = default)
     {
         if (outbox.EventType == EventTypeConstants.AuditLogEntryCreated)
         {

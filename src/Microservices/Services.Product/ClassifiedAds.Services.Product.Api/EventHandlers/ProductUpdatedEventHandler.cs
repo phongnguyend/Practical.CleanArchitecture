@@ -7,7 +7,6 @@ using ClassifiedAds.Services.Product.Commands;
 using ClassifiedAds.Services.Product.Constants;
 using ClassifiedAds.Services.Product.Entities;
 using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,15 +16,15 @@ public class ProductUpdatedEventHandler : IDomainEventHandler<EntityUpdatedEvent
 {
     private readonly Dispatcher _dispatcher;
     private readonly ICurrentUser _currentUser;
-    private readonly IRepository<OutboxEvent, Guid> _outboxEventRepository;
+    private readonly IRepository<OutboxMessage, Guid> _outboxMessageRepository;
 
     public ProductUpdatedEventHandler(Dispatcher dispatcher,
         ICurrentUser currentUser,
-        IRepository<OutboxEvent, Guid> outboxEventRepository)
+        IRepository<OutboxMessage, Guid> outboxMessageRepository)
     {
         _dispatcher = dispatcher;
         _currentUser = currentUser;
-        _outboxEventRepository = outboxEventRepository;
+        _outboxMessageRepository = outboxMessageRepository;
     }
 
     public async Task HandleAsync(EntityUpdatedEvent<Entities.Product> domainEvent, CancellationToken cancellationToken = default)
@@ -42,16 +41,15 @@ public class ProductUpdatedEventHandler : IDomainEventHandler<EntityUpdatedEvent
             },
         });
 
-        await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
+        await _outboxMessageRepository.AddOrUpdateAsync(new OutboxMessage
         {
             EventType = EventTypeConstants.ProductUpdated,
             TriggeredById = _currentUser.UserId,
             CreatedDateTime = domainEvent.EventDateTime,
             ObjectId = domainEvent.Entity.Id.ToString(),
             Payload = domainEvent.Entity.AsJsonString(),
-            ActivityId = Activity.Current.Id,
         }, cancellationToken);
 
-        await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await _outboxMessageRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

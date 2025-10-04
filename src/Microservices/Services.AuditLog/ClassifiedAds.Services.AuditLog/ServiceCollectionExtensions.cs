@@ -54,7 +54,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddHostedServicesAuditLogModule(this IServiceCollection services)
     {
         services.AddMessageBusConsumers(Assembly.GetExecutingAssembly());
-        services.AddOutboxEventPublishers(Assembly.GetExecutingAssembly());
+        services.AddOutboxMessagePublishers(Assembly.GetExecutingAssembly());
 
         services.AddHostedService<MessageBusConsumerBackgroundService<AuditLogAggregationConsumer, AuditLogCreatedEvent>>();
 
