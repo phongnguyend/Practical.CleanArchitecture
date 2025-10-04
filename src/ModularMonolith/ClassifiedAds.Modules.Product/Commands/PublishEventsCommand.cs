@@ -20,23 +20,23 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
 {
     private readonly ILogger<PublishEventsCommandHandler> _logger;
     private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly IRepository<OutboxEvent, Guid> _outboxEventRepository;
+    private readonly IRepository<OutboxMessage, Guid> _outboxMessageRepository;
     private readonly IMessageBus _messageBus;
 
     public PublishEventsCommandHandler(ILogger<PublishEventsCommandHandler> logger,
         IDateTimeProvider dateTimeProvider,
-        IRepository<OutboxEvent, Guid> outboxEventRepository,
+        IRepository<OutboxMessage, Guid> outboxMessageRepository,
         IMessageBus messageBus)
     {
         _logger = logger;
         _dateTimeProvider = dateTimeProvider;
-        _outboxEventRepository = outboxEventRepository;
+        _outboxMessageRepository = outboxMessageRepository;
         _messageBus = messageBus;
     }
 
     public async Task HandleAsync(PublishEventsCommand command, CancellationToken cancellationToken = default)
     {
-        var events = _outboxEventRepository.GetQueryableSet()
+        var events = _outboxMessageRepository.GetQueryableSet()
             .Where(x => !x.Published)
             .OrderBy(x => x.CreatedDateTime)
             .Take(50)
@@ -44,7 +44,7 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
 
         foreach (var eventLog in events)
         {
-            var outbox = new PublishingOutBoxEvent
+            var outbox = new PublishingOutboxMessage
             {
                 Id = eventLog.Id.ToString(),
                 EventType = eventLog.EventType,
@@ -57,7 +57,7 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
 
             eventLog.Published = true;
             eventLog.UpdatedDateTime = _dateTimeProvider.OffsetNow;
-            await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await _outboxMessageRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         command.SentEventsCount = events.Count;

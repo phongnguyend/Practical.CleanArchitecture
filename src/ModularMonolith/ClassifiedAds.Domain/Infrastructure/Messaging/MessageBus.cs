@@ -16,7 +16,7 @@ public class MessageBus : IMessageBus
 {
     private readonly IServiceProvider _serviceProvider;
     private static List<Type> _consumers = new List<Type>();
-    private static Dictionary<string, List<Type>> _outboxEventHandlers = new();
+    private static Dictionary<string, List<Type>> _outboxMessageHandlers = new();
 
     internal static void AddConsumers(Assembly assembly, IServiceCollection services)
     {
@@ -32,10 +32,10 @@ public class MessageBus : IMessageBus
         _consumers.AddRange(types);
     }
 
-    internal static void AddOutboxEventPublishers(Assembly assembly, IServiceCollection services)
+    internal static void AddOutboxMessagePublishers(Assembly assembly, IServiceCollection services)
     {
         var types = assembly.GetTypes()
-                            .Where(x => x.GetInterfaces().Any(y => y == typeof(IOutBoxEventPublisher)))
+                            .Where(x => x.GetInterfaces().Any(y => y == typeof(IOutboxMessagePublisher)))
                             .ToList();
 
         foreach (var type in types)
@@ -45,18 +45,18 @@ public class MessageBus : IMessageBus
 
         foreach (var item in types)
         {
-            var canHandlerEventTypes = (string[])item.InvokeMember(nameof(IOutBoxEventPublisher.CanHandleEventTypes), BindingFlags.InvokeMethod, null, null, null, CultureInfo.CurrentCulture);
-            var eventSource = (string)item.InvokeMember(nameof(IOutBoxEventPublisher.CanHandleEventSource), BindingFlags.InvokeMethod, null, null, null, CultureInfo.CurrentCulture);
+            var canHandlerEventTypes = (string[])item.InvokeMember(nameof(IOutboxMessagePublisher.CanHandleEventTypes), BindingFlags.InvokeMethod, null, null, null, CultureInfo.CurrentCulture);
+            var eventSource = (string)item.InvokeMember(nameof(IOutboxMessagePublisher.CanHandleEventSource), BindingFlags.InvokeMethod, null, null, null, CultureInfo.CurrentCulture);
 
             foreach (var eventType in canHandlerEventTypes)
             {
                 var key = eventSource + ":" + eventType;
-                if (!_outboxEventHandlers.ContainsKey(key))
+                if (!_outboxMessageHandlers.ContainsKey(key))
                 {
-                    _outboxEventHandlers[key] = new List<Type>();
+                    _outboxMessageHandlers[key] = new List<Type>();
                 }
 
-                _outboxEventHandlers[key].Add(item);
+                _outboxMessageHandlers[key].Add(item);
             }
         }
     }
@@ -111,10 +111,10 @@ public class MessageBus : IMessageBus
         }, cancellationToken);
     }
 
-    public async Task SendAsync(PublishingOutBoxEvent outbox, CancellationToken cancellationToken = default)
+    public async Task SendAsync(PublishingOutboxMessage outbox, CancellationToken cancellationToken = default)
     {
         var key = outbox.EventSource + ":" + outbox.EventType;
-        var handlerTypes = _outboxEventHandlers.TryGetValue(key, out var value) ? value : null;
+        var handlerTypes = _outboxMessageHandlers.TryGetValue(key, out var value) ? value : null;
 
         if (handlerTypes == null)
         {
@@ -137,15 +137,15 @@ public static class MessageBusExtentions
         MessageBus.AddConsumers(assembly, services);
     }
 
-    public static void AddOutboxEventPublishers(this IServiceCollection services, Assembly assembly)
+    public static void AddOutboxMessagePublishers(this IServiceCollection services, Assembly assembly)
     {
-        MessageBus.AddOutboxEventPublishers(assembly, services);
+        MessageBus.AddOutboxMessagePublishers(assembly, services);
     }
 
     public static void AddMessageBus(this IServiceCollection services, Assembly assembly)
     {
         services.AddTransient<IMessageBus, MessageBus>();
         services.AddMessageBusConsumers(assembly);
-        services.AddOutboxEventPublishers(assembly);
+        services.AddOutboxMessagePublishers(assembly);
     }
 }
