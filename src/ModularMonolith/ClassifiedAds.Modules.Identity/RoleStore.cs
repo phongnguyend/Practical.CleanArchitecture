@@ -1,5 +1,5 @@
 ﻿using ClassifiedAds.Modules.Identity.Entities;
-using ClassifiedAds.Modules.Identity.Repositories;
+using ClassifiedAds.Modules.Identity.Persistence;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading;

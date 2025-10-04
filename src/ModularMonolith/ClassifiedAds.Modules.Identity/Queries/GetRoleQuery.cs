@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Modules.Identity.Entities;
-using ClassifiedAds.Modules.Identity.Repositories;
+using ClassifiedAds.Modules.Identity.Persistence;
 using System;
 using System.Linq;
 using System.Threading;

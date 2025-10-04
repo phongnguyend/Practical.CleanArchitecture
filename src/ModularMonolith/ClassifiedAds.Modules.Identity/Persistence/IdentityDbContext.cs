@@ -1,9 +1,9 @@
-﻿using ClassifiedAds.Infrastructure.Persistence;
+﻿using ClassifiedAds.Persistence.SqlServer;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace ClassifiedAds.Modules.Identity.Repositories;
+namespace ClassifiedAds.Modules.Identity.Persistence;
 
 public class IdentityDbContext : DbContextUnitOfWork<IdentityDbContext>, IDataProtectionKeyContext
 {

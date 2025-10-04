@@ -6,7 +6,7 @@ using ClassifiedAds.Domain.Infrastructure.Messaging;
 using ClassifiedAds.Infrastructure.FeatureToggles.OutboxPublishingToggle;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.Monitoring;
-using ClassifiedAds.Modules.Identity.Repositories;
+using ClassifiedAds.Modules.Identity.Persistence;
 using ClassifiedAds.Modules.Storage.DTOs;
 using ClassifiedAds.Modules.Storage.MessageBusConsumers;
 using Microsoft.AspNetCore.DataProtection;

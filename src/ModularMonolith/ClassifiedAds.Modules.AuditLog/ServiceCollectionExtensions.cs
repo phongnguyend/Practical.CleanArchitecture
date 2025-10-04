@@ -2,8 +2,8 @@
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Modules.AuditLog.ConfigurationOptions;
 using ClassifiedAds.Modules.AuditLog.Entities;
+using ClassifiedAds.Modules.AuditLog.Persistence;
 using ClassifiedAds.Modules.AuditLog.RateLimiterPolicies;
-using ClassifiedAds.Modules.AuditLog.Repositories;
 using ClassifiedAds.Modules.AuditLog.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;

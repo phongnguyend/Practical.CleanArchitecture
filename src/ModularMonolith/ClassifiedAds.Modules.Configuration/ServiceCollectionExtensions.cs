@@ -4,7 +4,7 @@ using ClassifiedAds.Modules.Configuration.ConfigurationOptions;
 using ClassifiedAds.Modules.Configuration.Entities;
 using ClassifiedAds.Modules.Configuration.Excel;
 using ClassifiedAds.Modules.Configuration.Excel.ClosedXML;
-using ClassifiedAds.Modules.Configuration.Repositories;
+using ClassifiedAds.Modules.Configuration.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;

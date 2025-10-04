@@ -3,7 +3,7 @@ using ClassifiedAds.Application.Decorators.AuditLog;
 using ClassifiedAds.Application.Decorators.DatabaseRetry;
 using ClassifiedAds.Contracts.Identity.DTOs;
 using ClassifiedAds.Modules.Identity.Entities;
-using ClassifiedAds.Modules.Identity.Repositories;
+using ClassifiedAds.Modules.Identity.Persistence;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

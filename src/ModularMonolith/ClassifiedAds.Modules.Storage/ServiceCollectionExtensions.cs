@@ -6,7 +6,7 @@ using ClassifiedAds.Modules.Storage.DTOs;
 using ClassifiedAds.Modules.Storage.Entities;
 using ClassifiedAds.Modules.Storage.HostedServices;
 using ClassifiedAds.Modules.Storage.MessageBusConsumers;
-using ClassifiedAds.Modules.Storage.Repositories;
+using ClassifiedAds.Modules.Storage.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;

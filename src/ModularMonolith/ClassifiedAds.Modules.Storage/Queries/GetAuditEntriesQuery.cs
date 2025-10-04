@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Contracts.AuditLog.DTOs;
 using ClassifiedAds.Modules.Storage.Entities;
-using ClassifiedAds.Modules.Storage.Repositories;
+using ClassifiedAds.Modules.Storage.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

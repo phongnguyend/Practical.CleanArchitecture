@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 
-namespace ClassifiedAds.Modules.Identity.Repositories;
+namespace ClassifiedAds.Modules.Identity.Persistence;
 
 public class UserRepository : Repository<User, Guid>, IUserRepository
 {

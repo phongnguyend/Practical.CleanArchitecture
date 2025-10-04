@@ -6,6 +6,7 @@
     <Project Path="ClassifiedAds.Infrastructure/ClassifiedAds.Infrastructure.csproj" />
     <Project Path="ClassifiedAds.Persistence.MySQL/ClassifiedAds.Persistence.MySQL.csproj" />
     <Project Path="ClassifiedAds.Persistence.PostgreSQL/ClassifiedAds.Persistence.PostgreSQL.csproj" />
+    <Project Path="ClassifiedAds.Persistence.SqlServer/ClassifiedAds.Persistence.SqlServer.csproj" Id="5046664a-23dc-4b14-88b9-064d808ff78e" />
   </Folder>
   <Folder Name="/Contracts/">
     <Project Path="ClassifiedAds.Contracts/ClassifiedAds.Contracts.csproj" />

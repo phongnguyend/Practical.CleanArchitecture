@@ -6,7 +6,7 @@ using ClassifiedAds.Modules.Identity.HostedServices;
 using ClassifiedAds.Modules.Identity.IdentityProviders.Auth0;
 using ClassifiedAds.Modules.Identity.IdentityProviders.Azure;
 using ClassifiedAds.Modules.Identity.PasswordValidators;
-using ClassifiedAds.Modules.Identity.Repositories;
+using ClassifiedAds.Modules.Identity.Persistence;
 using ClassifiedAds.Modules.Identity.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;

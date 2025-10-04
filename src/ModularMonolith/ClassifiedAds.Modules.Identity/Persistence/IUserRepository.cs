@@ -4,7 +4,7 @@ using ClassifiedAds.Modules.Identity.Entities;
 using System;
 using System.Linq;
 
-namespace ClassifiedAds.Modules.Identity.Repositories;
+namespace ClassifiedAds.Modules.Identity.Persistence;
 
 public interface IUserRepository : IRepository<User, Guid>
 {

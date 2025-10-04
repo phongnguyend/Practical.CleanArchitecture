@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using System;
 
-namespace ClassifiedAds.Modules.Product.Repositories;
+namespace ClassifiedAds.Modules.Product.Persistence;
 
 public class ProductRepository : Repository<Entities.Product, Guid>, IProductRepository
 {

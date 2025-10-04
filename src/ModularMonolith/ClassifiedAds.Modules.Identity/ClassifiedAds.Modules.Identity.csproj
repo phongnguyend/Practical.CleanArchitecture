@@ -20,6 +20,7 @@
 		<ProjectReference Include="..\ClassifiedAds.CrossCuttingConcerns\ClassifiedAds.CrossCuttingConcerns.csproj" />
 		<ProjectReference Include="..\ClassifiedAds.Domain\ClassifiedAds.Domain.csproj" />
 		<ProjectReference Include="..\ClassifiedAds.Infrastructure\ClassifiedAds.Infrastructure.csproj" />
+		<ProjectReference Include="..\ClassifiedAds.Persistence.SqlServer\ClassifiedAds.Persistence.SqlServer.csproj" />
 	</ItemGroup>
 
 </Project>

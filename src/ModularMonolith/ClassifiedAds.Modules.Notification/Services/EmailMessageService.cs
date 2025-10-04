@@ -2,7 +2,7 @@
 using ClassifiedAds.Contracts.Notification.DTOs;
 using ClassifiedAds.Contracts.Notification.Services;
 using ClassifiedAds.Modules.Notification.Entities;
-using ClassifiedAds.Modules.Notification.Repositories;
+using ClassifiedAds.Modules.Notification.Persistence;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Notification.Services;

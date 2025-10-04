@@ -1,13 +1,10 @@
 ﻿using ClassifiedAds.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using System;
 using System.Data;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace ClassifiedAds.Infrastructure.Persistence;
+namespace ClassifiedAds.Persistence.SqlServer;
 
 public class DbContextUnitOfWork<TDbContext> : DbContext, IUnitOfWork
     where TDbContext : DbContext

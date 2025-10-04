@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Application.Decorators.DatabaseRetry;
 using ClassifiedAds.Modules.Identity.Entities;
-using ClassifiedAds.Modules.Identity.Repositories;
+using ClassifiedAds.Modules.Identity.Persistence;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

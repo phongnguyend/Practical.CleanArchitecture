@@ -6,14 +6,9 @@ using EntityFrameworkCore.SqlServer.SimpleBulks.BulkInsert;
 using EntityFrameworkCore.SqlServer.SimpleBulks.BulkMerge;
 using EntityFrameworkCore.SqlServer.SimpleBulks.BulkUpdate;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace ClassifiedAds.Infrastructure.Persistence;
+namespace ClassifiedAds.Persistence.SqlServer;
 
 public class DbContextRepository<TDbContext, TEntity, TKey> : IRepository<TEntity, TKey>
     where TEntity : Entity<TKey>, IAggregateRoot

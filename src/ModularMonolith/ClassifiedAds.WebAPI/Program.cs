@@ -2,7 +2,7 @@
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Web.ExceptionHandlers;
-using ClassifiedAds.Modules.Identity.Repositories;
+using ClassifiedAds.Modules.Identity.Persistence;
 using ClassifiedAds.Modules.Identity.Services;
 using ClassifiedAds.Modules.Notification.Hubs;
 using ClassifiedAds.WebAPI.ConfigurationOptions;

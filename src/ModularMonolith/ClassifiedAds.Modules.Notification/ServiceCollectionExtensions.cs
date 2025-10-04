@@ -3,7 +3,7 @@ using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Modules.Notification.ConfigurationOptions;
 using ClassifiedAds.Modules.Notification.Entities;
 using ClassifiedAds.Modules.Notification.HostedServices;
-using ClassifiedAds.Modules.Notification.Repositories;
+using ClassifiedAds.Modules.Notification.Persistence;
 using ClassifiedAds.Modules.Notification.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;

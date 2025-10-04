@@ -2,7 +2,7 @@
 using ClassifiedAds.Modules.Identity.IdentityProviders;
 using ClassifiedAds.Modules.Identity.IdentityProviders.Auth0;
 using ClassifiedAds.Modules.Identity.IdentityProviders.Azure;
-using ClassifiedAds.Modules.Identity.Repositories;
+using ClassifiedAds.Modules.Identity.Persistence;
 using System;
 using System.Linq;
 using System.Threading;

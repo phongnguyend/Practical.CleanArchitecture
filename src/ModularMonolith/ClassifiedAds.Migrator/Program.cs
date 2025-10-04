@@ -1,7 +1,7 @@
 ﻿using ClassifiedAds.Contracts.Identity.Services;
 using ClassifiedAds.Infrastructure.HealthChecks;
 using ClassifiedAds.Infrastructure.Logging;
-using ClassifiedAds.Modules.Identity.Repositories;
+using ClassifiedAds.Modules.Identity.Persistence;
 using ClassifiedAds.Modules.Identity.Services;
 using DbUp;
 using Microsoft.AspNetCore.DataProtection;

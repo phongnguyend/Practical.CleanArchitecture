@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Modules.Notification.Repositories;
+namespace ClassifiedAds.Modules.Notification.Persistence;
 
 public class EmailMessageRepository : Repository<EmailMessage, Guid>, IEmailMessageRepository
 {

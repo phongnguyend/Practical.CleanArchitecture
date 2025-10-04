@@ -4,9 +4,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Modules.Notification.Repositories;
+namespace ClassifiedAds.Modules.Notification.Persistence;
 
-public interface IEmailMessageRepository : IRepository<EmailMessage, Guid>
+public interface ISmsMessageRepository : IRepository<SmsMessage, Guid>
 {
     Task<int> ArchiveMessagesAsync(CancellationToken cancellationToken = default);
 }

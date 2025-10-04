@@ -1,8 +1,8 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.DateTimes;
 using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Infrastructure.Persistence;
+using ClassifiedAds.Persistence.SqlServer;
 
-namespace ClassifiedAds.Modules.AuditLog.Repositories;
+namespace ClassifiedAds.Modules.AuditLog.Persistence;
 
 public class Repository<T, TKey> : DbContextRepository<AuditLogDbContext, T, TKey>
     where T : Entity<TKey>, IAggregateRoot

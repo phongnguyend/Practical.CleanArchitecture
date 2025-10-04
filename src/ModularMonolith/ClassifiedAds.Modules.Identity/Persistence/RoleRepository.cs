@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 
-namespace ClassifiedAds.Modules.Identity.Repositories;
+namespace ClassifiedAds.Modules.Identity.Persistence;
 
 public class RoleRepository : Repository<Role, Guid>, IRoleRepository
 {

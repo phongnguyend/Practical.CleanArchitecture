@@ -1,12 +1,12 @@
-﻿using ClassifiedAds.Infrastructure.Persistence;
+﻿using ClassifiedAds.Persistence.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace ClassifiedAds.Modules.Configuration.Repositories;
+namespace ClassifiedAds.Modules.Product.Persistence;
 
-public class ConfigurationDbContext : DbContextUnitOfWork<ConfigurationDbContext>
+public class ProductDbContext : DbContextUnitOfWork<ProductDbContext>
 {
-    public ConfigurationDbContext(DbContextOptions<ConfigurationDbContext> options)
+    public ProductDbContext(DbContextOptions<ProductDbContext> options)
         : base(options)
     {
     }

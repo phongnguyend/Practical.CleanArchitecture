@@ -1,12 +1,12 @@
-﻿using ClassifiedAds.Infrastructure.Persistence;
+﻿using ClassifiedAds.Persistence.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace ClassifiedAds.Modules.Notification.Repositories;
+namespace ClassifiedAds.Modules.Configuration.Persistence;
 
-public class NotificationDbContext : DbContextUnitOfWork<NotificationDbContext>
+public class ConfigurationDbContext : DbContextUnitOfWork<ConfigurationDbContext>
 {
-    public NotificationDbContext(DbContextOptions<NotificationDbContext> options)
+    public ConfigurationDbContext(DbContextOptions<ConfigurationDbContext> options)
         : base(options)
     {
     }
