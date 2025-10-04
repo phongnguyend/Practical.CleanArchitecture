@@ -5,7 +5,6 @@ using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.Repositories;
 using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,15 +14,15 @@ public class ProductDeletedEventHandler : IDomainEventHandler<EntityDeletedEvent
 {
     private readonly ICrudService<AuditLogEntry> _auditSerivce;
     private readonly ICurrentUser _currentUser;
-    private readonly IRepository<OutboxEvent, Guid> _outboxEventRepository;
+    private readonly IRepository<OutboxMessage, Guid> _outboxMessageRepository;
 
     public ProductDeletedEventHandler(ICrudService<AuditLogEntry> auditSerivce,
         ICurrentUser currentUser,
-        IRepository<OutboxEvent, Guid> outboxEventRepository)
+        IRepository<OutboxMessage, Guid> outboxMessageRepository)
     {
         _auditSerivce = auditSerivce;
         _currentUser = currentUser;
-        _outboxEventRepository = outboxEventRepository;
+        _outboxMessageRepository = outboxMessageRepository;
     }
 
     public async Task HandleAsync(EntityDeletedEvent<Product> domainEvent, CancellationToken cancellationToken = default)
@@ -37,16 +36,15 @@ public class ProductDeletedEventHandler : IDomainEventHandler<EntityDeletedEvent
             Log = domainEvent.Entity.AsJsonString(),
         }, cancellationToken);
 
-        await _outboxEventRepository.AddOrUpdateAsync(new OutboxEvent
+        await _outboxMessageRepository.AddOrUpdateAsync(new OutboxMessage
         {
             EventType = EventTypeConstants.ProductDeleted,
             TriggeredById = _currentUser.UserId,
             CreatedDateTime = domainEvent.EventDateTime,
             ObjectId = domainEvent.Entity.Id.ToString(),
             Payload = domainEvent.Entity.AsJsonString(),
-            ActivityId = Activity.Current.Id,
         }, cancellationToken);
 
-        await _outboxEventRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await _outboxMessageRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

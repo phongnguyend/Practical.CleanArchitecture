@@ -3,16 +3,16 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Domain.Infrastructure.Messaging;
 
-public interface IOutBoxEventPublisher
+public interface IOutboxMessagePublisher
 {
     static abstract string[] CanHandleEventTypes();
 
     static abstract string CanHandleEventSource();
 
-    Task HandleAsync(PublishingOutBoxEvent outbox, CancellationToken cancellationToken = default);
+    Task HandleAsync(PublishingOutboxMessage outbox, CancellationToken cancellationToken = default);
 }
 
-public class PublishingOutBoxEvent
+public class PublishingOutboxMessage
 {
     public string Id { get; set; }
 

@@ -2,15 +2,15 @@
 
 namespace ClassifiedAds.Domain.Entities;
 
-public class OutboxEvent : OutboxEventBase, IAggregateRoot
+public class OutboxMessage : OutboxMessageBase, IAggregateRoot
 {
 }
 
-public class ArchivedOutboxEvent : OutboxEventBase, IAggregateRoot
+public class ArchivedOutboxMessage : OutboxMessageBase, IAggregateRoot
 {
 }
 
-public abstract class OutboxEventBase : Entity<Guid>
+public abstract class OutboxMessageBase : Entity<Guid>
 {
     public string EventType { get; set; }
 

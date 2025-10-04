@@ -15,7 +15,7 @@ public interface IMessageBus
     Task ReceiveAsync<TConsumer, T>(CancellationToken cancellationToken = default)
         where T : IMessageBusMessage;
 
-    Task SendAsync(PublishingOutBoxEvent outbox, CancellationToken cancellationToken = default);
+    Task SendAsync(PublishingOutboxMessage outbox, CancellationToken cancellationToken = default);
 }
 
 public interface IMessageBusMessage

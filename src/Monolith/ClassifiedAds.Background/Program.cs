@@ -61,7 +61,7 @@ Host.CreateDefaultBuilder(args)
     services.AddMessageBusReceiver<WebhookConsumer, FileUploadedEvent>(appSettings.Messaging);
     services.AddMessageBusReceiver<WebhookConsumer, FileDeletedEvent>(appSettings.Messaging);
     services.AddMessageBusConsumers(Assembly.GetExecutingAssembly());
-    services.AddOutboxEventPublishers(Assembly.GetExecutingAssembly());
+    services.AddOutboxMessagePublishers(Assembly.GetExecutingAssembly());
 
     services.AddNotificationServices(appSettings.Notification);
 
