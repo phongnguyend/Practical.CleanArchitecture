@@ -1,10 +1,6 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
-using ClassifiedAds.CrossCuttingConcerns.Locks;
-using ClassifiedAds.CrossCuttingConcerns.Tenants;
+﻿using ClassifiedAds.CrossCuttingConcerns.Tenants;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Persistence;
-using ClassifiedAds.Persistence.CircuitBreakers;
-using ClassifiedAds.Persistence.Locks;
 using ClassifiedAds.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -25,8 +21,6 @@ public static class PersistenceExtensions
                 .AddDbContextFactory<AdsDbContext>((Action<DbContextOptionsBuilder>)null, ServiceLifetime.Scoped)
                 .AddRepositories();
 
-        services.AddScoped(typeof(IDistributedLock), _ => new SqlDistributedLock(connectionString));
-
         return services;
     }
 
@@ -42,11 +36,6 @@ public static class PersistenceExtensions
                 })
                 .AddRepositories();
 
-        services.AddScoped(typeof(IDistributedLock), services =>
-        {
-            return new SqlDistributedLock(services.GetRequiredService<IConnectionStringResolver<AdsDbContextMultiTenant>>().ConnectionString);
-        });
-
         return services;
     }
 
@@ -61,9 +50,6 @@ public static class PersistenceExtensions
         {
             return services.GetRequiredService<AdsDbContext>();
         });
-
-        services.AddScoped<ILockManager, LockManager>();
-        services.AddScoped<ICircuitBreakerManager, CircuitBreakerManager>();
 
         return services;
     }
