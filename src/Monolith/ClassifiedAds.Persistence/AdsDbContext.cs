@@ -71,12 +71,14 @@ public class AdsDbContext : DbContext, IUnitOfWork, IDataProtectionKeyContext
     public override int SaveChanges()
     {
         SetOutboxActivityId();
+        HandleFileEntriesDeleted();
         return base.SaveChanges();
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         SetOutboxActivityId();
+        HandleFileEntriesDeleted();
         return await base.SaveChangesAsync(cancellationToken);
     }
 
@@ -90,6 +92,24 @@ public class AdsDbContext : DbContext, IUnitOfWork, IDataProtectionKeyContext
             if (string.IsNullOrWhiteSpace(outbox.ActivityId))
             {
                 outbox.ActivityId = System.Diagnostics.Activity.Current?.Id;
+            }
+        }
+    }
+
+    private void HandleFileEntriesDeleted()
+    {
+        var entities = ChangeTracker.Entries<FileEntry>();
+        foreach (var entity in entities.Where(e => e.State == EntityState.Added || e.State == EntityState.Modified))
+        {
+            var fileEntry = entity.Entity;
+
+            if (fileEntry.Deleted)
+            {
+                Set<DeletedFileEntry>().Add(new DeletedFileEntry
+                {
+                    FileEntryId = fileEntry.Id,
+                    CreatedDateTime = fileEntry.DeletedDate ?? System.DateTimeOffset.Now
+                });
             }
         }
     }
