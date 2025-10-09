@@ -20,8 +20,6 @@ public class RabbitMQReceiverOptions
 
     public bool SingleActiveConsumer { get; set; }
 
-    public bool MessageEncryptionEnabled { get; set; }
-
     public string MessageEncryptionKey { get; set; }
 
     public int MaxRetryCount { get; set; }

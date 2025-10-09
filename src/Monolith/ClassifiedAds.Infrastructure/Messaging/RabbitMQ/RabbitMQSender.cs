@@ -2,6 +2,7 @@
 using CryptographyHelper;
 using CryptographyHelper.SymmetricAlgorithms;
 using RabbitMQ.Client;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,20 +41,27 @@ public class RabbitMQSender<T> : IMessageSender<T>
             MetaData = metaData,
         }.GetBytes();
 
-        if (_options.MessageEncryptionEnabled)
-        {
-            var iv = SymmetricCrypto.GenerateKey(16);
-            body = (iv.ToBase64String() + "." + body.UseAES(_options.MessageEncryptionKey.FromBase64String())
-            .WithCipher(CipherMode.CBC)
-            .WithIV(iv)
-            .WithPadding(PaddingMode.PKCS7)
-            .Encrypt().ToBase64String()).GetBytes();
-        }
-
         var properties = new BasicProperties
         {
             Persistent = true
         };
+
+        if (_options.MessageEncryptionEnabled)
+        {
+            var iv = SymmetricCrypto.GenerateKey(16);
+
+            body = body.UseAES(_options.MessageEncryptionKey.FromBase64String())
+            .WithCipher(CipherMode.CBC)
+            .WithIV(iv)
+            .WithPadding(PaddingMode.PKCS7)
+            .Encrypt();
+
+            properties.Headers = new Dictionary<string, object>
+            {
+                { "x-encrypted", true },
+                { "x-encrypted-iv", iv.ToBase64String() }
+            };
+        }
 
         await channel.BasicPublishAsync(exchange: _exchangeName,
                                routingKey: _routingKey,

@@ -79,7 +79,6 @@ public static class MessagingCollectionExtensions
             RoutingKey = options.RoutingKeys[typeof(T).Name],
             QueueName = options.Consumers[typeof(TConsumer).Name][typeof(T).Name],
             AutomaticCreateEnabled = true,
-            MessageEncryptionEnabled = options.MessageEncryptionEnabled,
             MessageEncryptionKey = options.MessageEncryptionKey
         };
 
