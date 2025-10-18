@@ -50,7 +50,7 @@ public class FilesController : Controller
     [HttpGet]
     public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get()
     {
-        var fileEntries = await _dispatcher.DispatchAsync(new GetEntititesQuery<FileEntry>());
+        var fileEntries = await _dispatcher.DispatchAsync(new GetFileEntriesQuery());
         return Ok(fileEntries.ToModels());
     }
 
@@ -119,7 +119,7 @@ public class FilesController : Controller
     {
         var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
 
-        if (fileEntry == null)
+        if (fileEntry == null || fileEntry.Deleted)
         {
             // return NotFound();
             return Ok(null);
@@ -207,8 +207,10 @@ public class FilesController : Controller
             return Forbid();
         }
 
-        await _dispatcher.DispatchAsync(new DeleteEntityCommand<FileEntry> { Entity = fileEntry });
-        await _fileManager.DeleteAsync(fileEntry.ToModel());
+        fileEntry.Deleted = true;
+        fileEntry.DeletedDate = DateTimeOffset.Now;
+
+        await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
 
         return Ok();
     }

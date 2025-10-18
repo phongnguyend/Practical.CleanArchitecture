@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Application.AuditLogEntries.DTOs;
 using ClassifiedAds.Application.AuditLogEntries.Queries;
+using ClassifiedAds.Application.FileEntries.Queries;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.Storages;
 using ClassifiedAds.WebAPI.Authorization;
@@ -64,7 +65,7 @@ public class FilesController : Controller
     public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get()
     {
         await _notificationHubContext.Clients.All.SendAsync("ReceiveMessage", $"{_stringLocalizer["Getting files ..."]}");
-        var fileEntries = await _dispatcher.DispatchAsync(new GetEntititesQuery<FileEntry>());
+        var fileEntries = await _dispatcher.DispatchAsync(new GetFileEntriesQuery());
         return Ok(fileEntries.ToModels());
     }
 
@@ -131,7 +132,7 @@ public class FilesController : Controller
     {
         var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
 
-        if (fileEntry == null)
+        if (fileEntry == null || fileEntry.Deleted)
         {
             // return NotFound();
             return Ok(null);
@@ -219,8 +220,10 @@ public class FilesController : Controller
             return Forbid();
         }
 
-        await _dispatcher.DispatchAsync(new DeleteEntityCommand<FileEntry> { Entity = fileEntry });
-        await _fileManager.DeleteAsync(fileEntry);
+        fileEntry.Deleted = true;
+        fileEntry.DeletedDate = DateTimeOffset.Now;
+
+        await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
 
         return Ok();
     }

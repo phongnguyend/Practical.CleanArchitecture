@@ -12,3 +12,12 @@ public class FileEntryConfiguration : IEntityTypeConfiguration<FileEntry>
         builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
     }
 }
+
+public class DeletedFileEntryConfiguration : IEntityTypeConfiguration<DeletedFileEntry>
+{
+    public void Configure(EntityTypeBuilder<DeletedFileEntry> builder)
+    {
+        builder.ToTable("DeletedFileEntries");
+        builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
+    }
+}
