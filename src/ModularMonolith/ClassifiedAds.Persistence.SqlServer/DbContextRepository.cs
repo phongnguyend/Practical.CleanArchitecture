@@ -82,29 +82,29 @@ public class DbContextRepository<TDbContext, TEntity, TKey> : IRepository<TEntit
         return query.ToListAsync();
     }
 
-    public void BulkInsert(IEnumerable<TEntity> entities)
+    public async Task BulkInsertAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
     {
-        _dbContext.BulkInsert(entities);
+        await _dbContext.BulkInsertAsync(entities, cancellationToken: cancellationToken);
     }
 
-    public void BulkInsert(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector)
+    public async Task BulkInsertAsync(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector, CancellationToken cancellationToken = default)
     {
-        _dbContext.BulkInsert(entities, columnNamesSelector);
+        await _dbContext.BulkInsertAsync(entities, columnNamesSelector, cancellationToken: cancellationToken);
     }
 
-    public void BulkUpdate(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector)
+    public async Task BulkUpdateAsync(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector, CancellationToken cancellationToken = default)
     {
-        _dbContext.BulkUpdate(entities, columnNamesSelector);
+        await _dbContext.BulkUpdateAsync(entities, columnNamesSelector, cancellationToken: cancellationToken);
     }
 
-    public void BulkDelete(IEnumerable<TEntity> entities)
+    public async Task BulkDeleteAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
     {
-        _dbContext.BulkDelete(entities);
+        await _dbContext.BulkDeleteAsync(entities, cancellationToken: cancellationToken);
     }
 
-    public void BulkMerge(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> idSelector, Expression<Func<TEntity, object>> updateColumnNamesSelector, Expression<Func<TEntity, object>> insertColumnNamesSelector)
+    public async Task BulkMergeAsync(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> idSelector, Expression<Func<TEntity, object>> updateColumnNamesSelector, Expression<Func<TEntity, object>> insertColumnNamesSelector, CancellationToken cancellationToken = default)
     {
-        _dbContext.BulkMerge(entities, idSelector, updateColumnNamesSelector, insertColumnNamesSelector);
+        await _dbContext.BulkMergeAsync(entities, idSelector, updateColumnNamesSelector, insertColumnNamesSelector, cancellationToken: cancellationToken);
     }
 
     public void SetRowVersion(TEntity entity, byte[] version)

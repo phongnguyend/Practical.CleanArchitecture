@@ -15,13 +15,13 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Persistence.Repositories;
 
-public class Repository<T, TKey> : IRepository<T, TKey>
-    where T : Entity<TKey>, IAggregateRoot
+public class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
+    where TEntity : Entity<TKey>, IAggregateRoot
 {
     private readonly AdsDbContext _dbContext;
     private readonly IDateTimeProvider _dateTimeProvider;
 
-    protected DbSet<T> DbSet => _dbContext.Set<T>();
+    protected DbSet<TEntity> DbSet => _dbContext.Set<TEntity>();
 
     public IUnitOfWork UnitOfWork
     {
@@ -37,7 +37,7 @@ public class Repository<T, TKey> : IRepository<T, TKey>
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task AddOrUpdateAsync(T entity, CancellationToken cancellationToken = default)
+    public async Task AddOrUpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         if (entity.Id.Equals(default(TKey)))
         {
@@ -49,29 +49,29 @@ public class Repository<T, TKey> : IRepository<T, TKey>
         }
     }
 
-    public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
+    public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         entity.CreatedDateTime = _dateTimeProvider.OffsetNow;
         await DbSet.AddAsync(entity, cancellationToken);
     }
 
-    public Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
+    public Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         entity.UpdatedDateTime = _dateTimeProvider.OffsetNow;
         return Task.CompletedTask;
     }
 
-    public void Delete(T entity)
+    public void Delete(TEntity entity)
     {
         DbSet.Remove(entity);
     }
 
-    public IQueryable<T> GetQueryableSet()
+    public IQueryable<TEntity> GetQueryableSet()
     {
-        return _dbContext.Set<T>();
+        return _dbContext.Set<TEntity>();
     }
 
-    public Task<T1> FirstOrDefaultAsync<T1>(IQueryable<T1> query)
+    public Task<T> FirstOrDefaultAsync<T>(IQueryable<T> query)
     {
         return query.FirstOrDefaultAsync();
     }
@@ -86,32 +86,32 @@ public class Repository<T, TKey> : IRepository<T, TKey>
         return query.ToListAsync();
     }
 
-    public void BulkInsert(IEnumerable<T> entities)
+    public async Task BulkInsertAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
     {
-        _dbContext.BulkInsert(entities);
+        await _dbContext.BulkInsertAsync(entities, cancellationToken: cancellationToken);
     }
 
-    public void BulkInsert(IEnumerable<T> entities, Expression<Func<T, object>> columnNamesSelector)
+    public async Task BulkInsertAsync(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector, CancellationToken cancellationToken = default)
     {
-        _dbContext.BulkInsert(entities, columnNamesSelector);
+        await _dbContext.BulkInsertAsync(entities, columnNamesSelector, cancellationToken: cancellationToken);
     }
 
-    public void BulkUpdate(IEnumerable<T> entities, Expression<Func<T, object>> columnNamesSelector)
+    public async Task BulkUpdateAsync(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector, CancellationToken cancellationToken = default)
     {
-        _dbContext.BulkUpdate(entities, columnNamesSelector);
+        await _dbContext.BulkUpdateAsync(entities, columnNamesSelector, cancellationToken: cancellationToken);
     }
 
-    public void BulkDelete(IEnumerable<T> entities)
+    public async Task BulkDeleteAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
     {
-        _dbContext.BulkDelete(entities);
+        await _dbContext.BulkDeleteAsync(entities, cancellationToken: cancellationToken);
     }
 
-    public void BulkMerge(IEnumerable<T> entities, Expression<Func<T, object>> idSelector, Expression<Func<T, object>> updateColumnNamesSelector, Expression<Func<T, object>> insertColumnNamesSelector)
+    public async Task BulkMergeAsync(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> idSelector, Expression<Func<TEntity, object>> updateColumnNamesSelector, Expression<Func<TEntity, object>> insertColumnNamesSelector, CancellationToken cancellationToken = default)
     {
-        _dbContext.BulkMerge(entities, idSelector, updateColumnNamesSelector, insertColumnNamesSelector);
+        await _dbContext.BulkMergeAsync(entities, idSelector, updateColumnNamesSelector, insertColumnNamesSelector, cancellationToken: cancellationToken);
     }
 
-    public void SetRowVersion(T entity, byte[] version)
+    public void SetRowVersion(TEntity entity, byte[] version)
     {
         _dbContext.Entry(entity).OriginalValues[nameof(entity.RowVersion)] = version;
     }

@@ -29,13 +29,13 @@ public interface IRepository<TEntity, TKey> : IConcurrencyHandler<TEntity>
 
     Task<List<T>> ToListAsync<T>(IQueryable<T> query);
 
-    void BulkInsert(IEnumerable<TEntity> entities);
+    Task BulkInsertAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
 
-    void BulkInsert(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector);
+    Task BulkInsertAsync(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector, CancellationToken cancellationToken = default);
 
-    void BulkUpdate(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector);
+    Task BulkUpdateAsync(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector, CancellationToken cancellationToken = default);
 
-    void BulkMerge(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> idSelector, Expression<Func<TEntity, object>> updateColumnNamesSelector, Expression<Func<TEntity, object>> insertColumnNamesSelector);
+    Task BulkMergeAsync(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> idSelector, Expression<Func<TEntity, object>> updateColumnNamesSelector, Expression<Func<TEntity, object>> insertColumnNamesSelector, CancellationToken cancellationToken = default);
 
-    void BulkDelete(IEnumerable<TEntity> entities);
+    Task BulkDeleteAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
 }
