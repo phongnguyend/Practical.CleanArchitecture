@@ -10,7 +10,7 @@ public static class DinkToPdfCollectionExtensions
 {
     public static IServiceCollection AddDinkToPdfWriters(this IServiceCollection services)
     {
-        services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+        services.AddSingleton<IConverter>(new SynchronizedConverter(new PdfTools()));
         services.AddSingleton<IPdfWriter<ExportProductsToPdf>, ExportProductsToPdfHandler>();
 
         return services;

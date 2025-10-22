@@ -77,10 +77,10 @@ services.AddMonitoringServices(appSettings.Monitoring);
 
 services.AddControllersWithViews(setupAction =>
 {
-    setupAction.Filters.Add(typeof(CustomActionFilter));
-    setupAction.Filters.Add(typeof(CustomResultFilter));
-    setupAction.Filters.Add(typeof(CustomAuthorizationFilter));
-    setupAction.Filters.Add(typeof(CustomExceptionFilter));
+    setupAction.Filters.Add<CustomActionFilter>();
+    setupAction.Filters.Add<CustomResultFilter>();
+    setupAction.Filters.Add<CustomAuthorizationFilter>();
+    setupAction.Filters.Add<CustomExceptionFilter>();
 })
 .AddNewtonsoftJson();
 

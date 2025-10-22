@@ -29,6 +29,7 @@
   <Folder Name="/Tests/">
     <Project Path="ClassifiedAds.ArchTests/ClassifiedAds.ArchTests.csproj" />
     <Project Path="ClassifiedAds.ContractTests/ClassifiedAds.ContractTests.csproj" />
+    <Project Path="ClassifiedAds.Migrator.Tests/ClassifiedAds.Migrator.Tests.csproj" Id="6a96689e-e085-4b51-af24-092d2a64d008" />
     <Project Path="ClassifiedAds.UnitTests/ClassifiedAds.UnitTests.csproj" />
   </Folder>
 </Solution>

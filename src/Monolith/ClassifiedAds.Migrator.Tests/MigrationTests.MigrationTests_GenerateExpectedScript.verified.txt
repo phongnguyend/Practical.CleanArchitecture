@@ -1,0 +1,445 @@
+﻿IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+GO
+
+BEGIN TRANSACTION;
+CREATE TABLE [_CustomMigrationHistories] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [MigrationName] nvarchar(max) NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK__CustomMigrationHistories] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [ArchivedEmailMessages] (
+    [Id] uniqueidentifier NOT NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    [From] nvarchar(max) NULL,
+    [Tos] nvarchar(max) NULL,
+    [CCs] nvarchar(max) NULL,
+    [BCCs] nvarchar(max) NULL,
+    [Subject] nvarchar(max) NULL,
+    [Body] nvarchar(max) NULL,
+    [AttemptCount] int NOT NULL,
+    [MaxAttemptCount] int NOT NULL,
+    [NextAttemptDateTime] datetimeoffset NULL,
+    [ExpiredDateTime] datetimeoffset NULL,
+    [Log] nvarchar(max) NULL,
+    [SentDateTime] datetimeoffset NULL,
+    [CopyFromId] uniqueidentifier NULL,
+    CONSTRAINT [PK_ArchivedEmailMessages] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [ArchivedOutboxMessages] (
+    [Id] uniqueidentifier NOT NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    [EventType] nvarchar(max) NULL,
+    [TriggeredById] uniqueidentifier NOT NULL,
+    [ObjectId] nvarchar(max) NULL,
+    [Payload] nvarchar(max) NULL,
+    [Published] bit NOT NULL,
+    [ActivityId] nvarchar(max) NULL,
+    CONSTRAINT [PK_ArchivedOutboxMessages] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [ArchivedSmsMessages] (
+    [Id] uniqueidentifier NOT NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    [Message] nvarchar(max) NULL,
+    [PhoneNumber] nvarchar(max) NULL,
+    [AttemptCount] int NOT NULL,
+    [MaxAttemptCount] int NOT NULL,
+    [NextAttemptDateTime] datetimeoffset NULL,
+    [ExpiredDateTime] datetimeoffset NULL,
+    [Log] nvarchar(max) NULL,
+    [SentDateTime] datetimeoffset NULL,
+    [CopyFromId] uniqueidentifier NULL,
+    CONSTRAINT [PK_ArchivedSmsMessages] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [AuditLogEntries] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [UserId] uniqueidentifier NOT NULL,
+    [Action] nvarchar(max) NULL,
+    [ObjectId] nvarchar(max) NULL,
+    [Log] nvarchar(max) NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_AuditLogEntries] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [CircuitBreakers] (
+    [Id] uniqueidentifier NOT NULL,
+    [Name] nvarchar(450) NULL,
+    [Status] int NOT NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [LastStatusUpdated] datetimeoffset NOT NULL,
+    CONSTRAINT [PK_CircuitBreakers] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [ConfigurationEntries] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [Key] nvarchar(max) NULL,
+    [Value] nvarchar(max) NULL,
+    [Description] nvarchar(max) NULL,
+    [IsSensitive] bit NOT NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_ConfigurationEntries] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [DataProtectionKeys] (
+    [Id] int NOT NULL IDENTITY,
+    [FriendlyName] nvarchar(max) NULL,
+    [Xml] nvarchar(max) NULL,
+    CONSTRAINT [PK_DataProtectionKeys] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [EmailMessages] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    [From] nvarchar(max) NULL,
+    [Tos] nvarchar(max) NULL,
+    [CCs] nvarchar(max) NULL,
+    [BCCs] nvarchar(max) NULL,
+    [Subject] nvarchar(max) NULL,
+    [Body] nvarchar(max) NULL,
+    [AttemptCount] int NOT NULL,
+    [MaxAttemptCount] int NOT NULL,
+    [NextAttemptDateTime] datetimeoffset NULL,
+    [ExpiredDateTime] datetimeoffset NULL,
+    [Log] nvarchar(max) NULL,
+    [SentDateTime] datetimeoffset NULL,
+    [CopyFromId] uniqueidentifier NULL,
+    CONSTRAINT [PK_EmailMessages] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [FileEntries] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [Name] nvarchar(max) NULL,
+    [Description] nvarchar(max) NULL,
+    [Size] bigint NOT NULL,
+    [UploadedTime] datetimeoffset NOT NULL,
+    [FileName] nvarchar(max) NULL,
+    [FileLocation] nvarchar(max) NULL,
+    [Encrypted] bit NOT NULL,
+    [EncryptionKey] nvarchar(max) NULL,
+    [EncryptionIV] nvarchar(max) NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_FileEntries] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [LocalizationEntries] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [Name] nvarchar(max) NULL,
+    [Value] nvarchar(max) NULL,
+    [Culture] nvarchar(max) NULL,
+    [Description] nvarchar(max) NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_LocalizationEntries] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [Locks] (
+    [EntityId] nvarchar(450) NOT NULL,
+    [EntityName] nvarchar(450) NOT NULL,
+    [OwnerId] nvarchar(450) NULL,
+    [AcquiredDateTime] datetimeoffset NULL,
+    [ExpiredDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_Locks] PRIMARY KEY ([EntityId], [EntityName])
+);
+
+CREATE TABLE [OutboxMessages] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    [EventType] nvarchar(max) NULL,
+    [TriggeredById] uniqueidentifier NOT NULL,
+    [ObjectId] nvarchar(max) NULL,
+    [Payload] nvarchar(max) NULL,
+    [Published] bit NOT NULL,
+    [ActivityId] nvarchar(max) NULL,
+    CONSTRAINT [PK_OutboxMessages] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [Products] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [Code] nvarchar(max) NULL,
+    [Name] nvarchar(max) NULL,
+    [Description] nvarchar(max) NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_Products] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [Roles] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [Name] nvarchar(max) NULL,
+    [NormalizedName] nvarchar(max) NULL,
+    [ConcurrencyStamp] nvarchar(max) NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_Roles] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [SmsMessages] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    [Message] nvarchar(max) NULL,
+    [PhoneNumber] nvarchar(max) NULL,
+    [AttemptCount] int NOT NULL,
+    [MaxAttemptCount] int NOT NULL,
+    [NextAttemptDateTime] datetimeoffset NULL,
+    [ExpiredDateTime] datetimeoffset NULL,
+    [Log] nvarchar(max) NULL,
+    [SentDateTime] datetimeoffset NULL,
+    [CopyFromId] uniqueidentifier NULL,
+    CONSTRAINT [PK_SmsMessages] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [Users] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [UserName] nvarchar(max) NULL,
+    [NormalizedUserName] nvarchar(max) NULL,
+    [Email] nvarchar(max) NULL,
+    [NormalizedEmail] nvarchar(max) NULL,
+    [EmailConfirmed] bit NOT NULL,
+    [PasswordHash] nvarchar(max) NULL,
+    [PhoneNumber] nvarchar(max) NULL,
+    [PhoneNumberConfirmed] bit NOT NULL,
+    [TwoFactorEnabled] bit NOT NULL,
+    [ConcurrencyStamp] nvarchar(max) NULL,
+    [SecurityStamp] nvarchar(max) NULL,
+    [LockoutEnabled] bit NOT NULL,
+    [LockoutEnd] datetimeoffset NULL,
+    [AccessFailedCount] int NOT NULL,
+    [Auth0UserId] nvarchar(max) NULL,
+    [AzureAdB2CUserId] nvarchar(max) NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_Users] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [CircuitBreakerLogs] (
+    [Id] uniqueidentifier NOT NULL,
+    [CircuitBreakerId] uniqueidentifier NOT NULL,
+    [Status] int NOT NULL,
+    [Succeeded] bit NOT NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    CONSTRAINT [PK_CircuitBreakerLogs] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_CircuitBreakerLogs_CircuitBreakers_CircuitBreakerId] FOREIGN KEY ([CircuitBreakerId]) REFERENCES [CircuitBreakers] ([Id]) ON DELETE CASCADE
+);
+
+CREATE TABLE [EmailMessageAttachments] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [EmailMessageId] uniqueidentifier NOT NULL,
+    [FileEntryId] uniqueidentifier NOT NULL,
+    [Name] nvarchar(max) NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_EmailMessageAttachments] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_EmailMessageAttachments_EmailMessages_EmailMessageId] FOREIGN KEY ([EmailMessageId]) REFERENCES [EmailMessages] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_EmailMessageAttachments_FileEntries_FileEntryId] FOREIGN KEY ([FileEntryId]) REFERENCES [FileEntries] ([Id]) ON DELETE CASCADE
+);
+
+CREATE TABLE [RoleClaims] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [Type] nvarchar(max) NULL,
+    [Value] nvarchar(max) NULL,
+    [RoleId] uniqueidentifier NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_RoleClaims] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_RoleClaims_Roles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [Roles] ([Id]) ON DELETE CASCADE
+);
+
+CREATE TABLE [PasswordHistories] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [UserId] uniqueidentifier NOT NULL,
+    [PasswordHash] nvarchar(max) NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_PasswordHistories] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_PasswordHistories_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+);
+
+CREATE TABLE [UserClaims] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [Type] nvarchar(max) NULL,
+    [Value] nvarchar(max) NULL,
+    [UserId] uniqueidentifier NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_UserClaims] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_UserClaims_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+);
+
+CREATE TABLE [UserLogins] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [UserId] uniqueidentifier NOT NULL,
+    [LoginProvider] nvarchar(max) NULL,
+    [ProviderKey] nvarchar(max) NULL,
+    [ProviderDisplayName] nvarchar(max) NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_UserLogins] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_UserLogins_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+);
+
+CREATE TABLE [UserRoles] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [UserId] uniqueidentifier NOT NULL,
+    [RoleId] uniqueidentifier NOT NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_UserRoles] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_UserRoles_Roles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [Roles] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_UserRoles_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+);
+
+CREATE TABLE [UserTokens] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [UserId] uniqueidentifier NOT NULL,
+    [LoginProvider] nvarchar(max) NULL,
+    [TokenName] nvarchar(max) NULL,
+    [TokenValue] nvarchar(max) NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_UserTokens] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_UserTokens_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+);
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'CreatedDateTime', N'Description', N'IsSensitive', N'Key', N'UpdatedDateTime', N'Value') AND [object_id] = OBJECT_ID(N'[ConfigurationEntries]'))
+    SET IDENTITY_INSERT [ConfigurationEntries] ON;
+INSERT INTO [ConfigurationEntries] ([Id], [CreatedDateTime], [Description], [IsSensitive], [Key], [UpdatedDateTime], [Value])
+VALUES ('8a051aa5-bcd1-ea11-b098-ac728981bd15', '0001-01-01T00:00:00.0000000+00:00', NULL, CAST(0 AS bit), N'SecurityHeaders:Test-Read-From-SqlServer', NULL, N'this-is-read-from-sqlserver');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'CreatedDateTime', N'Description', N'IsSensitive', N'Key', N'UpdatedDateTime', N'Value') AND [object_id] = OBJECT_ID(N'[ConfigurationEntries]'))
+    SET IDENTITY_INSERT [ConfigurationEntries] OFF;
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'CreatedDateTime', N'Culture', N'Description', N'Name', N'UpdatedDateTime', N'Value') AND [object_id] = OBJECT_ID(N'[LocalizationEntries]'))
+    SET IDENTITY_INSERT [LocalizationEntries] ON;
+INSERT INTO [LocalizationEntries] ([Id], [CreatedDateTime], [Culture], [Description], [Name], [UpdatedDateTime], [Value])
+VALUES ('29a4aacb-4ddf-4f85-aced-c5283a8bdd7f', '0001-01-01T00:00:00.0000000+00:00', N'en-US', NULL, N'Test', NULL, N'Test'),
+('5a262d8a-b0d9-45d3-8c0e-18b2c882b9fe', '0001-01-01T00:00:00.0000000+00:00', N'vi-VN', NULL, N'Test', NULL, N'Kiem Tra');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'CreatedDateTime', N'Culture', N'Description', N'Name', N'UpdatedDateTime', N'Value') AND [object_id] = OBJECT_ID(N'[LocalizationEntries]'))
+    SET IDENTITY_INSERT [LocalizationEntries] OFF;
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Code', N'CreatedDateTime', N'Description', N'Name', N'UpdatedDateTime') AND [object_id] = OBJECT_ID(N'[Products]'))
+    SET IDENTITY_INSERT [Products] ON;
+INSERT INTO [Products] ([Id], [Code], [CreatedDateTime], [Description], [Name], [UpdatedDateTime])
+VALUES ('6672e891-0d94-4620-b38a-dbc5b02da9f7', N'TEST', '0001-01-01T00:00:00.0000000+00:00', N'Description', N'Test', NULL),
+('cc9d7eca-6428-4e6d-b40b-2c8d93ab7347', N'PD001', '0001-01-01T00:00:00.0000000+00:00', N'Iphone X', N'Iphone X', NULL);
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Code', N'CreatedDateTime', N'Description', N'Name', N'UpdatedDateTime') AND [object_id] = OBJECT_ID(N'[Products]'))
+    SET IDENTITY_INSERT [Products] OFF;
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'AccessFailedCount', N'Auth0UserId', N'AzureAdB2CUserId', N'ConcurrencyStamp', N'CreatedDateTime', N'Email', N'EmailConfirmed', N'LockoutEnabled', N'LockoutEnd', N'NormalizedEmail', N'NormalizedUserName', N'PasswordHash', N'PhoneNumber', N'PhoneNumberConfirmed', N'SecurityStamp', N'TwoFactorEnabled', N'UpdatedDateTime', N'UserName') AND [object_id] = OBJECT_ID(N'[Users]'))
+    SET IDENTITY_INSERT [Users] ON;
+INSERT INTO [Users] ([Id], [AccessFailedCount], [Auth0UserId], [AzureAdB2CUserId], [ConcurrencyStamp], [CreatedDateTime], [Email], [EmailConfirmed], [LockoutEnabled], [LockoutEnd], [NormalizedEmail], [NormalizedUserName], [PasswordHash], [PhoneNumber], [PhoneNumberConfirmed], [SecurityStamp], [TwoFactorEnabled], [UpdatedDateTime], [UserName])
+VALUES ('12837d3d-793f-ea11-becb-5cea1d05f660', 0, NULL, NULL, NULL, '0001-01-01T00:00:00.0000000+00:00', N'phong@gmail.com', CAST(0 AS bit), CAST(1 AS bit), NULL, N'PHONG@GMAIL.COM', N'PHONG@GMAIL.COM', N'AQAAAAEAACcQAAAAELBcKuXWkiRQEYAkD/qKs9neac5hxWs3bkegIHpGLtf+zFHuKnuI3lBqkWO9TMmFAQ==', NULL, CAST(0 AS bit), N'5M2QLL65J6H6VFIS7VZETKXY27KNVVYJ', CAST(0 AS bit), NULL, N'phong@gmail.com');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'AccessFailedCount', N'Auth0UserId', N'AzureAdB2CUserId', N'ConcurrencyStamp', N'CreatedDateTime', N'Email', N'EmailConfirmed', N'LockoutEnabled', N'LockoutEnd', N'NormalizedEmail', N'NormalizedUserName', N'PasswordHash', N'PhoneNumber', N'PhoneNumberConfirmed', N'SecurityStamp', N'TwoFactorEnabled', N'UpdatedDateTime', N'UserName') AND [object_id] = OBJECT_ID(N'[Users]'))
+    SET IDENTITY_INSERT [Users] OFF;
+
+CREATE INDEX [IX_ArchivedEmailMessages_CreatedDateTime] ON [ArchivedEmailMessages] ([CreatedDateTime]);
+
+CREATE INDEX [IX_ArchivedOutboxMessages_CreatedDateTime] ON [ArchivedOutboxMessages] ([CreatedDateTime]);
+
+CREATE INDEX [IX_ArchivedSmsMessages_CreatedDateTime] ON [ArchivedSmsMessages] ([CreatedDateTime]);
+
+CREATE INDEX [IX_CircuitBreakerLogs_CircuitBreakerId] ON [CircuitBreakerLogs] ([CircuitBreakerId]);
+
+CREATE UNIQUE INDEX [IX_CircuitBreakers_Name] ON [CircuitBreakers] ([Name]) WHERE [Name] IS NOT NULL;
+
+CREATE INDEX [IX_EmailMessageAttachments_EmailMessageId] ON [EmailMessageAttachments] ([EmailMessageId]);
+
+CREATE INDEX [IX_EmailMessageAttachments_FileEntryId] ON [EmailMessageAttachments] ([FileEntryId]);
+
+CREATE INDEX [IX_EmailMessages_CreatedDateTime] ON [EmailMessages] ([CreatedDateTime]);
+
+CREATE INDEX [IX_EmailMessages_SentDateTime] ON [EmailMessages] ([SentDateTime]) INCLUDE ([ExpiredDateTime], [AttemptCount], [MaxAttemptCount], [NextAttemptDateTime]);
+
+CREATE INDEX [IX_Locks_OwnerId] ON [Locks] ([OwnerId]);
+
+CREATE INDEX [IX_OutboxMessages_CreatedDateTime] ON [OutboxMessages] ([CreatedDateTime]);
+
+CREATE INDEX [IX_OutboxMessages_Published_CreatedDateTime] ON [OutboxMessages] ([Published], [CreatedDateTime]);
+
+CREATE INDEX [IX_PasswordHistories_UserId] ON [PasswordHistories] ([UserId]);
+
+CREATE INDEX [IX_RoleClaims_RoleId] ON [RoleClaims] ([RoleId]);
+
+CREATE INDEX [IX_SmsMessages_CreatedDateTime] ON [SmsMessages] ([CreatedDateTime]);
+
+CREATE INDEX [IX_SmsMessages_SentDateTime] ON [SmsMessages] ([SentDateTime]) INCLUDE ([ExpiredDateTime], [AttemptCount], [MaxAttemptCount], [NextAttemptDateTime]);
+
+CREATE INDEX [IX_UserClaims_UserId] ON [UserClaims] ([UserId]);
+
+CREATE INDEX [IX_UserLogins_UserId] ON [UserLogins] ([UserId]);
+
+CREATE INDEX [IX_UserRoles_RoleId] ON [UserRoles] ([RoleId]);
+
+CREATE INDEX [IX_UserRoles_UserId] ON [UserRoles] ([UserId]);
+
+CREATE INDEX [IX_UserTokens_UserId] ON [UserTokens] ([UserId]);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20251004140709_Init', N'9.0.1');
+
+ALTER TABLE [FileEntries] ADD [Archived] bit NOT NULL DEFAULT CAST(0 AS bit);
+
+ALTER TABLE [FileEntries] ADD [ArchivedDate] datetimeoffset NULL;
+
+ALTER TABLE [FileEntries] ADD [Deleted] bit NOT NULL DEFAULT CAST(0 AS bit);
+
+ALTER TABLE [FileEntries] ADD [DeletedDate] datetimeoffset NULL;
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20251005024408_DeletedFileEntry', N'9.0.1');
+
+CREATE TABLE [DeletedFileEntries] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [FileEntryId] uniqueidentifier NOT NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_DeletedFileEntries] PRIMARY KEY ([Id])
+);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20251018034807_DeletedFileEntry2', N'9.0.1');
+
+COMMIT;
+GO
+
