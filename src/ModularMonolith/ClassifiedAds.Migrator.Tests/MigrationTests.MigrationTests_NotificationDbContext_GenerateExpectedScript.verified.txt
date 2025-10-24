@@ -1,0 +1,119 @@
+﻿IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+GO
+
+BEGIN TRANSACTION;
+CREATE TABLE [ArchivedEmailMessages] (
+    [Id] uniqueidentifier NOT NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    [From] nvarchar(max) NULL,
+    [Tos] nvarchar(max) NULL,
+    [CCs] nvarchar(max) NULL,
+    [BCCs] nvarchar(max) NULL,
+    [Subject] nvarchar(max) NULL,
+    [Body] nvarchar(max) NULL,
+    [AttemptCount] int NOT NULL,
+    [MaxAttemptCount] int NOT NULL,
+    [NextAttemptDateTime] datetimeoffset NULL,
+    [ExpiredDateTime] datetimeoffset NULL,
+    [Log] nvarchar(max) NULL,
+    [SentDateTime] datetimeoffset NULL,
+    [CopyFromId] uniqueidentifier NULL,
+    CONSTRAINT [PK_ArchivedEmailMessages] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [ArchivedSmsMessages] (
+    [Id] uniqueidentifier NOT NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    [Message] nvarchar(max) NULL,
+    [PhoneNumber] nvarchar(max) NULL,
+    [AttemptCount] int NOT NULL,
+    [MaxAttemptCount] int NOT NULL,
+    [NextAttemptDateTime] datetimeoffset NULL,
+    [ExpiredDateTime] datetimeoffset NULL,
+    [Log] nvarchar(max) NULL,
+    [SentDateTime] datetimeoffset NULL,
+    [CopyFromId] uniqueidentifier NULL,
+    CONSTRAINT [PK_ArchivedSmsMessages] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [EmailMessages] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    [From] nvarchar(max) NULL,
+    [Tos] nvarchar(max) NULL,
+    [CCs] nvarchar(max) NULL,
+    [BCCs] nvarchar(max) NULL,
+    [Subject] nvarchar(max) NULL,
+    [Body] nvarchar(max) NULL,
+    [AttemptCount] int NOT NULL,
+    [MaxAttemptCount] int NOT NULL,
+    [NextAttemptDateTime] datetimeoffset NULL,
+    [ExpiredDateTime] datetimeoffset NULL,
+    [Log] nvarchar(max) NULL,
+    [SentDateTime] datetimeoffset NULL,
+    [CopyFromId] uniqueidentifier NULL,
+    CONSTRAINT [PK_EmailMessages] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [SmsMessages] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    [Message] nvarchar(max) NULL,
+    [PhoneNumber] nvarchar(max) NULL,
+    [AttemptCount] int NOT NULL,
+    [MaxAttemptCount] int NOT NULL,
+    [NextAttemptDateTime] datetimeoffset NULL,
+    [ExpiredDateTime] datetimeoffset NULL,
+    [Log] nvarchar(max) NULL,
+    [SentDateTime] datetimeoffset NULL,
+    [CopyFromId] uniqueidentifier NULL,
+    CONSTRAINT [PK_SmsMessages] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [EmailMessageAttachments] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [EmailMessageId] uniqueidentifier NOT NULL,
+    [FileEntryId] uniqueidentifier NOT NULL,
+    [Name] nvarchar(max) NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_EmailMessageAttachments] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_EmailMessageAttachments_EmailMessages_EmailMessageId] FOREIGN KEY ([EmailMessageId]) REFERENCES [EmailMessages] ([Id]) ON DELETE CASCADE
+);
+
+CREATE INDEX [IX_ArchivedEmailMessages_CreatedDateTime] ON [ArchivedEmailMessages] ([CreatedDateTime]);
+
+CREATE INDEX [IX_ArchivedSmsMessages_CreatedDateTime] ON [ArchivedSmsMessages] ([CreatedDateTime]);
+
+CREATE INDEX [IX_EmailMessageAttachments_EmailMessageId] ON [EmailMessageAttachments] ([EmailMessageId]);
+
+CREATE INDEX [IX_EmailMessages_CreatedDateTime] ON [EmailMessages] ([CreatedDateTime]);
+
+CREATE INDEX [IX_EmailMessages_SentDateTime] ON [EmailMessages] ([SentDateTime]) INCLUDE ([ExpiredDateTime], [AttemptCount], [MaxAttemptCount], [NextAttemptDateTime]);
+
+CREATE INDEX [IX_SmsMessages_CreatedDateTime] ON [SmsMessages] ([CreatedDateTime]);
+
+CREATE INDEX [IX_SmsMessages_SentDateTime] ON [SmsMessages] ([SentDateTime]) INCLUDE ([ExpiredDateTime], [AttemptCount], [MaxAttemptCount], [NextAttemptDateTime]);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20231215102244_Init', N'9.0.1');
+
+COMMIT;
+GO
+

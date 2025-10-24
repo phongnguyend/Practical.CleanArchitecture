@@ -1,0 +1,56 @@
+﻿IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+GO
+
+BEGIN TRANSACTION;
+CREATE TABLE [ConfigurationEntries] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [Key] nvarchar(max) NULL,
+    [Value] nvarchar(max) NULL,
+    [Description] nvarchar(max) NULL,
+    [IsSensitive] bit NOT NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_ConfigurationEntries] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [LocalizationEntries] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [Name] nvarchar(max) NULL,
+    [Value] nvarchar(max) NULL,
+    [Culture] nvarchar(max) NULL,
+    [Description] nvarchar(max) NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_LocalizationEntries] PRIMARY KEY ([Id])
+);
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'CreatedDateTime', N'Description', N'IsSensitive', N'Key', N'UpdatedDateTime', N'Value') AND [object_id] = OBJECT_ID(N'[ConfigurationEntries]'))
+    SET IDENTITY_INSERT [ConfigurationEntries] ON;
+INSERT INTO [ConfigurationEntries] ([Id], [CreatedDateTime], [Description], [IsSensitive], [Key], [UpdatedDateTime], [Value])
+VALUES ('8a051aa5-bcd1-ea11-b098-ac728981bd15', '0001-01-01T00:00:00.0000000+00:00', NULL, CAST(0 AS bit), N'SecurityHeaders:Test-Read-From-SqlServer', NULL, N'this-is-read-from-sqlserver');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'CreatedDateTime', N'Description', N'IsSensitive', N'Key', N'UpdatedDateTime', N'Value') AND [object_id] = OBJECT_ID(N'[ConfigurationEntries]'))
+    SET IDENTITY_INSERT [ConfigurationEntries] OFF;
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'CreatedDateTime', N'Culture', N'Description', N'Name', N'UpdatedDateTime', N'Value') AND [object_id] = OBJECT_ID(N'[LocalizationEntries]'))
+    SET IDENTITY_INSERT [LocalizationEntries] ON;
+INSERT INTO [LocalizationEntries] ([Id], [CreatedDateTime], [Culture], [Description], [Name], [UpdatedDateTime], [Value])
+VALUES ('29a4aacb-4ddf-4f85-aced-c5283a8bdd7f', '0001-01-01T00:00:00.0000000+00:00', N'en-US', NULL, N'Test', NULL, N'Test'),
+('5a262d8a-b0d9-45d3-8c0e-18b2c882b9fe', '0001-01-01T00:00:00.0000000+00:00', N'vi-VN', NULL, N'Test', NULL, N'Kiem Tra');
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'CreatedDateTime', N'Culture', N'Description', N'Name', N'UpdatedDateTime', N'Value') AND [object_id] = OBJECT_ID(N'[LocalizationEntries]'))
+    SET IDENTITY_INSERT [LocalizationEntries] OFF;
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20231215102232_Init', N'9.0.1');
+
+COMMIT;
+GO
+

@@ -1,0 +1,101 @@
+﻿IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+GO
+
+BEGIN TRANSACTION;
+CREATE TABLE [ArchivedOutboxMessages] (
+    [Id] uniqueidentifier NOT NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    [EventType] nvarchar(max) NULL,
+    [TriggeredById] uniqueidentifier NOT NULL,
+    [ObjectId] nvarchar(max) NULL,
+    [Message] nvarchar(max) NULL,
+    [Published] bit NOT NULL,
+    CONSTRAINT [PK_ArchivedOutboxMessages] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [AuditLogEntries] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [UserId] uniqueidentifier NOT NULL,
+    [Action] nvarchar(max) NULL,
+    [ObjectId] nvarchar(max) NULL,
+    [Log] nvarchar(max) NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_AuditLogEntries] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [OutboxMessages] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    [EventType] nvarchar(max) NULL,
+    [TriggeredById] uniqueidentifier NOT NULL,
+    [ObjectId] nvarchar(max) NULL,
+    [Message] nvarchar(max) NULL,
+    [Published] bit NOT NULL,
+    CONSTRAINT [PK_OutboxMessages] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [Products] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [Code] nvarchar(max) NULL,
+    [Name] nvarchar(max) NULL,
+    [Description] nvarchar(max) NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_Products] PRIMARY KEY ([Id])
+);
+
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Code', N'CreatedDateTime', N'Description', N'Name', N'UpdatedDateTime') AND [object_id] = OBJECT_ID(N'[Products]'))
+    SET IDENTITY_INSERT [Products] ON;
+INSERT INTO [Products] ([Id], [Code], [CreatedDateTime], [Description], [Name], [UpdatedDateTime])
+VALUES ('6672e891-0d94-4620-b38a-dbc5b02da9f7', N'TEST', '0001-01-01T00:00:00.0000000+00:00', N'Description', N'Test', NULL),
+('cc9d7eca-6428-4e6d-b40b-2c8d93ab7347', N'PD001', '0001-01-01T00:00:00.0000000+00:00', N'Iphone X', N'Iphone X', NULL);
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Code', N'CreatedDateTime', N'Description', N'Name', N'UpdatedDateTime') AND [object_id] = OBJECT_ID(N'[Products]'))
+    SET IDENTITY_INSERT [Products] OFF;
+
+CREATE INDEX [IX_ArchivedOutboxMessages_CreatedDateTime] ON [ArchivedOutboxMessages] ([CreatedDateTime]);
+
+CREATE INDEX [IX_OutboxMessages_CreatedDateTime] ON [OutboxMessages] ([CreatedDateTime]);
+
+CREATE INDEX [IX_OutboxMessages_Published] ON [OutboxMessages] ([Published]);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20231215102250_Init', N'9.0.1');
+
+DROP INDEX [IX_OutboxMessages_Published] ON [OutboxMessages];
+
+CREATE INDEX [IX_OutboxMessages_Published_CreatedDateTime] ON [OutboxMessages] ([Published], [CreatedDateTime]);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250117051536_Net9', N'9.0.1');
+
+EXEC sp_rename N'[OutboxMessages].[Message]', N'Payload', 'COLUMN';
+
+EXEC sp_rename N'[ArchivedOutboxMessages].[Message]', N'Payload', 'COLUMN';
+
+ALTER TABLE [OutboxMessages] ADD [ActivityId] nvarchar(max) NULL;
+
+ALTER TABLE [ArchivedOutboxMessages] ADD [ActivityId] nvarchar(max) NULL;
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250124082952_Outbox', N'9.0.1');
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20251005024629_DeletedFileEntry', N'9.0.1');
+
+COMMIT;
+GO
+

@@ -1,0 +1,119 @@
+﻿IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+GO
+
+BEGIN TRANSACTION;
+CREATE TABLE [ArchivedOutboxMessages] (
+    [Id] uniqueidentifier NOT NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    [EventType] nvarchar(max) NULL,
+    [TriggeredById] uniqueidentifier NOT NULL,
+    [ObjectId] nvarchar(max) NULL,
+    [Message] nvarchar(max) NULL,
+    [Published] bit NOT NULL,
+    CONSTRAINT [PK_ArchivedOutboxMessages] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [AuditLogEntries] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [UserId] uniqueidentifier NOT NULL,
+    [Action] nvarchar(max) NULL,
+    [ObjectId] nvarchar(max) NULL,
+    [Log] nvarchar(max) NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_AuditLogEntries] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [FileEntries] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [Name] nvarchar(max) NULL,
+    [Description] nvarchar(max) NULL,
+    [Size] bigint NOT NULL,
+    [UploadedTime] datetimeoffset NOT NULL,
+    [FileName] nvarchar(max) NULL,
+    [FileLocation] nvarchar(max) NULL,
+    [Encrypted] bit NOT NULL,
+    [EncryptionKey] nvarchar(max) NULL,
+    [EncryptionIV] nvarchar(max) NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_FileEntries] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [OutboxMessages] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    [EventType] nvarchar(max) NULL,
+    [TriggeredById] uniqueidentifier NOT NULL,
+    [ObjectId] nvarchar(max) NULL,
+    [Message] nvarchar(max) NULL,
+    [Published] bit NOT NULL,
+    CONSTRAINT [PK_OutboxMessages] PRIMARY KEY ([Id])
+);
+
+CREATE INDEX [IX_ArchivedOutboxMessages_CreatedDateTime] ON [ArchivedOutboxMessages] ([CreatedDateTime]);
+
+CREATE INDEX [IX_OutboxMessages_CreatedDateTime] ON [OutboxMessages] ([CreatedDateTime]);
+
+CREATE INDEX [IX_OutboxMessages_Published] ON [OutboxMessages] ([Published]);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20231215102256_Init', N'9.0.1');
+
+DROP INDEX [IX_OutboxMessages_Published] ON [OutboxMessages];
+
+CREATE INDEX [IX_OutboxMessages_Published_CreatedDateTime] ON [OutboxMessages] ([Published], [CreatedDateTime]);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250117051834_Net9', N'9.0.1');
+
+EXEC sp_rename N'[OutboxMessages].[Message]', N'Payload', 'COLUMN';
+
+EXEC sp_rename N'[ArchivedOutboxMessages].[Message]', N'Payload', 'COLUMN';
+
+ALTER TABLE [OutboxMessages] ADD [ActivityId] nvarchar(max) NULL;
+
+ALTER TABLE [ArchivedOutboxMessages] ADD [ActivityId] nvarchar(max) NULL;
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250124083053_Outbox', N'9.0.1');
+
+ALTER TABLE [FileEntries] ADD [Archived] bit NOT NULL DEFAULT CAST(0 AS bit);
+
+ALTER TABLE [FileEntries] ADD [ArchivedDate] datetimeoffset NULL;
+
+ALTER TABLE [FileEntries] ADD [Deleted] bit NOT NULL DEFAULT CAST(0 AS bit);
+
+ALTER TABLE [FileEntries] ADD [DeletedDate] datetimeoffset NULL;
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20251005024704_DeletedFileEntry', N'9.0.1');
+
+CREATE TABLE [DeletedFileEntries] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [FileEntryId] uniqueidentifier NOT NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_DeletedFileEntries] PRIMARY KEY ([Id])
+);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20251018041048_DeletedFileEntry2', N'9.0.1');
+
+COMMIT;
+GO
+

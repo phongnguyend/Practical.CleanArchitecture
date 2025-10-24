@@ -14,6 +14,7 @@
   <Folder Name="/Hosts/">
     <Project Path="ClassifiedAds.AspireAppHost/ClassifiedAds.AspireAppHost.csproj" />
     <Project Path="ClassifiedAds.Background/ClassifiedAds.Background.csproj" />
+    <Project Path="ClassifiedAds.Migrator.Tests/ClassifiedAds.Migrator.Tests.csproj" Id="f94748b5-20dc-4487-91b5-9043751549d4" />
     <Project Path="ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj" />
     <Project Path="ClassifiedAds.WebAPI/ClassifiedAds.WebAPI.csproj" />
   </Folder>
