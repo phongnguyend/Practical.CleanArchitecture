@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Locks;
-using EntityFrameworkCore.SqlServer.SimpleBulks.Extensions;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Data;
@@ -41,9 +40,9 @@ public class SqlDistributedLock : IDistributedLock
 
     public IDistributedLockScope Acquire(string lockName)
     {
-        SqlParameter returnValue;
-        var acquireCommand = CreateAcquireCommand(0, lockName, -1, out returnValue);
+        var acquireCommand = CreateAcquireCommand(0, lockName, -1, out var returnValue);
 
+        EnsureOpen();
         acquireCommand.ExecuteNonQuery();
 
         if (ParseReturnCode((int)returnValue.Value))
@@ -58,9 +57,9 @@ public class SqlDistributedLock : IDistributedLock
 
     public IDistributedLockScope TryAcquire(string lockName)
     {
-        SqlParameter returnValue;
-        var acquireCommand = CreateAcquireCommand(30, lockName, 0, out returnValue);
+        var acquireCommand = CreateAcquireCommand(30, lockName, 0, out var returnValue);
 
+        EnsureOpen();
         acquireCommand.ExecuteNonQuery();
 
         if (ParseReturnCode((int)returnValue.Value))
@@ -73,10 +72,16 @@ public class SqlDistributedLock : IDistributedLock
         }
     }
 
+    private void EnsureOpen()
+    {
+        if (_connection.State != ConnectionState.Open)
+        {
+            _connection.Open();
+        }
+    }
+
     private SqlCommand CreateAcquireCommand(int commandTimeout, string lockName, int lockTimeout, out SqlParameter returnValue)
     {
-        _connection.EnsureOpen();
-
         SqlCommand command = _connection.CreateCommand();
         command.Transaction = _transaction;
 
