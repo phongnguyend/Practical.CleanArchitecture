@@ -36,7 +36,11 @@ public class SmsMessageRepository : Repository<SmsMessage, Guid>, ISmsMessageRep
 
         using (await UnitOfWork.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken))
         {
-            await _dbContext.BulkInsertAsync(archivedMessages, opt => opt.KeepIdentity = true, cancellationToken: cancellationToken);
+            await _dbContext.BulkInsertAsync(archivedMessages,
+                new BulkInsertOptions
+                {
+                    KeepIdentity = true
+                }, cancellationToken: cancellationToken);
             await _dbContext.BulkDeleteAsync(messagesToArchive, cancellationToken: cancellationToken);
             await UnitOfWork.CommitTransactionAsync(cancellationToken);
         }
