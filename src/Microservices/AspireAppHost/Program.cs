@@ -21,7 +21,10 @@ var apiGateway = builder.AddProject<Projects.ClassifiedAds_Gateways_WebAPI>("Cla
 
 
 var identityServer = builder
-    .AddExecutable("ClassifiedAds-IdentityServer", "dotnet", "../../IdentityServers/OpenIddict/ClassifiedAds.IdentityServer", "run", $"--urls=https://localhost:44367");
+    .AddExecutable("IdentityServer", "dotnet", "../../IdentityServers/OpenIddict/ClassifiedAds.IdentityServer", "run", $"--urls=https://localhost:44367");
+
+var identityServerMigrator = builder
+    .AddExecutable("IdentityServer-Migrator", "dotnet", "../../IdentityServers/OpenIddict/ClassifiedAds.Migrator", "run");
 
 var webhook = builder.AddExternalService("Webhook", "https://ddddotnet-webhook-server.azurewebsites.net").WithHttpHealthCheck("");
 
