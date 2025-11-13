@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -23,10 +22,7 @@ public class GetProductsRequest : IEndpointHandler
         .RequireRateLimiting(RateLimiterPolicyNames.DefaultPolicy)
         .WithName("GetProducts")
         .Produces<IEnumerable<ProductModel>>(contentType: "application/json")
-        .WithOpenApi(operation => new OpenApiOperation(operation)
-        {
-            Tags = new List<OpenApiTag> { new OpenApiTag { Name = "Products" } }
-        });
+        .WithTags("Products");
     }
 
     private static async Task<IResult> HandleAsync(Dispatcher dispatcher,

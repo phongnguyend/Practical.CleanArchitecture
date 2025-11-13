@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.OpenApi.Models;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Product.Api.Endpoints;
@@ -27,10 +25,7 @@ public class ImportCsvRequestHandler : IEndpointHandler
         .WithName("ImportCsv")
         .Produces<CreateProductResponse>(StatusCodes.Status200OK, contentType: "application/json")
         .ProducesProblem(StatusCodes.Status400BadRequest)
-        .WithOpenApi(operation => new OpenApiOperation(operation)
-        {
-            Tags = new List<OpenApiTag> { new OpenApiTag { Name = "Products" } }
-        })
+        .WithTags("Products")
         .DisableAntiforgery();
     }
 

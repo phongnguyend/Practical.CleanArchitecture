@@ -7,8 +7,6 @@ using ClassifiedAds.Services.Product.RateLimiterPolicies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.OpenApi.Models;
-using System.Collections.Generic;
 using System.IO;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -24,10 +22,7 @@ public class ExportProductsAsCsvRequest : IEndpointHandler
         .RequireRateLimiting(RateLimiterPolicyNames.DefaultPolicy)
         .WithName("ExportProductsAsCsv")
         .Produces(StatusCodes.Status200OK)
-        .WithOpenApi(operation => new OpenApiOperation(operation)
-        {
-            Tags = new List<OpenApiTag> { new OpenApiTag { Name = "Products" } }
-        });
+        .WithTags("Products");
     }
 
     private static async Task<IResult> HandleAsync(Dispatcher dispatcher,

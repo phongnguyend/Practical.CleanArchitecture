@@ -9,9 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -56,10 +54,7 @@ public class UpdateProductRequestHandler : IEndpointHandler
         .Produces<UpdateProductResponse>(StatusCodes.Status200OK, contentType: "application/json")
         .ProducesProblem(StatusCodes.Status404NotFound)
         .ProducesProblem(StatusCodes.Status400BadRequest)
-        .WithOpenApi(operation => new OpenApiOperation(operation)
-        {
-            Tags = new List<OpenApiTag> { new OpenApiTag { Name = "Products" } }
-        });
+        .WithTags("Products");
     }
 
     private static async Task<IResult> HandleAsync(Dispatcher dispatcher, Guid id, [FromBody] UpdateProductRequest request, IValidator<UpdateProductRequest> validator)

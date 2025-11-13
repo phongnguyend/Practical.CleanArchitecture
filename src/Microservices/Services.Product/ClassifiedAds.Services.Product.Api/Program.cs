@@ -13,7 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Polly;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
@@ -154,27 +154,13 @@ services.AddSwaggerGen(setupAction =>
         },
     });
 
-    setupAction.AddSecurityRequirement(new OpenApiSecurityRequirement
+    setupAction.AddSecurityRequirement(doc => new OpenApiSecurityRequirement
     {
         {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Oidc",
-                },
-            }, new List<string>()
+            new OpenApiSecuritySchemeReference("Oidc", doc), new List<string>()
         },
         {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer",
-                },
-            }, new List<string>()
+            new OpenApiSecuritySchemeReference("Bearer", doc), new List<string>()
         },
     });
 });

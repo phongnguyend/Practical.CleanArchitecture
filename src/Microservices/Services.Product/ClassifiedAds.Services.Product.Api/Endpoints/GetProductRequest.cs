@@ -7,9 +7,7 @@ using ClassifiedAds.Services.Product.RateLimiterPolicies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Product.Api.Endpoints;
@@ -24,10 +22,7 @@ public class GetProductRequest : IEndpointHandler
         .WithName("GetProduct")
         .Produces<ProductModel>(contentType: "application/json")
         .ProducesProblem(StatusCodes.Status404NotFound)
-        .WithOpenApi(operation => new OpenApiOperation(operation)
-        {
-            Tags = new List<OpenApiTag> { new OpenApiTag { Name = "Products" } }
-        });
+        .WithTags("Products");
     }
 
     private static async Task<IResult> HandleAsync(Dispatcher dispatcher, Guid id)

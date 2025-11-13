@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build-env
 WORKDIR /ClassifiedAds.Microservices
 
 # Copy csproj and restore as distinct layers
@@ -17,7 +17,7 @@ COPY . ./
 RUN dotnet publish ./Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI/ClassifiedAds.Gateways.WebAPI.csproj -c Release -o out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /ClassifiedAds.Microservices
 COPY --from=build-env /ClassifiedAds.Microservices/out .
 

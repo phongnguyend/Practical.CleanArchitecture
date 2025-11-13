@@ -8,9 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -54,10 +52,7 @@ public class CreateProductRequestHandler : IEndpointHandler
         .WithName("CreateProduct")
         .Produces<CreateProductResponse>(StatusCodes.Status201Created, contentType: "application/json")
         .ProducesProblem(StatusCodes.Status400BadRequest)
-        .WithOpenApi(operation => new OpenApiOperation(operation)
-        {
-            Tags = new List<OpenApiTag> { new OpenApiTag { Name = "Products" } }
-        });
+        .WithTags("Products");
     }
 
     private static async Task<IResult> HandleAsync(Dispatcher dispatcher, [FromBody] CreateProductRequest request, IValidator<CreateProductRequest> validator)
