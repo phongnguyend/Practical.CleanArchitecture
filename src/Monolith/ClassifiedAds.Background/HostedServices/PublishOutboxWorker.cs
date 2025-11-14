@@ -1,5 +1,5 @@
-﻿using ClassifiedAds.Application.EventLogs.Commands;
-using ClassifiedAds.Application.FeatureToggles;
+﻿using ClassifiedAds.Application.FeatureToggles;
+using ClassifiedAds.Application.OutboxMessages.Commands;
 using ClassifiedAds.CrossCuttingConcerns.CircuitBreakers;
 using ClassifiedAds.CrossCuttingConcerns.Logging;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,15 +11,15 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.Background.HostedServices;
 
-public class PublishEventWorker : BackgroundService
+public class PublishOutboxWorker : BackgroundService
 {
     private readonly IServiceProvider _services;
     private readonly IOutboxPublishingToggle _outboxPublishingToggle;
-    private readonly ILogger<PublishEventWorker> _logger;
+    private readonly ILogger<PublishOutboxWorker> _logger;
 
-    public PublishEventWorker(IServiceProvider services,
+    public PublishOutboxWorker(IServiceProvider services,
         IOutboxPublishingToggle outboxPublishingToggle,
-        ILogger<PublishEventWorker> logger)
+        ILogger<PublishOutboxWorker> logger)
     {
         _services = services;
         _outboxPublishingToggle = outboxPublishingToggle;
@@ -28,7 +28,7 @@ public class PublishEventWorker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("PushlishEventWorker is starting.");
+        _logger.LogInformation("PublishOutboxWorker is starting.");
         await DoWork(stoppingToken);
     }
 
@@ -38,18 +38,18 @@ public class PublishEventWorker : BackgroundService
         {
             if (!_outboxPublishingToggle.IsEnabled())
             {
-                _logger.LogInformation("PushlishEventWorker is being paused. Retry in 10s.");
+                _logger.LogInformation("PublishOutboxWorker is being paused. Retry in 10s.");
                 await Task.Delay(10000, stoppingToken);
                 continue;
             }
 
-            using var activity = ActivityExtensions.StartNew("PublishEventWorker");
+            using var activity = ActivityExtensions.StartNew("PublishOutboxWorker");
 
-            _logger.LogDebug($"PushlishEvent task doing background work.");
+            _logger.LogDebug($"PublishOutboxWorker task doing background work.");
 
             try
             {
-                var publishEventsCommand = new PublishEventsCommand();
+                var publishEventsCommand = new PublishOutboxMessagesCommand();
 
                 using (var scope = _services.CreateScope())
                 {
@@ -74,6 +74,6 @@ public class PublishEventWorker : BackgroundService
             }
         }
 
-        _logger.LogInformation($"PushlishEventWorker background task is stopping.");
+        _logger.LogInformation($"PublishOutboxWorker background task is stopping.");
     }
 }

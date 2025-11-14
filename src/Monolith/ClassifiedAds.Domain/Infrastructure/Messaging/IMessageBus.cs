@@ -24,6 +24,7 @@ public interface IMessageBusMessage
 
 public interface IMessageBusEvent : IMessageBusMessage
 {
+    public string EventType { get; }
 }
 
 public interface IMessageBusCommand : IMessageBusMessage

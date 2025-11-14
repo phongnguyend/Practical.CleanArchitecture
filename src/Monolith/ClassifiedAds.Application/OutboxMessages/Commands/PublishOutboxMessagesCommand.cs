@@ -8,21 +8,21 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Application.EventLogs.Commands;
+namespace ClassifiedAds.Application.OutboxMessages.Commands;
 
-public class PublishEventsCommand : ICommand
+public class PublishOutboxMessagesCommand : ICommand
 {
     public int SentEventsCount { get; set; }
 }
 
-public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
+public class PublishOutboxMessagesCommandHandler : ICommandHandler<PublishOutboxMessagesCommand>
 {
-    private readonly ILogger<PublishEventsCommandHandler> _logger;
+    private readonly ILogger<PublishOutboxMessagesCommandHandler> _logger;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IRepository<OutboxMessage, Guid> _outboxMessageRepository;
     private readonly IMessageBus _messageBus;
 
-    public PublishEventsCommandHandler(ILogger<PublishEventsCommandHandler> logger,
+    public PublishOutboxMessagesCommandHandler(ILogger<PublishOutboxMessagesCommandHandler> logger,
         IDateTimeProvider dateTimeProvider,
         IRepository<OutboxMessage, Guid> outboxMessageRepository,
         IMessageBus messageBus)
@@ -33,7 +33,7 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
         _messageBus = messageBus;
     }
 
-    public async Task HandleAsync(PublishEventsCommand command, CancellationToken cancellationToken = default)
+    public async Task HandleAsync(PublishOutboxMessagesCommand command, CancellationToken cancellationToken = default)
     {
         var events = _outboxMessageRepository.GetQueryableSet()
             .Where(x => !x.Published)
@@ -47,7 +47,7 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
             {
                 Id = eventLog.Id.ToString(),
                 EventType = eventLog.EventType,
-                EventSource = typeof(PublishEventsCommand).Assembly.GetName().Name,
+                EventSource = typeof(PublishOutboxMessagesCommand).Assembly.GetName().Name,
                 Payload = eventLog.Payload,
                 ActivityId = eventLog.ActivityId
             };
