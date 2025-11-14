@@ -56,6 +56,8 @@ Host.CreateDefaultBuilder(args)
             .AddApplicationServices()
             .AddMessageHandlers();
 
+    services.AddStorageManager(appSettings.Storage);
+
     services.AddTransient<IMessageBus, MessageBus>();
     services.AddMessageBusSender<FileCreatedEvent>(appSettings.Messaging);
     services.AddMessageBusSender<FileUpdatedEvent>(appSettings.Messaging);
@@ -69,6 +71,12 @@ Host.CreateDefaultBuilder(args)
     services.AddMessageBusReceiver<WebhookConsumer, ProductCreatedEvent>(appSettings.Messaging);
     services.AddMessageBusReceiver<WebhookConsumer, ProductUpdatedEvent>(appSettings.Messaging);
     services.AddMessageBusReceiver<WebhookConsumer, ProductDeletedEvent>(appSettings.Messaging);
+    services.AddMessageBusReceiver<FileEmbeddingConsumer, FileCreatedEvent>(appSettings.Messaging);
+    services.AddMessageBusReceiver<FileEmbeddingConsumer, FileUpdatedEvent>(appSettings.Messaging);
+    services.AddMessageBusReceiver<FileEmbeddingConsumer, FileDeletedEvent>(appSettings.Messaging);
+    services.AddMessageBusReceiver<ProductEmbeddingConsumer, ProductCreatedEvent>(appSettings.Messaging);
+    services.AddMessageBusReceiver<ProductEmbeddingConsumer, ProductUpdatedEvent>(appSettings.Messaging);
+    services.AddMessageBusReceiver<ProductEmbeddingConsumer, ProductDeletedEvent>(appSettings.Messaging);
     services.AddMessageBusConsumers(Assembly.GetExecutingAssembly());
     services.AddOutboxMessagePublishers(Assembly.GetExecutingAssembly());
 
@@ -106,6 +114,12 @@ static void AddHostedServices(IServiceCollection services)
     services.AddHostedService<MessageBusConsumerBackgroundService<WebhookConsumer, ProductCreatedEvent>>();
     services.AddHostedService<MessageBusConsumerBackgroundService<WebhookConsumer, ProductUpdatedEvent>>();
     services.AddHostedService<MessageBusConsumerBackgroundService<WebhookConsumer, ProductDeletedEvent>>();
+    services.AddHostedService<MessageBusConsumerBackgroundService<FileEmbeddingConsumer, FileCreatedEvent>>();
+    services.AddHostedService<MessageBusConsumerBackgroundService<FileEmbeddingConsumer, FileUpdatedEvent>>();
+    services.AddHostedService<MessageBusConsumerBackgroundService<FileEmbeddingConsumer, FileDeletedEvent>>();
+    services.AddHostedService<MessageBusConsumerBackgroundService<ProductEmbeddingConsumer, ProductCreatedEvent>>();
+    services.AddHostedService<MessageBusConsumerBackgroundService<ProductEmbeddingConsumer, ProductUpdatedEvent>>();
+    services.AddHostedService<MessageBusConsumerBackgroundService<ProductEmbeddingConsumer, ProductDeletedEvent>>();
     services.AddHostedService<PublishOutboxWorker>();
     services.AddHostedService<SendEmailWorker>();
     services.AddHostedService<SendSmsWorker>();

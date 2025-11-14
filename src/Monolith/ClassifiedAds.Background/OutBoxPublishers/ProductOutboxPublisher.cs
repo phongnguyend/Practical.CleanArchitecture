@@ -1,5 +1,5 @@
-﻿using ClassifiedAds.Application.FileEntries.MessageBusEvents;
-using ClassifiedAds.Application.OutboxMessages.Commands;
+﻿using ClassifiedAds.Application.OutboxMessages.Commands;
+using ClassifiedAds.Application.Products.MessageBusEvents;
 using ClassifiedAds.Domain.Constants;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.Messaging;
@@ -7,15 +7,15 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Background.OutboxMessagePublishers;
+namespace ClassifiedAds.Background.OutBoxPublishers;
 
-public class FileEntryOutboxMessagePublisher : IOutboxMessagePublisher
+public class ProductOutboxPublisher : IOutboxMessagePublisher
 {
     private readonly IMessageBus _messageBus;
 
     public static string[] CanHandleEventTypes()
     {
-        return [EventTypeConstants.FileEntryCreated, EventTypeConstants.FileEntryUpdated, EventTypeConstants.FileEntryDeleted];
+        return [EventTypeConstants.ProductCreated, EventTypeConstants.ProductUpdated, EventTypeConstants.ProductDeleted];
     }
 
     public static string CanHandleEventSource()
@@ -23,36 +23,36 @@ public class FileEntryOutboxMessagePublisher : IOutboxMessagePublisher
         return typeof(PublishOutboxMessagesCommand).Assembly.GetName().Name;
     }
 
-    public FileEntryOutboxMessagePublisher(IMessageBus messageBus)
+    public ProductOutboxPublisher(IMessageBus messageBus)
     {
         _messageBus = messageBus;
     }
 
     public async Task HandleAsync(PublishingOutboxMessage outbox, CancellationToken cancellationToken = default)
     {
-        if (outbox.EventType == EventTypeConstants.FileEntryCreated)
+        if (outbox.EventType == EventTypeConstants.ProductCreated)
         {
-            await _messageBus.SendAsync(new FileCreatedEvent
+            await _messageBus.SendAsync(new ProductCreatedEvent
             {
-                FileEntry = JsonSerializer.Deserialize<FileEntry>(outbox.Payload),
+                Product = JsonSerializer.Deserialize<Product>(outbox.Payload),
             },
             metaData: new MetaData { ActivityId = outbox.ActivityId, MessageId = outbox.Id },
             cancellationToken: cancellationToken);
         }
-        else if (outbox.EventType == EventTypeConstants.FileEntryUpdated)
+        else if (outbox.EventType == EventTypeConstants.ProductUpdated)
         {
-            await _messageBus.SendAsync(new FileUpdatedEvent
+            await _messageBus.SendAsync(new ProductUpdatedEvent
             {
-                FileEntry = JsonSerializer.Deserialize<FileEntry>(outbox.Payload)
+                Product = JsonSerializer.Deserialize<Product>(outbox.Payload)
             },
             metaData: new MetaData { ActivityId = outbox.ActivityId, MessageId = outbox.Id },
             cancellationToken: cancellationToken);
         }
-        else if (outbox.EventType == EventTypeConstants.FileEntryDeleted)
+        else if (outbox.EventType == EventTypeConstants.ProductDeleted)
         {
-            await _messageBus.SendAsync(new FileDeletedEvent
+            await _messageBus.SendAsync(new ProductDeletedEvent
             {
-                FileEntry = JsonSerializer.Deserialize<FileEntry>(outbox.Payload)
+                Product = JsonSerializer.Deserialize<Product>(outbox.Payload)
             },
             metaData: new MetaData { ActivityId = outbox.ActivityId, MessageId = outbox.Id },
             cancellationToken: cancellationToken);
