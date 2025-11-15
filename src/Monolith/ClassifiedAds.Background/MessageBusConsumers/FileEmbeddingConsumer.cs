@@ -1,4 +1,6 @@
-﻿using ClassifiedAds.Application.FileEntries.MessageBusEvents;
+﻿using Azure;
+using Azure.AI.Vision.ImageAnalysis;
+using ClassifiedAds.Application.FileEntries.MessageBusEvents;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.Messaging;
 using ClassifiedAds.Domain.Infrastructure.Storages;
@@ -9,9 +11,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -77,9 +81,9 @@ public sealed class FileEmbeddingConsumer :
             // TODO: xxx
             return;
         }
-
-        if (fileExtension == ".pdf" ||
-            fileExtension == ".docx")
+        else if (fileExtension == ".pdf" ||
+            fileExtension == ".docx" ||
+            fileExtension == ".pptx")
         {
             _logger.LogInformation("Converting file to markdown for FileEntry Id: {FileEntryId}", fileEntry?.Id);
 
@@ -98,9 +102,30 @@ public sealed class FileEmbeddingConsumer :
                 await File.WriteAllTextAsync(markdownFile, markdown, cancellationToken);
             }
         }
+        else if (fileExtension == ".jpg" ||
+            fileExtension == ".png")
+        {
+            _logger.LogInformation("Processing image file for FileEntry Id: {FileEntryId}", fileEntry?.Id);
+
+            var imageAnalysisFolder = Path.Combine(_configuration["Storage:TempFolderPath"], "ImageAnalysis");
+
+            if (!Directory.Exists(imageAnalysisFolder))
+            {
+                Directory.CreateDirectory(imageAnalysisFolder);
+            }
+
+            var imageAnalysisFile = Path.Combine(imageAnalysisFolder, fileEntry.Id + ".json");
+
+            if (!File.Exists(imageAnalysisFile))
+            {
+                var imageAnalysisResult = await AnalyzeImageAsync(fileStorageManager, fileEntry, cancellationToken);
+
+                await File.WriteAllTextAsync(imageAnalysisFile, JsonSerializer.Serialize(imageAnalysisResult), cancellationToken);
+            }
+        }
     }
 
-    private async Task<string> ConvertToMarkdownAsync(IFileStorageManager fileStorageManager, FileEntry fileEntry, CancellationToken cancellationToken = default)
+    private async Task<byte[]> GetBytesAsync(IFileStorageManager fileStorageManager, FileEntry fileEntry, CancellationToken cancellationToken)
     {
         var content = await fileStorageManager.ReadAsync(fileEntry, cancellationToken);
 
@@ -124,6 +149,13 @@ public sealed class FileEmbeddingConsumer :
                 : content;
         }
 
+        return content;
+    }
+
+    private async Task<string> ConvertToMarkdownAsync(IFileStorageManager fileStorageManager, FileEntry fileEntry, CancellationToken cancellationToken = default)
+    {
+        var content = await GetBytesAsync(fileStorageManager, fileEntry, cancellationToken);
+
         using var form = new MultipartFormDataContent();
         using var fileContent = new ByteArrayContent(content);
         fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
@@ -136,5 +168,69 @@ public sealed class FileEmbeddingConsumer :
         var markdown = await response.Content.ReadAsStringAsync(cancellationToken);
 
         return markdown;
+    }
+
+    private ImageAnalysisClient CreateImageAnalysisClient(string endpoint, string key)
+    {
+        var client = new ImageAnalysisClient(new Uri(endpoint), new AzureKeyCredential(key));
+        return client;
+    }
+
+    private async Task<ImageAnalysisResult> AnalyzeImageAsync(IFileStorageManager fileStorageManager, FileEntry fileEntry, CancellationToken cancellationToken = default)
+    {
+        string key = _configuration["ImageAnalysis:AzureAIVision:ApiKey"]!;
+        string endpoint = _configuration["ImageAnalysis:AzureAIVision:Endpoint"]!;
+
+        // Create a client
+        var client = CreateImageAnalysisClient(endpoint, key);
+        var bytes = await GetBytesAsync(fileStorageManager, fileEntry, cancellationToken);
+
+        // Creating a list that defines the features to be extracted from the image.
+        VisualFeatures features = VisualFeatures.Caption | VisualFeatures.DenseCaptions | VisualFeatures.Tags;
+
+        // Analyze the image
+        var result = await client.AnalyzeAsync(new BinaryData(bytes), visualFeatures: features, cancellationToken: cancellationToken);
+
+        return new ImageAnalysisResult
+        {
+            Tags = result.Value.Tags.Values.Select(x => new Tag
+            {
+                Name = x.Name,
+                Confidence = x.Confidence
+            }).ToArray(),
+            Caption = new Caption
+            {
+                Text = result.Value.Caption.Text,
+                Confidence = result.Value.Caption.Confidence
+            },
+            DenseCaptions = result.Value.DenseCaptions.Values.Select(x => new Caption
+            {
+                Text = x.Text,
+                Confidence = x.Confidence
+            }).ToArray()
+        };
+    }
+
+    class ImageAnalysisResult
+    {
+        public Tag[] Tags { get; set; }
+
+        public Caption Caption { get; set; }
+
+        public Caption[] DenseCaptions { get; set; }
+    }
+
+    class Tag
+    {
+        public string Name { get; set; }
+
+        public float Confidence { get; set; }
+    }
+
+    class Caption
+    {
+        public string Text { get; set; }
+
+        public float Confidence { get; set; }
     }
 }
