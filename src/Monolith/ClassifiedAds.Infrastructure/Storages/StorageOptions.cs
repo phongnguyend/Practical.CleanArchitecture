@@ -10,6 +10,8 @@ public class StorageOptions
 
     public string MasterEncryptionKey { get; set; }
 
+    public string TempFolderPath { get; set; }
+
     public LocalOptions Local { get; set; }
 
     public AzureBlobOption Azure { get; set; }

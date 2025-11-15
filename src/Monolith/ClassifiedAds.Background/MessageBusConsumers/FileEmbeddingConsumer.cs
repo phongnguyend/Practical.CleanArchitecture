@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
@@ -40,72 +41,68 @@ public sealed class FileEmbeddingConsumer :
     {
         _logger.LogInformation("Handling FileCreatedEvent for FileEntry Id: {FileEntryId}", data?.FileEntry?.Id);
 
-        if (string.IsNullOrEmpty(data?.FileEntry?.FileLocation))
-        {
-            return;
-        }
-
-        if (data.FileEntry.FileName.EndsWith(".txt") ||
-           data.FileEntry.FileName.EndsWith(".md") ||
-           data.FileEntry.FileName.EndsWith(".markdown"))
-        {
-            _logger.LogInformation("Skipping text file for FileEntry Id: {FileEntryId}", data?.FileEntry?.Id);
-            return;
-        }
-
-        if (data.FileEntry.FileName.EndsWith(".pdf") ||
-            data.FileEntry.FileName.EndsWith(".docx"))
-        {
-            _logger.LogInformation("Converting file to markdown for FileEntry Id: {FileEntryId}", data?.FileEntry?.Id);
-
-            var markdown = await ConvertToMarkdownAsync(data.FileEntry, cancellationToken);
-
-            return;
-        }
-
-        return;
+        await ProcessFileAsync(data.FileEntry, cancellationToken);
     }
 
     public async Task HandleAsync(FileUpdatedEvent data, MetaData metaData, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Handling FileUpdatedEvent for FileEntry Id: {FileEntryId}", data?.FileEntry?.Id);
 
-        if (string.IsNullOrEmpty(data?.FileEntry?.FileLocation))
-        {
-            return;
-        }
-
-        if (data.FileEntry.FileName.EndsWith(".txt") ||
-           data.FileEntry.FileName.EndsWith(".md") ||
-           data.FileEntry.FileName.EndsWith(".markdown"))
-        {
-            _logger.LogInformation("Skipping text file for FileEntry Id: {FileEntryId}", data?.FileEntry?.Id);
-            return;
-        }
-
-        if (data.FileEntry.FileName.EndsWith(".pdf") ||
-            data.FileEntry.FileName.EndsWith(".docx"))
-        {
-            _logger.LogInformation("Converting file to markdown for FileEntry Id: {FileEntryId}", data?.FileEntry?.Id);
-
-            var markdown = await ConvertToMarkdownAsync(data.FileEntry, cancellationToken);
-
-            return;
-        }
-
-        return;
+        await ProcessFileAsync(data.FileEntry, cancellationToken);
     }
 
     public Task HandleAsync(FileDeletedEvent data, MetaData metaData, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Handling FileDeletedEvent for FileEntry Id: {FileEntryId}", data?.FileEntry?.Id);
+
         return Task.CompletedTask;
     }
 
-    private async Task<string> ConvertToMarkdownAsync(FileEntry fileEntry, CancellationToken cancellationToken = default)
+    private async Task ProcessFileAsync(FileEntry fileEntry, CancellationToken cancellationToken)
     {
-        // TODO: xxx
-        var content = await _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IFileStorageManager>().ReadAsync(fileEntry, cancellationToken);
+        if (string.IsNullOrEmpty(fileEntry?.FileLocation))
+        {
+            return;
+        }
+
+        using var scope = _serviceProvider.CreateScope();
+        var fileStorageManager = scope.ServiceProvider.GetService<IFileStorageManager>();
+
+        var fileExtension = Path.GetExtension(fileEntry.FileName);
+
+        if (fileExtension == ".txt" ||
+           fileExtension == ".md" ||
+           fileExtension == ".markdown")
+        {
+            // TODO: xxx
+            return;
+        }
+
+        if (fileExtension == ".pdf" ||
+            fileExtension == ".docx")
+        {
+            _logger.LogInformation("Converting file to markdown for FileEntry Id: {FileEntryId}", fileEntry?.Id);
+
+            var markdownFolder = Path.Combine(_configuration["Storage:TempFolderPath"], "Markdown");
+
+            if (!Directory.Exists(markdownFolder))
+            {
+                Directory.CreateDirectory(markdownFolder);
+            }
+
+            var markdownFile = Path.Combine(markdownFolder, fileEntry.Id + ".md");
+
+            if (!File.Exists(markdownFile))
+            {
+                var markdown = await ConvertToMarkdownAsync(fileStorageManager, fileEntry, cancellationToken);
+                await File.WriteAllTextAsync(markdownFile, markdown, cancellationToken);
+            }
+        }
+    }
+
+    private async Task<string> ConvertToMarkdownAsync(IFileStorageManager fileStorageManager, FileEntry fileEntry, CancellationToken cancellationToken = default)
+    {
+        var content = await fileStorageManager.ReadAsync(fileEntry, cancellationToken);
 
         if (fileEntry.Encrypted)
         {
