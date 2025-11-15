@@ -74,6 +74,11 @@ public sealed class FileEmbeddingConsumer :
             return;
         }
 
+        if (fileEntry.Deleted)
+        {
+            return;
+        }
+
         using var scope = _serviceProvider.CreateScope();
         var fileStorageManager = scope.ServiceProvider.GetService<IFileStorageManager>();
         var markdownService = scope.ServiceProvider.GetService<MarkdownService>();
@@ -91,19 +96,9 @@ public sealed class FileEmbeddingConsumer :
 
             var chunks = TextChunkingService.ChunkSentences(Encoding.UTF8.GetString(bytes));
 
-            var chunksFolder = Path.Combine(_configuration["Storage:TempFolderPath"], "Chunks", fileEntry.Id.ToString());
+            var chunksFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Chunks", fileEntry.Id.ToString()));
 
-            if (!Directory.Exists(chunksFolder))
-            {
-                Directory.CreateDirectory(chunksFolder);
-            }
-
-            var embeddingsFolder = Path.Combine(_configuration["Storage:TempFolderPath"], "Embeddings", fileEntry.Id.ToString());
-
-            if (!Directory.Exists(embeddingsFolder))
-            {
-                Directory.CreateDirectory(embeddingsFolder);
-            }
+            var embeddingsFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Embeddings", fileEntry.Id.ToString()));
 
             foreach (var chunk in chunks)
             {
@@ -119,12 +114,7 @@ public sealed class FileEmbeddingConsumer :
         {
             _logger.LogInformation("Converting file to markdown for FileEntry Id: {FileEntryId}", fileEntry?.Id);
 
-            var markdownFolder = Path.Combine(_configuration["Storage:TempFolderPath"], "Markdown");
-
-            if (!Directory.Exists(markdownFolder))
-            {
-                Directory.CreateDirectory(markdownFolder);
-            }
+            var markdownFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Markdown"));
 
             var markdownFile = Path.Combine(markdownFolder, fileEntry.Id + ".md");
 
@@ -137,19 +127,9 @@ public sealed class FileEmbeddingConsumer :
 
             var chunks = TextChunkingService.ChunkSentences(await File.ReadAllTextAsync(markdownFile, cancellationToken));
 
-            var chunksFolder = Path.Combine(_configuration["Storage:TempFolderPath"], "Chunks", fileEntry.Id.ToString());
+            var chunksFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Chunks", fileEntry.Id.ToString()));
 
-            if (!Directory.Exists(chunksFolder))
-            {
-                Directory.CreateDirectory(chunksFolder);
-            }
-
-            var embeddingsFolder = Path.Combine(_configuration["Storage:TempFolderPath"], "Embeddings", fileEntry.Id.ToString());
-
-            if (!Directory.Exists(embeddingsFolder))
-            {
-                Directory.CreateDirectory(embeddingsFolder);
-            }
+            var embeddingsFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Embeddings", fileEntry.Id.ToString()));
 
             foreach (var chunk in chunks)
             {
@@ -164,21 +144,12 @@ public sealed class FileEmbeddingConsumer :
         {
             _logger.LogInformation("Processing image file for FileEntry Id: {FileEntryId}", fileEntry?.Id);
 
-            var imageAnalysisFolder = Path.Combine(_configuration["Storage:TempFolderPath"], "ImageAnalysis");
+            var imageAnalysisFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "ImageAnalysis"));
 
-            if (!Directory.Exists(imageAnalysisFolder))
-            {
-                Directory.CreateDirectory(imageAnalysisFolder);
-            }
+            var embeddingsFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Embeddings", fileEntry.Id.ToString()));
 
-            var embeddingsFolder = Path.Combine(_configuration["Storage:TempFolderPath"], "Embeddings", fileEntry.Id.ToString());
-
-            if (!Directory.Exists(embeddingsFolder))
-            {
-                Directory.CreateDirectory(embeddingsFolder);
-            }
-
-            var imageAnalysisFile = Path.Combine(imageAnalysisFolder, fileEntry.Id + ".json");
+            var imageAnalysisFile = Path.Combine(imageAnalysisFolder, $"{fileEntry.Id}.json");
+            var embeddingFile = Path.Combine(embeddingsFolder, $"{fileEntry.Id}.json");
 
             if (!File.Exists(imageAnalysisFile))
             {
@@ -189,12 +160,14 @@ public sealed class FileEmbeddingConsumer :
                 var json = JsonSerializer.Serialize(imageAnalysisResult);
 
                 await File.WriteAllTextAsync(imageAnalysisFile, json, cancellationToken);
-
-                var embedding = await embeddingService.GenerateAsync(json, cancellationToken);
-                await File.WriteAllTextAsync(Path.Combine(embeddingsFolder, $"{fileEntry.Id}.json"), JsonSerializer.Serialize(embedding), cancellationToken);
             }
 
-
+            if (!File.Exists(embeddingFile))
+            {
+                var json = await File.ReadAllTextAsync(imageAnalysisFile, cancellationToken);
+                var embedding = await embeddingService.GenerateAsync(json, cancellationToken);
+                await File.WriteAllTextAsync(embeddingFile, JsonSerializer.Serialize(embedding), cancellationToken);
+            }
         }
     }
 
@@ -223,5 +196,15 @@ public sealed class FileEmbeddingConsumer :
         }
 
         return content;
+    }
+
+    private static string CreateDirectoryIfNotExist(string path)
+    {
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+
+        return path;
     }
 }
