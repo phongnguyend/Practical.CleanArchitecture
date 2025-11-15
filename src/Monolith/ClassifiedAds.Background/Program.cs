@@ -5,6 +5,7 @@ using ClassifiedAds.Background.ConfigurationOptions;
 using ClassifiedAds.Background.HostedServices;
 using ClassifiedAds.Background.Identity;
 using ClassifiedAds.Background.MessageBusConsumers;
+using ClassifiedAds.Background.Services;
 using ClassifiedAds.CrossCuttingConcerns.Exceptions;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.IdentityProviders;
@@ -57,6 +58,9 @@ Host.CreateDefaultBuilder(args)
             .AddMessageHandlers();
 
     services.AddStorageManager(appSettings.Storage);
+    services.AddScoped<EmbeddingService>();
+    services.AddScoped<ImageAnalysisService>();
+    services.AddScoped<MarkdownService>();
 
     services.AddTransient<IMessageBus, MessageBus>();
     services.AddMessageBusSender<FileCreatedEvent>(appSettings.Messaging);
