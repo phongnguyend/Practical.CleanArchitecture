@@ -23,7 +23,7 @@ internal class AddRoleCommandHandler : ICommandHandler<AddRoleCommand>
     public async Task HandleAsync(AddRoleCommand command, CancellationToken cancellationToken = default)
     {
         command.User.UserRoles.Add(command.Role);
-        await _userRepository.AddOrUpdateAsync(command.User);
-        await _userRepository.UnitOfWork.SaveChangesAsync();
+        await _userRepository.AddOrUpdateAsync(command.User, cancellationToken);
+        await _userRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

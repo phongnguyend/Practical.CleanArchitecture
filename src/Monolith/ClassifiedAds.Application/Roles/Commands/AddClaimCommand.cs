@@ -23,6 +23,6 @@ internal class AddClaimCommandHandler : ICommandHandler<AddClaimCommand>
     public async Task HandleAsync(AddClaimCommand command, CancellationToken cancellationToken = default)
     {
         command.Role.Claims.Add(command.Claim);
-        await _roleRepository.UnitOfWork.SaveChangesAsync();
+        await _roleRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

@@ -22,6 +22,6 @@ internal class DeleteRoleCommandHandler : ICommandHandler<DeleteRoleCommand>
     public async Task HandleAsync(DeleteRoleCommand command, CancellationToken cancellationToken = default)
     {
         _roleRepository.Delete(command.Role);
-        await _roleRepository.UnitOfWork.SaveChangesAsync();
+        await _roleRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

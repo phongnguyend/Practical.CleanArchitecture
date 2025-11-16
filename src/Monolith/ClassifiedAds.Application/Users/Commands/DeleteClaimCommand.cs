@@ -23,7 +23,7 @@ internal class DeleteClaimCommandHandler : ICommandHandler<DeleteClaimCommand>
     public async Task HandleAsync(DeleteClaimCommand command, CancellationToken cancellationToken = default)
     {
         command.User.Claims.Remove(command.Claim);
-        await _userRepository.AddOrUpdateAsync(command.User);
-        await _userRepository.UnitOfWork.SaveChangesAsync();
+        await _userRepository.AddOrUpdateAsync(command.User, cancellationToken);
+        await _userRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

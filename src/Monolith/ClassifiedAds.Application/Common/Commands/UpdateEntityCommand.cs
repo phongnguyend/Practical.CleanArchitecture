@@ -28,6 +28,6 @@ where TEntity : Entity<Guid>, IAggregateRoot
 
     public async Task HandleAsync(UpdateEntityCommand<TEntity> command, CancellationToken cancellationToken = default)
     {
-        await _crudService.UpdateAsync(command.Entity);
+        await _crudService.UpdateAsync(command.Entity, cancellationToken);
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -41,11 +42,11 @@ public partial class Upload
         {
             Logger.LogWarning("Upload using InputFile + HttpClient.");
 
-            var buffer = new byte[BrowserFile.Size];
-            await BrowserFile.OpenReadStream().ReadAsync(buffer);
+            using var memoryStream = new MemoryStream();
+            await BrowserFile.OpenReadStream().CopyToAsync(memoryStream);
 
             File.FileName = BrowserFile.Name;
-            var res = await FileService.UploadFileAsync(File, buffer);
+            var res = await FileService.UploadFileAsync(File, memoryStream.ToArray());
 
             NavManager.NavigateTo($"/files/edit/{res.Id}");
         }

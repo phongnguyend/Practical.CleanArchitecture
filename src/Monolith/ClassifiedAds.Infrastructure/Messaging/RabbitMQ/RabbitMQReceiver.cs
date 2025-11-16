@@ -242,7 +242,7 @@ public class RabbitMQReceiver<TConsumer, T> : IMessageReceiver<TConsumer, T>, ID
         return null;
     }
 
-    private int GetRetryQueue(int retryCount, int[] buckets)
+    private static int GetRetryQueue(int retryCount, int[] buckets)
     {
         int index = (retryCount - 1) % buckets.Length;
         return buckets[index];

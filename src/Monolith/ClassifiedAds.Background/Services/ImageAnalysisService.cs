@@ -17,7 +17,7 @@ public class ImageAnalysisService
         _configuration = configuration;
     }
 
-    private ImageAnalysisClient CreateImageAnalysisClient(string endpoint, string key)
+    private static ImageAnalysisClient CreateImageAnalysisClient(string endpoint, string key)
     {
         var client = new ImageAnalysisClient(new Uri(endpoint), new AzureKeyCredential(key));
         return client;

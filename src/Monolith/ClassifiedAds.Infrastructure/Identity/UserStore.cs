@@ -44,8 +44,8 @@ public class UserStore : IUserStore<User>,
                 CreatedDateTime = DateTimeOffset.Now,
             },
         };
-        await _userRepository.AddOrUpdateAsync(user);
-        await _unitOfWork.SaveChangesAsync();
+        await _userRepository.AddOrUpdateAsync(user, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return IdentityResult.Success;
     }
 
@@ -57,17 +57,17 @@ public class UserStore : IUserStore<User>,
 
     public Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
     {
-        return _userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefaultAsync(x => x.NormalizedEmail == normalizedEmail);
+        return _userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefaultAsync(x => x.NormalizedEmail == normalizedEmail, cancellationToken: cancellationToken);
     }
 
     public Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken)
     {
-        return _userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefaultAsync(x => x.Id == Guid.Parse(userId));
+        return _userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefaultAsync(x => x.Id == Guid.Parse(userId), cancellationToken: cancellationToken);
     }
 
     public Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
     {
-        return _userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefaultAsync(x => x.NormalizedUserName == normalizedUserName);
+        return _userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefaultAsync(x => x.NormalizedUserName == normalizedUserName, cancellationToken: cancellationToken);
     }
 
     public Task<int> GetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
@@ -231,8 +231,8 @@ public class UserStore : IUserStore<User>,
 
     public async Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
     {
-        await _userRepository.AddOrUpdateAsync(user);
-        await _unitOfWork.SaveChangesAsync();
+        await _userRepository.AddOrUpdateAsync(user, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return IdentityResult.Success;
     }
 
@@ -266,7 +266,7 @@ public class UserStore : IUserStore<User>,
             });
         }
 
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     public async Task RemoveTokenAsync(User user, string loginProvider, string name, CancellationToken cancellationToken)
@@ -276,7 +276,7 @@ public class UserStore : IUserStore<User>,
         if (tokenEntity != null)
         {
             user.Tokens.Remove(tokenEntity);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 

@@ -20,6 +20,6 @@ internal class DeleteProductCommandHandler : ICommandHandler<DeleteProductComman
 
     public async Task HandleAsync(DeleteProductCommand command, CancellationToken cancellationToken = default)
     {
-        await _productService.DeleteAsync(command.Product);
+        await _productService.DeleteAsync(command.Product, cancellationToken);
     }
 }

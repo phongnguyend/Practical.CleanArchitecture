@@ -23,6 +23,6 @@ internal class DeleteClaimCommandHandler : ICommandHandler<DeleteClaimCommand>
     public async Task HandleAsync(DeleteClaimCommand command, CancellationToken cancellationToken = default)
     {
         command.Role.Claims.Remove(command.Claim);
-        await _roleRepository.UnitOfWork.SaveChangesAsync();
+        await _roleRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

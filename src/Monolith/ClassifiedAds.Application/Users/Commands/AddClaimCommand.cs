@@ -23,7 +23,7 @@ internal class AddClaimCommandHandler : ICommandHandler<AddClaimCommand>
     public async Task HandleAsync(AddClaimCommand command, CancellationToken cancellationToken = default)
     {
         command.User.Claims.Add(command.Claim);
-        await _userRepository.AddOrUpdateAsync(command.User);
-        await _userRepository.UnitOfWork.SaveChangesAsync();
+        await _userRepository.AddOrUpdateAsync(command.User, cancellationToken);
+        await _userRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

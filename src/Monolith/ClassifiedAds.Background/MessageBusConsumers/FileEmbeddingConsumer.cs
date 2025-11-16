@@ -3,6 +3,7 @@ using ClassifiedAds.Background.Services;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.Messaging;
 using ClassifiedAds.Domain.Infrastructure.Storages;
+using ClassifiedAds.Domain.Repositories;
 using CryptographyHelper;
 using CryptographyHelper.SymmetricAlgorithms;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -84,6 +86,8 @@ public sealed class FileEmbeddingConsumer :
         var markdownService = scope.ServiceProvider.GetService<MarkdownService>();
         var imageAnalysisService = scope.ServiceProvider.GetService<ImageAnalysisService>();
         var embeddingService = scope.ServiceProvider.GetService<EmbeddingService>();
+        var fileEntryTextRepository = scope.ServiceProvider.GetService<IRepository<FileEntryText, Guid>>();
+        var fileEntryEmbeddingRepository = scope.ServiceProvider.GetService<IRepository<FileEntryEmbedding, Guid>>();
 
         var fileExtension = Path.GetExtension(fileEntry.FileName);
 
@@ -91,6 +95,13 @@ public sealed class FileEmbeddingConsumer :
            fileExtension == ".md" ||
            fileExtension == ".markdown")
         {
+
+            var hasFileEntryEmbeddings = fileEntryEmbeddingRepository.GetQueryableSet().Any(x => x.FileEntryId == fileEntry.Id);
+
+            if (hasFileEntryEmbeddings)
+            {
+                return;
+            }
 
             var bytes = await GetBytesAsync(fileStorageManager, fileEntry, cancellationToken);
 
@@ -106,37 +117,83 @@ public sealed class FileEmbeddingConsumer :
 
                 var embedding = await embeddingService.GenerateAsync(chunk.Text, cancellationToken);
                 await File.WriteAllTextAsync(Path.Combine(embeddingsFolder, $"{chunk.StartIndex}_{chunk.EndIndex}.json"), JsonSerializer.Serialize(embedding), cancellationToken);
+
+                var fileEntryEmbedding = new FileEntryEmbedding
+                {
+                    ChunkName = $"{chunk.StartIndex}_{chunk.EndIndex}.txt",
+                    FileEntryId = fileEntry.Id,
+                    Embedding = JsonSerializer.Serialize(embedding.EmbeddingVector),
+                    TokenDetails = JsonSerializer.Serialize(embedding.UsageDetails)
+                };
+
+                await fileEntryEmbeddingRepository.AddAsync(fileEntryEmbedding, cancellationToken);
             }
+
+            await fileEntryEmbeddingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
         else if (fileExtension == ".pdf" ||
             fileExtension == ".docx" ||
             fileExtension == ".pptx")
         {
-            _logger.LogInformation("Converting file to markdown for FileEntry Id: {FileEntryId}", fileEntry?.Id);
+            var fileEntryText = fileEntryTextRepository.GetQueryableSet().FirstOrDefault(x => x.FileEntryId == fileEntry.Id);
 
-            var markdownFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Markdown"));
-
-            var markdownFile = Path.Combine(markdownFolder, fileEntry.Id + ".md");
-
-            if (!File.Exists(markdownFile))
+            if (fileEntryText == null)
             {
-                var bytes = await GetBytesAsync(fileStorageManager, fileEntry, cancellationToken);
-                var markdown = await markdownService.ConvertToMarkdownAsync(bytes, fileEntry.FileName, cancellationToken);
-                await File.WriteAllTextAsync(markdownFile, markdown, cancellationToken);
+                _logger.LogInformation("Converting file to markdown for FileEntry Id: {FileEntryId}", fileEntry?.Id);
+
+                var markdownFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Markdown"));
+
+                var markdownFile = Path.Combine(markdownFolder, fileEntry.Id + ".md");
+
+                if (!File.Exists(markdownFile))
+                {
+                    var bytes = await GetBytesAsync(fileStorageManager, fileEntry, cancellationToken);
+                    var markdown = await markdownService.ConvertToMarkdownAsync(bytes, fileEntry.FileName, cancellationToken);
+                    await File.WriteAllTextAsync(markdownFile, markdown, cancellationToken);
+                }
+
+                fileEntryText = new FileEntryText
+                {
+                    FileEntryId = fileEntry.Id,
+                };
+
+                await fileEntryTextRepository.AddAsync(fileEntryText, cancellationToken);
+                await fileEntryTextRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
             }
 
-            var chunks = TextChunkingService.ChunkSentences(await File.ReadAllTextAsync(markdownFile, cancellationToken));
+            var hasFileEntryEmbeddings = fileEntryEmbeddingRepository.GetQueryableSet().Any(x => x.FileEntryId == fileEntry.Id);
 
-            var chunksFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Chunks", fileEntry.Id.ToString()));
-
-            var embeddingsFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Embeddings", fileEntry.Id.ToString()));
-
-            foreach (var chunk in chunks)
+            if (!hasFileEntryEmbeddings)
             {
-                await File.WriteAllTextAsync(Path.Combine(chunksFolder, $"{chunk.StartIndex}_{chunk.EndIndex}.txt"), chunk.Text, cancellationToken);
+                var markdownFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Markdown"));
 
-                var embedding = await embeddingService.GenerateAsync(chunk.Text, cancellationToken);
-                await File.WriteAllTextAsync(Path.Combine(embeddingsFolder, $"{chunk.StartIndex}_{chunk.EndIndex}.json"), JsonSerializer.Serialize(embedding), cancellationToken);
+                var markdownFile = Path.Combine(markdownFolder, fileEntry.Id + ".md");
+
+                var chunks = TextChunkingService.ChunkSentences(await File.ReadAllTextAsync(markdownFile, cancellationToken));
+
+                var chunksFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Chunks", fileEntry.Id.ToString()));
+
+                var embeddingsFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Embeddings", fileEntry.Id.ToString()));
+
+                foreach (var chunk in chunks)
+                {
+                    await File.WriteAllTextAsync(Path.Combine(chunksFolder, $"{chunk.StartIndex}_{chunk.EndIndex}.txt"), chunk.Text, cancellationToken);
+
+                    var embedding = await embeddingService.GenerateAsync(chunk.Text, cancellationToken);
+                    await File.WriteAllTextAsync(Path.Combine(embeddingsFolder, $"{chunk.StartIndex}_{chunk.EndIndex}.json"), JsonSerializer.Serialize(embedding), cancellationToken);
+
+                    var fileEntryEmbedding = new FileEntryEmbedding
+                    {
+                        ChunkName = $"{chunk.StartIndex}_{chunk.EndIndex}.txt",
+                        FileEntryId = fileEntry.Id,
+                        Embedding = JsonSerializer.Serialize(embedding.EmbeddingVector),
+                        TokenDetails = JsonSerializer.Serialize(embedding.UsageDetails)
+                    };
+
+                    await fileEntryEmbeddingRepository.AddAsync(fileEntryEmbedding, cancellationToken);
+                }
+
+                await fileEntryEmbeddingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
             }
         }
         else if (fileExtension == ".jpg" ||
@@ -151,7 +208,9 @@ public sealed class FileEmbeddingConsumer :
             var imageAnalysisFile = Path.Combine(imageAnalysisFolder, $"{fileEntry.Id}.json");
             var embeddingFile = Path.Combine(embeddingsFolder, $"{fileEntry.Id}.json");
 
-            if (!File.Exists(imageAnalysisFile))
+            var fileEntryText = fileEntryTextRepository.GetQueryableSet().FirstOrDefault(x => x.FileEntryId == fileEntry.Id);
+
+            if (fileEntryText == null)
             {
                 var bytes = await GetBytesAsync(fileStorageManager, fileEntry, cancellationToken);
 
@@ -160,13 +219,34 @@ public sealed class FileEmbeddingConsumer :
                 var json = JsonSerializer.Serialize(imageAnalysisResult);
 
                 await File.WriteAllTextAsync(imageAnalysisFile, json, cancellationToken);
+
+                fileEntryText = new FileEntryText
+                {
+                    FileEntryId = fileEntry.Id,
+                };
+
+                await fileEntryTextRepository.AddAsync(fileEntryText, cancellationToken);
+                await fileEntryTextRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
             }
 
-            if (!File.Exists(embeddingFile))
+            var hasFileEntryEmbeddings = fileEntryEmbeddingRepository.GetQueryableSet().Any(x => x.FileEntryId == fileEntry.Id);
+
+            if (!hasFileEntryEmbeddings)
             {
                 var json = await File.ReadAllTextAsync(imageAnalysisFile, cancellationToken);
                 var embedding = await embeddingService.GenerateAsync(json, cancellationToken);
                 await File.WriteAllTextAsync(embeddingFile, JsonSerializer.Serialize(embedding), cancellationToken);
+
+                var fileEntryEmbedding = new FileEntryEmbedding
+                {
+                    ChunkName = $"{fileEntry.Id}.json",
+                    FileEntryId = fileEntry.Id,
+                    Embedding = JsonSerializer.Serialize(embedding.EmbeddingVector),
+                    TokenDetails = JsonSerializer.Serialize(embedding.UsageDetails)
+                };
+
+                await fileEntryEmbeddingRepository.AddAsync(fileEntryEmbedding, cancellationToken);
+                await fileEntryEmbeddingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
             }
         }
     }

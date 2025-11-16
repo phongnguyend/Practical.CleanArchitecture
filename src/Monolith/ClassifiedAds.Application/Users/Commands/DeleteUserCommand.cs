@@ -22,6 +22,6 @@ internal class DeleteUserCommandHandler : ICommandHandler<DeleteUserCommand>
     public async Task HandleAsync(DeleteUserCommand command, CancellationToken cancellationToken = default)
     {
         _userRepository.Delete(command.User);
-        await _userRepository.UnitOfWork.SaveChangesAsync();
+        await _userRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

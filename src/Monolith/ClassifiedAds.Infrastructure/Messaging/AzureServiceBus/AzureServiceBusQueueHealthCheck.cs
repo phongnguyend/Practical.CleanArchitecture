@@ -22,7 +22,7 @@ public class AzureServiceBusQueueHealthCheck : IHealthCheck
         try
         {
             var client = new ServiceBusAdministrationClient(_connectionString);
-            var queue = await client.GetQueueAsync(_queueName);
+            var queue = await client.GetQueueAsync(_queueName, cancellationToken);
 
             if (string.Equals(queue?.Value?.Name, _queueName, StringComparison.OrdinalIgnoreCase))
             {

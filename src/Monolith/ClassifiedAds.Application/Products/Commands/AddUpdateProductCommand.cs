@@ -25,7 +25,7 @@ internal class AddUpdateProductCommandHandler : ICommandHandler<AddUpdateProduct
     {
         using (await _unitOfWork.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted, cancellationToken))
         {
-            await _productService.AddOrUpdateAsync(command.Product);
+            await _productService.AddOrUpdateAsync(command.Product, cancellationToken);
 
             await _unitOfWork.CommitTransactionAsync(cancellationToken);
         }
