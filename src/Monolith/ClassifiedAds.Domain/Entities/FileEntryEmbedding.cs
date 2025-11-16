@@ -6,6 +6,8 @@ public class FileEntryEmbedding : Entity<Guid>, IAggregateRoot
 {
     public string ChunkName { get; set; }
 
+    public string ChunkLocation { get; set; }
+
     public string Embedding { get; set; }
 
     public string TokenDetails { get; set; }

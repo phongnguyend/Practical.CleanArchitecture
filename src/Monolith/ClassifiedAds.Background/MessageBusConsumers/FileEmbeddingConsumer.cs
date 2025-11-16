@@ -29,6 +29,12 @@ public sealed class FileEmbeddingConsumer :
     private readonly IConfiguration _configuration;
     private readonly IServiceProvider _serviceProvider;
 
+    private readonly string _tempFolder;
+    private readonly string _markdownFolder;
+    private readonly string _imageAnalysisFolder;
+    private readonly string _chunkFolder;
+    private readonly string _embeddingFolder;
+
     public FileEmbeddingConsumer(ILogger<FileEmbeddingConsumer> logger,
         IConfiguration configuration,
         IServiceProvider serviceProvider)
@@ -36,6 +42,12 @@ public sealed class FileEmbeddingConsumer :
         _logger = logger;
         _configuration = configuration;
         _serviceProvider = serviceProvider;
+
+        _tempFolder = _configuration["Storage:TempFolderPath"];
+        _markdownFolder = Path.Combine(_tempFolder, "Markdown");
+        _imageAnalysisFolder = Path.Combine(_tempFolder, "ImageAnalysis");
+        _chunkFolder = Path.Combine(_tempFolder, "Chunks");
+        _embeddingFolder = Path.Combine(_tempFolder, "Embeddings");
     }
 
     public async Task HandleAsync(FileCreatedEvent data, MetaData metaData, CancellationToken cancellationToken = default)
@@ -107,9 +119,9 @@ public sealed class FileEmbeddingConsumer :
 
             var chunks = TextChunkingService.ChunkSentences(Encoding.UTF8.GetString(bytes));
 
-            var chunksFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Chunks", fileEntry.Id.ToString()));
+            var chunksFolder = CreateDirectoryIfNotExist(Path.Combine(_chunkFolder, fileEntry.Id.ToString()));
 
-            var embeddingsFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Embeddings", fileEntry.Id.ToString()));
+            var embeddingsFolder = CreateDirectoryIfNotExist(Path.Combine(_embeddingFolder, fileEntry.Id.ToString()));
 
             foreach (var chunk in chunks)
             {
@@ -121,6 +133,7 @@ public sealed class FileEmbeddingConsumer :
                 var fileEntryEmbedding = new FileEntryEmbedding
                 {
                     ChunkName = $"{chunk.StartIndex}_{chunk.EndIndex}.txt",
+                    ChunkLocation = Path.Combine("Chunks", fileEntry.Id.ToString(), $"{chunk.StartIndex}_{chunk.EndIndex}.txt"),
                     FileEntryId = fileEntry.Id,
                     Embedding = JsonSerializer.Serialize(embedding.EmbeddingVector),
                     TokenDetails = JsonSerializer.Serialize(embedding.UsageDetails)
@@ -141,19 +154,17 @@ public sealed class FileEmbeddingConsumer :
             {
                 _logger.LogInformation("Converting file to markdown for FileEntry Id: {FileEntryId}", fileEntry?.Id);
 
-                var markdownFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Markdown"));
+                var markdownFolder = CreateDirectoryIfNotExist(_markdownFolder);
 
-                var markdownFile = Path.Combine(markdownFolder, fileEntry.Id + ".md");
+                var markdownFile = Path.Combine(markdownFolder, $"{fileEntry.Id}.md");
 
-                if (!File.Exists(markdownFile))
-                {
-                    var bytes = await GetBytesAsync(fileStorageManager, fileEntry, cancellationToken);
-                    var markdown = await markdownService.ConvertToMarkdownAsync(bytes, fileEntry.FileName, cancellationToken);
-                    await File.WriteAllTextAsync(markdownFile, markdown, cancellationToken);
-                }
+                var bytes = await GetBytesAsync(fileStorageManager, fileEntry, cancellationToken);
+                var markdown = await markdownService.ConvertToMarkdownAsync(bytes, fileEntry.FileName, cancellationToken);
+                await File.WriteAllTextAsync(markdownFile, markdown, cancellationToken);
 
                 fileEntryText = new FileEntryText
                 {
+                    TextLocation = Path.Combine("Markdown", $"{fileEntry.Id}.md"),
                     FileEntryId = fileEntry.Id,
                 };
 
@@ -165,15 +176,13 @@ public sealed class FileEmbeddingConsumer :
 
             if (!hasFileEntryEmbeddings)
             {
-                var markdownFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Markdown"));
-
-                var markdownFile = Path.Combine(markdownFolder, fileEntry.Id + ".md");
+                var markdownFile = Path.Combine(_markdownFolder, $"{fileEntry.Id}.md");
 
                 var chunks = TextChunkingService.ChunkSentences(await File.ReadAllTextAsync(markdownFile, cancellationToken));
 
-                var chunksFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Chunks", fileEntry.Id.ToString()));
+                var chunksFolder = CreateDirectoryIfNotExist(Path.Combine(_chunkFolder, fileEntry.Id.ToString()));
 
-                var embeddingsFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Embeddings", fileEntry.Id.ToString()));
+                var embeddingsFolder = CreateDirectoryIfNotExist(Path.Combine(_embeddingFolder, fileEntry.Id.ToString()));
 
                 foreach (var chunk in chunks)
                 {
@@ -185,6 +194,7 @@ public sealed class FileEmbeddingConsumer :
                     var fileEntryEmbedding = new FileEntryEmbedding
                     {
                         ChunkName = $"{chunk.StartIndex}_{chunk.EndIndex}.txt",
+                        ChunkLocation = Path.Combine("Chunks", fileEntry.Id.ToString(), $"{chunk.StartIndex}_{chunk.EndIndex}.txt"),
                         FileEntryId = fileEntry.Id,
                         Embedding = JsonSerializer.Serialize(embedding.EmbeddingVector),
                         TokenDetails = JsonSerializer.Serialize(embedding.UsageDetails)
@@ -201,9 +211,9 @@ public sealed class FileEmbeddingConsumer :
         {
             _logger.LogInformation("Processing image file for FileEntry Id: {FileEntryId}", fileEntry?.Id);
 
-            var imageAnalysisFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "ImageAnalysis"));
+            var imageAnalysisFolder = CreateDirectoryIfNotExist(_imageAnalysisFolder);
 
-            var embeddingsFolder = CreateDirectoryIfNotExist(Path.Combine(_configuration["Storage:TempFolderPath"], "Embeddings", fileEntry.Id.ToString()));
+            var embeddingsFolder = CreateDirectoryIfNotExist(Path.Combine(_embeddingFolder, fileEntry.Id.ToString()));
 
             var imageAnalysisFile = Path.Combine(imageAnalysisFolder, $"{fileEntry.Id}.json");
             var embeddingFile = Path.Combine(embeddingsFolder, $"{fileEntry.Id}.json");
@@ -222,6 +232,7 @@ public sealed class FileEmbeddingConsumer :
 
                 fileEntryText = new FileEntryText
                 {
+                    TextLocation = Path.Combine("ImageAnalysis", $"{fileEntry.Id}.json"),
                     FileEntryId = fileEntry.Id,
                 };
 
@@ -240,6 +251,7 @@ public sealed class FileEmbeddingConsumer :
                 var fileEntryEmbedding = new FileEntryEmbedding
                 {
                     ChunkName = $"{fileEntry.Id}.json",
+                    ChunkLocation = Path.Combine("ImageAnalysis", $"{fileEntry.Id}.json"),
                     FileEntryId = fileEntry.Id,
                     Embedding = JsonSerializer.Serialize(embedding.EmbeddingVector),
                     TokenDetails = JsonSerializer.Serialize(embedding.UsageDetails)
