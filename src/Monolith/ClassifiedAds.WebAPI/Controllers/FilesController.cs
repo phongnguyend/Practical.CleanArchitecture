@@ -162,6 +162,7 @@ public class FilesController : Controller
 
         model.FileEntryEmbeddings = _fileEntryEmbeddingRepository.GetQueryableSet()
             .Where(x => x.FileEntryId == fileEntry.Id)
+            .OrderBy(x => x.CreatedDateTime)
             .Select(x => new FileEntryEmbeddingModel
             {
                 ChunkName = x.ChunkName,
@@ -170,7 +171,8 @@ public class FilesController : Controller
                 TokenDetails = x.TokenDetails,
                 CreatedDateTime = x.CreatedDateTime,
                 UpdatedDateTime = x.UpdatedDateTime,
-            }).ToList();
+            })
+            .ToList();
 
         return Ok(model);
     }
@@ -211,6 +213,53 @@ public class FilesController : Controller
         }
 
         return File(content, MediaTypeNames.Application.Octet, WebUtility.HtmlEncode(fileEntry.FileName));
+    }
+
+    [Authorize(Permissions.DownloadFile)]
+    [HttpGet("{id}/downloadtext")]
+    public async Task<IActionResult> DownloadText(Guid id)
+    {
+        var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
+
+        var authorizationResult = await _authorizationService.AuthorizeAsync(User, fileEntry, Operations.Read);
+        if (!authorizationResult.Succeeded)
+        {
+            return Forbid();
+        }
+
+        var fileEntryText = _fileEntryTextRepository.GetQueryableSet()
+              .Where(x => x.FileEntryId == fileEntry.Id)
+              .Select(x => new FileEntryTextModel
+              {
+                  TextLocation = x.TextLocation
+              }).FirstOrDefault();
+
+        var stream = System.IO.File.OpenRead(Path.Combine(_options.Storage.TempFolderPath, fileEntryText.TextLocation));
+        var ext = Path.GetExtension(fileEntryText.TextLocation).ToLowerInvariant();
+        return File(stream, MediaTypeNames.Application.Octet, WebUtility.HtmlEncode(fileEntry.FileName + ext));
+    }
+
+    [Authorize(Permissions.DownloadFile)]
+    [HttpGet("{id}/downloadchunk/{chunkName}")]
+    public async Task<IActionResult> DownloadChunk(Guid id, string chunkName)
+    {
+        var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
+
+        var authorizationResult = await _authorizationService.AuthorizeAsync(User, fileEntry, Operations.Read);
+        if (!authorizationResult.Succeeded)
+        {
+            return Forbid();
+        }
+
+        var fileEntryEmbedding = _fileEntryEmbeddingRepository.GetQueryableSet()
+              .Where(x => x.FileEntryId == fileEntry.Id && x.ChunkName == chunkName)
+              .Select(x => new FileEntryEmbeddingModel
+              {
+                  ChunkLocation = x.ChunkLocation,
+              }).FirstOrDefault();
+
+        var stream = System.IO.File.OpenRead(Path.Combine(_options.Storage.TempFolderPath, fileEntryEmbedding.ChunkLocation));
+        return File(stream, MediaTypeNames.Application.Octet, WebUtility.HtmlEncode(fileEntryEmbedding.ChunkName));
     }
 
     [Authorize(Permissions.UpdateFile)]

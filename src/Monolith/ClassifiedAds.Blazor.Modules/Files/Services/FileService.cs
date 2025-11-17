@@ -21,6 +21,16 @@ public class FileService : HttpService
         return $"{_httpClient.BaseAddress.AbsoluteUri.Trim('/')}/api/files/{id}/download";
     }
 
+    public string GetDownloadTextUrl(Guid id)
+    {
+        return $"{_httpClient.BaseAddress.AbsoluteUri.Trim('/')}/api/files/{id}/downloadtext";
+    }
+
+    public string GetDownloadChunkUrl(Guid id, string chunkName)
+    {
+        return $"{_httpClient.BaseAddress.AbsoluteUri.Trim('/')}/api/files/{id}/downloadchunk/{chunkName}";
+    }
+
     public string GetUploadUrl()
     {
         return $"{_httpClient.BaseAddress.AbsoluteUri.Trim('/')}/api/files";

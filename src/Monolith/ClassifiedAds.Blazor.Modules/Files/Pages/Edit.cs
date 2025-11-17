@@ -28,6 +28,8 @@ public partial class Edit
 
     protected AuditLogsDialog AuditLogsDialog { get; set; }
 
+    public bool ShowTokenDetails { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         File = await FileService.GetFileByIdAsync(Id);
@@ -45,10 +47,22 @@ public partial class Edit
         NavManager.NavigateTo("/files");
     }
 
+    protected async Task DownloadText()
+    {
+        var ext = Path.GetExtension(File.FileEntryText.TextLocation).ToLowerInvariant();
+        var token = await FileService.GetAccessToken();
+        await JSRuntime.InvokeVoidAsync("interop.downloadFile", FileService.GetDownloadTextUrl(File.Id), token, File.FileName + ext);
+    }
+
+    protected async Task DownloadChunk(FileEntryEmbeddingModel chunk)
+    {
+        var token = await FileService.GetAccessToken();
+        await JSRuntime.InvokeVoidAsync("interop.downloadFile", FileService.GetDownloadChunkUrl(File.Id, chunk.ChunkName), token, chunk.ChunkName);
+    }
+
     protected async Task DownloadEmbedding(FileEntryEmbeddingModel embedding)
     {
         using var streamRef = new DotNetStreamReference(stream: new MemoryStream(Encoding.UTF8.GetBytes(embedding.Embedding)));
-
         await JSRuntime.InvokeVoidAsync("interop.downloadFileFromStream", "Embedding.txt", streamRef);
     }
 }

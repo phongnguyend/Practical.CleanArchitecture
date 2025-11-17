@@ -47,7 +47,7 @@
 				<div class="form-group row">
 					<label for="textLocation" class="col-sm-2 col-form-label">Text Location</label>
 					<div class="col-sm-10">
-						@File.FileEntryText?.TextLocation
+						<a href="javascript:none()" @onclick="(() => DownloadText())">@File.FileEntryText?.TextLocation</a>
 					</div>
 				</div>
 			}
@@ -80,14 +80,20 @@
 		</div>
 
 		<div class="card-body">
+			<div style="float: right;">
+				<InputCheckbox id="showTokenDetails" @bind-Value="ShowTokenDetails" /> Show Token Details
+			</div>
 			<table class="table">
 				<thead>
 					<tr>
 						<th>Chunk Name</th>
 						<th>Chunk Location</th>
-						<th>Embedding</th>
-						<th>Token Details</th>
 						<th>Created Date Time</th>
+						<th>Embedding</th>
+						@if (ShowTokenDetails)
+						{
+							<th>Token Details</th>
+						}
 					</tr>
 				</thead>
 				<tbody>
@@ -95,10 +101,15 @@
 					{
 						<tr>
 							<td>@fileEntryEmbedding.ChunkName</td>
-							<td>@fileEntryEmbedding.ChunkLocation</td>
-							<td><a href="javascript:none()" @onclick="(() => DownloadEmbedding(fileEntryEmbedding))">Download</a></td>
-							<td>@fileEntryEmbedding.TokenDetails</td>
+							<td>
+								<a href="javascript:none()" @onclick="(() => DownloadChunk(fileEntryEmbedding))">@fileEntryEmbedding.ChunkLocation</a>
+							</td>
 							<td>@fileEntryEmbedding.CreatedDateTime</td>
+							<td><a href="javascript:none()" @onclick="(() => DownloadEmbedding(fileEntryEmbedding))">Download</a></td>
+							@if (ShowTokenDetails)
+							{
+								<td>@fileEntryEmbedding.TokenDetails</td>
+							}
 						</tr>
 					}
 				</tbody>
