@@ -7,6 +7,7 @@ using ClassifiedAds.Application.Products.Queries;
 using ClassifiedAds.CrossCuttingConcerns.Csv;
 using ClassifiedAds.CrossCuttingConcerns.Pdf;
 using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.WebAPI.Authorization;
 using ClassifiedAds.WebAPI.Models.Products;
 using ClassifiedAds.WebAPI.RateLimiterPolicies;
@@ -37,18 +38,21 @@ public class ProductsController : ControllerBase
     private readonly IPdfWriter<ExportProductsToPdf> _pdfWriter;
     private readonly ICsvWriter<ExportProductsToCsv> _productCsvWriter;
     private readonly ICsvReader<ImportProductsFromCsv> _productCsvReader;
+    private readonly IRepository<ProductEmbedding, Guid> _productEmbeddingRepository;
 
     public ProductsController(Dispatcher dispatcher,
         ILogger<ProductsController> logger,
         IPdfWriter<ExportProductsToPdf> pdfWriter,
         ICsvWriter<ExportProductsToCsv> productCsvWriter,
-        ICsvReader<ImportProductsFromCsv> productCsvReader)
+        ICsvReader<ImportProductsFromCsv> productCsvReader,
+        IRepository<ProductEmbedding, Guid> productEmbeddingRepository)
     {
         _dispatcher = dispatcher;
         _logger = logger;
         _pdfWriter = pdfWriter;
         _productCsvWriter = productCsvWriter;
         _productCsvReader = productCsvReader;
+        _productEmbeddingRepository = productEmbeddingRepository;
     }
 
     [Authorize(Permissions.GetProducts)]
@@ -69,6 +73,20 @@ public class ProductsController : ControllerBase
     {
         var product = await _dispatcher.DispatchAsync(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
         var model = product.ToModel();
+
+        var embedding = _productEmbeddingRepository.GetQueryableSet().Where(x => x.ProductId == id)
+            .Select(x => new ProductEmbeddingModel
+            {
+                Text = x.Text,
+                Embedding = x.Embedding,
+                TokenDetails = x.TokenDetails,
+                CreatedDateTime = x.CreatedDateTime,
+                UpdatedDateTime = x.UpdatedDateTime,
+            })
+            .FirstOrDefault();
+
+        model.ProductEmbedding = embedding;
+
         return Ok(model);
     }
 

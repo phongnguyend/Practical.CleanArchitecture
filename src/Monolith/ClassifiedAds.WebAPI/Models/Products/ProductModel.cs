@@ -11,4 +11,19 @@ public class ProductModel
     public string Name { get; set; }
 
     public string Description { get; set; }
+
+    public ProductEmbeddingModel ProductEmbedding { get; set; }
+}
+
+public class ProductEmbeddingModel
+{
+    public string Text { get; set; }
+
+    public string Embedding { get; set; }
+
+    public string TokenDetails { get; set; }
+
+    public DateTimeOffset CreatedDateTime { get; set; }
+
+    public DateTimeOffset? UpdatedDateTime { get; set; }
 }
