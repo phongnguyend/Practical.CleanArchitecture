@@ -4,6 +4,7 @@ using ClassifiedAds.Application.AuditLogEntries.Queries;
 using ClassifiedAds.Application.FileEntries.Queries;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.Storages;
+using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.WebAPI.Authorization;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
 using ClassifiedAds.WebAPI.Hubs;
@@ -42,6 +43,8 @@ public class FilesController : Controller
     private readonly IHubContext<NotificationHub> _notificationHubContext;
     private readonly IStringLocalizer _stringLocalizer;
     private readonly IAuthorizationService _authorizationService;
+    private readonly IRepository<FileEntryText, Guid> _fileEntryTextRepository;
+    private readonly IRepository<FileEntryEmbedding, Guid> _fileEntryEmbeddingRepository;
 
     public FilesController(Dispatcher dispatcher,
         IOptions<AppSettings> options,
@@ -49,7 +52,9 @@ public class FilesController : Controller
         IMemoryCache memoryCache,
         IHubContext<NotificationHub> notificationHubContext,
         IStringLocalizer stringLocalizer,
-        IAuthorizationService authorizationService)
+        IAuthorizationService authorizationService,
+        IRepository<FileEntryText, Guid> fileEntryTextRepository,
+        IRepository<FileEntryEmbedding, Guid> fileEntryEmbeddingRepository)
     {
         _dispatcher = dispatcher;
         _options = options.Value;
@@ -58,6 +63,8 @@ public class FilesController : Controller
         _notificationHubContext = notificationHubContext;
         _stringLocalizer = stringLocalizer;
         _authorizationService = authorizationService;
+        _fileEntryTextRepository = fileEntryTextRepository;
+        _fileEntryEmbeddingRepository = fileEntryEmbeddingRepository;
     }
 
     [Authorize(Permissions.GetFiles)]
@@ -144,7 +151,28 @@ public class FilesController : Controller
             return Forbid();
         }
 
-        return Ok(fileEntry.ToModel());
+        var model = fileEntry.ToModel();
+
+        model.FileEntryText = _fileEntryTextRepository.GetQueryableSet()
+            .Where(x => x.FileEntryId == fileEntry.Id)
+            .Select(x => new FileEntryTextModel
+            {
+                TextLocation = x.TextLocation
+            }).FirstOrDefault();
+
+        model.FileEntryEmbeddings = _fileEntryEmbeddingRepository.GetQueryableSet()
+            .Where(x => x.FileEntryId == fileEntry.Id)
+            .Select(x => new FileEntryEmbeddingModel
+            {
+                ChunkName = x.ChunkName,
+                ChunkLocation = x.ChunkLocation,
+                Embedding = x.Embedding,
+                TokenDetails = x.TokenDetails,
+                CreatedDateTime = x.CreatedDateTime,
+                UpdatedDateTime = x.UpdatedDateTime,
+            }).ToList();
+
+        return Ok(model);
     }
 
     [Authorize(Permissions.DownloadFile)]

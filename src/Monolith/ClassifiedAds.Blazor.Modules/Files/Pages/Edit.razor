@@ -4,61 +4,105 @@
 @using ClassifiedAds.Blazor.Modules.Files.Components
 
 <div class="card">
-    <div class="card-header">
-        Edit File
-    </div>
-    <div class="card-body">
-        <EditForm Model="File" OnValidSubmit="HandleValidSubmit">
+	<div class="card-header">
+		Edit File
+	</div>
+	<div class="card-body">
+		<EditForm Model="File" OnValidSubmit="HandleValidSubmit">
 
-            <DataAnnotationsValidator />
-            <ValidationSummary />
+			<DataAnnotationsValidator />
+			<ValidationSummary />
 
-            <div class="form-group row">
-                <label for="fileName" class="col-sm-2 col-form-label">Name: </label>
-                <div class="col-sm-10">
-                    <InputText id="fileName" class="form-control" @bind-Value="File.Name" placeholder="Enter Name"></InputText>
-                    <ValidationMessage For="@(() => File.Name)" />
-                </div>
-            </div>
+			<div class="form-group row">
+				<label for="fileName" class="col-sm-2 col-form-label">Name: </label>
+				<div class="col-sm-10">
+					<InputText id="fileName" class="form-control" @bind-Value="File.Name" placeholder="Enter Name"></InputText>
+					<ValidationMessage For="@(() => File.Name)" />
+				</div>
+			</div>
 
-            <div class="form-group row">
-                <label for="description" class="col-sm-2 col-form-label">Description: </label>
-                <div class="col-sm-10">
-                    <InputText id="description" class="form-control" @bind-Value="File.Description" placeholder="Enter Description"></InputText>
-                    <ValidationMessage For="@(() => File.Description)" />
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="formFile" class="col-sm-2 col-form-label">File</label>
-                <div class="col-sm-10">
-                    <input id="formFile"
-                           name="formFile"
-                           class="form-control" value="@File.FileName" disabled />
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="encrypted" class="col-sm-2 col-form-label">Encrypted</label>
-                <div class="col-sm-10">
-                    <InputCheckbox id="encrypted" @bind-Value="File.Encrypted" disabled />
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="description" class="col-sm-2 col-form-label"></label>
-                <div class="col-sm-10">
-                    <button class="btn btn-primary">Save</button>
-                </div>
-            </div>
-        </EditForm>
-    </div>
-    <div class="card-footer">
-        <a class="btn btn-outline-secondary"
-           href="@("/files")"
-           style="width: 80px;">
-            <i class="fa fa-chevron-left"></i> Back
-        </a>
-        &nbsp;
-        <button @onclick="(ViewAuditLogs)" class="btn btn-secondary" title="View Audit Logs">View Audit Logs</button>
-    </div>
+			<div class="form-group row">
+				<label for="description" class="col-sm-2 col-form-label">Description: </label>
+				<div class="col-sm-10">
+					<InputText id="description" class="form-control" @bind-Value="File.Description" placeholder="Enter Description"></InputText>
+					<ValidationMessage For="@(() => File.Description)" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="formFile" class="col-sm-2 col-form-label">File</label>
+				<div class="col-sm-10">
+					<input id="formFile"
+						   name="formFile"
+						   class="form-control" value="@File.FileName" disabled />
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="encrypted" class="col-sm-2 col-form-label">Encrypted</label>
+				<div class="col-sm-10">
+					<InputCheckbox id="encrypted" @bind-Value="File.Encrypted" disabled />
+				</div>
+			</div>
+			@if (File.FileEntryText != null)
+			{
+				<div class="form-group row">
+					<label for="textLocation" class="col-sm-2 col-form-label">Text Location</label>
+					<div class="col-sm-10">
+						@File.FileEntryText?.TextLocation
+					</div>
+				</div>
+			}
+			<div class="form-group row">
+				<label for="description" class="col-sm-2 col-form-label"></label>
+				<div class="col-sm-10">
+					<button class="btn btn-primary">Save</button>
+				</div>
+			</div>
+		</EditForm>
+	</div>
+	<div class="card-footer">
+		<a class="btn btn-outline-secondary"
+		   href="@("/files")"
+		   style="width: 80px;">
+			<i class="fa fa-chevron-left"></i> Back
+		</a>
+		&nbsp;
+		<button @onclick="(ViewAuditLogs)" class="btn btn-secondary" title="View Audit Logs">View Audit Logs</button>
+	</div>
 </div>
 
 <AuditLogsDialog @ref="AuditLogsDialog"></AuditLogsDialog>
+
+@if (File.FileEntryEmbeddings != null)
+{
+	<div class="card">
+		<div class="card-header">
+			File Embedding
+		</div>
+
+		<div class="card-body">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Chunk Name</th>
+						<th>Chunk Location</th>
+						<th>Embedding</th>
+						<th>Token Details</th>
+						<th>Created Date Time</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var fileEntryEmbedding in File.FileEntryEmbeddings)
+					{
+						<tr>
+							<td>@fileEntryEmbedding.ChunkName</td>
+							<td>@fileEntryEmbedding.ChunkLocation</td>
+							<td><a href="javascript:none()" @onclick="(() => DownloadEmbedding(fileEntryEmbedding))">Download</a></td>
+							<td>@fileEntryEmbedding.TokenDetails</td>
+							<td>@fileEntryEmbedding.CreatedDateTime</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+}

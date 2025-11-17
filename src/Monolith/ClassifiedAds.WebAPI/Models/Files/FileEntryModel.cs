@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ClassifiedAds.WebAPI.Models.Files;
 
@@ -19,4 +20,28 @@ public class FileEntryModel
     public string FileLocation { get; set; }
 
     public bool Encrypted { get; set; }
+
+    public FileEntryTextModel FileEntryText { get; set; }
+
+    public List<FileEntryEmbeddingModel> FileEntryEmbeddings { get; set; }
+}
+
+public class FileEntryTextModel
+{
+    public string TextLocation { get; set; }
+}
+
+public class FileEntryEmbeddingModel
+{
+    public string ChunkName { get; set; }
+
+    public string ChunkLocation { get; set; }
+
+    public string Embedding { get; set; }
+
+    public string TokenDetails { get; set; }
+
+    public DateTimeOffset CreatedDateTime { get; set; }
+
+    public DateTimeOffset? UpdatedDateTime { get; set; }
 }

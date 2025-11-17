@@ -2,7 +2,10 @@
 using ClassifiedAds.Blazor.Modules.Files.Models;
 using ClassifiedAds.Blazor.Modules.Files.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Blazor.Modules.Files.Pages;
@@ -11,6 +14,9 @@ public partial class Edit
 {
     [Inject]
     public NavigationManager NavManager { get; set; }
+
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
 
     [Inject]
     public FileService FileService { get; set; }
@@ -37,5 +43,12 @@ public partial class Edit
     {
         await FileService.UpdateFileAsync(File.Id, File);
         NavManager.NavigateTo("/files");
+    }
+
+    protected async Task DownloadEmbedding(FileEntryEmbeddingModel embedding)
+    {
+        using var streamRef = new DotNetStreamReference(stream: new MemoryStream(Encoding.UTF8.GetBytes(embedding.Embedding)));
+
+        await JSRuntime.InvokeVoidAsync("interop.downloadFileFromStream", "Embedding.txt", streamRef);
     }
 }
