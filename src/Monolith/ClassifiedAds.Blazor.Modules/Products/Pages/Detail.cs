@@ -37,6 +37,11 @@ public partial class Detail
         Product = await ProductService.GetProductByIdAsync(ProductId);
     }
 
+    protected override async Task OnParametersSetAsync()
+    {
+        Product = await ProductService.GetProductByIdAsync(ProductId);
+    }
+
     protected async Task ViewAuditLogs()
     {
         var logs = await ProductService.GetAuditLogsAsync(Product.Id);

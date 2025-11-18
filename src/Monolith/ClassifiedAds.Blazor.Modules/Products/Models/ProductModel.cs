@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ClassifiedAds.Blazor.Modules.Products.Models;
@@ -18,6 +19,8 @@ public class ProductModel
     public string Description { get; set; }
 
     public ProductEmbeddingModel ProductEmbedding { get; set; }
+
+    public List<SimilarProductModel> SimilarProducts { get; set; }
 }
 
 public class ProductEmbeddingModel
@@ -31,4 +34,9 @@ public class ProductEmbeddingModel
     public DateTimeOffset CreatedDateTime { get; set; }
 
     public DateTimeOffset? UpdatedDateTime { get; set; }
+}
+
+public class SimilarProductModel : ProductModel
+{
+    public double SimilarityScore { get; set; }
 }

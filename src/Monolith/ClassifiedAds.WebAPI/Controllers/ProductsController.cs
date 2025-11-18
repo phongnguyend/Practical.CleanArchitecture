@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -69,7 +70,7 @@ public class ProductsController : ControllerBase
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<Product>> Get(Guid id)
+    public async Task<ActionResult<ProductModel>> Get(Guid id)
     {
         var product = await _dispatcher.DispatchAsync(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
         var model = product.ToModel();
@@ -77,22 +78,40 @@ public class ProductsController : ControllerBase
         var embedding = _productEmbeddingRepository.GetQueryableSet().Where(x => x.ProductId == id)
             .Select(x => new
             {
-                Text = x.Text,
-                Embedding = x.Embedding,
-                TokenDetails = x.TokenDetails,
-                CreatedDateTime = x.CreatedDateTime,
-                UpdatedDateTime = x.UpdatedDateTime,
+                x.Text,
+                x.Embedding,
+                x.TokenDetails,
+                x.CreatedDateTime,
+                x.UpdatedDateTime,
             })
             .FirstOrDefault();
 
-        model.ProductEmbedding = embedding == null ? null : new ProductEmbeddingModel
+        if (embedding != null)
         {
-            Text = embedding.Text,
-            Embedding = JsonSerializer.Serialize(embedding.Embedding.Memory),
-            TokenDetails = embedding.TokenDetails,
-            CreatedDateTime = embedding.CreatedDateTime,
-            UpdatedDateTime = embedding.UpdatedDateTime,
-        };
+            model.ProductEmbedding = new ProductEmbeddingModel
+            {
+                Text = embedding.Text,
+                Embedding = JsonSerializer.Serialize(embedding.Embedding.Memory),
+                TokenDetails = embedding.TokenDetails,
+                CreatedDateTime = embedding.CreatedDateTime,
+                UpdatedDateTime = embedding.UpdatedDateTime,
+            };
+
+            var similarProducts = _productEmbeddingRepository.GetQueryableSet()
+                .Where(x => x.ProductId != id)
+                .OrderBy(x => EF.Functions.VectorDistance("cosine", x.Embedding, embedding.Embedding))
+                .Take(5)
+                .Select(x => new SimilarProductModel
+                {
+                    Id = x.Product.Id,
+                    Code = x.Product.Code,
+                    Name = x.Product.Name,
+                    Description = x.Product.Description,
+                    SimilarityScore = EF.Functions.VectorDistance("cosine", x.Embedding, embedding.Embedding)
+                }).ToList();
+
+            model.SimilarProducts = similarProducts;
+        }
 
         return Ok(model);
     }

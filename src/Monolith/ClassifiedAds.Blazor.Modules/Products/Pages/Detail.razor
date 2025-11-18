@@ -73,7 +73,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-4">Embedding:</div>
-						<div class="col-md-8"> <a href="javascript:none()" @onclick="(() => DownloadProductEmbedding())">Download</a></div>
+						<div class="col-md-8"> <a href="javascript:void(0)" @onclick="(() => DownloadProductEmbedding())">Download</a></div>
 					</div>
 					<div class="row">
 						<div class="col-md-4">Token Details:</div>
@@ -92,3 +92,45 @@
 		</div>
 	</div>
 }
+
+<div class="card">
+	<div class="card-header">
+		Similar Products
+	</div>
+	<div class="card-body">
+		<div class="table-responsive">
+			@if (Product == null)
+			{
+				<p><em>Loading...</em></p>
+			}
+			else if(Product.SimilarProducts == null || !Product.SimilarProducts.Any())
+			{
+				<p><em>No similar products found.</em></p>
+			}
+			else
+			{
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Code</th>
+							<th>Description</th>
+							<th>Similarity Score</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var product in Product?.SimilarProducts)
+						{
+							<tr @key="product.Id">
+								<td><a href="@($"/products/{product.Id}")">@product.Name</a></td>
+								<td>@product.Code</td>
+								<td>@product.Description</td>
+								<td>@product.SimilarityScore</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			}
+		</div>
+	</div>
+</div>
