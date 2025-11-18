@@ -10,5 +10,6 @@ public class FileEntryEmbeddingConfiguration : IEntityTypeConfiguration<FileEntr
     {
         builder.ToTable("FileEntryEmbeddings");
         builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
+        builder.Property(b => b.Embedding).HasColumnType("vector(1536)");
     }
 }

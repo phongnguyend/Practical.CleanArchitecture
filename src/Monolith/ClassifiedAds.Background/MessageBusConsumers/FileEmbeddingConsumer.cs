@@ -6,6 +6,7 @@ using ClassifiedAds.Domain.Infrastructure.Storages;
 using ClassifiedAds.Domain.Repositories;
 using CryptographyHelper;
 using CryptographyHelper.SymmetricAlgorithms;
+using Microsoft.Data.SqlTypes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -135,7 +136,7 @@ public sealed class FileEmbeddingConsumer :
                     ChunkName = $"{chunk.StartIndex}_{chunk.EndIndex}.txt",
                     ChunkLocation = Path.Combine("Chunks", fileEntry.Id.ToString(), $"{chunk.StartIndex}_{chunk.EndIndex}.txt"),
                     FileEntryId = fileEntry.Id,
-                    Embedding = JsonSerializer.Serialize(embedding.EmbeddingVector),
+                    Embedding = new SqlVector<float>(embedding.EmbeddingVector),
                     TokenDetails = JsonSerializer.Serialize(embedding.UsageDetails)
                 };
 
@@ -196,7 +197,7 @@ public sealed class FileEmbeddingConsumer :
                         ChunkName = $"{chunk.StartIndex}_{chunk.EndIndex}.txt",
                         ChunkLocation = Path.Combine("Chunks", fileEntry.Id.ToString(), $"{chunk.StartIndex}_{chunk.EndIndex}.txt"),
                         FileEntryId = fileEntry.Id,
-                        Embedding = JsonSerializer.Serialize(embedding.EmbeddingVector),
+                        Embedding = new SqlVector<float>(embedding.EmbeddingVector),
                         TokenDetails = JsonSerializer.Serialize(embedding.UsageDetails)
                     };
 
@@ -253,7 +254,7 @@ public sealed class FileEmbeddingConsumer :
                     ChunkName = $"{fileEntry.Id}.json",
                     ChunkLocation = Path.Combine("ImageAnalysis", $"{fileEntry.Id}.json"),
                     FileEntryId = fileEntry.Id,
-                    Embedding = JsonSerializer.Serialize(embedding.EmbeddingVector),
+                    Embedding = new SqlVector<float>(embedding.EmbeddingVector),
                     TokenDetails = JsonSerializer.Serialize(embedding.UsageDetails)
                 };
 

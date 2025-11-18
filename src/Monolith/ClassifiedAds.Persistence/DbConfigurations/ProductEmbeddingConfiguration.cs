@@ -10,5 +10,6 @@ public class ProductEmbeddingConfiguration : IEntityTypeConfiguration<ProductEmb
     {
         builder.ToTable("ProductEmbeddings");
         builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
+        builder.Property(b => b.Embedding).HasColumnType("vector(1536)");
     }
 }

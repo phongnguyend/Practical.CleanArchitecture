@@ -163,11 +163,21 @@ public class FilesController : Controller
         model.FileEntryEmbeddings = _fileEntryEmbeddingRepository.GetQueryableSet()
             .Where(x => x.FileEntryId == fileEntry.Id)
             .OrderBy(x => x.CreatedDateTime)
-            .Select(x => new FileEntryEmbeddingModel
+            .Select(x => new
             {
                 ChunkName = x.ChunkName,
                 ChunkLocation = x.ChunkLocation,
                 Embedding = x.Embedding,
+                TokenDetails = x.TokenDetails,
+                CreatedDateTime = x.CreatedDateTime,
+                UpdatedDateTime = x.UpdatedDateTime,
+            })
+            .AsEnumerable()
+            .Select(x => new FileEntryEmbeddingModel
+            {
+                ChunkName = x.ChunkName,
+                ChunkLocation = x.ChunkLocation,
+                Embedding = JsonSerializer.Serialize(x.Embedding.Memory),
                 TokenDetails = x.TokenDetails,
                 CreatedDateTime = x.CreatedDateTime,
                 UpdatedDateTime = x.UpdatedDateTime,

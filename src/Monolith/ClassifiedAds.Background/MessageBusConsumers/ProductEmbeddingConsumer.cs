@@ -3,6 +3,7 @@ using ClassifiedAds.Background.Services;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.Messaging;
 using ClassifiedAds.Domain.Repositories;
+using Microsoft.Data.SqlTypes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -77,7 +78,7 @@ public sealed class ProductEmbeddingConsumer :
             {
                 Text = currentProduct.Description,
                 ProductId = currentProduct.Id,
-                Embedding = JsonSerializer.Serialize(embedding.EmbeddingVector),
+                Embedding = new SqlVector<float>(embedding.EmbeddingVector),
                 TokenDetails = JsonSerializer.Serialize(embedding.UsageDetails)
             };
 
@@ -91,7 +92,7 @@ public sealed class ProductEmbeddingConsumer :
                 var embedding = await GenerateEmbeddingAsync(embeddingService, currentProduct, cancellationToken);
 
                 currentProductEmbedding.Text = currentProduct.Description;
-                currentProductEmbedding.Embedding = JsonSerializer.Serialize(embedding.EmbeddingVector);
+                currentProductEmbedding.Embedding = new SqlVector<float>(embedding.EmbeddingVector);
                 currentProductEmbedding.TokenDetails = JsonSerializer.Serialize(embedding.UsageDetails);
 
                 await productEmbeddingRepository.UpdateAsync(currentProductEmbedding, cancellationToken);

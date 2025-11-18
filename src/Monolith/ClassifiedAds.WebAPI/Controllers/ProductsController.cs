@@ -75,7 +75,7 @@ public class ProductsController : ControllerBase
         var model = product.ToModel();
 
         var embedding = _productEmbeddingRepository.GetQueryableSet().Where(x => x.ProductId == id)
-            .Select(x => new ProductEmbeddingModel
+            .Select(x => new
             {
                 Text = x.Text,
                 Embedding = x.Embedding,
@@ -85,7 +85,14 @@ public class ProductsController : ControllerBase
             })
             .FirstOrDefault();
 
-        model.ProductEmbedding = embedding;
+        model.ProductEmbedding = embedding == null ? null : new ProductEmbeddingModel
+        {
+            Text = embedding.Text,
+            Embedding = JsonSerializer.Serialize(embedding.Embedding.Memory),
+            TokenDetails = embedding.TokenDetails,
+            CreatedDateTime = embedding.CreatedDateTime,
+            UpdatedDateTime = embedding.UpdatedDateTime,
+        };
 
         return Ok(model);
     }
