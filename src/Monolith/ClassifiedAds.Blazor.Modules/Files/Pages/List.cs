@@ -26,11 +26,17 @@ public partial class List
 
     public List<FileEntryModel> Files { get; set; } = new List<FileEntryModel>();
 
+    public List<FileEntryVectorSearchResultModel> VectorSearchResults { get; set; } = new List<FileEntryVectorSearchResultModel>();
+
     protected AuditLogsDialog AuditLogsDialog { get; set; }
 
     protected ConfirmDialog DeleteDialog { get; set; }
 
     public FileEntryModel DeletingFile { get; private set; }
+
+    protected string SearchText { get; set; }
+
+    public bool ShowVectorSearch { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -69,5 +75,18 @@ public partial class List
 
         Files = await FileService.GetFilesAsync();
         StateHasChanged();
+    }
+
+    protected async Task VectorSearch()
+    {
+        if (string.IsNullOrWhiteSpace(SearchText))
+        {
+            Files = await FileService.GetFilesAsync();
+            ShowVectorSearch = false;
+            return;
+        }
+
+        VectorSearchResults = await FileService.VectorSearchFilesAsync(SearchText);
+        ShowVectorSearch = true;
     }
 }

@@ -45,3 +45,20 @@ public class FileEntryEmbeddingModel
 
     public DateTimeOffset? UpdatedDateTime { get; set; }
 }
+
+public class FileEntryVectorSearchResultModel
+{
+    public Guid FileEntryId { get; set; }
+
+    public string FileEntryName { get; set; }
+
+    public string FileName { get; set; }
+
+    public string FileExtension { get; set; }
+
+    public string ChunkName { get; set; }
+
+    public string ChunkData { get; set; }
+
+    public double SimilarityScore { get; set; }
+}

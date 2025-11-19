@@ -83,4 +83,10 @@ public class FileService : HttpService
         var auditLogs = await GetAsync<List<FileEntryAuditLogModel>>($"api/files/{id}/auditlogs");
         return auditLogs;
     }
+
+    public async Task<List<FileEntryVectorSearchResultModel>> VectorSearchFilesAsync(string searchText)
+    {
+        var files = await GetAsync<List<FileEntryVectorSearchResultModel>>($"api/files/vectorsearch?searchText={searchText}");
+        return files;
+    }
 }
