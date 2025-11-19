@@ -4,6 +4,7 @@ using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.Messaging;
 using ClassifiedAds.Domain.Infrastructure.Storages;
 using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Infrastructure.AI;
 using CryptographyHelper;
 using CryptographyHelper.SymmetricAlgorithms;
 using Microsoft.Data.SqlTypes;
