@@ -88,7 +88,7 @@ public class FilesController : Controller
     public async Task<ActionResult<IEnumerable<FileEntryVectorSearchResultModel>>> VectorSearch(string searchText)
     {
         var embeddingRs = await _embeddingService.GenerateAsync(searchText);
-        var embedding = new SqlVector<float>(embeddingRs.EmbeddingVector);
+        var embedding = new SqlVector<float>(embeddingRs.Vector);
 
         var chunks = _fileEntryEmbeddingRepository.GetQueryableSet()
                 .Where(x => !x.FileEntry.Deleted)

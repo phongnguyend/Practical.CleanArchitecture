@@ -138,8 +138,8 @@ public sealed class FileEmbeddingConsumer :
                     ChunkLocation = Path.Combine("Chunks", fileEntry.Id.ToString(), $"{chunk.StartIndex}_{chunk.EndIndex}.txt"),
                     ShortText = Left(chunk.Text, 100),
                     FileEntryId = fileEntry.Id,
-                    Embedding = new SqlVector<float>(embedding.EmbeddingVector),
-                    TokenDetails = JsonSerializer.Serialize(embedding.UsageDetails)
+                    Embedding = new SqlVector<float>(embedding.Vector),
+                    TokenDetails = JsonSerializer.Serialize(embedding.TokenDetails)
                 };
 
                 await fileEntryEmbeddingRepository.AddAsync(fileEntryEmbedding, cancellationToken);
@@ -200,8 +200,8 @@ public sealed class FileEmbeddingConsumer :
                         ChunkLocation = Path.Combine("Chunks", fileEntry.Id.ToString(), $"{chunk.StartIndex}_{chunk.EndIndex}.txt"),
                         ShortText = Left(chunk.Text, 100),
                         FileEntryId = fileEntry.Id,
-                        Embedding = new SqlVector<float>(embedding.EmbeddingVector),
-                        TokenDetails = JsonSerializer.Serialize(embedding.UsageDetails)
+                        Embedding = new SqlVector<float>(embedding.Vector),
+                        TokenDetails = JsonSerializer.Serialize(embedding.TokenDetails)
                     };
 
                     await fileEntryEmbeddingRepository.AddAsync(fileEntryEmbedding, cancellationToken);
@@ -257,8 +257,8 @@ public sealed class FileEmbeddingConsumer :
                     ChunkName = $"{fileEntry.Id}.json",
                     ChunkLocation = Path.Combine("ImageAnalysis", $"{fileEntry.Id}.json"),
                     FileEntryId = fileEntry.Id,
-                    Embedding = new SqlVector<float>(embedding.EmbeddingVector),
-                    TokenDetails = JsonSerializer.Serialize(embedding.UsageDetails)
+                    Embedding = new SqlVector<float>(embedding.Vector),
+                    TokenDetails = JsonSerializer.Serialize(embedding.TokenDetails)
                 };
 
                 await fileEntryEmbeddingRepository.AddAsync(fileEntryEmbedding, cancellationToken);

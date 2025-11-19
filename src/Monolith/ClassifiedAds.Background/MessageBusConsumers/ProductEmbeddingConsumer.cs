@@ -78,8 +78,8 @@ public sealed class ProductEmbeddingConsumer :
             {
                 Text = currentProduct.Description,
                 ProductId = currentProduct.Id,
-                Embedding = new SqlVector<float>(embedding.EmbeddingVector),
-                TokenDetails = JsonSerializer.Serialize(embedding.UsageDetails)
+                Embedding = new SqlVector<float>(embedding.Vector),
+                TokenDetails = JsonSerializer.Serialize(embedding.TokenDetails)
             };
 
             await productEmbeddingRepository.AddAsync(currentProductEmbedding, cancellationToken);
@@ -92,8 +92,8 @@ public sealed class ProductEmbeddingConsumer :
                 var embedding = await GenerateEmbeddingAsync(embeddingService, currentProduct, cancellationToken);
 
                 currentProductEmbedding.Text = currentProduct.Description;
-                currentProductEmbedding.Embedding = new SqlVector<float>(embedding.EmbeddingVector);
-                currentProductEmbedding.TokenDetails = JsonSerializer.Serialize(embedding.UsageDetails);
+                currentProductEmbedding.Embedding = new SqlVector<float>(embedding.Vector);
+                currentProductEmbedding.TokenDetails = JsonSerializer.Serialize(embedding.TokenDetails);
 
                 await productEmbeddingRepository.UpdateAsync(currentProductEmbedding, cancellationToken);
                 await productEmbeddingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);

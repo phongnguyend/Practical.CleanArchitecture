@@ -76,7 +76,7 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<IEnumerable<ProductModel>>> VectorSearch(string searchText)
     {
         var embeddingRs = await _embeddingService.GenerateAsync(searchText);
-        var embedding = new SqlVector<float>(embeddingRs.EmbeddingVector);
+        var embedding = new SqlVector<float>(embeddingRs.Vector);
 
         var products = _productEmbeddingRepository.GetQueryableSet()
                 .OrderBy(x => EF.Functions.VectorDistance("cosine", x.Embedding, embedding))
