@@ -13,6 +13,8 @@ public class ProductModel
 
     public string Description { get; set; }
 
+    public double SimilarityScore { get; set; }
+
     public ProductEmbeddingModel ProductEmbedding { get; set; }
 
     public List<SimilarProductModel> SimilarProducts { get; set; }
@@ -33,5 +35,4 @@ public class ProductEmbeddingModel
 
 public class SimilarProductModel : ProductModel
 {
-    public double SimilarityScore { get; set; }
 }

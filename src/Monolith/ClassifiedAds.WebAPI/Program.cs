@@ -3,6 +3,7 @@ using ClassifiedAds.Application.Products.DTOs;
 using ClassifiedAds.CrossCuttingConcerns.Csv;
 using ClassifiedAds.CrossCuttingConcerns.Excel;
 using ClassifiedAds.Domain.Identity;
+using ClassifiedAds.Infrastructure.AI;
 using ClassifiedAds.Infrastructure.Csv;
 using ClassifiedAds.Infrastructure.Excel.ClosedXML;
 using ClassifiedAds.Infrastructure.HealthChecks;
@@ -102,6 +103,9 @@ services.AddMultiTenantPersistence(typeof(AdsDbContextMultiTenantConnectionStrin
         .AddMessageHandlers()
         .ConfigureInterceptors()
         .AddIdentityCore();
+
+services.AddScoped<EmbeddingService>();
+services.AddScoped<ImageAnalysisService>();
 
 services.AddDataProtection()
     .PersistKeysToDbContext<AdsDbContext>()

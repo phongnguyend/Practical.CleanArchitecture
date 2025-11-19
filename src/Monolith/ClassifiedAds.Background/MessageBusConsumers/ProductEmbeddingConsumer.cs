@@ -1,8 +1,8 @@
 ﻿using ClassifiedAds.Application.Products.MessageBusEvents;
-using ClassifiedAds.Background.Services;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.Messaging;
 using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Infrastructure.AI;
 using Microsoft.Data.SqlTypes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

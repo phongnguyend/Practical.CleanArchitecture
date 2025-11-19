@@ -58,4 +58,10 @@ public class ProductService : HttpService
     {
         return $"{_httpClient.BaseAddress.AbsoluteUri.Trim('/')}/api/products/ExportAsCsv";
     }
+
+    public async Task<List<ProductModel>> VectorSearchProductsAsync(string searchText)
+    {
+        var products = await GetAsync<List<ProductModel>>($"api/products/vectorsearch?searchText={searchText}");
+        return products;
+    }
 }

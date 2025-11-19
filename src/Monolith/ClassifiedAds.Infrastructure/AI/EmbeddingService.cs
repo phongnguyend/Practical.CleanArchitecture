@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Background.Services;
+namespace ClassifiedAds.Infrastructure.AI;
 
 public class EmbeddingService
 {
@@ -25,7 +25,7 @@ public class EmbeddingService
         _embeddingClient = options.CreateEmbeddingClient();
     }
 
-    public async Task<EmbeddingResult> GenerateAsync(string input, CancellationToken cancelationToken)
+    public async Task<EmbeddingResult> GenerateAsync(string input, CancellationToken cancelationToken = default)
     {
         var result = await _embeddingClient.GenerateAsync([input], cancellationToken: cancelationToken);
 

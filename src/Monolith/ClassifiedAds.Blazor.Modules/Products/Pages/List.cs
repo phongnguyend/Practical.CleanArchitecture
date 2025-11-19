@@ -36,6 +36,10 @@ public partial class List
 
     public ProductModel DeletingProduct { get; private set; }
 
+    protected string SearchText { get; set; }
+
+    public bool ShowSimilarityScore { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         Products = await ProductService.GetProductsAsync();
@@ -84,5 +88,18 @@ public partial class List
         var token = await ProductService.GetAccessToken();
         await JSRuntime.Log(token);
         await JSRuntime.InvokeVoidAsync("interop.downloadFile", ProductService.GetExportCsvUrl(), token, "Products.csv");
+    }
+
+    protected async Task VectorSearch()
+    {
+        if (string.IsNullOrWhiteSpace(SearchText))
+        {
+            Products = await ProductService.GetProductsAsync();
+            ShowSimilarityScore = false;
+            return;
+        }
+
+        Products = await ProductService.VectorSearchProductsAsync(SearchText);
+        ShowSimilarityScore = true;
     }
 }

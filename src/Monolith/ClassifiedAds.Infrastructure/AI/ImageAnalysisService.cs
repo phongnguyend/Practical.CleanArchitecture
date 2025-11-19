@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClassifiedAds.Background.Services;
+namespace ClassifiedAds.Infrastructure.AI;
 
 public class ImageAnalysisService
 {

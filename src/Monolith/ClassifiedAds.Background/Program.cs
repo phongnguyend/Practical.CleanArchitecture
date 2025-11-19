@@ -10,6 +10,7 @@ using ClassifiedAds.CrossCuttingConcerns.Exceptions;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.IdentityProviders;
 using ClassifiedAds.Domain.Infrastructure.Messaging;
+using ClassifiedAds.Infrastructure.AI;
 using ClassifiedAds.Infrastructure.FeatureToggles.OutboxPublishingToggle;
 using ClassifiedAds.Infrastructure.HostedServices;
 using ClassifiedAds.Infrastructure.IdentityProviders.Auth0;
