@@ -136,6 +136,7 @@ public sealed class FileEmbeddingConsumer :
                 {
                     ChunkName = $"{chunk.StartIndex}_{chunk.EndIndex}.txt",
                     ChunkLocation = Path.Combine("Chunks", fileEntry.Id.ToString(), $"{chunk.StartIndex}_{chunk.EndIndex}.txt"),
+                    ShortText = Left(chunk.Text, 100),
                     FileEntryId = fileEntry.Id,
                     Embedding = new SqlVector<float>(embedding.EmbeddingVector),
                     TokenDetails = JsonSerializer.Serialize(embedding.UsageDetails)
@@ -197,6 +198,7 @@ public sealed class FileEmbeddingConsumer :
                     {
                         ChunkName = $"{chunk.StartIndex}_{chunk.EndIndex}.txt",
                         ChunkLocation = Path.Combine("Chunks", fileEntry.Id.ToString(), $"{chunk.StartIndex}_{chunk.EndIndex}.txt"),
+                        ShortText = Left(chunk.Text, 100),
                         FileEntryId = fileEntry.Id,
                         Embedding = new SqlVector<float>(embedding.EmbeddingVector),
                         TokenDetails = JsonSerializer.Serialize(embedding.UsageDetails)
@@ -300,5 +302,11 @@ public sealed class FileEmbeddingConsumer :
         }
 
         return path;
+    }
+
+    private static string Left(string value, int length)
+    {
+        length = Math.Abs(length);
+        return string.IsNullOrEmpty(value) ? value : value.Substring(0, Math.Min(value.Length, length));
     }
 }

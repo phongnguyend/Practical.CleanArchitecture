@@ -94,12 +94,17 @@ public partial class List
     {
         if (string.IsNullOrWhiteSpace(SearchText))
         {
-            Products = await ProductService.GetProductsAsync();
-            ShowSimilarityScore = false;
             return;
         }
 
         Products = await ProductService.VectorSearchProductsAsync(SearchText);
         ShowSimilarityScore = true;
+    }
+
+    protected async Task ClearSearch()
+    {
+        SearchText = string.Empty;
+        Products = await ProductService.GetProductsAsync();
+        ShowSimilarityScore = false;
     }
 }

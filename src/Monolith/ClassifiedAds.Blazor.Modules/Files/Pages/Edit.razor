@@ -87,7 +87,7 @@
 				<thead>
 					<tr>
 						<th>Chunk Name</th>
-						<th>Chunk Location</th>
+						<th>Short Text</th>
 						<th>Created Date Time</th>
 						<th>Embedding</th>
 						@if (ShowTokenDetails)
@@ -100,10 +100,10 @@
 					@foreach (var fileEntryEmbedding in File.FileEntryEmbeddings)
 					{
 						<tr>
-							<td>@fileEntryEmbedding.ChunkName</td>
-							<td>
-								<a href="javascript:void(0)" @onclick="(() => DownloadChunk(fileEntryEmbedding))">@fileEntryEmbedding.ChunkLocation</a>
+							<td title="@fileEntryEmbedding.ChunkLocation">
+								<a href="javascript:void(0)" @onclick="(() => DownloadChunk(fileEntryEmbedding))">@fileEntryEmbedding.ChunkName</a>
 							</td>
+							<td>@fileEntryEmbedding.ShortText</td>
 							<td>@fileEntryEmbedding.CreatedDateTime</td>
 							<td><a href="javascript:void(0)" @onclick="(() => DownloadEmbedding(fileEntryEmbedding))">Download</a></td>
 							@if (ShowTokenDetails)

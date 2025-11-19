@@ -81,12 +81,17 @@ public partial class List
     {
         if (string.IsNullOrWhiteSpace(SearchText))
         {
-            Files = await FileService.GetFilesAsync();
-            ShowVectorSearch = false;
             return;
         }
 
         VectorSearchResults = await FileService.VectorSearchFilesAsync(SearchText);
         ShowVectorSearch = true;
+    }
+
+    protected async Task ClearSearch()
+    {
+        SearchText = string.Empty;
+        Files = await FileService.GetFilesAsync();
+        ShowVectorSearch = false;
     }
 }

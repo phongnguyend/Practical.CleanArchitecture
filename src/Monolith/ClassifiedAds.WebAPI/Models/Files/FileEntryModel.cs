@@ -37,6 +37,8 @@ public class FileEntryEmbeddingModel
 
     public string ChunkLocation { get; set; }
 
+    public string ShortText { get; set; }
+
     public string Embedding { get; set; }
 
     public string TokenDetails { get; set; }

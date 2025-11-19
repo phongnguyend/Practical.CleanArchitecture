@@ -91,6 +91,7 @@ public class FilesController : Controller
         var embedding = new SqlVector<float>(embeddingRs.EmbeddingVector);
 
         var chunks = _fileEntryEmbeddingRepository.GetQueryableSet()
+                .Where(x => !x.FileEntry.Deleted)
                 .OrderBy(x => EF.Functions.VectorDistance("cosine", x.Embedding, embedding))
                 .Take(5)
                 .Select(x => new
@@ -98,6 +99,7 @@ public class FilesController : Controller
                     x.FileEntry,
                     x.ChunkName,
                     x.ChunkLocation,
+                    x.ShortText,
                     SimilarityScore = EF.Functions.VectorDistance("cosine", x.Embedding, embedding)
                 }).ToList();
 
@@ -123,8 +125,7 @@ public class FilesController : Controller
             }
             else
             {
-                var text = System.IO.File.ReadAllText(Path.Combine(_options.Storage.TempFolderPath, chunk.ChunkLocation));
-                result.ChunkData = Left(text, 100);
+                result.ChunkData = chunk.ShortText;
             }
 
             result.FileExtension = fileExtension;
@@ -133,12 +134,6 @@ public class FilesController : Controller
         }
 
         return Ok(results);
-    }
-
-    private static string Left(string value, int length)
-    {
-        length = Math.Abs(length);
-        return string.IsNullOrEmpty(value) ? value : value.Substring(0, Math.Min(value.Length, length));
     }
 
     [Authorize(Permissions.UploadFile)]
@@ -230,18 +225,20 @@ public class FilesController : Controller
             .OrderBy(x => x.CreatedDateTime)
             .Select(x => new
             {
-                ChunkName = x.ChunkName,
-                ChunkLocation = x.ChunkLocation,
-                Embedding = x.Embedding,
-                TokenDetails = x.TokenDetails,
-                CreatedDateTime = x.CreatedDateTime,
-                UpdatedDateTime = x.UpdatedDateTime,
+                x.ChunkName,
+                x.ChunkLocation,
+                x.ShortText,
+                x.Embedding,
+                x.TokenDetails,
+                x.CreatedDateTime,
+                x.UpdatedDateTime,
             })
             .AsEnumerable()
             .Select(x => new FileEntryEmbeddingModel
             {
                 ChunkName = x.ChunkName,
                 ChunkLocation = x.ChunkLocation,
+                ShortText = x.ShortText,
                 Embedding = JsonSerializer.Serialize(x.Embedding.Memory),
                 TokenDetails = x.TokenDetails,
                 CreatedDateTime = x.CreatedDateTime,

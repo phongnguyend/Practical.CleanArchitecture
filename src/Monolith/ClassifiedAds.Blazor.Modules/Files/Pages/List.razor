@@ -9,9 +9,12 @@
 	</div>
 	<div class="card-body">
 		<div class="input-group">
-			<InputText @bind-Value="SearchText" class="form-control" placeholder="Search by Description" />
+			<InputText @bind-Value="SearchText" class="form-control" placeholder="Search by Content" />
 			<button type="button" class="btn btn-primary" style="margin-left:10px;" @onclick="VectorSearch">
 				Vector Search
+			</button>
+			<button type="button" class="btn btn-secondary" style="margin-left:10px;" @onclick="ClearSearch">
+				Clear
 			</button>
 		</div>
 	</div>
