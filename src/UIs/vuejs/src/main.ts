@@ -3,7 +3,7 @@ import axios from 'axios'
 import { createBootstrap } from 'bootstrap-vue-next'
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
-import VueDatePicker from '@vuepic/vue-datepicker'
+import { VueDatePicker } from '@vuepic/vue-datepicker'
 
 import App from './App.vue'
 import router from './router'
