@@ -4,10 +4,18 @@ import { useState, useEffect } from "react";
 import Pagination from "../../components/Pagination/Pagination";
 import axios from "./axios";
 
+interface AuditLog {
+  id: string;
+  createdDateTime: string;
+  userName: string;
+  action: string;
+  log: string;
+}
+
 const AuditLogs = () => {
   const [pageTitle] = useState("Audit Logs");
   const [currentPage, setCurrentPage] = useState(1);
-  const [auditLogs, setAuditLogs] = useState([]);
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const pageSize = 5;
 

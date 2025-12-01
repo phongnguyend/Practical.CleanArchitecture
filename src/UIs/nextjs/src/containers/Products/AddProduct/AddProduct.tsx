@@ -1,11 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 
 import { checkValidity } from "../../../shared/utility";
 import axios from "../axios";
+
+interface Product {
+  id?: string;
+  name: string;
+  description: string;
+  [key: string]: any;
+}
 
 const AddProduct = () => {
   const [state, setState] = useState({
@@ -53,7 +60,10 @@ const AddProduct = () => {
     errorMessage: null,
   });
 
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState<Product>({
+    name: "",
+    description: "",
+  });
 
   const { id } = useParams();
   const router = useRouter();
@@ -67,7 +77,7 @@ const AddProduct = () => {
     }
   };
 
-  const saveProduct = async (product) => {
+  const saveProduct = async (product: Product) => {
     try {
       const response = product.id
         ? await axios.put(product.id, product)
@@ -80,21 +90,29 @@ const AddProduct = () => {
   };
 
   useEffect(() => {
-    if (id) {
+    if (id && typeof id === "string") {
       setState({ ...state, title: "Edit Product" });
       fetchProduct(id);
     }
   }, []);
 
-  const fieldChanged = (event) => {
-    checkFieldValidity(event.target.name, event.target.value);
+  const fieldChanged = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    checkFieldValidity(
+      event.target.name as keyof typeof state.controls,
+      event.target.value
+    );
     setProduct({
       ...product,
       [event.target.name]: event.target.value,
     });
   };
 
-  const checkFieldValidity = (name, value) => {
+  const checkFieldValidity = (
+    name: keyof typeof state.controls,
+    value: string
+  ) => {
     const control = state.controls[name];
     const rules = control.validation;
     const validationRs = checkValidity(value, rules);
@@ -113,12 +131,16 @@ const AddProduct = () => {
     return validationRs.isValid;
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setState({ ...state, submitted: true });
     let isValid = true;
     for (const fieldName in state.controls) {
-      isValid = checkFieldValidity(fieldName, product[fieldName]) && isValid;
+      isValid =
+        checkFieldValidity(
+          fieldName as keyof typeof state.controls,
+          product[fieldName]
+        ) && isValid;
     }
 
     if (isValid) {

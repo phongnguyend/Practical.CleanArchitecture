@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import classes from "./Nav.module.css";
 import { usePathname } from "next/navigation";
 
 const Nav = () => {
   const pageTitle = "ClassifiedAds.NextJs";
-  const nextVersion = "15.1.4";
+  const nextVersion = "16.0.6";
 
   const pathname = usePathname();
 
-  const isActive = (path) => {
+  const isActive = (path: string) => {
     return pathname === path || pathname.startsWith(path + "/");
   };
 

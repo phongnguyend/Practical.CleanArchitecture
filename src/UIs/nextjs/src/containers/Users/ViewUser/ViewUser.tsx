@@ -49,8 +49,8 @@ const ViewUser = () => {
   const { id } = useParams();
   const router = useRouter();
 
-  const [user, setUser] = useState({});
-  const [postError, setPostError] = useState(null);
+  const [user, setUser] = useState<any>({});
+  const [postError, setPostError] = useState<any>(null);
 
   const fetchUser = async (id: string) => {
     try {
@@ -63,14 +63,14 @@ const ViewUser = () => {
   const setPasswordInit = () => {
     setPostError(null);
   };
-  const setPassword = async (password) => {
+  const setPassword = async (password: { id: string; password: string; confirmPassword: string }) => {
     try {
       await axios.put(password.id + "/password", password);
       setState({
         ...state,
         showSetPasswordModal: false,
       });
-    } catch (error) {
+    } catch (error: any) {
       setPostError(error);
     }
   };
@@ -99,12 +99,13 @@ const ViewUser = () => {
 
   useEffect(() => {
     if (id) {
-      fetchUser(id);
+      const userId = Array.isArray(id) ? id[0] : id;
+      fetchUser(userId);
       setState({
         ...state,
         setPasswordModel: {
           ...state.setPasswordModel,
-          id: id,
+          id: userId,
         },
       });
     }
@@ -159,19 +160,19 @@ const ViewUser = () => {
     sendEmailAddressConfirmationEmailInit();
   };
 
-  const fieldChanged = (event) => {
+  const fieldChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     const setPasswordModel = {
       ...state.setPasswordModel,
       [event.target.name]: value,
     };
 
-    checkFieldValidity(event.target.name, value);
+    checkFieldValidity(event.target.name as keyof typeof state.controls, value);
 
     setState({ ...state, setPasswordModel: setPasswordModel });
   };
 
-  const checkFieldValidity = (name, value) => {
+  const checkFieldValidity = (name: keyof typeof state.controls, value: string) => {
     const control = state.controls[name];
 
     if (!control) return true;
@@ -194,14 +195,14 @@ const ViewUser = () => {
     return validationRs.isValid;
   };
 
-  const confirmSetPassword = (event) => {
+  const confirmSetPassword = (event: React.FormEvent) => {
     event.preventDefault();
     setState({ ...state, submitted: true });
 
     let isValid = true;
     for (const fieldName in state.controls) {
       isValid =
-        checkFieldValidity(fieldName, state.setPasswordModel[fieldName]) &&
+        checkFieldValidity(fieldName as keyof typeof state.controls, state.setPasswordModel[fieldName as keyof typeof state.setPasswordModel]) &&
         isValid;
     }
 
@@ -215,7 +216,7 @@ const ViewUser = () => {
   };
 
   const passwordErrors = postError?.response?.data
-    ? postError?.response?.data?.map((error) => (
+    ? postError?.response?.data?.map((error: any) => (
         <li key={error.code}>{error.description}</li>
       ))
     : null;

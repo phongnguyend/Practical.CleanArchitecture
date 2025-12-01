@@ -8,6 +8,35 @@ import axios from "../axios";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 
+interface File {
+  id: string;
+  name: string;
+  fileName: string;
+  description: string;
+  size: number;
+  uploadedTime: string;
+  encrypted?: boolean;
+}
+
+interface AuditLog {
+  id: string;
+  createdDateTime: string;
+  userName: string;
+  action: string;
+  data: {
+    name: string;
+    description: string;
+    fileName: string;
+    fileLocation: string;
+  };
+  highLight: {
+    name: boolean;
+    description: boolean;
+    fileName: boolean;
+    fileLocation: boolean;
+  };
+}
+
 const EditFile = ({}) => {
   const router = useRouter();
 
@@ -46,12 +75,12 @@ const EditFile = ({}) => {
     saved: false,
   });
 
-  const [file, setFile] = useState({});
-  const [auditLogs, setAuditLogs] = useState([]);
+  const [file, setFile] = useState<Partial<File>>({});
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
 
   const { id } = useParams();
 
-  const fetchFile = async (id) => {
+  const fetchFile = async (id: string) => {
     try {
       const response = await axios.get(id);
       setFile(response.data);
@@ -59,10 +88,10 @@ const EditFile = ({}) => {
       //
     }
   };
-  const updateFile = (file) => {
+  const updateFile = (file: File) => {
     setFile(file);
   };
-  const saveFile = async (file) => {
+  const saveFile = async (file: File) => {
     try {
       const response = await axios.put(file.id, file);
       setFile(response.data);
@@ -77,21 +106,27 @@ const EditFile = ({}) => {
   };
 
   useEffect(() => {
-    if (id) {
+    if (id && typeof id === "string") {
       fetchFile(id);
     }
   }, []);
 
-  const fieldChanged = (event) => {
-    checkFieldValidity(event.target.name, event.target.value);
+  const fieldChanged = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const fieldName = event.target.name as keyof typeof state.controls;
+    checkFieldValidity(fieldName, event.target.value);
 
     updateFile({
       ...file,
       [event.target.name]: event.target.value,
-    });
+    } as File);
   };
 
-  const checkFieldValidity = (name, value) => {
+  const checkFieldValidity = (
+    name: keyof typeof state.controls,
+    value: any
+  ) => {
     const control = state.controls[name];
     const rules = control.validation;
     const validationRs = checkValidity(value, rules);
@@ -111,16 +146,18 @@ const EditFile = ({}) => {
     return validationRs.isValid;
   };
 
-  const onSubmit = async (event) => {
+  const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setState({ ...state, submitted: true });
     let isValid = true;
     for (let fieldName in state.controls) {
-      isValid = checkFieldValidity(fieldName, file[fieldName]) && isValid;
+      const key = fieldName as keyof typeof state.controls;
+      const value = (file as any)[fieldName];
+      isValid = checkFieldValidity(key, value) && isValid;
     }
 
     if (isValid) {
-      await saveFile(file);
+      await saveFile(file as File);
     }
   };
 
@@ -134,7 +171,7 @@ const EditFile = ({}) => {
     }
   };
 
-  const formatDateTime = (value) => {
+  const formatDateTime = (value: string) => {
     if (!value) return value;
     const date = new Date(value);
     return date.toLocaleDateString() + " " + date.toLocaleTimeString();

@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image"; 
+import Image from "next/image";
 import Timer from "../../components/Timer/Timer";
 
 import "./Home.css";
@@ -7,7 +7,7 @@ import "./Home.css";
 function Home() {
   const date = new Date();
 
-  const nextVersion = '15.1.4'
+  const nextVersion = "16.0.6";
 
   return (
     <div className="card">

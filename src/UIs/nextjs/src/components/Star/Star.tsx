@@ -2,7 +2,12 @@ import React from "react";
 
 import classes from "./Star.module.css";
 
-const Star = props => {
+interface StarProps {
+  rating: number;
+  ratingClicked?: (message: string) => void;
+}
+
+const Star = (props: StarProps) => {
   const width = (props.rating * 75) / 5;
   return (
     <div

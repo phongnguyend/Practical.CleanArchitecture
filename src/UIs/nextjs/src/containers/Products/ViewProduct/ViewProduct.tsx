@@ -7,11 +7,21 @@ import { useRouter, useParams } from "next/navigation";
 import Star from "../../../components/Star/Star";
 import axios from "../axios";
 
+interface Product {
+  id: string;
+  name: string;
+  code: string;
+  description: string;
+  price: number;
+  starRating: number;
+  imageUrl: string;
+}
+
 const ViewProduct = () => {
   const { id } = useParams();
   const router = useRouter();
-  const [product, setProduct] = useState({});
-  const fetchProduct = async (id) => {
+  const [product, setProduct] = useState<Product | null>(null);
+  const fetchProduct = async (id: string) => {
     try {
       const response = await axios.get(id);
       const fetchedProduct = response.data;
@@ -22,7 +32,7 @@ const ViewProduct = () => {
   };
 
   useEffect(() => {
-    if (id) {
+    if (id && typeof id === "string") {
       fetchProduct(id);
     }
   }, []);

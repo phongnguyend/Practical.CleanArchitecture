@@ -1,6 +1,13 @@
 import { Pagination as BootstrapPagination } from "react-bootstrap";
 
-const Pagination = (props) => {
+interface PaginationProps {
+  totalItems: number;
+  currentPage: number;
+  pageSize: number;
+  pageSelected: (page: number) => void;
+}
+
+const Pagination = (props: PaginationProps) => {
   const { totalItems, currentPage, pageSize } = props;
   const totalPages = Math.ceil(totalItems / pageSize);
 
@@ -41,7 +48,10 @@ const Pagination = (props) => {
 
   return (
     <BootstrapPagination>
-      <BootstrapPagination.First disabled={currentPage === 1} onClick={() => pageSelected(1)} />
+      <BootstrapPagination.First
+        disabled={currentPage === 1}
+        onClick={() => pageSelected(1)}
+      />
       <BootstrapPagination.Prev
         disabled={currentPage === 1}
         onClick={() => pageSelected(currentPage - 1)}

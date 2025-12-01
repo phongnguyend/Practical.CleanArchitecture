@@ -1,7 +1,8 @@
+import { AxiosInstance } from "axios";
 import env from "../../environments";
 import { getAccessToken, login } from "./authService";
 
-const addAuthInterceptors = (axios) => {
+const addAuthInterceptors = (axios: AxiosInstance) => {
   axios.interceptors.request.use((config) => {
     if (
       config.baseURL?.startsWith(env.ResourceServer.Endpoint) ||

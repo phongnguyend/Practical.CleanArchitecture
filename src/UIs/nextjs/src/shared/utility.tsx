@@ -1,11 +1,11 @@
-export const updateObject = (oldObject, updatedProperties) => {
+export const updateObject = (oldObject: any, updatedProperties: any) => {
   return {
     ...oldObject,
     ...updatedProperties,
   };
 };
 
-export const checkValidity = (value, rules) => {
+export const checkValidity = (value: any, rules: any) => {
   let rs: any = { isValid: true };
   if (!rules) {
     return rs;
@@ -36,7 +36,8 @@ export const checkValidity = (value, rules) => {
   }
 
   if (rules.isEmail) {
-    const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+    const pattern =
+      /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
     rs.isValid = pattern.test(value);
     if (!rs.isValid) {
       rs.email = true;

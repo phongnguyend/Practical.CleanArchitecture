@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  UserManager,
-  User,
-  WebStorageStateStore,
-  UserManagerSettings,
-} from "oidc-client-ts";
+import { UserManager, User, WebStorageStateStore } from "oidc-client-ts";
 import { useEffect } from "react";
 
 import env from "../../environments";
@@ -15,9 +10,12 @@ const OidcLoginRedirect = () => {
     const config = {
       authority: env.OpenIdConnect.Authority,
       client_id: env.OpenIdConnect.ClientId,
+      redirect_uri: `${env.CurrentUrl}oidc-login-redirect`,
+      scope: "openid profile ClassifiedAds.WebAPI",
+      response_type: "code",
+      post_logout_redirect_uri: `${env.CurrentUrl}?postLogout=true`,
       userStore: new WebStorageStateStore({ store: localStorage }),
-      response_mode: "query",
-    } as UserManagerSettings;
+    };
 
     const userManager = new UserManager(config);
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { checkValidity } from "../../../shared/utility";
 import axios from "../axios";
 import Link from "next/link";
@@ -38,10 +38,10 @@ const UploadFile = () => {
       },
     },
     valid: false,
-    formFile: null,
+    formFile: null as File | null,
     hasFile: false,
     submitted: false,
-    errorMessage: null,
+    errorMessage: null as string | null,
     saved: false,
   });
 
@@ -52,14 +52,14 @@ const UploadFile = () => {
     encrypted: false,
   });
 
-  const fieldChanged = (event) => {
-    let value = event.target.value;
+  const fieldChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let value: string | boolean = event.target.value;
 
     if (event.target.type == "checkbox") {
       value = event.target.checked;
     }
 
-    checkFieldValidity(event.target.name, value);
+    checkFieldValidity(event.target.name as keyof typeof state.controls, value);
 
     setFile({
       ...file,
@@ -67,7 +67,10 @@ const UploadFile = () => {
     });
   };
 
-  const checkFieldValidity = (name, value) => {
+  const checkFieldValidity = (
+    name: keyof typeof state.controls,
+    value: string | boolean
+  ) => {
     const control = state.controls[name];
     if (!control) return true;
 
@@ -80,7 +83,7 @@ const UploadFile = () => {
         controls: {
           ...preState.controls,
           [name]: {
-            ...preState.controls[name],
+            ...preState.controls[name as keyof typeof preState.controls],
             error: validationRs,
             valid: validationRs.isValid,
           },
@@ -91,8 +94,8 @@ const UploadFile = () => {
     return validationRs.isValid;
   };
 
-  const handleFileInput = (event) => {
-    var formFile = event.target.files.item(0);
+  const handleFileInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    var formFile = event.target.files?.item(0) || null;
     setState({ ...state, formFile: formFile, hasFile: !!formFile });
     setFile({
       ...file,
@@ -100,18 +103,22 @@ const UploadFile = () => {
     });
   };
 
-  const onSubmit = async (event) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setState({ ...state, submitted: true });
     let isValid = true;
     for (let fieldName in state.controls) {
-      isValid = checkFieldValidity(fieldName, file[fieldName]) && isValid;
+      isValid =
+        checkFieldValidity(
+          fieldName as keyof typeof state.controls,
+          file[fieldName as keyof typeof file]
+        ) && isValid;
     }
 
     if (isValid && state.hasFile) {
       try {
         const formData = new FormData();
-        formData.append("formFile", file.formFile);
+        formData.append("formFile", state.formFile as File);
         formData.append("name", file.name);
         formData.append("description", file.description);
         formData.append("encrypted", file.encrypted.toString());

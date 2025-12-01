@@ -9,8 +9,47 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "../axios";
 
+interface User {
+  id?: string;
+  userName: string;
+  email: string;
+  emailConfirmed: boolean;
+  phoneNumber: string;
+  phoneNumberConfirmed: boolean;
+  twoFactorEnabled: boolean;
+  lockoutEnabled: boolean;
+  accessFailedCount: number;
+  lockoutEnd: string;
+}
+
+interface ValidationError {
+  required: boolean;
+  minLength: boolean;
+  isValid?: boolean;
+}
+
+interface ControlState {
+  validation: {
+    required: boolean;
+    minLength: number;
+  };
+  error: ValidationError;
+  valid: boolean;
+  touched: boolean;
+}
+
+interface AppState {
+  title: string;
+  controls: {
+    [key: string]: ControlState;
+  };
+  valid: boolean;
+  submitted: boolean;
+  errorMessage: string | null;
+}
+
 const AddUser = () => {
-  const [state, setState] = useState({
+  const [state, setState] = useState<AppState>({
     title: "Add User",
     controls: {
       userName: {
@@ -69,7 +108,7 @@ const AddUser = () => {
     }
   };
 
-  const saveUser = async (user) => {
+  const saveUser = async (user: User) => {
     try {
       const response = user.id
         ? await axios.put(user.id, user)
@@ -81,14 +120,14 @@ const AddUser = () => {
   };
 
   useEffect(() => {
-    if (id) {
+    if (id && typeof id === "string") {
       fetchUser(id);
       setState({ ...state, title: "Edit User" });
     }
   }, []);
 
-  const fieldChanged = (event) => {
-    let value = event.target.value;
+  const fieldChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let value: string | boolean | number = event.target.value;
 
     if (event.target.type === "checkbox") {
       value = event.target.checked;
@@ -102,14 +141,17 @@ const AddUser = () => {
     });
   };
 
-  const updateLockoutEnd = (dateTime: Date) => {
+  const updateLockoutEnd = (dateTime: Date | null) => {
     setUser({
       ...user,
       lockoutEnd: dateTime ? dateTime.toISOString() : "",
     });
   };
 
-  const checkFieldValidity = (name, value) => {
+  const checkFieldValidity = (
+    name: string,
+    value: string | boolean | number
+  ) => {
     const control = state.controls[name];
 
     if (!control) return true;
@@ -132,22 +174,23 @@ const AddUser = () => {
     return validationRs.isValid;
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setState({ ...state, submitted: true });
 
     let isValid = true;
     for (const fieldName in state.controls) {
-      isValid = checkFieldValidity(fieldName, user[fieldName]) && isValid;
+      const fieldValue = user[fieldName as keyof typeof user];
+      isValid = checkFieldValidity(fieldName, fieldValue) && isValid;
     }
 
     if (isValid) {
       saveUser({
         ...user,
         accessFailedCount: user.accessFailedCount
-          ? parseInt(user.accessFailedCount)
+          ? parseInt(user.accessFailedCount.toString())
           : 0,
-        lockoutEnd: user.lockoutEnd ? user.lockoutEnd : null,
+        lockoutEnd: user.lockoutEnd ? user.lockoutEnd : "",
       });
     }
   };
