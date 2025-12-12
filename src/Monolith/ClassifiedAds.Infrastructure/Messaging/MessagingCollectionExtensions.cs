@@ -81,6 +81,7 @@ public static class MessagingCollectionExtensions
             AutomaticCreateEnabled = true,
             MessageEncryptionKey = options.MessageEncryptionKey,
             MaxRetryCount = options.GetMaxRetryCount(typeof(TConsumer).Name),
+            RetryIntervals = options.GetRetryIntervals(typeof(TConsumer).Name),
             DeadLetterEnabled = options.GetDeadLetterEnabled(typeof(TConsumer).Name)
         };
 
