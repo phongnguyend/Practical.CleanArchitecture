@@ -27,4 +27,19 @@ public class RabbitMQOptions
     public bool MessageEncryptionEnabled { get; set; }
 
     public string MessageEncryptionKey { get; set; }
+
+    public string TryGetProperty(string consumerName, string propertyName)
+    {
+        return Consumers[consumerName].TryGetValue(propertyName, out var value) ? value : null;
+    }
+
+    public int GetMaxRetryCount(string consumerName)
+    {
+        return int.TryParse(TryGetProperty(consumerName, "Property_MaxRetryCount"), out var maxRetryCount) ? maxRetryCount : 0;
+    }
+
+    public bool GetDeadLetterEnabled(string consumerName)
+    {
+        return bool.TryParse(TryGetProperty(consumerName, "Property_DeadLetterEnabled"), out var deadLetterEnabled) ? deadLetterEnabled : false;
+    }
 }

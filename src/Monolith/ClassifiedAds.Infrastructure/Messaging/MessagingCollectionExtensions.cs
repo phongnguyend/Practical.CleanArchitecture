@@ -79,7 +79,9 @@ public static class MessagingCollectionExtensions
             RoutingKey = options.RoutingKeys[typeof(T).Name],
             QueueName = options.Consumers[typeof(TConsumer).Name][typeof(T).Name],
             AutomaticCreateEnabled = true,
-            MessageEncryptionKey = options.MessageEncryptionKey
+            MessageEncryptionKey = options.MessageEncryptionKey,
+            MaxRetryCount = options.GetMaxRetryCount(typeof(TConsumer).Name),
+            DeadLetterEnabled = options.GetDeadLetterEnabled(typeof(TConsumer).Name)
         };
 
         services.AddTransient<IMessageReceiver<TConsumer, T>>(x => new RabbitMQReceiver<TConsumer, T>(receiverOptions, x.GetRequiredService<ILogger<RabbitMQReceiver<TConsumer, T>>>()));
