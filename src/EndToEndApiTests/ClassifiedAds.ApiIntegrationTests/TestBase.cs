@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.ApiIntegrationTests.Configuration;
 using ClassifiedAds.ApiIntegrationTests.ExtensionMethods;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;

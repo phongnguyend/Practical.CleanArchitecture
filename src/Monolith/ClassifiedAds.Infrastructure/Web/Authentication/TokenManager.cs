@@ -1,4 +1,4 @@
-﻿using IdentityModel.Client;
+﻿using Duende.IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using System;
 using System.Net.Http;

@@ -7,7 +7,7 @@ using ClassifiedAds.WebMVC.ConfigurationOptions;
 using ClassifiedAds.WebMVC.Hubs;
 using ClassifiedAds.WebMVC.Models;
 using ClassifiedAds.WebMVC.Models.Home;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;

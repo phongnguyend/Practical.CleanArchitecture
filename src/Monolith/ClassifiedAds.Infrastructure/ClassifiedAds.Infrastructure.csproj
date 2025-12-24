@@ -24,8 +24,8 @@
     <PackageReference Include="CsvHelper" Version="33.1.0" />
     <PackageReference Include="Dapper.StrongName" Version="2.1.66" />
     <PackageReference Include="DinkToPdf" Version="1.0.8" />
+    <PackageReference Include="Duende.IdentityModel" Version="8.0.0" />
     <PackageReference Include="ExcelDataReader" Version="3.8.0" />
-    <PackageReference Include="IdentityModel" Version="7.0.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.23.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.0" />

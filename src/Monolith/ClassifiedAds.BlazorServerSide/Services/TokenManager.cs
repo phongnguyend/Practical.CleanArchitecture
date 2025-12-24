@@ -1,6 +1,6 @@
 ﻿using ClassifiedAds.Blazor.Modules.Core.Services;
 using ClassifiedAds.BlazorServerSide.ConfigurationOptions;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using System;
