@@ -43,4 +43,6 @@ public class User : Entity<Guid>, IAggregateRoot
     public IList<UserRole> UserRoles { get; set; }
 
     public IList<UserLogin> UserLogins { get; set; }
+
+    public IList<PasswordHistory> PasswordHistories { get; set; }
 }

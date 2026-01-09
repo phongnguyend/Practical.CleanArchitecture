@@ -38,6 +38,14 @@ public class UserStore : IUserStore<User>,
 
     public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
     {
+        user.PasswordHistories = new List<PasswordHistory>()
+        {
+            new PasswordHistory
+            {
+                PasswordHash = user.PasswordHash,
+                CreatedDateTime = DateTimeOffset.Now,
+            },
+        };
         await _userRepository.AddOrUpdateAsync(user, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         return IdentityResult.Success;
@@ -292,7 +300,7 @@ public class UserStore : IUserStore<User>,
 
     public async Task<bool> RedeemCodeAsync(User user, string code, CancellationToken cancellationToken)
     {
-        var mergedCodes = await GetTokenAsync(user, AuthenticatorStoreLoginProvider, RecoveryCodeTokenName, cancellationToken) ?? "";
+        var mergedCodes = await GetTokenAsync(user, AuthenticatorStoreLoginProvider, RecoveryCodeTokenName, cancellationToken) ?? string.Empty;
         var splitCodes = mergedCodes.Split(';');
         if (splitCodes.Contains(code))
         {
@@ -306,7 +314,7 @@ public class UserStore : IUserStore<User>,
 
     public async Task<int> CountCodesAsync(User user, CancellationToken cancellationToken)
     {
-        var mergedCodes = await GetTokenAsync(user, AuthenticatorStoreLoginProvider, RecoveryCodeTokenName, cancellationToken) ?? "";
+        var mergedCodes = await GetTokenAsync(user, AuthenticatorStoreLoginProvider, RecoveryCodeTokenName, cancellationToken) ?? string.Empty;
         if (mergedCodes.Length > 0)
         {
             return mergedCodes.Split(';').Length;
