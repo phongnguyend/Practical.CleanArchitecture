@@ -106,6 +106,11 @@ public class OpenAIOptions
 
     public IChatClient CreateChatClient()
     {
+        return CreateOpenAIChatClient().AsIChatClient();
+    }
+
+    public ChatClient CreateOpenAIChatClient()
+    {
         if (string.IsNullOrEmpty(ApiKey))
         {
             throw new ArgumentException("API Key is required", nameof(ApiKey));
@@ -126,7 +131,7 @@ public class OpenAIOptions
             Endpoint = new Uri(Endpoint)
         };
 
-        return new ChatClient(ModelId, new ApiKeyCredential(ApiKey), options).AsIChatClient();
+        return new ChatClient(ModelId, new ApiKeyCredential(ApiKey), options);
     }
 
     public IEmbeddingGenerator<string, Embedding<float>> CreateEmbeddingClient()

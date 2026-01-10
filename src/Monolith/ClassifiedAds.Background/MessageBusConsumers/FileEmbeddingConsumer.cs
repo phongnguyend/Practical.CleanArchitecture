@@ -103,7 +103,7 @@ public sealed class FileEmbeddingConsumer :
         var fileEntryTextRepository = scope.ServiceProvider.GetService<IRepository<FileEntryText, Guid>>();
         var fileEntryEmbeddingRepository = scope.ServiceProvider.GetService<IRepository<FileEntryEmbedding, Guid>>();
 
-        var fileExtension = Path.GetExtension(fileEntry.FileName);
+        var fileExtension = Path.GetExtension(fileEntry.FileName).ToLowerInvariant();
 
         if (fileExtension == ".txt" ||
            fileExtension == ".md" ||
@@ -219,8 +219,7 @@ public sealed class FileEmbeddingConsumer :
 
             var embeddingsFolder = CreateDirectoryIfNotExist(Path.Combine(_embeddingFolder, fileEntry.Id.ToString()));
 
-            var imageAnalysisFile = Path.Combine(imageAnalysisFolder, $"{fileEntry.Id}.json");
-            var embeddingFile = Path.Combine(embeddingsFolder, $"{fileEntry.Id}.json");
+            var imageAnalysisFile = Path.Combine(imageAnalysisFolder, $"{fileEntry.Id}.txt");
 
             var fileEntryText = fileEntryTextRepository.GetQueryableSet().FirstOrDefault(x => x.FileEntryId == fileEntry.Id);
 
@@ -228,7 +227,7 @@ public sealed class FileEmbeddingConsumer :
             {
                 var bytes = await GetBytesAsync(fileStorageManager, fileEntry, cancellationToken);
 
-                var imageAnalysisResult = await imageAnalysisService.AnalyzeImageAsync(bytes, cancellationToken);
+                var imageAnalysisResult = await imageAnalysisService.AnalyzeImageAsync(bytes, GetMediaType(fileExtension), cancellationToken);
 
                 var json = JsonSerializer.Serialize(imageAnalysisResult);
 
@@ -236,7 +235,7 @@ public sealed class FileEmbeddingConsumer :
 
                 fileEntryText = new FileEntryText
                 {
-                    TextLocation = Path.Combine("ImageAnalysis", $"{fileEntry.Id}.json"),
+                    TextLocation = Path.Combine("ImageAnalysis", $"{fileEntry.Id}.txt"),
                     FileEntryId = fileEntry.Id,
                 };
 
@@ -248,20 +247,30 @@ public sealed class FileEmbeddingConsumer :
 
             if (!hasFileEntryEmbeddings)
             {
-                var json = await File.ReadAllTextAsync(imageAnalysisFile, cancellationToken);
-                var embedding = await embeddingService.GenerateAsync(json, cancellationToken);
-                await File.WriteAllTextAsync(embeddingFile, JsonSerializer.Serialize(embedding), cancellationToken);
+                var chunks = TextChunkingService.ChunkSentences(await File.ReadAllTextAsync(imageAnalysisFile, cancellationToken));
 
-                var fileEntryEmbedding = new FileEntryEmbedding
+                var chunksFolder = CreateDirectoryIfNotExist(Path.Combine(_chunkFolder, fileEntry.Id.ToString()));
+
+                foreach (var chunk in chunks)
                 {
-                    ChunkName = $"{fileEntry.Id}.json",
-                    ChunkLocation = Path.Combine("ImageAnalysis", $"{fileEntry.Id}.json"),
-                    FileEntryId = fileEntry.Id,
-                    Embedding = new SqlVector<float>(embedding.Vector),
-                    TokenDetails = JsonSerializer.Serialize(embedding.TokenDetails)
-                };
+                    await File.WriteAllTextAsync(Path.Combine(chunksFolder, $"{chunk.StartIndex}_{chunk.EndIndex}.txt"), chunk.Text, cancellationToken);
 
-                await fileEntryEmbeddingRepository.AddAsync(fileEntryEmbedding, cancellationToken);
+                    var embedding = await embeddingService.GenerateAsync(chunk.Text, cancellationToken);
+                    await File.WriteAllTextAsync(Path.Combine(embeddingsFolder, $"{chunk.StartIndex}_{chunk.EndIndex}.json"), JsonSerializer.Serialize(embedding), cancellationToken);
+
+                    var fileEntryEmbedding = new FileEntryEmbedding
+                    {
+                        ChunkName = $"{chunk.StartIndex}_{chunk.EndIndex}.txt",
+                        ChunkLocation = Path.Combine("Chunks", fileEntry.Id.ToString(), $"{chunk.StartIndex}_{chunk.EndIndex}.txt"),
+                        ShortText = Left(chunk.Text, 100),
+                        FileEntryId = fileEntry.Id,
+                        Embedding = new SqlVector<float>(embedding.Vector),
+                        TokenDetails = JsonSerializer.Serialize(embedding.TokenDetails)
+                    };
+
+                    await fileEntryEmbeddingRepository.AddAsync(fileEntryEmbedding, cancellationToken);
+                }
+
                 await fileEntryEmbeddingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
             }
         }
@@ -308,5 +317,15 @@ public sealed class FileEmbeddingConsumer :
     {
         length = Math.Abs(length);
         return string.IsNullOrEmpty(value) ? value : value.Substring(0, Math.Min(value.Length, length));
+    }
+
+    private static string GetMediaType(string fileExtension)
+    {
+        return fileExtension switch
+        {
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".png" => "image/png",
+            _ => "application/octet-stream",
+        };
     }
 }

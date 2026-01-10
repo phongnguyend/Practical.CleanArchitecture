@@ -1,8 +1,7 @@
-﻿using Azure;
-using Azure.AI.Vision.ImageAnalysis;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
+using OpenAI.Chat;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,72 +10,30 @@ namespace ClassifiedAds.Infrastructure.AI;
 public class ImageAnalysisService
 {
     private readonly IConfiguration _configuration;
+    private readonly OpenAIOptions _options;
+    private readonly ChatClient _chatClient;
 
     public ImageAnalysisService(IConfiguration configuration)
     {
         _configuration = configuration;
+        _options = new OpenAIOptions();
+        _configuration.GetSection("ImageAnalysis:OpenAI").Bind(_options);
+        _chatClient = _options.CreateOpenAIChatClient();
     }
 
-    private static ImageAnalysisClient CreateImageAnalysisClient(string endpoint, string key)
+    public async Task<string> AnalyzeImageAsync(byte[] bytes, string mediaType, CancellationToken cancellationToken = default)
     {
-        var client = new ImageAnalysisClient(new Uri(endpoint), new AzureKeyCredential(key));
-        return client;
-    }
+        var textPart = ChatMessageContentPart.CreateTextPart("Describe this picture:");
+        var imgPart = ChatMessageContentPart.CreateImagePart(new BinaryData(bytes), mediaType);
 
-    public async Task<ImageAnalysisResult> AnalyzeImageAsync(byte[] bytes, CancellationToken cancellationToken = default)
-    {
-        string key = _configuration["ImageAnalysis:AzureAIVision:ApiKey"]!;
-        string endpoint = _configuration["ImageAnalysis:AzureAIVision:Endpoint"]!;
-
-        // Create a client
-        var client = CreateImageAnalysisClient(endpoint, key);
-
-        // Creating a list that defines the features to be extracted from the image.
-        VisualFeatures features = VisualFeatures.Caption | VisualFeatures.DenseCaptions | VisualFeatures.Tags;
-
-        // Analyze the image
-        var result = await client.AnalyzeAsync(new BinaryData(bytes), visualFeatures: features, cancellationToken: cancellationToken);
-
-        return new ImageAnalysisResult
+        var chatMessages = new List<ChatMessage>
         {
-            Tags = result.Value.Tags.Values.Select(x => new Tag
-            {
-                Name = x.Name,
-                Confidence = x.Confidence
-            }).ToArray(),
-            Caption = new Caption
-            {
-                Text = result.Value.Caption.Text,
-                Confidence = result.Value.Caption.Confidence
-            },
-            DenseCaptions = result.Value.DenseCaptions.Values.Select(x => new Caption
-            {
-                Text = x.Text,
-                Confidence = x.Confidence
-            }).ToArray()
+            new SystemChatMessage("You are a helpful assistant."),
+            new UserChatMessage(textPart, imgPart)
         };
+
+        ChatCompletion chatCompletion = await _chatClient.CompleteChatAsync(chatMessages, cancellationToken: cancellationToken);
+
+        return chatCompletion.Content[0].Text;
     }
-}
-
-public class ImageAnalysisResult
-{
-    public Tag[] Tags { get; set; }
-
-    public Caption Caption { get; set; }
-
-    public Caption[] DenseCaptions { get; set; }
-}
-
-public class Tag
-{
-    public string Name { get; set; }
-
-    public float Confidence { get; set; }
-}
-
-public class Caption
-{
-    public string Text { get; set; }
-
-    public float Confidence { get; set; }
 }
