@@ -1,0 +1,10 @@
+<span *ngIf="copyStatus" class="copy-icon">{{ copyStatus }}</span>
+<i
+  *ngIf="!copyStatus"
+  [class]="className"
+  [title]="title"
+  (click)="handleCopy()"
+  (keydown.enter)="handleCopy()"
+  role="button"
+  tabindex="0"
+></i>

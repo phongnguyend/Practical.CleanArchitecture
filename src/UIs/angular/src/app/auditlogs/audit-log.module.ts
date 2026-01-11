@@ -16,7 +16,7 @@ import { auditLogReducer } from "./audit-log.reducer";
     SharedModule,
     StoreModule.forFeature("auditLog", auditLogReducer),
     EffectsModule.forFeature([AuditLogEffects]),
+    AuditLogListComponent,
   ],
-  declarations: [AuditLogListComponent],
 })
 export class AuditLogModule {}

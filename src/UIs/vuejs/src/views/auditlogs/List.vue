@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="card-header">{{pageTitle}}</div>
+    <div class="card-header">{{ pageTitle }}</div>
     <div class="card-body">
       <div style="float: right">
         <app-pagination
@@ -25,7 +25,20 @@
               <td>{{ formatedDateTime(auditLog.createdDateTime) }}</td>
               <td>{{ auditLog.userName }}</td>
               <td>{{ auditLog.action }}</td>
-              <td>{{ auditLog.log }}</td>
+              <td>
+                <div class="position-relative">
+                  <div class="position-absolute top-0 end-0">
+                    <div class="d-flex">
+                      <CopyToClipboard
+                        :text="auditLog.log"
+                        className="custom-icon fa fa-copy"
+                        title="Copy this text"
+                      />
+                    </div>
+                  </div>
+                  <div class="pe-5">{{ auditLog.log }}</div>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -47,6 +60,7 @@ import { ref, onMounted } from 'vue'
 import axios from './axios'
 import type { IAuditLogEntry } from './AuditLog'
 import Pagination from '../../components/Pagination.vue'
+import CopyToClipboard from '../../components/CopyToClipboard.vue'
 
 // Register the component
 const appPagination = Pagination

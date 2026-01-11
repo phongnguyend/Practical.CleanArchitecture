@@ -12,6 +12,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     BModal: typeof import('bootstrap-vue-next/components/BModal')['BModal']
+    CopyToClipboard: typeof import('./src/components/CopyToClipboard.vue')['default']
     Notification: typeof import('./src/components/Notification.vue')['default']
     Pagination: typeof import('./src/components/Pagination.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

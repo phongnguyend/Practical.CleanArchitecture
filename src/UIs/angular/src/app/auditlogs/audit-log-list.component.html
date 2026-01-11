@@ -27,7 +27,20 @@
             </td>
             <td>{{ auditLog.userName }}</td>
             <td>{{ auditLog.action }}</td>
-            <td>{{ auditLog.log }}</td>
+            <td>
+              <div class="position-relative">
+                <div class="position-absolute top-0 end-0">
+                  <div class="d-flex">
+                    <app-copy-to-clipboard
+                      [text]="auditLog.log"
+                      [className]="'custom-icon fa fa-copy'"
+                      [title]="'Copy this text'"
+                    ></app-copy-to-clipboard>
+                  </div>
+                </div>
+                <div class="pe-5">{{ auditLog.log }}</div>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>

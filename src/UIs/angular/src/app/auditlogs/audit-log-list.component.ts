@@ -1,14 +1,18 @@
 import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { IAuditLogEntry } from "./audit-log";
 import { Store } from "@ngrx/store";
 import { AuditLogState } from "./audit-log.reducer";
 import * as actions from "./audit-log.actions";
+import { CopyToClipboardComponent } from "../shared/copy-to-clipboard.component";
+import { SharedModule } from "../shared/shared.module";
+import { PaginationComponent } from "../shared/pagination.component";
 
 @Component({
-    selector: "app-audit-log-list",
-    templateUrl: "./audit-log-list.component.html",
-    styleUrls: ["./audit-log-list.component.css"],
-    standalone: false
+  selector: "app-audit-log-list",
+  templateUrl: "./audit-log-list.component.html",
+  styleUrls: ["./audit-log-list.component.css"],
+  imports: [CommonModule, SharedModule, CopyToClipboardComponent, PaginationComponent],
 })
 export class AuditLogListComponent implements OnInit {
   auditLogs: IAuditLogEntry[] = [];
