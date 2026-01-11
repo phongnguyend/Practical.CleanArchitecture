@@ -6,12 +6,15 @@ import { AuthService } from "../auth/auth.service";
 import { environment } from "src/environments/environment";
 
 @Component({
-    selector: "app-notification",
-    template: "",
-    standalone: false
+  selector: "app-notification",
+  template: "",
+  standalone: true,
 })
 export class NotificationComponent implements OnInit {
-  constructor(public auth: AuthService, private toastr: ToastrService) {}
+  constructor(
+    public auth: AuthService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     const connection = new HubConnectionBuilder()
@@ -32,12 +35,10 @@ export class NotificationComponent implements OnInit {
       },
       function () {
         console.log(
-          "Cannot connect to NotificationHub: " +
-            environment.ResourceServer.NotificationEndpoint
+          "Cannot connect to NotificationHub: " + environment.ResourceServer.NotificationEndpoint
         );
         vm.toastr.error(
-          "Cannot connect to NotificationHub: " +
-            environment.ResourceServer.NotificationEndpoint,
+          "Cannot connect to NotificationHub: " + environment.ResourceServer.NotificationEndpoint,
           "",
           { progressBar: true }
         );

@@ -1,14 +1,17 @@
 import { Component, OnInit, TemplateRef } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
 import { IFile } from "../file";
 import { FileService } from "../file.service";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { IAuditLogEntry } from "src/app/auditlogs/audit-log";
 
 @Component({
-    selector: "app-list-files",
-    templateUrl: "./list-files.component.html",
-    styleUrls: ["./list-files.component.css"],
-    standalone: false
+  selector: "app-list-files",
+  templateUrl: "./list-files.component.html",
+  styleUrls: ["./list-files.component.css"],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
 })
 export class ListFilesComponent implements OnInit {
   files: IFile[] = [];

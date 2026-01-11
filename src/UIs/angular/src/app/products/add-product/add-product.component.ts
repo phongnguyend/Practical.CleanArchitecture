@@ -1,14 +1,17 @@
 import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { RouterModule, Router } from "@angular/router";
 import { IProduct } from "../product";
 import { NgModel, NgForm } from "@angular/forms";
 import { ProductService } from "../product.service";
-import { Router } from "@angular/router";
 import { GuidEmpty } from "src/app/shared/constants";
 
 @Component({
-    templateUrl: "./add-product.component.html",
-    styleUrls: ["./add-product.component.css"],
-    standalone: false
+  templateUrl: "./add-product.component.html",
+  styleUrls: ["./add-product.component.css"],
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
 })
 export class AddProductComponent implements OnInit {
   product: IProduct = {
@@ -25,7 +28,10 @@ export class AddProductComponent implements OnInit {
   postError = false;
   isDirty = false;
 
-  constructor(private productService: ProductService, private router: Router) {}
+  constructor(
+    private productService: ProductService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {}
 

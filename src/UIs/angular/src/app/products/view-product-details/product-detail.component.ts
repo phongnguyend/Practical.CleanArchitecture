@@ -1,15 +1,19 @@
 import { Component, OnInit, TemplateRef } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { IProduct } from "../product";
 import { ProductService } from "../product.service";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { IAuditLogEntry } from "../../auditlogs/audit-log";
+import { StarComponent } from "../../shared/star.component";
 
 @Component({
-    templateUrl: "./product-detail.component.html",
-    styleUrls: ["./product-detail.component.css"],
-    standalone: false
+  templateUrl: "./product-detail.component.html",
+  styleUrls: ["./product-detail.component.css"],
+  standalone: true,
+  imports: [CommonModule, RouterModule, StarComponent],
 })
 export class ProductDetailComponent implements OnInit {
   pageTitle = "Product Detail";

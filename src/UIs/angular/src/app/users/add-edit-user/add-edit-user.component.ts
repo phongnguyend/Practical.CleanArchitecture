@@ -1,4 +1,9 @@
 import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { RouterModule } from "@angular/router";
+import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
+import { TimepickerModule } from "ngx-bootstrap/timepicker";
 import { IUser } from "../user";
 import { UserService } from "../user.service";
 import { Router, ActivatedRoute } from "@angular/router";
@@ -6,10 +11,18 @@ import { NgModel, NgForm } from "@angular/forms";
 import { GuidEmpty } from "src/app/shared/constants";
 
 @Component({
-    selector: "app-add-edit-user",
-    templateUrl: "./add-edit-user.component.html",
-    styleUrls: ["./add-edit-user.component.css"],
-    standalone: false
+  selector: "app-add-edit-user",
+  templateUrl: "./add-edit-user.component.html",
+  styleUrls: ["./add-edit-user.component.css"],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule,
+    BsDatepickerModule,
+    TimepickerModule,
+  ],
 })
 export class AddEditUserComponent implements OnInit {
   formMode: string = "add";

@@ -1,14 +1,17 @@
 import { Component, OnInit, TemplateRef } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
 import { IUser } from "../user";
 import { IAuditLogEntry } from "src/app/auditlogs/audit-log";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { UserService } from "../user.service";
 
 @Component({
-    selector: "app-list-users",
-    templateUrl: "./list-users.component.html",
-    styleUrls: ["./list-users.component.css"],
-    standalone: false
+  selector: "app-list-users",
+  templateUrl: "./list-users.component.html",
+  styleUrls: ["./list-users.component.css"],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
 })
 export class ListUsersComponent implements OnInit {
   users: IUser[] = [];

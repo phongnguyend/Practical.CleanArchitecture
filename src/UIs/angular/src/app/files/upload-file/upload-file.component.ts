@@ -1,4 +1,7 @@
 import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { RouterModule } from "@angular/router";
 import { IFile } from "../file";
 import { Router, ActivatedRoute } from "@angular/router";
 import { FileService } from "../file.service";
@@ -6,10 +9,11 @@ import { NgModel, NgForm } from "@angular/forms";
 import { GuidEmpty } from "src/app/shared/constants";
 
 @Component({
-    selector: "app-upload-file",
-    templateUrl: "./upload-file.component.html",
-    styleUrls: ["./upload-file.component.css"],
-    standalone: false
+  selector: "app-upload-file",
+  templateUrl: "./upload-file.component.html",
+  styleUrls: ["./upload-file.component.css"],
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
 })
 export class UploadFileComponent implements OnInit {
   file: IFile = {
