@@ -1,5 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { RouterModule, Router, ActivatedRoute } from "@angular/router";
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from "@angular/forms";
 import { debounceTime } from "rxjs/operators";
 
@@ -7,10 +9,11 @@ import { IProduct } from "../product";
 import { ProductService } from "../product.service";
 
 @Component({
-    selector: "app-edit-product",
-    templateUrl: "./edit-product.component.html",
-    styleUrls: ["./edit-product.component.css"],
-    standalone: false
+  selector: "app-edit-product",
+  templateUrl: "./edit-product.component.html",
+  styleUrls: ["./edit-product.component.css"],
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
 })
 export class EditProductComponent implements OnInit {
   product: IProduct;
@@ -31,28 +34,26 @@ export class EditProductComponent implements OnInit {
     this.productForm = this.fb.group({
       name: ["", [Validators.required, Validators.minLength(3)]],
       code: ["", [Validators.required, Validators.maxLength(10)]],
-      description: ["", [Validators.required, Validators.maxLength(100)]]
+      description: ["", [Validators.required, Validators.maxLength(100)]],
     });
 
-    this.productForm
-      .get("name")
-      .valueChanges.subscribe(value => console.log(value));
+    this.productForm.get("name").valueChanges.subscribe((value) => console.log(value));
 
     this.productForm
       .get("code")
       .valueChanges.pipe(debounceTime(1000))
-      .subscribe(value => console.log(value));
+      .subscribe((value) => console.log(value));
 
     const id = this.route.snapshot.paramMap.get("id");
     this.productService.getProduct(id).subscribe({
-      next: product => {
+      next: (product) => {
         this.product = product;
         this.productForm.patchValue({
           name: product.name,
           code: product.code,
-          description: product.description
+          description: product.description,
         });
-      }
+      },
       //error: err => this.errorMessage = err
     });
   }
@@ -62,12 +63,12 @@ export class EditProductComponent implements OnInit {
     if (this.productForm.valid) {
       var product = Object.assign({}, this.product, this.productForm.value);
       this.productService.updateProduct(product).subscribe(
-        result => {
+        (result) => {
           console.log("success: ", result);
           this.productForm.reset();
           this.router.navigate(["/products", result.id]);
         },
-        error => this.onHttpError(error)
+        (error) => this.onHttpError(error)
       );
     } else {
       this.postError = true;

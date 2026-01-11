@@ -1,9 +1,14 @@
 import { Component, VERSION } from "@angular/core";
 import { Title } from "@angular/platform-browser";
+import { CommonModule } from "@angular/common";
+import { AppendVersionPipe } from "../shared/append-version.pipe";
+import { AppendCurrentDateTimePipe } from "../shared/append-current-datetime.pipe";
+import { TimerComponent } from "../shared/timer.component";
 
 @Component({
-    templateUrl: "./welcome.component.html",
-    standalone: false
+  templateUrl: "./welcome.component.html",
+  standalone: true,
+  imports: [CommonModule, AppendVersionPipe, AppendCurrentDateTimePipe, TimerComponent],
 })
 export class WelcomeComponent {
   public pageTitle = "Welcome ClassifiedAds Angular";

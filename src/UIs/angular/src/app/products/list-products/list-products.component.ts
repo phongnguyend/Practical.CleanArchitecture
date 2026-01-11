@@ -1,4 +1,7 @@
 import { Component, OnInit, TemplateRef } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { RouterModule } from "@angular/router";
 
 import { IProduct } from "../product";
 import { ProductService } from "../product.service";
@@ -6,11 +9,14 @@ import { Title } from "@angular/platform-browser";
 import { IAuditLogEntry } from "../../auditlogs/audit-log";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { NgForm } from "@angular/forms";
+import { StarComponent } from "../../shared/star.component";
+import { DeleteProductComponent } from "../delete-product/delete-product.component";
 
 @Component({
-    templateUrl: "./list-products.component.html",
-    styleUrls: ["./list-products.component.css"],
-    standalone: false
+  templateUrl: "./list-products.component.html",
+  styleUrls: ["./list-products.component.css"],
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule, StarComponent, DeleteProductComponent],
 })
 export class ListProductsComponent implements OnInit {
   pageTitle = "Product List";
@@ -26,9 +32,7 @@ export class ListProductsComponent implements OnInit {
   }
   set listFilter(value: string) {
     this._listFilter = value;
-    this.filteredProducts = this.listFilter
-      ? this.performFilter(this.listFilter)
-      : this.products;
+    this.filteredProducts = this.listFilter ? this.performFilter(this.listFilter) : this.products;
   }
 
   filteredProducts: IProduct[] = [];
@@ -62,8 +66,7 @@ export class ListProductsComponent implements OnInit {
   performFilter(filterBy: string): IProduct[] {
     filterBy = filterBy.toLocaleLowerCase();
     return this.products.filter(
-      (product: IProduct) =>
-        product.name.toLocaleLowerCase().indexOf(filterBy) !== -1
+      (product: IProduct) => product.name.toLocaleLowerCase().indexOf(filterBy) !== -1
     );
   }
 

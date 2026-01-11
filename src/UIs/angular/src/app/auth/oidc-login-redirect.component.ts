@@ -5,8 +5,8 @@ import { ActivatedRoute } from "@angular/router";
 import { environment } from "src/environments/environment";
 
 @Component({
-    template: "<div>Loading ...</div>",
-    standalone: false
+  template: "<div>Loading ...</div>",
+  standalone: true,
 })
 export class OidcLoginRedirect implements OnInit {
   constructor(private route: ActivatedRoute) {}

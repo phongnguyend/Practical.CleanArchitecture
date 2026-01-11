@@ -1,19 +1,14 @@
-import {
-  Component,
-  OnInit,
-  TemplateRef,
-  Input,
-  Output,
-  EventEmitter
-} from "@angular/core";
+import { Component, OnInit, TemplateRef, Input, Output, EventEmitter } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { IProduct } from "../product";
 
 @Component({
-    selector: "app-delete-product",
-    templateUrl: "./delete-product.component.html",
-    styleUrls: ["./delete-product.component.css"],
-    standalone: false
+  selector: "app-delete-product",
+  templateUrl: "./delete-product.component.html",
+  styleUrls: ["./delete-product.component.css"],
+  standalone: true,
+  imports: [CommonModule],
 })
 export class DeleteProductComponent implements OnInit {
   @Input() product: IProduct;

@@ -1,4 +1,7 @@
 import { Component, OnInit, TemplateRef } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { RouterModule } from "@angular/router";
 import { ConfigurationEntriesService } from "./configuration-entry.service";
 import { IConfigurationEntry } from "./configuration-entry";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
@@ -6,10 +9,11 @@ import { NgForm } from "@angular/forms";
 import { GuidEmpty } from "../shared/constants";
 
 @Component({
-    selector: "app-configuration-entry-list",
-    templateUrl: "./configuration-entry-list.component.html",
-    styleUrls: ["./configuration-entry-list.component.css"],
-    standalone: false
+  selector: "app-configuration-entry-list",
+  templateUrl: "./configuration-entry-list.component.html",
+  styleUrls: ["./configuration-entry-list.component.css"],
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
 })
 export class ConfigurationEntryListComponent implements OnInit {
   GuidEmpty = GuidEmpty;
@@ -73,12 +77,8 @@ export class ConfigurationEntryListComponent implements OnInit {
     if (form.invalid) return;
     var request =
       this.selectedEntry.id == GuidEmpty
-        ? this.configurationEntriesService.addConfigurationEntry(
-            this.selectedEntry
-          )
-        : this.configurationEntriesService.updateConfigurationEntry(
-            this.selectedEntry
-          );
+        ? this.configurationEntriesService.addConfigurationEntry(this.selectedEntry)
+        : this.configurationEntriesService.updateConfigurationEntry(this.selectedEntry);
 
     request.subscribe({
       next: (rs) => {
@@ -91,16 +91,14 @@ export class ConfigurationEntryListComponent implements OnInit {
   }
 
   confirmDelete() {
-    this.configurationEntriesService
-      .deleteConfigurationEntry(this.selectedEntry)
-      .subscribe({
-        next: (rs) => {
-          console.log(rs);
-          this.deleteModalRef.hide();
-          this.ngOnInit();
-        },
-        error: (err) => (this.errorMessage = err),
-      });
+    this.configurationEntriesService.deleteConfigurationEntry(this.selectedEntry).subscribe({
+      next: (rs) => {
+        console.log(rs);
+        this.deleteModalRef.hide();
+        this.ngOnInit();
+      },
+      error: (err) => (this.errorMessage = err),
+    });
   }
 
   cancelDelete() {
@@ -137,9 +135,7 @@ export class ConfigurationEntryListComponent implements OnInit {
       return;
     }
 
-    var request = this.configurationEntriesService.importExcelFile(
-      this.importingFile
-    );
+    var request = this.configurationEntriesService.importExcelFile(this.importingFile);
 
     request.subscribe({
       next: (rs) => {

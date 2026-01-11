@@ -1,4 +1,7 @@
 import { Component, OnInit, TemplateRef } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { RouterModule } from "@angular/router";
 import { FileService } from "../file.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { IFile } from "../file";
@@ -8,10 +11,11 @@ import { BsModalService } from "ngx-bootstrap/modal";
 import { GuidEmpty } from "src/app/shared/constants";
 
 @Component({
-    selector: "app-edit-file",
-    templateUrl: "./edit-file.component.html",
-    styleUrls: ["./edit-file.component.css"],
-    standalone: false
+  selector: "app-edit-file",
+  templateUrl: "./edit-file.component.html",
+  styleUrls: ["./edit-file.component.css"],
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
 })
 export class EditFileComponent implements OnInit {
   file: IFile = {
