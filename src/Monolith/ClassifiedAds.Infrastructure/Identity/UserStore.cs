@@ -19,15 +19,18 @@ public class UserStore : IUserStore<User>,
                          IUserLockoutStore<User>,
                          IUserAuthenticationTokenStore<User>,
                          IUserAuthenticatorKeyStore<User>,
-                         IUserTwoFactorRecoveryCodeStore<User>
+                         IUserTwoFactorRecoveryCodeStore<User>,
+                         IUserPasskeyStore<User>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserRepository _userRepository;
+    private readonly IRepository<UserPasskey, Guid> _userPasskey;
 
-    public UserStore(IUserRepository userRepository)
+    public UserStore(IUserRepository userRepository, IRepository<UserPasskey, Guid> userPasskey)
     {
         _unitOfWork = userRepository.UnitOfWork;
         _userRepository = userRepository;
+        _userPasskey = userPasskey;
     }
 
     public void Dispose()
@@ -319,5 +322,125 @@ public class UserStore : IUserStore<User>,
         }
 
         return 0;
+    }
+
+    // https://github.com/dotnet/dotnet/blob/b0f34d51fccc69fd334253924abd8d6853fad7aa/src/aspnetcore/src/Identity/EntityFrameworkCore/src/UserStore.cs
+    public async Task AddOrUpdatePasskeyAsync(User user, UserPasskeyInfo passkey, CancellationToken cancellationToken)
+    {
+        var userPasskey = await FindUserPasskeyByIdAsync(passkey.CredentialId, cancellationToken);
+        if (userPasskey != null)
+        {
+            UpdateFromUserPasskeyInfo(userPasskey, passkey);
+            await _userPasskey.UpdateAsync(userPasskey, cancellationToken);
+        }
+        else
+        {
+            userPasskey = CreateUserPasskey(user, passkey);
+            await _userPasskey.AddAsync(userPasskey, cancellationToken);
+        }
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<IList<UserPasskeyInfo>> GetPasskeysAsync(User user, CancellationToken cancellationToken)
+    {
+        var userId = user.Id;
+        var passkeys = await _userPasskey.GetQueryableSet()
+            .Where(p => p.UserId.Equals(userId))
+            .Select(p => ToUserPasskeyInfo(p))
+            .ToListAsync(cancellationToken);
+
+        return passkeys;
+    }
+
+    public async Task<User> FindByPasskeyIdAsync(byte[] credentialId, CancellationToken cancellationToken)
+    {
+        var passkey = await FindUserPasskeyByIdAsync(credentialId, cancellationToken);
+        if (passkey != null)
+        {
+            return await FindUserAsync(passkey.UserId, cancellationToken);
+        }
+
+        return null;
+    }
+
+    public async Task<UserPasskeyInfo> FindPasskeyAsync(User user, byte[] credentialId, CancellationToken cancellationToken)
+    {
+        var passkey = await FindUserPasskeyAsync(user.Id, credentialId, cancellationToken);
+        return passkey == null ? null : ToUserPasskeyInfo(passkey!);
+    }
+
+    public async Task RemovePasskeyAsync(User user, byte[] credentialId, CancellationToken cancellationToken)
+    {
+        var passkey = await FindUserPasskeyAsync(user.Id, credentialId, cancellationToken);
+        if (passkey != null)
+        {
+            _userPasskey.Delete(passkey);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+    }
+
+    private Task<UserPasskey?> FindUserPasskeyByIdAsync(byte[] credentialId, CancellationToken cancellationToken)
+    {
+        return _userPasskey.GetQueryableSet().SingleOrDefaultAsync(userPasskey => userPasskey.CredentialId.SequenceEqual(credentialId), cancellationToken);
+    }
+
+    private static UserPasskey CreateUserPasskey(User user, UserPasskeyInfo passkey)
+    {
+        return new UserPasskey
+        {
+            UserId = user.Id,
+            CredentialId = passkey.CredentialId,
+            Data = new()
+            {
+                PublicKey = passkey.PublicKey,
+                Name = passkey.Name,
+                CreatedAt = passkey.CreatedAt,
+                Transports = passkey.Transports,
+                SignCount = passkey.SignCount,
+                IsUserVerified = passkey.IsUserVerified,
+                IsBackupEligible = passkey.IsBackupEligible,
+                IsBackedUp = passkey.IsBackedUp,
+                AttestationObject = passkey.AttestationObject,
+                ClientDataJson = passkey.ClientDataJson,
+            }
+        };
+    }
+
+    // https://github.com/dotnet/dotnet/blob/8faa66ec621faa4bc5ff9571abc104b767b3c602/src/aspnetcore/src/Identity/EntityFrameworkCore/src/IdentityUserPasskeyExtensions.cs
+    public void UpdateFromUserPasskeyInfo(UserPasskey passkey, UserPasskeyInfo passkeyInfo)
+    {
+        passkey.Data.Name = passkeyInfo.Name;
+        passkey.Data.SignCount = passkeyInfo.SignCount;
+        passkey.Data.IsBackedUp = passkeyInfo.IsBackedUp;
+        passkey.Data.IsUserVerified = passkeyInfo.IsUserVerified;
+    }
+
+    public UserPasskeyInfo ToUserPasskeyInfo(UserPasskey passkey)
+        => new(
+            passkey.CredentialId,
+            passkey.Data.PublicKey,
+            passkey.Data.CreatedAt,
+            passkey.Data.SignCount,
+            passkey.Data.Transports,
+            passkey.Data.IsUserVerified,
+            passkey.Data.IsBackupEligible,
+            passkey.Data.IsBackedUp,
+            passkey.Data.AttestationObject,
+            passkey.Data.ClientDataJson)
+        {
+            Name = passkey.Data.Name
+        };
+
+    private Task<User?> FindUserAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        return _userRepository.GetQueryableSet().SingleOrDefaultAsync(u => u.Id.Equals(userId), cancellationToken);
+    }
+
+    private Task<UserPasskey?> FindUserPasskeyAsync(Guid userId, byte[] credentialId, CancellationToken cancellationToken)
+    {
+        return _userPasskey.GetQueryableSet().SingleOrDefaultAsync(
+            userPasskey => userPasskey.UserId.Equals(userId) && userPasskey.CredentialId.SequenceEqual(credentialId),
+            cancellationToken);
     }
 }

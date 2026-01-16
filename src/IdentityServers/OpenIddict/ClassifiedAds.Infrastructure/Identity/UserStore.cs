@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,18 +20,17 @@ public class UserStore : IUserStore<User>,
                          IUserAuthenticationTokenStore<User>,
                          IUserAuthenticatorKeyStore<User>,
                          IUserTwoFactorRecoveryCodeStore<User>,
-                         IUserLoginStore<User>,
-                         IUserClaimStore<User>
+                         IUserPasskeyStore<User>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserRepository _userRepository;
-    private readonly IRepository<UserLogin, Guid> _userLoginRepository;
+    private readonly IRepository<UserPasskey, Guid> _userPasskey;
 
-    public UserStore(IUserRepository userRepository, IRepository<UserLogin, Guid> userLoginRepository)
+    public UserStore(IUserRepository userRepository, IRepository<UserPasskey, Guid> userPasskey)
     {
         _unitOfWork = userRepository.UnitOfWork;
         _userRepository = userRepository;
-        _userLoginRepository = userLoginRepository;
+        _userPasskey = userPasskey;
     }
 
     public void Dispose()
@@ -49,8 +47,8 @@ public class UserStore : IUserStore<User>,
                 CreatedDateTime = DateTimeOffset.Now,
             },
         };
-        await _userRepository.AddOrUpdateAsync(user);
-        await _unitOfWork.SaveChangesAsync();
+        await _userRepository.AddOrUpdateAsync(user, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return IdentityResult.Success;
     }
 
@@ -62,17 +60,17 @@ public class UserStore : IUserStore<User>,
 
     public Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
     {
-        return _userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefaultAsync(x => x.NormalizedEmail == normalizedEmail);
+        return _userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefaultAsync(x => x.NormalizedEmail == normalizedEmail, cancellationToken: cancellationToken);
     }
 
     public Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken)
     {
-        return _userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefaultAsync(x => x.Id == Guid.Parse(userId));
+        return _userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefaultAsync(x => x.Id == Guid.Parse(userId), cancellationToken: cancellationToken);
     }
 
     public Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
     {
-        return _userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefaultAsync(x => x.NormalizedUserName == normalizedUserName);
+        return _userRepository.Get(new UserQueryOptions { IncludeTokens = true }).FirstOrDefaultAsync(x => x.NormalizedUserName == normalizedUserName, cancellationToken: cancellationToken);
     }
 
     public Task<int> GetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
@@ -236,8 +234,8 @@ public class UserStore : IUserStore<User>,
 
     public async Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
     {
-        await _userRepository.AddOrUpdateAsync(user);
-        await _unitOfWork.SaveChangesAsync();
+        await _userRepository.AddOrUpdateAsync(user, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return IdentityResult.Success;
     }
 
@@ -271,7 +269,7 @@ public class UserStore : IUserStore<User>,
             });
         }
 
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     public async Task RemoveTokenAsync(User user, string loginProvider, string name, CancellationToken cancellationToken)
@@ -281,7 +279,7 @@ public class UserStore : IUserStore<User>,
         if (tokenEntity != null)
         {
             user.Tokens.Remove(tokenEntity);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 
@@ -326,70 +324,123 @@ public class UserStore : IUserStore<User>,
         return 0;
     }
 
-    public async Task AddLoginAsync(User user, UserLoginInfo login, CancellationToken cancellationToken)
+    // https://github.com/dotnet/dotnet/blob/b0f34d51fccc69fd334253924abd8d6853fad7aa/src/aspnetcore/src/Identity/EntityFrameworkCore/src/UserStore.cs
+    public async Task AddOrUpdatePasskeyAsync(User user, UserPasskeyInfo passkey, CancellationToken cancellationToken)
     {
-        await _userLoginRepository.AddAsync(new UserLogin
+        var userPasskey = await FindUserPasskeyByIdAsync(passkey.CredentialId, cancellationToken);
+        if (userPasskey != null)
         {
-            UserId = user.Id,
-            LoginProvider = login.LoginProvider,
-            ProviderKey = login.ProviderKey,
-            ProviderDisplayName = login.ProviderDisplayName,
-        }, cancellationToken);
+            UpdateFromUserPasskeyInfo(userPasskey, passkey);
+            await _userPasskey.UpdateAsync(userPasskey, cancellationToken);
+        }
+        else
+        {
+            userPasskey = CreateUserPasskey(user, passkey);
+            await _userPasskey.AddAsync(userPasskey, cancellationToken);
+        }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task RemoveLoginAsync(User user, string loginProvider, string providerKey, CancellationToken cancellationToken)
+    public async Task<IList<UserPasskeyInfo>> GetPasskeysAsync(User user, CancellationToken cancellationToken)
     {
-        var userLogin = await _userLoginRepository.GetQueryableSet()
-            .Where(x => x.LoginProvider == loginProvider && x.ProviderKey == providerKey && x.UserId == user.Id).FirstOrDefaultAsync(cancellationToken);
+        var userId = user.Id;
+        var passkeys = await _userPasskey.GetQueryableSet()
+            .Where(p => p.UserId.Equals(userId))
+            .Select(p => ToUserPasskeyInfo(p))
+            .ToListAsync(cancellationToken);
 
-        if (userLogin != null)
+        return passkeys;
+    }
+
+    public async Task<User> FindByPasskeyIdAsync(byte[] credentialId, CancellationToken cancellationToken)
+    {
+        var passkey = await FindUserPasskeyByIdAsync(credentialId, cancellationToken);
+        if (passkey != null)
         {
-            _userLoginRepository.Delete(userLogin);
+            return await FindUserAsync(passkey.UserId, cancellationToken);
+        }
+
+        return null;
+    }
+
+    public async Task<UserPasskeyInfo> FindPasskeyAsync(User user, byte[] credentialId, CancellationToken cancellationToken)
+    {
+        var passkey = await FindUserPasskeyAsync(user.Id, credentialId, cancellationToken);
+        return passkey == null ? null : ToUserPasskeyInfo(passkey!);
+    }
+
+    public async Task RemovePasskeyAsync(User user, byte[] credentialId, CancellationToken cancellationToken)
+    {
+        var passkey = await FindUserPasskeyAsync(user.Id, credentialId, cancellationToken);
+        if (passkey != null)
+        {
+            _userPasskey.Delete(passkey);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 
-    public async Task<IList<UserLoginInfo>> GetLoginsAsync(User user, CancellationToken cancellationToken)
+    private Task<UserPasskey?> FindUserPasskeyByIdAsync(byte[] credentialId, CancellationToken cancellationToken)
     {
-        return await _userLoginRepository.GetQueryableSet()
-            .Where(x => x.UserId == user.Id)
-            .Select(x => new UserLoginInfo(x.LoginProvider, x.ProviderKey, x.ProviderDisplayName))
-            .ToListAsync(cancellationToken: cancellationToken);
+        return _userPasskey.GetQueryableSet().SingleOrDefaultAsync(userPasskey => userPasskey.CredentialId.SequenceEqual(credentialId), cancellationToken);
     }
 
-    public async Task<User> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
+    private static UserPasskey CreateUserPasskey(User user, UserPasskeyInfo passkey)
     {
-        var userLogin = await _userLoginRepository.GetQueryableSet()
-            .Where(x => x.LoginProvider == loginProvider && x.ProviderKey == providerKey)
-            .Include(x => x.User)
-            .FirstOrDefaultAsync(cancellationToken);
-        return userLogin?.User;
+        return new UserPasskey
+        {
+            UserId = user.Id,
+            CredentialId = passkey.CredentialId,
+            Data = new()
+            {
+                PublicKey = passkey.PublicKey,
+                Name = passkey.Name,
+                CreatedAt = passkey.CreatedAt,
+                Transports = passkey.Transports,
+                SignCount = passkey.SignCount,
+                IsUserVerified = passkey.IsUserVerified,
+                IsBackupEligible = passkey.IsBackupEligible,
+                IsBackedUp = passkey.IsBackedUp,
+                AttestationObject = passkey.AttestationObject,
+                ClientDataJson = passkey.ClientDataJson,
+            }
+        };
     }
 
-    public Task<IList<Claim>> GetClaimsAsync(User user, CancellationToken cancellationToken)
+    // https://github.com/dotnet/dotnet/blob/8faa66ec621faa4bc5ff9571abc104b767b3c602/src/aspnetcore/src/Identity/EntityFrameworkCore/src/IdentityUserPasskeyExtensions.cs
+    public void UpdateFromUserPasskeyInfo(UserPasskey passkey, UserPasskeyInfo passkeyInfo)
     {
-        return Task.FromResult<IList<Claim>>([]);
+        passkey.Data.Name = passkeyInfo.Name;
+        passkey.Data.SignCount = passkeyInfo.SignCount;
+        passkey.Data.IsBackedUp = passkeyInfo.IsBackedUp;
+        passkey.Data.IsUserVerified = passkeyInfo.IsUserVerified;
     }
 
-    public Task AddClaimsAsync(User user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
+    public UserPasskeyInfo ToUserPasskeyInfo(UserPasskey passkey)
+        => new(
+            passkey.CredentialId,
+            passkey.Data.PublicKey,
+            passkey.Data.CreatedAt,
+            passkey.Data.SignCount,
+            passkey.Data.Transports,
+            passkey.Data.IsUserVerified,
+            passkey.Data.IsBackupEligible,
+            passkey.Data.IsBackedUp,
+            passkey.Data.AttestationObject,
+            passkey.Data.ClientDataJson)
+        {
+            Name = passkey.Data.Name
+        };
+
+    private Task<User?> FindUserAsync(Guid userId, CancellationToken cancellationToken)
     {
-        return Task.CompletedTask;
+        return _userRepository.GetQueryableSet().SingleOrDefaultAsync(u => u.Id.Equals(userId), cancellationToken);
     }
 
-    public Task ReplaceClaimAsync(User user, Claim claim, Claim newClaim, CancellationToken cancellationToken)
+    private Task<UserPasskey?> FindUserPasskeyAsync(Guid userId, byte[] credentialId, CancellationToken cancellationToken)
     {
-        return Task.CompletedTask;
-    }
-
-    public Task RemoveClaimsAsync(User user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
-    }
-
-    public Task<IList<User>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken)
-    {
-        return Task.FromResult<IList<User>>([]);
+        return _userPasskey.GetQueryableSet().SingleOrDefaultAsync(
+            userPasskey => userPasskey.UserId.Equals(userId) && userPasskey.CredentialId.SequenceEqual(credentialId),
+            cancellationToken);
     }
 }
