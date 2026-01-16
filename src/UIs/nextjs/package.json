@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "SET NODE_TLS_REJECT_UNAUTHORIZED=0&&next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -12,7 +12,6 @@
     "axios": "^1.13.2",
     "bootstrap": "^5.3.8",
     "next": "16.0.6",
-    "oidc-client-ts": "^3.4.1",
     "react": "^19.2.0",
     "react-bootstrap": "^2.10.10",
     "react-datepicker": "^8.10.0",

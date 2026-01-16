@@ -1,6 +1,5 @@
 import { AxiosInstance } from "axios";
 import env from "../../environments";
-import { getAccessToken, login } from "./authService";
 
 const addAuthInterceptors = (axios: AxiosInstance) => {
   axios.interceptors.request.use((config) => {
@@ -8,7 +7,7 @@ const addAuthInterceptors = (axios: AxiosInstance) => {
       config.baseURL?.startsWith(env.ResourceServer.Endpoint) ||
       config.url?.startsWith(env.ResourceServer.Endpoint)
     ) {
-      config.headers["Authorization"] = "Bearer " + getAccessToken();
+      // TODO: handle CSRF token if needed
     }
     return config;
   });
@@ -18,7 +17,10 @@ const addAuthInterceptors = (axios: AxiosInstance) => {
     },
     (error) => {
       if (401 === error.response.status) {
-        login(window.location.href);
+        const returnUrl = window.location.href;
+        window.location.href = `/login?returnUrl=${encodeURIComponent(
+          returnUrl
+        )}`;
       } else {
         return Promise.reject(error);
       }
