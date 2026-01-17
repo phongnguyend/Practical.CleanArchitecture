@@ -6,9 +6,7 @@
         Export as Excel
       </button>
       &nbsp;
-      <button class="btn btn-primary" (click)="addEntry(addupdatetemplate)">
-        Add
-      </button>
+      <button class="btn btn-primary" (click)="addEntry(addupdatetemplate)">Add</button>
       &nbsp;
       <button class="btn btn-primary" (click)="openImportExcelModal(import_excel_modal_template)">
         Import Excel
@@ -38,7 +36,11 @@
                 Edit
               </button>
               &nbsp;
-              <button type="button" class="btn btn-primary btn-danger" (click)="deleteEntry(deletetemplate, entry)">
+              <button
+                type="button"
+                class="btn btn-primary btn-danger"
+                (click)="deleteEntry(deletetemplate, entry)"
+              >
                 Delete
               </button>
             </td>
@@ -48,64 +50,80 @@
     </div>
   </div>
 </div>
-<div *ngIf="errorMessage" class="alert alert-danger">
-  Error: {{ errorMessage }}
-</div>
+<div *ngIf="errorMessage" class="alert alert-danger">Error: {{ errorMessage }}</div>
 
 <ng-template #deletetemplate>
-  <div class="modal-body text-center">
+  <mat-dialog-content class="text-center">
     <p>
       Are you sure you want to delete
       <strong> {{ selectedEntry.key }}</strong>
     </p>
-    <button type="button" class="btn btn-primary" (click)="confirmDelete()">
-      Yes
-    </button>
-    <button type="button" class="btn btn-default" (click)="cancelDelete()">
-      No
-    </button>
-  </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button type="button" class="btn btn-primary" (click)="confirmDelete()">Yes</button>
+    <button type="button" class="btn btn-default" (click)="cancelDelete()">No</button>
+  </mat-dialog-actions>
 </ng-template>
 
 <ng-template #addupdatetemplate>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">
-      {{ selectedEntry.id == GuidEmpty ? "Add" : "Update" }}
-    </h4>
-    <button type="button" class="btn-close pull-right" aria-label="Close" (click)="addUpdateModalRef.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
+  <h2 mat-dialog-title>
+    {{ selectedEntry.id == GuidEmpty ? "Add" : "Update" }}
+  </h2>
+  <mat-dialog-content>
     <form #form="ngForm" (ngSubmit)="confirmAddUpdate(form)">
       <div class="mb-3 row">
         <label for="key" class="col-sm-3 col-form-label">Key</label>
         <div class="col-sm-9">
-          <input id="key" name="key" class="form-control" required [(ngModel)]="selectedEntry.key" #keyField="ngModel"
-            [class.is-invalid]="form.submitted && keyField.invalid" />
+          <input
+            id="key"
+            name="key"
+            class="form-control"
+            required
+            [(ngModel)]="selectedEntry.key"
+            #keyField="ngModel"
+            [class.is-invalid]="form.submitted && keyField.invalid"
+          />
           <span class="invalid-feedback"> Enter a key </span>
         </div>
       </div>
       <div class="mb-3 row">
         <label for="value" class="col-sm-3 col-form-label">Value</label>
         <div class="col-sm-9">
-          <input id="value" name="value" class="form-control" required [(ngModel)]="selectedEntry.value"
-            #valueField="ngModel" [class.is-invalid]="form.submitted && valueField.invalid" />
+          <input
+            id="value"
+            name="value"
+            class="form-control"
+            required
+            [(ngModel)]="selectedEntry.value"
+            #valueField="ngModel"
+            [class.is-invalid]="form.submitted && valueField.invalid"
+          />
           <span class="invalid-feedback"> Enter a value </span>
         </div>
       </div>
       <div class="mb-3 row">
         <label for="description" class="col-sm-3 col-form-label">Description</label>
         <div class="col-sm-9">
-          <input id="description" name="description" class="form-control" [(ngModel)]="selectedEntry.description"
-            #descriptionField="ngModel" [class.is-invalid]="form.submitted && descriptionField.invalid" />
+          <input
+            id="description"
+            name="description"
+            class="form-control"
+            [(ngModel)]="selectedEntry.description"
+            #descriptionField="ngModel"
+            [class.is-invalid]="form.submitted && descriptionField.invalid"
+          />
           <span class="invalid-feedback"> Enter a description </span>
         </div>
       </div>
       <div class="mb-3 row">
         <label for="sensitive" class="col-sm-3 col-form-label">Sensitive</label>
         <div class="col-sm-9">
-          <input type="checkbox" id="sensitive" name="sensitive" [(ngModel)]="selectedEntry.isSensitive" />
+          <input
+            type="checkbox"
+            id="sensitive"
+            name="sensitive"
+            [(ngModel)]="selectedEntry.isSensitive"
+          />
         </div>
       </div>
       <div class="mb-3 row">
@@ -115,22 +133,24 @@
         </div>
       </div>
     </form>
-  </div>
+  </mat-dialog-content>
 </ng-template>
 
 <ng-template #import_excel_modal_template>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">Import Excel</h4>
-    <button type="button" class="btn-close pull-right" aria-label="Close" (click)="importExcelModalRef.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
+  <h2 mat-dialog-title>Import Excel</h2>
+  <mat-dialog-content>
     <form #form="ngForm" (ngSubmit)="confirmImportExcelFile(form)">
       <div class="mb-3 row">
         <div class="col-sm-12">
-          <input id="importingFile" type="file" name="importingFile" class="form-control" required
-            (change)="handleFileInput($event.target.files)" [class.is-invalid]="form.submitted && !importingFile" />
+          <input
+            id="importingFile"
+            type="file"
+            name="importingFile"
+            class="form-control"
+            required
+            (change)="handleFileInput($event.target.files)"
+            [class.is-invalid]="form.submitted && !importingFile"
+          />
           <span class="invalid-feedback"> Select a file </span>
         </div>
       </div>
@@ -140,5 +160,5 @@
         </div>
       </div>
     </form>
-  </div>
+  </mat-dialog-content>
 </ng-template>

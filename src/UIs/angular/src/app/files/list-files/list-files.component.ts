@@ -3,25 +3,26 @@ import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { IFile } from "../file";
 import { FileService } from "../file.service";
-import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { IAuditLogEntry } from "src/app/auditlogs/audit-log";
+import { MatDialogModule } from "@angular/material/dialog";
 
 @Component({
   selector: "app-list-files",
   templateUrl: "./list-files.component.html",
   styleUrls: ["./list-files.component.css"],
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, MatDialogModule],
 })
 export class ListFilesComponent implements OnInit {
   files: IFile[] = [];
   selectedFile: IFile = null;
-  modalRef: BsModalRef;
+  modalRef: MatDialogRef<any>;
   errorMessage;
   auditLogs: IAuditLogEntry[];
   constructor(
     private fileService: FileService,
-    private modalService: BsModalService
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -49,14 +50,14 @@ export class ListFilesComponent implements OnInit {
 
   deleteFile(template: TemplateRef<any>, file: IFile) {
     this.selectedFile = file;
-    this.modalRef = this.modalService.show(template, { class: "modal-sm" });
+    this.modalRef = this.dialog.open(template, { width: "400px" });
   }
 
   confirmDelete() {
     this.fileService.deleteFile(this.selectedFile).subscribe({
       next: (rs) => {
         console.log(rs);
-        this.modalRef.hide();
+        this.modalRef.close();
         this.ngOnInit();
       },
       error: (err) => (this.errorMessage = err),
@@ -64,14 +65,14 @@ export class ListFilesComponent implements OnInit {
   }
 
   cancelDelete() {
-    this.modalRef.hide();
+    this.modalRef.close();
   }
 
   viewAuditLogs(template: TemplateRef<any>, file: IFile) {
     this.fileService.getAuditLogs(file.id).subscribe({
       next: (logs) => {
         this.auditLogs = logs;
-        this.modalService.show(template, { class: "modal-xl" });
+        this.dialog.open(template, { width: "90%", maxWidth: "1200px" });
       },
       error: (err) => (this.errorMessage = err),
     });

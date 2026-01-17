@@ -1,21 +1,15 @@
-<button
-  type="button"
-  class="btn btn-primary btn-danger"
-  (click)="openModal(template)"
->
+<button type="button" class="btn btn-primary btn-danger" (click)="openModal(template)">
   Delete
 </button>
 
 <ng-template #template>
-  <div class="modal-body text-center">
+  <mat-dialog-content class="text-center">
     <p>
       Are you sure you want to delete <strong> {{ product.name }}</strong>
     </p>
-    <button type="button" class="btn btn-primary" (click)="confirm()">
-      Yes
-    </button>
-    <button type="button" class="btn btn-default" (click)="decline()">
-      No
-    </button>
-  </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button type="button" class="btn btn-primary" (click)="confirm()">Yes</button>
+    <button type="button" class="btn btn-default" (click)="decline()">No</button>
+  </mat-dialog-actions>
 </ng-template>

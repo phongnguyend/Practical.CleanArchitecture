@@ -2,8 +2,11 @@ import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
-import { TimepickerModule } from "ngx-bootstrap/timepicker";
+import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatTimepickerModule } from "@angular/material/timepicker";
+import { MatNativeDateModule } from "@angular/material/core";
+import { MatInputModule } from "@angular/material/input";
+import { MatFormFieldModule } from "@angular/material/form-field";
 import { IUser } from "../user";
 import { UserService } from "../user.service";
 import { Router, ActivatedRoute } from "@angular/router";
@@ -20,8 +23,11 @@ import { GuidEmpty } from "src/app/shared/constants";
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
-    BsDatepickerModule,
-    TimepickerModule,
+    MatDatepickerModule,
+    MatTimepickerModule,
+    MatNativeDateModule,
+    MatInputModule,
+    MatFormFieldModule,
   ],
 })
 export class AddEditUserComponent implements OnInit {

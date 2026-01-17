@@ -45,8 +45,13 @@
       </div>
 
       <div class="col-md-4">
-        <img class="center-block img-responsive" [style.width.px]="200" [style.margin.px]="2"
-          [src]="'/assets/images/logo.png'" [title]="user.userName" />
+        <img
+          class="center-block img-responsive"
+          [style.width.px]="200"
+          [style.margin.px]="2"
+          [src]="'/assets/images/logo.png'"
+          [title]="user.userName"
+        />
       </div>
     </div>
   </div>
@@ -64,31 +69,32 @@
       Set Password
     </button>
     &nbsp;
-    <button type="button" class="btn btn-secondary"
-      (click)="sendPasswordResetEmailModal(sendPasswordResetEmailTemplate)">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="sendPasswordResetEmailModal(sendPasswordResetEmailTemplate)"
+    >
       Send Password Reset Email
     </button>
     &nbsp;
-    <button type="button" class="btn btn-secondary" (click)="
-        sendEmailAddressConfirmationEmailModal(
-          sendEmailAddressConfirmationEmailTemplate
-        )
-      ">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="sendEmailAddressConfirmationEmailModal(sendEmailAddressConfirmationEmailTemplate)"
+    >
       Send Email Address Confirmation Email
     </button>
   </div>
 </div>
 
 <ng-template #setPasswordTemplate>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">Set Password</h4>
-    <button type="button" class="btn-close pull-right" aria-label="Close" (click)="setPasswordModalRef.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <div class="row" [hidden]="!passwordValidationErrors || !passwordValidationErrors.length"
-      class="alert alert-danger">
+  <h2 mat-dialog-title>Set Password</h2>
+  <mat-dialog-content>
+    <div
+      class="row"
+      [hidden]="!passwordValidationErrors || !passwordValidationErrors.length"
+      class="alert alert-danger"
+    >
       <ul>
         <li *ngFor="let error of passwordValidationErrors">
           {{ error.description }}
@@ -108,23 +114,32 @@
       <div class="mb-3 row">
         <label for="password" class="col-sm-4 col-form-label">Password</label>
         <div class="col-sm-8">
-          <input type="password" id="password" name="password" class="form-control" required
-            [(ngModel)]="setPasswordModel.password" #passwordField="ngModel"
-            [class.is-invalid]="form.submitted && passwordField.invalid" />
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-control"
+            required
+            [(ngModel)]="setPasswordModel.password"
+            #passwordField="ngModel"
+            [class.is-invalid]="form.submitted && passwordField.invalid"
+          />
           <span class="invalid-feedback"> Enter a password </span>
         </div>
       </div>
       <div class="mb-3 row">
         <label for="confirmPassword" class="col-sm-4 col-form-label">Confirm Password</label>
         <div class="col-sm-8">
-          <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
-            [(ngModel)]="setPasswordModel.confirmPassword" #confirmPasswordField="ngModel" [class.is-invalid]="
-              form.submitted &&
-              confirmPasswordField.value != passwordField.value
-            " />
-          <span class="invalid-feedback">
-            Confirm Password does not match
-          </span>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            class="form-control"
+            [(ngModel)]="setPasswordModel.confirmPassword"
+            #confirmPasswordField="ngModel"
+            [class.is-invalid]="form.submitted && confirmPasswordField.value != passwordField.value"
+          />
+          <span class="invalid-feedback"> Confirm Password does not match </span>
         </div>
       </div>
       <div class="mb-3 row">
@@ -134,35 +149,39 @@
         </div>
       </div>
     </form>
-  </div>
+  </mat-dialog-content>
 </ng-template>
 
 <ng-template #sendPasswordResetEmailTemplate>
-  <div class="modal-body text-center">
+  <mat-dialog-content class="text-center">
     <p>
       Are you sure you want to send reset password email
       <strong> {{ user.userName }}</strong>
     </p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
     <button type="button" class="btn btn-primary" (click)="confirmSendPasswordResetEmail()">
       Yes
     </button>
-    <button type="button" class="btn btn-default" (click)="sendPasswordResetEmailModalRef.hide()">
-      No
-    </button>
-  </div>
+    <button type="button" class="btn btn-default" mat-dialog-close>No</button>
+  </mat-dialog-actions>
 </ng-template>
 
 <ng-template #sendEmailAddressConfirmationEmailTemplate>
-  <div class="modal-body text-center">
+  <mat-dialog-content class="text-center">
     <p>
       Are you sure you want to send email address confirmation email
       <strong> {{ user.userName }}</strong>
     </p>
-    <button type="button" class="btn btn-primary" (click)="confirmSendEmailAddressConfirmationEmail()">
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="confirmSendEmailAddressConfirmationEmail()"
+    >
       Yes
     </button>
-    <button type="button" class="btn btn-default" (click)="sendEmailAddressConfirmationEmailModalRef.hide()">
-      No
-    </button>
-  </div>
+    <button type="button" class="btn btn-default" mat-dialog-close>No</button>
+  </mat-dialog-actions>
 </ng-template>

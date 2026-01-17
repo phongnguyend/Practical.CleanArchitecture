@@ -51,27 +51,24 @@
     </div>
   </div>
 </div>
-<div *ngIf="errorMessage" class="alert alert-danger">
-  Error: {{ errorMessage }}
-</div>
+<div *ngIf="errorMessage" class="alert alert-danger">Error: {{ errorMessage }}</div>
 
 <ng-template #deletetemplate>
-  <div class="modal-body text-center">
+  <mat-dialog-content class="text-center">
     <p>
       Are you sure you want to delete
       <strong> {{ selectedUser.userName }}</strong>
     </p>
-    <button type="button" class="btn btn-primary" (click)="confirmDelete()">
-      Yes
-    </button>
-    <button type="button" class="btn btn-default" (click)="cancelDelete()">
-      No
-    </button>
-  </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button type="button" class="btn btn-primary" (click)="confirmDelete()">Yes</button>
+    <button type="button" class="btn btn-default" (click)="cancelDelete()">No</button>
+  </mat-dialog-actions>
 </ng-template>
 
 <ng-template #auditlogtemplate>
-  <div class="modal-body text-center">
+  <h2 mat-dialog-title>Audit Logs</h2>
+  <mat-dialog-content>
     <div class="table-responsive">
       <table class="table">
         <thead>
@@ -108,5 +105,8 @@
         </tbody>
       </table>
     </div>
-  </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button type="button" class="btn btn-default" mat-dialog-close>Close</button>
+  </mat-dialog-actions>
 </ng-template>

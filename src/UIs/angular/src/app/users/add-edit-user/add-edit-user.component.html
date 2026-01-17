@@ -8,79 +8,149 @@
       <div class="mb-3 row">
         <label for="userName" class="col-sm-3 col-form-label">User Name</label>
         <div class="col-sm-9">
-          <input id="userName" name="userName" class="form-control" [(ngModel)]="user.userName" required
-            #userNameField="ngModel" (blur)="onBlur(userNameField)"
-            [class.is-invalid]="form.submitted && userNameField.invalid" />
+          <input
+            id="userName"
+            name="userName"
+            class="form-control"
+            [(ngModel)]="user.userName"
+            required
+            #userNameField="ngModel"
+            (blur)="onBlur(userNameField)"
+            [class.is-invalid]="form.submitted && userNameField.invalid"
+          />
           <span class="invalid-feedback"> Enter an user name </span>
         </div>
       </div>
       <div class="mb-3 row">
         <label for="email" class="col-sm-3 col-form-label">Email</label>
         <div class="col-sm-9">
-          <input id="email" name="email" class="form-control" [(ngModel)]="user.email" required #emailField="ngModel"
-            (blur)="onBlur(emailField)" [class.is-invalid]="form.submitted && emailField.invalid" />
+          <input
+            id="email"
+            name="email"
+            class="form-control"
+            [(ngModel)]="user.email"
+            required
+            #emailField="ngModel"
+            (blur)="onBlur(emailField)"
+            [class.is-invalid]="form.submitted && emailField.invalid"
+          />
           <span class="invalid-feedback"> Enter an email </span>
         </div>
       </div>
       <div class="mb-3 row">
         <label for="emailConfirmed" class="col-sm-3 col-form-label">Email Confirmed</label>
         <div class="col-sm-9">
-          <input type="checkbox" id="emailConfirmed" name="emailConfirmed" [(ngModel)]="user.emailConfirmed"
-            #emailConfirmedField="ngModel" (blur)="onBlur(emailConfirmedField)"
-            [class.is-invalid]="form.submitted && emailConfirmedField.invalid" />
+          <input
+            type="checkbox"
+            id="emailConfirmed"
+            name="emailConfirmed"
+            [(ngModel)]="user.emailConfirmed"
+            #emailConfirmedField="ngModel"
+            (blur)="onBlur(emailConfirmedField)"
+            [class.is-invalid]="form.submitted && emailConfirmedField.invalid"
+          />
         </div>
       </div>
       <div class="mb-3 row">
         <label for="phoneNumber" class="col-sm-3 col-form-label">Phone Number</label>
         <div class="col-sm-9">
-          <input id="phoneNumber" name="phoneNumber" class="form-control" [(ngModel)]="user.phoneNumber" required
-            #phoneNumberField="ngModel" (blur)="onBlur(phoneNumberField)"
-            [class.is-invalid]="form.submitted && phoneNumberField.invalid" />
+          <input
+            id="phoneNumber"
+            name="phoneNumber"
+            class="form-control"
+            [(ngModel)]="user.phoneNumber"
+            required
+            #phoneNumberField="ngModel"
+            (blur)="onBlur(phoneNumberField)"
+            [class.is-invalid]="form.submitted && phoneNumberField.invalid"
+          />
           <span class="invalid-feedback"> Enter a phone number </span>
         </div>
       </div>
       <div class="mb-3 row">
-        <label for="phoneNumberConfirmed" class="col-sm-3 col-form-label">Phone Number Confirmed</label>
+        <label for="phoneNumberConfirmed" class="col-sm-3 col-form-label"
+          >Phone Number Confirmed</label
+        >
         <div class="col-sm-9">
-          <input type="checkbox" id="phoneNumberConfirmed" name="phoneNumberConfirmed"
-            [(ngModel)]="user.phoneNumberConfirmed" #phoneNumberConfirmedField="ngModel"
-            (blur)="onBlur(phoneNumberConfirmedField)" [class.is-invalid]="
-              form.submitted && phoneNumberConfirmedField.invalid
-            " />
+          <input
+            type="checkbox"
+            id="phoneNumberConfirmed"
+            name="phoneNumberConfirmed"
+            [(ngModel)]="user.phoneNumberConfirmed"
+            #phoneNumberConfirmedField="ngModel"
+            (blur)="onBlur(phoneNumberConfirmedField)"
+            [class.is-invalid]="form.submitted && phoneNumberConfirmedField.invalid"
+          />
         </div>
       </div>
       <div class="mb-3 row">
         <label for="twoFactorEnabled" class="col-sm-3 col-form-label">Two Factor Enabled</label>
         <div class="col-sm-9">
-          <input type="checkbox" id="twoFactorEnabled" name="twoFactorEnabled" [(ngModel)]="user.twoFactorEnabled"
-            #twoFactorEnabledField="ngModel" (blur)="onBlur(twoFactorEnabledField)"
-            [class.is-invalid]="form.submitted && twoFactorEnabledField.invalid" />
+          <input
+            type="checkbox"
+            id="twoFactorEnabled"
+            name="twoFactorEnabled"
+            [(ngModel)]="user.twoFactorEnabled"
+            #twoFactorEnabledField="ngModel"
+            (blur)="onBlur(twoFactorEnabledField)"
+            [class.is-invalid]="form.submitted && twoFactorEnabledField.invalid"
+          />
         </div>
       </div>
       <div class="mb-3 row">
         <label for="lockoutEnabled" class="col-sm-3 col-form-label">Lockout Enabled</label>
         <div class="col-sm-9">
-          <input type="checkbox" id="lockoutEnabled" name="lockoutEnabled" [(ngModel)]="user.lockoutEnabled"
-            #lockoutEnabledField="ngModel" (blur)="onBlur(lockoutEnabledField)"
-            [class.is-invalid]="form.submitted && lockoutEnabledField.invalid" />
+          <input
+            type="checkbox"
+            id="lockoutEnabled"
+            name="lockoutEnabled"
+            [(ngModel)]="user.lockoutEnabled"
+            #lockoutEnabledField="ngModel"
+            (blur)="onBlur(lockoutEnabledField)"
+            [class.is-invalid]="form.submitted && lockoutEnabledField.invalid"
+          />
         </div>
       </div>
       <div class="mb-3 row">
         <label for="accessFailedCount" class="col-sm-3 col-form-label">Access Failed Count</label>
         <div class="col-sm-9">
-          <input type="number" id="accessFailedCount" name="accessFailedCount" class="form-control"
-            [(ngModel)]="user.accessFailedCount" #accessFailedCountField="ngModel"
-            (blur)="onBlur(accessFailedCountField)" [class.is-invalid]="
-              form.submitted && accessFailedCountField.invalid
-            " />
+          <input
+            type="number"
+            id="accessFailedCount"
+            name="accessFailedCount"
+            class="form-control"
+            [(ngModel)]="user.accessFailedCount"
+            #accessFailedCountField="ngModel"
+            (blur)="onBlur(accessFailedCountField)"
+            [class.is-invalid]="form.submitted && accessFailedCountField.invalid"
+          />
         </div>
       </div>
       <div class="mb-3 row">
         <label for="lockoutEnd" class="col-sm-3 col-form-label">Lockout End</label>
         <div class="col-sm-9">
-          <input type="text" name="lockoutEndDate" class="form-control" [(ngModel)]="user.lockoutEnd" bsDatepicker
-            [bsConfig]="{ adaptivePosition: true }" />
-          <timepicker name="lockoutEndTime" [(ngModel)]="user.lockoutEnd"></timepicker>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              name="lockoutEndDate"
+              [(ngModel)]="user.lockoutEnd"
+            />
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Time</mat-label>
+            <input
+              matInput
+              [matTimepicker]="timepicker"
+              name="lockoutEndTime"
+              [(ngModel)]="user.lockoutEnd"
+            />
+            <mat-timepicker-toggle matIconSuffix [for]="timepicker"></mat-timepicker-toggle>
+            <mat-timepicker #timepicker></mat-timepicker>
+          </mat-form-field>
         </div>
       </div>
       <div class="mb-3 row">
@@ -92,7 +162,7 @@
     </form>
   </div>
   <div class="card-footer">
-    <a class="btn btn-outline-secondary" [routerLink]="['/users']" style="width: 80px;">
+    <a class="btn btn-outline-secondary" [routerLink]="['/users']" style="width: 80px">
       <i class="fa fa-chevron-left"></i> Back
     </a>
   </div>

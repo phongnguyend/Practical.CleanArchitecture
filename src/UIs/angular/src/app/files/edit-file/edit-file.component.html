@@ -8,30 +8,57 @@
       <div class="mb-3 row">
         <label for="name" class="col-sm-2 col-form-label">Name</label>
         <div class="col-sm-10">
-          <input id="name" name="name" class="form-control" [(ngModel)]="file.name" required #nameField="ngModel"
-            (blur)="onBlur(nameField)" [class.is-invalid]="form.submitted && nameField.invalid" />
+          <input
+            id="name"
+            name="name"
+            class="form-control"
+            [(ngModel)]="file.name"
+            required
+            #nameField="ngModel"
+            (blur)="onBlur(nameField)"
+            [class.is-invalid]="form.submitted && nameField.invalid"
+          />
           <span class="invalid-feedback"> Enter a name </span>
         </div>
       </div>
       <div class="mb-3 row">
         <label for="description" class="col-sm-2 col-form-label">Description</label>
         <div class="col-sm-10">
-          <input id="description" name="description" class="form-control" [(ngModel)]="file.description" required
-            #descriptionField="ngModel" (blur)="onBlur(descriptionField)"
-            [class.is-invalid]="form.submitted && descriptionField.invalid" />
+          <input
+            id="description"
+            name="description"
+            class="form-control"
+            [(ngModel)]="file.description"
+            required
+            #descriptionField="ngModel"
+            (blur)="onBlur(descriptionField)"
+            [class.is-invalid]="form.submitted && descriptionField.invalid"
+          />
           <span class="invalid-feedback"> Enter a description </span>
         </div>
       </div>
       <div class="mb-3 row">
         <label for="formFile" class="col-sm-2 col-form-label">File</label>
         <div class="col-sm-10">
-          <input id="formFile" name="formFile" class="form-control" value="{{ file.fileName }}" disabled />
+          <input
+            id="formFile"
+            name="formFile"
+            class="form-control"
+            value="{{ file.fileName }}"
+            disabled
+          />
         </div>
       </div>
       <div class="mb-3 row">
         <label for="encrypted" class="col-sm-2 col-form-label">Encrypted</label>
         <div class="col-sm-10">
-          <input type="checkbox" id="encrypted" name="encrypted" [ngModel]="file.encrypted" disabled />
+          <input
+            type="checkbox"
+            id="encrypted"
+            name="encrypted"
+            [ngModel]="file.encrypted"
+            disabled
+          />
         </div>
       </div>
       <div class="mb-3 row">
@@ -47,13 +74,18 @@
       <i class="fa fa-chevron-left"></i> Back
     </a>
     &nbsp;
-    <button type="button" class="btn btn-primary btn-secondary" (click)="viewAuditLogs(auditlogtemplate)">
+    <button
+      type="button"
+      class="btn btn-primary btn-secondary"
+      (click)="viewAuditLogs(auditlogtemplate)"
+    >
       View Audit Logs
     </button>
   </div>
 </div>
 <ng-template #auditlogtemplate>
-  <div class="modal-body text-center">
+  <h2 mat-dialog-title>Audit Logs</h2>
+  <mat-dialog-content>
     <div class="table-responsive">
       <table class="table">
         <thead>
@@ -90,5 +122,8 @@
         </tbody>
       </table>
     </div>
-  </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button type="button" class="btn btn-default" mat-dialog-close>Close</button>
+  </mat-dialog-actions>
 </ng-template>
