@@ -15,42 +15,48 @@
   </div>
   <div class="card-body">
     <div class="table-responsive">
-      <table class="table" *ngIf="configurationEntries && configurationEntries.length">
-        <thead>
-          <tr>
-            <th>Key</th>
-            <th>Value</th>
-            <th>Description</th>
-            <th>Updated Time</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let entry of configurationEntries">
-            <td>{{ entry.key }}</td>
-            <td>{{ entry.isSensitive ? "******" : entry.value }}</td>
-            <td>{{ entry.description }}</td>
-            <td>{{ entry.updatedDateTime | date: "dd/MM/yyyy hh:mm:ss" }}</td>
-            <td>
-              <button class="btn btn-primary" (click)="updateEntry(addupdatetemplate, entry)">
-                Edit
-              </button>
-              &nbsp;
-              <button
-                type="button"
-                class="btn btn-primary btn-danger"
-                (click)="deleteEntry(deletetemplate, entry)"
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      @if (configurationEntries && configurationEntries.length) {
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Value</th>
+              <th>Description</th>
+              <th>Updated Time</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (entry of configurationEntries; track entry) {
+              <tr>
+                <td>{{ entry.key }}</td>
+                <td>{{ entry.isSensitive ? "******" : entry.value }}</td>
+                <td>{{ entry.description }}</td>
+                <td>{{ entry.updatedDateTime | date: "dd/MM/yyyy hh:mm:ss" }}</td>
+                <td>
+                  <button class="btn btn-primary" (click)="updateEntry(addupdatetemplate, entry)">
+                    Edit
+                  </button>
+                  &nbsp;
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-danger"
+                    (click)="deleteEntry(deletetemplate, entry)"
+                    >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
     </div>
   </div>
 </div>
-<div *ngIf="errorMessage" class="alert alert-danger">Error: {{ errorMessage }}</div>
+@if (errorMessage) {
+  <div class="alert alert-danger">Error: {{ errorMessage }}</div>
+}
 
 <ng-template #deletetemplate>
   <mat-dialog-content class="text-center">
@@ -82,83 +88,83 @@
             [(ngModel)]="selectedEntry.key"
             #keyField="ngModel"
             [class.is-invalid]="form.submitted && keyField.invalid"
-          />
-          <span class="invalid-feedback"> Enter a key </span>
+            />
+            <span class="invalid-feedback"> Enter a key </span>
+          </div>
         </div>
-      </div>
-      <div class="mb-3 row">
-        <label for="value" class="col-sm-3 col-form-label">Value</label>
-        <div class="col-sm-9">
-          <input
-            id="value"
-            name="value"
-            class="form-control"
-            required
-            [(ngModel)]="selectedEntry.value"
-            #valueField="ngModel"
-            [class.is-invalid]="form.submitted && valueField.invalid"
-          />
-          <span class="invalid-feedback"> Enter a value </span>
-        </div>
-      </div>
-      <div class="mb-3 row">
-        <label for="description" class="col-sm-3 col-form-label">Description</label>
-        <div class="col-sm-9">
-          <input
-            id="description"
-            name="description"
-            class="form-control"
-            [(ngModel)]="selectedEntry.description"
-            #descriptionField="ngModel"
-            [class.is-invalid]="form.submitted && descriptionField.invalid"
-          />
-          <span class="invalid-feedback"> Enter a description </span>
-        </div>
-      </div>
-      <div class="mb-3 row">
-        <label for="sensitive" class="col-sm-3 col-form-label">Sensitive</label>
-        <div class="col-sm-9">
-          <input
-            type="checkbox"
-            id="sensitive"
-            name="sensitive"
-            [(ngModel)]="selectedEntry.isSensitive"
-          />
-        </div>
-      </div>
-      <div class="mb-3 row">
-        <label class="col-sm-3 col-form-label"></label>
-        <div class="col-sm-9">
-          <button class="btn btn-primary">Save</button>
-        </div>
-      </div>
-    </form>
-  </mat-dialog-content>
-</ng-template>
+        <div class="mb-3 row">
+          <label for="value" class="col-sm-3 col-form-label">Value</label>
+          <div class="col-sm-9">
+            <input
+              id="value"
+              name="value"
+              class="form-control"
+              required
+              [(ngModel)]="selectedEntry.value"
+              #valueField="ngModel"
+              [class.is-invalid]="form.submitted && valueField.invalid"
+              />
+              <span class="invalid-feedback"> Enter a value </span>
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="description" class="col-sm-3 col-form-label">Description</label>
+            <div class="col-sm-9">
+              <input
+                id="description"
+                name="description"
+                class="form-control"
+                [(ngModel)]="selectedEntry.description"
+                #descriptionField="ngModel"
+                [class.is-invalid]="form.submitted && descriptionField.invalid"
+                />
+                <span class="invalid-feedback"> Enter a description </span>
+              </div>
+            </div>
+            <div class="mb-3 row">
+              <label for="sensitive" class="col-sm-3 col-form-label">Sensitive</label>
+              <div class="col-sm-9">
+                <input
+                  type="checkbox"
+                  id="sensitive"
+                  name="sensitive"
+                  [(ngModel)]="selectedEntry.isSensitive"
+                  />
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label class="col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                  <button class="btn btn-primary">Save</button>
+                </div>
+              </div>
+            </form>
+          </mat-dialog-content>
+        </ng-template>
 
-<ng-template #import_excel_modal_template>
-  <h2 mat-dialog-title>Import Excel</h2>
-  <mat-dialog-content>
-    <form #form="ngForm" (ngSubmit)="confirmImportExcelFile(form)">
-      <div class="mb-3 row">
-        <div class="col-sm-12">
-          <input
-            id="importingFile"
-            type="file"
-            name="importingFile"
-            class="form-control"
-            required
-            (change)="handleFileInput($event.target.files)"
-            [class.is-invalid]="form.submitted && !importingFile"
-          />
-          <span class="invalid-feedback"> Select a file </span>
-        </div>
-      </div>
-      <div class="mb-3 row">
-        <div class="col-sm-12" style="text-align: center">
-          <button class="btn btn-primary">Import</button>
-        </div>
-      </div>
-    </form>
-  </mat-dialog-content>
-</ng-template>
+        <ng-template #import_excel_modal_template>
+          <h2 mat-dialog-title>Import Excel</h2>
+          <mat-dialog-content>
+            <form #form="ngForm" (ngSubmit)="confirmImportExcelFile(form)">
+              <div class="mb-3 row">
+                <div class="col-sm-12">
+                  <input
+                    id="importingFile"
+                    type="file"
+                    name="importingFile"
+                    class="form-control"
+                    required
+                    (change)="handleFileInput($event.target.files)"
+                    [class.is-invalid]="form.submitted && !importingFile"
+                    />
+                    <span class="invalid-feedback"> Select a file </span>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <div class="col-sm-12" style="text-align: center">
+                    <button class="btn btn-primary">Import</button>
+                  </div>
+                </div>
+              </form>
+            </mat-dialog-content>
+          </ng-template>

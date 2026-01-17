@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { CommonModule } from "@angular/common";
+
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { MatDatepickerModule } from "@angular/material/datepicker";
@@ -19,7 +19,6 @@ import { GuidEmpty } from "src/app/shared/constants";
   styleUrls: ["./add-edit-user.component.css"],
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
@@ -27,8 +26,8 @@ import { GuidEmpty } from "src/app/shared/constants";
     MatTimepickerModule,
     MatNativeDateModule,
     MatInputModule,
-    MatFormFieldModule,
-  ],
+    MatFormFieldModule
+],
 })
 export class AddEditUserComponent implements OnInit {
   formMode: string = "add";

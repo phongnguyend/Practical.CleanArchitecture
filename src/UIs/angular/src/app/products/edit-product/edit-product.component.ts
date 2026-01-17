@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { CommonModule } from "@angular/common";
+
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Router, ActivatedRoute } from "@angular/router";
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from "@angular/forms";
@@ -13,7 +13,7 @@ import { ProductService } from "../product.service";
   templateUrl: "./edit-product.component.html",
   styleUrls: ["./edit-product.component.css"],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
+  imports: [FormsModule, ReactiveFormsModule, RouterModule],
 })
 export class EditProductComponent implements OnInit {
   product: IProduct;

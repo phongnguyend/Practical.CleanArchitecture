@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from "@angular/core";
-import { CommonModule } from "@angular/common";
+
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { IUser } from "../user";
@@ -14,7 +14,7 @@ import { MatDialogModule } from "@angular/material/dialog";
   templateUrl: "./view-user-details.component.html",
   styleUrls: ["./view-user-details.component.css"],
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, MatDialogModule],
+  imports: [FormsModule, RouterModule, MatDialogModule],
 })
 export class ViewUserDetailsComponent implements OnInit {
   user: IUser = null;

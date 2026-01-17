@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { CommonModule } from "@angular/common";
+
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { IFile } from "../file";
@@ -13,7 +13,7 @@ import { GuidEmpty } from "src/app/shared/constants";
   templateUrl: "./upload-file.component.html",
   styleUrls: ["./upload-file.component.css"],
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [FormsModule, RouterModule],
 })
 export class UploadFileComponent implements OnInit {
   file: IFile = {

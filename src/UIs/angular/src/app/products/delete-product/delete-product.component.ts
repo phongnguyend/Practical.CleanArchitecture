@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, Input, Output, EventEmitter } from "@angular/core";
-import { CommonModule } from "@angular/common";
+
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { IProduct } from "../product";
 import { MatDialogModule } from "@angular/material/dialog";
@@ -9,7 +9,7 @@ import { MatDialogModule } from "@angular/material/dialog";
   templateUrl: "./delete-product.component.html",
   styleUrls: ["./delete-product.component.css"],
   standalone: true,
-  imports: [CommonModule, MatDialogModule],
+  imports: [MatDialogModule],
 })
 export class DeleteProductComponent implements OnInit {
   @Input() product: IProduct;

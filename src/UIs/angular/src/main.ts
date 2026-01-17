@@ -1,4 +1,4 @@
-import { enableProdMode, importProvidersFrom, inject } from "@angular/core";
+import { enableProdMode, importProvidersFrom, inject, provideZoneChangeDetection } from "@angular/core";
 import { bootstrapApplication } from "@angular/platform-browser";
 import { BrowserModule } from "@angular/platform-browser";
 import { provideRouter } from "@angular/router";
@@ -40,7 +40,7 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    importProvidersFrom(
+    provideZoneChangeDetection(),importProvidersFrom(
       BrowserModule,
       BrowserAnimationsModule,
       StoreModule.forRoot({}),
