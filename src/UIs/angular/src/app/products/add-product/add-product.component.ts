@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { CommonModule } from "@angular/common";
+
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Router } from "@angular/router";
 import { IProduct } from "../product";
@@ -11,7 +11,7 @@ import { GuidEmpty } from "src/app/shared/constants";
   templateUrl: "./add-product.component.html",
   styleUrls: ["./add-product.component.css"],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
+  imports: [FormsModule, ReactiveFormsModule, RouterModule],
 })
 export class AddProductComponent implements OnInit {
   product: IProduct = {

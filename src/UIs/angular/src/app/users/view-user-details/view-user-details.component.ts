@@ -1,33 +1,34 @@
 import { Component, OnInit, TemplateRef } from "@angular/core";
-import { CommonModule } from "@angular/common";
+
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { IUser } from "../user";
 import { UserService } from "../user.service";
 import { Router, ActivatedRoute } from "@angular/router";
-import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { NgForm } from "@angular/forms";
+import { MatDialogModule } from "@angular/material/dialog";
 
 @Component({
   selector: "app-view-user-details",
   templateUrl: "./view-user-details.component.html",
   styleUrls: ["./view-user-details.component.css"],
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [FormsModule, RouterModule, MatDialogModule],
 })
 export class ViewUserDetailsComponent implements OnInit {
   user: IUser = null;
   setPasswordModel: any = {};
   passwordValidationErrors: any = [];
   postErrorMessage: string = "";
-  setPasswordModalRef: BsModalRef;
-  sendPasswordResetEmailModalRef: BsModalRef;
-  sendEmailAddressConfirmationEmailModalRef: BsModalRef;
+  setPasswordModalRef: MatDialogRef<any>;
+  sendPasswordResetEmailModalRef: MatDialogRef<any>;
+  sendEmailAddressConfirmationEmailModalRef: MatDialogRef<any>;
   constructor(
     private userService: UserService,
     private router: Router,
     private route: ActivatedRoute,
-    private modalService: BsModalService
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -45,21 +46,21 @@ export class ViewUserDetailsComponent implements OnInit {
   setPasswordModal(template: TemplateRef<any>) {
     this.setPasswordModel = {};
     this.passwordValidationErrors = [];
-    this.setPasswordModalRef = this.modalService.show(template, {
-      class: "modal-l",
+    this.setPasswordModalRef = this.dialog.open(template, {
+      width: "600px",
     });
   }
 
   sendPasswordResetEmailModal(template: TemplateRef<any>) {
-    this.sendPasswordResetEmailModalRef = this.modalService.show(template, {
-      class: "modal-sm",
+    this.sendPasswordResetEmailModalRef = this.dialog.open(template, {
+      width: "400px",
     });
   }
 
   confirmSendPasswordResetEmail() {
     this.userService.sendPasswordResetEmail(this.user.id).subscribe({
       next: () => {
-        this.sendPasswordResetEmailModalRef.hide();
+        this.sendPasswordResetEmailModalRef.close();
       },
       error: (err) => {
         this.postErrorMessage = err;
@@ -68,15 +69,15 @@ export class ViewUserDetailsComponent implements OnInit {
   }
 
   sendEmailAddressConfirmationEmailModal(template: TemplateRef<any>) {
-    this.sendEmailAddressConfirmationEmailModalRef = this.modalService.show(template, {
-      class: "modal-sm",
+    this.sendEmailAddressConfirmationEmailModalRef = this.dialog.open(template, {
+      width: "400px",
     });
   }
 
   confirmSendEmailAddressConfirmationEmail() {
     this.userService.sendEmailAddressConfirmationEmail(this.user.id).subscribe({
       next: () => {
-        this.sendEmailAddressConfirmationEmailModalRef.hide();
+        this.sendEmailAddressConfirmationEmailModalRef.close();
       },
       error: (err) => {
         this.postErrorMessage = err;
@@ -94,7 +95,7 @@ export class ViewUserDetailsComponent implements OnInit {
           setTimeout(() => {
             this.setPasswordModel = {};
           }, 1000);
-          this.setPasswordModalRef.hide();
+          this.setPasswordModalRef.close();
         },
         error: (err) => {
           if (Array.isArray(err)) {

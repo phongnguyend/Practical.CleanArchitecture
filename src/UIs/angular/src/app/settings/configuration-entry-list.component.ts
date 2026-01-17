@@ -4,29 +4,30 @@ import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { ConfigurationEntriesService } from "./configuration-entry.service";
 import { IConfigurationEntry } from "./configuration-entry";
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { NgForm } from "@angular/forms";
 import { GuidEmpty } from "../shared/constants";
+import { MatDialogModule } from "@angular/material/dialog";
 
 @Component({
   selector: "app-configuration-entry-list",
   templateUrl: "./configuration-entry-list.component.html",
   styleUrls: ["./configuration-entry-list.component.css"],
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, MatDialogModule],
 })
 export class ConfigurationEntryListComponent implements OnInit {
   GuidEmpty = GuidEmpty;
   configurationEntries: IConfigurationEntry[] = [];
   selectedEntry: IConfigurationEntry = null;
-  addUpdateModalRef: BsModalRef;
-  deleteModalRef: BsModalRef;
-  importExcelModalRef: BsModalRef;
+  addUpdateModalRef: MatDialogRef<any>;
+  deleteModalRef: MatDialogRef<any>;
+  importExcelModalRef: MatDialogRef<any>;
   errorMessage;
   importingFile;
   constructor(
     private configurationEntriesService: ConfigurationEntriesService,
-    private modalService: BsModalService
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -47,8 +48,8 @@ export class ConfigurationEntryListComponent implements OnInit {
       isSensitive: false,
       createdDateTime: new Date(),
     };
-    this.addUpdateModalRef = this.modalService.show(template, {
-      class: "modal-lg",
+    this.addUpdateModalRef = this.dialog.open(template, {
+      width: "700px",
     });
   }
 
@@ -61,15 +62,15 @@ export class ConfigurationEntryListComponent implements OnInit {
       isSensitive: entry.isSensitive,
       createdDateTime: new Date(),
     };
-    this.addUpdateModalRef = this.modalService.show(template, {
-      class: "modal-lg",
+    this.addUpdateModalRef = this.dialog.open(template, {
+      width: "700px",
     });
   }
 
   deleteEntry(template: TemplateRef<any>, entry: IConfigurationEntry) {
     this.selectedEntry = entry;
-    this.deleteModalRef = this.modalService.show(template, {
-      class: "modal-sm",
+    this.deleteModalRef = this.dialog.open(template, {
+      width: "400px",
     });
   }
 
@@ -83,7 +84,7 @@ export class ConfigurationEntryListComponent implements OnInit {
     request.subscribe({
       next: (rs) => {
         console.log(rs);
-        this.addUpdateModalRef.hide();
+        this.addUpdateModalRef.close();
         this.ngOnInit();
       },
       error: (err) => (this.errorMessage = err),
@@ -94,7 +95,7 @@ export class ConfigurationEntryListComponent implements OnInit {
     this.configurationEntriesService.deleteConfigurationEntry(this.selectedEntry).subscribe({
       next: (rs) => {
         console.log(rs);
-        this.deleteModalRef.hide();
+        this.deleteModalRef.close();
         this.ngOnInit();
       },
       error: (err) => (this.errorMessage = err),
@@ -102,7 +103,7 @@ export class ConfigurationEntryListComponent implements OnInit {
   }
 
   cancelDelete() {
-    this.deleteModalRef.hide();
+    this.deleteModalRef.close();
   }
 
   exportAsExcel() {
@@ -121,8 +122,8 @@ export class ConfigurationEntryListComponent implements OnInit {
 
   openImportExcelModal(template: TemplateRef<any>) {
     this.importingFile = null;
-    this.importExcelModalRef = this.modalService.show(template, {
-      class: "modal-sm",
+    this.importExcelModalRef = this.dialog.open(template, {
+      width: "500px",
     });
   }
 
@@ -140,7 +141,7 @@ export class ConfigurationEntryListComponent implements OnInit {
     request.subscribe({
       next: (rs) => {
         console.log(rs);
-        this.importExcelModalRef.hide();
+        this.importExcelModalRef.close();
         this.ngOnInit();
       },
       error: (err) => (this.errorMessage = err),

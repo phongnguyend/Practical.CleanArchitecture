@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { CommonModule } from "@angular/common";
+
 import { RouterModule } from "@angular/router";
 import { AuthService } from "../auth/auth.service";
 import { AppendVersionPipe } from "../shared/append-version.pipe";
@@ -9,7 +9,7 @@ import { AppendVersionPipe } from "../shared/append-version.pipe";
   templateUrl: "./nav.component.html",
   styleUrls: ["./nav.component.css"],
   standalone: true,
-  imports: [CommonModule, RouterModule, AppendVersionPipe],
+  imports: [RouterModule, AppendVersionPipe],
 })
 export class NavComponent implements OnInit {
   pageTitle = "ClassifiedAds.Angular";

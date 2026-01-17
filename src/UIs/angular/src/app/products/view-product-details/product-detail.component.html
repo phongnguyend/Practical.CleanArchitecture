@@ -1,109 +1,106 @@
-<div class="card" *ngIf="product">
-  <div class="card-header">
-    {{ pageTitle + ": " + product.name }}
-  </div>
-
-  <div class="card-body">
-    <div class="row">
-      <div class="col-md-8">
-        <div class="row">
-          <div class="col-md-4">Name:</div>
-          <div class="col-md-8">{{ product.name }}</div>
-        </div>
-        <div class="row">
-          <div class="col-md-4">Code:</div>
-          <div class="col-md-8">{{ product.code | uppercase }}</div>
-        </div>
-        <div class="row">
-          <div class="col-md-4">Description:</div>
-          <div class="col-md-8">{{ product.description }}</div>
-        </div>
-        <div class="row">
-          <div class="col-md-4">Price:</div>
-          <div class="col-md-8">
-            {{ product.price || 5 | currency: "USD":"symbol" }}
+@if (product) {
+  <div class="card">
+    <div class="card-header">
+      {{ pageTitle + ": " + product.name }}
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="col-md-4">Name:</div>
+            <div class="col-md-8">{{ product.name }}</div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">Code:</div>
+            <div class="col-md-8">{{ product.code | uppercase }}</div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">Description:</div>
+            <div class="col-md-8">{{ product.description }}</div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">Price:</div>
+            <div class="col-md-8">
+              {{ product.price || 5 | currency: "USD" : "symbol" }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">5 Star Rating:</div>
+            <div class="col-md-8">
+              <pm-star [rating]="product.starRating || 4"> </pm-star>
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-4">5 Star Rating:</div>
-          <div class="col-md-8">
-            <pm-star [rating]="product.starRating || 4"> </pm-star>
+        <div class="col-md-4">
+          <img
+            class="center-block img-responsive"
+            [style.width.px]="200"
+            [style.margin.px]="2"
+            [src]="product.imageUrl || '/assets/images/logo.png'"
+            [title]="product.name"
+            />
           </div>
         </div>
       </div>
-
-      <div class="col-md-4">
-        <img
-          class="center-block img-responsive"
-          [style.width.px]="200"
-          [style.margin.px]="2"
-          [src]="product.imageUrl || '/assets/images/logo.png'"
-          [title]="product.name"
-        />
+      <div class="card-footer">
+        <button class="btn btn-outline-secondary" (click)="onBack()" style="width: 80px">
+          <i class="fa fa-chevron-left"></i> Back
+        </button>
+        &nbsp;
+        <a
+          class="btn btn-primary"
+          routerLinkActive="active"
+          [routerLink]="['/products/edit', product.id]"
+          >
+          Edit
+        </a>
+        &nbsp;
+        <button type="button" class="btn btn-primary btn-secondary" (click)="viewAuditLogs(template)">
+          View Audit Logs
+        </button>
       </div>
     </div>
-  </div>
+  }
 
-  <div class="card-footer">
-    <button
-      class="btn btn-outline-secondary"
-      (click)="onBack()"
-      style="width: 80px;"
-    >
-      <i class="fa fa-chevron-left"></i> Back
-    </button>
-    &nbsp;
-    <a
-      class="btn btn-primary"
-      routerLinkActive="active"
-      [routerLink]="['/products/edit', product.id]"
-    >
-      Edit
-    </a>
-    &nbsp;
-    <button
-      type="button"
-      class="btn btn-primary btn-secondary"
-      (click)="viewAuditLogs(template)"
-    >
-      View Audit Logs
-    </button>
-  </div>
-</div>
-
-<ng-template #template>
-  <div class="modal-body text-center">
-    <div class="table-responsive">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Date Time</th>
-            <th>User Name</th>
-            <th>Action</th>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let auditLog of auditLogs">
-            <td>
-              {{ auditLog.createdDateTime | date: "dd/MM/yyyy hh:mm:ss" }}
-            </td>
-            <td>{{ auditLog.userName }}</td>
-            <td>{{ auditLog.action }}</td>
-            <td [style.color]="auditLog.highLight.code ? 'red' : ''">
-              {{ auditLog.data.code }}
-            </td>
-            <td [style.color]="auditLog.highLight.name ? 'red' : ''">
-              {{ auditLog.data.name }}
-            </td>
-            <td [style.color]="auditLog.highLight.description ? 'red' : ''">
-              {{ auditLog.data.description }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</ng-template>
+  <ng-template #template>
+    <h2 mat-dialog-title>Audit Logs</h2>
+    <mat-dialog-content>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Date Time</th>
+              <th>User Name</th>
+              <th>Action</th>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (auditLog of auditLogs; track auditLog) {
+              <tr>
+                <td>
+                  {{ auditLog.createdDateTime | date: "dd/MM/yyyy hh:mm:ss" }}
+                </td>
+                <td>{{ auditLog.userName }}</td>
+                <td>{{ auditLog.action }}</td>
+                <td [style.color]="auditLog.highLight.code ? 'red' : ''">
+                  {{ auditLog.data.code }}
+                </td>
+                <td [style.color]="auditLog.highLight.name ? 'red' : ''">
+                  {{ auditLog.data.name }}
+                </td>
+                <td [style.color]="auditLog.highLight.description ? 'red' : ''">
+                  {{ auditLog.data.description }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button type="button" class="btn btn-default" mat-dialog-close>Close</button>
+    </mat-dialog-actions>
+  </ng-template>

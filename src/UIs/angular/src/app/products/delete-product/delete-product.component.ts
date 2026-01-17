@@ -1,35 +1,36 @@
 import { Component, OnInit, TemplateRef, Input, Output, EventEmitter } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
+
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { IProduct } from "../product";
+import { MatDialogModule } from "@angular/material/dialog";
 
 @Component({
   selector: "app-delete-product",
   templateUrl: "./delete-product.component.html",
   styleUrls: ["./delete-product.component.css"],
   standalone: true,
-  imports: [CommonModule],
+  imports: [MatDialogModule],
 })
 export class DeleteProductComponent implements OnInit {
   @Input() product: IProduct;
   @Output() confirmed: EventEmitter<IProduct> = new EventEmitter<IProduct>();
 
-  modalRef: BsModalRef;
+  modalRef: MatDialogRef<any>;
   message: string;
-  constructor(private modalService: BsModalService) {}
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {}
 
   openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template, { class: "modal-sm" });
+    this.modalRef = this.dialog.open(template, { width: "400px" });
   }
 
   confirm(): void {
     this.confirmed.emit(this.product);
-    this.modalRef.hide();
+    this.modalRef.close();
   }
 
   decline(): void {
-    this.modalRef.hide();
+    this.modalRef.close();
   }
 }

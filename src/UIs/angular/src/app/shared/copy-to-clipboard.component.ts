@@ -1,10 +1,10 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-copy-to-clipboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './copy-to-clipboard.component.html',
   styleUrls: ['./copy-to-clipboard.component.css']
 })

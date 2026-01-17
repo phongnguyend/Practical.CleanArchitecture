@@ -3,10 +3,11 @@ export interface IAuditLogEntry {
   action: string;
   createdDateTime: Date;
   data: any;
+  log: any;
   highLight: any;
 }
 
 export interface Paged<T> {
-  totalItems: number,
-  items: Array<T>
+  totalItems: number;
+  items: Array<T>;
 }

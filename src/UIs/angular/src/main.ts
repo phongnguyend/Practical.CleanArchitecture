@@ -1,4 +1,4 @@
-import { enableProdMode, importProvidersFrom, inject } from "@angular/core";
+import { enableProdMode, importProvidersFrom, inject, provideZoneChangeDetection } from "@angular/core";
 import { bootstrapApplication } from "@angular/platform-browser";
 import { BrowserModule } from "@angular/platform-browser";
 import { provideRouter } from "@angular/router";
@@ -9,9 +9,12 @@ import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { EffectsModule } from "@ngrx/effects";
 import { ToastrModule } from "ngx-toastr";
 import { ErrorHandler, provideAppInitializer } from "@angular/core";
-import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
-import { TimepickerModule } from "ngx-bootstrap/timepicker";
-import { ModalModule } from "ngx-bootstrap/modal";
+import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatTimepickerModule } from "@angular/material/timepicker";
+import { MatNativeDateModule } from "@angular/material/core";
+import { MatInputModule } from "@angular/material/input";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatDialogModule } from "@angular/material/dialog";
 
 import { AppComponent } from "./app/app.component";
 import { environment } from "./environments/environment";
@@ -37,7 +40,7 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    importProvidersFrom(
+    provideZoneChangeDetection(),importProvidersFrom(
       BrowserModule,
       BrowserAnimationsModule,
       StoreModule.forRoot({}),
@@ -51,9 +54,12 @@ bootstrapApplication(AppComponent, {
       EffectsModule.forRoot([]),
       EffectsModule.forFeature([AuditLogEffects]),
       ToastrModule.forRoot(),
-      BsDatepickerModule.forRoot(),
-      TimepickerModule.forRoot(),
-      ModalModule.forRoot()
+      MatDatepickerModule,
+      MatTimepickerModule,
+      MatNativeDateModule,
+      MatInputModule,
+      MatFormFieldModule,
+      MatDialogModule
     ),
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
