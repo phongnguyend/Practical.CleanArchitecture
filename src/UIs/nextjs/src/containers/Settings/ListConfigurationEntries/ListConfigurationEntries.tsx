@@ -169,9 +169,10 @@ const ListConfigurationEntries = () => {
 
     if (isValid) {
       try {
-        const response = selectingEntry.id
-          ? await axios.put(selectingEntry.id, selectingEntry)
-          : await axios.post("", selectingEntry);
+        const { id, ...configurationEntryWithoutId } = selectingEntry;
+        const response = id
+          ? await axios.put(id, configurationEntryWithoutId)
+          : await axios.post("", configurationEntryWithoutId);
         const configurationEntry = response.data;
         setAddUpdateModalOpen(false);
         setSelectingEntry(null);
@@ -237,7 +238,7 @@ const ListConfigurationEntries = () => {
       setConfigurationEntries(response.data);
     } catch (error) {
       setErrorMessage(
-        error instanceof Error ? error.message : "An error occurred"
+        error instanceof Error ? error.message : "An error occurred",
       );
     }
   }, []);

@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import classes from "./Nav.module.css";
 import { usePathname } from "next/navigation";
 
-const Nav = () => {
+interface NavProps {
+  isAuthenticated: boolean;
+}
+
+const Nav = ({ isAuthenticated }: NavProps) => {
   const pageTitle = "ClassifiedAds.NextJs";
   const nextVersion = "16.0.6";
 
@@ -14,12 +17,6 @@ const Nav = () => {
   const isActive = (path: string) => {
     return pathname === path || pathname.startsWith(path + "/");
   };
-
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    setIsAuthenticated(localStorage.getItem("access_token") != null);
-  }, []);
 
   return (
     <nav

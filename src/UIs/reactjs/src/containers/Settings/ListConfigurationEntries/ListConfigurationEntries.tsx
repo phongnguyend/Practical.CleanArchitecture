@@ -7,19 +7,21 @@ import { checkValidity } from "../../../shared/utility";
 import axios from "../axios";
 
 const ListConfigurationEntries = (props: any) => {
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [addUpdateModalOpen, setAddUpdateModalOpen] = useState(false);
-  const [addUpdateFormSubmitted, setAddUpdateFormSubmitted] = useState(false);
-  const [importExcelModalOpen, setImportExcelModalOpen] = useState(false);
-  const [importingFile, setImportingFile] = useState<File | null>(null);
-  const [importExcelFormSubmitted, setImportExcelFormSubmitted] = useState(false);
-  const [selectingEntry, setSelectingEntry] = useState({
+  const getDefaultConfigurationEntry = () => ({
     id: "",
     key: "",
     value: "",
     description: "",
     isSensitive: false,
   });
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [addUpdateModalOpen, setAddUpdateModalOpen] = useState(false);
+  const [addUpdateFormSubmitted, setAddUpdateFormSubmitted] = useState(false);
+  const [importExcelModalOpen, setImportExcelModalOpen] = useState(false);
+  const [importingFile, setImportingFile] = useState<File | null>(null);
+  const [importExcelFormSubmitted, setImportExcelFormSubmitted] = useState(false);
+  const [selectingEntry, setSelectingEntry] = useState(getDefaultConfigurationEntry());
   const [controls, setControls] = useState({
     key: {
       validation: {
@@ -86,36 +88,18 @@ const ListConfigurationEntries = (props: any) => {
 
   const deleteCanceled = () => {
     setDeleteModalOpen(false);
-    setSelectingEntry({
-      id: "",
-      key: "",
-      value: "",
-      description: "",
-      isSensitive: false,
-    });
+    setSelectingEntry(getDefaultConfigurationEntry());
   };
 
   const deleteConfirmed = () => {
     props.deleteConfigurationEntry(selectingEntry);
     setDeleteModalOpen(false);
-    setSelectingEntry({
-      id: "",
-      key: "",
-      value: "",
-      description: "",
-      isSensitive: false,
-    });
+    setSelectingEntry(getDefaultConfigurationEntry());
   };
 
   const openAddModal = () => {
     setAddUpdateModalOpen(true);
-    setSelectingEntry({
-      id: "",
-      key: "",
-      value: "",
-      description: "",
-      isSensitive: false,
-    });
+    setSelectingEntry(getDefaultConfigurationEntry());
   };
 
   const openUpdateModal = (entry: any) => {
@@ -131,13 +115,7 @@ const ListConfigurationEntries = (props: any) => {
 
   const addUpdateCanceled = () => {
     setAddUpdateModalOpen(false);
-    setSelectingEntry({
-      id: "",
-      key: "",
-      value: "",
-      description: "",
-      isSensitive: false,
-    });
+    setSelectingEntry(getDefaultConfigurationEntry());
     setAddUpdateFormSubmitted(false);
   };
 
@@ -155,13 +133,7 @@ const ListConfigurationEntries = (props: any) => {
     if (isValid) {
       props.saveConfigurationEntry(selectingEntry);
       setAddUpdateModalOpen(false);
-      setSelectingEntry({
-        id: "",
-        key: "",
-        value: "",
-        description: "",
-        isSensitive: false,
-      });
+      setSelectingEntry(getDefaultConfigurationEntry());
     }
   };
 
