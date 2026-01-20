@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <RootNamespace>ClassifiedAds.Infrastructure</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,7 +32,6 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.3.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="10.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="10.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="10.0.0" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.14.0" />
     <PackageReference Include="OpenTelemetry.Exporter.Zipkin" Version="1.14.0" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0" />

@@ -37,8 +37,8 @@ public class PublishEventsCommandHandler : ICommandHandler<PublishEventsCommand>
     public async Task HandleAsync(PublishEventsCommand command, CancellationToken cancellationToken = default)
     {
         var events = _outboxMessageRepository.GetQueryableSet()
-           .Where(x => !x.Published)
-           .OrderBy(x => x.CreatedDateTime)
+            .Where(x => !x.Published && x.ScheduledAt <= _dateTimeProvider.OffsetNow)
+            .OrderBy(x => x.ScheduledAt)
            .Take(50)
            .ToList();
 

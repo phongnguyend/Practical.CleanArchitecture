@@ -49,6 +49,7 @@ public class AddAuditLogEntryCommandHandler : ICommandHandler<AddAuditLogEntryCo
             EventType = EventTypeConstants.AuditLogEntryCreated,
             TriggeredById = _currentUser.UserId,
             CreatedDateTime = auditLog.CreatedDateTime,
+            ScheduledAt = auditLog.CreatedDateTime,
             ObjectId = auditLog.Id.ToString(),
             Payload = auditLog.AsJsonString(),
         }, cancellationToken);

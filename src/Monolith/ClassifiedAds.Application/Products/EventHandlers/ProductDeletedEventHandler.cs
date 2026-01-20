@@ -41,6 +41,7 @@ public class ProductDeletedEventHandler : IDomainEventHandler<EntityDeletedEvent
             EventType = EventTypeConstants.ProductDeleted,
             TriggeredById = _currentUser.UserId,
             CreatedDateTime = domainEvent.EventDateTime,
+            ScheduledAt = domainEvent.EventDateTime,
             ObjectId = domainEvent.Entity.Id.ToString(),
             Payload = domainEvent.Entity.AsJsonString(),
         }, cancellationToken);
