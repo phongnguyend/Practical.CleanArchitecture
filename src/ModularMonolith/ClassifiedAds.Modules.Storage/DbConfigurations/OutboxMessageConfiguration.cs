@@ -10,7 +10,7 @@ public class OutboxMessageConfiguration : IEntityTypeConfiguration<OutboxMessage
     {
         builder.ToTable("OutboxMessages");
         builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
-        builder.HasIndex(x => new { x.Published, x.CreatedDateTime });
+        builder.HasIndex(x => new { x.Published, x.ScheduledAt });
         builder.HasIndex(x => x.CreatedDateTime);
     }
 }

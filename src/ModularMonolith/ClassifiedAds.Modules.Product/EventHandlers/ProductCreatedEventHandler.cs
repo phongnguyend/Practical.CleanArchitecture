@@ -44,6 +44,7 @@ public class ProductCreatedEventHandler : IDomainEventHandler<EntityCreatedEvent
             EventType = EventTypeConstants.AuditLogEntryCreated,
             TriggeredById = _currentUser.UserId,
             CreatedDateTime = auditLog.CreatedDateTime,
+            ScheduledAt = auditLog.CreatedDateTime,
             ObjectId = auditLog.Id.ToString(),
             Payload = auditLog.AsJsonString(),
         }, cancellationToken);
@@ -53,6 +54,7 @@ public class ProductCreatedEventHandler : IDomainEventHandler<EntityCreatedEvent
             EventType = EventTypeConstants.ProductCreated,
             TriggeredById = _currentUser.UserId,
             CreatedDateTime = domainEvent.EventDateTime,
+            ScheduledAt = domainEvent.EventDateTime,
             ObjectId = domainEvent.Entity.Id.ToString(),
             Payload = domainEvent.Entity.AsJsonString(),
         }, cancellationToken);

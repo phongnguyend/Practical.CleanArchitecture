@@ -24,4 +24,6 @@ public abstract class OutboxMessageBase : Entity<Guid>
     public bool Published { get; set; }
 
     public string ActivityId { get; set; }
+
+    public DateTimeOffset ScheduledAt { get; set; }
 }
