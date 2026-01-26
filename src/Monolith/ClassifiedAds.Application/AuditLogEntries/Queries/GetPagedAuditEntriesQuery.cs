@@ -17,10 +17,10 @@ public class GetPagedAuditEntriesQuery : AuditLogEntryQueryOptions, IQuery<Paged
 
 internal class GetPagedAuditEntriesQueryHandler : IQueryHandler<GetPagedAuditEntriesQuery, Paged<AuditLogEntryDTO>>
 {
-    private readonly IAuditLogEntryRepository _auditLogEntryRepository;
+    private readonly IAuditLogEntryReadOnlyRepository _auditLogEntryRepository;
     private readonly IUserRepository _userRepository;
 
-    public GetPagedAuditEntriesQueryHandler(IAuditLogEntryRepository auditLogEntryRepository, IUserRepository userRepository)
+    public GetPagedAuditEntriesQueryHandler(IAuditLogEntryReadOnlyRepository auditLogEntryRepository, IUserRepository userRepository)
     {
         _auditLogEntryRepository = auditLogEntryRepository;
         _userRepository = userRepository;

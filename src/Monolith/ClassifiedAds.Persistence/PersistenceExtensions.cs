@@ -16,33 +16,55 @@ public static class PersistenceExtensions
 {
     public static IServiceCollection AddPersistence(this IServiceCollection services, string connectionString, int? commandTimeout = null)
     {
-        services.AddDbContext<AdsDbContext>(options => options.UseSqlServer(connectionString, sql =>
+        services.AddDbContext<AdsDbContext>(options =>
+        {
+            options.UseSqlServer(connectionString, sql =>
+            {
+                if (commandTimeout.HasValue)
                 {
-                    if (commandTimeout.HasValue)
-                    {
-                        sql.CommandTimeout(commandTimeout);
-                    }
-                }))
-                .AddDbContextFactory<AdsDbContext>((Action<DbContextOptionsBuilder>)null, ServiceLifetime.Scoped)
-                .AddRepositories();
+                    sql.CommandTimeout(commandTimeout);
+                }
+            });
+        });
+        services.AddDbContextFactory<AdsDbContext>((Action<DbContextOptionsBuilder>)null, ServiceLifetime.Scoped);
+
+        services.AddDbContext<AdsReadOnlyDbContext>(options =>
+        {
+            options.UseSqlServer(connectionString, sql =>
+            {
+                if (commandTimeout.HasValue)
+                {
+                    sql.CommandTimeout(commandTimeout);
+                }
+            })
+            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        });
+        services.AddDbContextFactory<AdsReadOnlyDbContext>((Action<DbContextOptionsBuilder>)null, ServiceLifetime.Scoped);
+
+        services.AddRepositories();
 
         services.AddScoped(typeof(IDistributedLock), _ => new SqlDistributedLock(connectionString));
 
         return services;
     }
 
-    public static IServiceCollection AddMultiTenantPersistence(this IServiceCollection services, Type connectionStringResolverType, Type tenantResolverType)
+    public static IServiceCollection AddMultiTenantPersistence(this IServiceCollection services)
     {
-        services.AddScoped(typeof(IConnectionStringResolver<AdsDbContextMultiTenant>), connectionStringResolverType);
-        services.AddScoped(typeof(ITenantResolver), tenantResolverType);
-
         services.AddDbContext<AdsDbContextMultiTenant>(options => { })
                 .AddScoped(typeof(AdsDbContext), services =>
                 {
                     return services.GetRequiredService<AdsDbContextMultiTenant>();
                 })
-                .AddDbContextFactory<AdsDbContext>((Action<DbContextOptionsBuilder>)null, ServiceLifetime.Scoped)
-                .AddRepositories();
+                .AddDbContextFactory<AdsDbContext>((Action<DbContextOptionsBuilder>)null, ServiceLifetime.Scoped);
+
+        services.AddDbContext<AdsReadOnlyDbContextMultiTenant>(options => { })
+                .AddScoped(typeof(AdsReadOnlyDbContext), services =>
+                {
+                    return services.GetRequiredService<AdsReadOnlyDbContextMultiTenant>();
+                })
+                .AddDbContextFactory<AdsReadOnlyDbContext>((Action<DbContextOptionsBuilder>)null, ServiceLifetime.Scoped);
+
+        services.AddRepositories();
 
         services.AddScoped(typeof(IDistributedLock), services =>
         {
@@ -54,12 +76,16 @@ public static class PersistenceExtensions
 
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
+        // Read Write
         services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
-                .AddScoped<IAuditLogEntryRepository, AuditLogEntryRepository>()
                 .AddScoped<IEmailMessageRepository, EmailMessageRepository>()
                 .AddScoped<ISmsMessageRepository, SmsMessageRepository>()
                 .AddScoped<IUserRepository, UserRepository>()
                 .AddScoped<IRoleRepository, RoleRepository>();
+
+        // Read Only
+        services.AddScoped(typeof(IReadOnlyRepository<,>), typeof(ReadOnlyRepository<,>))
+                .AddScoped<IAuditLogEntryReadOnlyRepository, AuditLogEntryReadOnlyRepository>();
 
         services.AddScoped(typeof(IUnitOfWork), services =>
         {

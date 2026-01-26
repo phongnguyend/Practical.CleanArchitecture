@@ -5,12 +5,12 @@ using Microsoft.Extensions.Options;
 
 namespace ClassifiedAds.WebAPI.Tenants;
 
-public class AdsDbContextMultiTenantConnectionStringResolver : IConnectionStringResolver<AdsDbContextMultiTenant>
+public class AdsReadOnlyDbContextMultiTenantConnectionStringResolver : IConnectionStringResolver<AdsReadOnlyDbContextMultiTenant>
 {
     private readonly AppSettings _appSettings;
     private readonly ITenantResolver _tenantResolver;
 
-    public AdsDbContextMultiTenantConnectionStringResolver(IOptionsSnapshot<AppSettings> appSettings,
+    public AdsReadOnlyDbContextMultiTenantConnectionStringResolver(IOptionsSnapshot<AppSettings> appSettings,
         ITenantResolver tenantResolver)
     {
         _appSettings = appSettings.Value;

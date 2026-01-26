@@ -2,6 +2,7 @@
 using ClassifiedAds.Application.Products.DTOs;
 using ClassifiedAds.CrossCuttingConcerns.Csv;
 using ClassifiedAds.CrossCuttingConcerns.Excel;
+using ClassifiedAds.CrossCuttingConcerns.Tenants;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Infrastructure.AI;
 using ClassifiedAds.Infrastructure.Csv;
@@ -94,7 +95,11 @@ services.AddCors(options =>
 
 services.AddDateTimeProvider();
 
-services.AddMultiTenantPersistence(typeof(AdsDbContextMultiTenantConnectionStringResolver), typeof(TenantResolver))
+services.AddScoped<ITenantResolver, TenantResolver>();
+services.AddScoped<IConnectionStringResolver<AdsDbContextMultiTenant>, AdsDbContextMultiTenantConnectionStringResolver>();
+services.AddScoped<IConnectionStringResolver<AdsReadOnlyDbContextMultiTenant>, AdsReadOnlyDbContextMultiTenantConnectionStringResolver>();
+
+services.AddMultiTenantPersistence()
         .AddDomainServices()
         .AddApplicationServices((Type serviceType, Type implementationType, ServiceLifetime serviceLifetime) =>
         {
