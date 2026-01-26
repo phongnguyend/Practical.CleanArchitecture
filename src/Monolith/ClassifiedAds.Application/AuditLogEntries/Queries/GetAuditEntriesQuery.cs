@@ -1,5 +1,7 @@
 ﻿using ClassifiedAds.Application.AuditLogEntries.DTOs;
+using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -13,10 +15,10 @@ public class GetAuditEntriesQuery : AuditLogEntryQueryOptions, IQuery<List<Audit
 
 internal class GetAuditEntriesQueryHandler : IQueryHandler<GetAuditEntriesQuery, List<AuditLogEntryDTO>>
 {
-    private readonly IAuditLogEntryRepository _auditLogEntryRepository;
-    private readonly IUserRepository _userRepository;
+    private readonly IAuditLogEntryReadOnlyRepository _auditLogEntryRepository;
+    private readonly IReadOnlyRepository<User, Guid> _userRepository;
 
-    public GetAuditEntriesQueryHandler(IAuditLogEntryRepository auditLogEntryRepository, IUserRepository userRepository)
+    public GetAuditEntriesQueryHandler(IAuditLogEntryReadOnlyRepository auditLogEntryRepository, IReadOnlyRepository<User, Guid> userRepository)
     {
         _auditLogEntryRepository = auditLogEntryRepository;
         _userRepository = userRepository;

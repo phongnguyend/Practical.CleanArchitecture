@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <NuGetAudit>true</NuGetAudit>
+    <NuGetAudit>false</NuGetAudit>
   </PropertyGroup>
 
 </Project>

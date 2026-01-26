@@ -7,9 +7,9 @@ using System.Linq;
 
 namespace ClassifiedAds.Persistence.Repositories;
 
-public class AuditLogEntryRepository : Repository<AuditLogEntry, Guid>, IAuditLogEntryRepository
+public class AuditLogEntryReadOnlyRepository : ReadOnlyRepository<AuditLogEntry, Guid>, IAuditLogEntryReadOnlyRepository
 {
-    public AuditLogEntryRepository(AdsDbContext dbContext, IDateTimeProvider dateTimeProvider)
+    public AuditLogEntryReadOnlyRepository(AdsReadOnlyDbContext dbContext, IDateTimeProvider dateTimeProvider)
         : base(dbContext, dateTimeProvider)
     {
     }

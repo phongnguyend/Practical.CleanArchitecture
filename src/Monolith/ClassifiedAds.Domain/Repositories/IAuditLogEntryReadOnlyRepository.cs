@@ -13,7 +13,7 @@ public class AuditLogEntryQueryOptions
     public bool AsNoTracking { get; set; }
 }
 
-public interface IAuditLogEntryRepository : IRepository<AuditLogEntry, Guid>
+public interface IAuditLogEntryReadOnlyRepository : IReadOnlyRepository<AuditLogEntry, Guid>
 {
     IQueryable<AuditLogEntry> Get(AuditLogEntryQueryOptions queryOptions);
 }
