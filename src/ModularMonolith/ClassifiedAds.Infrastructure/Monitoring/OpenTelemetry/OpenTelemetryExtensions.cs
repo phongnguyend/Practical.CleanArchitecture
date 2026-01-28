@@ -41,14 +41,6 @@ public static class OpenTelemetryExtensions
                 .AddEntityFrameworkCoreInstrumentation()
                 .AddHttpClientInstrumentation();
 
-                if (options?.Zipkin?.IsEnabled ?? false)
-                {
-                    builder.AddZipkinExporter(zipkinOptions =>
-                    {
-                        zipkinOptions.Endpoint = new Uri(options.Zipkin.Endpoint);
-                    });
-                }
-
                 if (options?.Otlp?.IsEnabled ?? false)
                 {
                     builder.AddOtlpExporter(otlpOptions =>

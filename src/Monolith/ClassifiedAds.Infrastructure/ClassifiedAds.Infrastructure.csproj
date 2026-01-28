@@ -38,7 +38,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="10.0.0" />
     <PackageReference Include="Microsoft.Graph" Version="5.96.0" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.14.0" />
-    <PackageReference Include="OpenTelemetry.Exporter.Zipkin" Version="1.14.0" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0" />
     <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.13.0" />
     <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.10.0-beta.1" />
@@ -63,7 +62,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.AI.Vision.ImageAnalysis" Version="1.0.0" />
     <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="10.0.0-preview.1.25560.10" />
     <PackageReference Include="OpenAI" Version="2.7.0" />
   </ItemGroup>
