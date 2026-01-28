@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Polly;
+using SqlServerQueryHelper.EntityFrameworkCore;
 using System;
 using System.Reflection;
 
@@ -67,3 +68,11 @@ Policy.Handle<Exception>().WaitAndRetry(
         throw result.Error;
     }
 });
+
+using var serviceScope = app.Services.CreateScope();
+var context = serviceScope.ServiceProvider.GetRequiredService<OpenIddictDbContext>();
+context.Database.ExecuteSqlFiles("Scripts/Types", log: Console.WriteLine);
+context.Database.ExecuteSqlFiles("Scripts/Views", log: Console.WriteLine);
+context.Database.ExecuteSqlFiles("Scripts/Functions", log: Console.WriteLine);
+context.Database.ExecuteSqlFiles("Scripts/Stored Procedures", log: Console.WriteLine);
+context.Database.ExecuteSqlFiles("Scripts/Indexes", log: Console.WriteLine);
