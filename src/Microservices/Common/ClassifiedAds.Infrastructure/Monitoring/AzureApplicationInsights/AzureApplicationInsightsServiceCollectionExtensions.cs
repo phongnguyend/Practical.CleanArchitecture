@@ -1,6 +1,4 @@
-﻿using Microsoft.ApplicationInsights.DependencyCollector;
-using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace ClassifiedAds.Infrastructure.Monitoring.AzureApplicationInsights;
 
@@ -14,14 +12,6 @@ public static class AzureApplicationInsightsServiceCollectionExtensions
             {
                 opt.ConnectionString = azureApplicationInsightsOptions.ConnectionString;
             });
-
-            services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) =>
-            {
-                module.EnableSqlCommandTextInstrumentation = azureApplicationInsightsOptions.EnableSqlCommandTextInstrumentation;
-            });
-
-            services.AddApplicationInsightsTelemetryProcessor<CustomTelemetryProcessor>();
-            services.AddSingleton<ITelemetryInitializer, CustomTelemetryInitializer>();
         }
 
         return services;
