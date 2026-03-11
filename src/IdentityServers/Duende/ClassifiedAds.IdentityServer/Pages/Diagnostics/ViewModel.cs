@@ -2,8 +2,8 @@
 // See LICENSE in the project root for license information.
 
 
-using Duende.IdentityModel;
 using Microsoft.AspNetCore.Authentication;
+using System.Buffers.Text;
 using System.Text;
 using System.Text.Json;
 
@@ -18,7 +18,7 @@ public class ViewModel
         if (result.Properties.Items.ContainsKey("client_list"))
         {
             var encoded = result.Properties.Items["client_list"];
-            var bytes = Base64Url.Decode(encoded);
+            var bytes = Base64Url.DecodeFromChars(encoded);
             var value = Encoding.UTF8.GetString(bytes);
 
             Clients = JsonSerializer.Deserialize<string[]>(value);
