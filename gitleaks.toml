@@ -1,8 +1,12 @@
 title = "gitleaks config"
 
+[extend]
+useDefault = true
+
 [allowlist]
 description = "global allow lists"
 paths = ['''gitleaks.toml''']
+commits = []
 
 [[rules]]
 	id = "BadWords"
