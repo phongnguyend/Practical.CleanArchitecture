@@ -1,4 +1,4 @@
-name: gitleaks
+name: gitleaks --no-git
 
 on:
   push:
@@ -11,10 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: use gitleaks docker image
         run: |
           docker pull zricethezav/gitleaks:latest
           echo $GITHUB_WORKSPACE
-          docker run -v $GITHUB_WORKSPACE:/path zricethezav/gitleaks:latest detect --source="/path" --config="/path/gitleaks.toml" --log-opts="90bb5b692763468db76df70c8c48304f06dc8fee..HEAD" --verbose
+          docker run -v $GITHUB_WORKSPACE:/path zricethezav/gitleaks:latest detect --source="/path" --config="/path/gitleaks.toml" --verbose --no-git
