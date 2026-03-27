@@ -36,14 +36,14 @@ jobs:
       run: dotnet list package --vulnerable
 
     # Setup .NET 8 for CheckNugetPackages tool
-    - name: Setup .NET 8
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 8.0.x
+    # - name: Setup .NET 8
+    #   uses: actions/setup-dotnet@v1
+    #   with:
+    #     dotnet-version: 8.0.x
 
     # Install CheckNugetPackages tool
     - name: Install CheckNugetPackages tool
-      run: dotnet tool install --global CheckNugetPackages.DotNetCliTool --version 2.2.0
+      run: dotnet tool install --global CheckNugetPackages.DotNetCliTool --version 3.1.0
 
     # Run CheckNugetPackages
     - name: Run CheckNugetPackages
