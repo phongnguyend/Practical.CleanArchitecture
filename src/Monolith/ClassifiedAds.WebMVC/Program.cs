@@ -81,8 +81,7 @@ services.AddControllersWithViews(setupAction =>
     setupAction.Filters.Add<CustomResultFilter>();
     setupAction.Filters.Add<CustomAuthorizationFilter>();
     setupAction.Filters.Add<CustomExceptionFilter>();
-})
-.AddNewtonsoftJson();
+});
 
 services.AddDateTimeProvider();
 
