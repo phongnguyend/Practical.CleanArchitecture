@@ -8,17 +8,17 @@
 	<ItemGroup>
 		<Protobuf Include="..\..\Contracts\AuditLog\Protos\auditlog.proto" GrpcServices="Client" Link="Protos\auditlog.proto" />
 		<Protobuf Include="..\..\Contracts\Identity\Protos\user.proto" GrpcServices="Client" Link="Protos\user.proto" />
-		<PackageReference Include="Dapr.AspNetCore" Version="1.17.3" />
+		<PackageReference Include="Dapr.AspNetCore" Version="1.17.8" />
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
-		<PackageReference Include="Grpc.Tools" Version="2.78.0">
+		<PackageReference Include="Grpc.Tools" Version="2.80.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.4" />
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.4" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.4" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.4" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.4">
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.5">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -27,7 +27,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
 	</ItemGroup>
 
 	<ItemGroup>

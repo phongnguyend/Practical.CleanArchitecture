@@ -9,10 +9,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.3.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="10.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.4" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="10.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.5" />
   </ItemGroup>
 
 
