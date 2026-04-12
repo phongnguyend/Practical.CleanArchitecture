@@ -1,0 +1,2 @@
+docker build --no-cache -t markitdown-api .
+docker run -p 8000:8000 markitdown-api

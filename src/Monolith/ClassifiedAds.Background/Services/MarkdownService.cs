@@ -22,7 +22,7 @@ public class MarkdownService
         using var form = new MultipartFormDataContent();
         using var fileContent = new ByteArrayContent(content);
         fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
-        form.Add(fileContent, "formFile", fileName);
+        form.Add(fileContent, "file", fileName);
         form.Add(new StringContent("Test Name"), "name");
 
         var response = await _httpClient.PostAsync(_configuration["TextExtracting:MarkItDownServer:Endpoint"], form, cancellationToken);

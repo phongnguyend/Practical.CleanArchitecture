@@ -15,4 +15,6 @@ var identityServerMigrator = builder
 
 var webhook = builder.AddExternalService("Webhook", "https://ddddotnet-webhook-server.azurewebsites.net").WithHttpHealthCheck("");
 
+var markitdown = builder.AddExternalService("MarkItDown", "http://localhost:8000").WithHttpHealthCheck("health");
+
 builder.Build().Run();
