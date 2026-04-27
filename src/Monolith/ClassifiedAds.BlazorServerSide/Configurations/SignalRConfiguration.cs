@@ -1,10 +1,7 @@
-﻿using ClassifiedAds.WebMVC.ConfigurationOptions;
-using ClassifiedAds.WebMVC.Hubs;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Routing;
+﻿using ClassifiedAds.BlazorServerSide.ConfigurationOptions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ClassifiedAds.WebMVC.Configurations;
+namespace ClassifiedAds.BlazorServerSide.Configurations;
 
 public static class SignalRConfiguration
 {
@@ -27,12 +24,5 @@ public static class SignalRConfiguration
         }
 
         return services;
-    }
-
-    public static void MapClassifiedAdsHubs(this IEndpointRouteBuilder endpoints)
-    {
-        endpoints.MapHub<AuthorizedHub>("/AuthorizedHub");
-        endpoints.MapHub<HealthCheckHub>("/HealthCheckHub");
-        endpoints.MapHub<SimulatedLongRunningTaskHub>("/SimulatedLongRunningTaskHub");
     }
 }

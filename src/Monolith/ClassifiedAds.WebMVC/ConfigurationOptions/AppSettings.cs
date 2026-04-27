@@ -39,6 +39,8 @@ public class AppSettings
 
     public InterceptorsOptions Interceptors { get; set; }
 
+    public SignalROptions SignalR { get; set; }
+
     public Azure Azure { get; set; }
 
     public ValidateOptionsResult Validate()

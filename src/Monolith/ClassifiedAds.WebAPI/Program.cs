@@ -17,7 +17,7 @@ using ClassifiedAds.Infrastructure.Web.Endpoints;
 using ClassifiedAds.Infrastructure.Web.ExceptionHandlers;
 using ClassifiedAds.Persistence;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
-using ClassifiedAds.WebAPI.Hubs;
+using ClassifiedAds.WebAPI.Configurations;
 using ClassifiedAds.WebAPI.RateLimiterPolicies;
 using ClassifiedAds.WebAPI.Tenants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -67,7 +67,7 @@ services.AddControllers(configure =>
 {
 });
 
-services.AddSignalR();
+services.AddClassifiedAdsSignalR(appSettings);
 
 services.AddCors(options =>
 {
@@ -306,7 +306,7 @@ app.UseHealthChecks("/healthz", new HealthCheckOptions
 });
 
 app.MapControllers();
-app.MapHub<NotificationHub>("/hubs/notification").RequireCors("SignalRHubs");
+app.MapClassifiedAdsHubs();
 
 app.MapProcessInforEndpoint();
 app.MapThreadPoolInforEndpoint();

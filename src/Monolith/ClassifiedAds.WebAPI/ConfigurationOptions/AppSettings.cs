@@ -30,4 +30,6 @@ public class AppSettings
     public InterceptorsOptions Interceptors { get; set; }
 
     public CertificatesOptions Certificates { get; set; }
+
+    public SignalROptions SignalR { get; set; }
 }

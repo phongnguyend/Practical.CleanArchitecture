@@ -5,6 +5,7 @@ using ClassifiedAds.Blazor.Modules.Products.Services;
 using ClassifiedAds.Blazor.Modules.Settings.Services;
 using ClassifiedAds.Blazor.Modules.Users.Services;
 using ClassifiedAds.BlazorServerSide.ConfigurationOptions;
+using ClassifiedAds.BlazorServerSide.Configurations;
 using ClassifiedAds.BlazorServerSide.Services;
 using ClassifiedAds.Infrastructure.HealthChecks;
 using ClassifiedAds.Infrastructure.HostedServices;
@@ -56,11 +57,7 @@ if (appSettings.CookiePolicyOptions?.IsEnabled ?? false)
 services.AddRazorPages();
 services.AddServerSideBlazor();
 
-if (appSettings.Azure?.SignalR?.IsEnabled ?? false)
-{
-    services.AddSignalR()
-            .AddAzureSignalR();
-}
+services.AddClassifiedAdsSignalR(appSettings);
 
 services.AddScoped<ITokenManager, TokenManager>();
 services.AddScoped<TokenProvider>();

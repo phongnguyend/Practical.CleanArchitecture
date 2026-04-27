@@ -13,6 +13,8 @@ public class AppSettings
 
     public LoggingOptions Logging { get; set; }
 
+    public SignalROptions SignalR { get; set; }
+
     public Azure Azure { get; set; }
 
     public ValidateOptionsResult Validate()

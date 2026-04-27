@@ -1,10 +1,10 @@
-﻿using ClassifiedAds.WebMVC.ConfigurationOptions;
-using ClassifiedAds.WebMVC.Hubs;
+﻿using ClassifiedAds.WebAPI.ConfigurationOptions;
+using ClassifiedAds.WebAPI.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ClassifiedAds.WebMVC.Configurations;
+namespace ClassifiedAds.WebAPI.Configurations;
 
 public static class SignalRConfiguration
 {
@@ -31,8 +31,6 @@ public static class SignalRConfiguration
 
     public static void MapClassifiedAdsHubs(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapHub<AuthorizedHub>("/AuthorizedHub");
-        endpoints.MapHub<HealthCheckHub>("/HealthCheckHub");
-        endpoints.MapHub<SimulatedLongRunningTaskHub>("/SimulatedLongRunningTaskHub");
+        endpoints.MapHub<NotificationHub>("/hubs/notification").RequireCors("SignalRHubs");
     }
 }
