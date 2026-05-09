@@ -23,9 +23,12 @@ public class TenantResolver : ITenantResolver
                 return null;
             }
 
+            // resolve tenant by request information, such as host, port, origin, tenant id in header, etc.
             var scheme = request.Scheme;
             var host = request.Host.Host;
             var port = request.Host.Port;
+            var orgin = request.Headers.Origin.ToString();
+            var tenantId = request.Headers["X-Tenant-ID"].ToString();
 
             // TODO: query configuration store to get Tenant information
             return new Tenant
