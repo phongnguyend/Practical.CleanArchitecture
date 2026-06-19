@@ -1,4 +1,12 @@
-import { Component, OnInit, TemplateRef, Input, Output, EventEmitter } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  TemplateRef,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { IProduct } from "../product";
@@ -9,6 +17,7 @@ import { MatDialogModule } from "@angular/material/dialog";
   templateUrl: "./delete-product.component.html",
   styleUrls: ["./delete-product.component.css"],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatDialogModule],
 })
 export class DeleteProductComponent implements OnInit {

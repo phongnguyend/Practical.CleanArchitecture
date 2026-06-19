@@ -4,7 +4,7 @@ import { Observable, throwError } from "rxjs";
 import { catchError, tap, map } from "rxjs/operators";
 
 import { IProduct } from "./product";
-import { environment } from "src/environments/environment";
+import { environment } from "../../environments/environment";
 import { IAuditLogEntry } from "../auditlogs/audit-log";
 
 @Injectable({
@@ -16,21 +16,15 @@ export class ProductService {
   constructor(private http: HttpClient) {}
 
   getProducts(): Observable<IProduct[]> {
-    return this.http
-      .get<IProduct[]>(this.productUrl)
-      .pipe(catchError(this.handleError));
+    return this.http.get<IProduct[]>(this.productUrl).pipe(catchError(this.handleError));
   }
 
   getProduct(id: string): Observable<IProduct | undefined> {
-    return this.http
-      .get<IProduct>(this.productUrl + "/" + id)
-      .pipe(catchError(this.handleError));
+    return this.http.get<IProduct>(this.productUrl + "/" + id).pipe(catchError(this.handleError));
   }
 
   addProduct(product: IProduct): Observable<IProduct | undefined> {
-    return this.http
-      .post<IProduct>(this.productUrl, product)
-      .pipe(catchError(this.handleError));
+    return this.http.post<IProduct>(this.productUrl, product).pipe(catchError(this.handleError));
   }
 
   updateProduct(product: IProduct): Observable<IProduct | undefined> {

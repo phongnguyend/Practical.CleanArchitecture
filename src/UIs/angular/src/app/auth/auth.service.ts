@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { UserManager, User, WebStorageStateStore } from "oidc-client-ts";
 
 import { IUser } from "./user.model";
-import { environment } from "src/environments/environment";
+import { environment } from "../../environments/environment";
 
 @Injectable({
   providedIn: "root",
@@ -46,7 +46,7 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return this._user && this._user.access_token && !this._user.expired;
+    return !!(this._user && this._user.access_token && !this._user.expired);
   }
 
   getAccessToken(): string {

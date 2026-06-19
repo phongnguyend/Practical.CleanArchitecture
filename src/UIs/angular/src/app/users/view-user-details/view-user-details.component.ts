@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from "@angular/core";
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
 
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
@@ -14,6 +14,7 @@ import { MatDialogModule } from "@angular/material/dialog";
   templateUrl: "./view-user-details.component.html",
   styleUrls: ["./view-user-details.component.css"],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, RouterModule, MatDialogModule],
 })
 export class ViewUserDetailsComponent implements OnInit {

@@ -4,7 +4,7 @@ import { Observable, throwError } from "rxjs";
 import { catchError, tap, map } from "rxjs/operators";
 
 import { IFile } from "./file";
-import { environment } from "src/environments/environment";
+import { environment } from "../../environments/environment";
 import { IAuditLogEntry } from "../auditlogs/audit-log";
 
 @Injectable({
@@ -16,15 +16,11 @@ export class FileService {
   constructor(private http: HttpClient) {}
 
   getFiles(): Observable<IFile[]> {
-    return this.http
-      .get<IFile[]>(this.fileUrl)
-      .pipe(catchError(this.handleError));
+    return this.http.get<IFile[]>(this.fileUrl).pipe(catchError(this.handleError));
   }
 
   getFile(id: string): Observable<IFile | undefined> {
-    return this.http
-      .get<IFile>(this.fileUrl + "/" + id)
-      .pipe(catchError(this.handleError));
+    return this.http.get<IFile>(this.fileUrl + "/" + id).pipe(catchError(this.handleError));
   }
 
   uploadFile(file: IFile): Observable<IFile | undefined> {
@@ -33,9 +29,7 @@ export class FileService {
     formData.append("name", file.name);
     formData.append("description", file.description);
     formData.append("encrypted", file.encrypted.toString());
-    return this.http
-      .post<IFile>(this.fileUrl, formData)
-      .pipe(catchError(this.handleError));
+    return this.http.post<IFile>(this.fileUrl, formData).pipe(catchError(this.handleError));
   }
 
   updateFile(file: IFile): Observable<IFile | undefined> {
@@ -51,9 +45,7 @@ export class FileService {
   }
 
   deleteFile(file: IFile): Observable<IFile | undefined> {
-    return this.http
-      .delete<IFile>(this.fileUrl + "/" + file.id)
-      .pipe(catchError(this.handleError));
+    return this.http.delete<IFile>(this.fileUrl + "/" + file.id).pipe(catchError(this.handleError));
   }
 
   getAuditLogs(id: string): Observable<IAuditLogEntry[] | undefined> {

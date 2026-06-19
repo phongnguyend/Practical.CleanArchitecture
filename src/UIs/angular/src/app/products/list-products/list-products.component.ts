@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from "@angular/core";
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
@@ -17,6 +17,7 @@ import { MatDialogModule } from "@angular/material/dialog";
   templateUrl: "./list-products.component.html",
   styleUrls: ["./list-products.component.css"],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     FormsModule,

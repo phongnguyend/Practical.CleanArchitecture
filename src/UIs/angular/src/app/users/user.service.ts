@@ -4,7 +4,7 @@ import { Observable, throwError } from "rxjs";
 import { catchError, tap, map } from "rxjs/operators";
 
 import { IUser } from "./user";
-import { environment } from "src/environments/environment";
+import { environment } from "../../environments/environment";
 import { IAuditLogEntry } from "../auditlogs/audit-log";
 
 @Injectable({
@@ -16,21 +16,15 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   getUsers(): Observable<IUser[]> {
-    return this.http
-      .get<IUser[]>(this.userUrl)
-      .pipe(catchError(this.handleError));
+    return this.http.get<IUser[]>(this.userUrl).pipe(catchError(this.handleError));
   }
 
   getUser(id: string): Observable<IUser | undefined> {
-    return this.http
-      .get<IUser>(this.userUrl + "/" + id)
-      .pipe(catchError(this.handleError));
+    return this.http.get<IUser>(this.userUrl + "/" + id).pipe(catchError(this.handleError));
   }
 
   addUser(user: IUser): Observable<IUser | undefined> {
-    return this.http
-      .post<IUser>(this.userUrl, user)
-      .pipe(catchError(this.handleError));
+    return this.http.post<IUser>(this.userUrl, user).pipe(catchError(this.handleError));
   }
 
   updateUser(user: IUser): Observable<IUser | undefined> {
@@ -65,9 +59,7 @@ export class UserService {
   }
 
   deleteUser(user: IUser): Observable<IUser | undefined> {
-    return this.http
-      .delete<IUser>(this.userUrl + "/" + user.id)
-      .pipe(catchError(this.handleError));
+    return this.http.delete<IUser>(this.userUrl + "/" + user.id).pipe(catchError(this.handleError));
   }
 
   getAuditLogs(id: string): Observable<IAuditLogEntry[] | undefined> {

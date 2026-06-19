@@ -1,11 +1,12 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { UserManager, WebStorageStateStore, UserManagerSettings, User } from "oidc-client-ts";
 import { ActivatedRoute } from "@angular/router";
 
-import { environment } from "src/environments/environment";
+import { environment } from "../../environments/environment";
 
 @Component({
   template: "<div>Loading ...</div>",
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
 })
 export class OidcLoginRedirect implements OnInit {

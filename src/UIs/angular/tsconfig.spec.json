@@ -6,9 +6,14 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": [
-    "src/**/*.spec.ts",
-    "src/**/*.d.ts",
-    "setup-jest.ts"
-  ]
+  "include": ["src/**/*.spec.ts", "src/**/*.d.ts", "setup-jest.ts"],
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    },
+    "strictTemplates": false
+  }
 }

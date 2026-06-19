@@ -1,16 +1,17 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Router } from "@angular/router";
 import { IProduct } from "../product";
 import { NgModel, NgForm } from "@angular/forms";
 import { ProductService } from "../product.service";
-import { GuidEmpty } from "src/app/shared/constants";
+import { GuidEmpty } from "../../shared/constants";
 
 @Component({
   templateUrl: "./add-product.component.html",
   styleUrls: ["./add-product.component.css"],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, ReactiveFormsModule, RouterModule],
 })
 export class AddProductComponent implements OnInit {

@@ -1,7 +1,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "esModuleInterop": true,
@@ -11,10 +10,12 @@
     "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "strictPropertyInitialization": false,
+    "strictNullChecks": false,
+    "noImplicitAny": false
   },
   "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true
   }
 }

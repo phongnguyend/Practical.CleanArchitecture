@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
@@ -6,13 +6,14 @@ import { IFile } from "../file";
 import { Router, ActivatedRoute } from "@angular/router";
 import { FileService } from "../file.service";
 import { NgModel, NgForm } from "@angular/forms";
-import { GuidEmpty } from "src/app/shared/constants";
+import { GuidEmpty } from "../../shared/constants";
 
 @Component({
   selector: "app-upload-file",
   templateUrl: "./upload-file.component.html",
   styleUrls: ["./upload-file.component.css"],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, RouterModule],
 })
 export class UploadFileComponent implements OnInit {

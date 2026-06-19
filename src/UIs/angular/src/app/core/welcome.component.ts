@@ -1,4 +1,4 @@
-import { Component, VERSION } from "@angular/core";
+import { Component, VERSION, ChangeDetectionStrategy } from "@angular/core";
 import { Title } from "@angular/platform-browser";
 
 import { AppendVersionPipe } from "../shared/append-version.pipe";
@@ -8,6 +8,7 @@ import { TimerComponent } from "../shared/timer.component";
 @Component({
   templateUrl: "./welcome.component.html",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [AppendVersionPipe, AppendCurrentDateTimePipe, TimerComponent],
 })
 export class WelcomeComponent {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { IAuditLogEntry } from "./audit-log";
 import { Store } from "@ngrx/store";
@@ -12,6 +12,7 @@ import { PaginationComponent } from "../shared/pagination.component";
   templateUrl: "./audit-log-list.component.html",
   styleUrls: ["./audit-log-list.component.css"],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, CopyToClipboardComponent, PaginationComponent],
 })
 export class AuditLogListComponent implements OnInit {

@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 
 @Component({
   selector: "app-timer",
   templateUrl: "./timer.component.html",
   styleUrls: [],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [],
 })
 export class TimerComponent implements OnInit, OnDestroy {

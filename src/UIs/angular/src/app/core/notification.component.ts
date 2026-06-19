@@ -1,13 +1,14 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import { ToastrService } from "ngx-toastr";
 
 import { AuthService } from "../auth/auth.service";
-import { environment } from "src/environments/environment";
+import { environment } from "../../environments/environment";
 
 @Component({
   selector: "app-notification",
   template: "",
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
 })
 export class NotificationComponent implements OnInit {

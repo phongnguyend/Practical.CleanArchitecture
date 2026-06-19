@@ -1,10 +1,10 @@
-import { Component, OnInit, TemplateRef } from "@angular/core";
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { IFile } from "../file";
 import { FileService } from "../file.service";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
-import { IAuditLogEntry } from "src/app/auditlogs/audit-log";
+import { IAuditLogEntry } from "../../auditlogs/audit-log";
 import { MatDialogModule } from "@angular/material/dialog";
 
 @Component({
@@ -12,6 +12,7 @@ import { MatDialogModule } from "@angular/material/dialog";
   templateUrl: "./list-files.component.html",
   styleUrls: ["./list-files.component.css"],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, RouterModule, MatDialogModule],
 })
 export class ListFilesComponent implements OnInit {

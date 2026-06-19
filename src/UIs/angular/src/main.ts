@@ -1,8 +1,13 @@
-import { enableProdMode, importProvidersFrom, inject, provideZoneChangeDetection } from "@angular/core";
+import {
+  enableProdMode,
+  importProvidersFrom,
+  inject,
+  provideZoneChangeDetection,
+} from "@angular/core";
 import { bootstrapApplication } from "@angular/platform-browser";
 import { BrowserModule } from "@angular/platform-browser";
 import { provideRouter } from "@angular/router";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { StoreModule } from "@ngrx/store";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
@@ -40,7 +45,8 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideZoneChangeDetection(),importProvidersFrom(
+    provideZoneChangeDetection(),
+    importProvidersFrom(
       BrowserModule,
       BrowserAnimationsModule,
       StoreModule.forRoot({}),
@@ -62,7 +68,7 @@ bootstrapApplication(AppComponent, {
       MatDialogModule
     ),
     provideRouter(routes),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
     authInterceptorProvider,
     loggingInterceptorProvider,
     provideAppInitializer(() => AuthInitializer(inject(AuthService))()),
