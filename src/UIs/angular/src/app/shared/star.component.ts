@@ -1,11 +1,18 @@
-import { Component, OnChanges, Input, EventEmitter, Output } from "@angular/core";
-
+import {
+  Component,
+  OnChanges,
+  Input,
+  EventEmitter,
+  Output,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 
 @Component({
   selector: "pm-star",
   templateUrl: "./star.component.html",
   styleUrls: ["./star.component.css"],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [],
 })
 export class StarComponent implements OnChanges {

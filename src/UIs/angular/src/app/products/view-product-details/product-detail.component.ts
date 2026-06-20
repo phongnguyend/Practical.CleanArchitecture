@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from "@angular/core";
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -14,6 +14,7 @@ import { MatDialogModule } from "@angular/material/dialog";
   templateUrl: "./product-detail.component.html",
   styleUrls: ["./product-detail.component.css"],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, RouterModule, StarComponent, MatDialogModule],
 })
 export class ProductDetailComponent implements OnInit {

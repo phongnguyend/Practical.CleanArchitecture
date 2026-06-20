@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 
 import { IConfigurationEntry } from "./configuration-entry";
-import { environment } from "src/environments/environment";
+import { environment } from "../../environments/environment";
 import { Observable } from "rxjs";
 
 @Injectable({
@@ -17,15 +17,11 @@ export class ConfigurationEntriesService {
     return this.http.get<IConfigurationEntry[]>(this.url);
   }
 
-  getConfigurationEntry(
-    id: string
-  ): Observable<IConfigurationEntry | undefined> {
+  getConfigurationEntry(id: string): Observable<IConfigurationEntry | undefined> {
     return this.http.get<IConfigurationEntry>(this.url + "/" + id);
   }
 
-  addConfigurationEntry(
-    entry: IConfigurationEntry
-  ): Observable<IConfigurationEntry | undefined> {
+  addConfigurationEntry(entry: IConfigurationEntry): Observable<IConfigurationEntry | undefined> {
     return this.http.post<IConfigurationEntry>(this.url, entry);
   }
 
@@ -48,9 +44,6 @@ export class ConfigurationEntriesService {
   importExcelFile(file: File): Observable<IConfigurationEntry[] | undefined> {
     const formData: FormData = new FormData();
     formData.append("formFile", file);
-    return this.http.post<IConfigurationEntry[]>(
-      this.url + "/ImportExcel",
-      formData
-    );
+    return this.http.post<IConfigurationEntry[]>(this.url + "/ImportExcel", formData);
   }
 }

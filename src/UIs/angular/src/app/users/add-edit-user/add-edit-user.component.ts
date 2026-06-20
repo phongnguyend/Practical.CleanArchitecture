@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
@@ -11,13 +11,14 @@ import { IUser } from "../user";
 import { UserService } from "../user.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { NgModel, NgForm } from "@angular/forms";
-import { GuidEmpty } from "src/app/shared/constants";
+import { GuidEmpty } from "../../shared/constants";
 
 @Component({
   selector: "app-add-edit-user",
   templateUrl: "./add-edit-user.component.html",
   styleUrls: ["./add-edit-user.component.css"],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     ReactiveFormsModule,
@@ -26,8 +27,8 @@ import { GuidEmpty } from "src/app/shared/constants";
     MatTimepickerModule,
     MatNativeDateModule,
     MatInputModule,
-    MatFormFieldModule
-],
+    MatFormFieldModule,
+  ],
 })
 export class AddEditUserComponent implements OnInit {
   formMode: string = "add";

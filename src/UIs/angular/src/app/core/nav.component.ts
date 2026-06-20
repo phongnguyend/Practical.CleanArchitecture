@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 
 import { RouterModule } from "@angular/router";
 import { AuthService } from "../auth/auth.service";
@@ -9,6 +9,7 @@ import { AppendVersionPipe } from "../shared/append-version.pipe";
   templateUrl: "./nav.component.html",
   styleUrls: ["./nav.component.css"],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RouterModule, AppendVersionPipe],
 })
 export class NavComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from "@angular/core";
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
@@ -14,6 +14,7 @@ import { MatDialogModule } from "@angular/material/dialog";
   templateUrl: "./configuration-entry-list.component.html",
   styleUrls: ["./configuration-entry-list.component.css"],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, FormsModule, RouterModule, MatDialogModule],
 })
 export class ConfigurationEntryListComponent implements OnInit {

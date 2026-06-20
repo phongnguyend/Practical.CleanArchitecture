@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Router, ActivatedRoute } from "@angular/router";
@@ -13,6 +13,7 @@ import { ProductService } from "../product.service";
   templateUrl: "./edit-product.component.html",
   styleUrls: ["./edit-product.component.css"],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, ReactiveFormsModule, RouterModule],
 })
 export class EditProductComponent implements OnInit {

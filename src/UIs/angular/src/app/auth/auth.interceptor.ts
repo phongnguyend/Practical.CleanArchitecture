@@ -12,7 +12,7 @@ import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 
 import { AuthService } from "./auth.service";
-import { environment } from "src/environments/environment";
+import { environment } from "../../environments/environment";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
