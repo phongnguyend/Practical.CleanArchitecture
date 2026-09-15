@@ -1,9 +1,9 @@
 <template>
   <div class="card">
     <div class="card-header">
-      Users
+      <ActionIcon action="users" />Users
       <router-link class="btn btn-primary" style="float: right" to="/users/add"
-        >Add User</router-link
+        ><ActionIcon action="add" />Add User</router-link
       >
     </div>
     <div class="card-body">
@@ -19,15 +19,15 @@
           <tbody>
             <tr v-for="user in users" :key="user.id">
               <td>
-                <router-link :to="'/users/' + user.id">{{ user.userName }}</router-link>
+                <router-link :to="'/users/' + user.id"><ActionIcon action="view" />{{ user.userName }}</router-link>
               </td>
               <td>{{ user.email }}</td>
               <td>
                 <router-link class="btn btn-primary" :to="'/users/edit/' + user.id"
-                  >Edit</router-link
+                  ><ActionIcon action="edit" />Edit</router-link
                 >&nbsp;
                 <button type="button" class="btn btn-primary btn-danger" @click="deleteUser(user)">
-                  Delete
+                  <ActionIcon action="delete" />Delete
                 </button>
               </td>
             </tr>
@@ -37,10 +37,15 @@
     </div>
     <div v-if="errorMessage" class="alert alert-danger">Error: {{ errorMessage }}</div>
     <b-modal v-model="modalDelete" title="Delete User" @ok="deleteConfirmed">
+      <template #title><ActionIcon action="delete" />Delete User</template>
       <p class="my-4">
         Are you sure you want to delete
         <strong>{{ selectedUser.userName }}</strong>
       </p>
+      <template #footer="{ ok, cancel }">
+        <button class="btn btn-secondary" @click="cancel()"><ActionIcon action="cancel" />No</button>
+        <button class="btn btn-primary" @click="ok()"><ActionIcon action="confirm" />Yes</button>
+      </template>
     </b-modal>
   </div>
 </template>

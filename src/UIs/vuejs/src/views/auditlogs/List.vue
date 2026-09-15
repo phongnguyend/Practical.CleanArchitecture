@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="card-header">{{ pageTitle }}</div>
+    <div class="card-header"><ActionIcon action="audit" />{{ pageTitle }}</div>
     <div class="card-body">
       <div style="float: right">
         <app-pagination
@@ -31,7 +31,7 @@
                     <div class="d-flex">
                       <CopyToClipboard
                         :text="auditLog.log"
-                        className="custom-icon fa fa-copy"
+                        className="custom-icon"
                         title="Copy this text"
                       />
                     </div>

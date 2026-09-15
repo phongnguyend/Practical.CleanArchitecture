@@ -6,6 +6,7 @@ import { FileService } from "../file.service";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { IAuditLogEntry } from "../../auditlogs/audit-log";
 import { MatDialogModule } from "@angular/material/dialog";
+import { ActionIconComponent } from "../../shared/action-icon.component";
 
 @Component({
   selector: "app-list-files",
@@ -13,7 +14,7 @@ import { MatDialogModule } from "@angular/material/dialog";
   styleUrls: ["./list-files.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CommonModule, RouterModule, MatDialogModule],
+  imports: [CommonModule, RouterModule, MatDialogModule, ActionIconComponent],
 })
 export class ListFilesComponent implements OnInit {
   files: IFile[] = [];

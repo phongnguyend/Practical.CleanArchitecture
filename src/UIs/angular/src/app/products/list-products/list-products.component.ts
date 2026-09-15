@@ -12,6 +12,7 @@ import { NgForm } from "@angular/forms";
 import { StarComponent } from "../../shared/star.component";
 import { DeleteProductComponent } from "../delete-product/delete-product.component";
 import { MatDialogModule } from "@angular/material/dialog";
+import { ActionIconComponent } from "../../shared/action-icon.component";
 
 @Component({
   templateUrl: "./list-products.component.html",
@@ -25,6 +26,7 @@ import { MatDialogModule } from "@angular/material/dialog";
     StarComponent,
     DeleteProductComponent,
     MatDialogModule,
+    ActionIconComponent,
   ],
 })
 export class ListProductsComponent implements OnInit {

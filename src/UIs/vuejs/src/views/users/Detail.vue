@@ -1,6 +1,6 @@
 <template>
   <div class="card" v-if="user">
-    <div class="card-header">{{ 'User Detail: ' + user.userName }}</div>
+    <div class="card-header"><ActionIcon action="users" />{{ 'User Detail: ' + user.userName }}</div>
 
     <div class="card-body">
       <div class="row">
@@ -56,26 +56,27 @@
 
     <div class="card-footer">
       <button class="btn btn-outline-secondary" @click="onBack" style="width: 80px">
-        <i class="fa fa-chevron-left"></i> Back
+        <ChevronLeft :size="16" aria-hidden="true" /> Back
       </button>
       &nbsp;
-      <router-link class="btn btn-primary" :to="'/users/edit/' + user.id">Edit</router-link>&nbsp;
+      <router-link class="btn btn-primary" :to="'/users/edit/' + user.id"><ActionIcon action="edit" />Edit</router-link>&nbsp;
       <button type="button" class="btn btn-secondary" @click="setPasswordModal()">
-        Set Password</button
+        <ActionIcon action="key" />Set Password</button
       >&nbsp;
       <button type="button" class="btn btn-secondary" @click="sendPasswordResetEmailModal()">
-        Send Password Reset Email</button
+        <ActionIcon action="mail" />Send Password Reset Email</button
       >&nbsp;
       <button
         type="button"
         class="btn btn-secondary"
         @click="sendEmailAddressConfirmationEmailModal()"
       >
-        Send Email Address Confirmation Email
+        <ActionIcon action="mail" />Send Email Address Confirmation Email
       </button>
     </div>
 
     <b-modal v-model="modalSetPassword" title="Set Password" :no-footer="true">
+      <template #title><ActionIcon action="key" />Set Password</template>
       <div
         class="row alert alert-danger"
         v-show="passwordValidationErrors && passwordValidationErrors.length"
@@ -132,7 +133,7 @@
         <div class="mb-3 row">
           <label class="col-sm-4 col-form-label"></label>
           <div class="col-sm-8">
-            <button class="btn btn-primary">Save</button>
+            <button class="btn btn-primary"><ActionIcon action="save" />Save</button>
           </div>
         </div>
       </form>
@@ -143,10 +144,15 @@
       title="Send Password Reset Email"
       @ok="confirmSendPasswordResetEmail"
     >
+      <template #title><ActionIcon action="mail" />Send Password Reset Email</template>
       <p>
         Are you sure you want to send reset password email
         <strong>{{ user.userName }}</strong>
       </p>
+      <template #footer="{ ok, cancel }">
+        <button class="btn btn-secondary" @click="cancel()"><ActionIcon action="cancel" />No</button>
+        <button class="btn btn-primary" @click="ok()"><ActionIcon action="mail" />Yes</button>
+      </template>
     </b-modal>
 
     <b-modal
@@ -154,15 +160,21 @@
       title="Send Email Address Confirmation Email"
       @ok="confirmSendEmailAddressConfirmationEmail"
     >
+      <template #title><ActionIcon action="mail" />Send Email Address Confirmation Email</template>
       <p>
         Are you sure you want to send email address confirmation email
         <strong>{{ user.userName }}</strong>
       </p>
+      <template #footer="{ ok, cancel }">
+        <button class="btn btn-secondary" @click="cancel()"><ActionIcon action="cancel" />No</button>
+        <button class="btn btn-primary" @click="ok()"><ActionIcon action="mail" />Yes</button>
+      </template>
     </b-modal>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ChevronLeft } from 'lucide-vue-next'
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import useVuelidate from '@vuelidate/core'

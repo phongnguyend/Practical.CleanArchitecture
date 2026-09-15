@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { Eye } from "lucide-react";
 import { Modal, Button } from "react-bootstrap";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
+import ActionIcon from "../ActionIcon/ActionIcon";
 
 interface JsonViewerProps {
   jsonData: string;
@@ -25,10 +27,18 @@ const JsonViewer = ({ jsonData }: JsonViewerProps) => {
 
   return (
     <>
-      <i className="view-json-icon fa fa-eye" onClick={handleShow} title="View JSON"></i>
+      <button
+        type="button"
+        className="view-json-icon"
+        title="View JSON"
+        aria-label="View JSON"
+        onClick={handleShow}
+      >
+        <Eye size={20} aria-hidden="true" />
+      </button>
       <Modal show={show} onHide={handleClose} size="lg" centered>
         <Modal.Header closeButton>
-          <Modal.Title>JSON Data</Modal.Title>
+          <Modal.Title><ActionIcon action="view" />JSON Data</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <SyntaxHighlighter
@@ -45,7 +55,7 @@ const JsonViewer = ({ jsonData }: JsonViewerProps) => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Close
+            <ActionIcon action="close" /> Close
           </Button>
         </Modal.Footer>
       </Modal>

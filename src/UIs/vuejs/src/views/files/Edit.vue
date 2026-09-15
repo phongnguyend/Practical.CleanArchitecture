@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="card-header">{{ title }}</div>
+    <div class="card-header"><ActionIcon action="files" />{{ title }}</div>
     <div class="card-body">
       <div class="alert alert-danger" v-show="postError">
         {{ postErrorMessage }}
@@ -73,20 +73,21 @@
         <div class="mb-3 row">
           <label for="description" class="col-sm-2 col-form-label"></label>
           <div class="col-sm-10">
-            <button class="btn btn-primary">Save</button>
+            <button class="btn btn-primary"><ActionIcon action="save" />Save</button>
           </div>
         </div>
       </form>
     </div>
     <div class="card-footer">
       <router-link class="btn btn-outline-secondary" to="/files" style="width: 80px">
-        <i class="fa fa-chevron-left"></i> Back </router-link
+        <ChevronLeft :size="16" aria-hidden="true" /> Back </router-link
       >&nbsp;
       <button type="button" class="btn btn-primary btn-secondary" @click="viewAuditLogs(file)">
-        View Audit Logs
+        <ActionIcon action="history" />View Audit Logs
       </button>
     </div>
-    <b-modal v-model="modalAuditLogs" no-footer no-header size="xl">
+    <b-modal v-model="modalAuditLogs" no-footer size="xl">
+      <template #title><ActionIcon action="audit" />Audit Logs</template>
       <div class="table-responsive" :style="{ width: '100%' }">
         <table class="table">
           <thead>
@@ -126,6 +127,7 @@
 </template>
 
 <script setup lang="ts">
+import { ChevronLeft } from 'lucide-vue-next'
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import useVuelidate from '@vuelidate/core'

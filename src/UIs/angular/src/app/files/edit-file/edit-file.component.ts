@@ -10,6 +10,8 @@ import { IAuditLogEntry } from "../../auditlogs/audit-log";
 import { MatDialog } from "@angular/material/dialog";
 import { GuidEmpty } from "../../shared/constants";
 import { MatDialogModule } from "@angular/material/dialog";
+import { NgIcon } from "@ng-icons/core";
+import { ActionIconComponent } from "../../shared/action-icon.component";
 
 @Component({
   selector: "app-edit-file",
@@ -17,7 +19,7 @@ import { MatDialogModule } from "@angular/material/dialog";
   styleUrls: ["./edit-file.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CommonModule, FormsModule, RouterModule, MatDialogModule],
+  imports: [CommonModule, FormsModule, RouterModule, MatDialogModule, NgIcon, ActionIconComponent],
 })
 export class EditFileComponent implements OnInit {
   file: IFile = {

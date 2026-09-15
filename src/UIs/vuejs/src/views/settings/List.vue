@@ -1,15 +1,15 @@
 <template>
   <div class="card">
     <div class="card-header">
-      Settings
+      <ActionIcon action="settings" />Settings
       <div style="float: right">
         <button type="button" class="btn btn-secondary" @click="exportAsExcel()">
-          Export as Excel
+          <ActionIcon action="export" />Export as Excel
         </button>
         &nbsp;
-        <button class="btn btn-primary" @click="addEntry()">Add</button>
+        <button class="btn btn-primary" @click="addEntry()"><ActionIcon action="add" />Add</button>
         &nbsp;
-        <button class="btn btn-primary" @click="openImportExcelModal()">Import Excel</button>
+        <button class="btn btn-primary" @click="openImportExcelModal()"><ActionIcon action="import" />Import Excel</button>
       </div>
     </div>
     <div class="card-body">
@@ -31,14 +31,14 @@
               <td>{{ entry.description }}</td>
               <td>{{ formatedDateTime(entry.updatedDateTime || '') }}</td>
               <td>
-                <button class="btn btn-primary" @click="updateEntry(entry)">Edit</button>
+                <button class="btn btn-primary" @click="updateEntry(entry)"><ActionIcon action="edit" />Edit</button>
                 &nbsp;
                 <button
                   type="button"
                   class="btn btn-primary btn-danger"
                   @click="deleteEntry(entry)"
                 >
-                  Delete
+                  <ActionIcon action="delete" />Delete
                 </button>
               </td>
             </tr>
@@ -48,12 +48,18 @@
     </div>
     <div v-if="errorMessage" class="alert alert-danger">Error: {{ errorMessage }}</div>
     <b-modal v-model="modalDelete" title="Delete Entry" @ok="deleteConfirmed">
+      <template #title><ActionIcon action="delete" />Delete Entry</template>
       <p class="my-4">
         Are you sure you want to delete:
         <strong>{{ selectedEntry.key }}</strong>
       </p>
+      <template #footer="{ ok, cancel }">
+        <button class="btn btn-secondary" @click="cancel()"><ActionIcon action="cancel" />No</button>
+        <button class="btn btn-primary" @click="ok()"><ActionIcon action="confirm" />Yes</button>
+      </template>
     </b-modal>
     <b-modal v-model="modalAddUpdate" no-footer size="lg" v-bind:title="title">
+      <template #title><ActionIcon :action="title === 'Add' ? 'add' : 'edit'" />{{ title }}</template>
       <form @submit.prevent="confirmAddUpdate">
         <div class="mb-3 row">
           <label for="key" class="col-sm-3 col-form-label">Key</label>
@@ -113,12 +119,13 @@
         <div class="mb-3 row">
           <label class="col-sm-3 col-form-label"></label>
           <div class="col-sm-9">
-            <button class="btn btn-primary">Save</button>
+            <button class="btn btn-primary"><ActionIcon action="save" />Save</button>
           </div>
         </div>
       </form>
     </b-modal>
     <b-modal v-model="modalImportExcel" no-footer title="Import Excel">
+      <template #title><ActionIcon action="import" />Import Excel</template>
       <form @submit.prevent="confirmImportExcelFile">
         <div class="mb-3 row">
           <div class="col-sm-12">
@@ -137,7 +144,7 @@
         </div>
         <div class="mb-3 row">
           <div class="col-sm-12" style="text-align: center">
-            <button class="btn btn-primary">Import</button>
+            <button class="btn btn-primary"><ActionIcon action="import" />Import</button>
           </div>
         </div>
       </form>

@@ -11,6 +11,7 @@ import {
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { IProduct } from "../product";
 import { MatDialogModule } from "@angular/material/dialog";
+import { ActionIconComponent } from "../../shared/action-icon.component";
 
 @Component({
   selector: "app-delete-product",
@@ -18,7 +19,7 @@ import { MatDialogModule } from "@angular/material/dialog";
   styleUrls: ["./delete-product.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [MatDialogModule],
+  imports: [MatDialogModule, ActionIconComponent],
 })
 export class DeleteProductComponent implements OnInit {
   @Input() product: IProduct;

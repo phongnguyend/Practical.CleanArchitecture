@@ -1,13 +1,13 @@
 <div class="card">
   <div class="card-header">
-    Users
+    <app-action-icon action="users" />Users
     <a
       class="btn btn-primary"
       style="float: right"
       routerLinkActive="active"
       [routerLink]="['/users/add']"
       >
-      Add User
+      <app-action-icon action="add" />Add User
     </a>
   </div>
   <div class="card-body">
@@ -26,7 +26,7 @@
               <tr>
                 <td>
                   <a [routerLink]="['/users', user.id]">
-                    {{ user.userName }}
+                    <app-action-icon action="view" />{{ user.userName }}
                   </a>
                 </td>
                 <td>{{ user.email }}</td>
@@ -36,7 +36,7 @@
                     routerLinkActive="active"
                     [routerLink]="['/users/edit', user.id]"
                     >
-                    Edit
+                    <app-action-icon action="edit" />Edit
                   </a>
                   &nbsp;
                   <button
@@ -44,7 +44,7 @@
                     class="btn btn-primary btn-danger"
                     (click)="deleteUser(deletetemplate, user)"
                     >
-                    Delete
+                    <app-action-icon action="delete" />Delete
                   </button>
                 </td>
               </tr>
@@ -60,6 +60,7 @@
 }
 
 <ng-template #deletetemplate>
+  <h2 mat-dialog-title><app-action-icon action="delete" />Delete User</h2>
   <mat-dialog-content class="text-center">
     <p>
       Are you sure you want to delete
@@ -67,13 +68,13 @@
     </p>
   </mat-dialog-content>
   <mat-dialog-actions align="center">
-    <button type="button" class="btn btn-primary" (click)="confirmDelete()">Yes</button>
-    <button type="button" class="btn btn-default" (click)="cancelDelete()">No</button>
+    <button type="button" class="btn btn-primary" (click)="confirmDelete()"><app-action-icon action="confirm" />Yes</button>
+    <button type="button" class="btn btn-default" (click)="cancelDelete()"><app-action-icon action="cancel" />No</button>
   </mat-dialog-actions>
 </ng-template>
 
 <ng-template #auditlogtemplate>
-  <h2 mat-dialog-title>Audit Logs</h2>
+  <h2 mat-dialog-title><app-action-icon action="audit" />Audit Logs</h2>
   <mat-dialog-content>
     <div class="table-responsive">
       <table class="table">
@@ -115,6 +116,6 @@
     </div>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
-    <button type="button" class="btn btn-default" mat-dialog-close>Close</button>
+    <button type="button" class="btn btn-default" mat-dialog-close><app-action-icon action="close" />Close</button>
   </mat-dialog-actions>
 </ng-template>

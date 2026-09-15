@@ -1,15 +1,15 @@
 <template>
   <div class="card">
     <div class="card-header">
-      {{ pageTitle }}
+      <ActionIcon action="products" />{{ pageTitle }}
       <div style="float: right">
-        <button type="button" class="btn btn-secondary" @click="exportAsPdf">Export as Pdf</button>
+        <button type="button" class="btn btn-secondary" @click="exportAsPdf"><ActionIcon action="export" />Export as Pdf</button>
         &nbsp;
-        <button type="button" class="btn btn-secondary" @click="exportAsCsv">Export as Csv</button>
+        <button type="button" class="btn btn-secondary" @click="exportAsCsv"><ActionIcon action="export" />Export as Csv</button>
         &nbsp;
-        <router-link class="btn btn-primary" to="/products/add">Add Product</router-link>
+        <router-link class="btn btn-primary" to="/products/add"><ActionIcon action="add" />Add Product</router-link>
         &nbsp;
-        <button class="btn btn-primary" @click="openImportCsvModal()">Import Csv</button>
+        <button class="btn btn-primary" @click="openImportCsvModal()"><ActionIcon action="import" />Import Csv</button>
       </div>
     </div>
     <div class="card-body">
@@ -30,7 +30,7 @@
             <tr>
               <th>
                 <button class="btn btn-primary" @click="toggleImage">
-                  {{ showImage ? 'Hide' : 'Show' }} Image
+                  <ActionIcon :action="showImage ? 'hide' : 'show'" />{{ showImage ? 'Hide' : 'Show' }} Image
                 </button>
               </th>
               <th>Product</th>
@@ -55,7 +55,7 @@
                 />
               </td>
               <td>
-                <router-link :to="'/products/' + product.id">{{ product.name }}</router-link>
+                <router-link :to="'/products/' + product.id"><ActionIcon action="view" />{{ product.name }}</router-link>
               </td>
               <td>{{ uppercase(product.code) }}</td>
               <td>{{ product.description }}</td>
@@ -68,21 +68,21 @@
               </td>
               <td>
                 <router-link class="btn btn-primary" :to="'/products/edit/' + product.id"
-                  >Edit</router-link
+                  ><ActionIcon action="edit" />Edit</router-link
                 >&nbsp;
                 <button
                   type="button"
                   class="btn btn-primary btn-secondary"
                   @click="viewAuditLogs(product)"
                 >
-                  View Audit Logs</button
+                  <ActionIcon action="history" />View Audit Logs</button
                 >&nbsp;
                 <button
                   type="button"
                   class="btn btn-primary btn-danger"
                   @click="deleteProduct(product)"
                 >
-                  Delete
+                  <ActionIcon action="delete" />Delete
                 </button>
               </td>
             </tr>
@@ -92,12 +92,18 @@
     </div>
     <div v-if="errorMessage" class="alert alert-danger">Error: {{ errorMessage }}</div>
     <b-modal v-model="modalDelete" title="Delete Product" @ok="deleteConfirmed">
+      <template #title><ActionIcon action="delete" />Delete Product</template>
       <p class="my-4">
         Are you sure you want to delete:
         <strong>{{ selectedProduct.name }}</strong>
       </p>
+      <template #footer="{ ok, cancel }">
+        <button class="btn btn-secondary" @click="cancel()"><ActionIcon action="cancel" />No</button>
+        <button class="btn btn-primary" @click="ok()"><ActionIcon action="confirm" />Yes</button>
+      </template>
     </b-modal>
-    <b-modal v-model="modalAuditLogs" no-footer no-header size="xl">
+    <b-modal v-model="modalAuditLogs" no-footer size="xl">
+      <template #title><ActionIcon action="audit" />Audit Logs</template>
       <div class="table-responsive" :style="{ width: '100%' }">
         <table class="table">
           <thead>
@@ -130,6 +136,7 @@
       </div>
     </b-modal>
     <b-modal v-model="modalImportCsv" no-footer title="Import Csv">
+      <template #title><ActionIcon action="import" />Import Csv</template>
       <form @submit.prevent="confirmImportCsvFile">
         <div class="mb-3 row">
           <div class="col-sm-12">
@@ -148,7 +155,7 @@
         </div>
         <div class="mb-3 row">
           <div class="col-sm-12" style="text-align: center">
-            <button class="btn btn-primary">Import</button>
+            <button class="btn btn-primary"><ActionIcon action="import" />Import</button>
           </div>
         </div>
       </form>

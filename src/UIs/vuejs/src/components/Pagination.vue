@@ -6,7 +6,7 @@
         disabled: currentPage === 1,
       }"
     >
-      <a class="page-link" @click="selectPage(1)">First</a>
+      <a class="page-link" @click="selectPage(1)"><ActionIcon action="first" />First</a>
     </li>
     <li
       class="page-item"
@@ -14,7 +14,7 @@
         disabled: currentPage === 1,
       }"
     >
-      <a class="page-link" @click="selectPage(currentPage - 1)">Previous</a>
+      <a class="page-link" @click="selectPage(currentPage - 1)"><ActionIcon action="previous" />Previous</a>
     </li>
 
     <li
@@ -34,7 +34,7 @@
         disabled: currentPage === totalPages,
       }"
     >
-      <a class="page-link" @click="selectPage(currentPage + 1)">Next</a>
+      <a class="page-link" @click="selectPage(currentPage + 1)"><ActionIcon action="next" />Next</a>
     </li>
     <li
       class="page-item"
@@ -42,7 +42,7 @@
         disabled: currentPage === totalPages,
       }"
     >
-      <a class="page-link" @click="selectPage(totalPages)">Last</a>
+      <a class="page-link" @click="selectPage(totalPages)"><ActionIcon action="last" />Last</a>
     </li>
   </ul>
 </template>

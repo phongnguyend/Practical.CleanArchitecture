@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Modal, Button } from "react-bootstrap";
 
 import * as actions from "../actions";
+import ActionIcon from "../../../components/ActionIcon/ActionIcon";
 
 const ListUsers = (props: any) => {
     const [pageTitle] = useState("Users");
@@ -35,12 +36,12 @@ const ListUsers = (props: any) => {
     const rows = props.users?.map((user: any) => (
         <tr key={user.id}>
             <td>
-                <NavLink to={"/users/" + user.id}>{user.userName}</NavLink>
+                <NavLink to={"/users/" + user.id}><ActionIcon action="view" />{user.userName}</NavLink>
             </td>
             <td>{user.email}</td>
             <td>
                 <NavLink className="btn btn-primary" to={"/users/edit/" + user.id}>
-                    Edit
+                  <ActionIcon action="edit" /> Edit
                 </NavLink>
                 &nbsp;
                 <button
@@ -48,7 +49,7 @@ const ListUsers = (props: any) => {
                     className="btn btn-primary btn-danger"
                     onClick={() => deleteUser(user)}
                 >
-                    Delete
+                  <ActionIcon action="delete" /> Delete
                 </button>
             </td>
         </tr>
@@ -70,7 +71,7 @@ const ListUsers = (props: any) => {
     const deleteModal = (
         <Modal show={showDeleteModal} onHide={deleteCanceled}>
             <Modal.Header closeButton>
-                <Modal.Title>Delete User</Modal.Title>
+                <Modal.Title><ActionIcon action="delete" />Delete User</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 Are you sure you want to delete
@@ -78,10 +79,10 @@ const ListUsers = (props: any) => {
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={deleteCanceled}>
-                    No
+                  <ActionIcon action="cancel" /> No
                 </Button>
                 <Button variant="primary" onClick={deleteConfirmed}>
-                    Yes
+                  <ActionIcon action="confirm" /> Yes
                 </Button>
             </Modal.Footer>
         </Modal>
@@ -91,9 +92,9 @@ const ListUsers = (props: any) => {
         <div>
             <div className="card">
                 <div className="card-header">
-                    {pageTitle}
+                  <ActionIcon action="users" />{pageTitle}
                     <NavLink className="btn btn-primary" style={{ float: "right" }} to="/users/add">
-                        Add User
+                      <ActionIcon action="add" /> Add User
                     </NavLink>
                 </div>
                 <div className="card-body">

@@ -6,6 +6,7 @@ import { IAuditLogEntry } from "../../auditlogs/audit-log";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { UserService } from "../user.service";
 import { MatDialogModule } from "@angular/material/dialog";
+import { ActionIconComponent } from "../../shared/action-icon.component";
 
 @Component({
   selector: "app-list-users",
@@ -13,7 +14,7 @@ import { MatDialogModule } from "@angular/material/dialog";
   styleUrls: ["./list-users.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CommonModule, RouterModule, MatDialogModule],
+  imports: [CommonModule, RouterModule, MatDialogModule, ActionIconComponent],
 })
 export class ListUsersComponent implements OnInit {
   users: IUser[] = [];

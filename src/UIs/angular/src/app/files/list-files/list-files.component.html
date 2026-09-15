@@ -1,13 +1,13 @@
 <div class="card">
   <div class="card-header">
-    Files
+    <app-action-icon action="files" />Files
     <a
       class="btn btn-primary"
       style="float: right"
       routerLinkActive="active"
       [routerLink]="['/files/upload']"
       >
-      Upload File
+      <app-action-icon action="upload" />Upload File
     </a>
   </div>
   <div class="card-body">
@@ -27,14 +27,14 @@
             @for (file of files; track file) {
               <tr>
                 <td>
-                  <a [routerLink]="['/files/edit', file.id]"> {{ file.name }} ({{ file.fileName }}) </a>
+                  <a [routerLink]="['/files/edit', file.id]"><app-action-icon action="view" />{{ file.name }} ({{ file.fileName }})</a>
                 </td>
                 <td>{{ file.description }}</td>
                 <td>{{ file.size }}</td>
                 <td>{{ file.uploadedTime | date: "dd/MM/yyyy hh:mm:ss" }}</td>
                 <td>
                   <button type="button" class="btn btn-primary btn-secondary" (click)="download(file)">
-                    Download
+                    <app-action-icon action="download" />Download
                   </button>
                   &nbsp;
                   <a
@@ -42,7 +42,7 @@
                     routerLinkActive="active"
                     [routerLink]="['/files/edit', file.id]"
                     >
-                    Edit
+                    <app-action-icon action="edit" />Edit
                   </a>
                   &nbsp;
                   <button
@@ -50,7 +50,7 @@
                     class="btn btn-primary btn-secondary"
                     (click)="viewAuditLogs(auditlogtemplate, file)"
                     >
-                    View Audit Logs
+                    <app-action-icon action="history" />View Audit Logs
                   </button>
                   &nbsp;
                   <button
@@ -58,7 +58,7 @@
                     class="btn btn-primary btn-danger"
                     (click)="deleteFile(deletetemplate, file)"
                     >
-                    Delete
+                    <app-action-icon action="delete" />Delete
                   </button>
                 </td>
               </tr>
@@ -74,19 +74,20 @@
 }
 
 <ng-template #deletetemplate>
+  <h2 mat-dialog-title><app-action-icon action="delete" />Delete File</h2>
   <mat-dialog-content class="text-center">
     <p>
       Are you sure you want to delete <strong> {{ selectedFile.name }}</strong>
     </p>
   </mat-dialog-content>
   <mat-dialog-actions align="center">
-    <button type="button" class="btn btn-primary" (click)="confirmDelete()">Yes</button>
-    <button type="button" class="btn btn-default" (click)="cancelDelete()">No</button>
+    <button type="button" class="btn btn-primary" (click)="confirmDelete()"><app-action-icon action="confirm" />Yes</button>
+    <button type="button" class="btn btn-default" (click)="cancelDelete()"><app-action-icon action="cancel" />No</button>
   </mat-dialog-actions>
 </ng-template>
 
 <ng-template #auditlogtemplate>
-  <h2 mat-dialog-title>Audit Logs</h2>
+  <h2 mat-dialog-title><app-action-icon action="audit" />Audit Logs</h2>
   <mat-dialog-content>
     <div class="table-responsive">
       <table class="table">
@@ -128,6 +129,6 @@
     </div>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
-    <button type="button" class="btn btn-default" mat-dialog-close>Close</button>
+    <button type="button" class="btn btn-default" mat-dialog-close><app-action-icon action="close" />Close</button>
   </mat-dialog-actions>
 </ng-template>

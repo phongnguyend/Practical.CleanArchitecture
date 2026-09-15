@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import Star from "../../../components/Star/Star";
 import axios from "../axios";
+import ActionIcon from "../../../components/ActionIcon/ActionIcon";
 
 interface Product {
   id: string;
@@ -43,7 +45,7 @@ const ViewProduct = () => {
 
   const page = product ? (
     <div className="card">
-      <div className="card-header">{"Product Detail: " + product.name}</div>
+      <div className="card-header"><ActionIcon action="products" />{"Product Detail: " + product.name}</div>
 
       <div className="card-body">
         <div className="row">
@@ -92,11 +94,11 @@ const ViewProduct = () => {
           onClick={back}
           style={{ width: "80px" }}
         >
-          <i className="fa fa-chevron-left"></i> Back
+          <ChevronLeft size={16} aria-hidden="true" /> Back
         </button>
         &nbsp;
         <Link className="btn btn-primary" href={"/products/edit/" + product.id}>
-          Edit
+          <ActionIcon action="edit" /> Edit
         </Link>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { AuditLogState } from "./audit-log.reducer";
 import * as actions from "./audit-log.actions";
 import { CopyToClipboardComponent } from "../shared/copy-to-clipboard.component";
 import { PaginationComponent } from "../shared/pagination.component";
+import { ActionIconComponent } from "../shared/action-icon.component";
 
 @Component({
   selector: "app-audit-log-list",
@@ -13,7 +14,7 @@ import { PaginationComponent } from "../shared/pagination.component";
   styleUrls: ["./audit-log-list.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CommonModule, CopyToClipboardComponent, PaginationComponent],
+  imports: [CommonModule, CopyToClipboardComponent, PaginationComponent, ActionIconComponent],
 })
 export class AuditLogListComponent implements OnInit {
   auditLogs: IAuditLogEntry[] = [];

@@ -1,6 +1,7 @@
 @if (user) {
   <div class="card">
     <div class="card-header">
+      <app-action-icon action="users" />
       {{ "User Detail: " + user.userName }}
     </div>
     <div class="card-body">
@@ -56,15 +57,15 @@
       </div>
       <div class="card-footer">
         <button class="btn btn-outline-secondary" [routerLink]="['/users']" style="width: 80px">
-          <i class="fa fa-chevron-left"></i> Back
+          <ng-icon name="lucideChevronLeft" size="16" /> Back
         </button>
         &nbsp;
         <a class="btn btn-primary" routerLinkActive="active" [routerLink]="['/users/edit', user.id]">
-          Edit
+          <app-action-icon action="edit" />Edit
         </a>
         &nbsp;
         <button type="button" class="btn btn-secondary" (click)="setPasswordModal(setPasswordTemplate)">
-          Set Password
+          <app-action-icon action="key" />Set Password
         </button>
         &nbsp;
         <button
@@ -72,7 +73,7 @@
           class="btn btn-secondary"
           (click)="sendPasswordResetEmailModal(sendPasswordResetEmailTemplate)"
           >
-          Send Password Reset Email
+          <app-action-icon action="mail" />Send Password Reset Email
         </button>
         &nbsp;
         <button
@@ -80,14 +81,14 @@
           class="btn btn-secondary"
           (click)="sendEmailAddressConfirmationEmailModal(sendEmailAddressConfirmationEmailTemplate)"
           >
-          Send Email Address Confirmation Email
+          <app-action-icon action="mail" />Send Email Address Confirmation Email
         </button>
       </div>
     </div>
   }
 
   <ng-template #setPasswordTemplate>
-    <h2 mat-dialog-title>Set Password</h2>
+    <h2 mat-dialog-title><app-action-icon action="key" />Set Password</h2>
     <mat-dialog-content>
       <div
         class="row"
@@ -146,7 +147,7 @@
             <div class="mb-3 row">
               <label class="col-sm-4 col-form-label"></label>
               <div class="col-sm-8">
-                <button class="btn btn-primary">Save</button>
+                <button class="btn btn-primary"><app-action-icon action="save" />Save</button>
               </div>
             </div>
           </form>
@@ -154,6 +155,7 @@
       </ng-template>
 
       <ng-template #sendPasswordResetEmailTemplate>
+        <h2 mat-dialog-title><app-action-icon action="mail" />Send Password Reset Email</h2>
         <mat-dialog-content class="text-center">
           <p>
             Are you sure you want to send reset password email
@@ -162,13 +164,14 @@
         </mat-dialog-content>
         <mat-dialog-actions align="center">
           <button type="button" class="btn btn-primary" (click)="confirmSendPasswordResetEmail()">
-            Yes
+            <app-action-icon action="mail" />Yes
           </button>
-          <button type="button" class="btn btn-default" mat-dialog-close>No</button>
+          <button type="button" class="btn btn-default" mat-dialog-close><app-action-icon action="cancel" />No</button>
         </mat-dialog-actions>
       </ng-template>
 
       <ng-template #sendEmailAddressConfirmationEmailTemplate>
+        <h2 mat-dialog-title><app-action-icon action="mail" />Send Email Address Confirmation Email</h2>
         <mat-dialog-content class="text-center">
           <p>
             Are you sure you want to send email address confirmation email
@@ -181,8 +184,8 @@
             class="btn btn-primary"
             (click)="confirmSendEmailAddressConfirmationEmail()"
             >
-            Yes
+            <app-action-icon action="mail" />Yes
           </button>
-          <button type="button" class="btn btn-default" mat-dialog-close>No</button>
+          <button type="button" class="btn btn-default" mat-dialog-close><app-action-icon action="cancel" />No</button>
         </mat-dialog-actions>
       </ng-template>

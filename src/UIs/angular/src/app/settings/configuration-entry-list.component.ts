@@ -8,6 +8,7 @@ import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { NgForm } from "@angular/forms";
 import { GuidEmpty } from "../shared/constants";
 import { MatDialogModule } from "@angular/material/dialog";
+import { ActionIconComponent } from "../shared/action-icon.component";
 
 @Component({
   selector: "app-configuration-entry-list",
@@ -15,7 +16,7 @@ import { MatDialogModule } from "@angular/material/dialog";
   styleUrls: ["./configuration-entry-list.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CommonModule, FormsModule, RouterModule, MatDialogModule],
+  imports: [CommonModule, FormsModule, RouterModule, MatDialogModule, ActionIconComponent],
 })
 export class ConfigurationEntryListComponent implements OnInit {
   GuidEmpty = GuidEmpty;

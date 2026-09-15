@@ -13,7 +13,6 @@ import addAuthInterceptors from './auth/authInterceptors'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
-import 'font-awesome/css/font-awesome.min.css'
 import '@vuepic/vue-datepicker/dist/main.css'
 
 addAuthInterceptors(axios)

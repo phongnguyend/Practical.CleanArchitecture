@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="card-header">{{ appendVersion(pageTitle) }}
+    <div class="card-header"><ActionIcon action="home" />{{ appendVersion(pageTitle) }}
       <div style="float: right;color: green">
         <app-timer></app-timer>
       </div>
@@ -18,7 +18,7 @@
         </div>
         <div class="text-center">@phongnguyend</div>
         <div class="text-center">
-          <a href="https://github.com/phongnguyend/Practical.CleanArchitecture">Practical.CleanArchitecture</a>
+          <a href="https://github.com/phongnguyend/Practical.CleanArchitecture"><ActionIcon action="external" />Practical.CleanArchitecture</a>
         </div>
         <div class="text-center">
           <strong>vuejs v{{ version }}</strong>

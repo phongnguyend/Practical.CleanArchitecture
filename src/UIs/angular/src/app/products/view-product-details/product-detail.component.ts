@@ -9,13 +9,15 @@ import { MatDialog } from "@angular/material/dialog";
 import { IAuditLogEntry } from "../../auditlogs/audit-log";
 import { StarComponent } from "../../shared/star.component";
 import { MatDialogModule } from "@angular/material/dialog";
+import { NgIcon } from "@ng-icons/core";
+import { ActionIconComponent } from "../../shared/action-icon.component";
 
 @Component({
   templateUrl: "./product-detail.component.html",
   styleUrls: ["./product-detail.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CommonModule, RouterModule, StarComponent, MatDialogModule],
+  imports: [CommonModule, RouterModule, StarComponent, MatDialogModule, NgIcon, ActionIconComponent],
 })
 export class ProductDetailComponent implements OnInit {
   pageTitle = "Product Detail";

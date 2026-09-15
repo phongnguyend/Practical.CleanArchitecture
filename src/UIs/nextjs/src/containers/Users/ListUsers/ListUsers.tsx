@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useState, useEffect, useCallback } from "react";
 import { Modal, Button } from "react-bootstrap";
 import axios from "../axios";
+import ActionIcon from "../../../components/ActionIcon/ActionIcon";
 
 interface User {
   id: string;
@@ -64,12 +65,12 @@ const ListUsers: React.FC = () => {
   const rows = users?.map((user: User) => (
     <tr key={user.id}>
       <td>
-        <Link href={"/users/" + user.id}>{user.userName}</Link>
+        <Link href={"/users/" + user.id}><ActionIcon action="view" />{user.userName}</Link>
       </td>
       <td>{user.email}</td>
       <td>
         <Link className="btn btn-primary" href={"/users/edit/" + user.id}>
-          Edit
+          <ActionIcon action="edit" /> Edit
         </Link>
         &nbsp;
         <button
@@ -77,7 +78,7 @@ const ListUsers: React.FC = () => {
           className="btn btn-primary btn-danger"
           onClick={() => deleteUser(user)}
         >
-          Delete
+          <ActionIcon action="delete" /> Delete
         </button>
       </td>
     </tr>
@@ -99,7 +100,7 @@ const ListUsers: React.FC = () => {
   const deleteModal = (
     <Modal show={showDeleteModal} onHide={deleteCanceled}>
       <Modal.Header closeButton>
-        <Modal.Title>Delete User</Modal.Title>
+        <Modal.Title><ActionIcon action="delete" />Delete User</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         Are you sure you want to delete
@@ -107,10 +108,10 @@ const ListUsers: React.FC = () => {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={deleteCanceled}>
-          No
+          <ActionIcon action="cancel" /> No
         </Button>
         <Button variant="primary" onClick={deleteConfirmed}>
-          Yes
+          <ActionIcon action="confirm" /> Yes
         </Button>
       </Modal.Footer>
     </Modal>
@@ -120,13 +121,13 @@ const ListUsers: React.FC = () => {
     <div>
       <div className="card">
         <div className="card-header">
-          {pageTitle}
+          <ActionIcon action="users" />{pageTitle}
           <Link
             className="btn btn-primary"
             style={{ float: "right" }}
             href="/users/add"
           >
-            Add User
+            <ActionIcon action="add" /> Add User
           </Link>
         </div>
         <div className="card-body">

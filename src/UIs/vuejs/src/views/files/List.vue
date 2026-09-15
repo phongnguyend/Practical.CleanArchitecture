@@ -1,9 +1,9 @@
 <template>
   <div class="card">
     <div class="card-header">
-      Files
+      <ActionIcon action="files" />Files
       <router-link class="btn btn-primary" style="float: right" to="/files/upload"
-        >Upload File</router-link
+        ><ActionIcon action="upload" />Upload File</router-link
       >
     </div>
     <div class="card-body">
@@ -22,7 +22,7 @@
             <tr v-for="file in files" :key="file.id">
               <td>
                 <router-link :to="'/files/edit/' + file.id"
-                  >{{ file.name }} ({{ file.fileName }})</router-link
+                  ><ActionIcon action="view" />{{ file.name }} ({{ file.fileName }})</router-link
                 >
               </td>
               <td>{{ file.description }}</td>
@@ -30,22 +30,22 @@
               <td>{{ formatedDateTime(file.uploadedTime) }}</td>
               <td>
                 <button type="button" class="btn btn-primary btn-secondary" @click="download(file)">
-                  Download
+                  <ActionIcon action="download" />Download
                 </button>
                 &nbsp;
                 <router-link class="btn btn-primary" :to="'/files/edit/' + file.id"
-                  >Edit</router-link
+                  ><ActionIcon action="edit" />Edit</router-link
                 >&nbsp;
                 <button
                   type="button"
                   class="btn btn-primary btn-secondary"
                   @click="viewAuditLogs(file)"
                 >
-                  View Audit Logs
+                  <ActionIcon action="history" />View Audit Logs
                 </button>
                 &nbsp;
                 <button type="button" class="btn btn-primary btn-danger" @click="deleteFile(file)">
-                  Delete
+                  <ActionIcon action="delete" />Delete
                 </button>
               </td>
             </tr>
@@ -55,12 +55,18 @@
     </div>
     <div v-if="errorMessage" class="alert alert-danger">Error: {{ errorMessage }}</div>
     <b-modal v-model="modalDelete" title="Delete File" @ok="deleteConfirmed">
+      <template #title><ActionIcon action="delete" />Delete File</template>
       <p class="my-4">
         Are you sure you want to delete:
         <strong>{{ selectedFile.name }}</strong>
       </p>
+      <template #footer="{ ok, cancel }">
+        <button class="btn btn-secondary" @click="cancel()"><ActionIcon action="cancel" />No</button>
+        <button class="btn btn-primary" @click="ok()"><ActionIcon action="confirm" />Yes</button>
+      </template>
     </b-modal>
-    <b-modal v-model="modalAuditLogs" no-footer no-header size="xl">
+    <b-modal v-model="modalAuditLogs" no-footer size="xl">
+      <template #title><ActionIcon action="audit" />Audit Logs</template>
       <div class="table-responsive" :style="{ width: '100%' }">
         <table class="table">
           <thead>

@@ -7,6 +7,8 @@ import { debounceTime } from "rxjs/operators";
 
 import { IProduct } from "../product";
 import { ProductService } from "../product.service";
+import { NgIcon } from "@ng-icons/core";
+import { ActionIconComponent } from "../../shared/action-icon.component";
 
 @Component({
   selector: "app-edit-product",
@@ -14,7 +16,7 @@ import { ProductService } from "../product.service";
   styleUrls: ["./edit-product.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [FormsModule, ReactiveFormsModule, RouterModule],
+  imports: [FormsModule, ReactiveFormsModule, RouterModule, NgIcon, ActionIconComponent],
 })
 export class EditProductComponent implements OnInit {
   product: IProduct;

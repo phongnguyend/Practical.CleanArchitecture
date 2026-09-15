@@ -1,6 +1,6 @@
 <template>
   <span v-if="copyStatus" class="copy-icon">{{ copyStatus }}</span>
-  <i
+  <Clipboard
     v-else
     :class="className"
     :title="title"
@@ -8,11 +8,13 @@
     role="button"
     tabindex="0"
     @keydown.enter="handleCopy"
-  ></i>
+    :size="16"
+  />
 </template>
 
 <script setup lang="ts">
 import { ref, onUnmounted } from 'vue'
+import { Clipboard } from 'lucide-vue-next'
 
 interface Props {
   text: string
@@ -21,12 +23,12 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  className: 'copy-icon fa fa-clipboard',
+  className: 'copy-icon',
   title: 'Copy Data',
 })
 
 const copyStatus = ref('')
-let timeoutId: number | null = null
+let timeoutId: ReturnType<typeof setTimeout> | null = null
 
 const handleCopy = () => {
   navigator.clipboard

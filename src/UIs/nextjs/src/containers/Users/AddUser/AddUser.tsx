@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { ChevronLeft } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -8,6 +9,7 @@ import { checkValidity } from "../../../shared/utility";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "../axios";
+import ActionIcon from "../../../components/ActionIcon/ActionIcon";
 
 interface User {
   id?: string;
@@ -197,7 +199,7 @@ const AddUser = () => {
 
   const form = (
     <div className="card">
-      <div className="card-header">{state.title}</div>
+      <div className="card-header"><ActionIcon action="users" />{state.title}</div>
       <div className="card-body">
         {state.errorMessage ? (
           <div className="row alert alert-danger">{state.errorMessage}</div>
@@ -362,7 +364,7 @@ const AddUser = () => {
                 className="form-control"
                 autoComplete="off"
                 selected={user?.lockoutEnd ? new Date(user?.lockoutEnd) : null}
-                onChange={(date) => updateLockoutEnd(date)}
+                onChange={(date: Date | null) => updateLockoutEnd(date)}
                 timeInputLabel="Time:"
                 dateFormat="MM/dd/yyyy h:mm aa"
                 showTimeInput
@@ -375,7 +377,7 @@ const AddUser = () => {
               className="col-sm-3 col-form-label"
             ></label>
             <div className="col-sm-9">
-              <button className="btn btn-primary">Save</button>
+              <button className="btn btn-primary"><ActionIcon action="save" /> Save</button>
             </div>
           </div>
         </form>
@@ -386,7 +388,7 @@ const AddUser = () => {
           href="/users"
           style={{ width: "80px" }}
         >
-          <i className="fa fa-chevron-left"></i> Back
+          <ChevronLeft size={16} aria-hidden="true" /> Back
         </Link>
       </div>
     </div>

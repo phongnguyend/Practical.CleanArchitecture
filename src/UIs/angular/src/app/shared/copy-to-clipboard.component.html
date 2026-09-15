@@ -2,12 +2,14 @@
   <span class="copy-icon">{{ copyStatus }}</span>
 }
 @if (!copyStatus) {
-  <i
+  <ng-icon
+    name="lucideClipboard"
+    size="16"
     [class]="className"
     [title]="title"
     (click)="handleCopy()"
     (keydown.enter)="handleCopy()"
     role="button"
     tabindex="0"
-  ></i>
+  />
 }

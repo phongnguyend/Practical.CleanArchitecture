@@ -12,6 +12,8 @@ import { UserService } from "../user.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { NgModel, NgForm } from "@angular/forms";
 import { GuidEmpty } from "../../shared/constants";
+import { NgIcon } from "@ng-icons/core";
+import { ActionIconComponent } from "../../shared/action-icon.component";
 
 @Component({
   selector: "app-add-edit-user",
@@ -28,6 +30,8 @@ import { GuidEmpty } from "../../shared/constants";
     MatNativeDateModule,
     MatInputModule,
     MatFormFieldModule,
+    NgIcon,
+    ActionIconComponent,
   ],
 })
 export class AddEditUserComponent implements OnInit {

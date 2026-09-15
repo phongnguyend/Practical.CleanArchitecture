@@ -6,6 +6,7 @@ import {
   Output,
   ChangeDetectionStrategy,
 } from "@angular/core";
+import { NgIcon } from "@ng-icons/core";
 
 @Component({
   selector: "pm-star",
@@ -13,7 +14,7 @@ import {
   styleUrls: ["./star.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [],
+  imports: [NgIcon],
 })
 export class StarComponent implements OnChanges {
   @Input() rating = 0;

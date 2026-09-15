@@ -1,15 +1,15 @@
 <div class="card">
   <div class="card-header">
-    Settings
+    <app-action-icon action="settings" />Settings
     <div style="float: right">
       <button type="button" class="btn btn-secondary" (click)="exportAsExcel()">
-        Export as Excel
+        <app-action-icon action="export" />Export as Excel
       </button>
       &nbsp;
-      <button class="btn btn-primary" (click)="addEntry(addupdatetemplate)">Add</button>
+      <button class="btn btn-primary" (click)="addEntry(addupdatetemplate)"><app-action-icon action="add" />Add</button>
       &nbsp;
       <button class="btn btn-primary" (click)="openImportExcelModal(import_excel_modal_template)">
-        Import Excel
+        <app-action-icon action="import" />Import Excel
       </button>
     </div>
   </div>
@@ -35,7 +35,7 @@
                 <td>{{ entry.updatedDateTime | date: "dd/MM/yyyy hh:mm:ss" }}</td>
                 <td>
                   <button class="btn btn-primary" (click)="updateEntry(addupdatetemplate, entry)">
-                    Edit
+                    <app-action-icon action="edit" />Edit
                   </button>
                   &nbsp;
                   <button
@@ -43,7 +43,7 @@
                     class="btn btn-primary btn-danger"
                     (click)="deleteEntry(deletetemplate, entry)"
                     >
-                    Delete
+                    <app-action-icon action="delete" />Delete
                   </button>
                 </td>
               </tr>
@@ -59,6 +59,7 @@
 }
 
 <ng-template #deletetemplate>
+  <h2 mat-dialog-title><app-action-icon action="delete" />Delete Entry</h2>
   <mat-dialog-content class="text-center">
     <p>
       Are you sure you want to delete
@@ -66,13 +67,13 @@
     </p>
   </mat-dialog-content>
   <mat-dialog-actions align="center">
-    <button type="button" class="btn btn-primary" (click)="confirmDelete()">Yes</button>
-    <button type="button" class="btn btn-default" (click)="cancelDelete()">No</button>
+    <button type="button" class="btn btn-primary" (click)="confirmDelete()"><app-action-icon action="confirm" />Yes</button>
+    <button type="button" class="btn btn-default" (click)="cancelDelete()"><app-action-icon action="cancel" />No</button>
   </mat-dialog-actions>
 </ng-template>
 
 <ng-template #addupdatetemplate>
-  <h2 mat-dialog-title>
+  <h2 mat-dialog-title><app-action-icon action="settings" />
     {{ selectedEntry.id == GuidEmpty ? "Add" : "Update" }}
   </h2>
   <mat-dialog-content>
@@ -135,7 +136,7 @@
               <div class="mb-3 row">
                 <label class="col-sm-3 col-form-label"></label>
                 <div class="col-sm-9">
-                  <button class="btn btn-primary">Save</button>
+                  <button class="btn btn-primary"><app-action-icon action="save" />Save</button>
                 </div>
               </div>
             </form>
@@ -143,7 +144,7 @@
         </ng-template>
 
         <ng-template #import_excel_modal_template>
-          <h2 mat-dialog-title>Import Excel</h2>
+          <h2 mat-dialog-title><app-action-icon action="import" />Import Excel</h2>
           <mat-dialog-content>
             <form #form="ngForm" (ngSubmit)="confirmImportExcelFile(form)">
               <div class="mb-3 row">
@@ -162,7 +163,7 @@
                 </div>
                 <div class="mb-3 row">
                   <div class="col-sm-12" style="text-align: center">
-                    <button class="btn btn-primary">Import</button>
+                    <button class="btn btn-primary"><app-action-icon action="import" />Import</button>
                   </div>
                 </div>
               </form>

@@ -11,6 +11,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ActionIcon: typeof import('./src/components/ActionIcon.vue')['default']
     BModal: typeof import('bootstrap-vue-next/components/BModal')['BModal']
     CopyToClipboard: typeof import('./src/components/CopyToClipboard.vue')['default']
     Notification: typeof import('./src/components/Notification.vue')['default']

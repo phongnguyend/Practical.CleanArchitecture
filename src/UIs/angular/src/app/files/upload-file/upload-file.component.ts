@@ -7,6 +7,8 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { FileService } from "../file.service";
 import { NgModel, NgForm } from "@angular/forms";
 import { GuidEmpty } from "../../shared/constants";
+import { NgIcon } from "@ng-icons/core";
+import { ActionIconComponent } from "../../shared/action-icon.component";
 
 @Component({
   selector: "app-upload-file",
@@ -14,7 +16,7 @@ import { GuidEmpty } from "../../shared/constants";
   styleUrls: ["./upload-file.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [FormsModule, RouterModule],
+  imports: [FormsModule, RouterModule, NgIcon, ActionIconComponent],
 })
 export class UploadFileComponent implements OnInit {
   file: IFile = {

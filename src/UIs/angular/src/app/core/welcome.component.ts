@@ -4,12 +4,13 @@ import { Title } from "@angular/platform-browser";
 import { AppendVersionPipe } from "../shared/append-version.pipe";
 import { AppendCurrentDateTimePipe } from "../shared/append-current-datetime.pipe";
 import { TimerComponent } from "../shared/timer.component";
+import { ActionIconComponent } from "../shared/action-icon.component";
 
 @Component({
   templateUrl: "./welcome.component.html",
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [AppendVersionPipe, AppendCurrentDateTimePipe, TimerComponent],
+  imports: [AppendVersionPipe, AppendCurrentDateTimePipe, TimerComponent, ActionIconComponent],
 })
 export class WelcomeComponent {
   public pageTitle = "Welcome ClassifiedAds Angular";

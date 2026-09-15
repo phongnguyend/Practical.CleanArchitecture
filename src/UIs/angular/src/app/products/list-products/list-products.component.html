@@ -1,17 +1,17 @@
 <div class="card">
   <div class="card-header">
-    {{ pageTitle }}
+    <app-action-icon action="products" />{{ pageTitle }}
     <div style="float: right">
-      <button type="button" class="btn btn-secondary" (click)="exportAsPdf()">Export as Pdf</button>
+      <button type="button" class="btn btn-secondary" (click)="exportAsPdf()"><app-action-icon action="export" />Export as Pdf</button>
       &nbsp;
-      <button type="button" class="btn btn-secondary" (click)="exportAsCsv()">Export as Csv</button>
+      <button type="button" class="btn btn-secondary" (click)="exportAsCsv()"><app-action-icon action="export" />Export as Csv</button>
       &nbsp;
       <a class="btn btn-primary" routerLinkActive="active" [routerLink]="['/products/add']">
-        Add Product
+        <app-action-icon action="add" />Add Product
       </a>
       &nbsp;
       <button class="btn btn-primary" (click)="openImportCsvModal(import_csv_modal_template)">
-        Import Csv
+        <app-action-icon action="import" />Import Csv
       </button>
     </div>
   </div>
@@ -36,7 +36,7 @@
             <tr>
               <th>
                 <button class="btn btn-primary" (click)="toggleImage()">
-                  {{ showImage ? "Hide" : "Show" }} Image
+                  <app-action-icon [action]="showImage ? 'hide' : 'show'" />{{ showImage ? "Hide" : "Show" }} Image
                 </button>
               </th>
               <th>Product</th>
@@ -62,7 +62,7 @@
                 </td>
                 <td>
                   <a [routerLink]="['/products', product.id]">
-                    {{ product.name }}
+                    <app-action-icon action="view" />{{ product.name }}
                   </a>
                 </td>
                 <td>{{ product.code | uppercase }}</td>
@@ -78,7 +78,7 @@
                     routerLinkActive="active"
                     [routerLink]="['/products/edit', product.id]"
                     >
-                    Edit
+                  <app-action-icon action="edit" />Edit
                   </a>
                   &nbsp;
                   <button
@@ -86,7 +86,7 @@
                     class="btn btn-primary btn-secondary"
                     (click)="viewAuditLogs(template, product.id)"
                     >
-                    View Audit Logs
+                    <app-action-icon action="history" />View Audit Logs
                   </button>
                   &nbsp;
                   <app-delete-product
@@ -107,7 +107,7 @@
 }
 
 <ng-template #template>
-  <h2 mat-dialog-title>Audit Logs</h2>
+  <h2 mat-dialog-title><app-action-icon action="audit" />Audit Logs</h2>
   <mat-dialog-content>
     <div class="table-responsive">
       <table class="table">
@@ -145,12 +145,12 @@
     </div>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
-    <button type="button" class="btn btn-default" mat-dialog-close>Close</button>
+    <button type="button" class="btn btn-default" mat-dialog-close><app-action-icon action="close" />Close</button>
   </mat-dialog-actions>
 </ng-template>
 
 <ng-template #import_csv_modal_template>
-  <h2 mat-dialog-title>Import Csv</h2>
+  <h2 mat-dialog-title><app-action-icon action="import" />Import Csv</h2>
   <mat-dialog-content>
     <form #form="ngForm" (ngSubmit)="confirmImportCsvFile(form)">
       <div class="mb-3 row">
@@ -169,7 +169,7 @@
         </div>
         <div class="mb-3 row">
           <div class="col-sm-12" style="text-align: center">
-            <button class="btn btn-primary">Import</button>
+            <button class="btn btn-primary"><app-action-icon action="import" />Import</button>
           </div>
         </div>
       </form>

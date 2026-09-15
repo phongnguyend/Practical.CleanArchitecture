@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ChevronLeft } from "lucide-react";
 import { Navigate, NavLink, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import DatePicker from "react-datepicker";
@@ -6,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
+import ActionIcon from "../../../components/ActionIcon/ActionIcon";
 
 const AddUser = () => {
   const [state, setState] = useState({
@@ -122,7 +124,7 @@ const AddUser = () => {
 
   const form = (
     <div className="card">
-      <div className="card-header">{state.title}</div>
+      <div className="card-header"><ActionIcon action="users" />{state.title}</div>
       <div className="card-body">
         {state.errorMessage ? (
           <div className="row alert alert-danger">{state.errorMessage}</div>
@@ -280,14 +282,14 @@ const AddUser = () => {
           <div className="mb-3 row">
             <label htmlFor="description" className="col-sm-3 col-form-label"></label>
             <div className="col-sm-9">
-              <button className="btn btn-primary">Save</button>
+              <button className="btn btn-primary"><ActionIcon action="save" /> Save</button>
             </div>
           </div>
         </form>
       </div>
       <div className="card-footer">
         <NavLink className="btn btn-outline-secondary" to="/users" style={{ width: "80px" }}>
-          <i className="fa fa-chevron-left"></i> Back
+          <ChevronLeft size={16} aria-hidden="true" /> Back
         </NavLink>
       </div>
     </div>

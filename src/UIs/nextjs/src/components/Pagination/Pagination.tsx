@@ -1,4 +1,5 @@
 import { Pagination as BootstrapPagination } from "react-bootstrap";
+import ActionIcon from "../ActionIcon/ActionIcon";
 
 interface PaginationProps {
   totalItems: number;
@@ -48,23 +49,11 @@ const Pagination = (props: PaginationProps) => {
 
   return (
     <BootstrapPagination>
-      <BootstrapPagination.First
-        disabled={currentPage === 1}
-        onClick={() => pageSelected(1)}
-      />
-      <BootstrapPagination.Prev
-        disabled={currentPage === 1}
-        onClick={() => pageSelected(currentPage - 1)}
-      />
+      <BootstrapPagination.Item disabled={currentPage === 1} onClick={() => pageSelected(1)} aria-label="First page"><ActionIcon action="first" className="" /></BootstrapPagination.Item>
+      <BootstrapPagination.Item disabled={currentPage === 1} onClick={() => pageSelected(currentPage - 1)} aria-label="Previous page"><ActionIcon action="previous" className="" /></BootstrapPagination.Item>
       {pageItems}
-      <BootstrapPagination.Next
-        disabled={currentPage === totalPages}
-        onClick={() => pageSelected(currentPage + 1)}
-      />
-      <BootstrapPagination.Last
-        disabled={currentPage === totalPages}
-        onClick={() => pageSelected(totalPages)}
-      />
+      <BootstrapPagination.Item disabled={currentPage === totalPages} onClick={() => pageSelected(currentPage + 1)} aria-label="Next page"><ActionIcon action="next" className="" /></BootstrapPagination.Item>
+      <BootstrapPagination.Item disabled={currentPage === totalPages} onClick={() => pageSelected(totalPages)} aria-label="Last page"><ActionIcon action="last" className="" /></BootstrapPagination.Item>
     </BootstrapPagination>
   );
 };

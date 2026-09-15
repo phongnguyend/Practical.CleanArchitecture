@@ -1,4 +1,5 @@
 import React from "react";
+import ActionIcon from "../../components/ActionIcon/ActionIcon";
 import Image from "next/image";
 import Timer from "../../components/Timer/Timer";
 
@@ -12,6 +13,7 @@ function Home() {
   return (
     <div className="card">
       <div className="card-header">
+        <ActionIcon action="home" />
         Welcome ClassifiedAds NextJs version: {nextVersion}
         <div style={{ float: "right", color: "green" }}>
           <Timer />
@@ -38,7 +40,7 @@ function Home() {
           <div className="text-center">@phongnguyend</div>
           <div className="text-center">
             <a href="https://github.com/phongnguyend/Practical.CleanArchitecture">
-              Practical.CleanArchitecture
+              <ActionIcon action="external" /> Practical.CleanArchitecture
             </a>
           </div>
           <div className="text-center">

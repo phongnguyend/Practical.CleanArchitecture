@@ -1,4 +1,4 @@
-import React from "react";
+import { StarIcon } from "lucide-react";
 
 import classes from "./Star.module.css";
 
@@ -21,11 +21,9 @@ const Star = (props: StarProps) => {
       }
     >
       <div style={{ width: "75px" }}>
-        <span className="fa fa-star"></span>
-        <span className="fa fa-star"></span>
-        <span className="fa fa-star"></span>
-        <span className="fa fa-star"></span>
-        <span className="fa fa-star"></span>
+        {Array.from({ length: 5 }, (_, index) => (
+          <StarIcon key={index} size={15} fill="currentColor" aria-hidden="true" />
+        ))}
       </div>
     </div>
   );

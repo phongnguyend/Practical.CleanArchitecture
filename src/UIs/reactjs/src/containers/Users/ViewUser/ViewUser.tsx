@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ChevronLeft } from "lucide-react";
 import { NavLink, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal, Button } from "react-bootstrap";
@@ -6,6 +7,7 @@ import { Modal, Button } from "react-bootstrap";
 import logo from "../../../logo.svg";
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
+import ActionIcon from "../../../components/ActionIcon/ActionIcon";
 
 const ViewUser = () => {
   const [state, setState] = useState({
@@ -184,7 +186,7 @@ const ViewUser = () => {
   const setPasswordModal = (
     <Modal show={state.showSetPasswordModal && !savedPassword} onHide={cancelSetPassword}>
       <Modal.Header closeButton>
-        <Modal.Title>Set Password</Modal.Title>
+        <Modal.Title><ActionIcon action="key" />Set Password</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {passwordErrors ? (
@@ -248,7 +250,7 @@ const ViewUser = () => {
           <div className="mb-3 row">
             <label className="col-sm-4 col-form-label"></label>
             <div className="col-sm-8">
-              <button className="btn btn-primary">Save</button>
+              <button className="btn btn-primary"><ActionIcon action="save" /> Save</button>
             </div>
           </div>
         </form>
@@ -262,7 +264,7 @@ const ViewUser = () => {
       onHide={cancelSendPasswordResetEmail}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Send Password Reset Email</Modal.Title>
+        <Modal.Title><ActionIcon action="mail" />Send Password Reset Email</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         Are you sure you want to send reset password email
@@ -270,10 +272,10 @@ const ViewUser = () => {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={cancelSendPasswordResetEmail}>
-          No
+          <ActionIcon action="cancel" /> No
         </Button>
         <Button variant="primary" onClick={() => sendPasswordResetEmail(user.id)}>
-          Yes
+          <ActionIcon action="mail" /> Yes
         </Button>
       </Modal.Footer>
     </Modal>
@@ -285,7 +287,7 @@ const ViewUser = () => {
       onHide={cancelSendEmailAddressConfirmationEmail}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Send Email Address Confirmation Email</Modal.Title>
+        <Modal.Title><ActionIcon action="mail" />Send Email Address Confirmation Email</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         Are you sure you want to send email address confirmation email
@@ -293,10 +295,10 @@ const ViewUser = () => {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={cancelSendEmailAddressConfirmationEmail}>
-          No
+          <ActionIcon action="cancel" /> No
         </Button>
         <Button variant="primary" onClick={() => sendEmailAddressConfirmationEmail(user.id)}>
-          Yes
+          <ActionIcon action="mail" /> Yes
         </Button>
       </Modal.Footer>
     </Modal>
@@ -304,7 +306,7 @@ const ViewUser = () => {
 
   const page = user ? (
     <div className="card">
-      <div className="card-header">{"User Detail: " + user.userName}</div>
+      <div className="card-header"><ActionIcon action="users" />{"User Detail: " + user.userName}</div>
 
       <div className="card-body">
         <div className="row">
@@ -360,15 +362,15 @@ const ViewUser = () => {
 
       <div className="card-footer">
         <button className="btn btn-outline-secondary" onClick={back} style={{ width: "80px" }}>
-          <i className="fa fa-chevron-left"></i> Back
+          <ChevronLeft size={16} aria-hidden="true" /> Back
         </button>
         &nbsp;
         <NavLink className="btn btn-primary" to={"/users/edit/" + user.id}>
-          Edit
+          <ActionIcon action="edit" /> Edit
         </NavLink>
         &nbsp;
         <button type="button" className="btn btn-secondary" onClick={() => showSetPasswordModal()}>
-          Set Password
+          <ActionIcon action="key" /> Set Password
         </button>
         &nbsp;
         <button
@@ -376,7 +378,7 @@ const ViewUser = () => {
           className="btn btn-secondary"
           onClick={() => showSendPasswordResetEmailModal()}
         >
-          Send Password Reset Email
+          <ActionIcon action="mail" /> Send Password Reset Email
         </button>
         &nbsp;
         <button
@@ -384,7 +386,7 @@ const ViewUser = () => {
           className="btn btn-secondary"
           onClick={() => showSendEmailAddressConfirmationEmailModal()}
         >
-          Send Email Address Confirmation Email
+          <ActionIcon action="mail" /> Send Email Address Confirmation Email
         </button>
       </div>
 

@@ -1,15 +1,16 @@
 <button type="button" class="btn btn-primary btn-danger" (click)="openModal(template)">
-  Delete
+  <app-action-icon action="delete" />Delete
 </button>
 
 <ng-template #template>
+  <h2 mat-dialog-title><app-action-icon action="delete" />Delete Product</h2>
   <mat-dialog-content class="text-center">
     <p>
       Are you sure you want to delete <strong> {{ product.name }}</strong>
     </p>
   </mat-dialog-content>
   <mat-dialog-actions align="center">
-    <button type="button" class="btn btn-primary" (click)="confirm()">Yes</button>
-    <button type="button" class="btn btn-default" (click)="decline()">No</button>
+    <button type="button" class="btn btn-primary" (click)="confirm()"><app-action-icon action="confirm" />Yes</button>
+    <button type="button" class="btn btn-default" (click)="decline()"><app-action-icon action="cancel" />No</button>
   </mat-dialog-actions>
 </ng-template>

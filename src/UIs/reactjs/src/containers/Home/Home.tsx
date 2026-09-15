@@ -1,4 +1,5 @@
 import React from "react";
+import ActionIcon from "../../components/ActionIcon/ActionIcon";
 import logo from "../../logo.svg";
 import Timer from "../../components/Timer/Timer";
 
@@ -9,6 +10,7 @@ function Home() {
   return (
     <div className="card">
       <div className="card-header">
+        <ActionIcon action="home" />
         Welcome ClassifiedAds React version: {React.version}
         <div style={{ float: "right", color: "green" }}>
           <Timer />
@@ -32,7 +34,7 @@ function Home() {
           <div className="text-center">@phongnguyend</div>
           <div className="text-center">
             <a href="https://github.com/phongnguyend/Practical.CleanArchitecture">
-              Practical.CleanArchitecture
+              <ActionIcon action="external" /> Practical.CleanArchitecture
             </a>
           </div>
           <div className="text-center">

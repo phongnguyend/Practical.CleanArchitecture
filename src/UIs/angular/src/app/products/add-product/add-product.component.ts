@@ -6,13 +6,15 @@ import { IProduct } from "../product";
 import { NgModel, NgForm } from "@angular/forms";
 import { ProductService } from "../product.service";
 import { GuidEmpty } from "../../shared/constants";
+import { NgIcon } from "@ng-icons/core";
+import { ActionIconComponent } from "../../shared/action-icon.component";
 
 @Component({
   templateUrl: "./add-product.component.html",
   styleUrls: ["./add-product.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [FormsModule, ReactiveFormsModule, RouterModule],
+  imports: [FormsModule, ReactiveFormsModule, RouterModule, NgIcon, ActionIconComponent],
 })
 export class AddProductComponent implements OnInit {
   product: IProduct = {

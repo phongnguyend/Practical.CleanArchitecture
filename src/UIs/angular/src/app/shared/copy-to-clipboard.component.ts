@@ -1,16 +1,17 @@
 import { Component, Input, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
+import { NgIcon } from "@ng-icons/core";
 
 @Component({
   selector: "app-copy-to-clipboard",
   standalone: true,
-  imports: [],
+  imports: [NgIcon],
   templateUrl: "./copy-to-clipboard.component.html",
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./copy-to-clipboard.component.css"],
 })
 export class CopyToClipboardComponent implements OnDestroy {
   @Input() text: string = "";
-  @Input() className: string = "copy-icon fa fa-clipboard";
+  @Input() className: string = "copy-icon";
   @Input() title: string = "Copy Data";
 
   copyStatus: string = "";

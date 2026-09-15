@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { ChevronLeft } from "lucide-react";
 import { NavLink, Navigate } from "react-router-dom";
 import { checkValidity } from "../../../shared/utility";
 import axios from "../axios";
+import ActionIcon from "../../../components/ActionIcon/ActionIcon";
 
 const UploadFile = () => {
   const [state, setState] = useState({
@@ -121,7 +123,7 @@ const UploadFile = () => {
 
   const form = (
     <div className="card">
-      <div className="card-header">{state.title}</div>
+      <div className="card-header"><ActionIcon action="upload" />{state.title}</div>
       <div className="card-body">
         {state.errorMessage ? (
           <div className="row alert alert-danger">{state.errorMessage}</div>
@@ -209,14 +211,14 @@ const UploadFile = () => {
           <div className="mb-3 row">
             <label htmlFor="description" className="col-sm-2 col-form-label"></label>
             <div className="col-sm-10">
-              <button className="btn btn-primary">Save</button>
+              <button className="btn btn-primary"><ActionIcon action="save" /> Save</button>
             </div>
           </div>
         </form>
       </div>
       <div className="card-footer">
         <NavLink className="btn btn-outline-secondary" to="/files" style={{ width: "80px" }}>
-          <i className="fa fa-chevron-left"></i> Back
+          <ChevronLeft size={16} aria-hidden="true" /> Back
         </NavLink>
       </div>
     </div>

@@ -8,6 +8,8 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { NgForm } from "@angular/forms";
 import { MatDialogModule } from "@angular/material/dialog";
+import { NgIcon } from "@ng-icons/core";
+import { ActionIconComponent } from "../../shared/action-icon.component";
 
 @Component({
   selector: "app-view-user-details",
@@ -15,7 +17,7 @@ import { MatDialogModule } from "@angular/material/dialog";
   styleUrls: ["./view-user-details.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [FormsModule, RouterModule, MatDialogModule],
+  imports: [FormsModule, RouterModule, MatDialogModule, NgIcon, ActionIconComponent],
 })
 export class ViewUserDetailsComponent implements OnInit {
   user: IUser = null;

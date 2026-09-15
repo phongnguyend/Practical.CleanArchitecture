@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
 import axios from "../axios";
+import ActionIcon from "../../../components/ActionIcon/ActionIcon";
 
 type FileType = {
   id: string;
@@ -92,26 +93,26 @@ const ListFiles = () => {
   const rows = files?.map((file: any) => (
     <tr key={file.id}>
       <td>
-        <NavLink to={"/files/" + file.id}>{file.name + " (" + file.fileName + ")"}</NavLink>
+        <NavLink to={"/files/" + file.id}><ActionIcon action="view" />{file.name + " (" + file.fileName + ")"}</NavLink>
       </td>
       <td>{file.description}</td>
       <td>{file.size}</td>
       <td>{formatDateTime(file.uploadedTime)}</td>
       <td>
         <button type="button" className="btn btn-secondary" onClick={() => downloadFile(file)}>
-          Download
+          <ActionIcon action="download" /> Download
         </button>
         &nbsp;
         <NavLink className="btn btn-primary" to={"/files/edit/" + file.id}>
-          Edit
+          <ActionIcon action="edit" /> Edit
         </NavLink>
         &nbsp;
         <button type="button" className="btn btn-secondary" onClick={() => viewAuditLogs(file)}>
-          View Audit Logs
+          <ActionIcon action="history" /> View Audit Logs
         </button>
         &nbsp;
         <button type="button" className="btn btn-danger" onClick={() => deleteFile(file)}>
-          Delete
+          <ActionIcon action="delete" /> Delete
         </button>
       </td>
     </tr>
@@ -150,6 +151,7 @@ const ListFiles = () => {
 
   const auditLogsModal = (
     <Modal size="xl" show={showAuditLogsModal} onHide={() => setShowAuditLogsModal(false)}>
+      <Modal.Header closeButton><Modal.Title><ActionIcon action="audit" />Audit Logs</Modal.Title></Modal.Header>
       <Modal.Body>
         <div className="table-responsive">
           <table className="table">
@@ -174,7 +176,7 @@ const ListFiles = () => {
   const deleteModal = (
     <Modal show={showDeleteModal} onHide={deleteCanceled}>
       <Modal.Header closeButton>
-        <Modal.Title>Delete File</Modal.Title>
+        <Modal.Title><ActionIcon action="delete" />Delete File</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         Are you sure you want to delete
@@ -182,10 +184,10 @@ const ListFiles = () => {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={deleteCanceled}>
-          No
+          <ActionIcon action="cancel" /> No
         </Button>
         <Button variant="primary" onClick={deleteConfirmed}>
-          Yes
+          <ActionIcon action="confirm" /> Yes
         </Button>
       </Modal.Footer>
     </Modal>
@@ -195,9 +197,9 @@ const ListFiles = () => {
     <div>
       <div className="card">
         <div className="card-header">
-          {pageTitle}
+          <ActionIcon action="files" />{pageTitle}
           <NavLink className="btn btn-primary" style={{ float: "right" }} to="/files/upload">
-            Upload File
+            <ActionIcon action="upload" /> Upload File
           </NavLink>
         </div>
         <div className="card-body">

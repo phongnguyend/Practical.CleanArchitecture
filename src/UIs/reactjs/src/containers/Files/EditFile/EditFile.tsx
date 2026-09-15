@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { ChevronLeft } from "lucide-react";
 import { NavLink, Navigate, useParams } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 
 import { checkValidity } from "../../../shared/utility";
 import axios from "../axios";
+import ActionIcon from "../../../components/ActionIcon/ActionIcon";
 
 const EditFile = () => {
   const [state, setState] = useState({
@@ -135,7 +137,7 @@ const EditFile = () => {
 
   const form = (
     <div className="card">
-      <div className="card-header">{state.title}</div>
+      <div className="card-header"><ActionIcon action="files" />{state.title}</div>
       <div className="card-body">
         {state.errorMessage ? (
           <div className="row alert alert-danger">{state.errorMessage}</div>
@@ -220,14 +222,14 @@ const EditFile = () => {
           <div className="mb-3 row">
             <label htmlFor="description" className="col-sm-2 col-form-label"></label>
             <div className="col-sm-10">
-              <button className="btn btn-primary">Save</button>
+              <button className="btn btn-primary"><ActionIcon action="save" /> Save</button>
             </div>
           </div>
         </form>
       </div>
       <div className="card-footer">
         <NavLink className="btn btn-outline-secondary" to="/files" style={{ width: "80px" }}>
-          <i className="fa fa-chevron-left"></i> Back
+          <ChevronLeft size={16} aria-hidden="true" /> Back
         </NavLink>
         &nbsp;
         <button
@@ -235,7 +237,7 @@ const EditFile = () => {
           className="btn btn-primary btn-secondary"
           onClick={() => viewAuditLogs()}
         >
-          View Audit Logs
+          <ActionIcon action="history" /> View Audit Logs
         </button>
       </div>
     </div>
@@ -262,6 +264,7 @@ const EditFile = () => {
       show={state.showAuditLogsModal}
       onHide={() => setState({ ...state, showAuditLogsModal: false })}
     >
+      <Modal.Header closeButton><Modal.Title><ActionIcon action="audit" />Audit Logs</Modal.Title></Modal.Header>
       <Modal.Body>
         <div className="table-responsive">
           <table className="table">

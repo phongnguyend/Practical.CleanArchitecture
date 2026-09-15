@@ -1,9 +1,9 @@
 <ul class="pagination">
   <li class="page-item" [class.disabled]="currentPage == 1">
-    <a class="page-link" (click)="selectPage(1)">First</a>
+    <a class="page-link" (click)="selectPage(1)"><app-action-icon action="first" />First</a>
   </li>
   <li class="page-item" [class.disabled]="currentPage == 1">
-    <a class="page-link" (click)="selectPage(currentPage - 1)">Previous</a>
+    <a class="page-link" (click)="selectPage(currentPage - 1)"><app-action-icon action="previous" />Previous</a>
   </li>
 
   @for (pageNumber of pageNumbers; track pageNumber) {
@@ -16,9 +16,9 @@
   }
 
   <li class="page-item" [class.disabled]="currentPage == totalPages">
-    <a class="page-link" (click)="selectPage(currentPage + 1)">Next</a>
+    <a class="page-link" (click)="selectPage(currentPage + 1)"><app-action-icon action="next" />Next</a>
   </li>
   <li class="page-item" [class.disabled]="currentPage == totalPages">
-    <a class="page-link" (click)="selectPage(totalPages)">Last</a>
+    <a class="page-link" (click)="selectPage(totalPages)"><app-action-icon action="last" />Last</a>
   </li>
 </ul>

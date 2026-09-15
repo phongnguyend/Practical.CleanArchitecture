@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Pagination from "../../components/Pagination/Pagination";
+import ActionIcon from "../../components/ActionIcon/ActionIcon";
 import axios from "./axios";
 
 interface AuditLog {
@@ -83,7 +84,7 @@ const AuditLogs = () => {
 
   return (
     <div className="card">
-      <div className="card-header">{pageTitle}</div>
+      <div className="card-header"><ActionIcon action="audit" />{pageTitle}</div>
       <div className="card-body">
         {pagination}
         <div className="table-responsive" style={{ width: "100%" }}>

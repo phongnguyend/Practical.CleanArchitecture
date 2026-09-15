@@ -1,5 +1,5 @@
 <div class="card">
-  <div class="card-header">Audit Logs</div>
+  <div class="card-header"><app-action-icon action="audit" />Audit Logs</div>
   <div class="card-body">
     <div class="table-responsive">
       <div style="float: right">
@@ -35,7 +35,7 @@
                       <div class="d-flex">
                         <app-copy-to-clipboard
                           [text]="auditLog.log"
-                          [className]="'custom-icon fa fa-copy'"
+                          [className]="'custom-icon'"
                           [title]="'Copy this text'"
                         ></app-copy-to-clipboard>
                       </div>

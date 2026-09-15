@@ -20,6 +20,15 @@ import { MatNativeDateModule } from "@angular/material/core";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDialogModule } from "@angular/material/dialog";
+import { provideIcons } from "@ng-icons/core";
+import {
+  lucideCheck, lucideChevronLeft, lucideChevronRight, lucideChevronsLeft,
+  lucideChevronsRight, lucideClipboard, lucideClipboardList, lucideDownload,
+  lucideExternalLink, lucideEye, lucideEyeOff, lucideFileDown, lucideFileUp,
+  lucideFiles, lucideHistory, lucideHouse, lucideKeyRound, lucideLogIn,
+  lucideLogOut, lucideMail, lucidePackage, lucidePencil, lucidePlus, lucideSave,
+  lucideSettings, lucideStar, lucideTrash2, lucideUpload, lucideUsers, lucideX,
+} from "@ng-icons/lucide";
 
 import { AppComponent } from "./app/app.component";
 import { environment } from "./environments/environment";
@@ -46,6 +55,14 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     provideZoneChangeDetection(),
+    provideIcons({
+      lucideCheck, lucideChevronLeft, lucideChevronRight, lucideChevronsLeft,
+      lucideChevronsRight, lucideClipboard, lucideClipboardList, lucideDownload,
+      lucideExternalLink, lucideEye, lucideEyeOff, lucideFileDown, lucideFileUp,
+      lucideFiles, lucideHistory, lucideHouse, lucideKeyRound, lucideLogIn,
+      lucideLogOut, lucideMail, lucidePackage, lucidePencil, lucidePlus, lucideSave,
+      lucideSettings, lucideStar, lucideTrash2, lucideUpload, lucideUsers, lucideX,
+    }),
     importProvidersFrom(
       BrowserModule,
       BrowserAnimationsModule,

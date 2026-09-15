@@ -6,6 +6,7 @@ import {
   Output,
   ChangeDetectionStrategy,
 } from "@angular/core";
+import { ActionIconComponent } from "./action-icon.component";
 
 @Component({
   selector: "app-pagination",
@@ -13,7 +14,7 @@ import {
   styleUrls: ["./pagination.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [],
+  imports: [ActionIconComponent],
 })
 export class PaginationComponent implements OnChanges {
   pageNumbers: Array<number> = [];

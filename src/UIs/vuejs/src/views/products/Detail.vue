@@ -1,6 +1,6 @@
 <template>
   <div class="card" v-if="product">
-    <div class="card-header">{{ pageTitle + ": " + product.name }}</div>
+    <div class="card-header"><ActionIcon action="products" />{{ pageTitle + ": " + product.name }}</div>
 
     <div class="card-body">
       <div class="row">
@@ -38,15 +38,16 @@
 
     <div class="card-footer">
       <button class="btn btn-outline-secondary" @click="onBack" style="width:80px">
-        <i class="fa fa-chevron-left"></i> Back
+        <ChevronLeft :size="16" aria-hidden="true" /> Back
       </button>
       &nbsp;
-      <router-link class="btn btn-primary" :to="'/products/edit/' + product.id">Edit</router-link>
+      <router-link class="btn btn-primary" :to="'/products/edit/' + product.id"><ActionIcon action="edit" />Edit</router-link>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ChevronLeft } from 'lucide-vue-next'
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from './axios'

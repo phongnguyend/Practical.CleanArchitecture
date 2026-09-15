@@ -7,6 +7,7 @@ import { Modal, Button } from "react-bootstrap";
 
 import Star from "../../../components/Star/Star";
 import axios from "../axios";
+import ActionIcon from "../../../components/ActionIcon/ActionIcon";
 
 interface Product {
   id: string;
@@ -198,7 +199,7 @@ const ListProducts = () => {
         ) : null}
       </td>
       <td>
-        <Link href={"/products/" + product.id}>{product.name}</Link>
+        <Link href={"/products/" + product.id}><ActionIcon action="view" />{product.name}</Link>
       </td>
       <td>{product.code?.toLocaleUpperCase()}</td>
       <td>{product.description}</td>
@@ -211,7 +212,7 @@ const ListProducts = () => {
       </td>
       <td>
         <Link className="btn btn-primary" href={"/products/edit/" + product.id}>
-          Edit
+          <ActionIcon action="edit" /> Edit
         </Link>
         &nbsp;
         <button
@@ -219,7 +220,7 @@ const ListProducts = () => {
           className="btn btn-primary btn-secondary"
           onClick={() => viewAuditLogs(product)}
         >
-          View Audit Logs
+          <ActionIcon action="history" /> View Audit Logs
         </button>
         &nbsp;
         <button
@@ -227,7 +228,7 @@ const ListProducts = () => {
           className="btn btn-primary btn-danger"
           onClick={() => deleteProduct(product)}
         >
-          Delete
+          <ActionIcon action="delete" /> Delete
         </button>
       </td>
     </tr>
@@ -239,7 +240,7 @@ const ListProducts = () => {
         <tr>
           <th>
             <button className="btn btn-primary" onClick={toggleImage}>
-              {showImage ? "Hide" : "Show"} Image
+              <ActionIcon action={showImage ? "hide" : "show"} /> {showImage ? "Hide" : "Show"} Image
             </button>
           </th>
           <th>Product</th>
@@ -275,6 +276,7 @@ const ListProducts = () => {
       show={auditLogsModalOpen}
       onHide={() => setAuditLogsModalOpen(false)}
     >
+      <Modal.Header closeButton><Modal.Title><ActionIcon action="audit" />Audit Logs</Modal.Title></Modal.Header>
       <Modal.Body>
         <div className="table-responsive">
           <table className="table">
@@ -298,7 +300,7 @@ const ListProducts = () => {
   const deleteModal = (
     <Modal show={deleteModalOpen} onHide={deleteCanceled}>
       <Modal.Header closeButton>
-        <Modal.Title>Delete Product</Modal.Title>
+        <Modal.Title><ActionIcon action="delete" />Delete Product</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         Are you sure you want to delete
@@ -306,10 +308,10 @@ const ListProducts = () => {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={deleteCanceled}>
-          No
+          <ActionIcon action="cancel" /> No
         </Button>
         <Button variant="primary" onClick={deleteConfirmed}>
-          Yes
+          <ActionIcon action="confirm" /> Yes
         </Button>
       </Modal.Footer>
     </Modal>
@@ -318,7 +320,7 @@ const ListProducts = () => {
   const importCsvModal = (
     <Modal show={importCsvModalOpen} onHide={importCsvCanceled}>
       <Modal.Header closeButton>
-        <Modal.Title>Import Csv</Modal.Title>
+        <Modal.Title><ActionIcon action="import" />Import Csv</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <form onSubmit={importCsvConfirmed}>
@@ -339,7 +341,7 @@ const ListProducts = () => {
           </div>
           <div className="mb-3 row">
             <div className="col-sm-12" style={{ textAlign: "center" }}>
-              <button className="btn btn-primary">Import</button>
+              <button className="btn btn-primary"><ActionIcon action="import" /> Import</button>
             </div>
           </div>
         </form>
@@ -351,14 +353,14 @@ const ListProducts = () => {
     <div>
       <div className="card">
         <div className="card-header">
-          {pageTitle}
+          <ActionIcon action="products" />{pageTitle}
           <div style={{ float: "right" }}>
             <button
               type="button"
               className="btn btn-secondary"
               onClick={exportAsPdf}
             >
-              Export as Pdf
+              <ActionIcon action="export" /> Export as Pdf
             </button>
             &nbsp;
             <button
@@ -366,18 +368,18 @@ const ListProducts = () => {
               className="btn btn-secondary"
               onClick={exportAsCsv}
             >
-              Export as Csv
+              <ActionIcon action="export" /> Export as Csv
             </button>
             &nbsp;
             <Link className="btn btn-primary" href="/products/add">
-              Add Product
+              <ActionIcon action="add" /> Add Product
             </Link>
             &nbsp;
             <button
               className="btn btn-primary"
               onClick={() => openImportCsvModal()}
             >
-              Import Csv
+              <ActionIcon action="import" /> Import Csv
             </button>
           </div>
         </div>

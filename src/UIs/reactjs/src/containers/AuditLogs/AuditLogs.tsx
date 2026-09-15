@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Pagination from "../../components/Pagination/Pagination";
+import ActionIcon from "../../components/ActionIcon/ActionIcon";
 import CopyToClipboard from "../../components/CopyToClipboard/CopyToClipboard";
 import JsonViewer from "../../components/JsonViewer/JsonViewer";
 import axios from "./axios";
@@ -47,7 +48,7 @@ const AuditLogs = () => {
       <td>
         <div className="position-relative">
           <div className="position-absolute top-0 end-0">
-            <div className="d-flex">
+            <div className="d-flex align-items-center gap-1">
               <JsonViewer jsonData={auditLog.log} />
               <CopyToClipboard text={auditLog.log} />
             </div>
@@ -85,7 +86,7 @@ const AuditLogs = () => {
 
   return (
     <div className="card">
-      <div className="card-header">{pageTitle}</div>
+      <div className="card-header"><ActionIcon action="audit" />{pageTitle}</div>
       <div className="card-body">
         {pagination}
         <div className="table-responsive" style={{ width: "100%" }}>

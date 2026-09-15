@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { ChevronLeft } from "lucide-react";
 import { NavLink, Navigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
+import ActionIcon from "../../../components/ActionIcon/ActionIcon";
 
 const AddProduct = () => {
   const [state, setState] = useState({
@@ -110,7 +112,7 @@ const AddProduct = () => {
 
   const form = (
     <div className="card">
-      <div className="card-header">{state.title}</div>
+      <div className="card-header"><ActionIcon action="products" />{state.title}</div>
       <div className="card-body">
         {state.errorMessage ? (
           <div className="row alert alert-danger">{state.errorMessage}</div>
@@ -190,14 +192,14 @@ const AddProduct = () => {
           <div className="mb-3 row">
             <label htmlFor="description" className="col-sm-2 col-form-label"></label>
             <div className="col-sm-10">
-              <button className="btn btn-primary">Save</button>
+              <button className="btn btn-primary"><ActionIcon action="save" /> Save</button>
             </div>
           </div>
         </form>
       </div>
       <div className="card-footer">
         <NavLink className="btn btn-outline-secondary" to="/products" style={{ width: "80px" }}>
-          <i className="fa fa-chevron-left"></i> Back
+          <ChevronLeft size={16} aria-hidden="true" /> Back
         </NavLink>
       </div>
     </div>

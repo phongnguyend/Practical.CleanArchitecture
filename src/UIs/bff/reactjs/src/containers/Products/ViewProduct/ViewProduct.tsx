@@ -1,10 +1,12 @@
 import { useEffect } from "react";
+import { ChevronLeft } from "lucide-react";
 import { NavLink, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import logo from "../../../logo.svg";
 import Star from "../../../components/Star/Star";
 import * as actions from "../actions";
+import ActionIcon from "../../../components/ActionIcon/ActionIcon";
 
 const ViewProduct = () => {
 
@@ -27,6 +29,7 @@ const ViewProduct = () => {
   const page = product ? (
     <div className="card">
       <div className="card-header">
+        <ActionIcon action="products" />
         {"Product Detail: " + product.name}
       </div>
 
@@ -74,14 +77,14 @@ const ViewProduct = () => {
           onClick={back}
           style={{ width: "80px" }}
         >
-          <i className="fa fa-chevron-left"></i> Back
+          <ChevronLeft size={16} aria-hidden="true" /> Back
         </button>
         &nbsp;
         <NavLink
           className="btn btn-primary"
           to={"/products/edit/" + product.id}
         >
-          Edit
+          <ActionIcon action="edit" /> Edit
         </NavLink>
       </div>
     </div>
