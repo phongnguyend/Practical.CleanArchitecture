@@ -28,6 +28,7 @@ const iconNames = {
   next: "lucideChevronRight",
   previous: "lucideChevronLeft",
   products: "lucidePackage",
+  roles: "lucideShield",
   save: "lucideSave",
   settings: "lucideSettings",
   show: "lucideEye",
@@ -42,6 +43,7 @@ const iconNames = {
   standalone: true,
   imports: [NgIcon],
   template: `<ng-icon [name]="iconName" size="16" class="me-1" aria-hidden="true" />`,
+  styles: [":host { display: inline-flex; align-items: center; vertical-align: middle; }"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ActionIconComponent {

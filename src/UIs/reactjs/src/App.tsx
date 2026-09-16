@@ -16,6 +16,7 @@ import EditFile from "./containers/Files/EditFile/EditFile";
 import ListUsers from "./containers/Users/ListUsers/ListUsers";
 import AddUser from "./containers/Users/AddUser/AddUser";
 import ViewUser from "./containers/Users/ViewUser/ViewUser";
+import Roles from "./containers/Roles/Roles";
 import Login from "./containers/Auth/Login";
 import Logout from "./containers/Auth/Logout";
 
@@ -38,6 +39,8 @@ function App() {
         <Route path="/users/edit/:id" element={<AddUser />} />
         <Route path="/users/:id" element={<ViewUser />} />
         <Route path="/users" element={<ListUsers />} />
+        <Route path="/roles/:id" element={<Roles mode="view" />} />
+        <Route path="/roles" element={<Roles mode="list" />} />
         <Route path="/auditlogs" element={<AuditLogs />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />

@@ -14,3 +14,11 @@ div.card {
 .table {
   margin-top: 10px;
 }
+
+app-action-icon ng-icon svg {
+  display: block;
+}
+
+.navbar .nav-link.active app-action-icon ng-icon svg {
+  stroke-width: 2.5;
+}

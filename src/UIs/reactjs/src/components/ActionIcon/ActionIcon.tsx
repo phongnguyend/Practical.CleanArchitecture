@@ -23,6 +23,7 @@ import {
   Plus,
   Save,
   Settings,
+  Shield,
   Trash2,
   Upload,
   Users,
@@ -57,6 +58,7 @@ const icons = {
   next: ChevronRight,
   previous: ChevronLeft,
   products: Package,
+  roles: Shield,
   save: Save,
   settings: Settings,
   show: Eye,
@@ -73,7 +75,7 @@ interface ActionIconProps {
 
 const ActionIcon = ({ action, className = "me-1" }: ActionIconProps) => {
   const Icon = icons[action];
-  return <Icon size={16} className={className} aria-hidden="true" />;
+  return <Icon size={16} className={`align-middle ${className}`.trim()} aria-hidden="true" />;
 };
 
 export default ActionIcon;

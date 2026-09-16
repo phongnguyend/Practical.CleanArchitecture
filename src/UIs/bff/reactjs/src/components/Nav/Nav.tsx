@@ -16,7 +16,7 @@ const Nav = () => {
         <ActionIcon action="home" />
         {pageTitle + " " + React.version}
       </a>
-      <ul className="nav nav-pills">
+      <ul className="nav nav-tabs flex-grow-1">
         <li>
           <NavLink className="nav-link" to="/home">
             <ActionIcon action="home" /> Home
@@ -42,6 +42,7 @@ const Nav = () => {
             <ActionIcon action="users" /> Users
           </NavLink>
         </li>
+        <li><NavLink className="nav-link" to="/roles"><ActionIcon action="roles" /> Roles</NavLink></li>
         <li>
           <NavLink className="nav-link" to="/auditlogs">
             <ActionIcon action="audit" /> Audit Logs
@@ -49,7 +50,7 @@ const Nav = () => {
         </li>
 
         {!isAuthenticated() ? (
-          <li>
+          <li className="ms-auto">
             <a className="nav-link" href="/login">
               <ActionIcon action="login" /> Login
             </a>
@@ -57,7 +58,7 @@ const Nav = () => {
         ) : null}
 
         {isAuthenticated() ? (
-          <li>
+          <li className="ms-auto">
             <a className="nav-link" onClick={logout} href="/logout">
               <ActionIcon action="logout" /> Logout
             </a>

@@ -2,7 +2,7 @@ import {
   Check, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ClipboardList,
   Download, ExternalLink, Eye, EyeOff, FileDown, FileUp, Files, History, House,
   KeyRound, LogIn, LogOut, Mail, Package, Pencil, Plus, Save, Settings, Trash2,
-  Upload, Users, X, type LucideIcon,
+  Upload, Users, Shield, X, type LucideIcon,
 } from "lucide-react";
 
 export type ActionIconName = keyof typeof icons;
@@ -14,7 +14,7 @@ const icons = {
   history: History, home: House, import: FileUp, key: KeyRound,
   last: ChevronsRight, login: LogIn, logout: LogOut, mail: Mail,
   next: ChevronRight, previous: ChevronLeft, products: Package, save: Save,
-  settings: Settings, show: Eye, hide: EyeOff, upload: Upload, users: Users,
+  settings: Settings, show: Eye, hide: EyeOff, upload: Upload, users: Users, roles: Shield,
   view: Eye,
 } satisfies Record<string, LucideIcon>;
 
@@ -25,7 +25,7 @@ interface ActionIconProps {
 
 const ActionIcon = ({ action, className = "me-1" }: ActionIconProps) => {
   const Icon = icons[action];
-  return <Icon size={16} className={className} aria-hidden="true" />;
+  return <Icon size={16} className={`align-middle ${className}`.trim()} aria-hidden="true" />;
 };
 
 export default ActionIcon;

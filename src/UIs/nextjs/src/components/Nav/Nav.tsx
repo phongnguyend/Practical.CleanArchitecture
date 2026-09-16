@@ -28,7 +28,7 @@ const Nav = ({ isAuthenticated }: NavProps) => {
         <ActionIcon action="home" />
         {pageTitle + " " + nextVersion}
       </Link>
-      <ul className="nav nav-pills">
+      <ul className="nav nav-tabs flex-grow-1">
         <li>
           <Link
             className={
@@ -73,6 +73,7 @@ const Nav = ({ isAuthenticated }: NavProps) => {
             <ActionIcon action="users" /> Users
           </Link>
         </li>
+        <li><Link className={isActive("/roles") ? "nav-link active" : "nav-link"} href="/roles"><ActionIcon action="roles" /> Roles</Link></li>
         <li>
           <Link
             className={isActive("/auditlogs") ? "nav-link active" : "nav-link"}
@@ -83,7 +84,7 @@ const Nav = ({ isAuthenticated }: NavProps) => {
         </li>
 
         {!isAuthenticated ? (
-          <li>
+          <li className="ms-auto">
             <Link className="nav-link" href="/login">
               <ActionIcon action="login" /> Login
             </Link>
@@ -91,7 +92,7 @@ const Nav = ({ isAuthenticated }: NavProps) => {
         ) : null}
 
         {isAuthenticated ? (
-          <li>
+          <li className="ms-auto">
             <Link className="nav-link" href="/logout">
               <ActionIcon action="logout" /> Logout
             </Link>

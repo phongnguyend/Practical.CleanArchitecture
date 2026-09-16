@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand navbar-light bg-light">
   <a class="navbar-brand" href="/"><app-action-icon action="home" />{{ pageTitle | appendVersion }}</a>
-  <ul class="nav nav-pills">
+  <ul class="nav nav-tabs flex-grow-1">
     <li>
       <a class="nav-link" routerLinkActive="active" [routerLink]="['/welcome']"
         ><app-action-icon action="home" />Home
@@ -30,6 +30,7 @@
         <app-action-icon action="users" />Users
       </a>
     </li>
+    <li><a class="nav-link" routerLinkActive="active" [routerLink]="['/roles']"><app-action-icon action="roles" />Roles</a></li>
     <li>
       <a
         class="nav-link"
@@ -40,14 +41,14 @@
       </a>
     </li>
     @if (!auth.isAuthenticated()) {
-      <li>
+      <li class="ms-auto">
         <a class="nav-link" (click)="login()" href="javascript:void(0)">
           <app-action-icon action="login" />Login
         </a>
       </li>
     }
     @if (auth.isAuthenticated()) {
-      <li>
+      <li class="ms-auto">
         <a class="nav-link" (click)="logout()" href="javascript:void(0)">
           <app-action-icon action="logout" />Logout
         </a>

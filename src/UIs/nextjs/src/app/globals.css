@@ -1,0 +1,4 @@
+.card-header > svg,
+.modal-title > svg {
+  transform: translateY(-2px);
+}

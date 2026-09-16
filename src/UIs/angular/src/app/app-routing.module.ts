@@ -15,6 +15,7 @@ import { EditProductGuard } from "./products/edit-product/edit-product.guard";
 import { ListUsersComponent } from "./users/list-users/list-users.component";
 import { AddEditUserComponent } from "./users/add-edit-user/add-edit-user.component";
 import { ViewUserDetailsComponent } from "./users/view-user-details/view-user-details.component";
+import { RolesComponent } from "./roles/roles.component";
 
 // Files
 import { ListFilesComponent } from "./files/list-files/list-files.component";
@@ -63,6 +64,8 @@ export const routes: Routes = [
     path: "users/:id",
     component: ViewUserDetailsComponent,
   },
+  { path: "roles", component: RolesComponent },
+  { path: "roles/:id", component: RolesComponent },
 
   // Files routes
   { path: "files", component: ListFilesComponent },

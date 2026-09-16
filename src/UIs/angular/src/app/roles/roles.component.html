@@ -1,0 +1,58 @@
+<div class="card mt-2">
+  <div class="card-header">
+    <app-action-icon action="roles" />{{ mode === 'list' ? 'Roles' : 'Role Details' }}
+    @if (mode === 'list') { <button class="btn btn-primary float-end" type="button" (click)="openAdd(addtemplate)"><app-action-icon action="add" />Add Role</button> }
+  </div>
+  <div class="card-body">
+    @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+    @if (mode === 'list') {
+      <div class="table-responsive"><table class="table">
+        <thead><tr><th>Name</th><th>Actions</th></tr></thead>
+        <tbody>
+          @for (item of roles(); track item.id) {
+            <tr><td><a [routerLink]="['/roles', item.id]"><app-action-icon action="view" />{{ item.name }}</a></td>
+              <td><div class="d-flex gap-2">
+                <button class="btn btn-primary" type="button" (click)="openEdit(edittemplate, item)"><app-action-icon action="edit" />Edit</button>
+                <button class="btn btn-danger" type="button" (click)="remove(item)"><app-action-icon action="delete" />Delete</button>
+              </div></td></tr>
+          }
+        </tbody>
+      </table></div>
+    }
+    @if (mode === 'view') {
+      <dl><dt>Name</dt><dd>{{ role().name }}</dd><dt>Normalized Name</dt><dd>{{ role().normalizedName }}</dd></dl>
+      <button class="btn btn-primary" type="button" [disabled]="!role().id" (click)="openEdit(edittemplate, role())"><app-action-icon action="edit" />Edit</button>
+    }
+  </div>
+  @if (mode !== 'list') { <div class="card-footer"><a class="btn btn-outline-secondary" routerLink="/roles"><app-action-icon action="back" />Back</a></div> }
+</div>
+
+<ng-template #addtemplate>
+  <h2 mat-dialog-title><app-action-icon action="add" />Add Role</h2>
+  <form (ngSubmit)="add()">
+    <mat-dialog-content>
+      @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+      <label class="form-label" for="newRoleName">Name</label>
+      <input id="newRoleName" name="newRoleName" class="form-control" [(ngModel)]="newRoleName" required />
+    </mat-dialog-content>
+    <mat-dialog-actions align="end" class="gap-2">
+      <button class="btn btn-secondary" type="button" (click)="addDialog.close()"><app-action-icon action="cancel" />Cancel</button>
+      <button class="btn btn-primary" type="submit" [disabled]="adding"><app-action-icon action="save" />{{ adding ? 'Saving...' : 'Save' }}</button>
+    </mat-dialog-actions>
+  </form>
+</ng-template>
+
+<ng-template #edittemplate>
+  <h2 mat-dialog-title><app-action-icon action="edit" />Edit Role</h2>
+  <form (ngSubmit)="save()">
+    <mat-dialog-content>
+      @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
+      <label class="form-label" for="editRoleName">Name</label>
+      <input id="editRoleName" name="editRoleName" class="form-control" [(ngModel)]="editName" required />
+    </mat-dialog-content>
+    <mat-dialog-actions align="end" class="gap-2">
+      <button class="btn btn-secondary" type="button" (click)="editDialog.close()"><app-action-icon action="cancel" />Cancel</button>
+      <button class="btn btn-primary" type="submit" [disabled]="saving"><app-action-icon action="save" />{{ saving ? 'Saving...' : 'Save' }}</button>
+    </mat-dialog-actions>
+  </form>
+</ng-template>

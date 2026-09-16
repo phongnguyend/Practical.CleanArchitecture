@@ -18,6 +18,11 @@ div.card-header {
   font-size: large;
 }
 
+.card-header > svg,
+.modal-title > svg {
+  transform: translateY(-2px);
+}
+
 div.card {
   margin-top: 10px;
 }

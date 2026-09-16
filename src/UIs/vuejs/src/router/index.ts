@@ -73,6 +73,8 @@ const routes = [
     name: "UserDetail",
     component: () => import("../views/users/Detail.vue"),
   },
+  { path: "/roles", name: "Roles", component: () => import("../views/roles/Roles.vue") },
+  { path: "/roles/:id", name: "RoleDetail", component: () => import("../views/roles/Roles.vue") },
   {
     path: "/auditlogs",
     name: "AuditLogs",
