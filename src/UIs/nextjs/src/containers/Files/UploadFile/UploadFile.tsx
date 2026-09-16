@@ -7,6 +7,7 @@ import axios from "../axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ActionIcon from "../../../components/ActionIcon/ActionIcon";
+import FilePicker from "../../../components/FilePicker/FilePicker";
 
 const UploadFile = () => {
   const router = useRouter();
@@ -202,17 +203,7 @@ const UploadFile = () => {
               File
             </label>
             <div className="col-sm-10">
-              <input
-                id="formFile"
-                type="file"
-                name="formFile"
-                className={
-                  "form-control " +
-                  (state.submitted && !state.hasFile ? "is-invalid" : "")
-                }
-                onChange={handleFileInput}
-              />
-              <span className="invalid-feedback">Select a file</span>
+              <FilePicker id="formFile" name="formFile" label="File to upload" hint="Any file type" file={state.formFile} invalid={state.submitted && !state.hasFile} onChange={handleFileInput} />
             </div>
           </div>
           <div className="mb-3 row">

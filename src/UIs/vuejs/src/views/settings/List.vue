@@ -129,17 +129,7 @@
       <form @submit.prevent="confirmImportExcelFile">
         <div class="mb-3 row">
           <div class="col-sm-12">
-            <input
-              id="importingFile"
-              type="file"
-              name="importingFile"
-              class="form-control"
-              :class="{
-                'is-invalid': isImportExcelFormSubmitted && !importingFile,
-              }"
-              @change="handleFileInput(($event.target as HTMLInputElement)?.files || null)"
-            />
-            <span class="invalid-feedback"> Select a file </span>
+            <FilePicker id="importingFile" name="importingFile" label="Excel file" hint="Excel files (.xlsx)" :file="importingFile" :invalid="isImportExcelFormSubmitted && !importingFile" @change="handleFileInput" accept=".xlsx" />
           </div>
         </div>
         <div class="mb-3 row">
@@ -153,6 +143,7 @@
 </template>
 
 <script setup lang="ts">
+import FilePicker from '../../components/FilePicker.vue'
 import { ref, computed, onMounted } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'

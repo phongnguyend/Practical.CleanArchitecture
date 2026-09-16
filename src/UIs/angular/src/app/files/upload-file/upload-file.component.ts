@@ -8,6 +8,7 @@ import { FileService } from "../file.service";
 import { NgModel, NgForm } from "@angular/forms";
 import { GuidEmpty } from "../../shared/constants";
 import { NgIcon } from "@ng-icons/core";
+import { FilePickerComponent } from "../../shared/file-picker.component";
 import { ActionIconComponent } from "../../shared/action-icon.component";
 
 @Component({
@@ -16,7 +17,7 @@ import { ActionIconComponent } from "../../shared/action-icon.component";
   styleUrls: ["./upload-file.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [FormsModule, RouterModule, NgIcon, ActionIconComponent],
+  imports: [FormsModule, RouterModule, NgIcon, ActionIconComponent, FilePickerComponent],
 })
 export class UploadFileComponent implements OnInit {
   file: IFile = {
@@ -48,8 +49,8 @@ export class UploadFileComponent implements OnInit {
     console.log("in onBlur: ", field.valid);
   }
 
-  handleFileInput(files: FileList) {
-    this.file.formFile = files.item(0);
+  handleFileInput(files: FileList | null) {
+    this.file.formFile = files?.item(0) ?? null;
   }
 
   onSubmit(form: NgForm) {

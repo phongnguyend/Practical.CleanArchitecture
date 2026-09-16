@@ -149,16 +149,7 @@
             <form #form="ngForm" (ngSubmit)="confirmImportExcelFile(form)">
               <div class="mb-3 row">
                 <div class="col-sm-12">
-                  <input
-                    id="importingFile"
-                    type="file"
-                    name="importingFile"
-                    class="form-control"
-                    required
-                    (change)="handleFileInput($event.target.files)"
-                    [class.is-invalid]="form.submitted && !importingFile"
-                    />
-                    <span class="invalid-feedback"> Select a file </span>
+                  <app-file-picker inputId="importingFile" name="importingFile" label="Excel file" hint="Excel files (.xlsx)" [file]="importingFile" [invalid]="form.submitted && !importingFile" (fileChange)="handleFileInput($event)" accept=".xlsx" />
                   </div>
                 </div>
                 <div class="mb-3 row">

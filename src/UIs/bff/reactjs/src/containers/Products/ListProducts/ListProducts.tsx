@@ -6,6 +6,7 @@ import { Modal, Button } from "react-bootstrap";
 import logo from "../../../logo.svg";
 import * as actions from "../actions";
 import ActionIcon from "../../../components/ActionIcon/ActionIcon";
+import FilePicker from "../../../components/FilePicker/FilePicker";
 import Star from "../../../components/Star/Star";
 import axios from "../axios";
 
@@ -258,16 +259,7 @@ const ListProducts = (props: any) => {
         <form onSubmit={importCsvConfirmed}>
           <div className="mb-3 row">
             <div className="col-sm-12">
-              <input
-                id="importingFile"
-                type="file"
-                name="importingFile"
-                className={
-                  "form-control " + (importCsvFormSubmitted && !importingFile ? "is-invalid" : "")
-                }
-                onChange={fileChanged}
-              />
-              <span className="invalid-feedback"> Select a file </span>
+              <FilePicker id="importingFile" name="importingFile" label="CSV file" hint="CSV files (.csv)" file={importingFile} invalid={importCsvFormSubmitted && !importingFile} onChange={fileChanged} accept=".csv,text/csv" />
             </div>
           </div>
           <div className="mb-3 row">

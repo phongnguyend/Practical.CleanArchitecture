@@ -4,6 +4,7 @@ import { Modal, Button } from "react-bootstrap";
 
 import * as actions from "../actions";
 import ActionIcon from "../../../components/ActionIcon/ActionIcon";
+import FilePicker from "../../../components/FilePicker/FilePicker";
 import { checkValidity } from "../../../shared/utility";
 import axios from "../axios";
 
@@ -338,16 +339,7 @@ const ListConfigurationEntries = (props: any) => {
         <form onSubmit={importExcelConfirmed}>
           <div className="mb-3 row">
             <div className="col-sm-12">
-              <input
-                id="importingFile"
-                type="file"
-                name="importingFile"
-                className={
-                  "form-control " + (importExcelFormSubmitted && !importingFile ? "is-invalid" : "")
-                }
-                onChange={fileChanged}
-              />
-              <span className="invalid-feedback"> Select a file </span>
+              <FilePicker id="importingFile" name="importingFile" label="Excel file" hint="Excel files (.xlsx)" file={importingFile} invalid={importExcelFormSubmitted && !importingFile} onChange={fileChanged} accept=".xlsx" />
             </div>
           </div>
           <div className="mb-3 row">

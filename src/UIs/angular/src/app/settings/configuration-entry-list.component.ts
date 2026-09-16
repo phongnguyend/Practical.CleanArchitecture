@@ -8,6 +8,7 @@ import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { NgForm } from "@angular/forms";
 import { GuidEmpty } from "../shared/constants";
 import { MatDialogModule } from "@angular/material/dialog";
+import { FilePickerComponent } from "../shared/file-picker.component";
 import { ActionIconComponent } from "../shared/action-icon.component";
 
 @Component({
@@ -16,7 +17,7 @@ import { ActionIconComponent } from "../shared/action-icon.component";
   styleUrls: ["./configuration-entry-list.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CommonModule, FormsModule, RouterModule, MatDialogModule, ActionIconComponent],
+  imports: [CommonModule, FormsModule, RouterModule, MatDialogModule, ActionIconComponent, FilePickerComponent],
 })
 export class ConfigurationEntryListComponent implements OnInit {
   GuidEmpty = GuidEmpty;
@@ -129,8 +130,8 @@ export class ConfigurationEntryListComponent implements OnInit {
     });
   }
 
-  handleFileInput(files: FileList) {
-    this.importingFile = files.item(0);
+  handleFileInput(files: FileList | null) {
+    this.importingFile = files?.item(0) ?? null;
   }
 
   confirmImportExcelFile(form: NgForm) {

@@ -12,6 +12,7 @@ import { NgForm } from "@angular/forms";
 import { StarComponent } from "../../shared/star.component";
 import { DeleteProductComponent } from "../delete-product/delete-product.component";
 import { MatDialogModule } from "@angular/material/dialog";
+import { FilePickerComponent } from "../../shared/file-picker.component";
 import { ActionIconComponent } from "../../shared/action-icon.component";
 
 @Component({
@@ -26,7 +27,7 @@ import { ActionIconComponent } from "../../shared/action-icon.component";
     StarComponent,
     DeleteProductComponent,
     MatDialogModule,
-    ActionIconComponent,
+    ActionIconComponent, FilePickerComponent,
   ],
 })
 export class ListProductsComponent implements OnInit {
@@ -140,8 +141,8 @@ export class ListProductsComponent implements OnInit {
     });
   }
 
-  handleFileInput(files: FileList) {
-    this.importingFile = files.item(0);
+  handleFileInput(files: FileList | null) {
+    this.importingFile = files?.item(0) ?? null;
   }
 
   confirmImportCsvFile(form: NgForm) {

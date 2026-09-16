@@ -25,9 +25,7 @@
       <div class="mb-3 row">
         <label for="formFile" class="col-sm-2 col-form-label">File</label>
         <div class="col-sm-10">
-          <input id="formFile" type="file" name="formFile" class="form-control" required
-            (change)="handleFileInput($event.target.files)" [class.is-invalid]="form.submitted && !file.formFile" />
-          <span class="invalid-feedback"> Select a file </span>
+              <app-file-picker inputId="formFile" name="formFile" label="File to upload" hint="Any file type" [file]="file.formFile" [invalid]="form.submitted && !file.formFile" (fileChange)="handleFileInput($event)" />
         </div>
       </div>
       <div class="mb-3 row">

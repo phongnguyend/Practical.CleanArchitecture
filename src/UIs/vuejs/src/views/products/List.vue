@@ -140,17 +140,7 @@
       <form @submit.prevent="confirmImportCsvFile">
         <div class="mb-3 row">
           <div class="col-sm-12">
-            <input
-              id="importingFile"
-              type="file"
-              name="importingFile"
-              class="form-control"
-              :class="{
-                'is-invalid': isImportCsvFormSubmitted && !importingFile,
-              }"
-              @change="handleFileInput($event.target.files)"
-            />
-            <span class="invalid-feedback"> Select a file </span>
+            <FilePicker id="importingFile" name="importingFile" label="CSV file" hint="CSV files (.csv)" :file="importingFile" :invalid="isImportCsvFormSubmitted && !importingFile" @change="handleFileInput" accept=".csv,text/csv" />
           </div>
         </div>
         <div class="mb-3 row">
@@ -164,6 +154,7 @@
 </template>
 
 <script setup lang="ts">
+import FilePicker from '../../components/FilePicker.vue'
 import { ref, computed, onMounted } from 'vue'
 import axios from './axios'
 import logo from '../../assets/logo.png'

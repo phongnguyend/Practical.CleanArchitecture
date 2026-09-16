@@ -49,17 +49,7 @@
         <div class="mb-3 row">
           <label for="formFile" class="col-sm-2 col-form-label">File</label>
           <div class="col-sm-10">
-            <input
-              type="file"
-              id="formFile"
-              name="formFile"
-              class="form-control"
-              :class="{ 'is-invalid': isSubmitted && !hasFile }"
-              @change="handleFileInput(($event.target as HTMLInputElement)?.files || null)"
-            />
-            <span class="invalid-feedback">
-              <span>Select a file</span>
-            </span>
+            <FilePicker id="formFile" name="formFile" label="File to upload" hint="Any file type" :file="file.formFile" :invalid="isSubmitted && !hasFile" @change="handleFileInput" />
           </div>
         </div>
         <div class="mb-3 row">
@@ -85,6 +75,7 @@
 </template>
 
 <script setup lang="ts">
+import FilePicker from '../../components/FilePicker.vue'
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
