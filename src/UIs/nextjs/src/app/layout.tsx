@@ -25,7 +25,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `
+          (() => {
+            let choice = 'system';
+            try { choice = localStorage.getItem('classifiedads-theme') || 'system'; } catch {}
+            const dark = choice === 'dark' || (choice !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+            document.documentElement.setAttribute('data-bs-theme', dark ? 'dark' : 'light');
+          })();
+        ` }} />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <div className="container">
           <NavServer />

@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (() => {
+        let choice = 'system';
+        try { choice = localStorage.getItem('classifiedads-theme') || 'system'; } catch {}
+        const dark = choice === 'dark' || (choice !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.setAttribute('data-bs-theme', dark ? 'dark' : 'light');
+      })();
+    </script>
     <title>ClassifiedAds React: Vite + React + TS</title>
   </head>
   <body>

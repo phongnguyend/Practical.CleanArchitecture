@@ -30,4 +30,25 @@ div.card {
 .table {
   margin-top: 10px;
 }
+
+html[data-bs-theme="dark"] .file-picker {
+  border-color: var(--bs-border-color);
+  background: var(--bs-tertiary-bg);
+  color: var(--bs-body-color);
+}
+html[data-bs-theme="dark"] .file-picker:hover,
+html[data-bs-theme="dark"] .file-picker:focus-within {
+  border-color: var(--bs-primary);
+  background: var(--bs-secondary-bg);
+}
+html[data-bs-theme="dark"] .file-picker-icon {
+  background: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary-text-emphasis);
+}
+html[data-bs-theme="dark"] .file-picker-hint { color: var(--bs-secondary-color); }
+html[data-bs-theme="dark"] .file-picker-button {
+  border-color: var(--bs-border-color);
+  background: var(--bs-body-bg);
+  color: var(--bs-primary-text-emphasis);
+}
 </style>

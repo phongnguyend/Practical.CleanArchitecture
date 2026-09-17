@@ -26,8 +26,8 @@ import {
   lucideChevronsRight, lucideClipboard, lucideClipboardList, lucideDownload,
   lucideExternalLink, lucideEye, lucideEyeOff, lucideFileDown, lucideFileUp,
   lucideFiles, lucideHistory, lucideHouse, lucideKeyRound, lucideLogIn,
-  lucideLogOut, lucideMail, lucidePackage, lucidePencil, lucidePlus, lucideSave,
-  lucideSettings, lucideShield, lucideStar, lucideTrash2, lucideUpload, lucideUsers, lucideX,
+  lucideLogOut, lucideMail, lucideMonitor, lucideMoon, lucidePackage, lucidePencil, lucidePlus, lucideSave,
+  lucideSettings, lucideShield, lucideStar, lucideSun, lucideTrash2, lucideUpload, lucideUsers, lucideX,
 } from "@ng-icons/lucide";
 
 import { AppComponent } from "./app/app.component";
@@ -60,8 +60,8 @@ bootstrapApplication(AppComponent, {
       lucideChevronsRight, lucideClipboard, lucideClipboardList, lucideDownload,
       lucideExternalLink, lucideEye, lucideEyeOff, lucideFileDown, lucideFileUp,
       lucideFiles, lucideHistory, lucideHouse, lucideKeyRound, lucideLogIn,
-      lucideLogOut, lucideMail, lucidePackage, lucidePencil, lucidePlus, lucideSave,
-      lucideSettings, lucideShield, lucideStar, lucideTrash2, lucideUpload, lucideUsers, lucideX,
+      lucideLogOut, lucideMail, lucideMonitor, lucideMoon, lucidePackage, lucidePencil, lucidePlus, lucideSave,
+      lucideSettings, lucideShield, lucideStar, lucideSun, lucideTrash2, lucideUpload, lucideUsers, lucideX,
     }),
     importProvidersFrom(
       BrowserModule,

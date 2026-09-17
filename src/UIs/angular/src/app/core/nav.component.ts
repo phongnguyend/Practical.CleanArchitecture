@@ -4,6 +4,7 @@ import { RouterModule } from "@angular/router";
 import { AuthService } from "../auth/auth.service";
 import { AppendVersionPipe } from "../shared/append-version.pipe";
 import { ActionIconComponent } from "../shared/action-icon.component";
+import { ThemeSwitcherComponent } from "../shared/theme-switcher.component";
 
 @Component({
   selector: "app-nav",
@@ -11,7 +12,7 @@ import { ActionIconComponent } from "../shared/action-icon.component";
   styleUrls: ["./nav.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [RouterModule, AppendVersionPipe, ActionIconComponent],
+  imports: [RouterModule, AppendVersionPipe, ActionIconComponent, ThemeSwitcherComponent],
 })
 export class NavComponent implements OnInit {
   pageTitle = "ClassifiedAds.Angular";

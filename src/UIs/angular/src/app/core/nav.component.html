@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand navbar-light bg-light">
+<nav class="navbar navbar-expand bg-body">
   <a class="navbar-brand" href="/"><app-action-icon action="home" />{{ pageTitle | appendVersion }}</a>
-  <ul class="nav nav-tabs flex-grow-1">
+  <ul class="nav nav-tabs flex-grow-1 flex-nowrap nav-pages">
     <li>
       <a class="nav-link" routerLinkActive="active" [routerLink]="['/welcome']"
         ><app-action-icon action="home" />Home
@@ -40,19 +40,14 @@
         <app-action-icon action="audit" />Audit Logs
       </a>
     </li>
+  </ul>
+  <div class="nav-utilities d-flex align-items-center gap-2 ms-auto flex-shrink-0">
     @if (!auth.isAuthenticated()) {
-      <li class="ms-auto">
-        <a class="nav-link" (click)="login()" href="javascript:void(0)">
-          <app-action-icon action="login" />Login
-        </a>
-      </li>
+      <a class="nav-link" (click)="login()" href="javascript:void(0)"><app-action-icon action="login" />Login</a>
     }
     @if (auth.isAuthenticated()) {
-      <li class="ms-auto">
-        <a class="nav-link" (click)="logout()" href="javascript:void(0)">
-          <app-action-icon action="logout" />Logout
-        </a>
-      </li>
+      <a class="nav-link" (click)="logout()" href="javascript:void(0)"><app-action-icon action="logout" />Logout</a>
     }
-  </ul>
+    <app-theme-switcher />
+  </div>
 </nav>

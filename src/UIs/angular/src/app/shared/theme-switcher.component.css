@@ -1,0 +1,11 @@
+.theme-switcher { position: relative; }
+.theme-switcher-trigger { display: inline-flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border: 1px solid var(--bs-border-color); border-radius: .5rem; color: var(--bs-body-color); background: var(--bs-body-bg); cursor: pointer; list-style: none; }
+.theme-switcher-trigger::-webkit-details-marker { display: none; }
+.theme-switcher-trigger:hover, .theme-switcher[open] .theme-switcher-trigger { color: var(--bs-primary-text-emphasis); background: var(--bs-primary-bg-subtle); border-color: var(--bs-primary-border-subtle); }
+.theme-switcher-trigger:focus-visible { outline: 2px solid var(--bs-primary); outline-offset: 2px; }
+.theme-switcher-menu { position: absolute; z-index: 1050; top: calc(100% + .375rem); right: 0; min-width: 10rem; padding: .35rem; border: 1px solid var(--bs-border-color); border-radius: .5rem; background: var(--bs-body-bg); box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .16); }
+.theme-switcher-option { display: flex; align-items: center; gap: .65rem; width: 100%; padding: .5rem .65rem; border: 0; border-radius: .35rem; color: var(--bs-body-color); background: transparent; text-align: left; cursor: pointer; }
+.theme-switcher-option:hover, .theme-switcher-option:focus-visible { background: var(--bs-tertiary-bg); }
+.theme-switcher-option[aria-pressed="true"] { color: var(--bs-primary-text-emphasis); font-weight: 600; }
+.theme-switcher-check { margin-left: auto; }
+ng-icon { display: inline-flex; align-items: center; overflow: visible; }

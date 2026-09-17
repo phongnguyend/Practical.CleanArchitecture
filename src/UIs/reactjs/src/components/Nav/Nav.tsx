@@ -4,19 +4,20 @@ import { NavLink } from "react-router-dom";
 import { isAuthenticated } from "../../containers/Auth/authService";
 import classes from "./Nav.module.css";
 import ActionIcon from "../ActionIcon/ActionIcon";
+import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher";
 
 const Nav = () => {
   const pageTitle = "ClassifiedAds.React";
   return (
     <nav
-      className={"navbar navbar-expand navbar-light bg-light " + classes.Nav}
+      className={"navbar navbar-expand bg-body " + classes.Nav}
       style={{ paddingLeft: "1rem", paddingRight: "1rem" }}
     >
       <a className="navbar-brand" href="/">
         <ActionIcon action="home" />
         {pageTitle + " " + React.version}
       </a>
-      <ul className="nav nav-tabs flex-grow-1">
+      <ul className={"nav nav-tabs flex-grow-1 flex-nowrap " + classes.Tabs}>
         <li>
           <NavLink className="nav-link" to="/home">
             <ActionIcon action="home" /> Home
@@ -49,22 +50,12 @@ const Nav = () => {
           </NavLink>
         </li>
 
-        {!isAuthenticated() ? (
-          <li className="ms-auto">
-            <NavLink className="nav-link" to="/login">
-              <ActionIcon action="login" /> Login
-            </NavLink>
-          </li>
-        ) : null}
-
-        {isAuthenticated() ? (
-          <li className="ms-auto">
-            <NavLink className="nav-link" to="/logout">
-              <ActionIcon action="logout" /> Logout
-            </NavLink>
-          </li>
-        ) : null}
       </ul>
+      <div className="d-flex align-items-center gap-2 ms-auto flex-shrink-0">
+        {!isAuthenticated() ? <NavLink className="nav-link" to="/login"><ActionIcon action="login" /> Login</NavLink> : null}
+        {isAuthenticated() ? <NavLink className="nav-link" to="/logout"><ActionIcon action="logout" /> Logout</NavLink> : null}
+        <ThemeSwitcher />
+      </div>
     </nav>
   );
 };

@@ -5,6 +5,14 @@
   <title>ClassifiedAds.Angular</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    (() => {
+      let choice = 'system';
+      try { choice = localStorage.getItem('classifiedads-theme') || 'system'; } catch {}
+      const dark = choice === 'dark' || (choice !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.setAttribute('data-bs-theme', dark ? 'dark' : 'light');
+    })();
+  </script>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
