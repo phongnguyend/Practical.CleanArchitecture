@@ -1,3 +1,4 @@
+import { ModalModule, ModalService } from "../../shared/modal/modal";
 import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
@@ -5,10 +6,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 
 import { IProduct } from "../product";
 import { ProductService } from "../product.service";
-import { MatDialog } from "@angular/material/dialog";
 import { IAuditLogEntry } from "../../auditlogs/audit-log";
 import { StarComponent } from "../../shared/star.component";
-import { MatDialogModule } from "@angular/material/dialog";
 import { NgIcon } from "@ng-icons/core";
 import { ActionIconComponent } from "../../shared/action-icon.component";
 
@@ -17,7 +16,7 @@ import { ActionIconComponent } from "../../shared/action-icon.component";
   styleUrls: ["./product-detail.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CommonModule, RouterModule, StarComponent, MatDialogModule, NgIcon, ActionIconComponent],
+  imports: [CommonModule, RouterModule, StarComponent, ModalModule, NgIcon, ActionIconComponent],
 })
 export class ProductDetailComponent implements OnInit {
   pageTitle = "Product Detail";
@@ -29,7 +28,7 @@ export class ProductDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
-    private dialog: MatDialog
+    private dialog: ModalService
   ) {}
 
   ngOnInit() {

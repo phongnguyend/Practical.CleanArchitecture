@@ -1,11 +1,10 @@
+import { ModalRef, ModalModule, ModalService } from "../../shared/modal/modal";
 import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { IFile } from "../file";
 import { FileService } from "../file.service";
-import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { IAuditLogEntry } from "../../auditlogs/audit-log";
-import { MatDialogModule } from "@angular/material/dialog";
 import { ActionIconComponent } from "../../shared/action-icon.component";
 
 @Component({
@@ -14,17 +13,17 @@ import { ActionIconComponent } from "../../shared/action-icon.component";
   styleUrls: ["./list-files.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CommonModule, RouterModule, MatDialogModule, ActionIconComponent],
+  imports: [CommonModule, RouterModule, ModalModule, ActionIconComponent],
 })
 export class ListFilesComponent implements OnInit {
   files: IFile[] = [];
   selectedFile: IFile = null;
-  modalRef: MatDialogRef<any>;
+  modalRef: ModalRef<any>;
   errorMessage;
   auditLogs: IAuditLogEntry[];
   constructor(
     private fileService: FileService,
-    private dialog: MatDialog
+    private dialog: ModalService
   ) {}
 
   ngOnInit(): void {

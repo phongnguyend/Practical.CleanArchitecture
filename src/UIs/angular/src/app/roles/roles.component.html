@@ -28,31 +28,31 @@
 </div>
 
 <ng-template #addtemplate>
-  <h2 mat-dialog-title><app-action-icon action="add" />Add Role</h2>
+  <app-modal-header><app-action-icon action="add" />Add Role</app-modal-header>
   <form (ngSubmit)="add()">
-    <mat-dialog-content>
+    <app-modal-body>
       @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
       <label class="form-label" for="newRoleName">Name</label>
       <input id="newRoleName" name="newRoleName" class="form-control" [(ngModel)]="newRoleName" required />
-    </mat-dialog-content>
-    <mat-dialog-actions align="end" class="gap-2">
+    </app-modal-body>
+    <app-modal-footer align="end" class="gap-2">
       <button class="btn btn-secondary" type="button" (click)="addDialog.close()"><app-action-icon action="cancel" />Cancel</button>
       <button class="btn btn-primary" type="submit" [disabled]="adding"><app-action-icon action="save" />{{ adding ? 'Saving...' : 'Save' }}</button>
-    </mat-dialog-actions>
+    </app-modal-footer>
   </form>
 </ng-template>
 
 <ng-template #edittemplate>
-  <h2 mat-dialog-title><app-action-icon action="edit" />Edit Role</h2>
+  <app-modal-header><app-action-icon action="edit" />Edit Role</app-modal-header>
   <form (ngSubmit)="save()">
-    <mat-dialog-content>
+    <app-modal-body>
       @if (error()) { <div class="alert alert-danger" role="alert">{{ error() }}</div> }
       <label class="form-label" for="editRoleName">Name</label>
       <input id="editRoleName" name="editRoleName" class="form-control" [(ngModel)]="editName" required />
-    </mat-dialog-content>
-    <mat-dialog-actions align="end" class="gap-2">
+    </app-modal-body>
+    <app-modal-footer align="end" class="gap-2">
       <button class="btn btn-secondary" type="button" (click)="editDialog.close()"><app-action-icon action="cancel" />Cancel</button>
       <button class="btn btn-primary" type="submit" [disabled]="saving"><app-action-icon action="save" />{{ saving ? 'Saving...' : 'Save' }}</button>
-    </mat-dialog-actions>
+    </app-modal-footer>
   </form>
 </ng-template>

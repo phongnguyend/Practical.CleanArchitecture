@@ -1,7 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import "@angular/material/prebuilt-themes/indigo-pink.css";
-@import "ngx-toastr/toastr";
+@import "./app/shared/toast/toast.css";
+@import "./app/shared/json-viewer/json.css";
+@import "./app/shared/modal/modal.css";
 
 div.card-header {
   font-size: large;
@@ -23,7 +25,6 @@ app-action-icon ng-icon svg {
   stroke-width: 2.5;
 }
 
-
 html[data-bs-theme="dark"] .file-picker {
   border-color: var(--bs-border-color);
   background: var(--bs-tertiary-bg);
@@ -38,18 +39,11 @@ html[data-bs-theme="dark"] .file-picker-icon {
   background: var(--bs-primary-bg-subtle);
   color: var(--bs-primary-text-emphasis);
 }
-html[data-bs-theme="dark"] .file-picker-hint { color: var(--bs-secondary-color); }
+html[data-bs-theme="dark"] .file-picker-hint {
+  color: var(--bs-secondary-color);
+}
 html[data-bs-theme="dark"] .file-picker-button {
   border-color: var(--bs-border-color);
   background: var(--bs-body-bg);
   color: var(--bs-primary-text-emphasis);
-}
-
-html[data-bs-theme="dark"] .mat-mdc-dialog-surface {
-  background: var(--bs-body-bg) !important;
-  color: var(--bs-body-color) !important;
-}
-html[data-bs-theme="dark"] .mat-mdc-dialog-title,
-html[data-bs-theme="dark"] .mat-mdc-dialog-content {
-  color: var(--bs-body-color) !important;
 }

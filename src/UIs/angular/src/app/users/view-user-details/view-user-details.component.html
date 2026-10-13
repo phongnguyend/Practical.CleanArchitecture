@@ -88,8 +88,8 @@
   }
 
   <ng-template #setPasswordTemplate>
-    <h2 mat-dialog-title><app-action-icon action="key" />Set Password</h2>
-    <mat-dialog-content>
+    <app-modal-header><app-action-icon action="key" />Set Password</app-modal-header>
+    <app-modal-body>
       <div
         class="row"
         [hidden]="!passwordValidationErrors || !passwordValidationErrors.length"
@@ -106,7 +106,7 @@
       <div class="row" [hidden]="!postErrorMessage" class="alert alert-danger">
         {{ postErrorMessage }}
       </div>
-      <form #form="ngForm" (ngSubmit)="confirmSetPassword(form)">
+      <form id="view-user-details-component-modal-form-1" #form="ngForm" (ngSubmit)="confirmSetPassword(form)">
         <div class="mb-3 row">
           <label class="col-sm-4 col-form-label">User Name</label>
           <div class="col-sm-8">
@@ -144,41 +144,38 @@
                 <span class="invalid-feedback"> Confirm Password does not match </span>
               </div>
             </div>
-            <div class="mb-3 row">
-              <label class="col-sm-4 col-form-label"></label>
-              <div class="col-sm-8">
-                <button class="btn btn-primary"><app-action-icon action="save" />Save</button>
-              </div>
-            </div>
+
           </form>
-        </mat-dialog-content>
+        </app-modal-body>
+      <app-modal-footer><button type="button" class="btn btn-secondary" modalClose>Cancel</button>
+        <button type="submit" form="view-user-details-component-modal-form-1" class="btn btn-primary"><app-action-icon action="save" />Save</button></app-modal-footer>
       </ng-template>
 
       <ng-template #sendPasswordResetEmailTemplate>
-        <h2 mat-dialog-title><app-action-icon action="mail" />Send Password Reset Email</h2>
-        <mat-dialog-content class="text-center">
+        <app-modal-header><app-action-icon action="mail" />Send Password Reset Email</app-modal-header>
+        <app-modal-body class="text-center">
           <p>
             Are you sure you want to send reset password email
             <strong> {{ user.userName }}</strong>
           </p>
-        </mat-dialog-content>
-        <mat-dialog-actions align="center">
+        </app-modal-body>
+        <app-modal-footer align="center">
           <button type="button" class="btn btn-primary" (click)="confirmSendPasswordResetEmail()">
             <app-action-icon action="mail" />Yes
           </button>
-          <button type="button" class="btn btn-default" mat-dialog-close><app-action-icon action="cancel" />No</button>
-        </mat-dialog-actions>
+          <button type="button" class="btn btn-default" modalClose><app-action-icon action="cancel" />No</button>
+        </app-modal-footer>
       </ng-template>
 
       <ng-template #sendEmailAddressConfirmationEmailTemplate>
-        <h2 mat-dialog-title><app-action-icon action="mail" />Send Email Address Confirmation Email</h2>
-        <mat-dialog-content class="text-center">
+        <app-modal-header><app-action-icon action="mail" />Send Email Address Confirmation Email</app-modal-header>
+        <app-modal-body class="text-center">
           <p>
             Are you sure you want to send email address confirmation email
             <strong> {{ user.userName }}</strong>
           </p>
-        </mat-dialog-content>
-        <mat-dialog-actions align="center">
+        </app-modal-body>
+        <app-modal-footer align="center">
           <button
             type="button"
             class="btn btn-primary"
@@ -186,6 +183,6 @@
             >
             <app-action-icon action="mail" />Yes
           </button>
-          <button type="button" class="btn btn-default" mat-dialog-close><app-action-icon action="cancel" />No</button>
-        </mat-dialog-actions>
+          <button type="button" class="btn btn-default" modalClose><app-action-icon action="cancel" />No</button>
+        </app-modal-footer>
       </ng-template>

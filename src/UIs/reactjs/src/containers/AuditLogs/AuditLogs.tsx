@@ -53,7 +53,7 @@ const AuditLogs = () => {
               <CopyToClipboard text={auditLog.log} />
             </div>
           </div>
-          <div className="pe-5">{auditLog.log}</div>
+          <div style={{ paddingInlineEnd: "6rem" }}>{auditLog.log}</div>
         </div>
       </td>
     </tr>
@@ -86,7 +86,10 @@ const AuditLogs = () => {
 
   return (
     <div className="card">
-      <div className="card-header"><ActionIcon action="audit" />{pageTitle}</div>
+      <div className="card-header">
+        <ActionIcon action="audit" />
+        {pageTitle}
+      </div>
       <div className="card-body">
         {pagination}
         <div className="table-responsive" style={{ width: "100%" }}>

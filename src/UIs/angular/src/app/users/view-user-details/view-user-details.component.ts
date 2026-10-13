@@ -1,3 +1,4 @@
+import { ModalRef, ModalModule, ModalService } from "../../shared/modal/modal";
 import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
 
 import { FormsModule } from "@angular/forms";
@@ -5,9 +6,7 @@ import { RouterModule } from "@angular/router";
 import { IUser } from "../user";
 import { UserService } from "../user.service";
 import { Router, ActivatedRoute } from "@angular/router";
-import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { NgForm } from "@angular/forms";
-import { MatDialogModule } from "@angular/material/dialog";
 import { NgIcon } from "@ng-icons/core";
 import { ActionIconComponent } from "../../shared/action-icon.component";
 
@@ -17,21 +16,21 @@ import { ActionIconComponent } from "../../shared/action-icon.component";
   styleUrls: ["./view-user-details.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [FormsModule, RouterModule, MatDialogModule, NgIcon, ActionIconComponent],
+  imports: [FormsModule, RouterModule, ModalModule, NgIcon, ActionIconComponent],
 })
 export class ViewUserDetailsComponent implements OnInit {
   user: IUser = null;
   setPasswordModel: any = {};
   passwordValidationErrors: any = [];
   postErrorMessage: string = "";
-  setPasswordModalRef: MatDialogRef<any>;
-  sendPasswordResetEmailModalRef: MatDialogRef<any>;
-  sendEmailAddressConfirmationEmailModalRef: MatDialogRef<any>;
+  setPasswordModalRef: ModalRef<any>;
+  sendPasswordResetEmailModalRef: ModalRef<any>;
+  sendEmailAddressConfirmationEmailModalRef: ModalRef<any>;
   constructor(
     private userService: UserService,
     private router: Router,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: ModalService
   ) {}
 
   ngOnInit(): void {

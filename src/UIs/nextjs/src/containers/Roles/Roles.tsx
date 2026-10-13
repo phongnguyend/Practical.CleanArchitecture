@@ -1,8 +1,10 @@
 "use client";
+import { confirmModal } from "../../components/Modal/modalRuntime";
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { Modal, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import Modal from "../../components/Modal/Modal";
 import axios from "./axios";
 import ActionIcon from "../../components/ActionIcon/ActionIcon";
 
@@ -48,7 +50,7 @@ export default function Roles({ mode, id }: { mode: "list" | "view"; id?: string
   };
 
   const remove = async (item: Role) => {
-    if (!window.confirm(`Delete role ${item.name}?`)) return;
+    if (!await confirmModal(`Delete role ${item.name}?`, { title: "Delete Role", confirmText: "Delete" })) return;
     try { await axios.delete(item.id); await load(); }
     catch (err) { setError("Unable to delete the role. Please try again."); }
   };

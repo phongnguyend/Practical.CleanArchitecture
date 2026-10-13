@@ -29,6 +29,7 @@
                 <div class="position-relative">
                   <div class="position-absolute top-0 end-0">
                     <div class="d-flex">
+                      <JsonViewer :json-data="auditLog.log" />
                       <CopyToClipboard
                         :text="auditLog.log"
                         className="custom-icon"
@@ -36,7 +37,7 @@
                       />
                     </div>
                   </div>
-                  <div class="pe-5">{{ auditLog.log }}</div>
+                  <div style="padding-inline-end: 6rem">{{ auditLog.log }}</div>
                 </div>
               </td>
             </tr>
@@ -61,6 +62,7 @@ import axios from './axios'
 import type { IAuditLogEntry } from './AuditLog'
 import Pagination from '../../components/Pagination.vue'
 import CopyToClipboard from '../../components/CopyToClipboard.vue'
+import JsonViewer from '../../components/JsonViewer/JsonViewer.vue'
 
 // Register the component
 const appPagination = Pagination

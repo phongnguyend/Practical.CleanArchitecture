@@ -3,14 +3,14 @@
 </button>
 
 <ng-template #template>
-  <h2 mat-dialog-title><app-action-icon action="delete" />Delete Product</h2>
-  <mat-dialog-content class="text-center">
+  <app-modal-header><app-action-icon action="delete" />Delete Product</app-modal-header>
+  <app-modal-body class="text-center">
     <p>
       Are you sure you want to delete <strong> {{ product.name }}</strong>
     </p>
-  </mat-dialog-content>
-  <mat-dialog-actions align="center">
+  </app-modal-body>
+  <app-modal-footer align="center">
     <button type="button" class="btn btn-primary" (click)="confirm()"><app-action-icon action="confirm" />Yes</button>
     <button type="button" class="btn btn-default" (click)="decline()"><app-action-icon action="cancel" />No</button>
-  </mat-dialog-actions>
+  </app-modal-footer>
 </ng-template>

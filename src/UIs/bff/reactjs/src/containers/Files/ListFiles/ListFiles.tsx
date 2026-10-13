@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { Modal, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import Modal from "../../../components/Modal/Modal";
 import axios from "../axios";
 import ActionIcon from "../../../components/ActionIcon/ActionIcon";
 

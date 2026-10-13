@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { HubConnectionBuilder } from "@microsoft/signalr";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import ToastContainer, { toast } from "../Toast/ToastContainer";
 
 import env from "../..//environments";
 
@@ -12,12 +11,15 @@ function Notification() {
       .withAutomaticReconnect()
       .build();
 
+    let disposed = false;
     connection.start().then(
       function () {
+        if (disposed) return;
         console.log("Connected to NotificationHub");
         toast.success("Connected to NotificationHub");
       },
       function () {
+        if (disposed) return;
         console.log(
           "Cannot connect to NotificationHub: " + env.ResourceServer.NotificationEndpoint
         );
@@ -31,6 +33,10 @@ function Notification() {
       console.log("Received Message from NotificationHub: " + message);
       toast.info("Received Message from NotificationHub: " + message);
     });
+    return () => {
+      disposed = true;
+      void connection.stop();
+    };
   }, []);
 
   return <ToastContainer />;

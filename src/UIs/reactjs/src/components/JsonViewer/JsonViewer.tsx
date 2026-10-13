@@ -1,66 +1,43 @@
-import { useState } from "react";
-import { Eye } from "lucide-react";
-import { Modal, Button } from "react-bootstrap";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
-import ActionIcon from "../ActionIcon/ActionIcon";
+"use client";
+import { useEffect, useRef, useState } from "react";
+import Modal from "../Modal/Modal";
+import { mountJsonViewer } from "./jsonRuntime";
+import "./json.css";
 
-interface JsonViewerProps {
-  jsonData: string;
+export function JsonContent({ jsonData }: { jsonData: unknown }) {
+  const host = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (host.current) return mountJsonViewer(host.current, jsonData);
+  }, [jsonData]);
+  return <div ref={host} />;
 }
 
-const JsonViewer = ({ jsonData }: JsonViewerProps) => {
+export default function JsonViewer({ jsonData }: { jsonData: unknown }) {
   const [show, setShow] = useState(false);
-
-  const handleShow = () => setShow(true);
-  const handleClose = () => setShow(false);
-
-  // Try to parse and format the JSON data
-  const getParsedJson = () => {
-    try {
-      const parsedJson = JSON.parse(jsonData);
-      return JSON.stringify(parsedJson, null, 2);
-    } catch (error) {
-      return jsonData; // Return as is if not valid JSON
-    }
-  };
-
   return (
     <>
       <button
         type="button"
-        className="view-json-icon"
+        className="app-json-trigger"
         title="View JSON"
         aria-label="View JSON"
-        onClick={handleShow}
+        onClick={() => setShow(true)}
       >
-        <Eye size={20} aria-hidden="true" />
+        {"{ }"}
       </button>
-      <Modal show={show} onHide={handleClose} size="lg" centered>
-        <Modal.Header closeButton>
-          <Modal.Title><ActionIcon action="view" />JSON Data</Modal.Title>
+      <Modal show={show} onHide={() => setShow(false)} size="lg">
+        <Modal.Header>
+          <Modal.Title>JSON Data</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <SyntaxHighlighter
-            language="json"
-            style={tomorrow}
-            customStyle={{
-              maxHeight: "70vh",
-              overflowY: "auto",
-              borderRadius: "5px",
-            }}
-          >
-            {getParsedJson()}
-          </SyntaxHighlighter>
+          <JsonContent jsonData={jsonData} />
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            <ActionIcon action="close" /> Close
-          </Button>
+          <button type="button" className="btn btn-secondary" onClick={() => setShow(false)}>
+            Close
+          </button>
         </Modal.Footer>
       </Modal>
     </>
   );
-};
-
-export default JsonViewer;
+}

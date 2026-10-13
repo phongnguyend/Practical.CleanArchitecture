@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { Modal, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import Modal from "../../../components/Modal/Modal";
 
 import * as actions from "../actions";
 import ActionIcon from "../../../components/ActionIcon/ActionIcon";
@@ -250,7 +251,7 @@ const ListConfigurationEntries = (props: any) => {
         <Modal.Title><ActionIcon action={!selectingEntry?.id ? "add" : "edit"} />{!selectingEntry?.id ? "Add" : "Update"}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <form onSubmit={addUpdateConfirmed}>
+        <form id="listconfigurationentries-modal-form-1" onSubmit={addUpdateConfirmed}>
           <div className="mb-3 row">
             <label htmlFor="key" className="col-sm-3 col-form-label">
               Key
@@ -319,14 +320,13 @@ const ListConfigurationEntries = (props: any) => {
               />
             </div>
           </div>
-          <div className="mb-3 row">
-            <label className="col-sm-3 col-form-label"></label>
-            <div className="col-sm-9">
-              <button className="btn btn-primary"><ActionIcon action="save" /> Save</button>
-            </div>
-          </div>
+
         </form>
       </Modal.Body>
+      <Modal.Footer>
+        <button type="button" className="btn btn-secondary" onClick={addUpdateCanceled}>Cancel</button>
+        <button type="submit" form="listconfigurationentries-modal-form-1" className="btn btn-primary"><ActionIcon action="save" /> Save</button>
+      </Modal.Footer>
     </Modal>
   );
 
@@ -336,19 +336,19 @@ const ListConfigurationEntries = (props: any) => {
         <Modal.Title><ActionIcon action="import" />Import Excel</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <form onSubmit={importExcelConfirmed}>
+        <form id="listconfigurationentries-modal-form-2" onSubmit={importExcelConfirmed}>
           <div className="mb-3 row">
             <div className="col-sm-12">
               <FilePicker id="importingFile" name="importingFile" label="Excel file" hint="Excel files (.xlsx)" file={importingFile} invalid={importExcelFormSubmitted && !importingFile} onChange={fileChanged} accept=".xlsx" />
             </div>
           </div>
-          <div className="mb-3 row">
-            <div className="col-sm-12" style={{ textAlign: "center" }}>
-              <button className="btn btn-primary"><ActionIcon action="import" /> Import</button>
-            </div>
-          </div>
+
         </form>
       </Modal.Body>
+      <Modal.Footer>
+        <button type="button" className="btn btn-secondary" onClick={importExcelCanceled}>Cancel</button>
+        <button type="submit" form="listconfigurationentries-modal-form-2" className="btn btn-primary"><ActionIcon action="import" /> Import</button>
+      </Modal.Footer>
     </Modal>
   );
 

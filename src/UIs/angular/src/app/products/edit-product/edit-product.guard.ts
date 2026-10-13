@@ -1,3 +1,4 @@
+import { confirmModal } from "../../shared/modal/modalRuntime";
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from "@angular/router";
 import { Observable } from "rxjs";
@@ -29,7 +30,7 @@ export class EditProductGuard
     | boolean
     | UrlTree {
     if (component.productForm.dirty) {
-      return confirm("There is unsaved work. Are you sure you want to leave?");
+      return confirmModal("There is unsaved work. Are you sure you want to leave?");
     }
     return true;
   }

@@ -22,32 +22,36 @@
       </div>
     </div>
     <div v-if="mode !== 'list'" class="card-footer"><router-link class="btn btn-outline-secondary" to="/roles"><ActionIcon action="back" />Back</router-link></div>
-    <b-modal v-model="modalAdd" title="Add Role" no-footer>
-      <form @submit.prevent="add">
+    <AppModal v-model="modalAdd" title="Add Role">
+      <form id="roles-roles-modal-form-1" @submit.prevent="add">
         <div v-if="error" class="alert alert-danger" role="alert">{{ error }}</div>
         <div class="mb-3"><label class="form-label" for="newRoleName">Name</label>
           <input id="newRoleName" v-model="newName" class="form-control" required /></div>
-        <div class="d-flex justify-content-end gap-2">
-          <button class="btn btn-secondary" type="button" @click="modalAdd = false"><ActionIcon action="cancel" />Cancel</button>
-          <button class="btn btn-primary" type="submit" :disabled="saving"><ActionIcon action="save" />{{ saving ? 'Saving...' : 'Save' }}</button>
-        </div>
+
       </form>
-    </b-modal>
-    <b-modal v-model="modalEdit" title="Edit Role" no-footer>
-      <form @submit.prevent="saveEdit">
+      <template #footer="{ cancel }">
+        <button type="button" class="btn btn-secondary" @click="cancel">Cancel</button>
+        <button type="submit" form="roles-roles-modal-form-1" class="btn btn-primary" :disabled="saving"><ActionIcon action="save" />{{ saving ? 'Saving...' : 'Save' }}</button>
+      </template>
+    </AppModal>
+    <AppModal v-model="modalEdit" title="Edit Role">
+      <form id="roles-roles-modal-form-2" @submit.prevent="saveEdit">
         <div v-if="error" class="alert alert-danger" role="alert">{{ error }}</div>
         <div class="mb-3"><label class="form-label" for="editRoleName">Name</label>
           <input id="editRoleName" v-model="editName" class="form-control" required /></div>
-        <div class="d-flex justify-content-end gap-2">
-          <button class="btn btn-secondary" type="button" @click="modalEdit = false"><ActionIcon action="cancel" />Cancel</button>
-          <button class="btn btn-primary" type="submit" :disabled="saving"><ActionIcon action="save" />{{ saving ? 'Saving...' : 'Save' }}</button>
-        </div>
+
       </form>
-    </b-modal>
+      <template #footer="{ cancel }">
+        <button type="button" class="btn btn-secondary" @click="cancel">Cancel</button>
+        <button type="submit" form="roles-roles-modal-form-2" class="btn btn-primary" :disabled="saving"><ActionIcon action="save" />{{ saving ? 'Saving...' : 'Save' }}</button>
+      </template>
+    </AppModal>
   </div>
 </template>
 
 <script setup lang="ts">
+import { confirmModal } from "../../components/Modal/modalRuntime"
+import AppModal from "../../components/Modal/Modal.vue"
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from './axios'
@@ -115,7 +119,7 @@ const saveEdit = async () => {
 }
 
 const remove = async (item: Role) => {
-  if (!window.confirm(`Delete role ${item.name}?`)) return
+  if (!await confirmModal(`Delete role ${item.name}?`, { title: "Delete Role", confirmText: "Delete" })) return
   try { await axios.delete(item.id); await load() }
   catch { error.value = 'Unable to delete the role. Please try again.' }
 }

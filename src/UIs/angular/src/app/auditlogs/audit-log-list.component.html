@@ -8,7 +8,7 @@
           [currentPage]="currentPage"
           [pageSize]="5"
           (pageSelected)="pageChanged($event)"
-          >
+        >
         </app-pagination>
       </div>
       @if (auditLogs) {
@@ -33,6 +33,7 @@
                   <div class="position-relative">
                     <div class="position-absolute top-0 end-0">
                       <div class="d-flex">
+                        <app-json-viewer [jsonData]="auditLog.log" />
                         <app-copy-to-clipboard
                           [text]="auditLog.log"
                           [className]="'custom-icon'"
@@ -40,7 +41,7 @@
                         ></app-copy-to-clipboard>
                       </div>
                     </div>
-                    <div class="pe-5">{{ auditLog.log }}</div>
+                    <div style="padding-inline-end: 6rem">{{ auditLog.log }}</div>
                   </div>
                 </td>
               </tr>
@@ -54,7 +55,7 @@
           [currentPage]="currentPage"
           [pageSize]="5"
           (pageSelected)="pageChanged($event)"
-          >
+        >
         </app-pagination>
       </div>
     </div>

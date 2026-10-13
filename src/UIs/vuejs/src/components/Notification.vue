@@ -1,16 +1,18 @@
 <template>
-  <!-- This component doesn't render anything visible, it only handles notifications -->
+  <ToastContainer />
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, onBeforeUnmount } from 'vue'
 import { HubConnectionBuilder } from '@microsoft/signalr'
-import { useToast } from 'vue-toastification'
+import ToastContainer from './Toast/ToastContainer.vue'
+import { toast } from './Toast/toast'
 
 import authService from '../auth/authService'
 import env from '../../environments'
 
-const toast = useToast()
+let cleanup: (() => void) | undefined
+onBeforeUnmount(() => cleanup?.())
 
 onMounted(() => {
   const connection = new HubConnectionBuilder()
@@ -20,13 +22,20 @@ onMounted(() => {
     .withAutomaticReconnect()
     .build()
 
+  let disposed = false
+  cleanup = () => {
+    disposed = true
+    void connection.stop()
+  }
   connection.start().then(
     function () {
+      if (disposed) return
       toast.success('Connected to NotificationHub', {
-        timeout: 2000,
+        duration: 2000,
       })
     },
     function () {
+      if (disposed) return
       toast.error('Cannot connect to NotificationHub: ' + env.ResourceServer.NotificationEndpoint)
     },
   )

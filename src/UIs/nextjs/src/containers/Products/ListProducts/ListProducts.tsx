@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Modal, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import Modal from "../../../components/Modal/Modal";
 
 import Star from "../../../components/Star/Star";
 import axios from "../axios";
@@ -324,19 +325,19 @@ const ListProducts = () => {
         <Modal.Title><ActionIcon action="import" />Import Csv</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <form onSubmit={importCsvConfirmed}>
+        <form id="listproducts-modal-form-1" onSubmit={importCsvConfirmed}>
           <div className="mb-3 row">
             <div className="col-sm-12">
               <FilePicker id="importingFile" name="importingFile" label="CSV file" hint="CSV files (.csv)" file={importingFile} invalid={importCsvFormSubmitted && !importingFile} onChange={fileChanged} accept=".csv,text/csv" />
             </div>
           </div>
-          <div className="mb-3 row">
-            <div className="col-sm-12" style={{ textAlign: "center" }}>
-              <button className="btn btn-primary"><ActionIcon action="import" /> Import</button>
-            </div>
-          </div>
+
         </form>
       </Modal.Body>
+      <Modal.Footer>
+        <button type="button" className="btn btn-secondary" onClick={importCsvCanceled}>Cancel</button>
+        <button type="submit" form="listproducts-modal-form-1" className="btn btn-primary"><ActionIcon action="import" /> Import</button>
+      </Modal.Footer>
     </Modal>
   );
 

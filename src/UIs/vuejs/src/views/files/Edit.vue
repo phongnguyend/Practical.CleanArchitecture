@@ -86,8 +86,8 @@
         <ActionIcon action="history" />View Audit Logs
       </button>
     </div>
-    <b-modal v-model="modalAuditLogs" no-footer size="xl">
-      <template #title><ActionIcon action="audit" />Audit Logs</template>
+    <AppModal v-model="modalAuditLogs" size="xl">
+      <template #header><ActionIcon action="audit" />Audit Logs</template>
       <div class="table-responsive" :style="{ width: '100%' }">
         <table class="table">
           <thead>
@@ -122,11 +122,12 @@
           </tbody>
         </table>
       </div>
-    </b-modal>
+    </AppModal>
   </div>
 </template>
 
 <script setup lang="ts">
+import AppModal from "../../components/Modal/Modal.vue"
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -178,9 +179,9 @@ const rules = {
       required,
       minLength: minLength(3),
     },
-    description: { 
-      required, 
-      maxLength: maxLength(100) 
+    description: {
+      required,
+      maxLength: maxLength(100)
     },
   },
 }
@@ -194,8 +195,8 @@ const onSubmit = () => {
     return
   }
 
-  const promise = id.value 
-    ? axios.put(id.value, file.value) 
+  const promise = id.value
+    ? axios.put(id.value, file.value)
     : axios.post('', file.value)
 
   promise.then((rs) => {

@@ -75,8 +75,8 @@
       </button>
     </div>
 
-    <b-modal v-model="modalSetPassword" title="Set Password" :no-footer="true">
-      <template #title><ActionIcon action="key" />Set Password</template>
+    <AppModal v-model="modalSetPassword" title="Set Password">
+      <template #header><ActionIcon action="key" />Set Password</template>
       <div
         class="row alert alert-danger"
         v-show="passwordValidationErrors && passwordValidationErrors.length"
@@ -90,7 +90,7 @@
       <div class="row alert alert-danger" v-show="postErrorMessage">
         {{ postErrorMessage }}
       </div>
-      <form @submit.prevent="confirmSetPassword">
+      <form id="users-detail-modal-form-1" @submit.prevent="confirmSetPassword">
         <div class="mb-3 row">
           <label class="col-sm-4 col-form-label">User Name</label>
           <div class="col-sm-8">{{ user.userName }}</div>
@@ -130,21 +130,20 @@
             <span class="invalid-feedback">Confirm Password does not match</span>
           </div>
         </div>
-        <div class="mb-3 row">
-          <label class="col-sm-4 col-form-label"></label>
-          <div class="col-sm-8">
-            <button class="btn btn-primary"><ActionIcon action="save" />Save</button>
-          </div>
-        </div>
-      </form>
-    </b-modal>
 
-    <b-modal
+      </form>
+      <template #footer="{ cancel }">
+        <button type="button" class="btn btn-secondary" @click="cancel">Cancel</button>
+        <button type="submit" form="users-detail-modal-form-1" class="btn btn-primary"><ActionIcon action="save" />Save</button>
+      </template>
+    </AppModal>
+
+    <AppModal
       v-model="modalSendPasswordResetEmail"
       title="Send Password Reset Email"
       @ok="confirmSendPasswordResetEmail"
     >
-      <template #title><ActionIcon action="mail" />Send Password Reset Email</template>
+      <template #header><ActionIcon action="mail" />Send Password Reset Email</template>
       <p>
         Are you sure you want to send reset password email
         <strong>{{ user.userName }}</strong>
@@ -153,14 +152,14 @@
         <button class="btn btn-secondary" @click="cancel()"><ActionIcon action="cancel" />No</button>
         <button class="btn btn-primary" @click="ok()"><ActionIcon action="mail" />Yes</button>
       </template>
-    </b-modal>
+    </AppModal>
 
-    <b-modal
+    <AppModal
       v-model="modalSendEmailAddressConfirmationEmail"
       title="Send Email Address Confirmation Email"
       @ok="confirmSendEmailAddressConfirmationEmail"
     >
-      <template #title><ActionIcon action="mail" />Send Email Address Confirmation Email</template>
+      <template #header><ActionIcon action="mail" />Send Email Address Confirmation Email</template>
       <p>
         Are you sure you want to send email address confirmation email
         <strong>{{ user.userName }}</strong>
@@ -169,11 +168,12 @@
         <button class="btn btn-secondary" @click="cancel()"><ActionIcon action="cancel" />No</button>
         <button class="btn btn-primary" @click="ok()"><ActionIcon action="mail" />Yes</button>
       </template>
-    </b-modal>
+    </AppModal>
   </div>
 </template>
 
 <script setup lang="ts">
+import AppModal from "../../components/Modal/Modal.vue"
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'

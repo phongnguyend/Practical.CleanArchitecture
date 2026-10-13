@@ -1,3 +1,4 @@
+import { ModalRef, ModalModule, ModalService } from "../../shared/modal/modal";
 import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
@@ -7,11 +8,9 @@ import { IProduct } from "../product";
 import { ProductService } from "../product.service";
 import { Title } from "@angular/platform-browser";
 import { IAuditLogEntry } from "../../auditlogs/audit-log";
-import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { NgForm } from "@angular/forms";
 import { StarComponent } from "../../shared/star.component";
 import { DeleteProductComponent } from "../delete-product/delete-product.component";
-import { MatDialogModule } from "@angular/material/dialog";
 import { FilePickerComponent } from "../../shared/file-picker.component";
 import { ActionIconComponent } from "../../shared/action-icon.component";
 
@@ -26,7 +25,7 @@ import { ActionIconComponent } from "../../shared/action-icon.component";
     RouterModule,
     StarComponent,
     DeleteProductComponent,
-    MatDialogModule,
+    ModalModule,
     ActionIconComponent, FilePickerComponent,
   ],
 })
@@ -50,13 +49,13 @@ export class ListProductsComponent implements OnInit {
   filteredProducts: IProduct[] = [];
   products: IProduct[] = [];
 
-  importCsvModalRef: MatDialogRef<any>;
+  importCsvModalRef: ModalRef<any>;
   importingFile;
 
   constructor(
     private productService: ProductService,
     private titleService: Title,
-    private dialog: MatDialog
+    private dialog: ModalService
   ) {
     this.titleService.setTitle("ClassifiedAds Angular - Product");
   }

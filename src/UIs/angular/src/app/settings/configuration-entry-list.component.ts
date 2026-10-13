@@ -1,13 +1,12 @@
+import { ModalRef, ModalModule, ModalService } from "../shared/modal/modal";
 import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { ConfigurationEntriesService } from "./configuration-entry.service";
 import { IConfigurationEntry } from "./configuration-entry";
-import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { NgForm } from "@angular/forms";
 import { GuidEmpty } from "../shared/constants";
-import { MatDialogModule } from "@angular/material/dialog";
 import { FilePickerComponent } from "../shared/file-picker.component";
 import { ActionIconComponent } from "../shared/action-icon.component";
 
@@ -17,20 +16,20 @@ import { ActionIconComponent } from "../shared/action-icon.component";
   styleUrls: ["./configuration-entry-list.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CommonModule, FormsModule, RouterModule, MatDialogModule, ActionIconComponent, FilePickerComponent],
+  imports: [CommonModule, FormsModule, RouterModule, ModalModule, ActionIconComponent, FilePickerComponent],
 })
 export class ConfigurationEntryListComponent implements OnInit {
   GuidEmpty = GuidEmpty;
   configurationEntries: IConfigurationEntry[] = [];
   selectedEntry: IConfigurationEntry = null;
-  addUpdateModalRef: MatDialogRef<any>;
-  deleteModalRef: MatDialogRef<any>;
-  importExcelModalRef: MatDialogRef<any>;
+  addUpdateModalRef: ModalRef<any>;
+  deleteModalRef: ModalRef<any>;
+  importExcelModalRef: ModalRef<any>;
   errorMessage;
   importingFile;
   constructor(
     private configurationEntriesService: ConfigurationEntriesService,
-    private dialog: MatDialog
+    private dialog: ModalService
   ) {}
 
   ngOnInit(): void {

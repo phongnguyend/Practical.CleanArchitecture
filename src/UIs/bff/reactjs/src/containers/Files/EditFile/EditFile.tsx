@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { NavLink, Navigate, useParams } from "react-router-dom";
-import { Modal } from "react-bootstrap";
+import Modal from "../../../components/Modal/Modal";
 
 import { checkValidity } from "../../../shared/utility";
 import axios from "../axios";

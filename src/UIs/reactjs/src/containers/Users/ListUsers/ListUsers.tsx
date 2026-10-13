@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import { Modal, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import Modal from "../../../components/Modal/Modal";
 
 import * as actions from "../actions";
 import ActionIcon from "../../../components/ActionIcon/ActionIcon";

@@ -1,3 +1,4 @@
+import { ModalRef, ModalModule, ModalService } from "../../shared/modal/modal";
 import {
   Component,
   OnInit,
@@ -8,9 +9,7 @@ import {
   ChangeDetectionStrategy,
 } from "@angular/core";
 
-import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { IProduct } from "../product";
-import { MatDialogModule } from "@angular/material/dialog";
 import { ActionIconComponent } from "../../shared/action-icon.component";
 
 @Component({
@@ -19,15 +18,15 @@ import { ActionIconComponent } from "../../shared/action-icon.component";
   styleUrls: ["./delete-product.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [MatDialogModule, ActionIconComponent],
+  imports: [ModalModule, ActionIconComponent],
 })
 export class DeleteProductComponent implements OnInit {
   @Input() product: IProduct;
   @Output() confirmed: EventEmitter<IProduct> = new EventEmitter<IProduct>();
 
-  modalRef: MatDialogRef<any>;
+  modalRef: ModalRef<any>;
   message: string;
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: ModalService) {}
 
   ngOnInit(): void {}
 

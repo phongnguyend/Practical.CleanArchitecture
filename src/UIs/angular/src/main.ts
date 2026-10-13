@@ -12,22 +12,48 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { StoreModule } from "@ngrx/store";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { EffectsModule } from "@ngrx/effects";
-import { ToastrModule } from "ngx-toastr";
 import { ErrorHandler, provideAppInitializer } from "@angular/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatTimepickerModule } from "@angular/material/timepicker";
 import { MatNativeDateModule } from "@angular/material/core";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatDialogModule } from "@angular/material/dialog";
 import { provideIcons } from "@ng-icons/core";
 import {
-  lucideCheck, lucideChevronLeft, lucideChevronRight, lucideChevronsLeft,
-  lucideChevronsRight, lucideClipboard, lucideClipboardList, lucideDownload,
-  lucideExternalLink, lucideEye, lucideEyeOff, lucideFileDown, lucideFileUp,
-  lucideFiles, lucideHistory, lucideHouse, lucideKeyRound, lucideLogIn,
-  lucideLogOut, lucideMail, lucideMonitor, lucideMoon, lucidePackage, lucidePencil, lucidePlus, lucideSave,
-  lucideSettings, lucideShield, lucideStar, lucideSun, lucideTrash2, lucideUpload, lucideUsers, lucideX,
+  lucideCheck,
+  lucideChevronLeft,
+  lucideChevronRight,
+  lucideChevronsLeft,
+  lucideChevronsRight,
+  lucideClipboard,
+  lucideClipboardList,
+  lucideDownload,
+  lucideExternalLink,
+  lucideEye,
+  lucideEyeOff,
+  lucideFileDown,
+  lucideFileUp,
+  lucideFiles,
+  lucideHistory,
+  lucideHouse,
+  lucideKeyRound,
+  lucideLogIn,
+  lucideLogOut,
+  lucideMail,
+  lucideMonitor,
+  lucideMoon,
+  lucidePackage,
+  lucidePencil,
+  lucidePlus,
+  lucideSave,
+  lucideSettings,
+  lucideShield,
+  lucideStar,
+  lucideSun,
+  lucideTrash2,
+  lucideUpload,
+  lucideUsers,
+  lucideX,
 } from "@ng-icons/lucide";
 
 import { AppComponent } from "./app/app.component";
@@ -56,12 +82,40 @@ bootstrapApplication(AppComponent, {
   providers: [
     provideZoneChangeDetection(),
     provideIcons({
-      lucideCheck, lucideChevronLeft, lucideChevronRight, lucideChevronsLeft,
-      lucideChevronsRight, lucideClipboard, lucideClipboardList, lucideDownload,
-      lucideExternalLink, lucideEye, lucideEyeOff, lucideFileDown, lucideFileUp,
-      lucideFiles, lucideHistory, lucideHouse, lucideKeyRound, lucideLogIn,
-      lucideLogOut, lucideMail, lucideMonitor, lucideMoon, lucidePackage, lucidePencil, lucidePlus, lucideSave,
-      lucideSettings, lucideShield, lucideStar, lucideSun, lucideTrash2, lucideUpload, lucideUsers, lucideX,
+      lucideCheck,
+      lucideChevronLeft,
+      lucideChevronRight,
+      lucideChevronsLeft,
+      lucideChevronsRight,
+      lucideClipboard,
+      lucideClipboardList,
+      lucideDownload,
+      lucideExternalLink,
+      lucideEye,
+      lucideEyeOff,
+      lucideFileDown,
+      lucideFileUp,
+      lucideFiles,
+      lucideHistory,
+      lucideHouse,
+      lucideKeyRound,
+      lucideLogIn,
+      lucideLogOut,
+      lucideMail,
+      lucideMonitor,
+      lucideMoon,
+      lucidePackage,
+      lucidePencil,
+      lucidePlus,
+      lucideSave,
+      lucideSettings,
+      lucideShield,
+      lucideStar,
+      lucideSun,
+      lucideTrash2,
+      lucideUpload,
+      lucideUsers,
+      lucideX,
     }),
     importProvidersFrom(
       BrowserModule,
@@ -76,13 +130,11 @@ bootstrapApplication(AppComponent, {
       }),
       EffectsModule.forRoot([]),
       EffectsModule.forFeature([AuditLogEffects]),
-      ToastrModule.forRoot(),
       MatDatepickerModule,
       MatTimepickerModule,
       MatNativeDateModule,
       MatInputModule,
-      MatFormFieldModule,
-      MatDialogModule
+      MatFormFieldModule
     ),
     provideRouter(routes),
     provideHttpClient(withXhr(), withInterceptorsFromDi()),

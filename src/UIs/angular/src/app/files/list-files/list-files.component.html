@@ -74,21 +74,21 @@
 }
 
 <ng-template #deletetemplate>
-  <h2 mat-dialog-title><app-action-icon action="delete" />Delete File</h2>
-  <mat-dialog-content class="text-center">
+  <app-modal-header><app-action-icon action="delete" />Delete File</app-modal-header>
+  <app-modal-body class="text-center">
     <p>
       Are you sure you want to delete <strong> {{ selectedFile.name }}</strong>
     </p>
-  </mat-dialog-content>
-  <mat-dialog-actions align="center">
+  </app-modal-body>
+  <app-modal-footer align="center">
     <button type="button" class="btn btn-primary" (click)="confirmDelete()"><app-action-icon action="confirm" />Yes</button>
     <button type="button" class="btn btn-default" (click)="cancelDelete()"><app-action-icon action="cancel" />No</button>
-  </mat-dialog-actions>
+  </app-modal-footer>
 </ng-template>
 
 <ng-template #auditlogtemplate>
-  <h2 mat-dialog-title><app-action-icon action="audit" />Audit Logs</h2>
-  <mat-dialog-content>
+  <app-modal-header><app-action-icon action="audit" />Audit Logs</app-modal-header>
+  <app-modal-body>
     <div class="table-responsive">
       <table class="table">
         <thead>
@@ -127,8 +127,8 @@
         </tbody>
       </table>
     </div>
-  </mat-dialog-content>
-  <mat-dialog-actions align="end">
-    <button type="button" class="btn btn-default" mat-dialog-close><app-action-icon action="close" />Close</button>
-  </mat-dialog-actions>
+  </app-modal-body>
+  <app-modal-footer align="end">
+    <button type="button" class="btn btn-default" modalClose><app-action-icon action="close" />Close</button>
+  </app-modal-footer>
 </ng-template>

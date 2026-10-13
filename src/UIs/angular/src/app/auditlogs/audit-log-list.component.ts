@@ -1,3 +1,4 @@
+import { JsonViewerComponent } from "../shared/json-viewer/json-viewer.component";
 import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { IAuditLogEntry } from "./audit-log";
@@ -14,7 +15,13 @@ import { ActionIconComponent } from "../shared/action-icon.component";
   styleUrls: ["./audit-log-list.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CommonModule, CopyToClipboardComponent, PaginationComponent, ActionIconComponent],
+  imports: [
+    JsonViewerComponent,
+    CommonModule,
+    CopyToClipboardComponent,
+    PaginationComponent,
+    ActionIconComponent,
+  ],
 })
 export class AuditLogListComponent implements OnInit {
   auditLogs: IAuditLogEntry[] = [];

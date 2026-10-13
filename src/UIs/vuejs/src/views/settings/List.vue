@@ -47,8 +47,8 @@
       </div>
     </div>
     <div v-if="errorMessage" class="alert alert-danger">Error: {{ errorMessage }}</div>
-    <b-modal v-model="modalDelete" title="Delete Entry" @ok="deleteConfirmed">
-      <template #title><ActionIcon action="delete" />Delete Entry</template>
+    <AppModal v-model="modalDelete" title="Delete Entry" @ok="deleteConfirmed">
+      <template #header><ActionIcon action="delete" />Delete Entry</template>
       <p class="my-4">
         Are you sure you want to delete:
         <strong>{{ selectedEntry.key }}</strong>
@@ -57,10 +57,10 @@
         <button class="btn btn-secondary" @click="cancel()"><ActionIcon action="cancel" />No</button>
         <button class="btn btn-primary" @click="ok()"><ActionIcon action="confirm" />Yes</button>
       </template>
-    </b-modal>
-    <b-modal v-model="modalAddUpdate" no-footer size="lg" v-bind:title="title">
-      <template #title><ActionIcon :action="title === 'Add' ? 'add' : 'edit'" />{{ title }}</template>
-      <form @submit.prevent="confirmAddUpdate">
+    </AppModal>
+    <AppModal v-model="modalAddUpdate" size="lg" v-bind:title="title">
+      <template #header><ActionIcon :action="title === 'Add' ? 'add' : 'edit'" />{{ title }}</template>
+      <form id="settings-list-modal-form-1" @submit.prevent="confirmAddUpdate">
         <div class="mb-3 row">
           <label for="key" class="col-sm-3 col-form-label">Key</label>
           <div class="col-sm-9">
@@ -116,33 +116,33 @@
             />
           </div>
         </div>
-        <div class="mb-3 row">
-          <label class="col-sm-3 col-form-label"></label>
-          <div class="col-sm-9">
-            <button class="btn btn-primary"><ActionIcon action="save" />Save</button>
-          </div>
-        </div>
+
       </form>
-    </b-modal>
-    <b-modal v-model="modalImportExcel" no-footer title="Import Excel">
-      <template #title><ActionIcon action="import" />Import Excel</template>
-      <form @submit.prevent="confirmImportExcelFile">
+      <template #footer="{ cancel }">
+        <button type="button" class="btn btn-secondary" @click="cancel">Cancel</button>
+        <button type="submit" form="settings-list-modal-form-1" class="btn btn-primary"><ActionIcon action="save" />Save</button>
+      </template>
+    </AppModal>
+    <AppModal v-model="modalImportExcel" title="Import Excel">
+      <template #header><ActionIcon action="import" />Import Excel</template>
+      <form id="settings-list-modal-form-2" @submit.prevent="confirmImportExcelFile">
         <div class="mb-3 row">
           <div class="col-sm-12">
             <FilePicker id="importingFile" name="importingFile" label="Excel file" hint="Excel files (.xlsx)" :file="importingFile" :invalid="isImportExcelFormSubmitted && !importingFile" @change="handleFileInput" accept=".xlsx" />
           </div>
         </div>
-        <div class="mb-3 row">
-          <div class="col-sm-12" style="text-align: center">
-            <button class="btn btn-primary"><ActionIcon action="import" />Import</button>
-          </div>
-        </div>
+
       </form>
-    </b-modal>
+      <template #footer="{ cancel }">
+        <button type="button" class="btn btn-secondary" @click="cancel">Cancel</button>
+        <button type="submit" form="settings-list-modal-form-2" class="btn btn-primary"><ActionIcon action="import" />Import</button>
+      </template>
+    </AppModal>
   </div>
 </template>
 
 <script setup lang="ts">
+import AppModal from "../../components/Modal/Modal.vue"
 import FilePicker from '../../components/FilePicker.vue'
 import { ref, computed, onMounted } from 'vue'
 import useVuelidate from '@vuelidate/core'

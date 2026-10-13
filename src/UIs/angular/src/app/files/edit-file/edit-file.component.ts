@@ -1,3 +1,4 @@
+import { ModalModule, ModalService } from "../../shared/modal/modal";
 import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
@@ -7,9 +8,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { IFile } from "../file";
 import { NgModel, NgForm } from "@angular/forms";
 import { IAuditLogEntry } from "../../auditlogs/audit-log";
-import { MatDialog } from "@angular/material/dialog";
 import { GuidEmpty } from "../../shared/constants";
-import { MatDialogModule } from "@angular/material/dialog";
 import { NgIcon } from "@ng-icons/core";
 import { ActionIconComponent } from "../../shared/action-icon.component";
 
@@ -19,7 +18,7 @@ import { ActionIconComponent } from "../../shared/action-icon.component";
   styleUrls: ["./edit-file.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CommonModule, FormsModule, RouterModule, MatDialogModule, NgIcon, ActionIconComponent],
+  imports: [CommonModule, FormsModule, RouterModule, ModalModule, NgIcon, ActionIconComponent],
 })
 export class EditFileComponent implements OnInit {
   file: IFile = {
@@ -40,7 +39,7 @@ export class EditFileComponent implements OnInit {
     private fileService: FileService,
     private router: Router,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: ModalService
   ) {}
 
   ngOnInit(): void {

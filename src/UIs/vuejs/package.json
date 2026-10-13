@@ -19,12 +19,10 @@
     "@vuepic/vue-datepicker": "^14.0.0",
     "axios": "^1.20.0",
     "bootstrap": "^5.3.8",
-    "bootstrap-vue-next": "^1.2.0",
     "lucide-vue-next": "^1.0.0",
     "oidc-client-ts": "^3.5.0",
     "vue": "^3.5.42",
     "vue-router": "^5.3.1",
-    "vue-toastification": "^2.0.0-rc.5",
     "vuex": "^4.1.0"
   },
   "devDependencies": {

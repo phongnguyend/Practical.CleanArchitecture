@@ -36,8 +36,8 @@
       </div>
     </div>
     <div v-if="errorMessage" class="alert alert-danger">Error: {{ errorMessage }}</div>
-    <b-modal v-model="modalDelete" title="Delete User" @ok="deleteConfirmed">
-      <template #title><ActionIcon action="delete" />Delete User</template>
+    <AppModal v-model="modalDelete" title="Delete User" @ok="deleteConfirmed">
+      <template #header><ActionIcon action="delete" />Delete User</template>
       <p class="my-4">
         Are you sure you want to delete
         <strong>{{ selectedUser.userName }}</strong>
@@ -46,11 +46,12 @@
         <button class="btn btn-secondary" @click="cancel()"><ActionIcon action="cancel" />No</button>
         <button class="btn btn-primary" @click="ok()"><ActionIcon action="confirm" />Yes</button>
       </template>
-    </b-modal>
+    </AppModal>
   </div>
 </template>
 
 <script setup lang="ts">
+import AppModal from "../../components/Modal/Modal.vue"
 import { ref, onMounted } from 'vue'
 import axios from './axios'
 import type { IUser } from './User'

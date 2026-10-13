@@ -1,5 +1,5 @@
 .card-header > svg,
-.modal-title > svg {
+.app-modal-title > svg {
   transform: translateY(-2px);
 }
 

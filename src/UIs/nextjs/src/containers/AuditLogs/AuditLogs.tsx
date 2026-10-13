@@ -1,5 +1,6 @@
 "use client";
 
+import JsonViewer from "../../components/JsonViewer/JsonViewer";
 import { useState, useEffect } from "react";
 import Pagination from "../../components/Pagination/Pagination";
 import ActionIcon from "../../components/ActionIcon/ActionIcon";
@@ -27,7 +28,7 @@ const AuditLogs = () => {
   const fetchAuditLogs = async (currentPage: number, pageSize: number) => {
     try {
       const response = await axios.get(
-        "paged?page=" + currentPage + "&pageSize=" + pageSize
+        "paged?page=" + currentPage + "&pageSize=" + pageSize,
       );
       const data = response.data;
       setAuditLogs(data.items);
@@ -53,7 +54,10 @@ const AuditLogs = () => {
       <td>{formatDateTime(auditLog.createdDateTime)}</td>
       <td>{auditLog.userName}</td>
       <td>{auditLog.action}</td>
-      <td>{auditLog.log}</td>
+      <td>
+        <JsonViewer jsonData={auditLog.log} />
+        <div>{auditLog.log}</div>
+      </td>
     </tr>
   ));
 
@@ -84,7 +88,10 @@ const AuditLogs = () => {
 
   return (
     <div className="card">
-      <div className="card-header"><ActionIcon action="audit" />{pageTitle}</div>
+      <div className="card-header">
+        <ActionIcon action="audit" />
+        {pageTitle}
+      </div>
       <div className="card-body">
         {pagination}
         <div className="table-responsive" style={{ width: "100%" }}>

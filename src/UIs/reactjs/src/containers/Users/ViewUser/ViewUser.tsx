@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { ChevronLeft } from "lucide-react";
 import { NavLink, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Modal, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import Modal from "../../../components/Modal/Modal";
 
 import logo from "../../../logo.svg";
 import * as actions from "../actions";
@@ -197,7 +198,7 @@ const ViewUser = () => {
         {postError && !passwordErrors ? (
           <div className="row alert alert-danger">{postError?.response?.status}</div>
         ) : null}
-        <form onSubmit={confirmSetPassword}>
+        <form id="viewuser-modal-form-1" onSubmit={confirmSetPassword}>
           <div className="mb-3 row">
             <label htmlFor="userName" className="col-sm-4 col-form-label">
               User Name
@@ -247,14 +248,13 @@ const ViewUser = () => {
               <span className="invalid-feedback">Confirm Password does not match</span>
             </div>
           </div>
-          <div className="mb-3 row">
-            <label className="col-sm-4 col-form-label"></label>
-            <div className="col-sm-8">
-              <button className="btn btn-primary"><ActionIcon action="save" /> Save</button>
-            </div>
-          </div>
+
         </form>
       </Modal.Body>
+      <Modal.Footer>
+        <button type="button" className="btn btn-secondary" onClick={cancelSetPassword}>Cancel</button>
+        <button type="submit" form="viewuser-modal-form-1" className="btn btn-primary"><ActionIcon action="save" /> Save</button>
+      </Modal.Footer>
     </Modal>
   );
 

@@ -1,0 +1,115 @@
+.app-modal-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgb(0 0 0 / 55%);
+  overscroll-behavior: contain;
+}
+.app-modal-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 32rem;
+  max-height: calc(100dvh - 2rem);
+  min-height: 0;
+  color: var(--bs-body-color, #212529);
+  background: var(--bs-body-bg, #fff);
+  border: 1px solid var(--bs-border-color, #dee2e6);
+  border-radius: 0.6rem;
+  box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 25%);
+  overflow: hidden;
+}
+.app-modal-panel:focus {
+  outline: none;
+}
+.app-modal-panel:focus-visible {
+  outline: 3px solid var(--bs-primary, #0d6efd);
+  outline-offset: 2px;
+}
+.app-modal-panel--sm {
+  max-width: 24rem;
+}
+.app-modal-panel--lg {
+  max-width: 50rem;
+}
+.app-modal-panel--xl {
+  max-width: 72rem;
+}
+.app-modal-panel > form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: inherit;
+}
+.app-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 0 0 auto;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--bs-border-color, #dee2e6);
+}
+.app-modal-title,
+.app-modal-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  font-weight: 600;
+  flex: 1;
+}
+.app-modal-title > svg {
+  margin-right: 0.4rem;
+  vertical-align: -0.125em;
+}
+.app-modal-close {
+  margin-left: auto;
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 0.25rem;
+  color: inherit;
+  background: transparent;
+  font-size: 1.75rem;
+  line-height: 1;
+}
+.app-modal-close:hover {
+  background: var(--bs-secondary-bg, #e9ecef);
+}
+.app-modal-close:focus-visible {
+  outline: 2px solid var(--bs-primary, #0d6efd);
+  outline-offset: 2px;
+}
+.app-modal-body {
+  display: block;
+  padding: 1.25rem;
+  overflow: auto;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+.app-modal-footer {
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--bs-border-color, #dee2e6);
+}
+@media (max-width: 575px) {
+  .app-modal-layer {
+    padding: 0.5rem;
+  }
+  .app-modal-panel {
+    max-height: calc(100dvh - 1rem);
+  }
+  .app-modal-header,
+  .app-modal-body,
+  .app-modal-footer {
+    padding: 1rem;
+  }
+}

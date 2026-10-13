@@ -1,15 +1,16 @@
+import { confirmModal } from "../shared/modal/modalRuntime";
+import { ModalRef, ModalModule, ModalService } from "../shared/modal/modal";
 import { Component, OnInit, TemplateRef, signal } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { Role, RoleService } from "./role.service";
 import { ActionIconComponent } from "../shared/action-icon.component";
-import { MatDialog, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
 
 @Component({
   selector: "app-roles",
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, ActionIconComponent, MatDialogModule],
+  imports: [CommonModule, FormsModule, RouterModule, ActionIconComponent, ModalModule],
   templateUrl: "./roles.component.html",
 })
 export class RolesComponent implements OnInit {
@@ -19,14 +20,14 @@ export class RolesComponent implements OnInit {
   saving = false;
   adding = false;
   newRoleName = "";
-  addDialog: MatDialogRef<any>;
-  editDialog: MatDialogRef<any>;
+  addDialog: ModalRef<any>;
+  editDialog: ModalRef<any>;
   editingRole: Role | null = null;
   editName = "";
   id: string | null = null;
   mode: "list" | "view" = "list";
 
-  constructor(private service: RoleService, private route: ActivatedRoute, private router: Router, private dialog: MatDialog) {}
+  constructor(private service: RoleService, private route: ActivatedRoute, private router: Router, private dialog: ModalService) {}
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get("id");
@@ -66,8 +67,8 @@ export class RolesComponent implements OnInit {
     this.editDialog = this.dialog.open(template, { width: "400px" });
   }
 
-  remove(role: Role): void {
-    if (!window.confirm(`Delete role ${role.name}?`)) return;
+  async remove(role: Role): Promise<void> {
+    if (!await confirmModal(`Delete role ${role.name}?`, { title: "Delete Role", confirmText: "Delete" })) return;
     this.service.deleteRole(role.id).subscribe({
       next: () => this.load(),
       error: () => this.error.set("Unable to delete the role. Please try again."),

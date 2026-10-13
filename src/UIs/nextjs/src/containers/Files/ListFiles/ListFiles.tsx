@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import Modal from "../../../components/Modal/Modal";
 import axios from "../axios";
 import ActionIcon from "../../../components/ActionIcon/ActionIcon";
 import Link from "next/link";

@@ -91,8 +91,8 @@
       </div>
     </div>
     <div v-if="errorMessage" class="alert alert-danger">Error: {{ errorMessage }}</div>
-    <b-modal v-model="modalDelete" title="Delete Product" @ok="deleteConfirmed">
-      <template #title><ActionIcon action="delete" />Delete Product</template>
+    <AppModal v-model="modalDelete" title="Delete Product" @ok="deleteConfirmed">
+      <template #header><ActionIcon action="delete" />Delete Product</template>
       <p class="my-4">
         Are you sure you want to delete:
         <strong>{{ selectedProduct.name }}</strong>
@@ -101,9 +101,9 @@
         <button class="btn btn-secondary" @click="cancel()"><ActionIcon action="cancel" />No</button>
         <button class="btn btn-primary" @click="ok()"><ActionIcon action="confirm" />Yes</button>
       </template>
-    </b-modal>
-    <b-modal v-model="modalAuditLogs" no-footer size="xl">
-      <template #title><ActionIcon action="audit" />Audit Logs</template>
+    </AppModal>
+    <AppModal v-model="modalAuditLogs" size="xl">
+      <template #header><ActionIcon action="audit" />Audit Logs</template>
       <div class="table-responsive" :style="{ width: '100%' }">
         <table class="table">
           <thead>
@@ -134,26 +134,27 @@
           </tbody>
         </table>
       </div>
-    </b-modal>
-    <b-modal v-model="modalImportCsv" no-footer title="Import Csv">
-      <template #title><ActionIcon action="import" />Import Csv</template>
-      <form @submit.prevent="confirmImportCsvFile">
+    </AppModal>
+    <AppModal v-model="modalImportCsv" title="Import Csv">
+      <template #header><ActionIcon action="import" />Import Csv</template>
+      <form id="products-list-modal-form-1" @submit.prevent="confirmImportCsvFile">
         <div class="mb-3 row">
           <div class="col-sm-12">
             <FilePicker id="importingFile" name="importingFile" label="CSV file" hint="CSV files (.csv)" :file="importingFile" :invalid="isImportCsvFormSubmitted && !importingFile" @change="handleFileInput" accept=".csv,text/csv" />
           </div>
         </div>
-        <div class="mb-3 row">
-          <div class="col-sm-12" style="text-align: center">
-            <button class="btn btn-primary"><ActionIcon action="import" />Import</button>
-          </div>
-        </div>
+
       </form>
-    </b-modal>
+      <template #footer="{ cancel }">
+        <button type="button" class="btn btn-secondary" @click="cancel">Cancel</button>
+        <button type="submit" form="products-list-modal-form-1" class="btn btn-primary"><ActionIcon action="import" />Import</button>
+      </template>
+    </AppModal>
   </div>
 </template>
 
 <script setup lang="ts">
+import AppModal from "../../components/Modal/Modal.vue"
 import FilePicker from '../../components/FilePicker.vue'
 import { ref, computed, onMounted } from 'vue'
 import axios from './axios'

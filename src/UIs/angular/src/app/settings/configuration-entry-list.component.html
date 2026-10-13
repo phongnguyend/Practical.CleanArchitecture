@@ -59,25 +59,25 @@
 }
 
 <ng-template #deletetemplate>
-  <h2 mat-dialog-title><app-action-icon action="delete" />Delete Entry</h2>
-  <mat-dialog-content class="text-center">
+  <app-modal-header><app-action-icon action="delete" />Delete Entry</app-modal-header>
+  <app-modal-body class="text-center">
     <p>
       Are you sure you want to delete
       <strong> {{ selectedEntry.key }}</strong>
     </p>
-  </mat-dialog-content>
-  <mat-dialog-actions align="center">
+  </app-modal-body>
+  <app-modal-footer align="center">
     <button type="button" class="btn btn-primary" (click)="confirmDelete()"><app-action-icon action="confirm" />Yes</button>
     <button type="button" class="btn btn-default" (click)="cancelDelete()"><app-action-icon action="cancel" />No</button>
-  </mat-dialog-actions>
+  </app-modal-footer>
 </ng-template>
 
 <ng-template #addupdatetemplate>
-  <h2 mat-dialog-title><app-action-icon action="settings" />
+  <app-modal-header><app-action-icon action="settings" />
     {{ selectedEntry.id == GuidEmpty ? "Add" : "Update" }}
-  </h2>
-  <mat-dialog-content>
-    <form #form="ngForm" (ngSubmit)="confirmAddUpdate(form)">
+  </app-modal-header>
+  <app-modal-body>
+    <form id="configuration-entry-list-component-modal-form-1" #form="ngForm" (ngSubmit)="confirmAddUpdate(form)">
       <div class="mb-3 row">
         <label for="key" class="col-sm-3 col-form-label">Key</label>
         <div class="col-sm-9">
@@ -133,30 +133,25 @@
                   />
                 </div>
               </div>
-              <div class="mb-3 row">
-                <label class="col-sm-3 col-form-label"></label>
-                <div class="col-sm-9">
-                  <button class="btn btn-primary"><app-action-icon action="save" />Save</button>
-                </div>
-              </div>
+
             </form>
-          </mat-dialog-content>
+          </app-modal-body>
+      <app-modal-footer><button type="button" class="btn btn-secondary" modalClose>Cancel</button>
+        <button type="submit" form="configuration-entry-list-component-modal-form-1" class="btn btn-primary"><app-action-icon action="save" />Save</button></app-modal-footer>
         </ng-template>
 
         <ng-template #import_excel_modal_template>
-          <h2 mat-dialog-title><app-action-icon action="import" />Import Excel</h2>
-          <mat-dialog-content>
-            <form #form="ngForm" (ngSubmit)="confirmImportExcelFile(form)">
+          <app-modal-header><app-action-icon action="import" />Import Excel</app-modal-header>
+          <app-modal-body>
+            <form id="configuration-entry-list-component-modal-form-2" #form="ngForm" (ngSubmit)="confirmImportExcelFile(form)">
               <div class="mb-3 row">
                 <div class="col-sm-12">
                   <app-file-picker inputId="importingFile" name="importingFile" label="Excel file" hint="Excel files (.xlsx)" [file]="importingFile" [invalid]="form.submitted && !importingFile" (fileChange)="handleFileInput($event)" accept=".xlsx" />
                   </div>
                 </div>
-                <div class="mb-3 row">
-                  <div class="col-sm-12" style="text-align: center">
-                    <button class="btn btn-primary"><app-action-icon action="import" />Import</button>
-                  </div>
-                </div>
+
               </form>
-            </mat-dialog-content>
+            </app-modal-body>
+      <app-modal-footer><button type="button" class="btn btn-secondary" modalClose>Cancel</button>
+        <button type="submit" form="configuration-entry-list-component-modal-form-2" class="btn btn-primary"><app-action-icon action="import" />Import</button></app-modal-footer>
           </ng-template>

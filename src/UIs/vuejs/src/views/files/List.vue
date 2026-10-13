@@ -54,8 +54,8 @@
       </div>
     </div>
     <div v-if="errorMessage" class="alert alert-danger">Error: {{ errorMessage }}</div>
-    <b-modal v-model="modalDelete" title="Delete File" @ok="deleteConfirmed">
-      <template #title><ActionIcon action="delete" />Delete File</template>
+    <AppModal v-model="modalDelete" title="Delete File" @ok="deleteConfirmed">
+      <template #header><ActionIcon action="delete" />Delete File</template>
       <p class="my-4">
         Are you sure you want to delete:
         <strong>{{ selectedFile.name }}</strong>
@@ -64,9 +64,9 @@
         <button class="btn btn-secondary" @click="cancel()"><ActionIcon action="cancel" />No</button>
         <button class="btn btn-primary" @click="ok()"><ActionIcon action="confirm" />Yes</button>
       </template>
-    </b-modal>
-    <b-modal v-model="modalAuditLogs" no-footer size="xl">
-      <template #title><ActionIcon action="audit" />Audit Logs</template>
+    </AppModal>
+    <AppModal v-model="modalAuditLogs" size="xl">
+      <template #header><ActionIcon action="audit" />Audit Logs</template>
       <div class="table-responsive" :style="{ width: '100%' }">
         <table class="table">
           <thead>
@@ -101,11 +101,12 @@
           </tbody>
         </table>
       </div>
-    </b-modal>
+    </AppModal>
   </div>
 </template>
 
 <script setup lang="ts">
+import AppModal from "../../components/Modal/Modal.vue"
 import { ref, onMounted } from 'vue'
 import axios from './axios'
 import type { IFile } from './File'

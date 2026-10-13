@@ -16,8 +16,7 @@
     "react": "^19.3.0",
     "react-bootstrap": "^2.10.10",
     "react-datepicker": "^9.1.0",
-    "react-dom": "^19.3.0",
-    "react-toastify": "^11.1.0"
+    "react-dom": "^19.3.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.7",
