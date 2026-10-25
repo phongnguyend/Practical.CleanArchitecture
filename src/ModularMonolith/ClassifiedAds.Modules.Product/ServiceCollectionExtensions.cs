@@ -9,7 +9,6 @@ using ClassifiedAds.Modules.Product.Entities;
 using ClassifiedAds.Modules.Product.HostedServices;
 using ClassifiedAds.Modules.Product.Html;
 using ClassifiedAds.Modules.Product.Pdf;
-using ClassifiedAds.Modules.Product.Pdf.DinkToPdf;
 using ClassifiedAds.Modules.Product.Persistence;
 using ClassifiedAds.Modules.Product.RateLimiterPolicies;
 using Microsoft.AspNetCore.Builder;

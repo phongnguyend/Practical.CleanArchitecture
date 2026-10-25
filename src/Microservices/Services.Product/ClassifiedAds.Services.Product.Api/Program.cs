@@ -59,7 +59,7 @@ services.AddDateTimeProvider();
 services.AddApplicationServices();
 
 services.AddHtmlRazorLightEngine();
-services.AddDinkToPdfConverter();
+services.AddHtmlToPdfClient(configuration.GetSection("HtmlToPdf"));
 
 services.AddProductModule(appSettings);
 services.AddHostedServicesProductModule();

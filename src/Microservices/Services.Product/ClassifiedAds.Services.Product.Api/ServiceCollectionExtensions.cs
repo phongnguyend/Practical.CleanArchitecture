@@ -11,7 +11,6 @@ using ClassifiedAds.Services.Product.Entities;
 using ClassifiedAds.Services.Product.HostedServices;
 using ClassifiedAds.Services.Product.Html;
 using ClassifiedAds.Services.Product.Pdf;
-using ClassifiedAds.Services.Product.Pdf.DinkToPdf;
 using ClassifiedAds.Services.Product.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

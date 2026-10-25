@@ -20,7 +20,6 @@
     <PackageReference Include="CryptographyHelper" Version="4.0.0" />
     <PackageReference Include="CsvHelper" Version="33.1.0" />
     <PackageReference Include="Dapper.StrongName" Version="2.1.79" />
-    <PackageReference Include="DinkToPdf" Version="1.0.8" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.10" />
@@ -40,7 +39,6 @@
     <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.17.0" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Process" Version="1.17.0-rc.1" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.17.0" />
-    <PackageReference Include="PuppeteerSharp" Version="25.4.0" />
     <PackageReference Include="Quartz" Version="3.19.1" />
     <PackageReference Include="RabbitMQ.Client" Version="7.2.1" />
     <PackageReference Include="RazorLight" Version="2.3.1" />
@@ -62,15 +60,5 @@
     <ProjectReference Include="..\ClassifiedAds.Domain\ClassifiedAds.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ContentWithTargetPath Include="..\libs\libwkhtmltox\libwkhtmltox-0.12.4-x64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>libwkhtmltox.dll</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="..\libs\libwkhtmltox\libwkhtmltox-0.12.4-x64.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>libwkhtmltox.so</TargetPath>
-    </ContentWithTargetPath>
-  </ItemGroup>
 
 </Project>

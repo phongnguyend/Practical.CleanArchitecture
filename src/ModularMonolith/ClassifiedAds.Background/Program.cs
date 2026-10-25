@@ -56,7 +56,7 @@ Host.CreateDefaultBuilder(args)
     .AddApplicationServices();
 
     services.AddHtmlRazorLightEngine();
-    services.AddDinkToPdfConverter();
+    services.AddHtmlToPdfClient(configuration.GetSection("HtmlToPdf"));
 
     services.AddDataProtection()
     .PersistKeysToDbContext<IdentityDbContext>()

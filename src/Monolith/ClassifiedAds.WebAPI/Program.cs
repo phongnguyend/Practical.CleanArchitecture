@@ -2,6 +2,7 @@ using ClassifiedAds.Application.ConfigurationEntries.DTOs;
 using ClassifiedAds.Application.Products.DTOs;
 using ClassifiedAds.CrossCuttingConcerns.Csv;
 using ClassifiedAds.CrossCuttingConcerns.Excel;
+using ClassifiedAds.CrossCuttingConcerns.Pdf;
 using ClassifiedAds.CrossCuttingConcerns.Tenants;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Infrastructure.AI;
@@ -13,6 +14,7 @@ using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Infrastructure.Localization;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.Monitoring;
+using ClassifiedAds.Infrastructure.Pdf;
 using ClassifiedAds.Infrastructure.Web.Endpoints;
 using ClassifiedAds.Infrastructure.Web.ExceptionHandlers;
 using ClassifiedAds.Persistence;
@@ -231,7 +233,8 @@ services.AddScoped<ICurrentUser, CurrentWebUser>();
 
 services.AddStorageManager(appSettings.Storage);
 services.AddHtmlWriters();
-services.AddDinkToPdfWriters();
+services.AddHtmlToPdfClient(configuration.GetSection("HtmlToPdf"));
+services.AddScoped<IPdfWriter<ExportProductsToPdf>, ExportProductsToPdfHandler>();
 services.AddClassifiedAdsLocalization();
 
 services.AddScoped<ICsvReader<ImportProductsFromCsv>, ImportProductsFromCsvHandler>();
