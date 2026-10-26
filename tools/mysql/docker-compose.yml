@@ -9,7 +9,7 @@ services:
     ports:
       - "3306:3306"
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: phpmyadmin
     environment:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: mysql
