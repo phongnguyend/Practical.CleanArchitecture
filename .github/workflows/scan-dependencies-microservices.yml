@@ -43,17 +43,29 @@ jobs:
 
     # Install CheckNugetPackages tool
     - name: Install CheckNugetPackages tool
-      run: dotnet tool install --global CheckNugetPackages.DotNetCliTool --version 3.1.0
+      run: dotnet tool install --global CheckNugetPackages.DotNetCliTool --version 3.11.0
 
     # Run CheckNugetPackages
     - name: Run CheckNugetPackages
+      id: check-nuget
       run: |
         export PATH="$PATH:$HOME/.dotnet/tools"
-        CheckNugetPackages ./ --report-directory packages
+        CheckNugetPackages ./ --report-type csv html md --report-directory "$RUNNER_TEMP/nuget-packages"
 
-    # Upload the CSV report as a workflow artifact
+    - name: Display NuGet packages report
+      if: ${{ !cancelled() && steps.check-nuget.outcome != 'skipped' }}
+      run: |
+        report="$RUNNER_TEMP/nuget-packages/packages.md"
+        if [ -f "$report" ]; then
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+        else
+          echo "No Markdown report was generated. Check the CheckNugetPackages step logs." >> "$GITHUB_STEP_SUMMARY"
+        fi
+
+    # Keep all report formats available as a workflow artifact
     - name: Upload NuGet packages report
+      if: ${{ !cancelled() && steps.check-nuget.outcome != 'skipped' }}
       uses: actions/upload-artifact@v4
       with:
         name: packages
-        path: src/Microservices/packages
+        path: ${{ runner.temp }}/nuget-packages

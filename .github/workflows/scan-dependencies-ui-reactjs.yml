@@ -24,5 +24,40 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "18"
-      - run: npm audit --audit-level=critical
-        working-directory: ./src/UIs/reactjs/
+
+      - name: Setup .NET for CheckNpmPackages
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install CheckNpmPackages tool
+        run: dotnet tool install --global CheckNpmPackages.DotNetCliTool --version 3.11.0
+
+      - name: Run CheckNpmPackages
+        id: check-npm
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          export PATH="$PATH:$HOME/.dotnet/tools"
+          CheckNpmPackages ./ --report-type csv html md --report-directory "$RUNNER_TEMP/npm-packages"
+
+      - name: Display npm packages report
+        if: ${{ !cancelled() && steps.check-npm.outcome != 'skipped' }}
+        run: |
+          report="$RUNNER_TEMP/npm-packages/packages.md"
+          if [ -f "$report" ]; then
+            cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No Markdown report was generated. Check the CheckNpmPackages step logs." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload npm packages report
+        if: ${{ !cancelled() && steps.check-npm.outcome != 'skipped' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: ${{ runner.temp }}/npm-packages
+
+      - name: npm audit
+        if: ${{ !cancelled() }}
+        run: npm audit --audit-level=critical
+        working-directory: ${{ env.WORKING_DIRECTORY }}
