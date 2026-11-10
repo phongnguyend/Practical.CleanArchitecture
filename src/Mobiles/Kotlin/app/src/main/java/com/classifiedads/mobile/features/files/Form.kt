@@ -37,7 +37,7 @@ fun StoredFileForm(
             disabled = busy || true,
         )
     if (value.id.isEmpty()) {
-        OutlinedButton(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = pick) { Text("Choose file") }
+        OutlinedButton(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = pick) { ActionLabel("Choose file") }
         Text(file?.let(fileName) ?: "No file selected")
     }
 }

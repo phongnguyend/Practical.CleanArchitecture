@@ -1,3 +1,5 @@
+import '../../shared/widgets/action_label.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../core/services/app_services.dart';
@@ -54,7 +56,7 @@ class _StoredFileScreenState extends State<StoredFileScreen> {
             Rect.fromLTWH(0, 0, MediaQuery.sizeOf(context).width, 1),
           ),
         ),
-        child: const Text('Download'),
+        child: const ActionLabel('Download'),
       ),
     ],
   );

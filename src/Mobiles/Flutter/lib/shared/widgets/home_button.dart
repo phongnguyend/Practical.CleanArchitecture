@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'action_label.dart';
+
 class HomeButton extends StatelessWidget {
   const HomeButton({super.key, required this.label, required this.onPressed});
   final String label;
@@ -25,7 +27,7 @@ class HomeButton extends StatelessWidget {
           ),
           textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         ),
-        child: Text(label, textAlign: TextAlign.center),
+        child: ActionLabel(label),
       ),
     );
   }

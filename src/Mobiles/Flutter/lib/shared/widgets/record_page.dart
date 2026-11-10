@@ -1,3 +1,5 @@
+import 'pagination.dart';
+import 'action_label.dart';
 import '../models/repository.dart';
 
 import 'dart:convert';
@@ -136,11 +138,11 @@ class _RecordPageState<T> extends State<RecordPage<T>> {
         footer: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Back'),
+            child: const ActionLabel('Back'),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Edit'),
+            child: const ActionLabel('Edit'),
           ),
         ],
       ),
@@ -180,7 +182,7 @@ class _RecordPageState<T> extends State<RecordPage<T>> {
         footer: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Back'),
+            child: const ActionLabel('Back'),
           ),
         ],
       ),
@@ -217,11 +219,11 @@ class _RecordPageState<T> extends State<RecordPage<T>> {
           children: [
             TextButton(
               onPressed: busy ? null : () => run(load),
-              child: const Text('Refresh'),
+              child: const ActionLabel('Refresh'),
             ),
             FilledButton(
               onPressed: busy ? null : () => edit(widget.empty()),
-              child: Text(widget.createTitle),
+              child: ActionLabel(widget.createTitle),
             ),
             ...?widget.toolbar?.call(run, load),
           ],
@@ -256,7 +258,7 @@ class _RecordPageState<T> extends State<RecordPage<T>> {
                                   await widget.repository.get(widget.id(value)),
                                 ),
                               ),
-                        child: const Text('View'),
+                        child: const ActionLabel('View'),
                       ),
                       TextButton(
                         onPressed: busy
@@ -266,7 +268,7 @@ class _RecordPageState<T> extends State<RecordPage<T>> {
                                   await widget.repository.get(widget.id(value)),
                                 ),
                               ),
-                        child: const Text('Edit'),
+                        child: const ActionLabel('Edit'),
                       ),
                       TextButton(
                         style: dangerButtonStyle(context),
@@ -288,14 +290,14 @@ class _RecordPageState<T> extends State<RecordPage<T>> {
                                   });
                                 }
                               },
-                        child: const Text('Delete'),
+                        child: const ActionLabel('Delete'),
                       ),
                       if (widget.history != null)
                         TextButton(
                           onPressed: busy
                               ? null
                               : () => run(() => history(value)),
-                          child: const Text('History'),
+                          child: const ActionLabel('History'),
                         ),
                       ...?widget.actions?.call(value, run),
                     ],
@@ -304,21 +306,12 @@ class _RecordPageState<T> extends State<RecordPage<T>> {
               ),
             ),
           ),
-        Wrap(
-          spacing: 8,
-          children: [
-            if (page > 1)
-              TextButton(
-                onPressed: () => setState(() => page--),
-                child: const Text('Previous'),
-              ),
-            Text('Page $page · ${filtered.length} records'),
-            if (page * 20 < filtered.length)
-              TextButton(
-                onPressed: () => setState(() => page++),
-                child: const Text('Next'),
-              ),
-          ],
+        Pagination(
+          page: page,
+          total: filtered.length,
+          pageSize: 20,
+          busy: busy,
+          onPage: (value) => setState(() => page = value),
         ),
       ],
     );
@@ -337,12 +330,12 @@ Future<bool> confirmAction(
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: const ActionLabel('Cancel'),
           ),
           FilledButton(
             style: destructive ? dangerButtonStyle(context) : null,
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Confirm'),
+            child: const ActionLabel('Confirm'),
           ),
         ],
       ),
@@ -377,7 +370,13 @@ class EntityEditor<T> extends StatefulWidget {
 }
 
 class _EntityEditorState<T> extends State<EntityEditor<T>> {
-  late final String original = jsonEncode(widget.serialize(widget.value));
+  late final String original;
+  @override
+  void initState() {
+    super.initState();
+    original = jsonEncode(widget.serialize(widget.value));
+  }
+
   PlatformFile? file;
   bool busy = false;
   String error = '';
@@ -419,7 +418,10 @@ class _EntityEditorState<T> extends State<EntityEditor<T>> {
         ],
       ),
       footer: [
-        TextButton(onPressed: busy ? null : close, child: const Text('Cancel')),
+        TextButton(
+          onPressed: busy ? null : close,
+          child: const ActionLabel('Cancel'),
+        ),
         FilledButton(
           onPressed: busy
               ? null
@@ -442,7 +444,7 @@ class _EntityEditorState<T> extends State<EntityEditor<T>> {
                     if (mounted) setState(() => busy = false);
                   }
                 },
-          child: const Text('Save'),
+          child: const ActionLabel('Save'),
         ),
       ],
     ),

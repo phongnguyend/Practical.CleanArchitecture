@@ -4,6 +4,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import 'action_label.dart';
+
 class JsonTree extends StatefulWidget {
   const JsonTree({super.key, required this.value, this.name = 'root'});
   final dynamic value;
@@ -48,7 +50,7 @@ class _JsonTreeState extends State<JsonTree> {
         if (entries.length > limit)
           TextButton(
             onPressed: () => setState(() => limit += 50),
-            child: const Text('Show more'),
+            child: const ActionLabel('Show more'),
           ),
       ],
     );
@@ -79,7 +81,7 @@ class _JsonViewerState extends State<JsonViewer> {
           children: [
             TextButton(
               onPressed: () => setState(() => open = !open),
-              child: Text(open ? 'Hide JSON' : 'Show JSON'),
+              child: ActionLabel(open ? 'Hide JSON' : 'Show JSON'),
             ),
             TextButton(
               onPressed: () async {
@@ -100,7 +102,7 @@ class _JsonViewerState extends State<JsonViewer> {
                   }
                 }
               },
-              child: Text(copied ? 'Copied' : 'Copy JSON'),
+              child: ActionLabel(copied ? 'Copied' : 'Copy JSON'),
             ),
           ],
         ),

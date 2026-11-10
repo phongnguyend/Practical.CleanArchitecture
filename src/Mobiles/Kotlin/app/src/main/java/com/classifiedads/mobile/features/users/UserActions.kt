@@ -35,9 +35,9 @@ fun UserActions(value: User, api: Api) {
             else mode = ""
         }
     }
-    OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { open("password") }) { Text("Set password") }
-    OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { open("passwordresetemail") }) { Text("Reset email") }
-    OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { open("emailaddressconfirmation") }) { Text("Confirm email") }
+    OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { open("password") }) { ActionLabel("Set password") }
+    OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { open("passwordresetemail") }) { ActionLabel("Reset email") }
+    OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { open("emailaddressconfirmation") }) { ActionLabel("Confirm email") }
     if (notice.isNotEmpty()) Text(notice)
     if (mode.isNotEmpty())
         Sheet(
@@ -46,10 +46,10 @@ fun UserActions(value: User, api: Api) {
             ::close,
             footer = {
                 if (discard) {
-                    OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { discard = false }) { Text("Keep editing") }
-                    Button(shape = MaterialTheme.shapes.small, onClick = { mode = "" }) { Text("Discard") }
+                    OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { discard = false }) { ActionLabel("Keep editing") }
+                    Button(shape = MaterialTheme.shapes.small, onClick = { mode = "" }) { ActionLabel("Discard") }
                 } else {
-                    OutlinedButton(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = ::close) { Text("Cancel") }
+                    OutlinedButton(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = ::close) { ActionLabel("Cancel") }
                     Button(shape = MaterialTheme.shapes.small,
                         enabled = !busy,
                         onClick = {
@@ -81,7 +81,7 @@ fun UserActions(value: User, api: Api) {
                             }
                         },
                     ) {
-                        Text(if (mode == "password") "Save" else "Confirm")
+                        ActionLabel(if (mode == "password") "Save" else "Confirm")
                     }
                 }
             },

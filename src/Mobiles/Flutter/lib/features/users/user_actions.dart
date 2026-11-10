@@ -1,3 +1,5 @@
+import '../../shared/widgets/action_label.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../core/services/app_services.dart';
@@ -44,16 +46,16 @@ class UserActions extends StatelessWidget {
           barrierDismissible: false,
           builder: (context) => PasswordDialog(user: value, services: services),
         ),
-        child: const Text('Set password'),
+        child: const ActionLabel('Set password'),
       ),
       TextButton(
         onPressed: () => email(context, 'passwordresetemail', 'password reset'),
-        child: const Text('Reset email'),
+        child: const ActionLabel('Reset email'),
       ),
       TextButton(
         onPressed: () =>
             email(context, 'emailaddressconfirmation', 'confirmation'),
-        child: const Text('Confirm email'),
+        child: const ActionLabel('Confirm email'),
       ),
     ],
   );
@@ -111,7 +113,10 @@ class _PasswordState extends State<PasswordDialog> {
         ],
       ),
       footer: [
-        TextButton(onPressed: busy ? null : close, child: const Text('Cancel')),
+        TextButton(
+          onPressed: busy ? null : close,
+          child: const ActionLabel('Cancel'),
+        ),
         FilledButton(
           onPressed: busy
               ? null
@@ -140,7 +145,7 @@ class _PasswordState extends State<PasswordDialog> {
                     if (mounted) setState(() => busy = false);
                   }
                 },
-          child: const Text('Save'),
+          child: const ActionLabel('Save'),
         ),
       ],
     ),

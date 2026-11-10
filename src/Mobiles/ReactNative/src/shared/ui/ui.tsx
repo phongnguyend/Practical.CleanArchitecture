@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import {
   KeyboardAvoidingView,
+  Image,
   Modal,
   Platform,
   Pressable,
@@ -12,12 +13,14 @@ import {
   type ViewStyle,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { actionIcons } from "./action-icons";
 export const Theme = createContext(false);
 export function useStyles() {
   return makeStyles(useContext(Theme));
 }
 export function Button({
   title,
+  icon = title,
   onPress,
   disabled,
   danger,
@@ -25,6 +28,7 @@ export function Button({
   style,
 }: {
   title: string;
+  icon?: string;
   onPress: () => void;
   disabled?: boolean;
   danger?: boolean;
@@ -35,6 +39,7 @@ export function Button({
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={title}
       disabled={disabled}
       onPress={onPress}
       accessibilityState={{ disabled: !!disabled }}
@@ -47,11 +52,16 @@ export function Button({
         disabled && { opacity: 0.5 },
       ]}
     >
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 }}>
+      {actionIcons[icon] && <Image source={actionIcons[icon]} accessible={false}
+        style={{ width: 18, height: 18, tintColor: danger ? s.dangerButtonText.color : variant === "primary" ? s.buttonText.color : s.secondaryButtonText.color }} />}
       <Text style={[
+        { flexShrink: 1 },
         s.secondaryButtonText,
         variant === "primary" && s.buttonText,
         danger && s.dangerButtonText,
       ]}>{title}</Text>
+      </View>
     </Pressable>
   );
 }

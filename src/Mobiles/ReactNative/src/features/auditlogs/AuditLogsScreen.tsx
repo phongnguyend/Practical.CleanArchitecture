@@ -1,3 +1,4 @@
+import { Pagination } from "../../shared/ui/Pagination";
 import { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, Text, TextInput, View } from "react-native";
 import { api } from "../../core/services";
@@ -76,31 +77,8 @@ export default function AuditLogsScreen() {
           </View>
         ))}
       {!!error && <Text style={s.error}>{error}</Text>}
-      <View style={s.actions}>
-        {page > 1 && (
-          <Button
-            title="Previous"
-            disabled={busy}
-            onPress={() => {
-              setBusy(true);
-              setPage(page - 1);
-            }}
-          />
-        )}
-        <Text style={s.text}>
-          Page {page} · {total} records
-        </Text>
-        {page * 5 < total && (
-          <Button
-            title="Next"
-            disabled={busy}
-            onPress={() => {
-              setBusy(true);
-              setPage(page + 1);
-            }}
-          />
-        )}
-      </View>
+      <Pagination page={page} total={total} pageSize={5} busy={busy}
+        onPage={(value) => { setBusy(true); setPage(value); }} />
     </>
   );
 }

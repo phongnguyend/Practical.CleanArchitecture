@@ -35,7 +35,7 @@ fun AuditLogsScreen(api: Api) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text("Audit logs", style = MaterialTheme.typography.headlineSmall)
         TextInput("Search current records", search, { search = it })
-        OutlinedButton(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = { refresh++ }) { Text("Refresh") }
+        OutlinedButton(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = { refresh++ }) { ActionLabel("Refresh") }
         if (busy) LinearProgressIndicator()
         if (error.isNotEmpty()) Text(error)
         rows
@@ -50,10 +50,6 @@ fun AuditLogsScreen(api: Api) {
                     }
                 }
             }
-        Row {
-            if (page > 1) OutlinedButton(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = { page-- }) { Text("Previous") }
-            Text("Page $page · $total records")
-            if (page * 5 < total) OutlinedButton(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = { page++ }) { Text("Next") }
-        }
+        Pagination(page, total, 5, busy) { page = it }
     }
 }

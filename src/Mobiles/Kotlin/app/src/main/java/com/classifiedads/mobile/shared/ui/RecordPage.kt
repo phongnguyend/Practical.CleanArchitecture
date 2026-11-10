@@ -177,8 +177,8 @@ fun <T : Entity> RecordPage(
             },
         )
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedButton(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = { refresh++ }) { Text("Refresh") }
-            Button(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = { edit(empty()) }) { Text(createTitle) }
+            OutlinedButton(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = { refresh++ }) { ActionLabel("Refresh") }
+            Button(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = { edit(empty()) }) { ActionLabel(createTitle) }
             toolbar { refresh++ }
         }
         if (busy) LinearProgressIndicator(Modifier.fillMaxWidth())
@@ -196,13 +196,13 @@ fun <T : Entity> RecordPage(
                             enabled = !busy,
                             onClick = { run { detail = repository.get(value.id) } },
                         ) {
-                            Text("View")
+                            ActionLabel("View")
                         }
                         OutlinedButton(shape = MaterialTheme.shapes.small,
                             enabled = !busy,
                             onClick = { run { edit(repository.get(value.id)) } },
                         ) {
-                            Text("Edit")
+                            ActionLabel("Edit")
                         }
                         OutlinedButton(shape = MaterialTheme.shapes.small,
                             enabled = !busy,
@@ -218,25 +218,21 @@ fun <T : Entity> RecordPage(
                                         }
                             },
                         ) {
-                            Text("Delete")
+                            ActionLabel("Delete")
                         }
                         if (history != null)
                             OutlinedButton(shape = MaterialTheme.shapes.small,
                                 enabled = !busy,
                                 onClick = { run { audits = history(value.id) } },
                             ) {
-                                Text("History")
+                                ActionLabel("History")
                             }
                         actions(value)
                     }
                 }
             }
         }
-        Row {
-            if (page > 1) OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { page-- }) { Text("Previous") }
-            Text("Page $page · ${filtered.size} records")
-            if (page * 20 < filtered.size) OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { page++ }) { Text("Next") }
-        }
+        Pagination(page, filtered.size, 20, busy) { page = it }
     }
     if (confirmation != null || editor != null || detail != null || audits != null)
         Sheet(
@@ -256,7 +252,7 @@ fun <T : Entity> RecordPage(
             footer = {
                 if (confirmation != null) {
                     OutlinedButton(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = { confirmation = null }) {
-                        Text("Cancel")
+                        ActionLabel("Cancel")
                     }
                     Button(shape = MaterialTheme.shapes.small,
                         enabled = !busy,
@@ -268,10 +264,10 @@ fun <T : Entity> RecordPage(
                             run(action)
                         },
                     ) {
-                        Text("Confirm")
+                        ActionLabel("Confirm")
                     }
                 } else if (editor != null) {
-                    OutlinedButton(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = { closeEditor() }) { Text("Cancel") }
+                    OutlinedButton(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = { closeEditor() }) { ActionLabel("Cancel") }
                     Button(shape = MaterialTheme.shapes.small,
                         enabled = !busy,
                         onClick = {
@@ -287,7 +283,7 @@ fun <T : Entity> RecordPage(
                                 }
                         },
                     ) {
-                        Text("Save")
+                        ActionLabel("Save")
                     }
                 } else {
                     OutlinedButton(shape = MaterialTheme.shapes.small,
@@ -296,7 +292,7 @@ fun <T : Entity> RecordPage(
                             audits = null
                         }
                     ) {
-                        Text("Back")
+                        ActionLabel("Back")
                     }
                     detail?.let { value ->
                         Button(shape = MaterialTheme.shapes.small,
@@ -305,7 +301,7 @@ fun <T : Entity> RecordPage(
                                 edit(value)
                             }
                         ) {
-                            Text("Edit")
+                            ActionLabel("Edit")
                         }
                     }
                 }
@@ -357,14 +353,14 @@ fun ImportButton(
             open = true
         }
     ) {
-        Text("Import")
+        ActionLabel("Import")
     }
     if (open)
         Sheet(
             "Import $suffix",
             { if (!busy) open = false },
             footer = {
-                OutlinedButton(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = { open = false }) { Text("Cancel") }
+                OutlinedButton(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = { open = false }) { ActionLabel("Cancel") }
                 Button(shape = MaterialTheme.shapes.small,
                     enabled = !busy,
                     onClick = {
@@ -387,12 +383,12 @@ fun ImportButton(
                         }
                     },
                 ) {
-                    Text("Import")
+                    ActionLabel("Import")
                 }
             },
         ) {
             OutlinedButton(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = { picker.launch(arrayOf("*/*")) }) {
-                Text("Choose file")
+                ActionLabel("Choose file")
             }
             Text(file?.let(fileName) ?: "No file selected")
             if (error.isNotEmpty()) Text(error)
@@ -421,7 +417,7 @@ fun OperationButton(title: String, action: suspend () -> Unit) {
                 }
             },
         ) {
-            Text(title)
+            ActionLabel(title)
         }
         if (error.isNotEmpty()) Text(error, color = MaterialTheme.colorScheme.error)
     }

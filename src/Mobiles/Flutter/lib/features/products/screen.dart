@@ -1,3 +1,5 @@
+import '../../shared/widgets/action_label.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../core/services/app_services.dart';
@@ -64,7 +66,7 @@ class _ProductScreenState extends State<ProductScreen> {
     toolbar: (run, reload) => [
       TextButton(
         onPressed: () => setState(() => showImages = !showImages),
-        child: Text(showImages ? 'Hide Image' : 'Show Image'),
+        child: ActionLabel(showImages ? 'Hide Image' : 'Show Image'),
       ),
       TextButton(
         onPressed: () async {
@@ -85,7 +87,7 @@ class _ProductScreenState extends State<ProductScreen> {
             }
           }
         },
-        child: const Text('Import'),
+        child: const ActionLabel('Import'),
       ),
       TextButton(
         onPressed: () => run(
@@ -95,7 +97,7 @@ class _ProductScreenState extends State<ProductScreen> {
             Rect.fromLTWH(0, 0, MediaQuery.sizeOf(context).width, 1),
           ),
         ),
-        child: const Text('Export CSV'),
+        child: const ActionLabel('Export CSV'),
       ),
       TextButton(
         onPressed: () => run(
@@ -105,7 +107,7 @@ class _ProductScreenState extends State<ProductScreen> {
             Rect.fromLTWH(0, 0, MediaQuery.sizeOf(context).width, 1),
           ),
         ),
-        child: const Text('Export PDF'),
+        child: const ActionLabel('Export PDF'),
       ),
     ],
   );

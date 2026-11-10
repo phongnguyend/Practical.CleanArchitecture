@@ -26,6 +26,7 @@
     <Project Path="ClassifiedAds.Modules.Configuration/ClassifiedAds.Modules.Configuration.csproj" />
   </Folder>
   <Folder Name="/Modules/Identity/">
+    <Project Path="ClassifiedAds.Modules.Identity.UnitTests/ClassifiedAds.Modules.Identity.UnitTests.csproj" />
     <Project Path="ClassifiedAds.Modules.Identity/ClassifiedAds.Modules.Identity.csproj" />
   </Folder>
   <Folder Name="/Modules/Notification/">

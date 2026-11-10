@@ -1,3 +1,5 @@
+import 'action_label.dart';
+
 import 'package:flutter/material.dart';
 
 class RecordValue extends StatelessWidget {
@@ -78,11 +80,11 @@ class DateInput extends StatelessWidget {
                       );
                     }
                   },
-            child: const Text('Choose date/time'),
+            child: const ActionLabel('Choose date/time'),
           ),
           TextButton(
             onPressed: disabled ? null : () => changed(''),
-            child: const Text('Clear'),
+            child: const ActionLabel('Clear'),
           ),
         ],
       ),

@@ -169,4 +169,32 @@ void main() {
     expect(find.text('Sign in'), findsOneWidget);
     expect(find.text('Add new'), findsNothing);
   });
+
+  testWidgets(
+    'Changed product prompts before discard and preserves draft on Cancel',
+    (tester) async {
+      await tester.pumpWidget(ClassifiedAdsApp(services: WorkspaceServices()));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Products').first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Add new'));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+        find.byType(TextFormField).first,
+        'Unsaved product',
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+      expect(find.text('Discard unsaved changes?'), findsOneWidget);
+      await tester.tap(find.widgetWithText(TextButton, 'Cancel').last);
+      await tester.pumpAndSettle();
+      expect(find.text('Unsaved product'), findsOneWidget);
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Confirm'));
+      await tester.pumpAndSettle();
+      expect(find.text('Save'), findsNothing);
+    },
+  );
 }

@@ -8,6 +8,7 @@ using ClassifiedAds.Modules.Identity.Commands.Users;
 using ClassifiedAds.Modules.Identity.ConfigurationOptions;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Models;
+using ClassifiedAds.Modules.Identity.Queries;
 using ClassifiedAds.Modules.Identity.Queries.Roles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -41,6 +42,12 @@ public class UsersEndpoints
             .RequireAuthorization(Permissions.GetUser)
             .Produces<User>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound);
+
+        builder.MapGet("api/users/{id:guid}/auditlogs", GetAuditLogs)
+            .WithTags("Users")
+            .WithName("Users_GetAuditLogs")
+            .RequireAuthorization(Permissions.GetUser)
+            .Produces<IEnumerable<UserAuditEntryModel>>(StatusCodes.Status200OK);
 
         builder.MapPost("api/users", Post)
             .WithTags("Users")
@@ -99,6 +106,12 @@ public class UsersEndpoints
         var users = await dispatcher.DispatchAsync(new GetUsersQuery());
         var model = users.ToModels();
         return Results.Ok(model);
+    }
+
+    private static async Task<IResult> GetAuditLogs(Guid id, [FromServices] Dispatcher dispatcher)
+    {
+        var entries = await dispatcher.DispatchAsync(new GetUserAuditLogsQuery { Id = id });
+        return Results.Ok(entries);
     }
 
     private static async Task<IResult> GetById(Guid id,

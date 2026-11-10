@@ -1,3 +1,5 @@
+import '../../shared/widgets/action_label.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../core/services/app_services.dart';
@@ -60,7 +62,7 @@ class _ConfigurationEntryScreenState extends State<ConfigurationEntryScreen> {
             }
           }
         },
-        child: const Text('Import'),
+        child: const ActionLabel('Import'),
       ),
       TextButton(
         onPressed: () => run(
@@ -70,7 +72,7 @@ class _ConfigurationEntryScreenState extends State<ConfigurationEntryScreen> {
             Rect.fromLTWH(0, 0, MediaQuery.sizeOf(context).width, 1),
           ),
         ),
-        child: const Text('Export XLSX'),
+        child: const ActionLabel('Export XLSX'),
       ),
     ],
   );

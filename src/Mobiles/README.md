@@ -61,6 +61,8 @@ For example, product changes belong in `Flutter/lib/features/products/`, Kotlin'
 
 ## Integration checklist
 
+Repeatable Android UI tests for all three apps are available in [tests/README.md](tests/README.md). Run `./src/Mobiles/tests/Run-UiTests.ps1 -App All` from the repository root after installing and signing in to the apps. The suite uses AndroidX UI Automator.
+
 With a reachable backend and seeded account, verify in each app:
 
 1. Sign in, background/resume, restore session and refresh tokens.
@@ -91,7 +93,7 @@ Tested the running ModularMonolith API at `https://localhost:44312` and OpenIddi
 - File upload, download content comparison, metadata update, history and deletion passed.
 - Product CSV export, configuration Excel export and SignalR negotiation passed. PDF conversion, import processing and live notification delivery were not exercised.
 - All temporary product, role, configuration and file records were deleted. Their normal audit events remain. The supplied user was not modified; no email actions were invoked.
-- **Backend gap:** `GET /api/users/{id}/auditlogs` returned HTTP 404. The running ModularMonolith user endpoints do not register this route; the web client also calls it. User history is therefore unavailable on this backend until that endpoint is implemented.
+- **Backend gap found during this run:** `GET /api/users/{id}/auditlogs` returned HTTP 404. The route has since been implemented in ModularMonolith with regression coverage; restart the API after rebuilding to load it. It returns existing user audit snapshots, or an empty list when there are none.
 - **Native emulator follow-up:** Medium_Phone now connects as ADB `device`. Kotlin APK installation, launch, signed-out screen rendering, dark-theme switching and theme persistence after process restart passed. Sign-in displayed `Network error`; AppAuth logged `SSLHandshakeException` / `Trust anchor for certification path not found` while fetching Identity Server discovery. Port forwarding for 44312 and 44367 was active. Android certificate trust blocks native login and authenticated UI checks; Flutter and React Native emulator UI checks remain unverified. Dark mode also leaves dark status-bar icons against a dark background, making them hard to read.
 - **Kotlin fixes verified:** system-bar icon appearance now follows the selected theme; light icons were verified against the dark background on Medium_Phone. Six workflow tests and the debug APK build passed. The optional `debugCertificatePath` build property trusts a specific public development certificate for `localhost` only, using debug-only generated resources; the release manifest excludes this trust configuration. With the certificate actually served by the API/Identity Server (which differed from the Windows certificate-store certificate), discovery succeeded and opened Chrome. Chrome then displayed `NET::ERR_CERT_AUTHORITY_INVALID`; browser trust and authenticated UI checks remain blocked. See [Kotlin HTTPS setup](Kotlin/README.md) for the separate browser trust requirement.
 
@@ -129,3 +131,9 @@ All three apps use the same visual tokens with native controls: indigo primary a
 Keep styling aligned in Flutter's `lib/shared/widgets/app_theme.dart`, Kotlin's `shared/ui/AppTheme.kt`, and React Native's `src/shared/ui/ui.tsx`. Feature forms remain explicit native components; these themes do not introduce field definitions or a runtime UI schema.
 
 Home navigation, Sign out, and the `Practical.CleanArchitecture` project link use a dedicated native `HomeButton`: full width, minimum height 48, corner radius 10, neutral 14-point semibold text, and an outlined surface. Navigation buttons have 16-unit vertical gaps; the project link fills its welcome card. Destructive actions and delete confirmations use the same light/dark red text, background, and border colors across all three apps.
+
+Navigation and common actions pair their text labels with matching outline icons. The icons inherit each control's normal, selected, disabled or destructive color and are decorative for screen readers. Regenerate the bundled assets for all three apps with `python src/Mobiles/tools/generate_icons.py` from the repository root; no runtime icon dependency is required.
+
+Check action-label coverage and identical assets across all three apps with `python src/Mobiles/tools/check_icons.py`. This includes pagination, file/date pickers, account actions, theme choices, popup footers and import/export buttons.
+
+Record lists and Audit logs share a pagination layout in each app: a centered page/record summary above equal-width Previous and Next buttons, 12-unit spacing and a minimum 48-unit height. Both buttons remain visible and are disabled while loading or at the relevant page boundary.

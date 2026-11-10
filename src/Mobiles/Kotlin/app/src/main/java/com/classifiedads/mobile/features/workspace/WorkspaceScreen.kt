@@ -1,5 +1,6 @@
 package com.classifiedads.mobile.features.workspace
 
+import com.classifiedads.mobile.shared.ui.ActionLabel
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.LocalActivity
 import androidx.activity.result.contract.ActivityResultContracts
@@ -90,7 +91,7 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
                     colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
                     actions = {
                         Box {
-                            OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { appearance = true }) { Text("Theme") }
+                            OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { appearance = true }) { ActionLabel("Theme") }
                             DropdownMenu(
                                 expanded = appearance,
                                 onDismissRequest = { appearance = false },
@@ -98,7 +99,7 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
                                 listOf("System" to null, "Light" to false, "Dark" to true)
                                     .forEach { (label, value) ->
                                         DropdownMenuItem(
-                                            text = { Text(label) },
+                                            text = { ActionLabel(label) },
                                             onClick = {
                                                 model.chooseTheme(value)
                                                 appearance = false
@@ -125,7 +126,7 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
                             enabled = !model.busy,
                             onClick = { model.run { login.launch(model.session.loginIntent()) } },
                         ) {
-                            Text("Sign in")
+                            ActionLabel("Sign in")
                         }
                     }
                 else {
@@ -134,7 +135,7 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
                             FilterChip(
                                 selected = model.section == key,
                                 onClick = { model.section = key },
-                                label = { Text(title) },
+                                label = { ActionLabel(title) },
                                 shape = androidx.compose.foundation.shape.RoundedCornerShape(22.dp),
                                 colors = FilterChipDefaults.filterChipColors(
                                     selectedContainerColor = MaterialTheme.colorScheme.primary,
@@ -180,7 +181,7 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
             AlertDialog(
                 onDismissRequest = { signOut = false },
                 title = { Text("Sign out of this device?") },
-                dismissButton = { OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { signOut = false }) { Text("Cancel") } },
+                dismissButton = { OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { signOut = false }) { ActionLabel("Cancel") } },
                 confirmButton = {
                     Button(shape = MaterialTheme.shapes.small,
                         onClick = {
@@ -195,7 +196,7 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
                             }
                         }
                     ) {
-                        Text("Confirm")
+                        ActionLabel("Confirm")
                     }
                 },
             )

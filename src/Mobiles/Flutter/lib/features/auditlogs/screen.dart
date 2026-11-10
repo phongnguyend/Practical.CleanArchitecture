@@ -1,3 +1,6 @@
+import '../../shared/widgets/pagination.dart';
+import '../../shared/widgets/action_label.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../core/services/app_services.dart';
@@ -60,7 +63,7 @@ class _AuditLogsState extends State<AuditLogsScreen> {
                 setState(() => busy = true);
                 load();
               },
-        child: const Text('Refresh'),
+        child: const ActionLabel('Refresh'),
       ),
       if (busy) const LinearProgressIndicator(),
       if (error.isNotEmpty) Text(error),
@@ -80,36 +83,18 @@ class _AuditLogsState extends State<AuditLogsScreen> {
             ),
           ),
         ),
-      Wrap(
-        children: [
-          if (page > 1)
-            TextButton(
-              onPressed: busy
-                  ? null
-                  : () {
-                      setState(() {
-                        page--;
-                        busy = true;
-                      });
-                      load();
-                    },
-              child: const Text('Previous'),
-            ),
-          Text('Page $page · $total records'),
-          if (page * 5 < total)
-            TextButton(
-              onPressed: busy
-                  ? null
-                  : () {
-                      setState(() {
-                        page++;
-                        busy = true;
-                      });
-                      load();
-                    },
-              child: const Text('Next'),
-            ),
-        ],
+      Pagination(
+        page: page,
+        total: total,
+        pageSize: 5,
+        busy: busy,
+        onPage: (value) {
+          setState(() {
+            page = value;
+            busy = true;
+          });
+          load();
+        },
       ),
     ],
   );

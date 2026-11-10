@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../shared/widgets/action_label.dart';
+
 import '../../core/services/app_services.dart';
 import '../../shared/widgets/record_widgets.dart';
 import '../../shared/widgets/record_page.dart';
@@ -165,13 +167,20 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
       title: const Text('CLASSIFIED ADS'),
       actions: [
         PopupMenuButton<ThemeMode>(
+          tooltip: 'Theme',
           initialValue: widget.themeMode,
           onSelected: widget.theme,
           itemBuilder: (context) => [
             for (final mode in ThemeMode.values)
-              PopupMenuItem(value: mode, child: Text(mode.name)),
+              PopupMenuItem(value: mode, child: ActionLabel(mode.name)),
           ],
-          icon: const Icon(Icons.brightness_6),
+          icon: Image.asset(
+            'assets/icons/action_theme.png',
+            width: 20,
+            height: 20,
+            color: Theme.of(context).colorScheme.primary,
+            excludeFromSemantics: true,
+          ),
         ),
       ],
     ),
@@ -190,7 +199,7 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
                   const Text('Your workspace, anywhere.'),
                   FilledButton(
                     onPressed: busy ? null : () => authenticate(),
-                    child: const Text('Sign in'),
+                    child: const ActionLabel('Sign in'),
                   ),
                 ],
               ),
@@ -205,13 +214,11 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
                     Padding(
                       padding: const EdgeInsets.all(4),
                       child: ChoiceChip(
-                        label: Text(
+                        label: ActionLabel(
                           entry.value,
-                          style: TextStyle(
-                            color: entry.key == section
-                                ? Colors.white
-                                : Theme.of(context).colorScheme.onSurface,
-                          ),
+                          color: entry.key == section
+                              ? Colors.white
+                              : Theme.of(context).colorScheme.onSurface,
                         ),
                         selected: entry.key == section,
                         onSelected: (_) => setState(() => section = entry.key),

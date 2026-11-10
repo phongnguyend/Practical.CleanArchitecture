@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   AppState,
   Pressable,
+  Image,
   ScrollView,
   Text,
   View,
@@ -21,6 +22,7 @@ import {
   saveTheme,
 } from "../../core/services";
 import { HomeInfo } from "../../shared/ui/record-ui";
+import { actionIcons } from "../../shared/ui/action-icons";
 import { Button, HomeButton, Sheet, Theme, useStyles } from "../../shared/ui/ui";
 import AuditLogsScreen from "../auditlogs/AuditLogsScreen";
 import ConfigurationEntryScreen from "../configurationentries/ConfigurationEntryScreen";
@@ -185,6 +187,7 @@ function Workspace({
         <Text style={s.heading}>CLASSIFIED ADS</Text>
         <Button
           title={`Theme: ${appearance}`}
+          icon="Theme"
           onPress={() => setChoosingTheme(true)}
         />
       </View>
@@ -192,15 +195,17 @@ function Workspace({
         <ActivityIndicator />
       ) : signedIn ? (
         <>
-          <ScrollView horizontal style={s.navigation} contentContainerStyle={s.nav} showsHorizontalScrollIndicator={false}>
+          <ScrollView horizontal style={s.navigation} contentContainerStyle={s.nav} showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled">
             {destinations.map(([key, title]) => (
               <Pressable
                 key={key}
                 accessibilityRole="tab"
+                accessibilityLabel={title}
                 accessibilityState={{ selected: section === key }}
                 onPress={() => navigate(key)}
-                style={[s.chip, section === key && s.selected]}
+                style={[s.chip, section === key && s.selected, { flexDirection: "row", alignItems: "center", gap: 8 }]}
               >
+                <Image source={actionIcons[title]} accessible={false} style={{ width: 18, height: 18, tintColor: section === key ? s.buttonText.color : s.text.color }} />
                 <Text style={section === key ? s.buttonText : s.text}>
                   {title}
                 </Text>

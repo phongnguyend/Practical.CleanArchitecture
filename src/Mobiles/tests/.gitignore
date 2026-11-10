@@ -1,0 +1,4 @@
+artifacts/
+**/build/
+**/.gradle/
+**/local.properties

@@ -1,3 +1,4 @@
+import { Pagination } from "./Pagination";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Text, TextInput, View } from "react-native";
 import type { PickedFile } from "../../core/services";
@@ -225,17 +226,7 @@ export function RecordPage<T extends Entity>({
           </View>
         </View>
       ))}
-      <View style={s.actions}>
-        {page > 1 && (
-          <Button title="Previous" onPress={() => setPage(page - 1)} />
-        )}
-        <Text style={s.text}>
-          Page {page} · {filtered.length} records
-        </Text>
-        {page * 20 < filtered.length && (
-          <Button title="Next" onPress={() => setPage(page + 1)} />
-        )}
-      </View>
+      <Pagination page={page} total={filtered.length} pageSize={20} busy={busy} onPage={setPage} />
       {!!error && (
         <Text accessibilityRole="alert" style={s.error}>
           {error}
@@ -340,6 +331,8 @@ export function RecordPage<T extends Entity>({
             />
           ) : detail ? (
             <Details value={detail} />
+          ) : history?.length === 0 ? (
+            <Text style={s.muted}>No audit entries.</Text>
           ) : (
             history?.map((entry, index) => (
               <View key={entry.id || index} style={s.card}>

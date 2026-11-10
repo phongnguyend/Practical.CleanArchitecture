@@ -156,9 +156,9 @@ fun DateField(label: String, value: String, enabled: Boolean, changed: (String) 
                         .show()
                 },
             ) {
-                Text("Choose date and time")
+                ActionLabel("Choose date and time")
             }
-            OutlinedButton(shape = MaterialTheme.shapes.small, enabled = enabled, onClick = { changed("") }) { Text("Clear") }
+            OutlinedButton(shape = MaterialTheme.shapes.small, enabled = enabled, onClick = { changed("") }) { ActionLabel("Clear") }
         }
     }
 }

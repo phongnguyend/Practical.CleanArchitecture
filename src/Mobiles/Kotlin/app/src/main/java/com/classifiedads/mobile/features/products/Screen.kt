@@ -49,7 +49,7 @@ fun ProductScreen(api: Api) {
         },
         toolbar = { reload ->
             OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { showImages = !showImages }) {
-                Text(if (showImages) "Hide Image" else "Show Image")
+                ActionLabel(if (showImages) "Hide Image" else "Show Image")
             }
             ImportButton(".csv", api::fileName, repository::importFile, reload)
             OperationButton("Export CSV") {

@@ -23,6 +23,6 @@ fun HomeButton(label: String, onClick: () -> Unit) {
         ),
         contentPadding = PaddingValues(horizontal = 14.dp, vertical = 12.dp),
     ) {
-        Text(label, style = MaterialTheme.typography.labelLarge)
+        ActionLabel(label)
     }
 }

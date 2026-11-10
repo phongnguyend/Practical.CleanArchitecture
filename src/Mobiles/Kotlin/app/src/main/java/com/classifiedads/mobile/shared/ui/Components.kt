@@ -28,7 +28,7 @@ fun Sheet(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(title, Modifier.weight(1f), style = MaterialTheme.typography.titleLarge)
-                    OutlinedButton(shape = MaterialTheme.shapes.small, onClick = close) { Text("Close") }
+                    OutlinedButton(shape = MaterialTheme.shapes.small, onClick = close) { ActionLabel("Close") }
                 }
                 HorizontalDivider()
                 Column(
@@ -79,7 +79,7 @@ fun JsonTree(value: Any?, name: String = "root") {
             if (open) {
                 entries.take(limit).forEach { (key, item) -> JsonTree(item, key) }
                 if (entries.size > limit)
-                    OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { limit += 50 }) { Text("Show more") }
+                    OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { limit += 50 }) { ActionLabel("Show more") }
             }
         }
 }
@@ -95,7 +95,7 @@ fun JsonViewer(value: Any?) {
         else value
     Column {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { open = !open }) { Text(if (open) "Hide JSON" else "Show JSON") }
+            OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { open = !open }) { ActionLabel(if (open) "Hide JSON" else "Show JSON") }
             OutlinedButton(shape = MaterialTheme.shapes.small,
                 onClick = {
                     clipboard.setText(
@@ -106,7 +106,7 @@ fun JsonViewer(value: Any?) {
                     copied = true
                 }
             ) {
-                Text(if (copied) "Copied" else "Copy JSON")
+                ActionLabel(if (copied) "Copied" else "Copy JSON")
             }
         }
         if (open) JsonTree(parsed)

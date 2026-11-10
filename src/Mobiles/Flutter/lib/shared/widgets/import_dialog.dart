@@ -1,3 +1,5 @@
+import 'action_label.dart';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:classified_ads_mobile/core/services/app_services.dart';
@@ -42,7 +44,7 @@ class _ImportState extends State<ImportDialog> {
                       if (mounted) setState(() => error = e.toString());
                     }
                   },
-            child: const Text('Choose file'),
+            child: const ActionLabel('Choose file'),
           ),
           Text(file?.name ?? 'No file selected'),
           if (error.isNotEmpty)
@@ -56,7 +58,7 @@ class _ImportState extends State<ImportDialog> {
       footer: [
         TextButton(
           onPressed: busy ? null : () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: const ActionLabel('Cancel'),
         ),
         FilledButton(
           onPressed: busy
@@ -84,7 +86,7 @@ class _ImportState extends State<ImportDialog> {
                     if (mounted) setState(() => busy = false);
                   }
                 },
-          child: const Text('Import'),
+          child: const ActionLabel('Import'),
         ),
       ],
     );
