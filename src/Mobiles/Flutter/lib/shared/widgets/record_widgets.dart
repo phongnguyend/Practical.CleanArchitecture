@@ -5,6 +5,14 @@ import 'package:flutter/material.dart';
 import '../models/record.dart';
 import 'home_button.dart';
 
+String _homeClock(DateTime value) {
+  final hour = value.hour % 12 == 0 ? 12 : value.hour % 12;
+  final minute = value.minute.toString().padLeft(2, '0');
+  final second = value.second.toString().padLeft(2, '0');
+  final period = value.hour < 12 ? 'AM' : 'PM';
+  return '${value.month}/${value.day}/${value.year}, $hour:$minute:$second $period';
+}
+
 class HomeInfo extends StatefulWidget {
   const HomeInfo({super.key, required this.openProject});
   final VoidCallback openProject;
@@ -42,7 +50,7 @@ class _HomeInfoState extends State<HomeInfo> {
             'Welcome to Classified Ads',
             style: Theme.of(context).textTheme.titleLarge,
           ),
-          Text('Flutter · $now'),
+          Text('Flutter · ${_homeClock(now)}'),
           const Text('Developed by Phong Nguyen · @phongnguyend'),
           HomeButton(
             onPressed: widget.openProject,

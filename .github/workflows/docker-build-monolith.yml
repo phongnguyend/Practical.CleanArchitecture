@@ -16,6 +16,9 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v2
       - name: docker compose build
@@ -23,10 +26,10 @@ jobs:
           cd src/Monolith
           docker compose build
       - name: Log into Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Tag and Push Images
         run: |
-          REPO_NAME=docker.pkg.github.com/${{ github.repository }}
+          REPO_NAME=ghcr.io/${{ github.repository }}
           
           # Change all uppercase to lowercase
           REPO_NAME=$(echo $REPO_NAME | tr '[A-Z]' '[a-z]')

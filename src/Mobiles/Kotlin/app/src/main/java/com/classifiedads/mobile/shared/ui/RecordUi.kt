@@ -15,7 +15,9 @@ import com.classifiedads.mobile.shared.model.*
 import java.net.HttpURLConnection
 import java.net.URI
 import java.time.Instant
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -24,6 +26,7 @@ import org.json.JSONObject
 @Composable
 fun HomeInfo() {
     val context = LocalContext.current
+    val clockFormat = remember { DateTimeFormatter.ofPattern("M/d/yyyy, h:mm:ss a", Locale.US) }
     var now by remember { mutableStateOf(java.time.LocalDateTime.now()) }
     LaunchedEffect(Unit) {
         while (true) {
@@ -34,7 +37,7 @@ fun HomeInfo() {
     OutlinedCard(Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.medium) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Text("Welcome to Classified Ads", style = MaterialTheme.typography.titleLarge)
-            Text("Kotlin / Compose · $now")
+            Text("Kotlin / Compose · ${now.format(clockFormat)}")
             Text("Developed by Phong Nguyen · @phongnguyend")
             var error by remember { mutableStateOf("") }
             HomeButton(label = "Practical.CleanArchitecture",
