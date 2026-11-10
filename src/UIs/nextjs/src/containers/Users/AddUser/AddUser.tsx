@@ -21,7 +21,7 @@ interface User {
   twoFactorEnabled: boolean;
   lockoutEnabled: boolean;
   accessFailedCount: number;
-  lockoutEnd: string;
+  lockoutEnd: string | null;
 }
 
 interface ValidationError {
@@ -192,7 +192,7 @@ const AddUser = () => {
         accessFailedCount: user.accessFailedCount
           ? parseInt(user.accessFailedCount.toString())
           : 0,
-        lockoutEnd: user.lockoutEnd ? user.lockoutEnd : "",
+        lockoutEnd: user.lockoutEnd ? user.lockoutEnd : null,
       });
     }
   };

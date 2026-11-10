@@ -16,7 +16,7 @@
       <div class="row">
         <div class="col-md-2">Filter by:</div>
         <div class="col-md-4">
-          <input type="text" v-model="listFilter" />
+          <input aria-label="Filter records" type="text" v-model="listFilter" />
         </div>
       </div>
       <div class="row" v-if="listFilter">

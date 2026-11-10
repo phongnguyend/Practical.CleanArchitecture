@@ -22,6 +22,7 @@ const Nav = ({ isAuthenticated }: NavProps) => {
 
   return (
     <nav
+      aria-label="Main navigation"
       className={"navbar navbar-expand bg-body " + classes.Nav}
       style={{ paddingLeft: "1rem", paddingRight: "1rem" }}
     >

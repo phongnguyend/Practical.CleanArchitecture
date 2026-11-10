@@ -1,4 +1,4 @@
-import { put, takeEvery } from "redux-saga/effects";
+import { put, takeEvery, takeLatest } from "redux-saga/effects";
 import axios from "./axios";
 
 import * as actionTypes from "./actionTypes";
@@ -100,7 +100,7 @@ export function* sendEmailAddressConfirmationEmailSaga(action) {
 
 export function* watchUser() {
   yield takeEvery(actionTypes.FETCH_USERS, fetchUsersSaga);
-  yield takeEvery(actionTypes.FETCH_USER, fetchUserSaga);
+  yield takeLatest(actionTypes.FETCH_USER, fetchUserSaga);
   yield takeEvery(actionTypes.SAVE_USER, saveUserSaga);
   yield takeEvery(actionTypes.DELETE_USER, deleteUserSaga);
   yield takeEvery(actionTypes.FETCH_USER_AUDIT_LOGS, fetchAuditLogsSaga);

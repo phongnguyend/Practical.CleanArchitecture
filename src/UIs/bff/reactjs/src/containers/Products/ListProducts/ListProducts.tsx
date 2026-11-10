@@ -300,7 +300,8 @@ const ListProducts = (props: any) => {
           <div className="row">
             <div className="col-md-2">Filter by:</div>
             <div className="col-md-4">
-              <input type="text" value={listFilter} onChange={(event) => filterChanged(event)} />
+              <input type="text" aria-label="Filter records"
+                value={listFilter} onChange={(event) => filterChanged(event)} />
             </div>
           </div>
           {listFilter ? (

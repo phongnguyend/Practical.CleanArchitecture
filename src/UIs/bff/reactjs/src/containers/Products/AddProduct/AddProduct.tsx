@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { NavLink, Navigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -54,14 +54,14 @@ const AddProduct = () => {
   });
 
   const { id } = useParams();
-  const { product, saved } = useSelector((state: any) => state.product);
+  const { product, saved, loading } = useSelector((state: any) => state.product);
   const dispatch = useDispatch();
   const fetchProduct = (id) => dispatch(actions.fetchProduct(id));
   const updateProduct = (product) => dispatch(actions.updateProduct(product));
   const resetProduct = () => dispatch(actions.resetProduct());
   const saveProduct = (product) => dispatch(actions.saveProduct(product));
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     resetProduct();
     if (id) {
       setState({ ...state, title: "Edit Product" });
@@ -118,6 +118,7 @@ const AddProduct = () => {
           <div className="row alert alert-danger">{state.errorMessage}</div>
         ) : null}
         <form onSubmit={onSubmit}>
+          <fieldset disabled={loading}>
           <div className="mb-3 row">
             <label htmlFor="name" className="col-sm-2 col-form-label">
               Name
@@ -195,6 +196,7 @@ const AddProduct = () => {
               <button className="btn btn-primary"><ActionIcon action="save" /> Save</button>
             </div>
           </div>
+                  </fieldset>
         </form>
       </div>
       <div className="card-footer">

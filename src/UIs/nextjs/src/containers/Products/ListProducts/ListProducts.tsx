@@ -381,6 +381,7 @@ const ListProducts = () => {
             <div className="col-md-4">
               <input
                 type="text"
+                aria-label="Filter records"
                 value={listFilter}
                 onChange={(event) => filterChanged(event)}
               />

@@ -94,7 +94,7 @@ export default function Roles({ mode }: { mode: "list" | "view" }) {
         <Modal.Body>
           {error && <div className="alert alert-danger" role="alert">{error}</div>}
           <label className="form-label" htmlFor="newRoleName">Name</label>
-          <input className="form-control" id="newRoleName" value={newName} onChange={event => setNewName(event.target.value)} required autoFocus />
+          <input className="form-control" id="newRoleName" value={newName} onChange={event => setNewName(event.target.value)} required data-modal-autofocus="" />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="button" onClick={() => setShowAddModal(false)}><ActionIcon action="cancel" />Cancel</Button>
@@ -108,7 +108,7 @@ export default function Roles({ mode }: { mode: "list" | "view" }) {
         <Modal.Body>
           {error && <div className="alert alert-danger" role="alert">{error}</div>}
           <label className="form-label" htmlFor="editRoleName">Name</label>
-          <input className="form-control" id="editRoleName" value={editName} onChange={event => setEditName(event.target.value)} required autoFocus />
+          <input className="form-control" id="editRoleName" value={editName} onChange={event => setEditName(event.target.value)} required data-modal-autofocus="" />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="button" onClick={() => setEditingRole(null)}><ActionIcon action="cancel" />Cancel</Button>

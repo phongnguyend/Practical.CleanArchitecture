@@ -86,7 +86,7 @@ export class RolesComponent implements OnInit {
     if (!name) { this.error.set("Enter a role name."); return; }
     this.adding = true;
     this.error.set("");
-    this.service.addRole({ id: "", name }).subscribe({
+    this.service.addRole({ name }).subscribe({
       next: () => { this.adding = false; this.addDialog.close(); this.load(); },
       error: () => { this.adding = false; this.error.set("Unable to add the role. Please try again."); },
     });

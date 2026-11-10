@@ -115,7 +115,7 @@ const UploadFile = () => {
         formData.append("encrypted", file.encrypted.toString());
         const response = await axios.post("", formData);
         setFile(response.data);
-        setState({ ...state, saved: true });
+        setState(current => ({ ...current, saved: true }));
       } catch (error) {
         console.log(error);
       }

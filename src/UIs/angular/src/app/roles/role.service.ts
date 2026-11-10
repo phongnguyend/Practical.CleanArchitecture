@@ -16,7 +16,7 @@ export class RoleService {
 
   getRoles(): Observable<Role[]> { return this.http.get<Role[]>(this.url); }
   getRole(id: string): Observable<Role> { return this.http.get<Role>(`${this.url}/${id}`); }
-  addRole(role: Role): Observable<Role> { return this.http.post<Role>(this.url, role); }
+  addRole(role: Pick<Role, "name">): Observable<Role> { return this.http.post<Role>(this.url, role); }
   updateRole(role: Role): Observable<Role> { return this.http.put<Role>(`${this.url}/${role.id}`, role); }
   deleteRole(id: string): Observable<void> { return this.http.delete<void>(`${this.url}/${id}`); }
 }

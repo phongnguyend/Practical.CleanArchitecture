@@ -82,14 +82,6 @@ const EditFile = ({}) => {
 
   const { id } = useParams();
 
-  const fetchFile = async (id: string) => {
-    try {
-      const response = await axios.get(id);
-      setFile(response.data);
-    } catch (error) {
-      //
-    }
-  };
   const updateFile = (file: File) => {
     setFile(file);
   };
@@ -108,10 +100,14 @@ const EditFile = ({}) => {
   };
 
   useEffect(() => {
-    if (id && typeof id === "string") {
-      fetchFile(id);
+    let active = true;
+    if (typeof id === "string") {
+      axios.get(id).then(response => {
+        if (active) setFile(response.data);
+      }).catch(() => {});
     }
-  }, []);
+    return () => { active = false; };
+  }, [id]);
 
   const fieldChanged = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

@@ -61,16 +61,10 @@ async function handleRequest(request: NextRequest, params: { path: string[] }) {
     headers["Authorization"] = `Bearer ${accessToken}`;
   }
 
-  // Prepare request body for methods that support it
-  let body = undefined;
-  if (["POST", "PUT", "PATCH"].includes(request.method)) {
-    const contentType = request.headers.get("content-type");
-    if (contentType?.includes("application/json")) {
-      body = await request.json();
-    } else {
-      body = await request.text();
-    }
-  }
+  // Preserve multipart boundaries and binary content exactly as received.
+  const body = ["POST", "PUT", "PATCH"].includes(request.method)
+    ? Buffer.from(await request.arrayBuffer())
+    : undefined;
 
   try {
     const response = await axiosInstance({
@@ -78,6 +72,7 @@ async function handleRequest(request: NextRequest, params: { path: string[] }) {
       url: targetUrl,
       headers,
       data: body,
+      responseType: "arraybuffer",
     });
 
     // Create response with same status and headers
@@ -85,7 +80,7 @@ async function handleRequest(request: NextRequest, params: { path: string[] }) {
     Object.entries(response.headers).forEach(([key, value]) => {
       // Skip headers that shouldn't be forwarded
       if (
-        !["content-encoding", "transfer-encoding", "connection"].includes(
+        !["content-encoding", "content-length", "transfer-encoding", "connection"].includes(
           key.toLowerCase()
         )
       ) {
@@ -94,9 +89,9 @@ async function handleRequest(request: NextRequest, params: { path: string[] }) {
     });
 
     return new NextResponse(
-      typeof response.data === "string"
-        ? response.data
-        : JSON.stringify(response.data),
+      [204, 205, 304].includes(response.status)
+        ? null
+        : new Uint8Array(response.data),
       {
         status: response.status,
         statusText: response.statusText,

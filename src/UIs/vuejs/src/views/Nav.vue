@@ -1,5 +1,5 @@
 <template>
-  <nav
+  <nav aria-label="Main navigation"
     class="navbar navbar-expand bg-body"
     :style="{ paddingLeft: '1rem', paddingRight: '1rem' }"
   >

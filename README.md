@@ -746,7 +746,7 @@
 
   ![alt text](/docs/imgs/chrome_driver_path.png)
 
-- Update [EndToEndUiTests/appsettings.json](/src/EndToEndUiTests/Selenium/appsettings.json)
+- Update [Selenium/appsettings.json](/src/e2e/ui/dotnet/Selenium/appsettings.json)
   ```js
   {
     "ChromeDriverPath": "D:\\Downloads\\chromedriver_win32\\72",

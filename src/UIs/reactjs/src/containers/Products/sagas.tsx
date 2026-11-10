@@ -1,4 +1,4 @@
-import { put, takeEvery } from "redux-saga/effects";
+import { put, takeEvery, takeLatest } from "redux-saga/effects";
 import axios from "./axios";
 
 import * as actionTypes from "./actionTypes";
@@ -65,7 +65,7 @@ export function* fetchAuditLogsSaga(action) {
 
 export function* watchProduct() {
   yield takeEvery(actionTypes.FETCH_PRODUCTS, fetchProductsSaga);
-  yield takeEvery(actionTypes.FETCH_PRODUCT, fetchProductSaga);
+  yield takeLatest(actionTypes.FETCH_PRODUCT, fetchProductSaga);
   yield takeEvery(actionTypes.SAVE_PRODUCT, saveProductSaga);
   yield takeEvery(actionTypes.DELETE_PRODUCT, deleteProductSaga);
   yield takeEvery(actionTypes.FETCH_PRODUCT_AUDIT_LOGS, fetchAuditLogsSaga);

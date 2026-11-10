@@ -48,14 +48,6 @@ const EditFile = () => {
 
   const { id } = useParams();
 
-  const fetchFile = async (id) => {
-    try {
-      const response = await axios.get(id);
-      setFile(response.data);
-    } catch (error) {
-      //
-    }
-  };
   const updateFile = (file) => {
     setFile(file);
   };
@@ -72,10 +64,14 @@ const EditFile = () => {
   };
 
   useEffect(() => {
-    if (id) {
-      fetchFile(id);
+    let active = true;
+    if (typeof id === "string") {
+      axios.get(id).then(response => {
+        if (active) setFile(response.data);
+      }).catch(() => {});
     }
-  }, []);
+    return () => { active = false; };
+  }, [id]);
 
   const fieldChanged = (event) => {
     checkFieldValidity(event.target.name, event.target.value);
