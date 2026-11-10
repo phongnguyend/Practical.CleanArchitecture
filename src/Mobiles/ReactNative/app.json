@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "Classified Ads",
+    "slug": "classifiedads-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.classifiedads.mobile.reactnative"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.classifiedads.mobile.reactnative"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "./plugins/withDebugCertificate",
+      "./plugins/withAndroidBuildPaths",
+      "expo-web-browser",
+      "expo-secure-store",
+      "expo-sharing",
+      "expo-router",
+      "@react-native-community/datetimepicker"
+    ],
+    "scheme": "classifiedads.rn"
+  }
+}

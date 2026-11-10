@@ -1,0 +1,12 @@
+**/node_modules/
+**/.expo/
+**/.dart_tool/
+**/.flutter-plugins-dependencies
+**/build/
+**/.gradle/
+**/local.properties
+**/.env
+**/Pods/
+**/DerivedData/
+**/key.properties
+**/*.jks

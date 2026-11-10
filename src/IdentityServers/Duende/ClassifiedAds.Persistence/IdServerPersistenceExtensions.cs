@@ -324,6 +324,26 @@ public static class IdServerPersistenceExtensions
             });
         }
 
+        foreach (var (name, scheme) in new[] { ("Flutter", "classifiedads.flutter"), ("Kotlin", "classifiedads.kotlin"), ("ReactNative", "classifiedads.rn") })
+        {
+            var clientId = $"ClassifiedAds.Mobile.{name}";
+            if (!context.Clients.Any(x => x.ClientId == clientId))
+            {
+                clients.Add(new Client
+                {
+                    ClientId = clientId,
+                    ClientName = $"ClassifiedAds {name} Mobile",
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequireClientSecret = false,
+                    RequirePkce = true,
+                    AllowOfflineAccess = true,
+                    RedirectUris = { $"{scheme}:/oauthredirect" },
+                    PostLogoutRedirectUris = { $"{scheme}:/logout" },
+                    AllowedScopes = { "openid", "profile", "ClassifiedAds.WebAPI" },
+                });
+            }
+        }
+
         if (clients.Any())
         {
             context.Clients.AddRange(clients.Select(x => x.ToEntity()));

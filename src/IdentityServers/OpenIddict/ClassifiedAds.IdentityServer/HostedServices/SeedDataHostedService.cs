@@ -30,6 +30,8 @@ public class SeedDataHostedService : IHostedService
     {
         var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
+        await RegisterMobileClients(manager, cancellationToken);
+
         await UpsertClientApplication(manager, new OpenIddictApplicationDescriptor
         {
             ClientId = "Swagger",
@@ -311,6 +313,35 @@ public class SeedDataHostedService : IHostedService
             },
             ClientType = OpenIddictConstants.ClientTypes.Public,
         }, cancellationToken);
+    }
+
+    private static async Task RegisterMobileClients(IOpenIddictApplicationManager manager, CancellationToken cancellationToken)
+    {
+        foreach (var (name, scheme) in new[] { ("Flutter", "classifiedads.flutter"), ("Kotlin", "classifiedads.kotlin"), ("ReactNative", "classifiedads.rn") })
+        {
+            await UpsertClientApplication(manager, new OpenIddictApplicationDescriptor
+            {
+                ClientId = $"ClassifiedAds.Mobile.{name}",
+                DisplayName = $"ClassifiedAds {name} Mobile",
+                ClientType = OpenIddictConstants.ClientTypes.Public,
+                RedirectUris = { new Uri($"{scheme}:/oauthredirect") },
+                PostLogoutRedirectUris = { new Uri($"{scheme}:/logout") },
+                Permissions =
+                {
+                    OpenIddictConstants.Permissions.Endpoints.Authorization,
+                    OpenIddictConstants.Permissions.Endpoints.Token,
+                    OpenIddictConstants.Permissions.Endpoints.EndSession,
+                    OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
+                    OpenIddictConstants.Permissions.GrantTypes.RefreshToken,
+                    OpenIddictConstants.Permissions.ResponseTypes.Code,
+                    OpenIddictConstants.Permissions.Scopes.Profile,
+                    OpenIddictConstants.Permissions.Prefixes.Scope + "openid",
+                    OpenIddictConstants.Permissions.Prefixes.Scope + "offline_access",
+                    OpenIddictConstants.Permissions.Prefixes.Scope + "ClassifiedAds.WebAPI",
+                },
+                Requirements = { OpenIddictConstants.Requirements.Features.ProofKeyForCodeExchange },
+            }, cancellationToken);
+        }
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
