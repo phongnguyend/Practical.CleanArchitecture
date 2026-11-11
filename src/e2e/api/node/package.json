@@ -1,0 +1,7 @@
+{
+  "name": "classifiedads-api-e2e",
+  "private": true,
+  "type": "module",
+  "scripts": {"test": "playwright test", "test:list": "playwright test --list", "typecheck": "tsc --noEmit", "report": "playwright show-report"},
+  "devDependencies": {"@playwright/test": "^1.65.0", "@types/node": "^26.6.6", "typescript": "^7.0.2"}
+}
