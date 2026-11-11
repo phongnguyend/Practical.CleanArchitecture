@@ -9,7 +9,7 @@
         <button class="btn btn-primary"
                 style="float: right;"
                 @onclick="@(()=> NavManager.NavigateTo("/users/add"))">
-            Add User
+            <ActionIcon Name="plus" /> Add User
         </button>
     </div>
     <div class="card-body">
@@ -33,9 +33,9 @@
                             </td>
                             <td>@user.Email</td>
                             <td>
-                                <button @onclick="@(()=> NavManager.NavigateTo($"/users/edit/{user.Id}"))" class="btn btn-primary" title="Edit">Edit</button>
+                                <button @onclick="@(()=> NavManager.NavigateTo($"/users/edit/{user.Id}"))" class="btn btn-primary" title="Edit"><ActionIcon Name="pencil" /> Edit</button>
                                 &nbsp;
-                                <button @onclick="(()=> DeleteUser(user))" class="btn btn-danger" title="Delete">Delete</button>
+                                <button @onclick="(()=> DeleteUser(user))" class="btn btn-danger" title="Delete"><ActionIcon Name="trash" /> Delete</button>
                             </td>
                         </tr>
                     }

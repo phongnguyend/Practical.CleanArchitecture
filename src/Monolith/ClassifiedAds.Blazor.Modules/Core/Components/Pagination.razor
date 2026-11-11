@@ -1,12 +1,12 @@
 ﻿<ul class="pagination">
-    <li class="page-item @(CurrentPage==1?"disabled":"")"><a class="page-link" @onclick="() => HandleClick(1)">First</a></li>
-    <li class="page-item @(CurrentPage==1?"disabled":"")"><a class="page-link" @onclick="() => HandleClick(CurrentPage - 1)">Previous</a></li>
+    <li class="page-item @(CurrentPage==1?"disabled":"")"><a class="page-link" @onclick="() => HandleClick(1)"><ActionIcon Name="media-step-backward" /> First</a></li>
+    <li class="page-item @(CurrentPage==1?"disabled":"")"><a class="page-link" @onclick="() => HandleClick(CurrentPage - 1)"><ActionIcon Name="chevron-left" /> Previous</a></li>
     @foreach (var pageNumber in PageNumbers)
     {
         <li class="page-item @(CurrentPage==pageNumber?"active":"")"><a class="page-link" @onclick="() => HandleClick(pageNumber)">@pageNumber</a></li>
     }
-    <li class="page-item @(CurrentPage==TotalPages?"disabled":"")"><a class="page-link" @onclick="() => HandleClick(CurrentPage + 1)">Next</a></li>
-    <li class="page-item @(CurrentPage==TotalPages?"disabled":"")"><a class="page-link" @onclick="() => HandleClick(TotalPages)">Last</a></li>
+    <li class="page-item @(CurrentPage==TotalPages?"disabled":"")"><a class="page-link" @onclick="() => HandleClick(CurrentPage + 1)"><ActionIcon Name="chevron-right" /> Next</a></li>
+    <li class="page-item @(CurrentPage==TotalPages?"disabled":"")"><a class="page-link" @onclick="() => HandleClick(TotalPages)"><ActionIcon Name="media-step-forward" /> Last</a></li>
 </ul>
 
 @code {

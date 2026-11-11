@@ -11,10 +11,10 @@
 		<div class="input-group">
 			<InputText @bind-Value="SearchText" class="form-control" placeholder="Search by Content" />
 			<button type="button" class="btn btn-primary" style="margin-left:10px;" @onclick="VectorSearch">
-				Vector Search
+				<ActionIcon Name="magnifying-glass" /> Vector Search
 			</button>
 			<button type="button" class="btn btn-secondary" style="margin-left:10px;" @onclick="ClearSearch">
-				Clear
+				<ActionIcon Name="x" /> Clear
 			</button>
 		</div>
 	</div>
@@ -28,7 +28,7 @@
 			<button class="btn btn-primary"
 					style="float: right;"
 					@onclick="@(() => NavManager.NavigateTo("/files/upload"))">
-				Upload File
+				<ActionIcon Name="data-transfer-upload" /> Upload File
 			</button>
 		</div>
 		<div class="card-body">
@@ -59,14 +59,14 @@
 									<button type="button"
 											class="btn btn-secondary"
 											@onclick="(() => Download(file))">
-										Download
+										<ActionIcon Name="data-transfer-download" /> Download
 									</button>
 									&nbsp;
-									<button @onclick="@(() => NavManager.NavigateTo($"/files/edit/{file.Id}"))" class="btn btn-primary" title="Edit">Edit</button>
+									<button @onclick="@(() => NavManager.NavigateTo($"/files/edit/{file.Id}"))" class="btn btn-primary" title="Edit"><ActionIcon Name="pencil" /> Edit</button>
 									&nbsp;
-									<button @onclick="(() => ViewAuditLogs(file))" class="btn btn-secondary" title="View Audit Logs">View Audit Logs</button>
+									<button @onclick="(() => ViewAuditLogs(file))" class="btn btn-secondary" title="View Audit Logs"><ActionIcon Name="clock" /> View Audit Logs</button>
 									&nbsp;
-									<button @onclick="(() => DeleteFile(file))" class="btn btn-danger" title="Delete">Delete</button>
+									<button @onclick="(() => DeleteFile(file))" class="btn btn-danger" title="Delete"><ActionIcon Name="trash" /> Delete</button>
 								</td>
 							</tr>
 						}

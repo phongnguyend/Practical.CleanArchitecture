@@ -59,30 +59,29 @@
     </div>
 
     <div class="card-footer">
-        <a class="btn btn-outline-secondary"
-           href="@("/users")"
-           style="width: 80px;">
-            <i class="fa fa-chevron-left"></i> Back
+        <a class="btn btn-outline-secondary d-inline-flex align-items-center text-nowrap"
+           href="@("/users")">
+            <ActionIcon Name="chevron-left" /> Back
         </a>
         &nbsp;
-        <button @onclick="@(()=> NavManager.NavigateTo($"/users/edit/{User.Id}"))" class="btn btn-primary" title="Edit">Edit</button>
+        <button @onclick="@(()=> NavManager.NavigateTo($"/users/edit/{User.Id}"))" class="btn btn-primary" title="Edit"><ActionIcon Name="pencil" /> Edit</button>
         &nbsp;
         <button type="button"
                 class="btn btn-secondary"
                 @onclick="() => SetPasswordDialog.Show(User)">
-            Set Password
+            <ActionIcon Name="key" /> Set Password
         </button>
         &nbsp;
         <button type="button"
                 class="btn btn-secondary"
                 @onclick="() => SendPasswordResetEmailDialog.Show()">
-            Send Password Reset Email
+            <ActionIcon Name="envelope-closed" /> Send Password Reset Email
         </button>
         &nbsp;
         <button type="button"
                 class="btn btn-secondary"
                 @onclick="() => SendEmailAddressConfirmationEmailDialog.Show()">
-            Send Email Address Confirmation Email
+            <ActionIcon Name="envelope-closed" /> Send Email Address Confirmation Email
         </button>
     </div>
 </div>

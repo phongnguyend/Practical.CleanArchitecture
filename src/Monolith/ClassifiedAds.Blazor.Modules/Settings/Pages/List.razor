@@ -8,13 +8,13 @@
         Settings
         <div style="float: right">
             <button type="button" class="btn btn-secondary" @onclick="ExportAsExcel">
-                Export as Excel
+                <ActionIcon Name="data-transfer-download" /> Export as Excel
             </button>
             &nbsp;
             <button class="btn btn-primary"
                     style="float: right;"
                     @onclick="@(()=> AddSetting())">
-                Add
+                <ActionIcon Name="plus" /> Add
             </button>
         </div>
     </div>
@@ -39,9 +39,9 @@
                             <td>@entry.Description</td>
                             <td>@entry.UpdatedDateTime</td>
                             <td>
-                                <button @onclick="(()=> EditSetting(entry))" class="btn btn-primary" title="Edit">Edit</button>
+                                <button @onclick="(()=> EditSetting(entry))" class="btn btn-primary" title="Edit"><ActionIcon Name="pencil" /> Edit</button>
                                 &nbsp;
-                                <button @onclick="(()=> DeleteSetting(entry))" class="btn btn-danger" title="Delete">Delete</button>
+                                <button @onclick="(()=> DeleteSetting(entry))" class="btn btn-danger" title="Delete"><ActionIcon Name="trash" /> Delete</button>
                             </td>
                         </tr>
                     }

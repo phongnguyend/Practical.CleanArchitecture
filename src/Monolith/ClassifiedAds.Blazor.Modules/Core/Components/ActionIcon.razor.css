@@ -1,0 +1,7 @@
+.action-icon {
+    width: 1em;
+    margin-inline-end: 0.4em;
+    text-align: center;
+    font-size: 0.875em;
+    pointer-events: none;
+}

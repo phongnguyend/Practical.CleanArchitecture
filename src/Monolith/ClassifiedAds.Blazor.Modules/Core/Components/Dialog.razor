@@ -1,0 +1,26 @@
+@if (IsOpen)
+{
+    <DialogBackdrop />
+    <div class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true" aria-label="@Title">
+        <div class="modal-dialog @(string.IsNullOrEmpty(Size) ? null : $"modal-{Size}")" role="document">
+            <div class="modal-content">
+                @ChildContent
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = string.Empty;
+
+    // Bootstrap size suffix: sm, lg, or xl. Empty uses the default width.
+    [Parameter]
+    public string Size { get; set; } = string.Empty;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

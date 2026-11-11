@@ -10,10 +10,10 @@
 		<div class="input-group">
 			<InputText @bind-Value="SearchText" class="form-control" placeholder="Search by Description" />
 			<button type="button" class="btn btn-primary" style="margin-left:10px;" @onclick="VectorSearch">
-				Vector Search
+				<ActionIcon Name="magnifying-glass" /> Vector Search
 			</button>
 			<button type="button" class="btn btn-secondary" style="margin-left:10px;" @onclick="ClearSearch">
-				Clear
+				<ActionIcon Name="x" /> Clear
 			</button>
 		</div>
 	</div>
@@ -25,17 +25,17 @@
 
 		<div style="float: right">
 			<button type="button" class="btn btn-secondary" @onclick="ExportAsPdf">
-				Export as Pdf
+				<ActionIcon Name="data-transfer-download" /> Export as Pdf
 			</button>
 			&nbsp;
 			<button type="button" class="btn btn-secondary" @onclick="ExportAsCsv">
-				Export as Csv
+				<ActionIcon Name="data-transfer-download" /> Export as Csv
 			</button>
 			&nbsp;
 			<button class="btn btn-primary"
 					style="float: right;"
 					@onclick="QuickAddProduct">
-				Add Product
+				<ActionIcon Name="plus" /> Add Product
 			</button>
 		</div>
 	</div>
@@ -73,9 +73,9 @@
 									<td>@product.SimilarityScore</td>
 								}
 								<td>
-									<button @onclick="(() => EditProduct(product))" class="btn btn-primary" title="Edit">Edit</button>
-									<button @onclick="(() => ViewAuditLogs(product))" class="btn btn-secondary" title="View Audit Logs">View Audit Logs</button>
-									<button @onclick="(() => DeleteProduct(product))" class="btn btn-danger" title="Delete">Delete</button>
+									<button @onclick="(() => EditProduct(product))" class="btn btn-primary" title="Edit"><ActionIcon Name="pencil" /> Edit</button>
+									<button @onclick="(() => ViewAuditLogs(product))" class="btn btn-secondary" title="View Audit Logs"><ActionIcon Name="clock" /> View Audit Logs</button>
+									<button @onclick="(() => DeleteProduct(product))" class="btn btn-danger" title="Delete"><ActionIcon Name="trash" /> Delete</button>
 								</td>
 							</tr>
 						}

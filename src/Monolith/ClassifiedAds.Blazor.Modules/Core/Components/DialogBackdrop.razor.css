@@ -1,0 +1,21 @@
+.dialog-backdrop {
+    position: fixed;
+    inset: 0;
+    /* Bootstrap dialogs sit at 1050; keep the backdrop below their controls. */
+    z-index: 1040;
+    background-color: rgba(15, 23, 42, 0.5);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    animation: backdrop-appear 150ms ease-out;
+}
+
+@keyframes backdrop-appear {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dialog-backdrop {
+        animation: none;
+    }
+}

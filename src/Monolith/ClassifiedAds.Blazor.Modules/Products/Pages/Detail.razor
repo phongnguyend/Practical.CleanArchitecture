@@ -45,13 +45,13 @@
 	</div>
 
 	<div class="card-footer">
-		<NavLink class="btn btn-outline-secondary" href="products">
-			<i class="fa fa-chevron-left"></i> Back
+		<NavLink class="btn btn-outline-secondary d-inline-flex align-items-center text-nowrap" href="products">
+			<ActionIcon Name="chevron-left" /> Back
 		</NavLink>
 		&nbsp;
-		<button @onclick="@(() => NavManager.NavigateTo($"/products/edit/{ProductId}"))" class="btn btn-primary" title="Edit">Edit</button>
+		<button @onclick="@(() => NavManager.NavigateTo($"/products/edit/{ProductId}"))" class="btn btn-primary" title="Edit"><ActionIcon Name="pencil" /> Edit</button>
 		&nbsp;
-		<button @onclick="(() => ViewAuditLogs())" class="btn btn-secondary" title="View Audit Logs">View Audit Logs</button>
+		<button @onclick="(() => ViewAuditLogs())" class="btn btn-secondary" title="View Audit Logs"><ActionIcon Name="clock" /> View Audit Logs</button>
 	</div>
 </div>
 
@@ -73,7 +73,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-4">Embedding:</div>
-						<div class="col-md-8"> <a href="javascript:void(0)" @onclick="(() => DownloadProductEmbedding())">Download</a></div>
+						<div class="col-md-8"> <a href="javascript:void(0)" @onclick="(() => DownloadProductEmbedding())"><ActionIcon Name="data-transfer-download" /> Download</a></div>
 					</div>
 					<div class="row">
 						<div class="col-md-4">Token Details:</div>

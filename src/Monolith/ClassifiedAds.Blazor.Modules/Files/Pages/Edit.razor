@@ -54,19 +54,18 @@
 			<div class="form-group row">
 				<label for="description" class="col-sm-2 col-form-label"></label>
 				<div class="col-sm-10">
-					<button class="btn btn-primary">Save</button>
+					<button class="btn btn-primary"><ActionIcon Name="check" /> Save</button>
 				</div>
 			</div>
 		</EditForm>
 	</div>
 	<div class="card-footer">
-		<a class="btn btn-outline-secondary"
-		   href="@("/files")"
-		   style="width: 80px;">
-			<i class="fa fa-chevron-left"></i> Back
+		<a class="btn btn-outline-secondary d-inline-flex align-items-center text-nowrap"
+		   href="@("/files")">
+			<ActionIcon Name="chevron-left" /> Back
 		</a>
 		&nbsp;
-		<button @onclick="(ViewAuditLogs)" class="btn btn-secondary" title="View Audit Logs">View Audit Logs</button>
+		<button @onclick="(ViewAuditLogs)" class="btn btn-secondary" title="View Audit Logs"><ActionIcon Name="clock" /> View Audit Logs</button>
 	</div>
 </div>
 
@@ -105,7 +104,7 @@
 							</td>
 							<td>@fileEntryEmbedding.ShortText</td>
 							<td>@fileEntryEmbedding.CreatedDateTime</td>
-							<td><a href="javascript:void(0)" @onclick="(() => DownloadEmbedding(fileEntryEmbedding))">Download</a></td>
+							<td><a href="javascript:void(0)" @onclick="(() => DownloadEmbedding(fileEntryEmbedding))"><ActionIcon Name="data-transfer-download" /> Download</a></td>
 							@if (ShowTokenDetails)
 							{
 								<td>@fileEntryEmbedding.TokenDetails</td>
