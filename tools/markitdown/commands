@@ -1,2 +1,8 @@
 docker build --no-cache -t markitdown-api .
 docker run -p 8000:8000 markitdown-api
+
+# Optional limits in MB (defaults: 50 MB file size, 1 MB chunks; 1 MB = 1024 * 1024 bytes).
+docker run -p 8000:8000 -e MAX_FILE_SIZE_MB=100 -e CHUNK_SIZE_MB=2 markitdown-api
+
+# Compose also accepts MAX_FILE_SIZE_MB and CHUNK_SIZE_MB from the environment or .env.
+docker compose up --build

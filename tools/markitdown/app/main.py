@@ -13,9 +13,20 @@ app = FastAPI(
 # Initialize converter once (important for performance)
 md = MarkItDown()
 
-# Limits
-MAX_FILE_SIZE = 25 * 1024 * 1024  # 25 MB
-CHUNK_SIZE = 1024 * 1024  # 1 MB
+def positive_int_env(name: str, default: int) -> int:
+    try:
+        value = int(os.environ.get(name, str(default)))
+    except ValueError:
+        raise ValueError(f"{name} must be a positive integer (MB)") from None
+    if value <= 0:
+        raise ValueError(f"{name} must be a positive integer (MB)")
+    return value
+
+
+# Environment values are in MB (1 MB = 1024 * 1024 bytes).
+# Convert to bytes for upload size checks and streaming.
+MAX_FILE_SIZE = positive_int_env("MAX_FILE_SIZE_MB", 50) * 1024 * 1024
+CHUNK_SIZE = positive_int_env("CHUNK_SIZE_MB", 1) * 1024 * 1024
 
 
 @app.get("/health")
@@ -44,7 +55,7 @@ async def convert(file: UploadFile = File(...)):
                 if size > MAX_FILE_SIZE:
                     raise HTTPException(
                         status_code=413,
-                        detail="File too large (max 25MB)"
+                        detail=f"File too large (max {MAX_FILE_SIZE // (1024 * 1024)} MB)"
                     )
 
                 tmp.write(chunk)

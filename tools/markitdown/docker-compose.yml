@@ -6,3 +6,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    environment:
+      # Sizes in MB (1 MB = 1024 * 1024 bytes).
+      MAX_FILE_SIZE_MB: ${MAX_FILE_SIZE_MB:-50}
+      CHUNK_SIZE_MB: ${CHUNK_SIZE_MB:-1}
