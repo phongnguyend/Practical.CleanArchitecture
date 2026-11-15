@@ -8,7 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Gateways.GraphQL\ClassifiedAds.Gateways.GraphQL\ClassifiedAds.Gateways.GraphQL.csproj" />
     <ProjectReference Include="..\Gateways.WebAPI\ClassifiedAds.Gateways.WebAPI\ClassifiedAds.Gateways.WebAPI.csproj" />
     <ProjectReference Include="..\Services.AuditLog\ClassifiedAds.Services.AuditLog.Api\ClassifiedAds.Services.AuditLog.Api.csproj" />
     <ProjectReference Include="..\Services.AuditLog\ClassifiedAds.Services.AuditLog.Grpc\ClassifiedAds.Services.AuditLog.Grpc.csproj" />

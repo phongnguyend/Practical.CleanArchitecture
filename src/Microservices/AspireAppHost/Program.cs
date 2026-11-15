@@ -22,7 +22,6 @@ var storageApi = builder.AddProject<Projects.ClassifiedAds_Services_Storage_Api>
 
 var productApi = builder.AddProject<Projects.ClassifiedAds_Services_Product_Api>("ClassifiedAds-Services-Product-Api");
 
-var graphQlGateway = builder.AddProject<Projects.ClassifiedAds_Gateways_GraphQL>("ClassifiedAds-Gateways-GraphQL");
 var apiGateway = builder.AddProject<Projects.ClassifiedAds_Gateways_WebAPI>("ClassifiedAds-Gateways-WebAPI");
 
 // Resolve gRPC addresses from Aspire instead of the standalone launch-profile ports.
