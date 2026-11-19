@@ -1,0 +1,59 @@
+name: Build Mobile Kotlin
+
+on:
+  push:
+    paths:
+      - "src/Mobiles/Kotlin/**"
+      - ".github/workflows/build-mobile-kotlin.yml"
+  pull_request:
+    paths:
+      - "src/Mobiles/Kotlin/**"
+      - ".github/workflows/build-mobile-kotlin.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# This Jetpack Compose application has no iOS target.
+jobs:
+  android:
+    name: Kotlin Android
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+        working-directory: src/Mobiles/Kotlin
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Build, lint, and unit tests
+        run: bash ./gradlew --no-daemon --stacktrace :app:assembleDebug :app:lintDebug :app:testDebugUnitTest
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: kotlin-android-debug
+          path: src/Mobiles/Kotlin/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload lint and test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kotlin-android-reports
+          path: |
+            src/Mobiles/Kotlin/app/build/reports/
+            src/Mobiles/Kotlin/app/build/test-results/
+          if-no-files-found: ignore
+          retention-days: 14

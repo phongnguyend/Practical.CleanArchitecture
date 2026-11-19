@@ -27,6 +27,20 @@ The existing CSV/Excel import endpoints parse and return rows without persisting
 
 The feature reference is the implementation in `src/UIs/angular`, `src/UIs/reactjs`, and `src/UIs/vuejs`. Native screens retain the same API operations and validation, with date/time pickers, platform file sharing, and mobile layouts. Details show labeled fields; history shows snapshots and changed fields, with JSON available for inspection. Editors distinguish unchanged cancellation from discarding edits.
 
+## GitHub Actions builds
+
+Each mobile app has a path-filtered workflow that runs on pushes, pull requests, and manual dispatch from the Actions tab:
+
+| Workflow | Android artifact | iOS artifact |
+| --- | --- | --- |
+| [Build Mobile Flutter](../../.github/workflows/build-mobile-flutter.yml) | Debug APK | Debug simulator app |
+| [Build Mobile Kotlin](../../.github/workflows/build-mobile-kotlin.yml) | Debug APK | Not applicable: this project uses Android Jetpack Compose, not Kotlin Multiplatform |
+| [Build Mobile React Native](../../.github/workflows/build-mobile-reactnative.yml) | Release-mode APK signed with the generated debug key, with JavaScript bundled | Release-mode simulator app with JavaScript bundled |
+
+Android builds run on Ubuntu; iOS builds run on macOS 15. Flutter is pinned to 3.47.9, React Native uses Node 24, and Android builds use Java 17. The workflows run Flutter analysis/widget tests, Kotlin lint/unit tests, and React Native lint/typechecking/contract/rendered-screen tests. They do not run the authenticated device UI suite or require running backend services.
+
+Download artifacts from the completed workflow run; retention is 14 days. iOS apps are packaged as `.tar.gz` files to preserve permissions and symlinks. Extract and install them on a matching iOS Simulator; they are not device-installable IPAs. CI does not require Apple signing credentials, Android release keys, or an Expo account and does not publish to stores. Production distribution requires a separate signing/release workflow. Apps retain their default backend URLs; configure reachable endpoints before using them against a deployed backend.
+
 ## Backend setup
 
 1. Start a Monolith, ModularMonolith, or Microservices backend and its identity server using that project's README.
