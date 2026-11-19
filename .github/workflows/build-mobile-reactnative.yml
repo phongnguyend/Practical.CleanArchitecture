@@ -53,6 +53,9 @@ jobs:
           distribution: temurin
           java-version: "17"
       - uses: android-actions/setup-android@v3
+        with:
+          # Override the default, which includes the obsolete SDK "tools" package.
+          packages: platform-tools
       - uses: gradle/actions/setup-gradle@v6
       - name: Generate native project
         run: npx expo prebuild --platform android --no-install
@@ -72,6 +75,9 @@ jobs:
     name: React Native iOS
     runs-on: macos-15
     timeout-minutes: 60
+    env:
+      # ExpoModulesJSI requires Swift tools 6.2; macos-15 defaults to Xcode 16.4 / Swift 6.1.
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
     defaults:
       run:
         shell: bash
@@ -87,6 +93,10 @@ jobs:
           cache-dependency-path: src/Mobiles/ReactNative/package-lock.json
       - name: Install dependencies
         run: npm ci
+      - name: Verify iOS toolchain
+        run: |
+          xcodebuild -version
+          xcrun swift --version
       - name: Generate native project
         run: npx expo prebuild --platform ios --no-install
       - name: Install iOS pods

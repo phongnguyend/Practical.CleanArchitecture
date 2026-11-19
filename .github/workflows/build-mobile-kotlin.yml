@@ -37,6 +37,9 @@ jobs:
           distribution: temurin
           java-version: "17"
       - uses: android-actions/setup-android@v3
+        with:
+          # Override the default, which includes the obsolete SDK "tools" package.
+          packages: platform-tools
       - uses: gradle/actions/setup-gradle@v6
       - name: Build, lint, and unit tests
         run: bash ./gradlew --no-daemon --stacktrace :app:assembleDebug :app:lintDebug :app:testDebugUnitTest
