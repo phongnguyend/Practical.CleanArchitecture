@@ -36,11 +36,12 @@
     "typescript": "~6.0.3"
   },
   "scripts": {
+    "postinstall": "node scripts/patch-expo-modules-jsi.cjs",
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "typecheck": "tsc --noEmit",
-    "test": "node --test tests/contracts.test.cjs",
+    "test": "node --test tests/contracts.test.cjs tests/expo-jsi-patch.test.cjs",
     "test:ui": "jest --runInBand",
     "lint": "expo lint"
   },
