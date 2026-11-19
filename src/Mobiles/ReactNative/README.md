@@ -6,6 +6,8 @@ See [mobile features and backend setup](../README.md). Uses Expo SDK 58; validat
 npm ci
 ```
 
+`npm ci` also applies a guarded Swift 6.2 workaround to the locked `expo-modules-jsi@58.0.22` dependency for [Expo issue #52754](https://github.com/expo/expo/issues/52754). It preserves the temporary buffer's lifetime while passing its address into the synchronous JavaScript actor closure. The patch is idempotent and rejects unexpected dependency versions or source changes. Review and remove `scripts/patch-expo-modules-jsi.cjs` and its `postinstall` hook once an upstream release fixes the issue. iOS CI selects Xcode 26.2; Xcode 16.4's Swift 6.1 cannot build this package.
+
 Copy `.env.example` to `.env` and configure reachable, trusted backend URLs.
 
 ```sh

@@ -1,0 +1,93 @@
+name: Build Mobile Flutter
+
+on:
+  push:
+    paths:
+      - "src/Mobiles/Flutter/**"
+      - ".github/workflows/build-mobile-flutter.yml"
+  pull_request:
+    paths:
+      - "src/Mobiles/Flutter/**"
+      - ".github/workflows/build-mobile-flutter.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  android:
+    name: Flutter Android
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+        working-directory: src/Mobiles/Flutter
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: android-actions/setup-android@v3
+        with:
+          # Override the default, which includes the obsolete SDK "tools" package.
+          packages: platform-tools
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.47.9"
+          channel: stable
+          cache: true
+      - name: Install dependencies from lockfile
+        run: flutter pub get --enforce-lockfile
+      - name: Analyze
+        run: flutter analyze
+      - name: Unit and widget tests
+        run: flutter test
+      - name: Build Android APK
+        run: flutter build apk --debug --no-pub
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-android-debug
+          path: src/Mobiles/Flutter/build/app/outputs/flutter-apk/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+
+  ios:
+    name: Flutter iOS
+    runs-on: macos-15
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+        working-directory: src/Mobiles/Flutter
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.47.9"
+          channel: stable
+          cache: true
+      - name: Install dependencies from lockfile
+        run: flutter pub get --enforce-lockfile
+      - name: Build iOS simulator app
+        run: |
+          flutter build ios --simulator --debug --no-codesign --no-pub
+          tar -czf build/flutter-ios-simulator.tar.gz -C build/ios/iphonesimulator Runner.app
+      - name: Upload iOS simulator app
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-ios-simulator
+          path: src/Mobiles/Flutter/build/flutter-ios-simulator.tar.gz
+          if-no-files-found: error
+          retention-days: 14
+
