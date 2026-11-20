@@ -1,0 +1,20 @@
+{
+  "cli": {
+    "appVersionSource": "local"
+  },
+  "build": {
+    "ci": {
+      "node": "24.11.1",
+      "environment": "preview",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "simulator": true,
+        "buildConfiguration": "Release",
+        "image": "macos-sequoia-15.6-xcode-26.2"
+      }
+    }
+  }
+}

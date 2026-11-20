@@ -39,7 +39,7 @@ Each mobile app has a path-filtered workflow that runs on pushes, pull requests,
 
 Android builds run on Ubuntu; iOS builds run on macOS 15. Flutter is pinned to 3.47.9, React Native uses Node 24, and Android builds use Java 17. The workflows run Flutter analysis/widget tests, Kotlin lint/unit tests, and React Native lint/typechecking/contract/rendered-screen tests. They do not run the authenticated device UI suite or require running backend services.
 
-Download artifacts from the completed workflow run; retention is 14 days. iOS apps are packaged as `.tar.gz` files to preserve permissions and symlinks. Extract and install them on a matching iOS Simulator; they are not device-installable IPAs. CI does not require Apple signing credentials, Android release keys, or an Expo account and does not publish to stores. Production distribution requires a separate signing/release workflow. Apps retain their default backend URLs; configure reachable endpoints before using them against a deployed backend.
+Download artifacts from the completed workflow run; retention is 14 days. iOS apps are packaged as `.tar.gz` files to preserve permissions and symlinks. Extract and install them on a matching iOS Simulator; they are not device-installable IPAs. The native CI jobs do not require Apple signing credentials, Android release keys, or an Expo account and do not publish to stores. React Native also offers an opt-in [Expo EAS cloud build job](ReactNative/README.md#expo-eas-cloud-builds), which requires an Expo project and token. Production distribution requires a separate signing/release workflow. Apps retain their default backend URLs; configure reachable endpoints before using them against a deployed backend.
 
 ## Backend setup
 

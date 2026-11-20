@@ -1,0 +1,64 @@
+name: Build Mobile React Native Expo
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: "1"
+  EXPO_NO_TELEMETRY: "1"
+
+jobs:
+  expo:
+    name: React Native Expo EAS
+    # Cloud builds require credentials and consume the Expo project's build quota.
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: bash
+        working-directory: src/Mobiles/ReactNative
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: src/Mobiles/ReactNative/package-lock.json
+      - name: Check Expo configuration
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          EXPO_PROJECT_ID: ${{ vars.EXPO_PROJECT_ID }}
+        run: |
+          if [[ -z "$EXPO_TOKEN" || -z "$EXPO_PROJECT_ID" ]]; then
+            echo "::error::Set the EXPO_TOKEN repository secret and EXPO_PROJECT_ID repository variable. See src/Mobiles/ReactNative/README.md."
+            exit 1
+          fi
+      - name: Install dependencies
+        run: npm ci
+      - name: Link existing Expo project
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          EXPO_PROJECT_ID: ${{ vars.EXPO_PROJECT_ID }}
+        run: npx --yes eas-cli@latest init --id "$EXPO_PROJECT_ID" --non-interactive
+      - name: Build Android and iOS on Expo
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: npx --yes eas-cli@latest build --platform all --profile ci --non-interactive --wait --json > eas-build-results.json
+      - name: Upload Expo build results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reactnative-expo-build-results
+          path: src/Mobiles/ReactNative/eas-build-results.json
+          if-no-files-found: ignore
+          retention-days: 14
+

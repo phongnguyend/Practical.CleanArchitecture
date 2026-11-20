@@ -10,6 +10,32 @@ npm ci
 
 Copy `.env.example` to `.env` and configure reachable, trusted backend URLs.
 
+## Expo EAS cloud builds
+
+The `React Native Expo EAS` job in [Build Mobile React Native Expo](../../../.github/workflows/build-mobile-reactnative-expo.yml) submits both platforms to Expo from Ubuntu and waits for their results. The `ci` profile in `eas.json` produces an Android APK and an iOS simulator app; it does not submit to app stores. The existing native Android and iOS jobs still run independently.
+
+One-time setup from this directory:
+
+```sh
+npx eas-cli@latest login
+npx eas-cli@latest init
+npx eas-cli@latest build --platform android --profile ci
+npx eas-cli@latest build --platform ios --profile ci
+```
+
+Link the existing Expo project with the `practical-clean-architecture` slug. Complete the initial interactive builds to configure Android signing credentials and verify project access. Simulator builds do not require Apple distribution credentials. Retain the generated `extra.eas.projectId` in `app.json` for local builds. The slug must match the project selected by `EXPO_PROJECT_ID`.
+
+In GitHub repository Settings → Secrets and variables → Actions, add:
+
+- Secret `EXPO_TOKEN`: an Expo access token with access to the project.
+- Variable `EXPO_PROJECT_ID`: the UUID shown in the Expo project settings (matching `extra.eas.projectId`).
+
+For an on-demand build, select **Build Mobile React Native Expo → Run workflow**. Pull requests never run the credentialed cloud job. CI links the configured project in its checkout without committing that change. Build logs and downloads are available on Expo; the `reactnative-expo-build-results` GitHub artifact contains build metadata and artifact URLs. Cloud builds use the Expo account's quota, and cancelling GitHub's waiting job may require cancelling the submitted builds separately on Expo.
+
+Configure public backend URLs (`EXPO_PUBLIC_API_URL`, `EXPO_PUBLIC_AUTHORITY`, and `EXPO_PUBLIC_NOTIFICATION_URL`) in the Expo project's `preview` environment. The existing `postinstall` Swift compatibility patch also runs on Expo's builders. See [Expo's CI setup guide](https://docs.expo.dev/build/building-on-ci/) for token and initial-build setup.
+
+## Local development
+
 ```sh
 npm run android
 # macOS:
