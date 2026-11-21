@@ -82,7 +82,7 @@ jobs:
           xcodebuild -version
           dotnet workload install maui-ios --version 10.0.303.1
       - name: Build unsigned iOS simulator app
-        run: dotnet build App/ClassifiedAds.Mobile.csproj --configuration Release --framework net10.0-ios -p:TargetFrameworks=net10.0-ios -p:RuntimeIdentifier=iossimulator-arm64 -p:EnableCodeSigning=false
+        run: dotnet build App/ClassifiedAds.Mobile.csproj --configuration Release --framework net10.0-ios -p:MauiTargetFramework=net10.0-ios -p:RuntimeIdentifier=iossimulator-arm64 -p:EnableCodeSigning=false
       - name: Package simulator app
         run: tar -czf maui-ios-simulator.tar.gz -C App/bin/Release/net10.0-ios/iossimulator-arm64 ClassifiedAds.Mobile.app
       - uses: actions/upload-artifact@v4

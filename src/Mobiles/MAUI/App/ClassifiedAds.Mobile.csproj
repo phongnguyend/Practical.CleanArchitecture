@@ -2,6 +2,8 @@
   <PropertyGroup>
     <TargetFrameworks>net10.0-android</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx'))">net10.0-android;net10.0-ios</TargetFrameworks>
+    <!-- Select a single app target without overriding the frameworks of project references. -->
+    <TargetFrameworks Condition="'$(MauiTargetFramework)' != ''">$(MauiTargetFramework)</TargetFrameworks>
     <OutputType>Exe</OutputType><RootNamespace>ClassifiedAds.Mobile</RootNamespace>
     <UseMaui>true</UseMaui><SingleProject>true</SingleProject>
     <ApplicationTitle>Classified Ads</ApplicationTitle><ApplicationId>com.classifiedads.mobile.maui</ApplicationId>

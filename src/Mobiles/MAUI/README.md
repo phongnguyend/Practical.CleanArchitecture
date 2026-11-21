@@ -50,10 +50,12 @@ Use .NET SDK 10.0.302 and Xcode 26.6 with the pinned workload set. From this dir
 
 ```sh
 dotnet workload install maui-ios --version 10.0.303.1
-DEVELOPER_DIR=/Applications/Xcode_26.6.app/Contents/Developer dotnet build App/ClassifiedAds.Mobile.csproj -f net10.0-ios -p:TargetFrameworks=net10.0-ios -p:RuntimeIdentifier=iossimulator-arm64 -p:EnableCodeSigning=false
+DEVELOPER_DIR=/Applications/Xcode_26.6.app/Contents/Developer dotnet build App/ClassifiedAds.Mobile.csproj -f net10.0-ios -p:MauiTargetFramework=net10.0-ios -p:RuntimeIdentifier=iossimulator-arm64 -p:EnableCodeSigning=false
 ```
 
 Use `iossimulator-x64` on an Intel Mac. Physical-device deployment requires your Apple signing identity and provisioning profile.
+
+`MauiTargetFramework` limits restore to the app's iOS target. Do not override `TargetFrameworks` on the command line: that global property also changes the shared Core project's restore targets, which must remain `net10.0`.
 
 ## Servers and sign-in
 
