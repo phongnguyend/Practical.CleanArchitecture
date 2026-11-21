@@ -5,6 +5,14 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
 }
+val crashlyticsEnabled = providers.gradleProperty("crashlyticsEnabled").orNull == "true"
+if (crashlyticsEnabled) {
+    require(file("google-services.json").isFile) {
+        "Crashlytics requires app/google-services.json"
+    }
+    apply(plugin = "com.google.gms.google-services")
+    apply(plugin = "com.google.firebase.crashlytics")
+}
 fun setting(name: String, fallback: String) = "\"" + providers.gradleProperty(name).getOrElse(fallback).replace("\\", "\\\\").replace("\"", "\\\"") + "\""
 // Opt in to one local public certificate; generated resources are debug-only.
 val debugCertificatePath = providers.gradleProperty("debugCertificatePath")
@@ -50,6 +58,7 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0.0"
+        buildConfigField("boolean", "CRASHLYTICS_ENABLED", crashlyticsEnabled.toString())
         manifestPlaceholders["appAuthRedirectScheme"] = "classifiedads.kotlin"
         buildConfigField("String", "API_URL", setting("apiUrl", "https://localhost:44312/api/"))
         buildConfigField("String", "AUTHORITY", setting("authority", "https://localhost:44367"))
@@ -68,6 +77,8 @@ tasks.configureEach {
     if (name == "preDebugBuild") dependsOn(generateLocalCertificateResources)
 }
 dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:35.2.0"))
+    implementation("com.google.firebase:firebase-crashlytics")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.json:json:20240303")
     implementation(platform("androidx.compose:compose-bom:2025.06.01"))

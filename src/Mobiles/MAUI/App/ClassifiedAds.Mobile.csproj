@@ -11,6 +11,24 @@
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(EnableFirebaseCrashlytics)' == 'true'">
+    <DefineConstants>$(DefineConstants);FIREBASE_CRASHLYTICS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(EnableFirebaseCrashlytics)' == 'true'">
+    <PackageReference Include="Plugin.Firebase.Crashlytics" Version="4.0.0" />
+    <PackageReference Include="Plugin.Firebase.Core" Version="4.0.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(EnableFirebaseCrashlytics)' == 'true' And '$(TargetFramework)' == 'net10.0-android'">
+    <GoogleServicesJson Include="google-services.json" />
+    <AndroidResource Include="Configuration/Android/Crashlytics.xml" LogicalName="values/crashlytics.xml" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(EnableFirebaseCrashlytics)' == 'true' And '$(TargetFramework)' == 'net10.0-ios'">
+    <BundleResource Include="GoogleService-Info.plist" LogicalName="GoogleService-Info.plist" />
+  </ItemGroup>
+  <Target Name="ValidateFirebaseConfiguration" BeforeTargets="PrepareForBuild" Condition="'$(EnableFirebaseCrashlytics)' == 'true'">
+    <Error Condition="'$(TargetFramework)' == 'net10.0-android' And !Exists('google-services.json')" Text="Crashlytics requires App/google-services.json." />
+    <Error Condition="'$(TargetFramework)' == 'net10.0-ios' And !Exists('GoogleService-Info.plist')" Text="Crashlytics requires App/GoogleService-Info.plist." />
+  </Target>
   <ItemGroup>
     <MauiIcon Include="Resources/AppIcon/appicon.svg" ForegroundFile="Resources/AppIcon/appiconfg.svg" Color="#4f46e5" />
     <MauiSplashScreen Include="Resources/Splash/splash.svg" Color="#4f46e5" BaseSize="128,128" />

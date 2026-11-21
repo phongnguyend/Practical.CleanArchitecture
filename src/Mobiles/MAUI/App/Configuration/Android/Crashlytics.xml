@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MAUI does not run R8; this is the binding's documented mapping marker. -->
+    <string name="com.google.firebase.crashlytics.mapping_file_id">none</string>
+</resources>

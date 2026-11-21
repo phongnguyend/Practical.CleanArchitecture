@@ -5,8 +5,11 @@
   "dependencies": {
     "@microsoft/signalr": "^10.0.11",
     "@react-native-community/datetimepicker": "9.2.1",
+    "@react-native-firebase/app": "^27.1.1",
+    "@react-native-firebase/crashlytics": "^27.1.1",
     "expo": "~58.0.23",
     "expo-auth-session": "~58.0.17",
+    "expo-build-properties": "~58.0.12",
     "expo-clipboard": "~58.0.4",
     "expo-constants": "~58.0.15",
     "expo-document-picker": "~58.0.4",
@@ -41,7 +44,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "typecheck": "tsc --noEmit",
-    "test": "node --test tests/contracts.test.cjs tests/expo-jsi-patch.test.cjs",
+    "test": "node --test tests/contracts.test.cjs tests/expo-jsi-patch.test.cjs tests/firebase-config.test.cjs",
     "test:ui": "jest --runInBand",
     "lint": "expo lint"
   },

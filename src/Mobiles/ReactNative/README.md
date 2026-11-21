@@ -64,3 +64,7 @@ npm run android
 The plugin trusts this certificate only for `localhost` in Android debug builds. It preserves Expo's debug HTTP access for Metro; API and issuer URLs should remain HTTPS. No certificate validation bypass is installed, and release builds do not include the debug resources. Remove the environment variable and rerun prebuild to remove the local certificate. The system login browser has its own trust store; see [Kotlin HTTPS setup](../Kotlin/README.md).
 
 `src/app` contains thin Expo Router adapters. `src/features/workspace/WorkspaceScreen.tsx` handles navigation, session state, themes and notifications. Each resource folder owns its typed `model.ts`, `api.ts`, explicit form/detail components and screen. `src/core` separates authentication, configuration, HTTP, file transfers, notifications and appearance storage. `src/shared/ui` provides controls and reusable record-page lifecycle behavior without field schemas. Tests validate feature payloads and rendered workflows. See the parent README for dependency boundaries.
+
+## Crash reporting
+
+See [Firebase Crashlytics setup](../FIREBASE.md) for optional reporting, Firebase app registrations, local configuration, CI secrets, and verification. Ordinary builds work without Firebase configuration.

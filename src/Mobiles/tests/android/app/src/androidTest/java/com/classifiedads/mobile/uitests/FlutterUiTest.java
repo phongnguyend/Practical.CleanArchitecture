@@ -20,21 +20,33 @@ import com.classifiedads.mobile.uitests.features.navigation.NavigationUiTests;
 })
 public class FlutterUiTest {
     public static class Home extends HomeUiTests {
-        public Home() { super("flutter", "com.classifiedads.mobile.classified_ads_mobile", ".MainActivity"); }
+        public Home() {
+            super("flutter", "com.classifiedads.mobile.flutter", ".MainActivity");
+        }
     }
     public static class Products extends ProductsUiTests {
-        public Products() { super("flutter", "com.classifiedads.mobile.classified_ads_mobile", ".MainActivity"); }
+        public Products() {
+            super("flutter", "com.classifiedads.mobile.flutter", ".MainActivity");
+        }
     }
     public static class Users extends UsersUiTests {
-        public Users() { super("flutter", "com.classifiedads.mobile.classified_ads_mobile", ".MainActivity"); }
+        public Users() {
+            super("flutter", "com.classifiedads.mobile.flutter", ".MainActivity");
+        }
     }
     public static class Roles extends RolesUiTests {
-        public Roles() { super("flutter", "com.classifiedads.mobile.classified_ads_mobile", ".MainActivity"); }
+        public Roles() {
+            super("flutter", "com.classifiedads.mobile.flutter", ".MainActivity");
+        }
     }
     public static class Configuration extends ConfigurationUiTests {
-        public Configuration() { super("flutter", "com.classifiedads.mobile.classified_ads_mobile", ".MainActivity"); }
+        public Configuration() {
+            super("flutter", "com.classifiedads.mobile.flutter", ".MainActivity");
+        }
     }
     public static class Navigation extends NavigationUiTests {
-        public Navigation() { super("flutter", "com.classifiedads.mobile.classified_ads_mobile", ".MainActivity"); }
+        public Navigation() {
+            super("flutter", "com.classifiedads.mobile.flutter", ".MainActivity");
+        }
     }
 }

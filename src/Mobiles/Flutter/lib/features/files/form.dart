@@ -24,6 +24,7 @@ class StoredFileForm extends StatelessWidget {
   final bool busy;
   @override
   Widget build(BuildContext context) => Column(
+    spacing: 16,
     children: [
       TextFormField(
         initialValue: value.name.toString(),

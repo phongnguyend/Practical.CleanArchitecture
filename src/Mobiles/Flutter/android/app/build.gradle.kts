@@ -7,6 +7,11 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+if (file("google-services.json").isFile) {
+    apply(plugin = "com.google.gms.google-services")
+    apply(plugin = "com.google.firebase.crashlytics")
+}
+
 // Opt in to one local public certificate; generated resources are debug-only.
 val debugCertificatePath = providers.gradleProperty("debugCertificatePath")
 val debugCertificateBase64 = providers.gradleProperty("dart-defines").map { definitions ->
@@ -57,7 +62,7 @@ android {
     }
     sourceSets.getByName("debug").res.srcDir(localCertificateResources.get().asFile)
 
-    namespace = "com.classifiedads.mobile.classified_ads_mobile"
+    namespace = "com.classifiedads.mobile.flutter"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -68,7 +73,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.classifiedads.mobile.classified_ads_mobile"
+        applicationId = "com.classifiedads.mobile.flutter"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24

@@ -158,3 +158,7 @@ Record lists and Audit logs share a pagination layout in each app: a centered pa
 ### .NET MAUI
 
 See [MAUI setup, feature structure, build commands and tests](MAUI/README.md). Its Android and iOS jobs run independently in `build-mobile-maui.yml`.
+
+## Crash reporting
+
+See [Firebase Crashlytics setup](FIREBASE.md) for optional reporting, Firebase app registrations, local configuration, CI secrets, and verification. Ordinary builds work without Firebase configuration.

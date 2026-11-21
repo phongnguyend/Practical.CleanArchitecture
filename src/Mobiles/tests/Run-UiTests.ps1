@@ -21,7 +21,7 @@ $devices = @(& $adb devices | Select-String '^([^\s]+)\s+device$' | ForEach-Obje
 if ($devices.Count -ne 1) { throw 'Connect exactly one authorized Android emulator/device for this test run.' }
 if ($Serial -and $Serial -ne $devices[0]) { throw "Requested device $Serial is not the connected device." }
 $Serial = $devices[0]
-$apps = @{ Flutter='com.classifiedads.mobile.classified_ads_mobile'; Kotlin='com.classifiedads.mobile.kotlin'; ReactNative='com.classifiedads.mobile.reactnative'; MAUI='com.classifiedads.mobile.maui' }
+$apps = @{ Flutter='com.classifiedads.mobile.flutter'; Kotlin='com.classifiedads.mobile.kotlin'; ReactNative='com.classifiedads.mobile.reactnative'; MAUI='com.classifiedads.mobile.maui' }
 $selected = if ($App -eq 'All') { @('Flutter', 'Kotlin', 'ReactNative', 'MAUI') } else { @($App) }
 foreach ($name in $selected) {
     $installed = & $adb -s $Serial shell pm path $apps[$name]

@@ -19,3 +19,7 @@ The system login browser has its own trust store: app configuration does not fix
 APK: `app/build/outputs/apk/debug/`. Requires Android 8/API 26+. AppAuth uses `classifiedads.kotlin` callbacks. Tokens are encrypted with Android Keystore; FileProvider shares private cached downloads.
 
 `MainActivity.kt` is the Android entry point. `features.workspace` handles navigation, sessions and notifications. Each resource package owns a typed data class, `Repository.kt`, explicit `Form.kt`, `Details.kt` and `Screen.kt`. `core.auth` contains session and token storage; `core.network` contains API transport. `shared.model` contains repository contracts and audit/error helpers; `shared.ui` contains reusable Compose controls and record-page lifecycle behavior without field schemas. Configure production signing before release.
+
+## Crash reporting
+
+See [Firebase Crashlytics setup](../FIREBASE.md) for optional reporting, Firebase app registrations, local configuration, CI secrets, and verification. Ordinary builds work without Firebase configuration.
