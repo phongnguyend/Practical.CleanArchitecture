@@ -1,4 +1,4 @@
-"""Check action-icon coverage and asset parity across the three mobile apps."""
+"""Check action-icon coverage and asset parity across the mobile apps."""
 from pathlib import Path
 import re
 
@@ -14,7 +14,7 @@ maps = {
 assert maps['ReactNative'] == maps['Flutter'] == maps['Kotlin'], 'Action icons differ between apps'
 for icon in set(maps['ReactNative'].values()):
     assets = [ROOT / folder / f'action_{icon}.png' for folder in (
-        'ReactNative/assets/icons', 'Flutter/assets/icons', 'Kotlin/app/src/main/res/drawable-nodpi')]
+        'ReactNative/assets/icons', 'Flutter/assets/icons', 'Kotlin/app/src/main/res/drawable-nodpi', 'MAUI/App/Resources/Images')]
     assert len({p.read_bytes() for p in assets}) == 1, f'Icon asset differs: {icon}'
 
 for name, root, extension, pattern in (
@@ -32,4 +32,9 @@ for name, root, extension, pattern in (
             labels += re.findall(r'\bicon="([^"]+)"', source)
         for label in labels:
             assert label in maps[name], f'{path}: missing icon for {label}'
-print(f'Checked {len(maps["ReactNative"])} action labels and identical assets across all three apps.')
+for path in (ROOT / 'MAUI/App').rglob('*.cs'):
+    if 'obj' in path.parts or 'bin' in path.parts:
+        continue
+    for icon in re.findall(r'Ui\.Button\("[^"]*",\s*"(\w+)"', path.read_text()):
+        assert (ROOT / 'MAUI/App/Resources/Images' / f'action_{icon}.png').exists(), f'{path}: missing icon {icon}'
+print(f'Checked {len(maps["ReactNative"])} action labels and identical assets across all four apps.')

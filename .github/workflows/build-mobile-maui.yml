@@ -1,0 +1,93 @@
+name: Build Mobile MAUI
+
+on:
+  push:
+    paths:
+      - "src/Mobiles/MAUI/**"
+      - ".github/workflows/build-mobile-maui.yml"
+  pull_request:
+    paths:
+      - "src/Mobiles/MAUI/**"
+      - ".github/workflows/build-mobile-maui.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  android:
+    name: MAUI Android
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+        working-directory: src/Mobiles/MAUI
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.302
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools platforms;android-36 build-tools;36.0.0
+      - name: Install MAUI Android workload
+        run: dotnet workload install maui-android --version 10.0.303.1
+      - name: Unit and API contract tests
+        run: dotnet test Tests/ClassifiedAds.Mobile.Tests.csproj --configuration Release --logger trx --results-directory artifacts/tests
+      - name: Build standalone Android APK
+        run: dotnet build App/ClassifiedAds.Mobile.csproj --configuration Release --framework net10.0-android -p:AndroidPackageFormats=apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: maui-android
+          path: src/Mobiles/MAUI/App/bin/Release/net10.0-android/*-Signed.apk
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: maui-test-results
+          path: src/Mobiles/MAUI/artifacts/tests
+          retention-days: 14
+
+  ios:
+    name: MAUI iOS simulator
+    runs-on: macos-26
+    timeout-minutes: 60
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+    defaults:
+      run:
+        shell: bash
+        working-directory: src/Mobiles/MAUI
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.302
+      - name: Verify Xcode and install matching workload
+        run: |
+          xcodebuild -version
+          dotnet workload install maui-ios --version 10.0.303.1
+      - name: Build unsigned iOS simulator app
+        run: dotnet build App/ClassifiedAds.Mobile.csproj --configuration Release --framework net10.0-ios -p:MauiTargetFramework=net10.0-ios -p:RuntimeIdentifier=iossimulator-arm64 -p:EnableCodeSigning=false
+      - name: Package simulator app
+        run: tar -czf maui-ios-simulator.tar.gz -C App/bin/Release/net10.0-ios/iossimulator-arm64 ClassifiedAds.Mobile.app
+      - uses: actions/upload-artifact@v4
+        with:
+          name: maui-ios-simulator
+          path: src/Mobiles/MAUI/maui-ios-simulator.tar.gz
+          if-no-files-found: error
+          retention-days: 14

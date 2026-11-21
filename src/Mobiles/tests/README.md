@@ -1,6 +1,6 @@
 # Android UI automation
 
-These are real-device tests of the installed Flutter, Kotlin and React Native apps, using AndroidX UI Automator. They interact with native accessibility elements without relying on screen coordinates or application test-mode bypasses. A small separate test-host APK lets the suite test all three apps without adding dependencies to production apps. Existing Flutter widget, Kotlin unit, and React Native rendered-screen tests remain the fastest first layer.
+These are real-device tests of the installed Flutter, Kotlin, React Native and MAUI apps, using AndroidX UI Automator. They interact with native accessibility elements without relying on screen coordinates or application test-mode bypasses. A small separate test-host APK lets the suite test all four apps without adding dependencies to production apps. Existing Flutter widget, Kotlin unit, and React Native rendered-screen tests remain the fastest first layer.
 
 ## Run
 
@@ -12,6 +12,7 @@ From the repository root (PowerShell):
 ./src/Mobiles/tests/Run-UiTests.ps1 -App Flutter
 ./src/Mobiles/tests/Run-UiTests.ps1 -App Kotlin
 ./src/Mobiles/tests/Run-UiTests.ps1 -App ReactNative
+./src/Mobiles/tests/Run-UiTests.ps1 -App MAUI
 ./src/Mobiles/tests/Run-UiTests.ps1 -App All
 
 # Optional live API writes, using uniquely named products with cleanup:
@@ -24,11 +25,11 @@ From the repository root (PowerShell):
 ./src/Mobiles/tests/Run-UiTests.ps1 -App All -Feature Users
 ```
 
-The script locates the standard Android Studio SDK/JDK, forwards the local API/Identity/Metro ports, builds only the small test host, and returns a nonzero exit code for failures. It does not rebuild the three apps: rebuild/install the affected app after native or Flutter/Kotlin changes. React Native JavaScript changes can use Metro.
+The script locates the standard Android Studio SDK/JDK, forwards the local API/Identity/Metro ports, builds only the small test host, and returns a nonzero exit code for failures. It does not rebuild the four apps: rebuild/install the affected app after native or Flutter/Kotlin changes. React Native JavaScript changes can use Metro.
 
 ## Coverage
 
-Each app has a JUnit suite (`FlutterUiTest`, `KotlinUiTest`, `ReactNativeUiTest`) composed of the same feature groups. Under `android/app/src/androidTest/java/com/classifiedads/mobile/uitests/`:
+Each app has a JUnit suite (`FlutterUiTest`, `KotlinUiTest`, `ReactNativeUiTest`, `MAUIUiTest`) composed of the same feature groups. Under `android/app/src/androidTest/java/com/classifiedads/mobile/uitests/`:
 
 | Folder | Coverage |
 | --- | --- |
@@ -60,11 +61,13 @@ Tests use visible text/content descriptions, accessibility text entry, bounded w
 
 Ordinary scenarios return home to dispose the previous feature's state. Cold launches remain explicit in session/theme persistence checks. This avoids downloading the React Native development bundle for every case. Empty accessibility text is normalized across frameworks; selectors are scoped to the target app so keyboard controls cannot be mistaken for app actions.
 
-There are 13 scenarios per app (39 across all three). The default run executes 36 scenarios and skips the three optional CRUD cases. Form validation and discard tests do not save records or send account emails.
+There are 13 scenarios per app (52 across all four). The default run executes 48 scenarios and skips the four optional CRUD cases. Form validation and discard tests do not save records or send account emails.
 
 ## Results and limitations
 
 Verified on Medium_Phone (Android 17): the original 33 scenarios passed with `-App All -IncludeCrud`, including temporary-product cleanup in Flutter, Kotlin and React Native. After adding Audit logs and Notifications, all nine navigation checks passed with `-App All -Feature Navigation` (three checks per app, no skips).
+
+MAUI was verified on Medium_Phone (Android 17) on 2026-11-21: the default suite passed all 12 non-destructive scenarios, with the optional CRUD case skipped. A separate `-Feature Products -TestMethod productCreateUpdateHistoryDelete -IncludeCrud` run passed the remaining scenario, including temporary-product cleanup. Testing uncovered and fixed editable-field accessibility labels that were being included in field values. Local HTTPS used the optional localhost-only Debug certificate configuration documented in the MAUI README.
 
 `tests/artifacts/<timestamp>-<app>-<feature>/` contains the Gradle log, JUnit XML, HTML report, screenshots and accessibility trees. Artifacts are ignored by Git and may contain development record data. Screenshots aid diagnosis; the suite asserts control geometry and theme brightness, not pixel-identical rendering across frameworks.
 
