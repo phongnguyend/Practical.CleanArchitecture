@@ -1,4 +1,4 @@
-package com.classifiedads.mobile.classified_ads_mobile
+package com.classifiedads.mobile.flutter
 
 import io.flutter.embedding.android.FlutterActivity
 

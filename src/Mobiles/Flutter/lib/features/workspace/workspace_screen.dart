@@ -192,16 +192,23 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
           if (!ready)
             const CircularProgressIndicator()
           else if (!widget.services.signedIn)
-            Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                children: [
-                  const Text('Your workspace, anywhere.'),
-                  FilledButton(
-                    onPressed: busy ? null : () => authenticate(),
-                    child: const ActionLabel('Sign in'),
-                  ),
-                ],
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Your workspace, anywhere.',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    const SizedBox(height: 16),
+                    FilledButton(
+                      onPressed: busy ? null : () => authenticate(),
+                      child: const ActionLabel('Sign in'),
+                    ),
+                  ],
+                ),
               ),
             )
           else ...[

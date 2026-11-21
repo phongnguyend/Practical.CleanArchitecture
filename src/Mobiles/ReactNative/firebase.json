@@ -1,0 +1,8 @@
+{
+  "react-native": {
+    "crashlytics_auto_collection_enabled": false,
+    "crashlytics_debug_enabled": false,
+    "crashlytics_javascript_exception_handler_enabled": true,
+    "crashlytics_is_error_generation_on_js_crash_enabled": true
+  }
+}

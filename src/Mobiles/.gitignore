@@ -10,3 +10,8 @@
 **/DerivedData/
 **/key.properties
 **/*.jks
+
+# Firebase configuration is supplied locally or by CI.
+**/google-services.json
+**/GoogleService-Info.plist
+**/firebase-defines.json

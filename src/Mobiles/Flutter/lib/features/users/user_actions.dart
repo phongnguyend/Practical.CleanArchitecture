@@ -96,6 +96,7 @@ class _PasswordState extends State<PasswordDialog> {
     child: DialogShell(
       title: 'Set password',
       body: Column(
+        spacing: 16,
         children: [
           TextField(
             obscureText: true,

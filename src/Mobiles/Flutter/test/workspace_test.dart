@@ -168,6 +168,18 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Sign in'), findsOneWidget);
     expect(find.text('Add new'), findsNothing);
+    final heading = find.text('Your workspace, anywhere.');
+    final button = find.widgetWithText(FilledButton, 'Sign in');
+    final screen = tester.getRect(find.byType(Scaffold));
+    final action = tester.getRect(button);
+    expect(action.left - screen.left, closeTo(16, 1));
+    expect(screen.right - action.right, closeTo(16, 1));
+    expect(action.height, greaterThanOrEqualTo(44));
+    expect(
+      action.top - tester.getRect(heading).bottom,
+      greaterThanOrEqualTo(16),
+    );
+    expect(tester.widget<Text>(heading).style?.fontSize, 26);
   });
 
   testWidgets(

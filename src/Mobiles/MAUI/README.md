@@ -103,3 +103,7 @@ The shared suite covers home layout, theme/session persistence, navigation, audi
 ## Android verification
 
 On 2026-11-21, all 13 shared UI scenarios passed on Medium_Phone (Android 17): 12 non-destructive cases in the full suite, then the optional product CRUD/history/cleanup case in a separate targeted run. The app retained its authenticated session across restarts and APK updates. Local HTTPS used `DebugCertificatePath`; release resources exclude this certificate.
+
+## Crash reporting
+
+See [Firebase Crashlytics setup](../FIREBASE.md) for optional reporting, Firebase app registrations, local configuration, CI secrets, and verification. Ordinary builds work without Firebase configuration.
