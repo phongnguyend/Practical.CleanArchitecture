@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net10.0-android</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx'))">net10.0-android;net10.0-ios</TargetFrameworks>
+    <OutputType>Exe</OutputType><RootNamespace>ClassifiedAds.Mobile</RootNamespace>
+    <UseMaui>true</UseMaui><SingleProject>true</SingleProject>
+    <ApplicationTitle>Classified Ads</ApplicationTitle><ApplicationId>com.classifiedads.mobile.maui</ApplicationId>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion><ApplicationVersion>1</ApplicationVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <MauiIcon Include="Resources/AppIcon/appicon.svg" ForegroundFile="Resources/AppIcon/appiconfg.svg" Color="#4f46e5" />
+    <MauiSplashScreen Include="Resources/Splash/splash.svg" Color="#4f46e5" BaseSize="128,128" />
+    <MauiImage Include="Resources/Images/action_*.png" Resize="true" BaseSize="20,20" />
+    <MauiFont Include="Resources/Fonts/*" />
+    <MauiAsset Include="Resources/Raw/**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+    <ProjectReference Include="../Core/ClassifiedAds.Mobile.Core.csproj" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.20" />
+    <PackageReference Include="Duende.IdentityModel.OidcClient" Version="7.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.13" />
+  </ItemGroup>
+</Project>

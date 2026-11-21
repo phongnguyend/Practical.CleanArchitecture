@@ -1,18 +1,19 @@
 # Mobile applications
 
-Three independent native clients for the API used by `src/UIs`:
+Four independent native clients for the API used by `src/UIs`:
 
 | Project | Toolkit | Platforms |
 | --- | --- | --- |
 | [Flutter](Flutter/README.md) | Flutter Material 3 | Android, iOS |
 | [Kotlin](Kotlin/README.md) | Jetpack Compose Material 3 | Android |
 | [ReactNative](ReactNative/README.md) | React Native / Expo | Android, iOS |
+| [MAUI](MAUI/README.md) | .NET MAUI native controls | Android, iOS |
 
-All three include browser OIDC login with PKCE, secure session storage/refresh, logout, persisted System/Light/Dark appearance, search, paging, loading/error states, confirmation dialogs, editors, expandable JSON inspection/copy, and foreground SignalR notifications.
+All four include browser OIDC login with PKCE, secure session storage/refresh, logout, persisted System/Light/Dark appearance, search, paging, loading/error states, confirmation dialogs, editors, expandable JSON inspection/copy, and foreground SignalR notifications.
 
 ## Features
 
-| Area | Available in all three apps |
+| Area | Available in all four apps |
 | --- | --- |
 | Products | Name filtering, image visibility, ratings, readable details, create/edit/delete, highlighted audit history, confirmed CSV import, CSV/PDF exports |
 | Files | List/details, multipart upload with encryption choice, metadata edit with read-only filename/encryption, delete, download/share, highlighted audit history |
@@ -36,8 +37,9 @@ Each mobile app has a path-filtered workflow that runs on pushes, pull requests,
 | [Build Mobile Flutter](../../.github/workflows/build-mobile-flutter.yml) | Debug APK | Debug simulator app |
 | [Build Mobile Kotlin](../../.github/workflows/build-mobile-kotlin.yml) | Debug APK | Not applicable: this project uses Android Jetpack Compose, not Kotlin Multiplatform |
 | [Build Mobile React Native](../../.github/workflows/build-mobile-reactnative.yml) | Release-mode APK signed with the generated debug key, with JavaScript bundled | Release-mode simulator app with JavaScript bundled |
+| [Build Mobile MAUI](../../.github/workflows/build-mobile-maui.yml) | Standalone Release APK with debug signing | Unsigned arm64 simulator app |
 
-Android builds run on Ubuntu; iOS builds run on macOS 15. Flutter is pinned to 3.47.9, React Native uses Node 24, and Android builds use Java 17. The workflows run Flutter analysis/widget tests, Kotlin lint/unit tests, and React Native lint/typechecking/contract/rendered-screen tests. They do not run the authenticated device UI suite or require running backend services.
+Android builds run on Ubuntu; Flutter/React Native iOS builds run on macOS 15 and MAUI on macOS 26. Flutter is pinned to 3.47.9, React Native uses Node 24, and Flutter/Kotlin/React Native Android builds use Java 17; MAUI uses Java 21. The workflows run Flutter analysis/widget tests, Kotlin lint/unit tests, and React Native lint/typechecking/contract/rendered-screen tests, and MAUI xUnit validation/API contract tests. They do not run the authenticated device UI suite or require running backend services.
 
 Download artifacts from the completed workflow run; retention is 14 days. iOS apps are packaged as `.tar.gz` files to preserve permissions and symlinks. Extract and install them on a matching iOS Simulator; they are not device-installable IPAs. The native CI jobs do not require Apple signing credentials, Android release keys, or an Expo account and do not publish to stores. React Native also offers an opt-in [Expo EAS cloud build job](ReactNative/README.md#expo-eas-cloud-builds), which requires an Expo project and token. Production distribution requires a separate signing/release workflow. Apps retain their default backend URLs; configure reachable endpoints before using them against a deployed backend.
 
@@ -53,6 +55,7 @@ Download artifacts from the completed workflow run; retention is 14 days. iOS ap
 | `ClassifiedAds.Mobile.Flutter` | `classifiedads.flutter:/oauthredirect` | `classifiedads.flutter:/logout` |
 | `ClassifiedAds.Mobile.Kotlin` | `classifiedads.kotlin:/oauthredirect` | `classifiedads.kotlin:/logout` |
 | `ClassifiedAds.Mobile.ReactNative` | `classifiedads.rn:/oauthredirect` | `classifiedads.rn:/logout` |
+| `ClassifiedAds.Mobile.MAUI` | `classifiedads.maui:/oauthredirect` | `classifiedads.maui:/logout` |
 
 Native integrations provide authentication, secure storage, file picking/sharing, and SignalR. Dialogs, JSON viewers, and notifications use framework UI primitives.
 
@@ -75,7 +78,7 @@ For example, product changes belong in `Flutter/lib/features/products/`, Kotlin'
 
 ## Integration checklist
 
-Repeatable Android UI tests for all three apps are available in [tests/README.md](tests/README.md). Run `./src/Mobiles/tests/Run-UiTests.ps1 -App All` from the repository root after installing and signing in to the apps. The suite uses AndroidX UI Automator.
+Repeatable Android UI tests for all four apps are available in [tests/README.md](tests/README.md). Run `./src/Mobiles/tests/Run-UiTests.ps1 -App All` from the repository root after installing and signing in to the apps. The suite uses AndroidX UI Automator.
 
 With a reachable backend and seeded account, verify in each app:
 
@@ -144,10 +147,14 @@ All three apps use the same visual tokens with native controls: indigo primary a
 
 Keep styling aligned in Flutter's `lib/shared/widgets/app_theme.dart`, Kotlin's `shared/ui/AppTheme.kt`, and React Native's `src/shared/ui/ui.tsx`. Feature forms remain explicit native components; these themes do not introduce field definitions or a runtime UI schema.
 
-Home navigation, Sign out, and the `Practical.CleanArchitecture` project link use a dedicated native `HomeButton`: full width, minimum height 48, corner radius 10, neutral 14-point semibold text, and an outlined surface. Navigation buttons have 16-unit vertical gaps; the project link fills its welcome card. Destructive actions and delete confirmations use the same light/dark red text, background, and border colors across all three apps.
+Home navigation, Sign out, and the `Practical.CleanArchitecture` project link use a dedicated native `HomeButton`: full width, minimum height 48, corner radius 10, neutral 14-point semibold text, and an outlined surface. Navigation buttons have 16-unit vertical gaps; the project link fills its welcome card. Destructive actions and delete confirmations use the same light/dark red text, background, and border colors across all four apps.
 
-Navigation and common actions pair their text labels with matching outline icons. The icons inherit each control's normal, selected, disabled or destructive color and are decorative for screen readers. Regenerate the bundled assets for all three apps with `python src/Mobiles/tools/generate_icons.py` from the repository root; no runtime icon dependency is required.
+Navigation and common actions pair their text labels with matching outline icons. The icons inherit each control's normal, selected, disabled or destructive color and are decorative for screen readers. Regenerate the bundled assets for all four apps with `python src/Mobiles/tools/generate_icons.py` from the repository root; no runtime icon dependency is required.
 
-Check action-label coverage and identical assets across all three apps with `python src/Mobiles/tools/check_icons.py`. This includes pagination, file/date pickers, account actions, theme choices, popup footers and import/export buttons.
+Check action-label coverage and identical assets across all four apps with `python src/Mobiles/tools/check_icons.py`. This includes pagination, file/date pickers, account actions, theme choices, popup footers and import/export buttons.
 
 Record lists and Audit logs share a pagination layout in each app: a centered page/record summary above equal-width Previous and Next buttons, 12-unit spacing and a minimum 48-unit height. Both buttons remain visible and are disabled while loading or at the relevant page boundary.
+
+### .NET MAUI
+
+See [MAUI setup, feature structure, build commands and tests](MAUI/README.md). Its Android and iOS jobs run independently in `build-mobile-maui.yml`.

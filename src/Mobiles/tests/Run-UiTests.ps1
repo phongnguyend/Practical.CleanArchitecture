@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('All', 'Flutter', 'Kotlin', 'ReactNative')]
+    [ValidateSet('All', 'Flutter', 'Kotlin', 'ReactNative', 'MAUI')]
     [string]$App = 'All',
     [ValidateSet('All', 'Home', 'Products', 'Users', 'Roles', 'Configuration', 'Navigation')]
     [string]$Feature = 'All',
@@ -21,8 +21,8 @@ $devices = @(& $adb devices | Select-String '^([^\s]+)\s+device$' | ForEach-Obje
 if ($devices.Count -ne 1) { throw 'Connect exactly one authorized Android emulator/device for this test run.' }
 if ($Serial -and $Serial -ne $devices[0]) { throw "Requested device $Serial is not the connected device." }
 $Serial = $devices[0]
-$apps = @{ Flutter='com.classifiedads.mobile.classified_ads_mobile'; Kotlin='com.classifiedads.mobile.kotlin'; ReactNative='com.classifiedads.mobile.reactnative' }
-$selected = if ($App -eq 'All') { @('Flutter', 'Kotlin', 'ReactNative') } else { @($App) }
+$apps = @{ Flutter='com.classifiedads.mobile.classified_ads_mobile'; Kotlin='com.classifiedads.mobile.kotlin'; ReactNative='com.classifiedads.mobile.reactnative'; MAUI='com.classifiedads.mobile.maui' }
+$selected = if ($App -eq 'All') { @('Flutter', 'Kotlin', 'ReactNative', 'MAUI') } else { @($App) }
 foreach ($name in $selected) {
     $installed = & $adb -s $Serial shell pm path $apps[$name]
     if ($LASTEXITCODE -ne 0 -or !$installed) { throw "Install the $name app before running UI tests." }

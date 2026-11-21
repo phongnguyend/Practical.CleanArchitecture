@@ -56,7 +56,7 @@ for name, paths in ICONS.items():
             alpha = round(max(0, min(1, (1 - d) * 3 + .5)) * 255)
             pixels.extend((0, 0, 0, alpha))
     png = b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('!2I5B', 72, 72, 8, 6, 0, 0, 0)) + chunk(b'IDAT', zlib.compress(pixels)) + chunk(b'IEND', b'')
-    for folder in ['Flutter/assets/icons', 'ReactNative/assets/icons', 'Kotlin/app/src/main/res/drawable-nodpi']:
+    for folder in ['Flutter/assets/icons', 'ReactNative/assets/icons', 'Kotlin/app/src/main/res/drawable-nodpi', 'MAUI/App/Resources/Images']:
         target = ROOT / folder / f'action_{name}.png'
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(png)

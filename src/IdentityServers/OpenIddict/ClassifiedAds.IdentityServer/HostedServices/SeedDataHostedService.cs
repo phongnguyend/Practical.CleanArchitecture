@@ -317,7 +317,7 @@ public class SeedDataHostedService : IHostedService
 
     private static async Task RegisterMobileClients(IOpenIddictApplicationManager manager, CancellationToken cancellationToken)
     {
-        foreach (var (name, scheme) in new[] { ("Flutter", "classifiedads.flutter"), ("Kotlin", "classifiedads.kotlin"), ("ReactNative", "classifiedads.rn") })
+        foreach (var (name, scheme) in new[] { ("Flutter", "classifiedads.flutter"), ("Kotlin", "classifiedads.kotlin"), ("ReactNative", "classifiedads.rn"), ("MAUI", "classifiedads.maui") })
         {
             await UpsertClientApplication(manager, new OpenIddictApplicationDescriptor
             {

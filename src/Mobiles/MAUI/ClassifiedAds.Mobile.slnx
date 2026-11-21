@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="App/ClassifiedAds.Mobile.csproj" />
+  <Project Path="Core/ClassifiedAds.Mobile.Core.csproj" />
+  <Project Path="Tests/ClassifiedAds.Mobile.Tests.csproj" />
+</Solution>
