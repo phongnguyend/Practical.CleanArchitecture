@@ -22,4 +22,9 @@
     <PackageReference Include="Duende.IdentityModel.OidcClient" Version="7.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.13" />
   </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug' And '$(TargetFramework)' == 'net10.0-android' And '$(DebugCertificatePath)' != ''">
+    <AndroidResource Remove="Platforms/Android/Resources/xml/network_security_config.xml" />
+    <AndroidResource Include="Configuration/Android/DebugNetworkSecurityConfig.xml" LogicalName="xml/network_security_config.xml" />
+    <AndroidResource Include="$(DebugCertificatePath)" LogicalName="raw/local_development_certificate.cer" />
+  </ItemGroup>
 </Project>

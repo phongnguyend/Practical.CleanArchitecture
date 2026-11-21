@@ -28,7 +28,6 @@ public abstract class RecordPage<T> : ContentView where T : Record, new()
         {
             Placeholder = "Search records"
         };
-        SemanticProperties.SetDescription(search, "Search current records");
         search.SetAppThemeColor(Entry.TextColorProperty, Color.FromArgb("#172554"), Color.FromArgb("#e2e8f0"));
         search.TextChanged += (_, _) =>
         {

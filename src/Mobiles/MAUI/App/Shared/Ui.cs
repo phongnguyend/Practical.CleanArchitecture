@@ -128,7 +128,7 @@ public static class Ui
             MinimumHeightRequest = 48
         };
         input.SetAppThemeColor(Entry.TextColorProperty, Color.FromArgb("#172554"), Color.FromArgb("#e2e8f0"));
-        SemanticProperties.SetDescription(input, label);
+        // Placeholder supplies the accessible label without replacing editable text on Android.
         input.TextChanged += (_, e) => change(e.NewTextValue ?? "");
         form.Add(Text(label));
         form.Add(input);

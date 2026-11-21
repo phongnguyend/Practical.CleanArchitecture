@@ -67,7 +67,7 @@ There are 13 scenarios per app (52 across all four). The default run executes 48
 
 Verified on Medium_Phone (Android 17): the original 33 scenarios passed with `-App All -IncludeCrud`, including temporary-product cleanup in Flutter, Kotlin and React Native. After adding Audit logs and Notifications, all nine navigation checks passed with `-App All -Feature Navigation` (three checks per app, no skips).
 
-MAUI uses the same 13 scenarios. Its suite has been compiled; authenticated execution has not yet been verified on a connected device.
+MAUI was verified on Medium_Phone (Android 17) on 2026-11-21: the default suite passed all 12 non-destructive scenarios, with the optional CRUD case skipped. A separate `-Feature Products -TestMethod productCreateUpdateHistoryDelete -IncludeCrud` run passed the remaining scenario, including temporary-product cleanup. Testing uncovered and fixed editable-field accessibility labels that were being included in field values. Local HTTPS used the optional localhost-only Debug certificate configuration documented in the MAUI README.
 
 `tests/artifacts/<timestamp>-<app>-<feature>/` contains the Gradle log, JUnit XML, HTML report, screenshots and accessibility trees. Artifacts are ignored by Git and may contain development record data. Screenshots aid diagnosis; the suite asserts control geometry and theme brightness, not pixel-identical rendering across frameworks.
 

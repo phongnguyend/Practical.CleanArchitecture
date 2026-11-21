@@ -67,6 +67,14 @@ Default URLs match the other mobile apps:
 
 Change URLs with **Server settings** on the signed-out screen. Use HTTPS endpoints with a certificate trusted by both the device and browser. No certificate-validation bypass is shipped. Android debug builds accept user-installed CAs; release builds use system trust only.
 
+Alternatively, an Android Debug build can explicitly trust the server's public development certificate for `localhost` only:
+
+```powershell
+dotnet build App/ClassifiedAds.Mobile.csproj -f net10.0-android -p:EmbedAssembliesIntoApk=true -p:DebugCertificatePath="C:/path/to/localhost.cer"
+```
+
+Use the public certificate actually served by the API/Identity Server. This option is ignored in Release builds, does not trust other hosts, and does not change browser trust. `EmbedAssembliesIntoApk=true` makes the Debug APK independently installable for UI tests.
+
 For an Android emulator, forward the host ports:
 
 ```sh
@@ -91,3 +99,7 @@ The shared suite covers home layout, theme/session persistence, navigation, audi
 ## GitHub Actions
 
 [Build Mobile MAUI](../../../.github/workflows/build-mobile-maui.yml) runs on changes to this project, pull requests, and manual dispatch. Android runs on Ubuntu and iOS on macOS in independent parallel jobs. Android runs xUnit tests and uploads a debug-key-signed Release APK plus TRX reports. iOS uploads an unsigned simulator `.app` archive. These are verification artifacts; store distribution/signing is not configured. Live authenticated UI tests run separately using the commands above.
+
+## Android verification
+
+On 2026-11-21, all 13 shared UI scenarios passed on Medium_Phone (Android 17): 12 non-destructive cases in the full suite, then the optional product CRUD/history/cleanup case in a separate targeted run. The app retained its authenticated session across restarts and APK updates. Local HTTPS used `DebugCertificatePath`; release resources exclude this certificate.
