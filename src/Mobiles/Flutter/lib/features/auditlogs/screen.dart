@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/services/app_services.dart';
 import '../../shared/models/record.dart';
-import '../../shared/widgets/json_tree.dart';
+import 'audit_entry.dart';
 
 class AuditLogsScreen extends StatefulWidget {
   const AuditLogsScreen({super.key, required this.services});
@@ -40,15 +40,20 @@ class _AuditLogsState extends State<AuditLogsScreen> {
         });
       }
     } catch (e) {
-      if (mounted) setState(() => error = e.toString());
+      if (mounted) {
+        setState(() => error = e.toString());
+      }
     } finally {
-      if (mounted) setState(() => busy = false);
+      if (mounted) {
+        setState(() => busy = false);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
+    spacing: 12,
     children: [
       Text('Audit logs', style: Theme.of(context).textTheme.headlineSmall),
       const SizedBox(height: 16),
@@ -70,19 +75,16 @@ class _AuditLogsState extends State<AuditLogsScreen> {
       for (final row in rows.where(
         (row) => row.toString().toLowerCase().contains(search.toLowerCase()),
       ))
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              children: [
-                Text(
-                  '${row['createdDateTime']} · ${row['userName']} · ${row['action']}',
-                ),
-                JsonViewer(value: row['log']),
-              ],
-            ),
-          ),
-        ),
+        AuditEntry(key: ValueKey(row['id']), entry: row),
+      if (!busy &&
+          error.isEmpty &&
+          rows
+              .where(
+                (row) =>
+                    row.toString().toLowerCase().contains(search.toLowerCase()),
+              )
+              .isEmpty)
+        const Text('No audit logs found.'),
       Pagination(
         page: page,
         total: total,

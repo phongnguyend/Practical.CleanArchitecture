@@ -1,3 +1,4 @@
+import { recordSentryError } from "./sentry";
 import Constants from "expo-constants";
 import { Platform } from "react-native";
 
@@ -19,11 +20,15 @@ export async function initializeCrashReporting(): Promise<void> {
 
 // Unexpected caught failures only; omit response bodies, tokens, and user input.
 export function recordUnexpectedError(error: unknown): void {
-  if (!client || !(error instanceof Error) || error.name === "AbortError") {
+  if (!(error instanceof Error) || error.name === "AbortError") {
     return;
   }
   const safeError = new Error(error.name);
+  safeError.name = error.name;
   // Preserve frames without copying the original message at the top of the stack.
   safeError.stack = [error.name, ...(error.stack?.split("\n").slice(1) || [])].join("\n");
-  client.recordError(client.getCrashlytics(), safeError);
+  recordSentryError(safeError);
+  if (client) {
+    client.recordError(client.getCrashlytics(), safeError);
+  }
 }

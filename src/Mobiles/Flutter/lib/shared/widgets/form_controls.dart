@@ -1,3 +1,4 @@
+import 'action_group.dart';
 import 'action_label.dart';
 
 import 'package:flutter/material.dart';
@@ -49,7 +50,7 @@ class DateInput extends StatelessWidget {
             ? 'Not set'
             : DateTime.tryParse(value)?.toLocal().toString() ?? value,
       ),
-      Wrap(
+      ActionGroup(
         children: [
           TextButton(
             onPressed: disabled

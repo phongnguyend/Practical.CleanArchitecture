@@ -39,3 +39,8 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Generated public Sentry configuration; upload tokens belong only in CI.
+sentry.config.json
+sentry.properties
+.sentryclirc

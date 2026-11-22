@@ -4,7 +4,7 @@ import * as WebBrowser from "expo-web-browser";
 import { useEffect, useState } from "react";
 import { Image, Platform, Pressable, Text, View } from "react-native";
 import { Row } from "../models/record";
-import { Button, HomeButton, JsonTree, useStyles } from "./ui";
+import { ActionGroup, Button, HomeButton, JsonTree, useStyles } from "./ui";
 
 export function HomeInfo() {
   const s = useStyles();
@@ -78,24 +78,28 @@ export function JsonTools({ value }: { value: unknown }) {
     [copied, setCopied] = useState(false);
   let parsed = value;
   try {
-    if (typeof value === "string") parsed = JSON.parse(value);
+    if (typeof value === "string") {
+      parsed = JSON.parse(value);
+    }
   } catch {
     /* Show non-JSON logs as text. */
   }
   return (
     <View style={{ gap: 8 }}>
-      <Button
-        title={expanded ? "Hide JSON" : "Show JSON"}
-        onPress={() => setExpanded(!expanded)}
-      />
-      <Button
-        title={copied ? "Copied" : "Copy JSON"}
-        onPress={() => {
-          void Clipboard.setStringAsync(
-            typeof value === "string" ? value : JSON.stringify(value, null, 2),
-          ).then(() => setCopied(true));
-        }}
-      />
+      <ActionGroup>
+        <Button
+          title={expanded ? "Hide JSON" : "Show JSON"}
+          onPress={() => setExpanded(!expanded)}
+        />
+        <Button
+          title={copied ? "Copied" : "Copy JSON"}
+          onPress={() => {
+            void Clipboard.setStringAsync(
+              typeof value === "string" ? value : JSON.stringify(value, null, 2),
+            ).then(() => setCopied(true));
+          }}
+        />
+      </ActionGroup>
       {expanded && <JsonTree value={parsed} />}
     </View>
   );
@@ -116,7 +120,7 @@ export function DateField({
   return (
     <View style={{ gap: 8 }}>
       <Text style={s.text}>{value ? date.toLocaleString() : "Not set"}</Text>
-      <View style={s.actions}>
+      <ActionGroup>
         <Button
           title="Choose date"
           disabled={disabled}
@@ -132,7 +136,7 @@ export function DateField({
           disabled={disabled}
           onPress={() => onChange("")}
         />
-      </View>
+      </ActionGroup>
       {mode && (
         <>
           <DateTimePicker

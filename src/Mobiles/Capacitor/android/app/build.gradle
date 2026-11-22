@@ -68,6 +68,7 @@ tasks.register('prepareDebugCertificate') {
             new File(xml, 'local_certificate_security_config.xml').text = '<network-security-config><base-config cleartextTrafficPermitted="false"><trust-anchors><certificates src="system" /></trust-anchors></base-config><domain-config><domain>localhost</domain><trust-anchors><certificates src="system" /><certificates src="@raw/localhost_dev" /></trust-anchors></domain-config></network-security-config>'
         } else {
             target.delete()
+            new File(certificateResources.get().dir('xml').asFile, 'local_certificate_security_config.xml').delete()
         }
     }
 }

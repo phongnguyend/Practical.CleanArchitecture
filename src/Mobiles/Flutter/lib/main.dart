@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'app/app.dart';
 import 'core/diagnostics/crash_reporting.dart';
+import 'core/diagnostics/sentry_reporting.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,5 +21,5 @@ Future<void> main() async {
   } catch (_) {
     debugPrint('Crash reporting could not be initialized.');
   }
-  runApp(const ClassifiedAdsApp());
+  await SentryReporting.run(() => runApp(const ClassifiedAdsApp()));
 }

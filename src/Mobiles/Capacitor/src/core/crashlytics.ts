@@ -1,3 +1,4 @@
+import { reportSentryFailure } from "./sentry";
 import { Capacitor } from "@capacitor/core";
 import { FirebaseCrashlytics } from "@capacitor-firebase/crashlytics";
 // Never forward response bodies, URLs, tokens, field values, or raw error messages.
@@ -5,6 +6,10 @@ export async function reportFailure(
   source: "javascript" | "promise" | "react",
   error?: unknown,
 ) {
+  // Window errors are captured automatically by Sentry; only forward caught React failures.
+  if (source === "react") {
+    reportSentryFailure(error);
+  }
   if (
     !Capacitor.isNativePlatform() ||
     !Capacitor.isPluginAvailable("FirebaseCrashlytics")

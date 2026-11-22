@@ -47,3 +47,8 @@ yarn-error.*
 # Do not upload local environment files.
 .env
 .env.*
+
+# Public runtime settings must reach the cloud build.
+!sentry.config.json
+sentry.properties
+.sentryclirc

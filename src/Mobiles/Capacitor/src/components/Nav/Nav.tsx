@@ -14,9 +14,9 @@ export const destinations = [
 ] as const;
 export default function Nav() {
   return (
-    <>
+    <div className="mobile-chrome">
       <header className="mobile-header">
-        <span>CLASSIFIED ADS</span>
+        <span>CLASSIFIED ADS (Capacitor)</span>
         <ThemeSwitcher />
       </header>
       {isAuthenticated() && (
@@ -29,6 +29,6 @@ export default function Nav() {
           ))}
         </nav>
       )}
-    </>
+    </div>
   );
 }

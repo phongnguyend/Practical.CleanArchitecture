@@ -1,16 +1,9 @@
 import { Pagination } from "../../shared/ui/Pagination";
 import { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Text, TextInput } from "react-native";
 import { api } from "../../core/services";
-import { JsonTools } from "../../shared/ui/record-ui";
+import AuditEntry, { AuditLog } from "./AuditEntry";
 import { Button, useStyles } from "../../shared/ui/ui";
-type AuditLog = {
-  id: string;
-  createdDateTime: string;
-  userName: string;
-  action: string;
-  log: unknown;
-};
 export default function AuditLogsScreen() {
   const s = useStyles();
   const [page, setPage] = useState(1),
@@ -35,10 +28,14 @@ export default function AuditLogsScreen() {
         }
       })
       .catch((e) => {
-        if (active) setError(String(e));
+        if (active) {
+          setError(String(e));
+        }
       })
       .finally(() => {
-        if (active) setBusy(false);
+        if (active) {
+          setBusy(false);
+        }
       });
     return () => {
       active = false;
@@ -68,17 +65,15 @@ export default function AuditLogsScreen() {
           JSON.stringify(row).toLowerCase().includes(search.toLowerCase()),
         )
         .map((row) => (
-          <View key={row.id} style={s.card}>
-            <Text style={s.text}>
-              {new Date(row.createdDateTime).toLocaleString()} · {row.userName}{" "}
-              · {row.action}
-            </Text>
-            <JsonTools value={row.log} />
-          </View>
+          <AuditEntry key={row.id} entry={row} />
         ))}
+      {!busy && !error && rows.filter((row) => JSON.stringify(row).toLowerCase().includes(search.toLowerCase())).length === 0 && <Text style={s.muted}>No audit logs found.</Text>}
       {!!error && <Text style={s.error}>{error}</Text>}
       <Pagination page={page} total={total} pageSize={5} busy={busy}
-        onPage={(value) => { setBusy(true); setPage(value); }} />
+        onPage={(value) => {
+          setBusy(true);
+          setPage(value);
+        }} />
     </>
   );
 }

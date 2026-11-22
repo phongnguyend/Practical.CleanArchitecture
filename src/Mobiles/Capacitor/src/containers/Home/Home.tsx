@@ -5,13 +5,11 @@ import { destinations } from "../../components/Nav/Nav";
 import ActionIcon from "../../components/ActionIcon/ActionIcon";
 import Modal from "../../components/Modal/Modal";
 import { openExternal } from "../../core/files/native-files";
-import { useNotifications } from "../../core/notifications";
 export default function Home() {
   const [now, setNow] = useState(new Date());
   const [busy, setBusy] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [error, setError] = useState("");
-  const { status } = useNotifications();
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(timer);
@@ -64,7 +62,6 @@ export default function Home() {
           </button>
         </div>
       </section>
-      <p role="status">Notification hub: {status}</p>
       {destinations
         .filter(
           ([path]) => !["/home", "/auditlogs", "/notifications"].includes(path),

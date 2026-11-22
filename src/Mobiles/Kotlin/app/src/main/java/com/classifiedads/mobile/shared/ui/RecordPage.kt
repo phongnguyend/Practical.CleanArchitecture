@@ -74,8 +74,8 @@ fun ToggleInput(
     changed: (Boolean) -> Unit,
     disabled: Boolean = false,
 ) {
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(label)
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+        Text(label, Modifier.weight(1f))
         Switch(checked = value, onCheckedChange = changed, enabled = !disabled)
     }
 }
@@ -176,7 +176,7 @@ fun <T : Entity> RecordPage(
                 page = 1
             },
         )
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        ActionGroup {
             OutlinedButton(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = { refresh++ }) { ActionLabel("Refresh") }
             Button(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = { edit(empty()) }) { ActionLabel(createTitle) }
             toolbar { refresh++ }
@@ -191,7 +191,7 @@ fun <T : Entity> RecordPage(
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(label(value), style = MaterialTheme.typography.titleLarge)
                     summary(value)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    ActionGroup {
                         OutlinedButton(shape = MaterialTheme.shapes.small,
                             enabled = !busy,
                             onClick = { run { detail = repository.get(value.id) } },
@@ -400,8 +400,8 @@ fun OperationButton(title: String, action: suspend () -> Unit) {
     val scope = rememberCoroutineScope()
     var busy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf("") }
-    Column {
-        OutlinedButton(shape = MaterialTheme.shapes.small,
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        OutlinedButton(modifier = Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.small,
             enabled = !busy,
             onClick = {
                 busy = true

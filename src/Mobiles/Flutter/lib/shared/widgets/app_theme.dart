@@ -6,7 +6,7 @@ ButtonStyle dangerButtonStyle(BuildContext context) {
     foregroundColor: Color(dark ? 0xfffda4af : 0xffbe123c),
     backgroundColor: Color(dark ? 0xff451a25 : 0xfffff1f2),
     side: BorderSide(color: Color(dark ? 0xff881337 : 0xfffecdd3)),
-    minimumSize: const Size(44, 44),
+    minimumSize: const Size(48, 48),
     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
@@ -37,7 +37,7 @@ ThemeData appTheme(Brightness brightness) {
   final base = ThemeData(useMaterial3: true, colorScheme: scheme);
   final shape = RoundedRectangleBorder(borderRadius: BorderRadius.circular(10));
   final button = ButtonStyle(
-    minimumSize: const WidgetStatePropertyAll(Size(44, 44)),
+    minimumSize: const WidgetStatePropertyAll(Size(48, 48)),
     padding: const WidgetStatePropertyAll(
       EdgeInsets.symmetric(horizontal: 14, vertical: 11),
     ),

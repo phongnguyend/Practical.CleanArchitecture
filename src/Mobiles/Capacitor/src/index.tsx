@@ -1,3 +1,5 @@
+import { initializeSentry } from "./core/sentry";
+initializeSentry();
 import React from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { initializeCrashlytics } from "./core/crashlytics";

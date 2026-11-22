@@ -10,6 +10,36 @@ public abstract class HomeUiTests extends MobileUiTestSupport {
         super(app, packageName, activity);
     }
 
+    @Test public void titleIdentifiesTheApp() {
+        String framework;
+        switch (app) {
+            case "flutter":
+                framework = "Flutter";
+                break;
+            case "kotlin":
+                framework = "Kotlin";
+                break;
+            case "reactnative":
+                framework = "React Native";
+                break;
+            case "maui":
+                framework = ".NET MAUI";
+                break;
+            case "capacitor":
+                framework = "Capacitor";
+                break;
+            default:
+                throw new AssertionError("Unknown app: " + app);
+        }
+        String title = "CLASSIFIED ADS (" + framework + ")";
+        awaitLabel(title);
+        Rect bounds = find(title).getVisibleBounds();
+        assertTrue("Title must be visible", bounds.width() > 0 && bounds.height() > 0);
+        assertTrue("Title must fit on screen", bounds.left >= 0 && bounds.right <= device.getDisplayWidth());
+        Rect homeTab = button("Home").getVisibleBounds();
+        assertTrue("Navigation labels must not wrap vertically", homeTab.height() <= dp(56));
+    }
+
     @Test public void homeActionsShareWidthHeightAndSpacing() {
         String[] titles = {"Products", "Files", "Users", "Roles", "Configuration Entries", "Sign out"};
         Rect previous = null;

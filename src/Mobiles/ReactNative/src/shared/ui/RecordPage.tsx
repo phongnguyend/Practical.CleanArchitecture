@@ -4,7 +4,7 @@ import { ActivityIndicator, Text, TextInput, View } from "react-native";
 import type { PickedFile } from "../../core/services";
 import { auditSnapshot, Row } from "../models/record";
 import { JsonTools } from "./record-ui";
-import { Button, Sheet, useStyles } from "./ui";
+import { ActionGroup, Button, Sheet, useStyles } from "./ui";
 export type Entity = { id: string };
 export type EditorProps<T> = {
   value: T;
@@ -158,7 +158,7 @@ export function RecordPage<T extends Entity>({
         }}
         style={s.input}
       />
-      <View style={s.actions}>
+      <ActionGroup>
         <Button
           title="Refresh"
           disabled={busy}
@@ -171,7 +171,7 @@ export function RecordPage<T extends Entity>({
           onPress={() => edit(empty())}
         />
         {Toolbar && <Toolbar {...controls} />}
-      </View>
+      </ActionGroup>
       {busy && <ActivityIndicator />}
       {!filtered.length && !busy && (
         <Text style={s.muted}>No records found.</Text>
@@ -180,7 +180,7 @@ export function RecordPage<T extends Entity>({
         <View key={row.id} style={s.card}>
           <Text style={s.heading}>{label(row)}</Text>
           <Summary value={row} />
-          <View style={s.actions}>
+          <ActionGroup>
             <Button
               title="View"
               disabled={busy}
@@ -223,7 +223,7 @@ export function RecordPage<T extends Entity>({
               />
             )}
             {RowActions && <RowActions value={row} actions={controls} />}
-          </View>
+          </ActionGroup>
         </View>
       ))}
       <Pagination page={page} total={filtered.length} pageSize={20} busy={busy} onPage={setPage} />

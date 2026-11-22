@@ -110,15 +110,25 @@ public abstract class MobileUiTestSupport {
     }
     protected void scrollToText(String text) {
         for (int attempt = 0; attempt < 30; attempt++) {
-            if (contains(text)) return;
+            if (contains(text)) {
+                return;
+            }
             UiObject2 dialogControl = find("Save");
             UiObject2 root = dialogControl;
-            if (root != null) while (root.getParent() != null) root = root.getParent();
-            List<UiObject2> candidates = root == null ? device.findObjects(By.scrollable(true))
-                : root.findObjects(By.scrollable(true));
+            if (root != null) {
+                while (root.getParent() != null) {
+                    root = root.getParent();
+                }
+            }
+            List<UiObject2> candidates = root == null ? device.findObjects(By.pkg(packageName).scrollable(true))
+                : root.findObjects(By.pkg(packageName).scrollable(true));
             UiObject2 scroller = candidates.stream()
                 .max(Comparator.comparingInt(n -> n.getVisibleBounds().height())).orElse(null);
             assertNotNull("Scrollable content for " + text, scroller);
+            // Keep gestures in the content's center, away from edge overlays
+            // such as React Native's development warning banner.
+            int verticalMargin = scroller.getVisibleBounds().height() / 5;
+            scroller.setGestureMargins(dp(16), verticalMargin, dp(16), verticalMargin);
             // Compose can return false before its updated scroll semantics arrive.
             // Re-query the target after each gesture instead of treating that as the end.
             scroller.scroll(Direction.DOWN, .8f);
@@ -167,7 +177,20 @@ public abstract class MobileUiTestSupport {
         return original;
     }
     protected UiObject2 button(String label) { awaitLabel(label); return actionable(find(label)); }
-    protected void click(String label) { button(label).click(); }
+    protected void click(String label) {
+        if (app.equals("reactnative")) {
+            UiObject2 warning = device.findObject(By.pkg(packageName).descContains("Open debugger to view warnings."));
+            if (warning != null) {
+                UiObject2 dismiss = warning.findObject(By.clickable(true));
+                assertNotNull("Development warning banner dismiss control", dismiss);
+                capture("development-warning-banner");
+                dismiss.click();
+                waitFor("Development warning banner closes", () ->
+                    !device.hasObject(By.pkg(packageName).descContains("Open debugger to view warnings.")));
+            }
+        }
+        button(label).click();
+    }
     protected void awaitLabel(String label) { waitFor("Visible control: " + label, () -> find(label) != null); }
     protected UiObject2 find(String text) { return findPattern(Pattern.quote(text)); }
     protected UiObject2 findPattern(String expression) {

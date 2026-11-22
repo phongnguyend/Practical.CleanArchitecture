@@ -98,3 +98,7 @@ CI secrets: `FIREBASE_CAPACITOR_ANDROID_CONFIG_BASE64` and `FIREBASE_CAPACITOR_I
 On 2026-11-22, the Android debug build installed and signed in on Medium_Phone (Android 17). All 13 shared UI Automator scenarios passed with `-IncludeCrud`, including temporary-product creation, update, audit history, deletion and cleanup. Reports: `../tests/artifacts/20261122-123907-Capacitor-All/reports/debug/index.html` (local, ignored by Git).
 
 Lint, TypeScript checking, 8 unit tests, 14 mobile browser UI tests, and all 6 Firebase configuration tests passed. Action groups use equal-width columns with 12px gaps, and product searches survive editor navigation. The iOS workflow and property lists were checked structurally; an iOS build cannot be run on this Windows host. Firebase console delivery remains unverified until real configuration files are supplied.
+
+## Sentry
+
+Optional Sentry reporting is available independently of Crashlytics. See [Sentry setup](../SENTRY.md) for client configuration, CI/Expo upload settings, and verification. Missing configuration leaves reporting disabled.

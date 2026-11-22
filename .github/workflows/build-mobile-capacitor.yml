@@ -4,11 +4,15 @@ on:
     paths:
       - "src/Mobiles/Capacitor/**"
       - "src/Mobiles/tools/prepare_firebase.py"
+      - "src/Mobiles/tools/prepare_sentry.py"
+      - "src/Mobiles/tools/test_prepare_sentry.py"
       - ".github/workflows/build-mobile-capacitor.yml"
   pull_request:
     paths:
       - "src/Mobiles/Capacitor/**"
       - "src/Mobiles/tools/prepare_firebase.py"
+      - "src/Mobiles/tools/prepare_sentry.py"
+      - "src/Mobiles/tools/test_prepare_sentry.py"
       - ".github/workflows/build-mobile-capacitor.yml"
   workflow_dispatch:
 permissions:
@@ -16,6 +20,15 @@ permissions:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+env:
+  SENTRY_DSN: ${{ secrets.SENTRY_CAPACITOR_DSN }}
+  SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+  SENTRY_PROJECT: ${{ vars.SENTRY_CAPACITOR_PROJECT }}
+  SENTRY_ENVIRONMENT: ${{ vars.SENTRY_ENVIRONMENT || 'ci' }}
+  SENTRY_RELEASE: mobile-capacitor@${{ github.sha }}
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  SENTRY_DISABLE_AUTO_UPLOAD: ${{ (secrets.SENTRY_AUTH_TOKEN == '' || vars.SENTRY_ORG == '' || vars.SENTRY_CAPACITOR_PROJECT == '') && 'true' || 'false' }}
+
 jobs:
   android:
     name: Capacitor Android
@@ -28,6 +41,8 @@ jobs:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
+      - name: Prepare optional Sentry configuration
+        run: python3 ../tools/prepare_sentry.py --app Capacitor
       - uses: actions/setup-node@v6
         with:
           node-version: "24"
@@ -87,6 +102,8 @@ jobs:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
+      - name: Prepare optional Sentry configuration
+        run: python3 ../tools/prepare_sentry.py --app Capacitor
       - uses: actions/setup-node@v6
         with:
           node-version: "24"
@@ -108,6 +125,9 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath build/ios CODE_SIGNING_ALLOWED=NO build
           tar -czf build/capacitor-ios-simulator.tar.gz -C build/ios/Build/Products/Debug-iphonesimulator App.app
+      - name: Upload Sentry native debug symbols
+        if: env.SENTRY_DISABLE_AUTO_UPLOAD == 'false'
+        run: npx sentry-cli debug-files upload build/ios/Build/Products
       - uses: actions/upload-artifact@v4
         with:
           name: capacitor-ios-simulator

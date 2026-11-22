@@ -44,6 +44,7 @@ dependencies:
   share_plus: ^13.3.1
   signalr_netcore: ^1.4.4
   url_launcher: ^6.3.3
+  sentry_flutter: ^10.6.0
 
 dev_dependencies:
   flutter_test:
@@ -55,6 +56,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  sentry_dart_plugin: ^3.6.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -99,3 +101,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+sentry:
+  upload_debug_symbols: true
+  upload_sources: false
+  upload_source_maps: false
+  ignore_missing: true

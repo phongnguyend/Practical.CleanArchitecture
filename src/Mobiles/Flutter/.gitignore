@@ -50,3 +50,10 @@ app.*.map.json
 # Android debug source configuration is source code, not build output.
 !/android/app/src/debug/
 !/android/app/src/debug/**
+
+# Generated public Sentry configuration; upload tokens belong only in CI.
+sentry.config.json
+sentry.properties
+.sentryclirc
+
+android/.kotlin/

@@ -1,3 +1,4 @@
+import '../../shared/widgets/action_group.dart';
 import '../../shared/widgets/action_label.dart';
 
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class UserActions extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => Wrap(
+  Widget build(BuildContext context) => ActionGroup(
     children: [
       TextButton(
         onPressed: () => showDialog<void>(

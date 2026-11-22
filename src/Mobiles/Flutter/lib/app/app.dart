@@ -33,7 +33,7 @@ class _AppState extends State<ClassifiedAdsApp> {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'Classified Ads',
+    title: 'Classified Ads (Flutter)',
     debugShowCheckedModeBanner: false,
     themeMode: mode,
     theme: appTheme(Brightness.light),

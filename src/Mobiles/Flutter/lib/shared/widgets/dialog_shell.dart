@@ -37,7 +37,9 @@ class DialogShell extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             child: Wrap(
               alignment: WrapAlignment.end,
-              spacing: 8,
+              spacing: 12,
+              runSpacing: 12,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: footer,
             ),
           ),

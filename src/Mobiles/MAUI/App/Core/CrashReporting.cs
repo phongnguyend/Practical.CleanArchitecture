@@ -20,15 +20,20 @@ public static class CrashReporting
         {
             if (args.ExceptionObject is Exception exception)
             {
-                Record(exception);
+                Record(exception, forwardToSentry: false);
             }
         };
-        TaskScheduler.UnobservedTaskException += (_, args) => Record(args.Exception);
+        TaskScheduler.UnobservedTaskException += (_, args) => Record(args.Exception, forwardToSentry: false);
 #endif
     }
 
-    public static void Record(Exception exception)
+    public static void Record(Exception exception, bool forwardToSentry = true)
     {
+        if (forwardToSentry)
+        {
+            SentryReporting.Record(exception);
+        }
+
         if (!enabled || exception is OperationCanceledException)
         {
             return;

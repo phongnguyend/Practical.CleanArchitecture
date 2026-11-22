@@ -4,7 +4,7 @@ namespace ClassifiedAds.Mobile.Shared;
 
 public static class JsonViewer
 {
-    public static View Create(JsonElement value)
+    public static View Create(JsonElement value, bool includeCopy = true)
     {
         if (value.ValueKind == JsonValueKind.String)
         {
@@ -20,7 +20,10 @@ public static class JsonViewer
         }
 
         var stack = Ui.Stack();
-        stack.Add(Ui.Button("Copy JSON", "copy", () => Clipboard.SetTextAsync(JsonSerializer.Serialize(value, new JsonSerializerOptions { WriteIndented = true }))));
+        if (includeCopy)
+        {
+            stack.Add(Ui.Button("Copy JSON", "copy", () => Clipboard.SetTextAsync(JsonSerializer.Serialize(value, new JsonSerializerOptions { WriteIndented = true }))));
+        }
         Add(stack, "JSON", value, 0);
         return stack;
     }

@@ -3,6 +3,7 @@ import java.util.Base64
 
 plugins {
     id("com.android.application")
+    id("io.sentry.android.gradle")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -108,4 +109,16 @@ flutter {
 
 tasks.configureEach {
     if (name == "preDebugBuild") dependsOn(generateLocalCertificateResources)
+}
+
+val sentryUploads = !System.getenv("SENTRY_AUTH_TOKEN").isNullOrBlank() && !System.getenv("SENTRY_ORG").isNullOrBlank() && !System.getenv("SENTRY_PROJECT").isNullOrBlank()
+sentry {
+    org.set(System.getenv("SENTRY_ORG"))
+    projectName.set(System.getenv("SENTRY_PROJECT"))
+    authToken.set(System.getenv("SENTRY_AUTH_TOKEN"))
+    autoUploadProguardMapping.set(sentryUploads)
+    uploadNativeSymbols.set(false)
+    includeSourceContext.set(false)
+    tracingInstrumentation.enabled.set(false)
+    autoInstallation.enabled.set(false)
 }

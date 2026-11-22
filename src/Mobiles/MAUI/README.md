@@ -107,3 +107,7 @@ On 2026-11-21, all 13 shared UI scenarios passed on Medium_Phone (Android 17): 1
 ## Crash reporting
 
 See [Firebase Crashlytics setup](../FIREBASE.md) for optional reporting, Firebase app registrations, local configuration, CI secrets, and verification. Ordinary builds work without Firebase configuration.
+
+## Sentry
+
+Optional Sentry reporting is available independently of Crashlytics. See [Sentry setup](../SENTRY.md) for client configuration, CI/Expo upload settings, and verification. Missing configuration leaves reporting disabled.

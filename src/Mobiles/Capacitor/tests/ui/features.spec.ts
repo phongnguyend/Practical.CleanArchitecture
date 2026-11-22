@@ -1,4 +1,34 @@
 import { test, expect } from "@playwright/test";
+
+for (const width of [320, 360, 412]) {
+  test(`action buttons fit a ${width}px viewport`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto("/products");
+    await expect(page.locator(".action-group").first()).toBeVisible();
+    const buttons = await page.locator(".action-group > .btn").evaluateAll((items) =>
+      items.map((item) => {
+        const bounds = item.getBoundingClientRect();
+        return { left: bounds.left, right: bounds.right, height: bounds.height };
+      }),
+    );
+    for (const button of buttons) {
+      expect(button.left).toBeGreaterThanOrEqual(0);
+      expect(button.right).toBeLessThanOrEqual(width);
+      expect(button.height).toBeGreaterThanOrEqual(48);
+    }
+    await page.getByRole("link", { name: "Add new", exact: true }).click();
+    const save = page.getByRole("button", { name: "Save", exact: true });
+    await save.scrollIntoViewIfNeeded();
+    const cancelBounds = await page.getByRole("button", { name: "Cancel", exact: true }).boundingBox();
+    const saveBounds = await save.boundingBox();
+    expect(cancelBounds).not.toBeNull();
+    expect(saveBounds).not.toBeNull();
+    const horizontalGap = Math.abs(saveBounds!.x - cancelBounds!.x) - cancelBounds!.width;
+    const verticalGap = Math.abs(saveBounds!.y - cancelBounds!.y) - cancelBounds!.height;
+    expect(Math.max(horizontalGap, verticalGap)).toBeGreaterThanOrEqual(11);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  });
+}
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
     localStorage.setItem(
@@ -134,6 +164,8 @@ test("user validation does not submit an incomplete account", async ({
     }
   });
   await page.goto("/users/add");
+  await expect(page.getByRole("button", { name: "Save", exact: true })).toBeInViewport();
+  await expect(page.getByRole("button", { name: "Cancel", exact: true })).toBeInViewport();
   await page.getByRole("button", { name: "Save", exact: true }).click();
   await expect(page.getByText("Username is required")).toBeVisible();
   expect(submissions).toBe(0);

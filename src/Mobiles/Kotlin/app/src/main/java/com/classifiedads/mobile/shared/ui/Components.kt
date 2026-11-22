@@ -12,11 +12,12 @@ import androidx.compose.ui.unit.dp
 import org.json.JSONArray
 import org.json.JSONObject
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun Sheet(
     title: String,
     close: () -> Unit,
-    footer: @Composable RowScope.() -> Unit,
+    footer: @Composable FlowRowScope.() -> Unit,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     androidx.compose.ui.window.Dialog(onDismissRequest = close) {
@@ -39,10 +40,10 @@ fun Sheet(
                     content = content,
                 )
                 HorizontalDivider()
-                Row(
+                FlowRow(
                     Modifier.fillMaxWidth().padding(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.End),
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                     content = footer,
                 )
             }
@@ -84,6 +85,7 @@ fun JsonTree(value: Any?, name: String = "root") {
         }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun JsonViewer(value: Any?) {
     var open by remember { mutableStateOf(false) }
@@ -94,7 +96,7 @@ fun JsonViewer(value: Any?) {
             runCatching { org.json.JSONTokener(value).nextValue() }.getOrDefault(value)
         else value
     Column {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        ActionGroup {
             OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { open = !open }) { ActionLabel(if (open) "Hide JSON" else "Show JSON") }
             OutlinedButton(shape = MaterialTheme.shapes.small,
                 onClick = {
