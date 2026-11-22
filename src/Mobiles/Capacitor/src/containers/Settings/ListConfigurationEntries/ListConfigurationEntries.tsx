@@ -1,0 +1,486 @@
+import PageHeader from "../../../components/PageHeader/PageHeader";
+import PagedTable from "../../../components/PagedTable/PagedTable";
+import { downloadOrShare } from "../../../core/files/native-files";
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import { Button } from "react-bootstrap";
+import Modal from "../../../components/Modal/Modal";
+
+import * as actions from "../actions";
+import ActionIcon from "../../../components/ActionIcon/ActionIcon";
+import FilePicker from "../../../components/FilePicker/FilePicker";
+import { checkValidity } from "../../../shared/utility";
+import axios from "../axios";
+
+const ListConfigurationEntries = (props: any) => {
+  const getDefaultConfigurationEntry = () => ({
+    id: "",
+    key: "",
+    value: "",
+    description: "",
+    isSensitive: false,
+  });
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [addUpdateModalOpen, setAddUpdateModalOpen] = useState(false);
+  const [addUpdateFormSubmitted, setAddUpdateFormSubmitted] = useState(false);
+  const [importExcelModalOpen, setImportExcelModalOpen] = useState(false);
+  const [importingFile, setImportingFile] = useState<File | null>(null);
+  const [importExcelFormSubmitted, setImportExcelFormSubmitted] =
+    useState(false);
+  const [selectingEntry, setSelectingEntry] = useState(
+    getDefaultConfigurationEntry(),
+  );
+  const [controls, setControls] = useState<any>({
+    key: {
+      validation: {
+        required: true,
+      },
+      error: {
+        required: false,
+      },
+      valid: false,
+      touched: false,
+    },
+    value: {
+      validation: {
+        required: true,
+      },
+      error: {
+        required: false,
+      },
+      valid: false,
+      touched: false,
+    },
+  });
+
+  const fieldChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let value: any = event.target.value;
+
+    if (event.target.type === "checkbox") {
+      value = event.target.checked;
+    }
+
+    const updatedEntry = {
+      ...selectingEntry,
+      [event.target.name]: value,
+    };
+
+    checkFieldValidity(event.target.name, value);
+    setSelectingEntry(updatedEntry);
+  };
+
+  const checkFieldValidity = (name: string, value: any) => {
+    const control = controls[name as keyof typeof controls];
+
+    if (!control) {
+      return true;
+    }
+
+    const rules = control.validation;
+    const validationRs = checkValidity(value, rules);
+
+    setControls((prevState: any) => ({
+      ...prevState,
+      [name]: {
+        ...prevState[name as keyof typeof prevState],
+        error: validationRs,
+        valid: validationRs.isValid,
+      },
+    }));
+
+    return validationRs.isValid;
+  };
+
+  const openDeleteModal = (entry: any) => {
+    setDeleteModalOpen(true);
+    setSelectingEntry(entry);
+  };
+
+  const deleteCanceled = () => {
+    setDeleteModalOpen(false);
+    setSelectingEntry(getDefaultConfigurationEntry());
+  };
+
+  const deleteConfirmed = () => {
+    props.deleteConfigurationEntry(selectingEntry);
+    setDeleteModalOpen(false);
+    setSelectingEntry(getDefaultConfigurationEntry());
+  };
+
+  const openAddModal = () => {
+    setAddUpdateModalOpen(true);
+    setSelectingEntry(getDefaultConfigurationEntry());
+  };
+
+  const openUpdateModal = (entry: any) => {
+    setAddUpdateModalOpen(true);
+    setSelectingEntry({
+      id: entry.id,
+      key: entry.key,
+      value: entry.isSensitive ? "" : entry.value,
+      description: entry.description,
+      isSensitive: entry.isSensitive,
+    });
+  };
+
+  const addUpdateCanceled = () => {
+    setAddUpdateModalOpen(false);
+    setSelectingEntry(getDefaultConfigurationEntry());
+    setAddUpdateFormSubmitted(false);
+  };
+
+  const addUpdateConfirmed = (event: React.FormEvent) => {
+    event.preventDefault();
+    setAddUpdateFormSubmitted(true);
+
+    let isValid = true;
+    for (let fieldName in controls) {
+      isValid =
+        checkFieldValidity(
+          fieldName,
+          selectingEntry[fieldName as keyof typeof selectingEntry],
+        ) && isValid;
+    }
+
+    if (isValid) {
+      props.saveConfigurationEntry(selectingEntry);
+      setAddUpdateModalOpen(false);
+      setSelectingEntry(getDefaultConfigurationEntry());
+    }
+  };
+
+  const formatDateTime = (value: string) => {
+    if (!value) {
+      return value;
+    }
+    var date = new Date(value);
+    return date.toLocaleDateString() + " " + date.toLocaleTimeString();
+  };
+
+  const exportAsExcel = async () => {
+    const rs = await axios.get("/ExportAsExcel", { responseType: "blob" });
+    await downloadOrShare(rs.data, "Settings.xlsx");
+  };
+
+  const openImportExcelModal = () => {
+    setImportExcelModalOpen(true);
+    setImportingFile(null);
+    setImportExcelFormSubmitted(false);
+  };
+
+  const importExcelCanceled = () => {
+    setImportExcelModalOpen(false);
+    setImportingFile(null);
+    setImportExcelFormSubmitted(false);
+  };
+
+  const fileChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setImportingFile(event.target.files?.item(0) || null);
+  };
+
+  const importExcelConfirmed = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setImportExcelFormSubmitted(true);
+    if (!importingFile) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append("formFile", importingFile);
+    await axios.post("ImportExcel", formData);
+    setImportExcelModalOpen(false);
+    setImportingFile(null);
+    setImportExcelFormSubmitted(false);
+
+    props.fetchConfigurationEntries();
+  };
+
+  useEffect(() => {
+    props.fetchConfigurationEntries();
+  }, []);
+
+  const rows = props.configurationEntries?.map((entry: any) => (
+    <tr key={entry.id}>
+      <td>{entry.key}</td>
+      <td>{entry.isSensitive ? "******" : entry.value}</td>
+      <td>{entry.description}</td>
+      <td>{formatDateTime(entry.updatedDateTime)}</td>
+      <td>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => openUpdateModal(entry)}
+        >
+          <ActionIcon action="edit" /> Edit
+        </button>
+
+        <button
+          type="button"
+          className="btn btn-danger"
+          onClick={() => openDeleteModal(entry)}
+        >
+          <ActionIcon action="delete" /> Delete
+        </button>
+      </td>
+    </tr>
+  ));
+
+  const table = props.configurationEntries ? (
+    <PagedTable searchable={true}>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Value</th>
+          <th>Description</th>
+          <th>Updated Time</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>{rows}</tbody>
+    </PagedTable>
+  ) : null;
+
+  const deleteModal = (
+    <Modal show={deleteModalOpen} onHide={deleteCanceled}>
+      <Modal.Header closeButton>
+        <Modal.Title>
+          <ActionIcon action="delete" />
+          Delete Entry
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        Are you sure you want to delete
+        <strong> {selectingEntry?.key}</strong>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={deleteCanceled}>
+          <ActionIcon action="cancel" /> No
+        </Button>
+        <Button variant="primary" onClick={deleteConfirmed}>
+          <ActionIcon action="confirm" /> Yes
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+
+  const addUpdateModal = (
+    <Modal show={addUpdateModalOpen && !props.saved} onHide={addUpdateCanceled}>
+      <Modal.Header closeButton>
+        <Modal.Title>
+          <ActionIcon action={!selectingEntry?.id ? "add" : "edit"} />
+          {!selectingEntry?.id ? "Add" : "Update"}
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <form
+          id="listconfigurationentries-modal-form-1"
+          onSubmit={addUpdateConfirmed}
+        >
+          <div className="mb-3 row">
+            <label htmlFor="key" className="col-sm-3 col-form-label">
+              Key
+            </label>
+            <div className="col-sm-9">
+              <input
+                id="key"
+                name="key"
+                className={
+                  "form-control " +
+                  (addUpdateFormSubmitted && !controls["key"].valid
+                    ? "is-invalid"
+                    : "")
+                }
+                value={selectingEntry?.key}
+                onChange={(event) => fieldChanged(event)}
+              />
+              <span className="invalid-feedback">
+                {controls["key"].error.required ? (
+                  <span>Key is required</span>
+                ) : null}
+              </span>
+            </div>
+          </div>
+          <div className="mb-3 row">
+            <label htmlFor="value" className="col-sm-3 col-form-label">
+              Value
+            </label>
+            <div className="col-sm-9">
+              <input
+                id="value"
+                name="value"
+                className={
+                  "form-control " +
+                  (addUpdateFormSubmitted && !controls["value"].valid
+                    ? "is-invalid"
+                    : "")
+                }
+                value={selectingEntry?.value}
+                onChange={(event) => fieldChanged(event)}
+              />
+              <span className="invalid-feedback">
+                {controls["value"].error.required ? (
+                  <span>Enter a value</span>
+                ) : null}
+              </span>
+            </div>
+          </div>
+          <div className="mb-3 row">
+            <label htmlFor="description" className="col-sm-3 col-form-label">
+              Description
+            </label>
+            <div className="col-sm-9">
+              <input
+                id="description"
+                name="description"
+                className="form-control"
+                value={selectingEntry?.description}
+                onChange={(event) => fieldChanged(event)}
+              />
+            </div>
+          </div>
+          <div className="mb-3 row">
+            <label htmlFor="isSensitive" className="col-sm-3 col-form-label">
+              Sensitive
+            </label>
+            <div className="col-sm-9">
+              <input
+                type="checkbox"
+                id="isSensitive"
+                name="isSensitive"
+                checked={selectingEntry?.isSensitive}
+                onChange={(event) => fieldChanged(event)}
+              />
+            </div>
+          </div>
+        </form>
+      </Modal.Body>
+      <Modal.Footer>
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={addUpdateCanceled}
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          form="listconfigurationentries-modal-form-1"
+          className="btn btn-primary"
+        >
+          <ActionIcon action="save" /> Save
+        </button>
+      </Modal.Footer>
+    </Modal>
+  );
+
+  const importExcelModal = (
+    <Modal show={importExcelModalOpen} onHide={importExcelCanceled}>
+      <Modal.Header closeButton>
+        <Modal.Title>
+          <ActionIcon action="import" />
+          Import Excel
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <form
+          id="listconfigurationentries-modal-form-2"
+          onSubmit={importExcelConfirmed}
+        >
+          <div className="mb-3 row">
+            <div className="col-sm-12">
+              <FilePicker
+                id="importingFile"
+                name="importingFile"
+                label="Excel file"
+                hint="Excel files (.xlsx)"
+                file={importingFile}
+                invalid={importExcelFormSubmitted && !importingFile}
+                onChange={fileChanged}
+                accept=".xlsx"
+              />
+            </div>
+          </div>
+        </form>
+      </Modal.Body>
+      <Modal.Footer>
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={importExcelCanceled}
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          form="listconfigurationentries-modal-form-2"
+          className="btn btn-primary"
+        >
+          <ActionIcon action="import" /> Import
+        </button>
+      </Modal.Footer>
+    </Modal>
+  );
+
+  return (
+    <div>
+      <div className="card">
+        <PageHeader
+          title={"Configuration Entries"}
+          icon="settings"
+          onRefresh={props.fetchConfigurationEntries}
+        >
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={exportAsExcel}
+          >
+            <ActionIcon action="export" /> Export as Excel
+          </button>
+
+          <button className="btn btn-primary" onClick={() => openAddModal()}>
+            <ActionIcon action="add" /> Add new
+          </button>
+
+          <button
+            className="btn btn-primary"
+            onClick={() => openImportExcelModal()}
+          >
+            <ActionIcon action="import" /> Import Excel
+          </button>
+        </PageHeader>
+        <div className="card-body">
+          <div className="table-responsive">{table}</div>
+        </div>
+      </div>
+      {props.errorMessage ? (
+        <div className="alert alert-danger">Error: {props.errorMessage}</div>
+      ) : null}
+      {deleteModal}
+      {addUpdateModal}
+      {importExcelModal}
+    </div>
+  );
+};
+
+const mapStateToProps = (state: any) => {
+  return {
+    configurationEntries: state.configurationEntry.configurationEntries,
+    saved: state.configurationEntry.saved,
+  };
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    fetchConfigurationEntries: () =>
+      dispatch(actions.fetchConfigurationEntries()),
+    saveConfigurationEntry: (entry: any) =>
+      dispatch(actions.saveConfigurationEntry(entry)),
+    deleteConfigurationEntry: (entry: any) =>
+      dispatch(actions.deleteConfigurationEntry(entry)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ListConfigurationEntries);

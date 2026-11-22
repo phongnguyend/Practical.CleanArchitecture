@@ -1,0 +1,78 @@
+apply plugin: 'com.android.application'
+
+android {
+    namespace = "com.classifiedads.mobile.capacitor"
+    compileSdk = rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "com.classifiedads.mobile.capacitor"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        aaptOptions {
+             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
+             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
+            ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+repositories {
+    flatDir{
+        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
+    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+    implementation project(':capacitor-android')
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+    implementation project(':capacitor-cordova-android-plugins')
+}
+
+apply from: 'capacitor.build.gradle'
+
+if (file('google-services.json').exists()) {
+    apply plugin: 'com.google.gms.google-services'
+    apply plugin: 'com.google.firebase.crashlytics'
+}
+// Trust only the supplied development certificate, and only in debug builds.
+def debugCertificate = providers.gradleProperty('debugCertificatePath')
+def certificateResources = layout.buildDirectory.dir('generated/debugCertificate')
+tasks.register('prepareDebugCertificate') {
+    inputs.property('certificatePath', debugCertificate.orElse(''))
+    if (debugCertificate.isPresent()) {
+        inputs.file(debugCertificate.get())
+    }
+    outputs.dir(certificateResources)
+    doLast {
+        def raw = certificateResources.get().dir('raw').asFile
+        raw.mkdirs()
+        def target = new File(raw, 'localhost_dev.cer')
+        if (debugCertificate.isPresent()) {
+            target.bytes = file(debugCertificate.get()).bytes
+            def xml = certificateResources.get().dir('xml').asFile
+            xml.mkdirs()
+            new File(xml, 'local_certificate_security_config.xml').text = '<network-security-config><base-config cleartextTrafficPermitted="false"><trust-anchors><certificates src="system" /></trust-anchors></base-config><domain-config><domain>localhost</domain><trust-anchors><certificates src="system" /><certificates src="@raw/localhost_dev" /></trust-anchors></domain-config></network-security-config>'
+        } else {
+            target.delete()
+        }
+    }
+}
+android.sourceSets.debug.res.srcDir(certificateResources)
+android.buildTypes.debug.manifestPlaceholders.debugNetworkSecurityConfig = debugCertificate.isPresent() ? '@xml/local_certificate_security_config' : '@xml/debug_network_security_config'
+tasks.matching { it.name == 'preDebugBuild' }.configureEach {
+    dependsOn('prepareDebugCertificate')
+}

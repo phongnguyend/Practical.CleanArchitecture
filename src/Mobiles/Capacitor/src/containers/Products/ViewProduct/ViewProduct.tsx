@@ -1,0 +1,93 @@
+import ActionGroup from "../../../components/ActionGroup/ActionGroup";
+import { useEffect } from "react";
+import { ChevronLeft } from "lucide-react";
+import { NavLink, useParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import logo from "../../../logo.svg";
+import Star from "../../../components/Star/Star";
+import * as actions from "../actions";
+import ActionIcon from "../../../components/ActionIcon/ActionIcon";
+
+const ViewProduct = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { product } = useSelector((state: any) => state.product);
+  const dispatch = useDispatch();
+  const fetchProduct = (id: any) => dispatch(actions.fetchProduct(id));
+
+  useEffect(() => {
+    if (id) {
+      fetchProduct(id);
+    }
+  }, []);
+
+  const back = () => {
+    navigate("/products");
+  };
+
+  const page = product ? (
+    <div className="card">
+      <div className="card-header">
+        <ActionIcon action="products" />
+        {"Product Detail: " + product.name}
+      </div>
+
+      <div className="card-body">
+        <div className="row">
+          <div className="col-md-8">
+            <div className="row">
+              <div className="col-md-4">Name:</div>
+              <div className="col-md-8">{product.name}</div>
+            </div>
+            <div className="row">
+              <div className="col-md-4">Code:</div>
+              <div className="col-md-8">{product.code}</div>
+            </div>
+            <div className="row">
+              <div className="col-md-4">Description:</div>
+              <div className="col-md-8">{product.description}</div>
+            </div>
+            <div className="row">
+              <div className="col-md-4">Price:</div>
+              <div className="col-md-8">{product.price || 5}</div>
+            </div>
+            <div className="row">
+              <div className="col-md-4">5 Star Rating:</div>
+              <div className="col-md-8">
+                <Star rating={product.starRating || 4} />
+              </div>
+            </div>
+          </div>
+
+          <div className="col-md-4">
+            <img
+              className="center-block img-responsive"
+              style={{ width: "200px", margin: "2px" }}
+              src={product.imageUrl || logo}
+              title={product.name}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="card-footer">
+        <ActionGroup>
+          <button className="btn btn-outline-secondary" onClick={back}>
+            <ChevronLeft size={16} aria-hidden="true" /> Back
+          </button>
+
+          <NavLink
+            className="btn btn-primary"
+            to={"/products/edit/" + product.id}
+          >
+            <ActionIcon action="edit" /> Edit
+          </NavLink>
+        </ActionGroup>
+      </div>
+    </div>
+  ) : null;
+  return page;
+};
+
+export default ViewProduct;

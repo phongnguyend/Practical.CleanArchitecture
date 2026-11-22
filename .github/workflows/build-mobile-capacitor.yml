@@ -1,0 +1,116 @@
+name: Build Mobile Capacitor
+on:
+  push:
+    paths:
+      - "src/Mobiles/Capacitor/**"
+      - "src/Mobiles/tools/prepare_firebase.py"
+      - ".github/workflows/build-mobile-capacitor.yml"
+  pull_request:
+    paths:
+      - "src/Mobiles/Capacitor/**"
+      - "src/Mobiles/tools/prepare_firebase.py"
+      - ".github/workflows/build-mobile-capacitor.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  android:
+    name: Capacitor Android
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: src/Mobiles/Capacitor
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: src/Mobiles/Capacitor/package-lock.json
+      - run: npm ci
+      - name: Prepare optional Firebase configuration
+        env:
+          FIREBASE_CONFIG_BASE64: ${{ secrets.FIREBASE_CAPACITOR_ANDROID_CONFIG_BASE64 }}
+        run: python3 ../tools/prepare_firebase.py --app Capacitor --platform android
+      - name: Lint, typecheck and unit tests
+        run: |
+          npm run lint
+          npm run typecheck
+          npm test
+      - name: Mobile browser UI tests
+        run: |
+          npx playwright install --with-deps chromium
+          npm run test:ui
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Build bundled Android APK
+        run: |
+          npm run build
+          npx cap sync android
+          bash android/gradlew -p android --no-daemon :app:assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: capacitor-android-debug
+          path: src/Mobiles/Capacitor/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: capacitor-ui-test-results
+          path: |
+            src/Mobiles/Capacitor/playwright-report
+            src/Mobiles/Capacitor/test-results
+          retention-days: 14
+  ios:
+    name: Capacitor iOS
+    runs-on: macos-15
+    timeout-minutes: 45
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+    defaults:
+      run:
+        working-directory: src/Mobiles/Capacitor
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: src/Mobiles/Capacitor/package-lock.json
+      - run: npm ci
+      - name: Prepare optional Firebase configuration
+        env:
+          FIREBASE_CONFIG_BASE64: ${{ secrets.FIREBASE_CAPACITOR_IOS_CONFIG_BASE64 }}
+        run: python3 ../tools/prepare_firebase.py --app Capacitor --platform ios
+      - name: Build iOS simulator app
+        run: |
+          xcodebuild -version
+          xcrun swift --version
+          npm run build
+          npx cap sync ios
+          xcodebuild -project ios/App/App.xcodeproj -scheme App \
+            -configuration Debug -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/ios CODE_SIGNING_ALLOWED=NO build
+          tar -czf build/capacitor-ios-simulator.tar.gz -C build/ios/Build/Products/Debug-iphonesimulator App.app
+      - uses: actions/upload-artifact@v4
+        with:
+          name: capacitor-ios-simulator
+          path: src/Mobiles/Capacitor/build/capacitor-ios-simulator.tar.gz
+          if-no-files-found: error
+          retention-days: 14

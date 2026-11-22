@@ -1,10 +1,10 @@
 # Firebase Crashlytics
 
-Crashlytics is optional in Flutter, Kotlin, React Native, and MAUI. Without configuration, the apps continue using the existing API and Identity Server and do not initialize reporting. Firebase Auth and Analytics are not required or installed by this integration.
+Crashlytics is optional in Flutter, Kotlin, React Native, MAUI, and Capacitor. Without configuration, the apps continue using the existing API and Identity Server and do not initialize reporting. Firebase Auth and Analytics are not required or installed by this integration.
 
 ## Create the Firebase apps
 
-Create a Firebase project and open **Crashlytics** in the console. Register these seven apps in Project settings. Separate development and production Firebase projects are recommended. Use the identifiers exactly, including case.
+Create a Firebase project and open **Crashlytics** in the console. Register these nine apps in Project settings. Separate development and production Firebase projects are recommended. Use the identifiers exactly, including case.
 
 | App | Platform | Package / bundle identifier |
 | --- | --- | --- |
@@ -13,6 +13,8 @@ Create a Firebase project and open **Crashlytics** in the console. Register thes
 | Flutter | iOS | `com.classifiedads.mobile.flutter` |
 | React Native | Android | `com.classifiedads.mobile.reactnative` |
 | React Native | iOS | `com.classifiedads.mobile.reactnative` |
+| Capacitor | Android | `com.classifiedads.mobile.capacitor` |
+| Capacitor | iOS | `com.classifiedads.mobile.capacitor` |
 | MAUI | Android | `com.classifiedads.mobile.maui` |
 | MAUI | iOS | `com.classifiedads.mobile.maui` |
 
@@ -27,13 +29,14 @@ python src/Mobiles/tools/prepare_firebase.py --app ReactNative --platform ios --
 python src/Mobiles/tools/prepare_firebase.py --app MAUI --platform ios --config C:/Downloads/maui-GoogleService-Info.plist --require-config
 ```
 
-Repeat with the other registered platforms. Supported app names are `Flutter`, `Kotlin`, `ReactNative`, and `MAUI`; Kotlin supports Android only. Wrong app IDs, invalid files, and missing required values fail validation. No configuration contents are printed.
+Repeat with the other registered platforms. Supported app names are `Flutter`, `Kotlin`, `ReactNative`, `MAUI`, and `Capacitor`; Kotlin supports Android only. Wrong app IDs, invalid files, and missing required values fail validation. No configuration contents are printed.
 
 | App | Android destination | iOS destination |
 | --- | --- | --- |
 | Kotlin | `Kotlin/app/google-services.json` | - |
 | Flutter | `Flutter/android/app/google-services.json` | `Flutter/ios/Runner/GoogleService-Info.plist` |
 | React Native | `ReactNative/google-services.json` | `ReactNative/GoogleService-Info.plist` |
+| Capacitor | `Capacitor/android/app/google-services.json` | `Capacitor/ios/App/App/GoogleService-Info.plist` |
 | MAUI | `MAUI/App/google-services.json` | `MAUI/App/GoogleService-Info.plist` |
 
 Paths in this table are relative to `src/Mobiles`. For Flutter, the script also writes `Flutter/firebase-defines.json` with options for the **selected platform**. Run it again when switching between Android and iOS. Flutter initializes Firebase with these explicit options; its plist is retained for symbol uploads, rather than requiring an absent plist in every Xcode build.
@@ -65,7 +68,7 @@ dotnet build App/ClassifiedAds.Mobile.csproj -f net10.0-ios -p:MauiTargetFramewo
 
 React Native enables each platform when its config exists. Provide both files before prebuilding both platforms. `FIREBASE_ANDROID_CONFIG` and `FIREBASE_IOS_CONFIG` can instead point to EAS file environment variables. RNFirebase v27 uses Swift Package Manager and dynamic iOS frameworks, configured by `app.config.js`. JavaScript and native crash reporting are active in release builds; debug builds are excluded.
 
-For local UI tests, leave Kotlin's Gradle property and MAUI's MSBuild property unset, omit Flutter's `--dart-define-from-file`, and build React Native with `CRASHLYTICS_ENABLED=false`. Rebuild after changing configuration. When switching a previously reporting installation to tests, uninstall/clear app data first: Firebase collection preferences and unsent reports can persist between launches. This also clears the login session.
+For local UI tests, leave Kotlin's Gradle property MAUI, and Capacitor's MSBuild property unset, omit Flutter's `--dart-define-from-file`, and build React Native with `CRASHLYTICS_ENABLED=false`. Rebuild after changing configuration. When switching a previously reporting installation to tests, uninstall/clear app data first: Firebase collection preferences and unsent reports can persist between launches. This also clears the login session.
 
 ## Captured errors
 
@@ -122,3 +125,7 @@ After real configuration is available:
 Configuration preparation is tested with `python -m unittest discover -s src/Mobiles/tools -p test_prepare_firebase.py`. React Native's `npm test` also tests configured and disabled Expo settings. No reports can be verified in the Firebase console until a project and real configuration files exist.
 
 References: [Android setup](https://firebase.google.com/docs/crashlytics/android/get-started), [Flutter setup](https://firebase.google.com/docs/crashlytics/flutter/get-started), [React Native Firebase](https://rnfirebase.io/crashlytics/usage), [MAUI binding](https://github.com/TobiasBuchholz/Plugin.Firebase/blob/master/docs/crashlytics.md).
+
+## Capacitor
+
+See [Capacitor Crashlytics setup](Capacitor/README.md#firebase-crashlytics). Run the preparation script with `--app Capacitor`, then rebuild and `npx cap sync`. Use CI secrets `FIREBASE_CAPACITOR_ANDROID_CONFIG_BASE64` and `FIREBASE_CAPACITOR_IOS_CONFIG_BASE64`. Native plugin inclusion depends on each platform configuration file; omit those files for UI test builds. JavaScript reports contain sanitized categories; native crashes use the native SDK. iOS Release device builds upload dSYMs through the Swift Package Manager Crashlytics run script.

@@ -324,7 +324,7 @@ public static class IdServerPersistenceExtensions
             });
         }
 
-        foreach (var (name, scheme) in new[] { ("Flutter", "classifiedads.flutter"), ("Kotlin", "classifiedads.kotlin"), ("ReactNative", "classifiedads.rn"), ("MAUI", "classifiedads.maui") })
+        foreach (var (name, scheme) in new[] { ("Flutter", "classifiedads.flutter"), ("Kotlin", "classifiedads.kotlin"), ("ReactNative", "classifiedads.rn"), ("MAUI", "classifiedads.maui"), ("Capacitor", "classifiedads.capacitor") })
         {
             var clientId = $"ClassifiedAds.Mobile.{name}";
             if (!context.Clients.Any(x => x.ClientId == clientId))

@@ -7,6 +7,7 @@ Four independent native clients for the API used by `src/UIs`:
 | [Flutter](Flutter/README.md) | Flutter Material 3 | Android, iOS |
 | [Kotlin](Kotlin/README.md) | Jetpack Compose Material 3 | Android |
 | [ReactNative](ReactNative/README.md) | React Native / Expo | Android, iOS |
+| [Capacitor](Capacitor/README.md) | React + Capacitor | Android, iOS |
 | [MAUI](MAUI/README.md) | .NET MAUI native controls | Android, iOS |
 
 All four include browser OIDC login with PKCE, secure session storage/refresh, logout, persisted System/Light/Dark appearance, search, paging, loading/error states, confirmation dialogs, editors, expandable JSON inspection/copy, and foreground SignalR notifications.
@@ -37,6 +38,7 @@ Each mobile app has a path-filtered workflow that runs on pushes, pull requests,
 | [Build Mobile Flutter](../../.github/workflows/build-mobile-flutter.yml) | Debug APK | Debug simulator app |
 | [Build Mobile Kotlin](../../.github/workflows/build-mobile-kotlin.yml) | Debug APK | Not applicable: this project uses Android Jetpack Compose, not Kotlin Multiplatform |
 | [Build Mobile React Native](../../.github/workflows/build-mobile-reactnative.yml) | Release-mode APK signed with the generated debug key, with JavaScript bundled | Release-mode simulator app with JavaScript bundled |
+| [Build Mobile Capacitor](../../.github/workflows/build-mobile-capacitor.yml) | Bundled debug APK | Unsigned simulator app |
 | [Build Mobile MAUI](../../.github/workflows/build-mobile-maui.yml) | Standalone Release APK with debug signing | Unsigned arm64 simulator app |
 
 Android builds run on Ubuntu; Flutter/React Native iOS builds run on macOS 15 and MAUI on macOS 26. Flutter is pinned to 3.47.9, React Native uses Node 24, and Flutter/Kotlin/React Native Android builds use Java 17; MAUI uses Java 21. The workflows run Flutter analysis/widget tests, Kotlin lint/unit tests, and React Native lint/typechecking/contract/rendered-screen tests, and MAUI xUnit validation/API contract tests. They do not run the authenticated device UI suite or require running backend services.
@@ -55,6 +57,7 @@ Download artifacts from the completed workflow run; retention is 14 days. iOS ap
 | `ClassifiedAds.Mobile.Flutter` | `classifiedads.flutter:/oauthredirect` | `classifiedads.flutter:/logout` |
 | `ClassifiedAds.Mobile.Kotlin` | `classifiedads.kotlin:/oauthredirect` | `classifiedads.kotlin:/logout` |
 | `ClassifiedAds.Mobile.ReactNative` | `classifiedads.rn:/oauthredirect` | `classifiedads.rn:/logout` |
+| `ClassifiedAds.Mobile.Capacitor` | `classifiedads.capacitor:/oauthredirect` | `classifiedads.capacitor:/logout` |
 | `ClassifiedAds.Mobile.MAUI` | `classifiedads.maui:/oauthredirect` | `classifiedads.maui:/logout` |
 
 Native integrations provide authentication, secure storage, file picking/sharing, and SignalR. Dialogs, JSON viewers, and notifications use framework UI primitives.
@@ -162,3 +165,7 @@ See [MAUI setup, feature structure, build commands and tests](MAUI/README.md). I
 ## Crash reporting
 
 See [Firebase Crashlytics setup](FIREBASE.md) for optional reporting, Firebase app registrations, local configuration, CI secrets, and verification. Ordinary builds work without Firebase configuration.
+
+### React + Capacitor
+
+See [Capacitor setup and tests](Capacitor/README.md). It bundles React feature screens in native Android/iOS apps, uses secure native OIDC storage, and supports the shared Android UI suite. Its Android CI uses Java 21 and Node 24; iOS uses macOS 15 with Xcode 26.2.
