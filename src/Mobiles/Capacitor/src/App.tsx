@@ -12,7 +12,7 @@ import Nav from "./components/Nav/Nav";
 import Notification from "./components/Notification/Notification";
 import Home from "./containers/Home/Home";
 import OidcLoginRedirect from "./containers/Auth/OidcLoginRedirect";
-import ListConfigurationEntries from "./containers/Settings/ListConfigurationEntries/ListConfigurationEntries";
+import ListConfigurationEntries from "./containers/ConfigurationEntries/ListConfigurationEntries/ListConfigurationEntries";
 import ListProducts from "./containers/Products/ListProducts/ListProducts";
 import AddProduct from "./containers/Products/AddProduct/AddProduct";
 import ViewProduct from "./containers/Products/ViewProduct/ViewProduct";
@@ -71,7 +71,7 @@ function App() {
               path="/oidc-login-redirect"
               element={<OidcLoginRedirect />}
             />
-            <Route path="/settings" element={<ListConfigurationEntries />} />
+            <Route path="/configurationentries" element={<ListConfigurationEntries />} />
             <Route path="/files/upload" element={<UploadFile />} />
             <Route path="/files/edit/:id" element={<EditFile />} />
             <Route path="/files" element={<ListFiles />} />

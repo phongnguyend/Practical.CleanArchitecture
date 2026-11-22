@@ -1,11 +1,11 @@
 using ClassifiedAds.Mobile.Core.Models;
 using ClassifiedAds.Mobile.Shared;
 
-namespace ClassifiedAds.Mobile.Features.Configuration;
+namespace ClassifiedAds.Mobile.Features.ConfigurationEntries;
 
-public sealed class ConfigurationView : RecordPage<ConfigurationEntry>
+public sealed class ConfigurationEntriesView : RecordPage<ConfigurationEntry>
 {
-    public ConfigurationView(AppServices services) : base(services, "Configuration Entries", "configurationentries") => Toolbar.Add(Ui.Actions(Ui.Button("Import Excel", "upload", () => Import("configurationentries/ImportExcel", "Import Excel")), Ui.Button("Export Excel", "download", () => services.Download("configurationentries/ExportAsExcel", "ConfigurationEntries.xlsx"))));
+    public ConfigurationEntriesView(AppServices services) : base(services, "Configuration Entries", "configurationentries") => Toolbar.Add(Ui.Actions(Ui.Button("Import Excel", "upload", () => Import("configurationentries/ImportExcel", "Import Excel")), Ui.Button("Export Excel", "download", () => services.Download("configurationentries/ExportAsExcel", "ConfigurationEntries.xlsx"))));
     protected override View Form(ConfigurationEntry value, Action changed)
     {
         var form = Ui.Stack();

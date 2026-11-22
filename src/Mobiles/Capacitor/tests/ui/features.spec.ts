@@ -85,7 +85,7 @@ for (const [route, label] of [
   ["files", "Files"],
   ["users", "Users"],
   ["roles", "Roles"],
-  ["settings", "Settings"],
+  ["configurationentries", "Configuration Entries"],
   ["auditlogs", "Audit logs"],
   ["notifications", "Notifications"],
 ]) {
@@ -132,7 +132,7 @@ test("product search, pagination, validation and discard protection", async ({
 });
 for (const [route, validation] of [
   ["roles", "Name is required"],
-  ["settings", "Key is required"],
+  ["configurationentries", "Key is required"],
 ]) {
   test(`${route} required validation`, async ({ page }) => {
     await page.goto(`/${route}`);

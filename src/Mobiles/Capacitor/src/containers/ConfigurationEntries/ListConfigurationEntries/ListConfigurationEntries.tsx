@@ -160,7 +160,7 @@ const ListConfigurationEntries = (props: any) => {
 
   const exportAsExcel = async () => {
     const rs = await axios.get("/ExportAsExcel", { responseType: "blob" });
-    await downloadOrShare(rs.data, "Settings.xlsx");
+    await downloadOrShare(rs.data, "ConfigurationEntries.xlsx");
   };
 
   const openImportExcelModal = () => {
