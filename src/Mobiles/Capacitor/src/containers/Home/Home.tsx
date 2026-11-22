@@ -69,7 +69,7 @@ export default function Home() {
         .map(([path, title, icon]) => (
           <Link className="btn btn-secondary" key={path} to={path}>
             <ActionIcon action={icon} />
-            {title === "Settings" ? "Configuration Entries" : title}
+            {title}
           </Link>
         ))}
       <button className="btn btn-secondary" onClick={() => setConfirm(true)}>

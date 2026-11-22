@@ -8,7 +8,7 @@ export const destinations = [
   ["/files", "Files", "files"],
   ["/users", "Users", "users"],
   ["/roles", "Roles", "roles"],
-  ["/settings", "Settings", "settings"],
+  ["/configurationentries", "Configuration Entries", "settings"],
   ["/auditlogs", "Audit logs", "audit"],
   ["/notifications", "Notifications", "notification"],
 ] as const;

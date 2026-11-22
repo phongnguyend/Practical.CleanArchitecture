@@ -3,7 +3,7 @@ using ClassifiedAds.Mobile.Features.Products;
 using ClassifiedAds.Mobile.Features.Files;
 using ClassifiedAds.Mobile.Features.Users;
 using ClassifiedAds.Mobile.Features.Roles;
-using ClassifiedAds.Mobile.Features.Configuration;
+using ClassifiedAds.Mobile.Features.ConfigurationEntries;
 using ClassifiedAds.Mobile.Features.AuditLogs;
 using ClassifiedAds.Mobile.Shared;
 
@@ -132,7 +132,7 @@ public sealed class WorkspacePage : ContentPage
         navigation.Add(Ui.Button("Files", "files", () => Navigate(new FilesView(services))));
         navigation.Add(Ui.Button("Users", "users", () => Navigate(new UsersView(services))));
         navigation.Add(Ui.Button("Roles", "roles", () => Navigate(new RolesView(services))));
-        navigation.Add(Ui.Button("Configuration Entries", "configuration", () => Navigate(new ConfigurationView(services))));
+        navigation.Add(Ui.Button("Configuration Entries", "configuration", () => Navigate(new ConfigurationEntriesView(services))));
         navigation.Add(Ui.Button("Audit logs", "history", () => Navigate(new AuditLogsView(services))));
         navigation.Add(Ui.Button("Notifications", "notifications", () =>
         {
@@ -161,7 +161,7 @@ public sealed class WorkspacePage : ContentPage
         home.Add(Ui.Button("Files", "files", () => Navigate(new FilesView(services))));
         home.Add(Ui.Button("Users", "users", () => Navigate(new UsersView(services))));
         home.Add(Ui.Button("Roles", "roles", () => Navigate(new RolesView(services))));
-        home.Add(Ui.Button("Configuration Entries", "configuration", () => Navigate(new ConfigurationView(services))));
+        home.Add(Ui.Button("Configuration Entries", "configuration", () => Navigate(new ConfigurationEntriesView(services))));
         home.Add(Ui.Button("Sign out", "logout", async () =>
         {
             if (!await Dialog.Confirm("Sign out of Classified Ads?"))
