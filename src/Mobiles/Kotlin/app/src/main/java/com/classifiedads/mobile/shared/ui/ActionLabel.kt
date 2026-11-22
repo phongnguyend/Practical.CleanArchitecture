@@ -25,6 +25,7 @@ fun ActionLabel(label: String) {
         "Add new" -> R.drawable.action_add
         "Edit" -> R.drawable.action_edit
         "Delete" -> R.drawable.action_delete
+        "View event details", "Hide event details" -> R.drawable.action_view
         "View" -> R.drawable.action_view
         "History" -> R.drawable.action_history
         "Refresh" -> R.drawable.action_refresh
@@ -71,8 +72,10 @@ fun ActionLabel(label: String) {
         "Dark" -> R.drawable.action_theme
         else -> null
     }
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        if (icon != null) Icon(painterResource(icon), contentDescription = null, modifier = Modifier.size(18.dp))
-        Text(label)
+    Row(Modifier.heightIn(min = 32.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)) {
+        if (icon != null) {
+            Icon(painterResource(icon), contentDescription = null, modifier = Modifier.size(18.dp))
+        }
+        Text(label, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
     }
 }

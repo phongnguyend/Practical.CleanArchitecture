@@ -1,3 +1,4 @@
+jest.mock("@sentry/react-native", () => ({ init: jest.fn(), captureException: jest.fn(), wrap: jest.fn() }));
 import { expect, jest, test } from "@jest/globals";
 import Constants from "expo-constants";
 import { initializeCrashReporting, recordUnexpectedError } from "../src/core/diagnostics/crash-reporting";

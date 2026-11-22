@@ -164,7 +164,7 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
-      title: const Text('CLASSIFIED ADS'),
+      title: const Text('CLASSIFIED ADS (Flutter)', style: TextStyle(fontSize: 18)),
       actions: [
         PopupMenuButton<ThemeMode>(
           tooltip: 'Theme',

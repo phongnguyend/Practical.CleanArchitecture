@@ -29,6 +29,7 @@ public static class Ui
         {
             Text = title,
             FontSize = 14,
+            LineBreakMode = LineBreakMode.WordWrap,
             FontFamily = "OpenSansSemibold",
             CornerRadius = 10,
             MinimumHeightRequest = 48,
@@ -90,12 +91,54 @@ public static class Ui
     {
         var grid = new Grid
         {
-            ColumnSpacing = 12
+            ColumnSpacing = 12,
+            RowSpacing = 12
         };
+        var responsive = children.All(child => child is Button);
+        var columns = responsive ? Math.Min(2, children.Length) : children.Length;
+        void Arrange(int count)
+        {
+            grid.ColumnDefinitions.Clear();
+            grid.RowDefinitions.Clear();
+            for (var column = 0; column < count; column++)
+            {
+                grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
+            }
+
+            for (var row = 0; row < (children.Length + count - 1) / count; row++)
+            {
+                grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+            }
+
+            for (var index = 0; index < children.Length; index++)
+            {
+                Grid.SetColumn(children[index], index % count);
+                Grid.SetRow(children[index], index / count);
+            }
+        }
+
+        if (children.Length == 0)
+        {
+            return grid;
+        }
+
         for (var i = 0; i < children.Length; i++)
         {
-            grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
-            grid.Add(children[i], i);
+            grid.Children.Add(children[i]);
+        }
+
+        Arrange(columns);
+        if (responsive)
+        {
+            grid.SizeChanged += (_, _) =>
+            {
+                var next = grid.Width < 300 ? 1 : Math.Min(2, children.Length);
+                if (grid.Width > 0 && next != columns)
+                {
+                    columns = next;
+                    Arrange(columns);
+                }
+            };
         }
 
         return grid;

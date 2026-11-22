@@ -169,3 +169,7 @@ See [Firebase Crashlytics setup](FIREBASE.md) for optional reporting, Firebase a
 ### React + Capacitor
 
 See [Capacitor setup and tests](Capacitor/README.md). It bundles React feature screens in native Android/iOS apps, uses secure native OIDC storage, and supports the shared Android UI suite. Its Android CI uses Java 21 and Node 24; iOS uses macOS 15 with Xcode 26.2.
+
+## Sentry
+
+All five apps support optional Sentry reporting alongside Crashlytics. See [Sentry setup](SENTRY.md) for local configuration, GitHub/Expo settings, symbol uploads, and verification. Reporting stays disabled until configured.

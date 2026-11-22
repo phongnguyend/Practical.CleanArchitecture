@@ -76,14 +76,12 @@ public sealed class AuditLogsView : ContentView
         records.Clear();
         foreach (var row in items.Where(x => x.ToString().Contains(search.Text ?? "", StringComparison.OrdinalIgnoreCase)))
         {
-            string Field(string name) => row.TryGetProperty(name, out var v) ? v.ToString() : "";
-            var date = DateTimeOffset.TryParse(Field("createdDateTime"), out var value) ? value.ToLocalTime().ToString("g") : Field("createdDateTime");
-            records.Add(Ui.Card(Ui.Stack(Ui.Text($"{date} \u00b7 {Field("userName")} \u00b7 {Field("action")}"), JsonViewer.Create(row.TryGetProperty("log", out var log) ? log : row))));
+            records.Add(AuditEntry.Create(row));
         }
 
         if (records.Count == 0)
         {
-            records.Add(Ui.Text("No records found"));
+            records.Add(Ui.Text("No audit logs found."));
         }
 
         summary.Text = paging.Summary;

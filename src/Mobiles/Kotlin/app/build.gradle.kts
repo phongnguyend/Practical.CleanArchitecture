@@ -1,9 +1,25 @@
+import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
 import java.security.cert.CertificateFactory
 
 plugins {
     id("com.android.application")
+    id("io.sentry.android.gradle")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+}
+val sentryFile = rootProject.file("sentry.config.json")
+val sentryConfig = if (sentryFile.isFile) JsonSlurper().parse(sentryFile) as Map<*, *> else emptyMap<String, Any>()
+val sentryUploads = !System.getenv("SENTRY_AUTH_TOKEN").isNullOrBlank() && !System.getenv("SENTRY_ORG").isNullOrBlank() && !System.getenv("SENTRY_PROJECT").isNullOrBlank()
+sentry {
+    org.set(System.getenv("SENTRY_ORG"))
+    projectName.set(System.getenv("SENTRY_PROJECT"))
+    authToken.set(System.getenv("SENTRY_AUTH_TOKEN"))
+    autoUploadProguardMapping.set(sentryUploads)
+    uploadNativeSymbols.set(sentryUploads)
+    includeSourceContext.set(false)
+    tracingInstrumentation.enabled.set(false)
+    autoInstallation.enabled.set(false)
 }
 val crashlyticsEnabled = providers.gradleProperty("crashlyticsEnabled").orNull == "true"
 if (crashlyticsEnabled) {
@@ -53,6 +69,10 @@ android {
     namespace = "com.classifiedads.mobile"
     compileSdk = 36
     defaultConfig {
+        buildConfigField("boolean", "SENTRY_ENABLED", (sentryConfig["SENTRY_ENABLED"] == true).toString())
+        for (key in listOf("SENTRY_DSN", "SENTRY_ENVIRONMENT", "SENTRY_RELEASE")) {
+            buildConfigField("String", key, JsonOutput.toJson(sentryConfig[key]?.toString() ?: ""))
+        }
         applicationId = "com.classifiedads.mobile.kotlin"
         minSdk = 26
         targetSdk = 36
@@ -77,6 +97,7 @@ tasks.configureEach {
     if (name == "preDebugBuild") dependsOn(generateLocalCertificateResources)
 }
 dependencies {
+    implementation("io.sentry:sentry-android:8.65.0")
     implementation(platform("com.google.firebase:firebase-bom:35.2.0"))
     implementation("com.google.firebase:firebase-crashlytics")
     testImplementation("junit:junit:4.13.2")

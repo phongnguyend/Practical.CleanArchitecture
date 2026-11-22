@@ -16,23 +16,29 @@ html[data-bs-theme="dark"] body {
   max-width: 1100px;
   margin: auto;
 }
-.mobile-header {
+.mobile-chrome {
   position: sticky;
   top: 0;
   z-index: 110;
+}
+.mobile-header {
   background: var(--bs-body-bg);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px;
   gap: 12px;
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 700;
 }
+.mobile-header > span {
+  min-width: 0;
+  line-height: 1.25;
+}
+.mobile-header > :last-child {
+  flex-shrink: 0;
+}
 .mobile-navigation {
-  position: sticky;
-  top: 72px;
-  z-index: 100;
   background: var(--bs-body-bg);
   display: flex;
   overflow-x: auto;
@@ -78,11 +84,18 @@ h1 {
   justify-content: center;
   align-items: center;
   gap: 8px;
-  min-height: 44px;
+  min-height: 48px;
   padding: 10px 14px;
   border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+  max-width: 100%;
+}
+.btn > svg {
+  flex-shrink: 0;
 }
 .btn-primary {
   --bs-btn-bg: #4f46e5;
@@ -180,8 +193,9 @@ form label {
   background: var(--bs-body-bg);
   border-top: 1px solid var(--bs-border-color);
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 12px;
+  gap: 16px;
 }
 .card-header {
   display: flex;
@@ -252,7 +266,7 @@ form label {
 }
 
 form:has(.form-actions) {
-  padding-bottom: 90px;
+  padding-bottom: 12px;
 }
 
 .mobile-page-header.card-header {
@@ -306,6 +320,10 @@ form:has(.form-actions) {
   min-width: 108px;
   min-height: 48px;
 }
+.app-modal-close {
+  width: 44px;
+  height: 44px;
+}
 @media (max-width: 360px) {
   .action-group {
     grid-template-columns: minmax(0, 1fr);
@@ -315,7 +333,10 @@ form:has(.form-actions) {
   }
 }
 
-@media (min-width:380px) {
-  .mobile-records .action-group:has(> :last-child:nth-child(3)) { grid-template-columns:repeat(3,minmax(0,1fr)); }
-  .mobile-records .action-group:has(> :last-child:nth-child(3)) > .btn { padding-inline:8px; font-size:13px; gap:6px; grid-column:auto; }
+@media (max-width: 360px) {
+  .app-modal-footer > .btn,
+  .form-actions > .btn {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
 }

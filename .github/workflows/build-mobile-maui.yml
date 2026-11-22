@@ -5,11 +5,15 @@ on:
     paths:
       - "src/Mobiles/MAUI/**"
       - "src/Mobiles/tools/prepare_firebase.py"
+      - "src/Mobiles/tools/prepare_sentry.py"
+      - "src/Mobiles/tools/test_prepare_sentry.py"
       - ".github/workflows/build-mobile-maui.yml"
   pull_request:
     paths:
       - "src/Mobiles/MAUI/**"
       - "src/Mobiles/tools/prepare_firebase.py"
+      - "src/Mobiles/tools/prepare_sentry.py"
+      - "src/Mobiles/tools/test_prepare_sentry.py"
       - ".github/workflows/build-mobile-maui.yml"
   workflow_dispatch:
 
@@ -19,6 +23,15 @@ permissions:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+env:
+  SENTRY_DSN: ${{ secrets.SENTRY_MAUI_DSN }}
+  SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+  SENTRY_PROJECT: ${{ vars.SENTRY_MAUI_PROJECT }}
+  SENTRY_ENVIRONMENT: ${{ vars.SENTRY_ENVIRONMENT || 'ci' }}
+  SENTRY_RELEASE: mobile-maui@${{ github.sha }}
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  SENTRY_DISABLE_AUTO_UPLOAD: ${{ (secrets.SENTRY_AUTH_TOKEN == '' || vars.SENTRY_ORG == '' || vars.SENTRY_MAUI_PROJECT == '') && 'true' || 'false' }}
 
 jobs:
   android:
@@ -33,6 +46,8 @@ jobs:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
+      - name: Prepare optional Sentry configuration
+        run: python3 ../tools/prepare_sentry.py --app MAUI
       - name: Prepare optional Firebase configuration
         env:
           FIREBASE_CONFIG_BASE64: ${{ secrets.FIREBASE_MAUI_ANDROID_CONFIG_BASE64 }}
@@ -53,6 +68,9 @@ jobs:
         run: dotnet test Tests/ClassifiedAds.Mobile.Tests.csproj --configuration Release --logger trx --results-directory artifacts/tests
       - name: Build standalone Android APK
         run: dotnet build App/ClassifiedAds.Mobile.csproj -p:EnableFirebaseCrashlytics="$FIREBASE_ENABLED" --configuration Release --framework net10.0-android -p:AndroidPackageFormats=apk
+      - name: Upload Sentry managed and native debug symbols
+        if: env.SENTRY_DISABLE_AUTO_UPLOAD == 'false'
+        run: npx --yes @sentry/cli@3.8.2 debug-files upload App/bin/Release App/obj/Release
       - uses: actions/upload-artifact@v4
         with:
           name: maui-android
@@ -80,6 +98,8 @@ jobs:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
+      - name: Prepare optional Sentry configuration
+        run: python3 ../tools/prepare_sentry.py --app MAUI
       - name: Prepare optional Firebase configuration
         env:
           FIREBASE_CONFIG_BASE64: ${{ secrets.FIREBASE_MAUI_IOS_CONFIG_BASE64 }}
@@ -95,6 +115,9 @@ jobs:
         run: dotnet build App/ClassifiedAds.Mobile.csproj -p:EnableFirebaseCrashlytics="$FIREBASE_ENABLED" --configuration Release --framework net10.0-ios -p:MauiTargetFramework=net10.0-ios -p:RuntimeIdentifier=iossimulator-arm64 -p:EnableCodeSigning=false
       - name: Package simulator app
         run: tar -czf maui-ios-simulator.tar.gz -C App/bin/Release/net10.0-ios/iossimulator-arm64 ClassifiedAds.Mobile.app
+      - name: Upload Sentry managed and native debug symbols
+        if: env.SENTRY_DISABLE_AUTO_UPLOAD == 'false'
+        run: npx --yes @sentry/cli@3.8.2 debug-files upload App/bin/Release App/obj/Release
       - uses: actions/upload-artifact@v4
         with:
           name: maui-ios-simulator

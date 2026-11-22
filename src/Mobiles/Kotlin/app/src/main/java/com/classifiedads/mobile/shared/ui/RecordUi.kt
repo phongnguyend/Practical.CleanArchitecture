@@ -124,13 +124,14 @@ fun ProductPicture(row: JSONObject) {
         }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DateField(label: String, value: String, enabled: Boolean, changed: (String) -> Unit) {
     val context = LocalContext.current
     Column {
         Text(label)
         Text(if (value.isBlank()) "Not set" else localDate(value))
-        Row {
+        ActionGroup {
             OutlinedButton(shape = MaterialTheme.shapes.small,
                 enabled = enabled,
                 onClick = {

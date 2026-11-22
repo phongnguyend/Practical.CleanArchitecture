@@ -7,6 +7,7 @@
     "@react-native-community/datetimepicker": "9.2.1",
     "@react-native-firebase/app": "^27.1.1",
     "@react-native-firebase/crashlytics": "^27.1.1",
+    "@sentry/react-native": "~8.28.0",
     "expo": "~58.0.23",
     "expo-auth-session": "~58.0.17",
     "expo-build-properties": "~58.0.12",

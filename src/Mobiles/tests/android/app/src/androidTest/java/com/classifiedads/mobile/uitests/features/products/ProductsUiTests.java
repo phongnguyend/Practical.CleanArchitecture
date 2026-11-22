@@ -36,6 +36,30 @@ public abstract class ProductsUiTests extends MobileUiTestSupport {
         return label != null && !label.getClassName().equals("android.widget.EditText");
     }
 
+    @Test public void toolbarButtonsHaveSeparatedTouchTargets() {
+        products();
+        Rect refresh = button("Refresh").getVisibleBounds();
+        Rect create = button("Add new").getVisibleBounds();
+        if (!app.equals("capacitor")) {
+            assertEquals("Primary toolbar actions need equal widths", refresh.width(), create.width(), dp(2));
+        }
+        if (app.equals("kotlin")) {
+            for (String title : new String[]{"Import", "Export CSV", "Export PDF"}) {
+                Rect action = button(title).getVisibleBounds();
+                assertEquals(title + " must fill its action column", refresh.width(), action.width(), dp(2));
+                assertEquals(title + " must match the toolbar height", refresh.height(), action.height(), dp(2));
+            }
+        }
+        for (Rect bounds : new Rect[]{refresh, create}) {
+            assertTrue("Toolbar buttons must fit the screen", bounds.left >= 0 && bounds.right <= device.getDisplayWidth());
+            assertTrue("Toolbar buttons need 48dp touch targets", bounds.width() >= dp(48) - 2 && bounds.height() >= dp(48) - 2);
+        }
+        int horizontalGap = Math.max(create.left - refresh.right, refresh.left - create.right);
+        int verticalGap = Math.max(create.top - refresh.bottom, refresh.top - create.bottom);
+        assertTrue("Toolbar buttons need a 12dp gap, including when wrapped",
+            horizontalGap >= dp(12) - 2 || verticalGap >= dp(12) - 2);
+    }
+
     @Test public void productSearchEmptyStateRefreshAndClear() {
         products();
         String emptySearch = fieldText(0);
@@ -84,7 +108,9 @@ public abstract class ProductsUiTests extends MobileUiTestSupport {
         waitFor("Required name validation", () -> contains("Name is required"));
         Rect cancel = button("Cancel").getVisibleBounds();
         Rect save = button("Save").getVisibleBounds();
-        assertTrue("Cancel and Save need at least 8dp spacing", save.left - cancel.right >= dp(8) - 2);
+        assertTrue("Cancel and Save need at least 12dp spacing, including when stacked",
+            save.left - cancel.right >= dp(12) - 2 || save.top - cancel.bottom >= dp(12) - 2);
+        assertTrue("Dialog actions need 48dp touch targets", cancel.height() >= dp(48) - 2 && save.height() >= dp(48) - 2);
         click("Cancel");
         waitFor("Editor closes without creating a record", () -> find("Save") == null);
         ready();

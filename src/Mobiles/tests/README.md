@@ -34,19 +34,21 @@ Each app has a JUnit suite (`FlutterUiTest`, `KotlinUiTest`, `ReactNativeUiTest`
 
 | Folder | Coverage |
 | --- | --- |
-| `features/home/` | Home layout, sign-out cancellation, theme/session persistence |
+| `features/home/` | App-specific title, home layout, sign-out cancellation, theme/session persistence |
 | `features/products/` | Search, unsaved changes, validation, optional CRUD/history |
 | `features/users/` | User form validation |
 | `features/roles/` | Role form validation |
 | `features/configuration/` | Configuration form validation |
-| `features/navigation/` | Resource lists, audit-log refresh and notification-hub connection |
+| `features/navigation/` | Resource lists, audit-log refresh, event detail expansion/collapse and notification-hub connection |
 | `support/` | App launch, selectors, waits, scrolling and diagnostic capture; no test cases |
 
 Use `-Feature Home`, `Products`, `Users`, `Roles`, `Configuration`, or `Navigation` to select a group. The default `All` runs the entire app suite. `-TestMethod` requires a feature group.
 
 The scenarios cover:
 
+- App title: identifies the framework and stays within the screen bounds.
 - Home buttons and the project link: consistent content width, minimum touch-target height, and vertical gaps.
+- Product toolbar buttons: 48dp touch targets, screen bounds, and 12dp separation when arranged side by side or wrapped. Navigation labels must stay within a compact tab height.
 - Products, files, users, roles and configuration: navigation, completed API loading, paging/status, and visible API errors.
 - Audit logs: reach the off-screen navigation tab, load and refresh the page, check equal-width pagination buttons, 12dp spacing and 48dp touch targets, verify disabled Previous on page one, move forward/back when another page exists, and return Home.
 - Notifications: reach the off-screen navigation tab, wait for the live hub connection and return Home. Message delivery is a separate scenario and is not covered by this navigation check.
@@ -62,7 +64,7 @@ Tests use visible text/content descriptions, accessibility text entry, bounded w
 
 Ordinary scenarios return home to dispose the previous feature's state. Cold launches remain explicit in session/theme persistence checks. This avoids downloading the React Native development bundle for every case. Empty accessibility text is normalized across frameworks; selectors are scoped to the target app so keyboard controls cannot be mistaken for app actions.
 
-There are 13 scenarios per app (52 across all four). The default run executes 48 scenarios and skips the four optional CRUD cases. Form validation and discard tests do not save records or send account emails.
+There are 16 scenarios per app (80 across all five). The default run executes 75 scenarios and skips the five optional CRUD cases. Form validation and discard tests do not save records or send account emails. The audit event detail check requires at least one audit event in the backend.
 
 ## Results and limitations
 

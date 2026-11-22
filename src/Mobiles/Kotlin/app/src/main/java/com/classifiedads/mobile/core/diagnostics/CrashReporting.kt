@@ -1,5 +1,7 @@
 package com.classifiedads.mobile.core.diagnostics
 
+import io.sentry.Sentry
+import io.sentry.android.core.SentryAndroid
 import android.content.Context
 import com.classifiedads.mobile.BuildConfig
 import com.google.firebase.FirebaseApp
@@ -10,6 +12,29 @@ object CrashReporting {
     private var client: FirebaseCrashlytics? = null
 
     fun initialize(context: Context) {
+        if (BuildConfig.SENTRY_ENABLED && BuildConfig.SENTRY_DSN.isNotBlank() && !BuildConfig.DEBUG) {
+            SentryAndroid.init(context) { options ->
+                options.dsn = BuildConfig.SENTRY_DSN
+                options.environment = BuildConfig.SENTRY_ENVIRONMENT
+                if (BuildConfig.SENTRY_RELEASE.isNotBlank()) {
+                    options.release = BuildConfig.SENTRY_RELEASE
+                }
+                options.isSendDefaultPii = false
+                options.maxBreadcrumbs = 0
+                options.tracesSampleRate = 0.0
+                options.setBeforeSend { event, _ ->
+                    event.user = null
+                    event.request = null
+                    event.message = null
+                    event.breadcrumbs?.clear()
+                    event.extras?.clear()
+                    event.exceptions?.forEach { exception ->
+                        exception.value = exception.type ?: "Unexpected error"
+                    }
+                    event
+                }
+            }
+        }
         if (FirebaseApp.initializeApp(context) == null) {
             return
         }
@@ -29,5 +54,8 @@ object CrashReporting {
         val safeError = RuntimeException(error.javaClass.simpleName)
         safeError.stackTrace = error.stackTrace
         client?.recordException(safeError)
+        if (Sentry.isEnabled()) {
+            Sentry.captureException(error)
+        }
     }
 }

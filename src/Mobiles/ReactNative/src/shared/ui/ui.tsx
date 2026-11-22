@@ -15,12 +15,25 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { actionIcons } from "./action-icons";
 export const Theme = createContext(false);
+const ActionWidth = createContext<number | undefined>(undefined);
+export function ActionGroup({ children }: { children: React.ReactNode }) {
+  const s = useStyles();
+  const [width, setWidth] = useState(0);
+  return (
+    <View style={s.actions} onLayout={(event) => setWidth(event.nativeEvent.layout.width)}>
+      <ActionWidth.Provider value={width > 0 ? (width >= 300 ? (width - 12) / 2 : width) : undefined}>
+        {children}
+      </ActionWidth.Provider>
+    </View>
+  );
+}
 export function useStyles() {
   return makeStyles(useContext(Theme));
 }
 export function Button({
   title,
   icon = title,
+  iconOnly = false,
   onPress,
   disabled,
   danger,
@@ -29,6 +42,7 @@ export function Button({
 }: {
   title: string;
   icon?: string;
+  iconOnly?: boolean;
   onPress: () => void;
   disabled?: boolean;
   danger?: boolean;
@@ -36,6 +50,7 @@ export function Button({
   style?: StyleProp<ViewStyle>;
 }) {
   const s = useStyles();
+  const actionWidth = useContext(ActionWidth);
   return (
     <Pressable
       accessibilityRole="button"
@@ -45,6 +60,8 @@ export function Button({
       accessibilityState={{ disabled: !!disabled }}
       style={({ pressed }) => [
         s.button,
+        actionWidth !== undefined && { width: actionWidth },
+        iconOnly && { width: 44, height: 44, minHeight: 44, paddingHorizontal: 0, paddingVertical: 0, flexShrink: 0 },
         style,
         variant === "primary" && s.primaryButton,
         danger && s.dangerButton,
@@ -55,12 +72,12 @@ export function Button({
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 }}>
       {actionIcons[icon] && <Image source={actionIcons[icon]} accessible={false}
         style={{ width: 18, height: 18, tintColor: danger ? s.dangerButtonText.color : variant === "primary" ? s.buttonText.color : s.secondaryButtonText.color }} />}
-      <Text style={[
-        { flexShrink: 1 },
+      {!iconOnly && <Text style={[
+        { flexShrink: 1, textAlign: "center" },
         s.secondaryButtonText,
         variant === "primary" && s.buttonText,
         danger && s.dangerButtonText,
-      ]}>{title}</Text>
+      ]}>{title}</Text>}
       </View>
     </Pressable>
   );
@@ -82,6 +99,7 @@ export function Sheet({
   const s = useStyles();
   return (
     <Modal transparent animationType="slide" onRequestClose={close}>
+      <ActionWidth.Provider value={undefined}>
       <SafeAreaView style={s.overlay}>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -90,7 +108,7 @@ export function Sheet({
           <View accessibilityViewIsModal style={s.sheet}>
             <View style={s.header}>
               <Text style={s.heading}>{title}</Text>
-              <Button title="Close" onPress={close} />
+              <Button title="Close" iconOnly onPress={close} />
             </View>
             <ScrollView
               keyboardShouldPersistTaps="handled"
@@ -105,6 +123,7 @@ export function Sheet({
           </View>
         </KeyboardAvoidingView>
       </SafeAreaView>
+      </ActionWidth.Provider>
     </Modal>
   );
 }
@@ -200,8 +219,8 @@ const makeStyles = (dark: boolean) =>
     actions: {
       flexDirection: "row",
       flexWrap: "wrap",
-      alignItems: "center",
-      gap: 8,
+      alignItems: "stretch",
+      gap: 12,
     },
     button: {
       backgroundColor: dark ? "#1e293b" : "#fff",
@@ -210,7 +229,8 @@ const makeStyles = (dark: boolean) =>
       borderRadius: 10,
       paddingVertical: 11,
       paddingHorizontal: 14,
-      minHeight: 44,
+      minHeight: 48,
+      maxWidth: "100%",
       alignItems: "center",
       justifyContent: "center",
     },
@@ -249,7 +269,8 @@ const makeStyles = (dark: boolean) =>
       flexDirection: "row",
       flexWrap: "wrap",
       justifyContent: "flex-end",
-      gap: 10,
+      alignItems: "stretch",
+      gap: 12,
       borderTopWidth: 1,
       borderTopColor: "#64748b44",
     },

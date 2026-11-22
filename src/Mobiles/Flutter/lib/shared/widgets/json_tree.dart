@@ -1,3 +1,5 @@
+import 'action_group.dart';
+
 import 'package:flutter/services.dart';
 
 import 'dart:convert';
@@ -77,7 +79,7 @@ class _JsonViewerState extends State<JsonViewer> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Wrap(
+        ActionGroup(
           children: [
             TextButton(
               onPressed: () => setState(() => open = !open),

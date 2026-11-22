@@ -184,10 +184,11 @@ function Workspace({
     <SafeAreaView style={s.screen}>
       <StatusBar style={dark ? "light" : "dark"} />
       <View style={s.header}>
-        <Text style={s.heading}>CLASSIFIED ADS</Text>
+        <Text style={s.heading}>CLASSIFIED ADS (React Native)</Text>
         <Button
           title={`Theme: ${appearance}`}
           icon="Theme"
+          iconOnly
           onPress={() => setChoosingTheme(true)}
         />
       </View>

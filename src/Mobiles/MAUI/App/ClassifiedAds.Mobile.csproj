@@ -36,6 +36,8 @@
     <MauiFont Include="Resources/Fonts/*" />
     <MauiAsset Include="Resources/Raw/**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
     <ProjectReference Include="../Core/ClassifiedAds.Mobile.Core.csproj" />
+    <EmbeddedResource Include="../sentry.config.json" LogicalName="sentry.config.json" Condition="Exists('../sentry.config.json')" />
+    <PackageReference Include="Sentry.Maui" Version="7.0.1" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.20" />
     <PackageReference Include="Duende.IdentityModel.OidcClient" Version="7.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.13" />

@@ -1,7 +1,10 @@
+import { initializeSentry, wrapWithSentry } from "../core/diagnostics/sentry";
 import { Stack } from "expo-router";
 import { useEffect } from "react";
 import { initializeCrashReporting } from "../core/diagnostics/crash-reporting";
-export default function Layout() {
+initializeSentry();
+
+function Layout() {
   useEffect(() => {
     void initializeCrashReporting().catch(() => {
       console.warn("Crash reporting could not be initialized.");
@@ -9,3 +12,5 @@ export default function Layout() {
   }, []);
   return <Stack screenOptions={{ headerShown: false }} />;
 }
+
+export default wrapWithSentry(Layout);

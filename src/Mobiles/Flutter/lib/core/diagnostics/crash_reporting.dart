@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:sentry_flutter/sentry_flutter.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -32,12 +34,13 @@ class CrashReporting {
           details.exception,
           details.stack ?? StackTrace.current,
           fatal: true,
+          forwardToSentry: false,
         ),
       );
     };
     final previousPlatformHandler = PlatformDispatcher.instance.onError;
     PlatformDispatcher.instance.onError = (error, stack) {
-      unawaited(record(error, stack, fatal: true));
+      unawaited(record(error, stack, fatal: true, forwardToSentry: false));
       return previousPlatformHandler?.call(error, stack) ?? true;
     };
   }
@@ -47,7 +50,14 @@ class CrashReporting {
     Object error,
     StackTrace stack, {
     bool fatal = false,
+    bool forwardToSentry = true,
   }) async {
+    if (forwardToSentry && Sentry.isEnabled) {
+      await Sentry.captureException(
+        error.runtimeType.toString(),
+        stackTrace: stack,
+      );
+    }
     await _client?.recordError(
       error.runtimeType.toString(),
       stack,

@@ -1,3 +1,4 @@
+import 'action_group.dart';
 import 'pagination.dart';
 import 'action_label.dart';
 import '../models/repository.dart';
@@ -201,9 +202,9 @@ class _RecordPageState<T> extends State<RecordPage<T>> {
         .toList();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 12,
       children: [
         Text(widget.title, style: Theme.of(context).textTheme.headlineSmall),
-        const SizedBox(height: 16),
         TextField(
           decoration: const InputDecoration(
             labelText: 'Search current records',
@@ -213,9 +214,7 @@ class _RecordPageState<T> extends State<RecordPage<T>> {
             page = 1;
           }),
         ),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
+        ActionGroup(
           children: [
             TextButton(
               onPressed: busy ? null : () => run(load),
@@ -241,14 +240,14 @@ class _RecordPageState<T> extends State<RecordPage<T>> {
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 12,
                 children: [
                   Text(
                     widget.label(value),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   widget.summary(value),
-                  Wrap(
-                    spacing: 8,
+                  ActionGroup(
                     children: [
                       TextButton(
                         onPressed: busy
@@ -299,9 +298,11 @@ class _RecordPageState<T> extends State<RecordPage<T>> {
                               : () => run(() => history(value)),
                           child: const ActionLabel('History'),
                         ),
-                      ...?widget.actions?.call(value, run),
                     ],
                   ),
+                  if (widget.actions != null) ...[
+                    ...widget.actions!(value, run),
+                  ],
                 ],
               ),
             ),

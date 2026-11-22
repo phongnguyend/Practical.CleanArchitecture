@@ -63,6 +63,36 @@ public abstract class NavigationUiTests extends MobileUiTestSupport {
         awaitLabel("Practical.CleanArchitecture");
     }
 
+    @Test public void auditEventDetailsExpandAndCollapse() throws Exception {
+        navigate("Audit logs", Direction.RIGHT);
+        ready();
+        assertNoApiError("Audit logs");
+        if (app.equals("kotlin")) {
+            assertTrue("Audit refresh fills the content width",
+                button("Refresh").getVisibleBounds().width() > device.getDisplayWidth() * .8);
+        }
+        scrollToText("View event details");
+        capture("audit-events-collapsed");
+        String expand = app.equals("flutter") ? "View event details, Collapsed" : "View event details";
+        click(expand);
+        device.waitForIdle();
+        capture("audit-event-expanded");
+        scrollToText("Full data");
+        awaitLabel("Full data");
+        String toggle = app.equals("flutter") ? "View event details, Expanded"
+            : app.equals("capacitor") ? "View event details" : "Hide event details";
+        for (int attempt = 0; attempt < 30 && find("Refresh") == null; attempt++) {
+            UiObject2 content = device.findObjects(By.scrollable(true).pkg(packageName)).stream()
+                .max(Comparator.comparingInt(node -> node.getVisibleBounds().height())).orElse(null);
+            assertNotNull("Scrollable audit details", content);
+            content.scroll(Direction.UP, .8f);
+        }
+        awaitLabel(toggle);
+        click(toggle);
+        awaitLabel(expand);
+        capture("audit-event-collapsed-again");
+    }
+
     @Test public void notificationsConnectAndReturnHome() {
         navigate("Notifications", Direction.RIGHT);
         waitFor("Notification hub connects", () -> findPattern("Connected(?: to NotificationHub)?") != null);

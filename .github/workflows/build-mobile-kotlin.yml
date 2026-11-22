@@ -5,12 +5,16 @@ on:
     paths:
       - "src/Mobiles/Kotlin/**"
       - "src/Mobiles/tools/prepare_firebase.py"
+      - "src/Mobiles/tools/prepare_sentry.py"
+      - "src/Mobiles/tools/test_prepare_sentry.py"
       - "src/Mobiles/tools/test_prepare_firebase.py"
       - ".github/workflows/build-mobile-kotlin.yml"
   pull_request:
     paths:
       - "src/Mobiles/Kotlin/**"
       - "src/Mobiles/tools/prepare_firebase.py"
+      - "src/Mobiles/tools/prepare_sentry.py"
+      - "src/Mobiles/tools/test_prepare_sentry.py"
       - "src/Mobiles/tools/test_prepare_firebase.py"
       - ".github/workflows/build-mobile-kotlin.yml"
   workflow_dispatch:
@@ -23,6 +27,15 @@ concurrency:
   cancel-in-progress: true
 
 # This Jetpack Compose application has no iOS target.
+env:
+  SENTRY_DSN: ${{ secrets.SENTRY_KOTLIN_DSN }}
+  SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+  SENTRY_PROJECT: ${{ vars.SENTRY_KOTLIN_PROJECT }}
+  SENTRY_ENVIRONMENT: ${{ vars.SENTRY_ENVIRONMENT || 'ci' }}
+  SENTRY_RELEASE: mobile-kotlin@${{ github.sha }}
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  SENTRY_DISABLE_AUTO_UPLOAD: ${{ (secrets.SENTRY_AUTH_TOKEN == '' || vars.SENTRY_ORG == '' || vars.SENTRY_KOTLIN_PROJECT == '') && 'true' || 'false' }}
+
 jobs:
   android:
     name: Kotlin Android
@@ -36,6 +49,10 @@ jobs:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
+      - name: Prepare optional Sentry configuration
+        run: python3 ../tools/prepare_sentry.py --app Kotlin
+      - name: Test Sentry configuration validation
+        run: python3 -m unittest discover -s ../tools -p test_prepare_sentry.py
       - name: Test Firebase configuration validation
         run: python3 -m unittest discover -s ../tools -p test_prepare_firebase.py
       - name: Prepare optional Firebase configuration

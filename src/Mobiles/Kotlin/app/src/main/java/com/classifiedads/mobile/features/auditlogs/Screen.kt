@@ -32,24 +32,33 @@ fun AuditLogsScreen(api: Api) {
             busy = false
         }
     }
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text("Audit logs", style = MaterialTheme.typography.headlineSmall)
         TextInput("Search current records", search, { search = it })
-        OutlinedButton(shape = MaterialTheme.shapes.small, enabled = !busy, onClick = { refresh++ }) { ActionLabel("Refresh") }
-        if (busy) LinearProgressIndicator()
-        if (error.isNotEmpty()) Text(error)
+        OutlinedButton(
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.small,
+            enabled = !busy,
+            onClick = { refresh++ },
+        ) {
+            ActionLabel("Refresh")
+        }
+        if (busy) {
+            LinearProgressIndicator()
+        }
+        if (error.isNotEmpty()) {
+            Text(error)
+        }
         rows
             .filter { it.toString().contains(search, true) }
             .forEach { row ->
-                Card {
-                    Column(Modifier.padding(12.dp)) {
-                        Text(
-                            "${row.optString("createdDateTime")} · ${row.optString("userName")} · ${row.optString("action")}"
-                        )
-                        JsonViewer(row.opt("log"))
-                    }
+                key(row.optString("id")) {
+                    AuditEntry(row)
                 }
             }
+        if (!busy && error.isEmpty() && rows.none { it.toString().contains(search, true) }) {
+            Text("No audit logs found.")
+        }
         Pagination(page, total, 5, busy) { page = it }
     }
 }

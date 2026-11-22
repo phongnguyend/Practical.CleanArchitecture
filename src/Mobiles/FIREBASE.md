@@ -129,3 +129,7 @@ References: [Android setup](https://firebase.google.com/docs/crashlytics/android
 ## Capacitor
 
 See [Capacitor Crashlytics setup](Capacitor/README.md#firebase-crashlytics). Run the preparation script with `--app Capacitor`, then rebuild and `npx cap sync`. Use CI secrets `FIREBASE_CAPACITOR_ANDROID_CONFIG_BASE64` and `FIREBASE_CAPACITOR_IOS_CONFIG_BASE64`. Native plugin inclusion depends on each platform configuration file; omit those files for UI test builds. JavaScript reports contain sanitized categories; native crashes use the native SDK. iOS Release device builds upload dSYMs through the Swift Package Manager Crashlytics run script.
+
+## Sentry
+
+[Sentry](SENTRY.md) can be configured independently or alongside Crashlytics for all five apps.

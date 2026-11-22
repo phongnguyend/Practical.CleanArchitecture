@@ -87,7 +87,7 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("CLASSIFIED ADS", style = MaterialTheme.typography.titleLarge) },
+                    title = { Text("CLASSIFIED ADS (Kotlin)", style = MaterialTheme.typography.titleMedium) },
                     colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
                     actions = {
                         Box {

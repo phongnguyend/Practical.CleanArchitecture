@@ -21,3 +21,8 @@ ios/App/App/config.xml
 build/
 
 *.log
+
+# Generated public Sentry configuration; upload tokens belong only in CI.
+sentry.config.json
+sentry.properties
+.sentryclirc

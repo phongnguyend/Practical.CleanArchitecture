@@ -95,7 +95,17 @@ public sealed class WorkspacePage : ContentPage
     private void Build()
     {
         header.Clear();
-        header.Add(Ui.Actions(Ui.Text("Classified Ads", true), Ui.Button("Theme", "theme", Theme)));
+        var title = Ui.Text("CLASSIFIED ADS (.NET MAUI)", true);
+        title.FontSize = 18;
+        title.VerticalOptions = LayoutOptions.Center;
+        var titleBar = new Grid
+        {
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Star), new ColumnDefinition(GridLength.Auto) },
+            ColumnSpacing = 12
+        };
+        titleBar.Add(title);
+        titleBar.Add(Ui.Button("Theme", "theme", Theme), 1);
+        header.Add(titleBar);
         if (!services.SignedIn)
         {
             body.Content = new ScrollView
@@ -143,7 +153,6 @@ public sealed class WorkspacePage : ContentPage
     private void Home()
     {
         clock = Ui.Text("");
-        status = Ui.Text(services.Status);
         Tick(null, EventArgs.Empty);
         var home = Ui.Stack();
         home.Spacing = 16;
@@ -169,7 +178,6 @@ public sealed class WorkspacePage : ContentPage
                 Build();
             }
         }));
-        home.Add(status);
         body.Content = new ScrollView
         {
             Content = home

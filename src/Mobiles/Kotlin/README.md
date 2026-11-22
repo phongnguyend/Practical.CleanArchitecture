@@ -23,3 +23,7 @@ APK: `app/build/outputs/apk/debug/`. Requires Android 8/API 26+. AppAuth uses `c
 ## Crash reporting
 
 See [Firebase Crashlytics setup](../FIREBASE.md) for optional reporting, Firebase app registrations, local configuration, CI secrets, and verification. Ordinary builds work without Firebase configuration.
+
+## Sentry
+
+Optional Sentry reporting is available independently of Crashlytics. See [Sentry setup](../SENTRY.md) for client configuration, CI/Expo upload settings, and verification. Missing configuration leaves reporting disabled.
