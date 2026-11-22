@@ -17,6 +17,10 @@ APPS = {
         "android": ("com.classifiedads.mobile.flutter", "android/app/google-services.json"),
         "ios": ("com.classifiedads.mobile.flutter", "ios/Runner/GoogleService-Info.plist"),
     },
+    "Capacitor": {
+        "android": ("com.classifiedads.mobile.capacitor", "android/app/google-services.json"),
+        "ios": ("com.classifiedads.mobile.capacitor", "ios/App/App/GoogleService-Info.plist"),
+    },
     "MAUI": {
         "android": ("com.classifiedads.mobile.maui", "App/google-services.json"),
         "ios": ("com.classifiedads.mobile.maui", "App/GoogleService-Info.plist"),

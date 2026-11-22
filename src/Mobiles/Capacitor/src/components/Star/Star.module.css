@@ -1,0 +1,6 @@
+.Star {
+  overflow: hidden;
+}
+.Star div {
+  cursor: pointer;
+}

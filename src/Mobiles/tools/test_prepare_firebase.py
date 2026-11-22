@@ -19,7 +19,7 @@ def config(platform, identifier):
 
 
 class FirebaseConfigurationTests(unittest.TestCase):
-    def test_all_seven_app_registrations_accept_matching_config(self):
+    def test_all_app_registrations_accept_matching_config(self):
         for app, platforms in APPS.items():
             for platform, (identifier, relative) in platforms.items():
                 with self.subTest(app=app, platform=platform), tempfile.TemporaryDirectory() as folder:

@@ -1,6 +1,6 @@
 # Android UI automation
 
-These are real-device tests of the installed Flutter, Kotlin, React Native and MAUI apps, using AndroidX UI Automator. They interact with native accessibility elements without relying on screen coordinates or application test-mode bypasses. A small separate test-host APK lets the suite test all four apps without adding dependencies to production apps. Existing Flutter widget, Kotlin unit, and React Native rendered-screen tests remain the fastest first layer.
+These are real-device tests of the installed Flutter, Kotlin, React Native, MAUI and Capacitor apps, using AndroidX UI Automator. They interact with native accessibility elements without relying on screen coordinates or application test-mode bypasses. A small separate test-host APK lets the suite test all five apps without adding dependencies to production apps. Existing Flutter widget, Kotlin unit, and React Native rendered-screen tests remain the fastest first layer.
 
 ## Run
 
@@ -13,6 +13,7 @@ From the repository root (PowerShell):
 ./src/Mobiles/tests/Run-UiTests.ps1 -App Kotlin
 ./src/Mobiles/tests/Run-UiTests.ps1 -App ReactNative
 ./src/Mobiles/tests/Run-UiTests.ps1 -App MAUI
+./src/Mobiles/tests/Run-UiTests.ps1 -App Capacitor
 ./src/Mobiles/tests/Run-UiTests.ps1 -App All
 
 # Optional live API writes, using uniquely named products with cleanup:
@@ -29,7 +30,7 @@ The script locates the standard Android Studio SDK/JDK, forwards the local API/I
 
 ## Coverage
 
-Each app has a JUnit suite (`FlutterUiTest`, `KotlinUiTest`, `ReactNativeUiTest`, `MAUIUiTest`) composed of the same feature groups. Under `android/app/src/androidTest/java/com/classifiedads/mobile/uitests/`:
+Each app has a JUnit suite (`FlutterUiTest`, `KotlinUiTest`, `ReactNativeUiTest`, `MAUIUiTest`, `CapacitorUiTest`) composed of the same feature groups. Under `android/app/src/androidTest/java/com/classifiedads/mobile/uitests/`:
 
 | Folder | Coverage |
 | --- | --- |
@@ -74,3 +75,5 @@ MAUI was verified on Medium_Phone (Android 17) on 2026-11-21: the default suite 
 This first suite covers Android, including Flutter and React Native on Android. It does not cover iOS, browser login itself, file pickers/transfers, import/export, password/email actions, notification delivery, or offline/expired-token handling. Never run optional CRUD against production data. Use disposable development backends/accounts.
 
 Advanced: the independent Gradle project is `tests/android`; it reuses the repository's Kotlin Gradle wrapper. Standard Android Studio/Gradle `connectedDebugAndroidTest` execution and JUnit XML consumption work without the PowerShell wrapper.
+
+Capacitor was verified on Medium_Phone (Android 17) on 2026-11-22 using `-App Capacitor -IncludeCrud`: all 13 shared scenarios passed, with no skips. The run includes theme/session persistence, form validation and spacing, discard protection, product CRUD/history/cleanup, resource lists, audit pagination, and notifications. Local report: `artifacts/20261122-123907-Capacitor-All/reports/debug/index.html`. Its separate browser suite also checks aligned action groups and preserved product searches.

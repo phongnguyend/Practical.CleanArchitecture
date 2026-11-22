@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Classified Ads</string>
+    <string name="title_activity_main">Classified Ads</string>
+    <string name="package_name">com.classifiedads.mobile.capacitor</string>
+    <string name="custom_url_scheme">com.classifiedads.mobile.capacitor</string>
+</resources>
