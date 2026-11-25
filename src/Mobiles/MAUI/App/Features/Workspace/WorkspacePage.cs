@@ -15,17 +15,19 @@ public sealed class WorkspacePage : ContentPage
     private readonly ContentView body = new();
     private readonly Toast toast = new();
     private readonly VerticalStackLayout header = Ui.Stack();
+    private readonly Dictionary<string, Button> navigationButtons = new();
     private Label clock = Ui.Text(""), status = Ui.Text("Disconnected");
     private VerticalStackLayout messages = Ui.Stack();
     private IDispatcherTimer? timer;
     private bool initialized;
+    private string authenticationError = "";
     public WorkspacePage()
     {
         this.SetAppThemeColor(BackgroundColorProperty, Color.FromArgb("#f3f6fb"), Color.FromArgb("#0b1220"));
         var grid = new Grid
         {
-            Padding = 16,
-            RowSpacing = 16,
+            Padding = new Thickness(16, 8, 16, 16),
+            RowSpacing = 12,
             RowDefinitions =
             {
                 new(GridLength.Auto),
@@ -82,6 +84,15 @@ public sealed class WorkspacePage : ContentPage
     public async Task Pause()
     {
         timer?.Stop();
+        if (services.LockSession())
+        {
+            toast.IsVisible = false;
+            while (Navigation.ModalStack.LastOrDefault() is Dialog dialog)
+            {
+                await dialog.Close();
+            }
+            Build();
+        }
         await services.StopNotifications();
     }
 
@@ -95,8 +106,9 @@ public sealed class WorkspacePage : ContentPage
     private void Build()
     {
         header.Clear();
+        navigationButtons.Clear();
         var title = Ui.Text("CLASSIFIED ADS (.NET MAUI)", true);
-        title.FontSize = 18;
+        title.FontSize = 16;
         title.VerticalOptions = LayoutOptions.Center;
         var titleBar = new Grid
         {
@@ -104,18 +116,56 @@ public sealed class WorkspacePage : ContentPage
             ColumnSpacing = 12
         };
         titleBar.Add(title);
-        titleBar.Add(Ui.Button("Theme", "theme", Theme), 1);
+        var themeButton = Ui.Button("Theme", "theme", Theme);
+        themeButton.Text = string.Empty;
+        themeButton.WidthRequest = 48;
+        themeButton.HeightRequest = 48;
+        themeButton.Padding = 12;
+        titleBar.Add(themeButton, 1);
         header.Add(titleBar);
+        if (!string.IsNullOrEmpty(authenticationError))
+        {
+            var error = Ui.Text(authenticationError);
+            error.FontSize = 14;
+            var dismiss = Ui.Button("Dismiss error", "close", () =>
+            {
+                authenticationError = "";
+                Build();
+                return Task.CompletedTask;
+            });
+            dismiss.Text = string.Empty;
+            dismiss.WidthRequest = 48;
+            var errorRow = new Grid
+            {
+                ColumnDefinitions = { new ColumnDefinition(GridLength.Star), new ColumnDefinition(GridLength.Auto) },
+                ColumnSpacing = 8
+            };
+            errorRow.Add(error);
+            errorRow.Add(dismiss, 1);
+            header.Add(Ui.Card(errorRow));
+        }
         if (!services.SignedIn)
         {
-            body.Content = new ScrollView
+            var signedOut = Ui.Stack();
+            if (services.BiometricEnabled)
             {
-                Content = Ui.Stack(Ui.Text("Welcome to Classified Ads", true), Ui.Text("Sign in to manage your workspace."), Ui.Button("Sign in", "lock", async () =>
+                var heading = Ui.Text("Workspace locked", true);
+                heading.FontSize = 24;
+                signedOut.Add(heading);
+                signedOut.Add(Ui.Button("Unlock with biometrics", "lock", () => BiometricAction(services.UnlockSession)));
+            }
+            if (!services.BiometricEnabled)
+            {
+                var heading = Ui.Text("Your workspace, anywhere.", true);
+                heading.FontSize = 24;
+                signedOut.Add(heading);
+            }
+            signedOut.Add(Ui.Stack(Ui.Button("Sign in", "lock", async () =>
                 {
                     await services.Login();
                     Build();
-                }), Ui.Button("Server settings", "configuration", Settings))
-            };
+                }), Ui.Button("Server settings", "configuration", Settings)));
+            body.Content = new ScrollView { Content = signedOut };
             return;
         }
 
@@ -139,29 +189,100 @@ public sealed class WorkspacePage : ContentPage
             Notifications();
             return Task.CompletedTask;
         }));
-        header.Add(new ScrollView { Orientation = ScrollOrientation.Horizontal, Content = navigation });
+        foreach (var button in navigation.Children.OfType<Button>())
+        {
+            button.CornerRadius = 24;
+            button.LineBreakMode = LineBreakMode.NoWrap;
+            navigationButtons.Add(button.Text, button);
+        }
+        header.Add(new ScrollView { Orientation = ScrollOrientation.Horizontal, Content = navigation, HorizontalScrollBarVisibility = ScrollBarVisibility.Never });
         Home();
         services.StartNotifications();
     }
 
+    private async Task BiometricAction(Func<Task> action)
+    {
+        authenticationError = "";
+        try
+        {
+            await action();
+        }
+        catch
+        {
+            authenticationError = "Biometric authentication did not complete. Try again or sign in with Identity Server.";
+        }
+        Build();
+    }
+
     private Task Navigate(View view)
     {
+        SelectNavigation(view switch
+        {
+            ProductsView => "Products",
+            FilesView => "Files",
+            UsersView => "Users",
+            RolesView => "Roles",
+            ConfigurationEntriesView => "Configuration Entries",
+            AuditLogsView => "Audit logs",
+            _ => "Home"
+        });
         body.Content = view;
         return Task.CompletedTask;
     }
 
+    private void SelectNavigation(string title)
+    {
+        foreach (var (name, button) in navigationButtons)
+        {
+            var selected = name == title;
+            button.BackgroundColor = Color.FromArgb(selected ? "#e0e7ff" : "#e2e8f0");
+            button.BorderColor = selected ? Ui.Primary : Colors.Transparent;
+            button.TextColor = selected ? Ui.Primary : Color.FromArgb("#334155");
+            SemanticProperties.SetHint(button, selected ? "Current page" : "Open " + name);
+        }
+    }
+
     private void Home()
     {
+        SelectNavigation("Home");
         clock = Ui.Text("");
         Tick(null, EventArgs.Empty);
         var home = Ui.Stack();
-        home.Spacing = 16;
-        home.Add(Ui.Card(Ui.Stack(Ui.Text("Welcome to Classified Ads", true), clock, Ui.Text("Developed by Phong Nguyen \u00b7 @phongnguyend"), Ui.Button("Practical.CleanArchitecture", "link", async () => await Launcher.OpenAsync("https://github.com/phongnguyend/Practical.CleanArchitecture")))));
+        home.Spacing = 12;
+        var welcome = Ui.Text("Welcome to Classified Ads", true);
+        welcome.FontSize = 16;
+        var welcomeContent = Ui.Stack(welcome, clock, Ui.Text("Developed by Phong Nguyen \u00b7 @phongnguyend"),
+            Ui.Button("Practical.CleanArchitecture", "link", async () => await Launcher.OpenAsync("https://github.com/phongnguyend/Practical.CleanArchitecture")));
+        welcomeContent.Spacing = 6;
+        home.Add(Ui.Card(welcomeContent));
         home.Add(Ui.Button("Products", "products", () => Navigate(new ProductsView(services))));
         home.Add(Ui.Button("Files", "files", () => Navigate(new FilesView(services))));
         home.Add(Ui.Button("Users", "users", () => Navigate(new UsersView(services))));
         home.Add(Ui.Button("Roles", "roles", () => Navigate(new RolesView(services))));
         home.Add(Ui.Button("Configuration Entries", "configuration", () => Navigate(new ConfigurationEntriesView(services))));
+        if (services.BiometricAvailable || services.BiometricEnabled)
+        {
+            home.Add(Ui.Button(services.BiometricEnabled ? "Disable biometric login" : "Enable biometric login", "lock", () => BiometricAction(async () =>
+            {
+                if (services.BiometricEnabled)
+                {
+                    await services.DisableBiometrics();
+                }
+                else
+                {
+                    await services.EnableBiometrics();
+                }
+            })));
+        }
+        if (services.BiometricEnabled)
+        {
+            home.Add(Ui.Button("Lock app", "lock", async () =>
+            {
+                services.LockSession();
+                await services.StopNotifications();
+                Build();
+            }));
+        }
         home.Add(Ui.Button("Sign out", "logout", async () =>
         {
             if (!await Dialog.Confirm("Sign out of Classified Ads?"))
@@ -186,6 +307,7 @@ public sealed class WorkspacePage : ContentPage
 
     private void Notifications()
     {
+        SelectNavigation("Notifications");
         status = Ui.Text(services.Status);
         messages = Ui.Stack();
         body.Content = new ScrollView
@@ -197,7 +319,10 @@ public sealed class WorkspacePage : ContentPage
 
     private async void ShowToast(string message)
     {
-        await toast.Show(message);
+        if (services.SignedIn)
+        {
+            await toast.Show(message);
+        }
     }
 
     private void UpdateNotifications()

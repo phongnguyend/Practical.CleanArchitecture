@@ -26,7 +26,7 @@ From the repository root (PowerShell):
 ./src/Mobiles/tests/Run-UiTests.ps1 -App All -Feature Users
 ```
 
-The script locates the standard Android Studio SDK/JDK, forwards the local API/Identity/Metro ports, builds only the small test host, and returns a nonzero exit code for failures. It does not rebuild the four apps: rebuild/install the affected app after native or Flutter/Kotlin changes. React Native JavaScript changes can use Metro.
+The script locates the standard Android Studio SDK/JDK, forwards the local API/Identity/Metro ports, builds only the small test host, and returns a nonzero exit code for failures. It does not rebuild the five apps: rebuild/install the affected app after native or Flutter/Kotlin changes. React Native JavaScript changes can use Metro.
 
 ## Coverage
 
@@ -46,7 +46,7 @@ Use `-Feature Home`, `Products`, `Users`, `Roles`, `Configuration`, or `Navigati
 
 The scenarios cover:
 
-- App title: identifies the framework and stays within the screen bounds.
+- App title: identifies the framework, stays within the screen bounds, and does not overlap the compact theme control.
 - Home buttons and the project link: consistent content width, minimum touch-target height, and vertical gaps.
 - Product toolbar buttons: 48dp touch targets, screen bounds, and 12dp separation when arranged side by side or wrapped. Navigation labels must stay within a compact tab height.
 - Products, files, users, roles and configuration: navigation, completed API loading, paging/status, and visible API errors.
@@ -64,9 +64,11 @@ Tests use visible text/content descriptions, accessibility text entry, bounded w
 
 Ordinary scenarios return home to dispose the previous feature's state. Cold launches remain explicit in session/theme persistence checks. This avoids downloading the React Native development bundle for every case. Empty accessibility text is normalized across frameworks; selectors are scoped to the target app so keyboard controls cannot be mistaken for app actions.
 
-There are 16 scenarios per app (80 across all five). The default run executes 75 scenarios and skips the five optional CRUD cases. Form validation and discard tests do not save records or send account emails. The audit event detail check requires at least one audit event in the backend.
+There are 16 shared scenarios per app, plus a Kotlin compact-header check (81 across all five). The default run executes 76 scenarios and skips the five optional CRUD cases. The `Home` group runs 21 checks across all five apps. Biometric scenarios are opt-in and excluded from these totals. Form validation and discard tests do not save records or send account emails. The audit event detail check requires at least one audit event in the backend.
 
 ## Results and limitations
+
+On 2026-11-25, all 21 workspace/home checks passed across Flutter, Kotlin, React Native, MAUI and Capacitor on Medium_Phone (Android 17), with no skips or failures. This includes compact titles/theme controls, home action spacing, theme persistence and sign-out cancellation. Local report: `artifacts/20261125-112459-All-Home/reports/debug/index.html`. The separate biometric lifecycle scenario also passed for each of the five apps; iOS biometrics were not device-tested in this run.
 
 Verified on Medium_Phone (Android 17): the original 33 scenarios passed with `-App All -IncludeCrud`, including temporary-product cleanup in Flutter, Kotlin and React Native. After adding Audit logs and Notifications, all nine navigation checks passed with `-App All -Feature Navigation` (three checks per app, no skips).
 
@@ -79,3 +81,13 @@ This first suite covers Android, including Flutter and React Native on Android. 
 Advanced: the independent Gradle project is `tests/android`; it reuses the repository's Kotlin Gradle wrapper. Standard Android Studio/Gradle `connectedDebugAndroidTest` execution and JUnit XML consumption work without the PowerShell wrapper.
 
 Capacitor was verified on Medium_Phone (Android 17) on 2026-11-22 using `-App Capacitor -IncludeCrud`: all 13 shared scenarios passed, with no skips. The run includes theme/session persistence, form validation and spacing, discard protection, product CRUD/history/cleanup, resource lists, audit pagination, and notifications. Local report: `artifacts/20261122-123907-Capacitor-All/reports/debug/index.html`. Its separate browser suite also checks aligned action groups and preserved product searches.
+
+## Biometric login
+
+Enroll an Android emulator fingerprint and sign in normally in each app before running this opt-in group. The runner sends the enrolled fingerprint only when the test requests it; it does not change screen-lock or enrollment settings. Other feature groups do not enable biometrics.
+
+```powershell
+./Run-UiTests.ps1 -App All -Feature Biometrics -Fingerprint 1
+```
+
+This covers enabling protection, manual locking, cancelling and retrying unlock, background locking, cold-start locking, and disabling protection. A successful run leaves biometrics disabled so the normal authenticated suite can run. If a test fails after enrollment, unlock and disable biometric login before rerunning. The `-Fingerprint` number matches Extended controls (Finger 1 through Finger 10). The runner maps it to the emulator console ID; for fingerprints enrolled directly through the console, supply the raw ID with `-FingerprintId`.

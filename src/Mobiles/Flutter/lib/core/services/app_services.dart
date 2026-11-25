@@ -4,9 +4,13 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' show Rect;
 
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, TargetPlatform;
+import 'package:flutter/services.dart' show MethodChannel;
+
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:file_picker/file_picker.dart';
+import 'package:file_picker/file_picker.dart' hide AndroidOptions;
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -45,12 +49,145 @@ class AppServices {
 
   final _auth = const FlutterAppAuth();
   final _storage = const FlutterSecureStorage();
+  final _biometricStorage = const FlutterSecureStorage(
+    aOptions: AndroidOptions.biometric(
+      enforceBiometrics: true,
+      requireBiometricsPerOperation: true,
+      biometricType: AndroidBiometricType.strongBiometricOnly,
+      storageNamespace: 'classifiedads_biometric',
+      // Never migrate through a cached unlocked cipher; initialize a fresh
+      // per-operation store instead, including after biometric key invalidation.
+      migrateOnAlgorithmChange: false,
+      resetOnError: true,
+      biometricPromptTitle: 'Unlock Classified Ads',
+    ),
+    iOptions: IOSOptions(
+      accountName: 'classifiedads.biometric',
+      accessibility: KeychainAccessibility.passcode,
+      accessControlFlags: [AccessControlFlag.biometryCurrentSet],
+    ),
+  );
+  bool biometricEnabled = false;
+  bool _prompting = false;
+  int _generation = 0;
   Json? _session;
+
+  Future<T> _protected<T>(Future<T> Function() operation) async {
+    if (_prompting) {
+      throw Exception('Biometric authentication is already in progress.');
+    }
+    _prompting = true;
+    try {
+      return await operation();
+    } finally {
+      _prompting = false;
+    }
+  }
+
+  bool lockSession() {
+    _generation++;
+    if (!biometricEnabled) {
+      return false;
+    }
+    _session = null;
+    _refreshing = null;
+    unawaited(stopNotifications());
+    return true;
+  }
+
+  Future<void> enableBiometrics() async {
+    if (_session?['refreshToken'] == null) {
+      throw Exception('Sign in before enabling biometric login.');
+    }
+    final epoch = _generation;
+    final value = jsonEncode(_session);
+    await _protected(() async {
+      await _biometricStorage.write(key: 'session', value: value);
+      if (await _biometricStorage.read(key: 'session') != value) {
+        throw Exception('Biometric enrollment did not complete.');
+      }
+    });
+    if (epoch != _generation) {
+      throw Exception('App was backgrounded. Enable biometric login again.');
+    }
+    await _storage.write(key: 'biometric_enabled', value: 'true');
+    biometricEnabled = true;
+    await _storage.delete(key: 'session');
+    if (epoch != _generation) {
+      lockSession();
+      throw Exception('Session locked. Unlock again.');
+    }
+  }
+
+  Future<void> disableBiometrics() async {
+    if (_session == null) {
+      throw Exception('Unlock before changing biometric settings.');
+    }
+    final epoch = _generation;
+    final stored = await _protected(
+      () => _biometricStorage.read(key: 'session'),
+    );
+    if (stored == null || epoch != _generation || _session == null) {
+      throw Exception(
+        'Session changed. Unlock before changing biometric settings.',
+      );
+    }
+    await _storage.write(key: 'session', value: jsonEncode(_session));
+    await _clearBiometricStorage();
+    await _storage.delete(key: 'biometric_enabled');
+    biometricEnabled = false;
+  }
+
+  Future<void> unlockSession() async {
+    if (!biometricEnabled) {
+      throw Exception('Biometric login is not enabled.');
+    }
+    final epoch = _generation;
+    final value = await _protected(
+      () => _biometricStorage.read(key: 'session'),
+    );
+    if (value == null || epoch != _generation) {
+      throw Exception(
+        'Biometric credentials are unavailable. Please sign in again.',
+      );
+    }
+    _session = jsonDecode(value) as Json;
+    try {
+      await accessToken();
+    } catch (_) {
+      _session = null;
+      rethrow;
+    }
+  }
+
+  Future<void> _clearBiometricStorage() async {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      // Deletion must work even after enrollment changes or on devices without biometrics.
+      await const MethodChannel('classifiedads/biometrics')
+          .invokeMethod<void>('clear');
+    } else {
+      await _biometricStorage.delete(key: 'session');
+    }
+  }
+
+  Future<void> _forgetBiometrics() async {
+    _generation++;
+    _session = null;
+    await _clearBiometricStorage();
+    await _storage.delete(key: 'biometric_enabled');
+    biometricEnabled = false;
+  }
+
   Future<String>? _refreshing;
   HubConnection? _hub;
   Timer? _retry;
   bool get signedIn => _session != null;
   Future<void> restore() async {
+    _session = null;
+    biometricEnabled = await _storage.read(key: 'biometric_enabled') == 'true';
+    if (biometricEnabled) {
+      return;
+    }
     try {
       final saved = await _storage.read(key: 'session');
       _session = saved == null ? null : jsonDecode(saved) as Json;
@@ -65,7 +202,8 @@ class AppServices {
     if (access == null || access.isEmpty) {
       throw Exception('The identity provider did not return an access token.');
     }
-    _session = {
+    final epoch = _generation;
+    final next = {
       'accessToken': access,
       'refreshToken': token.refreshToken ?? _session?['refreshToken'],
       'idToken': token.idToken ?? _session?['idToken'],
@@ -74,11 +212,23 @@ class AppServices {
                   DateTime.now().add(const Duration(minutes: 5)))
               .toIso8601String(),
     };
-    await _storage.write(key: 'session', value: jsonEncode(_session));
+    if (biometricEnabled) {
+      await _protected(
+        () => _biometricStorage.write(key: 'session', value: jsonEncode(next)),
+      );
+    } else {
+      await _storage.write(key: 'session', value: jsonEncode(next));
+    }
+    if (epoch != _generation) {
+      throw Exception('Session locked. Please unlock again.');
+    }
+    _session = next;
     return access;
   }
 
   Future<void> login() async {
+    await _forgetBiometrics();
+    await _storage.delete(key: 'session');
     final token = await _auth.authorizeAndExchangeCode(
       AuthorizationTokenRequest(
         AppConfig.clientId,
@@ -91,7 +241,9 @@ class AppServices {
   }
 
   Future<String> accessToken() async {
-    if (_session == null) throw Exception('Please sign in.');
+    if (_session == null) {
+      throw Exception('Please sign in.');
+    }
     if (DateTime.parse(_session!['expiresAt'] as String)
         .isAfter(DateTime.now().add(const Duration(minutes: 1)))) {
       return _session!['accessToken'] as String;
@@ -121,7 +273,7 @@ class AppServices {
   Future<void> logout() async {
     await stopNotifications();
     final idToken = _session?['idToken'] as String?;
-    _session = null;
+    await _forgetBiometrics();
     await _storage.delete(key: 'session');
     if (idToken != null) {
       await _auth.endSession(

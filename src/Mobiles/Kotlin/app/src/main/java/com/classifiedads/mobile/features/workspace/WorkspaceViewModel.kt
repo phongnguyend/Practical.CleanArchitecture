@@ -79,6 +79,9 @@ class WorkspaceViewModel(application: Application) : AndroidViewModel(applicatio
             "ReceiveMessage",
             { text: String ->
                 viewModelScope.launch {
+                    if (!session.signedIn) {
+                        return@launch
+                    }
                     message = text
                     feed = (listOf(text) + feed).take(100)
                 }

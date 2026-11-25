@@ -26,9 +26,9 @@ html[data-bs-theme="dark"] body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px;
+  padding: 8px 16px;
   gap: 12px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
 }
 .mobile-header > span {
@@ -61,7 +61,7 @@ html[data-bs-theme="dark"] body {
   padding: 0 16px 32px;
 }
 h1 {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
 }
 .signed-out {
@@ -74,9 +74,10 @@ h1 {
   gap: 12px;
 }
 .home-actions h1 {
-  font-size: 19px;
+  font-size: 16px;
 }
 .home-actions p {
+  font-size: 14px;
   margin: 0 0 6px;
 }
 .btn {
@@ -339,4 +340,13 @@ form:has(.form-actions) {
     flex: 1 1 100%;
     min-width: 0;
   }
+}
+
+.signed-out [role="alert"], .home-actions > [role="alert"] {
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--bs-danger-bg-subtle);
+  color: var(--bs-danger-text-emphasis);
+  font-size: 14px;
 }

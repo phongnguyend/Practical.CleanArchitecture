@@ -9,6 +9,15 @@ import { router } from "expo-router";
 import { api, upload } from "../src/core/services";
 import App from "../src/features/workspace/WorkspaceScreen";
 
+jest.mock("../src/core/auth/session", () => ({
+  sessionUnlocked: () => true,
+  biometricEnabled: () => false,
+  biometricAvailable: () => false,
+  lockSession: jest.fn(() => false),
+  enableBiometrics: jest.fn(),
+  disableBiometrics: jest.fn(),
+  unlockSession: jest.fn(),
+}));
 let mockSection = "products";
 jest.mock("expo-router", () => ({
   useLocalSearchParams: () => ({ section: mockSection }),

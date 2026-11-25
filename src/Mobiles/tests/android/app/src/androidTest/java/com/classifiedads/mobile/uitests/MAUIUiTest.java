@@ -1,5 +1,6 @@
 package com.classifiedads.mobile.uitests;
 
+import com.classifiedads.mobile.uitests.features.biometrics.BiometricsUiTests;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import com.classifiedads.mobile.uitests.features.home.HomeUiTests;
@@ -46,6 +47,12 @@ public class MAUIUiTest {
     }
     public static class Navigation extends NavigationUiTests {
         public Navigation() {
+            super("maui", "com.classifiedads.mobile.maui", ".MainActivity");
+        }
+    }
+    // Explicit selection only: requires enrolled emulator biometrics.
+    public static class Biometrics extends BiometricsUiTests {
+        public Biometrics() {
             super("maui", "com.classifiedads.mobile.maui", ".MainActivity");
         }
     }

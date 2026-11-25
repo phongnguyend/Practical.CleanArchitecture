@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 
 const _icons = <String, String>{
   'Home': 'home',
+  'Unlock with biometrics': 'lock',
+  'Enable biometric login': 'lock',
+  'Disable biometric login': 'lock',
+  'Lock app': 'lock',
+
   'Products': 'products',
   'Files': 'files',
   'Users': 'users',

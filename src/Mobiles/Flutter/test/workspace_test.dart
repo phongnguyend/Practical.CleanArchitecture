@@ -179,7 +179,7 @@ void main() {
       action.top - tester.getRect(heading).bottom,
       greaterThanOrEqualTo(16),
     );
-    expect(tester.widget<Text>(heading).style?.fontSize, 26);
+    expect(tester.widget<Text>(heading).style?.fontSize, 24);
   });
 
   testWidgets(

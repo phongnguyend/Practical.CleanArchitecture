@@ -17,8 +17,8 @@ export function HomeInfo() {
   return (
     <View style={s.card}>
       <Text style={s.heading}>Welcome to Classified Ads</Text>
-      <Text style={s.text}>React Native · {now.toLocaleString()}</Text>
-      <Text style={s.text}>Developed by Phong Nguyen · @phongnguyend</Text>
+      <Text style={[s.text, { fontSize: 14 }]}>React Native · {now.toLocaleString()}</Text>
+      <Text style={[s.text, { fontSize: 14 }]}>Developed by Phong Nguyen · @phongnguyend</Text>
       <HomeButton
         title="Practical.CleanArchitecture"
         onPress={() => {

@@ -16,7 +16,7 @@ module.exports = ({ config }) => {
   return {
     ...config,
     android: { ...config.android, ...(android ? { googleServicesFile: androidFile } : {}) },
-    ios: { ...config.ios, ...(ios ? { googleServicesFile: iosFile } : {}) },
+    ios: { ...config.ios, infoPlist: { ...config.ios?.infoPlist, NSFaceIDUsageDescription: "Unlock your Classified Ads session with Face ID." }, ...(ios ? { googleServicesFile: iosFile } : {}) },
     extra: { ...config.extra, sentry, crashlytics: { android, ios } },
     plugins: [
       ...(config.plugins || []),

@@ -1,3 +1,5 @@
+import { biometricEnabled, biometricSupported } from "../../core/auth/biometric-store";
+import { enableBiometrics, disableBiometrics, unlockSession, lockSession } from "../Auth/authService";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { isAuthenticated, login, logout } from "../Auth/authService";
@@ -26,10 +28,23 @@ export default function Home() {
       setBusy(false);
     }
   };
+  const biometricAction = async (action: () => Promise<void>) => {
+    setBusy(true);
+    setError("");
+    try {
+      await action();
+    } catch {
+      setError("Biometric authentication did not complete. Try again or sign in with Identity Server.");
+    } finally {
+      setBusy(false);
+    }
+  };
   if (!isAuthenticated()) {
     return (
       <section className="signed-out">
-        <h1>Your workspace, anywhere.</h1>
+        <h1>{biometricEnabled() ? "Workspace locked" : "Your workspace, anywhere."}</h1>
+        {biometricEnabled() && <button className="btn btn-primary" disabled={busy}
+          onClick={() => void biometricAction(unlockSession)}><ActionIcon action="key" />Unlock with biometrics</button>}
         <button
           className="btn btn-primary"
           disabled={busy}
@@ -72,6 +87,11 @@ export default function Home() {
             {title}
           </Link>
         ))}
+      {biometricSupported() && <button className="btn btn-secondary" disabled={busy}
+        onClick={() => void biometricAction(biometricEnabled() ? disableBiometrics : enableBiometrics)}>
+        <ActionIcon action="key" />{biometricEnabled() ? "Disable biometric login" : "Enable biometric login"}
+      </button>}
+      {biometricEnabled() && <button className="btn btn-secondary" onClick={lockSession}><ActionIcon action="key" />Lock app</button>}
       <button className="btn btn-secondary" onClick={() => setConfirm(true)}>
         <ActionIcon action="logout" />
         Sign out

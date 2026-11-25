@@ -2,6 +2,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
 import { existsSync } from "node:fs";
 const plugins = [
   "@sentry/capacitor",
+  "@capgo/capacitor-native-biometric",
   "@aparajita/capacitor-secure-storage",
   "@capacitor/app",
   "@capacitor/browser",

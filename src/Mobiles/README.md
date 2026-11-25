@@ -1,6 +1,6 @@
 # Mobile applications
 
-Four independent native clients for the API used by `src/UIs`:
+Five independent mobile clients for the API used by `src/UIs`:
 
 | Project | Toolkit | Platforms |
 | --- | --- | --- |
@@ -10,11 +10,11 @@ Four independent native clients for the API used by `src/UIs`:
 | [Capacitor](Capacitor/README.md) | React + Capacitor | Android, iOS |
 | [MAUI](MAUI/README.md) | .NET MAUI native controls | Android, iOS |
 
-All four include browser OIDC login with PKCE, secure session storage/refresh, logout, persisted System/Light/Dark appearance, search, paging, loading/error states, confirmation dialogs, editors, expandable JSON inspection/copy, and foreground SignalR notifications.
+All five include browser OIDC login with PKCE, secure session storage/refresh, logout, persisted System/Light/Dark appearance, search, paging, loading/error states, confirmation dialogs, editors, expandable JSON inspection/copy, and foreground SignalR notifications.
 
 ## Features
 
-| Area | Available in all four apps |
+| Area | Available in all five apps |
 | --- | --- |
 | Products | Name filtering, image visibility, ratings, readable details, create/edit/delete, highlighted audit history, confirmed CSV import, CSV/PDF exports |
 | Files | List/details, multipart upload with encryption choice, metadata edit with read-only filename/encryption, delete, download/share, highlighted audit history |
@@ -28,6 +28,24 @@ All four include browser OIDC login with PKCE, secure session storage/refresh, l
 The existing CSV/Excel import endpoints parse and return rows without persisting them. Like the web clients, mobile clients ask for confirmation before processing, then reload the list; they report processing rather than claiming records were saved. Notifications use SignalR while foregrounded, not OS push delivery. Backend authorization remains authoritative.
 
 The feature reference is the implementation in `src/UIs/angular`, `src/UIs/reactjs`, and `src/UIs/vuejs`. Native screens retain the same API operations and validation, with date/time pickers, platform file sharing, and mobile layouts. Details show labeled fields; history shows snapshots and changed fields, with JSON available for inspection. Editors distinguish unchanged cancellation from discarding edits.
+
+## Biometric login
+
+All five apps support optional biometric unlock of a saved Identity Server session. Sign in normally, then select **Enable biometric login** on Home and complete the system biometric prompt. Enabling requires a refresh token and an enrolled biometric. Biometrics stay on the device; passwords and biometric data are never sent to the API.
+
+When enabled, **Lock app**, backgrounding, or restarting the app hides the workspace and requires **Unlock with biometrics** before accessing the saved session. Cancellation leaves the app locked. The normal **Sign in** action remains available if biometrics are unavailable or the session has expired or been revoked. Signing in again resets biometric enrollment for that app; signing out deletes it. **Disable biometric login** requires another biometric check before returning to normal session storage.
+
+| App | Protected credential storage |
+| --- | --- |
+| Kotlin | Android Keystore private key with per-operation strong biometric authentication; AES-GCM encrypted session |
+| Flutter | `flutter_secure_storage` biometric storage, strong biometrics on Android and current biometric enrollment on iOS |
+| React Native | Expo SecureStore with `requireAuthentication` and a separate device-only keychain service |
+| MAUI | Android Keystore biometric private key and AES-GCM session; iOS Keychain with `BiometryCurrentSet` |
+| Capacitor | Native biometric plugin protected data API with `BIOMETRY_CURRENT_SET`; no browser fallback |
+
+Kotlin and MAUI biometric unlock require Android 11 or later with strong biometrics. Unsupported devices retain normal sign-in. iOS apps include the Face ID usage description. React Native needs a native development or release build, rather than Expo Go. Token rotation can produce additional system prompts in Flutter, React Native, and Capacitor because writes use their protected storage APIs.
+
+For device verification, enroll a fingerprint or Face ID in the device settings first. On an Android emulator, use **Extended controls ? Fingerprint ? Touch sensor** to complete prompts for the enrolled fingerprint. Verify enrollment, manual lock/unlock, cancelled unlock, background/foreground, cold restart, disabling, and sign-out. Changing enrolled biometrics may invalidate the saved key; recover through normal sign-in and enable biometric login again. Unit tests cover storage migration, locked startup, successful and cancelled reads, interrupted unlock/disable, and credential cleanup. Native biometric prompts still require device testing; mocked storage tests do not verify hardware-backed authentication.
 
 ## GitHub Actions builds
 
