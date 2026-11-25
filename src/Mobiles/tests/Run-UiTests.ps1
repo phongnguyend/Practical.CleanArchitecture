@@ -1,9 +1,12 @@
 param(
     [ValidateSet('All', 'Flutter', 'Kotlin', 'ReactNative', 'MAUI', 'Capacitor')]
     [string]$App = 'All',
-    [ValidateSet('All', 'Home', 'Products', 'Users', 'Roles', 'Configuration', 'Navigation')]
+    [ValidateSet('All', 'Home', 'Products', 'Users', 'Roles', 'Configuration', 'Navigation', 'Biometrics')]
     [string]$Feature = 'All',
     [switch]$IncludeCrud,
+    [ValidateRange(1, 10)]
+    [int]$Fingerprint = 1,
+    [int]$FingerprintId = 0,
     [string]$Serial,
     [string]$TestMethod
 )
@@ -41,6 +44,15 @@ foreach ($port in @(44312, 44367, 8081)) {
     & $adb -s $Serial reverse "tcp:$port" "tcp:$port"
     if ($LASTEXITCODE -ne 0) { throw "Could not forward port $port." }
 }
+if ($Feature -eq 'Biometrics' -and $Serial -notlike 'emulator-*') {
+    throw 'Biometrics automation requires an Android emulator with an enrolled fingerprint.'
+}
+# Extended controls uses fixed IDs, not the visible Finger 1..10 numbers.
+# Android emulator finger-page.cpp defines this mapping.
+$fingerIds = @(45146572, 192618075, 84807873, 189675793, 132710472, 36321043, 139425534, 15301340, 105702233, 87754286)
+if ($FingerprintId -eq 0) {
+    $FingerprintId = $fingerIds[$Fingerprint - 1]
+}
 $run = Get-Date -Format 'yyyyMMdd-HHmmss'
 $output = Join-Path $PSScriptRoot "artifacts/$run-$App-$Feature"
 New-Item -ItemType Directory -Path $output -Force | Out-Null
@@ -56,6 +68,7 @@ $arguments = @('-p', (Join-Path $PSScriptRoot 'android'), 'connectedDebugAndroid
 $env:ANDROID_HOME = $sdk
 $exitCode = 1
 $previousErrorPreference = $ErrorActionPreference
+$fingerprintJob = $null
 $testMutex = [System.Threading.Mutex]::new($false, 'Local\ClassifiedAdsMobileUiTests')
 try {
     if (!$testMutex.WaitOne(0)) {
@@ -66,11 +79,34 @@ try {
     # A terminated runner releases ownership to this process.
 }
 try {
+    if ($Feature -eq 'Biometrics') {
+        $fingerprintJob = Start-Job -ArgumentList $adb, $Serial, $run, $FingerprintId, (Join-Path $output 'fingerprint.log') -ScriptBlock {
+            param($adbPath, $deviceSerial, $runId, $fingerId, $logPath)
+            $seen = @{}
+            while ($true) {
+                $lines = & $adbPath -s $deviceSerial logcat -d -v raw 'ClassifiedAdsBiometrics:I' '*:S'
+                foreach ($line in $lines) {
+                    if ($line.StartsWith("TOUCH:${runId}:") -and !$seen.ContainsKey($line)) {
+                        $seen[$line] = $true
+                        & $adbPath -s $deviceSerial emu finger remove 2>&1 | Add-Content $logPath
+                        & $adbPath -s $deviceSerial emu finger touch $fingerId 2>&1 | Add-Content $logPath
+                        Start-Sleep -Milliseconds 200
+                        & $adbPath -s $deviceSerial emu finger remove 2>&1 | Add-Content $logPath
+                    }
+                }
+                Start-Sleep -Milliseconds 400
+            }
+        }
+    }
     # Windows PowerShell turns native stderr into error records, including Gradle warnings.
     $ErrorActionPreference = 'Continue'
     & (Join-Path $mobileRoot 'Kotlin/gradlew.bat') @arguments 2>&1 | Tee-Object (Join-Path $output 'gradle.log')
     $exitCode = $LASTEXITCODE
 } finally {
+    if ($fingerprintJob) {
+        Stop-Job $fingerprintJob
+        Remove-Job $fingerprintJob
+    }
     & $adb -s $Serial pull "/data/local/tmp/classifiedads-ui-results/$run" (Join-Path $output 'screenshots') 2>$null | Out-Null
     foreach ($path in @('outputs/androidTest-results/connected', 'reports/androidTests/connected')) {
         $source = Join-Path $PSScriptRoot "android/app/build/$path"

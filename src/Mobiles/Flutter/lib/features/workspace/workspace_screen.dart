@@ -63,7 +63,9 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
 
   Future<void> connect() => widget.services.startNotifications(
     (message) {
-      if (!mounted) return;
+      if (!mounted || !widget.services.signedIn) {
+        return;
+      }
       setState(() {
         feed.insert(0, message);
         if (feed.length > 100) feed.removeLast();
@@ -77,6 +79,14 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
   );
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused && widget.services.lockSession()) {
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      setState(() {
+        feed.clear();
+        section = 'home';
+      });
+    }
     if (state == AppLifecycleState.resumed && widget.services.signedIn) {
       unawaited(connect());
     } else if (state != AppLifecycleState.resumed) {
@@ -89,6 +99,25 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     unawaited(widget.services.stopNotifications());
     super.dispose();
+  }
+
+  Future<void> biometricAction(Future<void> Function() action) async {
+    setState(() {
+      busy = true;
+      error = '';
+    });
+    try {
+      await action();
+      if (widget.services.signedIn) {
+        await connect();
+      }
+    } catch (_) {
+      error = 'Biometric authentication did not complete. Try again or sign in with Identity Server.';
+    } finally {
+      if (mounted) {
+        setState(() => busy = false);
+      }
+    }
   }
 
   Future<void> authenticate({bool out = false}) async {
@@ -140,7 +169,7 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
     ),
     _ => Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: 16,
+      spacing: 12,
       children: [
         HomeInfo(openProject: widget.services.openProject),
         for (final entry in destinations.entries.where(
@@ -149,6 +178,27 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
           HomeButton(
             onPressed: () => setState(() => section = entry.key),
             label: entry.value,
+          ),
+        HomeButton(
+          label: widget.services.biometricEnabled
+              ? 'Disable biometric login'
+              : 'Enable biometric login',
+          onPressed: () => biometricAction(
+            widget.services.biometricEnabled
+                ? widget.services.disableBiometrics
+                : widget.services.enableBiometrics,
+          ),
+        ),
+        if (widget.services.biometricEnabled)
+          HomeButton(
+            label: 'Lock app',
+            onPressed: () {
+              widget.services.lockSession();
+              setState(() {
+                feed.clear();
+                section = 'home';
+              });
+            },
           ),
         HomeButton(
           onPressed: () async {
@@ -164,7 +214,10 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
-      title: const Text('CLASSIFIED ADS (Flutter)', style: TextStyle(fontSize: 18)),
+      title: const Text(
+        'CLASSIFIED ADS (Flutter)',
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+      ),
       actions: [
         PopupMenuButton<ThemeMode>(
           tooltip: 'Theme',
@@ -188,7 +241,40 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
       child: Column(
         children: [
           if (busy) const LinearProgressIndicator(),
-          if (error.isNotEmpty) Text(error),
+          if (error.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Material(
+                color: Theme.of(context).colorScheme.errorContainer,
+                borderRadius: BorderRadius.circular(10),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 12),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Semantics(
+                          liveRegion: true,
+                          child: Text(
+                            error,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onErrorContainer,
+                            ),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        tooltip: 'Dismiss error',
+                        onPressed: () => setState(() => error = ''),
+                        icon: const Icon(Icons.close, size: 20),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           if (!ready)
             const CircularProgressIndicator()
           else if (!widget.services.signedIn)
@@ -199,10 +285,23 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      'Your workspace, anywhere.',
-                      style: Theme.of(context).textTheme.headlineSmall,
+                      widget.services.biometricEnabled
+                          ? 'Workspace locked'
+                          : 'Your workspace, anywhere.',
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontSize: 24),
                     ),
                     const SizedBox(height: 16),
+                    if (widget.services.biometricEnabled)
+                      OutlinedButton(
+                        onPressed: busy
+                            ? null
+                            : () => biometricAction(
+                                widget.services.unlockSession,
+                              ),
+                        child: const ActionLabel('Unlock with biometrics'),
+                      ),
+                    const SizedBox(height: 12),
                     FilledButton(
                       onPressed: busy ? null : () => authenticate(),
                       child: const ActionLabel('Sign in'),

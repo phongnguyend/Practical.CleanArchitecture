@@ -56,7 +56,7 @@ val generateLocalCertificateResources = tasks.register("generateLocalCertificate
                     <network-security-config>
                         <base-config cleartextTrafficPermitted="false"><trust-anchors><certificates src="system" /></trust-anchors></base-config>
                         <domain-config cleartextTrafficPermitted="false">
-                            <domain>localhost</domain>
+                            <domain includeSubdomains="false">localhost</domain>
                             <trust-anchors><certificates src="system" /><certificates src="@raw/local_development_certificate" /></trust-anchors>
                         </domain-config>
                     </network-security-config>

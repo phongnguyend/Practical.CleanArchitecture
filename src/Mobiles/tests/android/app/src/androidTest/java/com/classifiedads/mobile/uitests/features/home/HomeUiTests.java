@@ -36,6 +36,11 @@ public abstract class HomeUiTests extends MobileUiTestSupport {
         Rect bounds = find(title).getVisibleBounds();
         assertTrue("Title must be visible", bounds.width() > 0 && bounds.height() > 0);
         assertTrue("Title must fit on screen", bounds.left >= 0 && bounds.right <= device.getDisplayWidth());
+        var theme = findPattern("(?i)Theme.*");
+        assertNotNull("Theme control must have an accessible label", theme);
+        Rect themeBounds = actionable(theme).getVisibleBounds();
+        assertTrue("Theme control must remain compact", themeBounds.width() <= dp(56) + 2);
+        assertTrue("App title must not overlap the theme control", bounds.right <= themeBounds.left);
         Rect homeTab = button("Home").getVisibleBounds();
         assertTrue("Navigation labels must not wrap vertically", homeTab.height() <= dp(56));
     }

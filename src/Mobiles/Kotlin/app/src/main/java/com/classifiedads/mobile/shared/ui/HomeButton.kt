@@ -21,7 +21,7 @@ fun HomeButton(label: String, onClick: () -> Unit) {
             containerColor = if (colors.background == Color(0xff0b1220)) Color(0xff1e293b) else Color.White,
             contentColor = colors.onSurface,
         ),
-        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 12.dp),
+        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
     ) {
         ActionLabel(label)
     }

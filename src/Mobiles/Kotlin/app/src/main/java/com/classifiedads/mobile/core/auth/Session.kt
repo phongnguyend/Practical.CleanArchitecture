@@ -14,26 +14,79 @@ import net.openid.appauth.*
 
 class Session(private val context: Context) {
     private val vault = TokenVault(context)
+    private val biometric = BiometricVault(context)
+    private var generation = 0
+    val biometricEnabled get() = biometric.enabled
+    fun biometricAvailable() = biometric.available()
+    fun lock(): Boolean {
+        generation++
+        if (!biometricEnabled) {
+            return false
+        }
+        state = AuthState()
+        return true
+    }
+    suspend fun enableBiometrics(activity: android.app.Activity) {
+        check(signedIn) { "Please sign in first." }
+        val epoch = generation
+        val value = state.jsonSerializeString()
+        biometric.create()
+        biometric.save(value)
+        check(biometric.read(activity) == value && epoch == generation)
+        biometric.enabled = true
+        vault.save(null)
+    }
+    suspend fun disableBiometrics(activity: android.app.Activity) {
+        check(signedIn) { "Unlock before changing biometric settings." }
+        val epoch = generation
+        biometric.read(activity)
+        check(epoch == generation && signedIn) { "Session changed. Unlock again." }
+        vault.save(state.jsonSerializeString())
+        biometric.clear()
+    }
+    suspend fun unlock(activity: android.app.Activity) {
+        check(biometricEnabled)
+        val epoch = generation
+        val data = biometric.read(activity)
+        check(epoch == generation) { "Session changed. Unlock again." }
+        state = AuthState.jsonDeserialize(data)
+        try {
+            token()
+        } catch (error: Exception) {
+            state = AuthState()
+            throw error
+        }
+    }
+    private fun persist(value: AuthState) {
+        if (biometricEnabled) {
+            biometric.save(value.jsonSerializeString())
+        } else {
+            vault.save(value.jsonSerializeString())
+        }
+    }
     private val service = AuthorizationService(context)
     private var state =
-        vault.read()?.let { runCatching { AuthState.jsonDeserialize(it) }.getOrNull() }
+        (if (biometricEnabled) null else vault.read())?.let { runCatching { AuthState.jsonDeserialize(it) }.getOrNull() }
             ?: AuthState()
     private val mutex = Mutex()
     val signedIn
         get() = state.isAuthorized
 
     suspend fun loginIntent(): Intent {
+        biometric.clear()
+        vault.save(null)
+        state = AuthState()
         val configuration =
             suspendCancellableCoroutine<AuthorizationServiceConfiguration> { continuation ->
                 AuthorizationServiceConfiguration.fetchFromIssuer(
                     Uri.parse(BuildConfig.AUTHORITY)
                 ) { config, error ->
                     if (continuation.isActive) {
-                        if (config != null) continuation.resume(config)
-                        else
-                            continuation.resumeWithException(
-                                error ?: IOException("Discovery failed")
-                            )
+                        if (config != null) {
+                            continuation.resume(config)
+                        } else {
+                            continuation.resumeWithException(error ?: IOException("Discovery failed"))
+                        }
                     }
                 }
             }
@@ -53,15 +106,26 @@ class Session(private val context: Context) {
         requireNotNull(intent) { "Sign-in cancelled" }
         val response = AuthorizationResponse.fromIntent(intent)
         val error = AuthorizationException.fromIntent(intent)
-        if (response == null) throw error ?: IOException("Sign-in cancelled")
+        if (response == null) {
+            throw error ?: IOException("Sign-in cancelled")
+        }
         state = AuthState(response, error)
         suspendCancellableCoroutine<Unit> { continuation ->
             service.performTokenRequest(response.createTokenExchangeRequest()) { tokens, failure ->
-                state.update(tokens, failure)
-                vault.save(state.jsonSerializeString())
-                if (continuation.isActive) {
-                    if (failure != null) continuation.resumeWithException(failure)
-                    else continuation.resume(Unit)
+                try {
+                    state.update(tokens, failure)
+                    persist(state)
+                    if (continuation.isActive) {
+                        if (failure != null) {
+                            continuation.resumeWithException(failure)
+                        } else {
+                            continuation.resume(Unit)
+                        }
+                    }
+                } catch (error: Exception) {
+                    if (continuation.isActive) {
+                        continuation.resumeWithException(error)
+                    }
                 }
             }
         }
@@ -69,15 +133,29 @@ class Session(private val context: Context) {
 
     suspend fun token(): String = mutex.withLock {
         check(signedIn) { "Please sign in." }
+        val previous = state
         suspendCancellableCoroutine { continuation ->
-            state.performActionWithFreshTokens(service) { token, _, failure ->
-                vault.save(state.jsonSerializeString())
+            previous.performActionWithFreshTokens(service) { token, _, failure ->
+                if (state !== previous) {
+                    if (continuation.isActive) {
+                        continuation.resumeWithException(IOException("Session locked. Please unlock again."))
+                    }
+                    return@performActionWithFreshTokens
+                }
+                try {
+                    persist(previous)
+                } catch (error: Exception) {
+                    if (continuation.isActive) {
+                        continuation.resumeWithException(error)
+                    }
+                    return@performActionWithFreshTokens
+                }
                 if (continuation.isActive) {
-                    if (token != null) continuation.resume(token)
-                    else
-                        continuation.resumeWithException(
-                            failure ?: IOException("Session expired. Sign in again.")
-                        )
+                    if (token != null && state === previous) {
+                        continuation.resume(token)
+                    } else {
+                        continuation.resumeWithException(failure ?: IOException("Session expired or locked. Sign in again."))
+                    }
                 }
             }
         }
@@ -97,6 +175,7 @@ class Session(private val context: Context) {
             else null
         state = AuthState()
         vault.save(null)
+        biometric.clear()
         return intent
     }
 

@@ -41,6 +41,84 @@ public sealed class AppServices
     private readonly SemaphoreSlim sessionLock = new(1, 1);
     private readonly OidcClient auth;
     private StoredSession? session;
+    private int generation;
+    public bool BiometricEnabled => BiometricVault.Enabled;
+
+    public bool BiometricAvailable => BiometricVault.IsAvailable();
+
+    public bool LockSession()
+    {
+        Interlocked.Increment(ref generation);
+        if (!BiometricEnabled)
+        {
+            return false;
+        }
+
+        session = null;
+        Messages.Clear();
+        return true;
+    }
+
+    public async Task EnableBiometrics()
+    {
+        var current = session ?? throw new InvalidOperationException("Sign in first.");
+        if (string.IsNullOrEmpty(current.RefreshToken))
+        {
+            throw new InvalidOperationException("Sign in again to enable biometric login.");
+        }
+
+        var epoch = generation;
+        var data = JsonSerializer.Serialize(current);
+        await BiometricVault.Create();
+        await BiometricVault.Write(data);
+        if (await BiometricVault.Read() != data || epoch != generation)
+        {
+            throw new InvalidOperationException("Biometric enrollment did not complete.");
+        }
+
+        BiometricVault.Enabled = true;
+        SecureStorage.Remove(SessionKey);
+    }
+
+    public async Task DisableBiometrics()
+    {
+        var current = session ?? throw new InvalidOperationException("Unlock before changing biometric settings.");
+        var epoch = generation;
+        await BiometricVault.Read();
+        if (epoch != generation)
+        {
+            throw new InvalidOperationException("Session changed. Unlock again.");
+        }
+
+        await SecureStorage.SetAsync(SessionKey, JsonSerializer.Serialize(current));
+        BiometricVault.Clear();
+    }
+
+    public async Task UnlockSession()
+    {
+        if (!BiometricEnabled)
+        {
+            throw new InvalidOperationException("Biometric login is not enabled.");
+        }
+
+        var epoch = generation;
+        var data = await BiometricVault.Read();
+        if (epoch != generation)
+        {
+            throw new InvalidOperationException("Session changed. Unlock again.");
+        }
+
+        session = JsonSerializer.Deserialize<StoredSession>(data);
+        try
+        {
+            await AccessToken();
+        }
+        catch
+        {
+            session = null;
+            throw;
+        }
+    }
     private HubConnection? hub;
     private CancellationTokenSource? hubLifetime;
     public ApiClient Api { get; }
@@ -63,6 +141,12 @@ public sealed class AppServices
 
     public async Task Restore()
     {
+        session = null;
+        if (BiometricEnabled)
+        {
+            return;
+        }
+
         var stored = await SecureStorage.GetAsync(SessionKey);
         if (stored is not null)
         {
@@ -79,6 +163,9 @@ public sealed class AppServices
 
     public async Task Login()
     {
+        BiometricVault.Clear();
+        SecureStorage.Remove(SessionKey);
+        session = null;
         var result = await auth.LoginAsync(new LoginRequest());
         if (result.IsError)
         {
@@ -90,7 +177,21 @@ public sealed class AppServices
 
     private async Task Save(StoredSession value)
     {
-        await SecureStorage.SetAsync(SessionKey, JsonSerializer.Serialize(value));
+        var epoch = generation;
+        if (BiometricEnabled)
+        {
+            await BiometricVault.Write(JsonSerializer.Serialize(value));
+        }
+        else
+        {
+            await SecureStorage.SetAsync(SessionKey, JsonSerializer.Serialize(value));
+        }
+
+        if (epoch != generation)
+        {
+            throw new InvalidOperationException("Session locked. Unlock again.");
+        }
+
         session = value;
     }
 
@@ -114,7 +215,12 @@ public sealed class AppServices
                 throw new InvalidOperationException("Session expired. Please sign out and sign in again.");
             }
 
-            var result = await auth.RefreshTokenAsync(session.RefreshToken);
+            var previous = session;
+            var result = await auth.RefreshTokenAsync(previous.RefreshToken);
+            if (!ReferenceEquals(session, previous))
+            {
+                throw new InvalidOperationException("Session locked. Unlock again.");
+            }
             if (result.IsError)
             {
                 throw new InvalidOperationException("Session expired. Please sign out and sign in again.");
@@ -139,6 +245,8 @@ public sealed class AppServices
             id = session?.IdentityToken;
             session = null;
             SecureStorage.Remove(SessionKey);
+            BiometricVault.Clear();
+            Interlocked.Increment(ref generation);
             Messages.Clear();
         }
         finally

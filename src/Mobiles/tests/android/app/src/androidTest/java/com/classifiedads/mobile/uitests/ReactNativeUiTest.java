@@ -1,5 +1,6 @@
 package com.classifiedads.mobile.uitests;
 
+import com.classifiedads.mobile.uitests.features.biometrics.BiometricsUiTests;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import com.classifiedads.mobile.uitests.features.home.HomeUiTests;
@@ -36,5 +37,11 @@ public class ReactNativeUiTest {
     }
     public static class Navigation extends NavigationUiTests {
         public Navigation() { super("reactnative", "com.classifiedads.mobile.reactnative", ".MainActivity"); }
+    }
+    // Explicit selection only: requires enrolled emulator biometrics.
+    public static class Biometrics extends BiometricsUiTests {
+        public Biometrics() {
+            super("reactnative", "com.classifiedads.mobile.reactnative", ".MainActivity");
+        }
     }
 }

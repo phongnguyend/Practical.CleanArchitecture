@@ -9,6 +9,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
+import com.classifiedads.mobile.R
 import androidx.core.view.WindowCompat
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -67,8 +73,18 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
     DisposableEffect(owner, model.signedIn) {
         val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_START) model.setNotifications(true)
-            else if (event == Lifecycle.Event.ON_STOP) model.setNotifications(false)
+            if (event == Lifecycle.Event.ON_START) {
+                model.setNotifications(true)
+            } else if (event == Lifecycle.Event.ON_PAUSE) {
+                model.setNotifications(false)
+                if (model.session.lock()) {
+                    model.signedIn = false
+                    model.feed = emptyList()
+                    model.message = ""
+                    snackbar.currentSnackbarData?.dismiss()
+                    model.section = "home"
+                }
+            }
         }
         owner.lifecycle.addObserver(observer)
         model.setNotifications(owner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED))
@@ -91,7 +107,14 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
                     colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
                     actions = {
                         Box {
-                            OutlinedButton(shape = MaterialTheme.shapes.small, onClick = { appearance = true }) { ActionLabel("Theme") }
+                            IconButton(onClick = { appearance = true }) {
+                                Icon(
+                                    painterResource(R.drawable.action_theme),
+                                    contentDescription = "Theme: ${if (model.dark == null) "System" else if (darkTheme) "Dark" else "Light"}",
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(22.dp),
+                                )
+                            }
                             DropdownMenu(
                                 expanded = appearance,
                                 onDismissRequest = { appearance = false },
@@ -114,29 +137,61 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
             snackbarHost = { SnackbarHost(snackbar) },
         ) { padding ->
             Column(Modifier.padding(padding)) {
-                if (model.busy) LinearProgressIndicator()
-                if (model.error.isNotEmpty()) Text(model.error)
-                if (!model.signedIn)
-                    Column(Modifier.padding(24.dp)) {
+                if (model.busy) {
+                    LinearProgressIndicator(Modifier.fillMaxWidth())
+                }
+                if (model.error.isNotEmpty()) {
+                    Surface(
+                        Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+                        color = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                        shape = MaterialTheme.shapes.small,
+                    ) {
+                        Row(Modifier.padding(start = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Text(model.error, Modifier.weight(1f).padding(vertical = 12.dp).semantics {
+                                liveRegion = LiveRegionMode.Polite
+                            }, style = MaterialTheme.typography.bodyMedium)
+                            IconButton(onClick = { model.error = "" }) {
+                                Icon(painterResource(R.drawable.action_close), contentDescription = "Dismiss error", modifier = Modifier.size(20.dp))
+                            }
+                        }
+                    }
+                }
+                if (!model.signedIn) {
+                    Column(
+                        Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
                         Text(
-                            "Your workspace, anywhere.",
-                            style = MaterialTheme.typography.headlineLarge,
+                            if (model.session.biometricEnabled) "Workspace locked" else "Your workspace, anywhere.",
+                            style = MaterialTheme.typography.headlineSmall,
                         )
-                        Button(shape = MaterialTheme.shapes.small,
+                        if (model.session.biometricEnabled) {
+                            OutlinedButton(modifier = Modifier.fillMaxWidth(), enabled = !model.busy,
+                                onClick = { model.run {
+                                    model.session.unlock(checkNotNull(activity))
+                                    model.signedIn = model.session.signedIn
+                                } }) {
+                                ActionLabel("Unlock with biometrics")
+                            }
+                        }
+                        Button(modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp), shape = MaterialTheme.shapes.small,
                             enabled = !model.busy,
                             onClick = { model.run { login.launch(model.session.loginIntent()) } },
                         ) {
                             ActionLabel("Sign in")
                         }
                     }
-                else {
+                } else {
                     Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 16.dp, vertical = 4.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         destinations.forEach { (key, title) ->
                             FilterChip(
+                                modifier = Modifier.heightIn(min = 44.dp),
                                 selected = model.section == key,
                                 onClick = { model.section = key },
                                 label = { ActionLabel(title) },
                                 shape = androidx.compose.foundation.shape.RoundedCornerShape(22.dp),
+                                border = null,
                                 colors = FilterChipDefaults.filterChipColors(
                                     selectedContainerColor = MaterialTheme.colorScheme.primary,
                                     selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
@@ -147,8 +202,8 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
                     }
                     key(model.section) {
                         Column(
-                            Modifier.verticalScroll(rememberScrollState()).padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            Modifier.fillMaxWidth().weight(1f).verticalScroll(rememberScrollState()).padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
                             when (model.section) {
                                 "products" -> ProductScreen(model.api)
@@ -160,14 +215,35 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
                                 "notifications" -> {
                                     Text("Notifications", style = MaterialTheme.typography.headlineSmall)
                                     Text(model.notificationStatus)
-                                    if (model.feed.isEmpty())
+                                    if (model.feed.isEmpty()) {
                                         Text("Live messages appear here while the app is active.")
+                                    }
                                     model.feed.forEach { Text(it) }
                                 }
                                 else -> {
                                     HomeInfo()
                                     destinations.drop(1).take(5).forEach { (key, title) ->
                                         HomeButton(title) { model.section = key }
+                                    }
+                                    if (model.session.biometricEnabled || model.session.biometricAvailable()) {
+                                        HomeButton(if (model.session.biometricEnabled) "Disable biometric login" else "Enable biometric login") {
+                                            model.run {
+                                                if (model.session.biometricEnabled) {
+                                                    model.session.disableBiometrics(checkNotNull(activity))
+                                                } else {
+                                                    model.session.enableBiometrics(checkNotNull(activity))
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (model.session.biometricEnabled) {
+                                        HomeButton("Lock app") {
+                                            model.session.lock()
+                                            model.setNotifications(false)
+                                            model.signedIn = false
+                                            model.feed = emptyList()
+                                            model.message = ""
+                                        }
                                     }
                                     HomeButton("Sign out") { signOut = true }
                                 }
@@ -177,7 +253,7 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
                 }
             }
         }
-        if (signOut)
+        if (signOut) {
             AlertDialog(
                 onDismissRequest = { signOut = false },
                 title = { Text("Sign out of this device?") },
@@ -192,7 +268,9 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
                                 model.signedIn = false
                                 model.feed = emptyList()
                                 model.section = "home"
-                                if (intent != null) logout.launch(intent)
+                                if (intent != null) {
+                                    logout.launch(intent)
+                                }
                             }
                         }
                     ) {
@@ -200,5 +278,6 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
                     }
                 },
             )
+        }
     }
 }

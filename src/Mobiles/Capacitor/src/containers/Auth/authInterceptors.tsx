@@ -2,8 +2,8 @@ import { toast } from "../../components/Toast/toast";
 import type { AxiosInstance } from "axios";
 import { getAccessToken } from "./authService";
 export default function addAuthInterceptors(client: AxiosInstance) {
-  client.interceptors.request.use((config) => {
-    const token = getAccessToken();
+  client.interceptors.request.use(async (config) => {
+    const token = await getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

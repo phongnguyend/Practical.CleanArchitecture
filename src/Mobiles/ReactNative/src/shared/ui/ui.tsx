@@ -82,8 +82,8 @@ export function Button({
     </Pressable>
   );
 }
-export function HomeButton({ title, onPress }: { title: string; onPress: () => void }) {
-  return <Button title={title} onPress={onPress} style={{ width: "100%", minHeight: 48, paddingVertical: 12 }} />;
+export function HomeButton({ title, onPress, disabled = false }: { title: string; onPress: () => void; disabled?: boolean }) {
+  return <Button title={title} onPress={onPress} disabled={disabled} style={{ width: "100%", minHeight: 48, paddingVertical: 12 }} />;
 }
 export function Sheet({
   title,
@@ -173,7 +173,8 @@ const makeStyles = (dark: boolean) =>
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      padding: 16,
+      paddingHorizontal: 16,
+      paddingVertical: 8,
       gap: 8,
     },
     eyebrow: {
@@ -184,19 +185,19 @@ const makeStyles = (dark: boolean) =>
     },
     heading: {
       color: dark ? "#f1f5f9" : "#172554",
-      fontSize: 19,
+      fontSize: 16,
       fontWeight: "700",
       flexShrink: 1,
     },
     title: {
-      fontSize: 30,
+      fontSize: 24,
       fontWeight: "800",
       color: dark ? "#e2e8f0" : "#172554",
       marginBottom: 12,
     },
     text: { color: dark ? "#e2e8f0" : "#334155", fontSize: 15 },
     muted: { color: dark ? "#94a3b8" : "#64748b", marginVertical: 6 },
-    body: { padding: 16, gap: 16, paddingBottom: 32 },
+    body: { padding: 16, gap: 12, paddingBottom: 32 },
     navigation: { flexGrow: 0, flexShrink: 0 },
     nav: { paddingHorizontal: 16, gap: 8, paddingBottom: 12, alignItems: "center" },
     chip: {

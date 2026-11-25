@@ -2,6 +2,10 @@ import { type ImageSourcePropType } from "react-native";
 
 // Bundled outline assets, shared visually with Flutter and Kotlin.
 export const actionIcons: Record<string, ImageSourcePropType> = {
+  "Unlock with biometrics": require("../../../assets/icons/action_lock.png"),
+  "Enable biometric login": require("../../../assets/icons/action_lock.png"),
+  "Disable biometric login": require("../../../assets/icons/action_lock.png"),
+  "Lock app": require("../../../assets/icons/action_lock.png"),
   "Home": require("../../../assets/icons/action_home.png"),
   "Products": require("../../../assets/icons/action_products.png"),
   "Files": require("../../../assets/icons/action_files.png"),

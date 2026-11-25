@@ -56,6 +56,7 @@ fun ActionLabel(label: String) {
         "Clear" -> R.drawable.action_close
         "Sign in" -> R.drawable.action_link
         "Done" -> R.drawable.action_check
+        "Unlock with biometrics", "Enable biometric login", "Disable biometric login", "Lock app" -> R.drawable.action_lock
         "Set password" -> R.drawable.action_lock
         "Reset email" -> R.drawable.action_mail
         "Confirm email" -> R.drawable.action_mail

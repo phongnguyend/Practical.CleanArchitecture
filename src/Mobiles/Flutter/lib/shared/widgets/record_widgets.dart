@@ -48,7 +48,8 @@ class _HomeInfoState extends State<HomeInfo> {
         children: [
           Text(
             'Welcome to Classified Ads',
-            style: Theme.of(context).textTheme.titleLarge,
+            style: Theme.of(context).textTheme.titleLarge
+                ?.copyWith(fontSize: 16),
           ),
           Text('Flutter · ${_homeClock(now)}'),
           const Text('Developed by Phong Nguyen · @phongnguyend'),

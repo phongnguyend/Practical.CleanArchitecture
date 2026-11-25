@@ -1,3 +1,4 @@
+import { sessionUnlocked, biometricEnabled, biometricAvailable, enableBiometrics, disableBiometrics, unlockSession, lockSession } from "../../core/auth/session";
 import { router, useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useContext, useEffect, useState } from "react";
@@ -95,15 +96,23 @@ function Workspace({
       .finally(() => setInitializing(false));
   }, []);
   useEffect(() => {
-    const subscription = AppState.addEventListener("change", (state) =>
-      setForeground(state === "active"),
-    );
+    const subscription = AppState.addEventListener("change", (state) => {
+      setForeground(state === "active");
+      if (state === "background" && lockSession()) {
+        setSignedIn(false);
+        setFeed([]);
+        setToast("");
+      }
+    });
     return () => subscription.remove();
   }, []);
   useEffect(
     () =>
       signedIn && foreground
         ? notifications((message) => {
+            if (!sessionUnlocked()) {
+              return;
+            }
             setToast(message);
             setFeed((items) => [message, ...items].slice(0, 100));
           }, setStatus)
@@ -133,6 +142,17 @@ function Workspace({
       }
     } catch (e) {
       setError(String(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function biometricAction(action: () => Promise<unknown>) {
+    setBusy(true);
+    setError("");
+    try {
+      await action();
+    } catch {
+      setError("Biometric authentication did not complete. Try again or sign in with Identity Server.");
     } finally {
       setBusy(false);
     }
@@ -175,7 +195,16 @@ function Workspace({
             {destinations.slice(1, 6).map(([key, title]) => (
               <HomeButton key={key} title={title} onPress={() => navigate(key)} />
             ))}
-            <HomeButton title="Sign out" onPress={() => setSignOut(true)} />
+            {(biometricEnabled() || biometricAvailable()) && <HomeButton disabled={busy}
+              title={biometricEnabled() ? "Disable biometric login" : "Enable biometric login"}
+              onPress={() => void biometricAction(biometricEnabled() ? disableBiometrics : enableBiometrics)} />}
+            {biometricEnabled() && <HomeButton title="Lock app" onPress={() => {
+              lockSession();
+              setSignedIn(false);
+              setFeed([]);
+              setToast("");
+            }} />}
+            <HomeButton disabled={busy} title="Sign out" onPress={() => setSignOut(true)} />
           </>
         );
     }
@@ -222,17 +251,23 @@ function Workspace({
           </ScrollView>
         </>
       ) : (
-        <View style={s.body}>
-          <Text style={s.title}>Your workspace, anywhere.</Text>
+        <ScrollView contentContainerStyle={s.body}>
+          <Text style={s.title}>{biometricEnabled() ? "Workspace locked" : "Your workspace, anywhere."}</Text>
+          {biometricEnabled() && <Button title="Unlock with biometrics" icon="Set password" disabled={busy}
+            onPress={() => void biometricAction(async () => { await unlockSession(); setSignedIn(true); })} />}
+          {biometricEnabled() && <Text style={s.muted}>Or sign in with Identity Server to recover access or switch accounts.</Text>}
           <Button
             title="Sign in"
             variant="primary"
             disabled={busy}
             onPress={() => void authenticate()}
           />
-        </View>
+        </ScrollView>
       )}
-      {!!error && <Text style={s.error}>{error}</Text>}
+      {!!error && <View style={[s.card, { marginHorizontal: 16, marginBottom: 12, flexDirection: "row", alignItems: "center" }]}>
+        <Text accessibilityRole="alert" style={[s.error, { flex: 1 }]}>{error}</Text>
+        <Button title="Dismiss error" icon="Close" iconOnly onPress={() => setError("")} />
+      </View>}
       {!!toast && (
         <Text accessibilityRole="alert" style={s.toast}>
           {toast}
