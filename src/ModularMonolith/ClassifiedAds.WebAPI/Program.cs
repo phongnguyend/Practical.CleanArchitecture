@@ -1,3 +1,5 @@
+using ClassifiedAds.Modules.Notification.Persistence;
+using ClassifiedAds.Infrastructure.Notification.MobilePush;
 using ClassifiedAds.Contracts.Identity.Services;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.Monitoring;
@@ -26,6 +28,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var services = builder.Services;
 var configuration = builder.Configuration;
+services.AddMobilePushNotifications<NotificationDbContext>(configuration.GetSection("Modules:Notification:MobilePush"));
 
 builder.WebHost.UseClassifiedAdsLogger(configuration =>
 {

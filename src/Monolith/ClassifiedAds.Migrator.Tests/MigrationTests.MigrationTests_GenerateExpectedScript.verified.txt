@@ -50,6 +50,7 @@ CREATE TABLE [ArchivedOutboxMessages] (
     [Payload] nvarchar(max) NULL,
     [Published] bit NOT NULL,
     [ActivityId] nvarchar(max) NULL,
+    [ScheduledAt] datetimeoffset NOT NULL,
     CONSTRAINT [PK_ArchivedOutboxMessages] PRIMARY KEY ([Id])
 );
 
@@ -110,6 +111,15 @@ CREATE TABLE [DataProtectionKeys] (
     CONSTRAINT [PK_DataProtectionKeys] PRIMARY KEY ([Id])
 );
 
+CREATE TABLE [DeletedFileEntries] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [FileEntryId] uniqueidentifier NOT NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_DeletedFileEntries] PRIMARY KEY ([Id])
+);
+
 CREATE TABLE [EmailMessages] (
     [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
     [RowVersion] rowversion NULL,
@@ -131,6 +141,21 @@ CREATE TABLE [EmailMessages] (
     CONSTRAINT [PK_EmailMessages] PRIMARY KEY ([Id])
 );
 
+CREATE TABLE [EmbeddingCacheEntries] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [Text] nvarchar(450) NOT NULL,
+    [Provider] nvarchar(max) NULL,
+    [Model] nvarchar(max) NULL,
+    [Embedding] nvarchar(max) NULL,
+    [InputTokenCount] bigint NULL,
+    [OutputTokenCount] bigint NULL,
+    [TotalTokenCount] bigint NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_EmbeddingCacheEntries] PRIMARY KEY ([Id])
+);
+
 CREATE TABLE [FileEntries] (
     [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
     [Name] nvarchar(max) NULL,
@@ -142,6 +167,10 @@ CREATE TABLE [FileEntries] (
     [Encrypted] bit NOT NULL,
     [EncryptionKey] nvarchar(max) NULL,
     [EncryptionIV] nvarchar(max) NULL,
+    [Archived] bit NOT NULL,
+    [ArchivedDate] datetimeoffset NULL,
+    [Deleted] bit NOT NULL,
+    [DeletedDate] datetimeoffset NULL,
     [RowVersion] rowversion NULL,
     [CreatedDateTime] datetimeoffset NOT NULL,
     [UpdatedDateTime] datetimeoffset NULL,
@@ -180,6 +209,7 @@ CREATE TABLE [OutboxMessages] (
     [Payload] nvarchar(max) NULL,
     [Published] bit NOT NULL,
     [ActivityId] nvarchar(max) NULL,
+    [ScheduledAt] datetimeoffset NOT NULL,
     CONSTRAINT [PK_OutboxMessages] PRIMARY KEY ([Id])
 );
 
@@ -267,6 +297,45 @@ CREATE TABLE [EmailMessageAttachments] (
     CONSTRAINT [PK_EmailMessageAttachments] PRIMARY KEY ([Id]),
     CONSTRAINT [FK_EmailMessageAttachments_EmailMessages_EmailMessageId] FOREIGN KEY ([EmailMessageId]) REFERENCES [EmailMessages] ([Id]) ON DELETE CASCADE,
     CONSTRAINT [FK_EmailMessageAttachments_FileEntries_FileEntryId] FOREIGN KEY ([FileEntryId]) REFERENCES [FileEntries] ([Id]) ON DELETE CASCADE
+);
+
+CREATE TABLE [FileEntryEmbeddings] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [ChunkName] nvarchar(max) NULL,
+    [ChunkLocation] nvarchar(max) NULL,
+    [ShortText] nvarchar(max) NULL,
+    [Embedding] vector(1536) NOT NULL,
+    [TokenDetails] nvarchar(max) NULL,
+    [FileEntryId] uniqueidentifier NOT NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_FileEntryEmbeddings] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_FileEntryEmbeddings_FileEntries_FileEntryId] FOREIGN KEY ([FileEntryId]) REFERENCES [FileEntries] ([Id]) ON DELETE CASCADE
+);
+
+CREATE TABLE [FileEntryTexts] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [TextLocation] nvarchar(max) NULL,
+    [FileEntryId] uniqueidentifier NOT NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_FileEntryTexts] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_FileEntryTexts_FileEntries_FileEntryId] FOREIGN KEY ([FileEntryId]) REFERENCES [FileEntries] ([Id]) ON DELETE CASCADE
+);
+
+CREATE TABLE [ProductEmbeddings] (
+    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
+    [Text] nvarchar(max) NULL,
+    [Embedding] vector(1536) NOT NULL,
+    [TokenDetails] nvarchar(max) NULL,
+    [ProductId] uniqueidentifier NOT NULL,
+    [RowVersion] rowversion NULL,
+    [CreatedDateTime] datetimeoffset NOT NULL,
+    [UpdatedDateTime] datetimeoffset NULL,
+    CONSTRAINT [PK_ProductEmbeddings] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_ProductEmbeddings_Products_ProductId] FOREIGN KEY ([ProductId]) REFERENCES [Products] ([Id]) ON DELETE CASCADE
 );
 
 CREATE TABLE [RoleClaims] (
@@ -390,13 +459,21 @@ CREATE INDEX [IX_EmailMessages_CreatedDateTime] ON [EmailMessages] ([CreatedDate
 
 CREATE INDEX [IX_EmailMessages_SentDateTime] ON [EmailMessages] ([SentDateTime]) INCLUDE ([ExpiredDateTime], [AttemptCount], [MaxAttemptCount], [NextAttemptDateTime]);
 
+CREATE UNIQUE INDEX [IX_EmbeddingCacheEntries_Text] ON [EmbeddingCacheEntries] ([Text]);
+
+CREATE INDEX [IX_FileEntryEmbeddings_FileEntryId] ON [FileEntryEmbeddings] ([FileEntryId]);
+
+CREATE INDEX [IX_FileEntryTexts_FileEntryId] ON [FileEntryTexts] ([FileEntryId]);
+
 CREATE INDEX [IX_Locks_OwnerId] ON [Locks] ([OwnerId]);
 
 CREATE INDEX [IX_OutboxMessages_CreatedDateTime] ON [OutboxMessages] ([CreatedDateTime]);
 
-CREATE INDEX [IX_OutboxMessages_Published_CreatedDateTime] ON [OutboxMessages] ([Published], [CreatedDateTime]);
+CREATE INDEX [IX_OutboxMessages_Published_ScheduledAt] ON [OutboxMessages] ([Published], [ScheduledAt]);
 
 CREATE INDEX [IX_PasswordHistories_UserId] ON [PasswordHistories] ([UserId]);
+
+CREATE INDEX [IX_ProductEmbeddings_ProductId] ON [ProductEmbeddings] ([ProductId]);
 
 CREATE INDEX [IX_RoleClaims_RoleId] ON [RoleClaims] ([RoleId]);
 
@@ -415,30 +492,58 @@ CREATE INDEX [IX_UserRoles_UserId] ON [UserRoles] ([UserId]);
 CREATE INDEX [IX_UserTokens_UserId] ON [UserTokens] ([UserId]);
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20251004140709_Init', N'9.0.1');
+VALUES (N'20260310235647_Init', N'10.0.10');
 
-ALTER TABLE [FileEntries] ADD [Archived] bit NOT NULL DEFAULT CAST(0 AS bit);
+COMMIT;
+GO
 
-ALTER TABLE [FileEntries] ADD [ArchivedDate] datetimeoffset NULL;
-
-ALTER TABLE [FileEntries] ADD [Deleted] bit NOT NULL DEFAULT CAST(0 AS bit);
-
-ALTER TABLE [FileEntries] ADD [DeletedDate] datetimeoffset NULL;
-
-INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20251005024408_DeletedFileEntry', N'9.0.1');
-
-CREATE TABLE [DeletedFileEntries] (
-    [Id] uniqueidentifier NOT NULL DEFAULT (newsequentialid()),
-    [FileEntryId] uniqueidentifier NOT NULL,
-    [RowVersion] rowversion NULL,
-    [CreatedDateTime] datetimeoffset NOT NULL,
-    [UpdatedDateTime] datetimeoffset NULL,
-    CONSTRAINT [PK_DeletedFileEntries] PRIMARY KEY ([Id])
+BEGIN TRANSACTION;
+CREATE TABLE [PushDeliveries] (
+    [Id] uniqueidentifier NOT NULL,
+    [MessageId] uniqueidentifier NOT NULL,
+    [DeviceId] uniqueidentifier NOT NULL,
+    [UserId] nvarchar(200) NULL,
+    [Attempts] int NOT NULL,
+    [NextAttemptAt] datetime2 NOT NULL,
+    [CompletedAt] datetime2 NULL,
+    [LastError] nvarchar(100) NULL,
+    CONSTRAINT [PK_PushDeliveries] PRIMARY KEY ([Id])
 );
 
+CREATE TABLE [PushDevices] (
+    [Id] uniqueidentifier NOT NULL,
+    [UserId] nvarchar(200) NULL,
+    [App] nvarchar(30) NULL,
+    [Platform] nvarchar(10) NULL,
+    [Token] nvarchar(2048) NULL,
+    [TokenHash] nvarchar(64) NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_PushDevices] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [PushMessages] (
+    [Id] uniqueidentifier NOT NULL,
+    [UserId] nvarchar(200) NULL,
+    [Title] nvarchar(100) NULL,
+    [Body] nvarchar(500) NULL,
+    [Section] nvarchar(40) NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [ReadAt] datetime2 NULL,
+    CONSTRAINT [PK_PushMessages] PRIMARY KEY ([Id])
+);
+
+CREATE INDEX [IX_PushDeliveries_CompletedAt_NextAttemptAt] ON [PushDeliveries] ([CompletedAt], [NextAttemptAt]);
+
+CREATE UNIQUE INDEX [IX_PushDeliveries_MessageId_DeviceId] ON [PushDeliveries] ([MessageId], [DeviceId]);
+
+CREATE UNIQUE INDEX [IX_PushDevices_TokenHash] ON [PushDevices] ([TokenHash]) WHERE [TokenHash] IS NOT NULL;
+
+CREATE INDEX [IX_PushDevices_UserId] ON [PushDevices] ([UserId]);
+
+CREATE INDEX [IX_PushMessages_UserId_CreatedAt] ON [PushMessages] ([UserId], [CreatedAt]);
+
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20251018034807_DeletedFileEntry2', N'9.0.1');
+VALUES (N'20261125104712_AddPushNotifications', N'10.0.10');
 
 COMMIT;
 GO

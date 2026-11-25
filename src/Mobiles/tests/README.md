@@ -91,3 +91,13 @@ Enroll an Android emulator fingerprint and sign in normally in each app before r
 ```
 
 This covers enabling protection, manual locking, cancelling and retrying unlock, background locking, cold-start locking, and disabling protection. A successful run leaves biometrics disabled so the normal authenticated suite can run. If a test fails after enrollment, unlock and disable biometric login before rerunning. The `-Fingerprint` number matches Extended controls (Finger 1 through Finger 10). The runner maps it to the emulator console ID; for fingerprints enrolled directly through the console, supply the raw ID with `-FingerprintId`.
+# Mobile push playground coverage
+
+The shared `Admin` feature checks the full-width **Home → Admin** shortcut, **Admin → Playgrounds → Mobile Push / Email / SMS**, required fields, queue refresh, and recent-message history for all five apps. It does not send a message. The `Notifications` feature checks the disabled-configuration explanation and inbox refresh. React Native and Flutter component tests also verify the three channels' payloads without contacting a delivery provider.
+
+```powershell
+./Run-UiTests.ps1 -App All -Feature Admin
+./Run-UiTests.ps1 -App All -Feature Notifications
+```
+
+Install updated apps and start the updated API/Identity Server first. Apply the existing notification-context migration so the push queue tables exist, and sign in to each app. Actual device delivery requires separately configured Firebase/APNs credentials.

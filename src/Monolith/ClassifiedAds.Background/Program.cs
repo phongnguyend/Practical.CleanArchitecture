@@ -87,7 +87,7 @@ Host.CreateDefaultBuilder(args)
 
     services.AddNotificationServices(appSettings.Notification);
 
-    services.AddWebNotification<SendTaskStatusMessage>(appSettings.Notification.Web);
+    services.AddInAppNotification<SendTaskStatusMessage>(appSettings.Notification.InApp);
 
     if (appSettings.IdentityProviders?.Auth0?.Enabled ?? false)
     {

@@ -3,8 +3,15 @@
     class="navbar navbar-expand bg-body"
     :style="{ paddingLeft: '1rem', paddingRight: '1rem' }"
   >
-    <a class="navbar-brand" href="/"><ActionIcon action="home" />{{ appendVersion(pageTitle) }}</a>
-    <ul class="nav nav-tabs flex-grow-1 flex-nowrap nav-pages">
+    <div class="nav-header">
+      <a class="navbar-brand" href="/"><ActionIcon action="home" />{{ pageTitle }}</a>
+      <div class="nav-utilities d-flex align-items-center gap-2 ms-auto flex-shrink-0">
+        <a v-if="!isAuthenticated" class="nav-link" @click="login" href="javascript:void(0)"><ActionIcon action="login" />Login</a>
+        <a v-if="isAuthenticated" class="nav-link" @click="logout" href="javascript:void(0)"><ActionIcon action="logout" />Logout</a>
+        <ThemeSwitcher />
+      </div>
+    </div>
+    <ul class="nav nav-tabs flex-wrap nav-pages">
       <li>
         <router-link class="nav-link" :class="{ active: isActive('/') }" to="/"><ActionIcon action="home" />Home</router-link>
       </li>
@@ -24,17 +31,13 @@
       <li>
         <router-link class="nav-link" :class="{ active: isActive('/auditlogs') }" to="/auditlogs"><ActionIcon action="audit" />Audit Logs</router-link>
       </li>
+      <li><router-link class="nav-link" :class="{ active: isActive('/admin') }" to="/admin"><ActionIcon action="settings" />Admin</router-link></li>
     </ul>
-    <div class="nav-utilities d-flex align-items-center gap-2 ms-auto flex-shrink-0">
-      <a v-if="!isAuthenticated" class="nav-link" @click="login" href="javascript:void(0)"><ActionIcon action="login" />Login</a>
-      <a v-if="isAuthenticated" class="nav-link" @click="logout" href="javascript:void(0)"><ActionIcon action="logout" />Logout</a>
-      <ThemeSwitcher />
-    </div>
   </nav>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, version } from 'vue'
+import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import ThemeSwitcher from '../components/ThemeSwitcher.vue'
@@ -59,18 +62,17 @@ const logout = () => {
   store.state.authService.logout()
 }
 
-const appendVersion = (value: string) => {
-  return value + ' ' + version
-}
 </script>
 
 <style scoped>
 .navbar {
+  display: block;
   padding-bottom: 0;
 }
 
-.navbar-brand { flex-shrink: 0; margin-right: .75rem; font-size: 1.1rem; white-space: nowrap; }
-.nav-pages { min-width: 0; overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; }
+.navbar-brand { min-width: 0; margin-right: .75rem; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav-pages { min-width: 0; width: 100%; flex-wrap: wrap; }
+.nav-header { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding-bottom: .5rem; }
 .nav-pages .nav-link { padding-inline: .65rem; font-size: 1rem; white-space: nowrap; }
 .nav-utilities .nav-link { font-size: 1rem; white-space: nowrap; }
 

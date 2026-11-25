@@ -3,6 +3,8 @@
     "crashlytics_auto_collection_enabled": false,
     "crashlytics_debug_enabled": false,
     "crashlytics_javascript_exception_handler_enabled": true,
-    "crashlytics_is_error_generation_on_js_crash_enabled": true
+    "crashlytics_is_error_generation_on_js_crash_enabled": true,
+    "messaging_auto_init_enabled": false,
+    "messaging_ios_auto_register_for_remote_messages": false
   }
 }

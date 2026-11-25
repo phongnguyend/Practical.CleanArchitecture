@@ -12,6 +12,8 @@ namespace ClassifiedAds.Blazor.Modules.Files.Pages;
 
 public partial class List
 {
+    protected bool IsLoaded { get; set; }
+
     [Inject]
     public NavigationManager NavManager { get; set; }
 
@@ -41,6 +43,7 @@ public partial class List
     protected override async Task OnInitializedAsync()
     {
         Files = await FileService.GetFilesAsync();
+        IsLoaded = true;
     }
 
     protected async Task Download(FileEntryModel file)

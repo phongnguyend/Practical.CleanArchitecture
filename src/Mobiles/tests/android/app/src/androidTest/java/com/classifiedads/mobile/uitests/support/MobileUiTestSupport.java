@@ -197,6 +197,7 @@ public abstract class MobileUiTestSupport {
         Pattern pattern = Pattern.compile(expression);
         List<UiObject2> nodes = new ArrayList<>(device.findObjects(By.text(pattern).pkg(packageName)));
         nodes.addAll(device.findObjects(By.desc(pattern).pkg(packageName)));
+        nodes.addAll(device.findObjects(By.hint(pattern).pkg(packageName)));
         // Home buttons follow navigation tabs with the same label.
         return nodes.stream().filter(n -> !n.getVisibleBounds().isEmpty())
             .max(Comparator.comparingInt(n -> n.getVisibleBounds().bottom)).orElse(null);

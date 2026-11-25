@@ -1,0 +1,25 @@
+:root { --app-bg: #f5f7fb; --app-surface: #fff; --app-text: #212529; --app-border: #dce1e8; }
+html[data-bs-theme="dark"] { color-scheme: dark; --app-bg: #15191e; --app-surface: #21262d; --app-text: #e6edf3; --app-border: #414954; }
+html, body { background: var(--app-bg); color: var(--app-text); }
+app { display: block; }
+.application-nav { display: block; padding: .75rem 1rem 0; background: var(--app-surface); border-bottom: 1px solid var(--app-border); }
+.application-nav .navbar-brand { color: var(--app-text); font-size: 1.1rem; margin-right: .5rem; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.application-tabs { width: 100%; flex-wrap: wrap; border: 0; }
+.application-tabs .nav-link { white-space: nowrap; padding: .65rem; color: var(--app-text); }
+.application-tabs .nav-link.active { background: var(--app-surface); color: #0d6efd; border-color: var(--app-border); box-shadow: inset 0 -3px #0d6efd; font-weight: 600; }
+.application-utilities { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; }
+.application-content { padding: 1.25rem; min-width: 0; }
+.card, .modal-content, .form-control, .table { color: var(--app-text); background: var(--app-surface); border-color: var(--app-border); }
+.card { margin-bottom: 1rem; }
+.theme-switcher { position: relative; }
+.theme-switcher summary { cursor: pointer; padding: .5rem; border: 1px solid var(--app-border); border-radius: .35rem; list-style: none; }
+.theme-options { position: absolute; right: 0; top: 100%; z-index: 1100; display: grid; gap: .25rem; padding: .5rem; background: var(--app-surface); border: 1px solid var(--app-border); border-radius: .5rem; box-shadow: 0 4px 16px #0002; }
+.playground-form { display: grid; gap: 1rem; max-width: 720px; }
+.playground-actions, .admin-links { display: flex; flex-wrap: wrap; gap: .75rem; }
+.queue-history { display: grid; gap: 1rem; }
+.queue-history article { padding: 1rem; border: 1px solid var(--app-border); border-radius: .5rem; }
+.message-body { white-space: pre-wrap; overflow-wrap: anywhere; }
+.table td .btn { margin: .2rem; }
+@media (max-width: 900px) { .application-content { padding: .75rem; } }
+
+.application-header { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding-bottom: .5rem; }

@@ -1,7 +1,9 @@
+@inject IJSRuntime JS
+@implements IAsyncDisposable
 @if (IsOpen)
 {
     <DialogBackdrop />
-    <div class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true" aria-label="@Title">
+    <div class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true" aria-label="@Title" @ref="Element">
         <div class="modal-dialog @(string.IsNullOrEmpty(Size) ? null : $"modal-{Size}")" role="document">
             <div class="modal-content">
                 @ChildContent
@@ -11,6 +13,53 @@
 }
 
 @code {
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    private ElementReference Element;
+    private DotNetObjectReference<Dialog> Reference;
+    private bool Attached;
+
+    protected override async System.Threading.Tasks.Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (IsOpen && !Attached)
+        {
+            Reference = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("classifiedAdsDialog.open", Element, Reference);
+            Attached = true;
+        }
+        else if (!IsOpen && Attached)
+        {
+            await JS.InvokeVoidAsync("classifiedAdsDialog.close");
+            Reference?.Dispose();
+            Reference = null;
+            Attached = false;
+        }
+    }
+
+    [JSInvokable]
+    public System.Threading.Tasks.Task Dismiss()
+    {
+        return OnClose.InvokeAsync();
+    }
+
+    public async System.Threading.Tasks.ValueTask DisposeAsync()
+    {
+        try
+        {
+            if (Attached)
+            {
+                await JS.InvokeVoidAsync("classifiedAdsDialog.close");
+            }
+        }
+        catch (JSDisconnectedException)
+        {
+            // The browser circuit may already have closed during navigation.
+        }
+
+        Reference?.Dispose();
+    }
+
     [Parameter]
     public bool IsOpen { get; set; }
 

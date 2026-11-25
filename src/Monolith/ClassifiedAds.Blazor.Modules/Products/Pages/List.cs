@@ -13,6 +13,8 @@ namespace ClassifiedAds.Blazor.Modules.Products.Pages;
 
 public partial class List
 {
+    protected bool IsLoaded { get; set; }
+
     [CascadingParameter]
     Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
@@ -43,6 +45,7 @@ public partial class List
     protected override async Task OnInitializedAsync()
     {
         Products = await ProductService.GetProductsAsync();
+        IsLoaded = true;
     }
 
     protected void QuickAddProduct()

@@ -44,3 +44,5 @@ yarn-error.*
 sentry.config.json
 sentry.properties
 .sentryclirc
+
+push.config.json

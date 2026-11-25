@@ -4,6 +4,8 @@ import { NgIcon } from "@ng-icons/core";
 export type ActionIconName = keyof typeof iconNames;
 
 const iconNames = {
+  notification: "lucideBell",
+  refresh: "lucideRotateCw",
   add: "lucidePlus",
   audit: "lucideClipboardList",
   back: "lucideChevronLeft",

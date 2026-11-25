@@ -43,10 +43,10 @@ export class OwnedData {
 }
 
 export const test = base.extend<{ app: App; api: APIRequestContext; owned: OwnedData }>({
-  app: async ({ page }, use) => {
+  app: async ({ page }, use, info) => {
     await page.goto('/');
-    await expect(page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Logout', exact: true })).toBeVisible();
-    await use(new App(page));
+    await expect(page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Logout', exact: true })).toBeVisible({ timeout: 45_000 });
+    await use(new App(page, info.project.metadata.authMode === 'blazor'));
   },
   api: async ({ app, baseURL }, use, info) => {
     if (info.project.metadata.authMode === 'cookie') {

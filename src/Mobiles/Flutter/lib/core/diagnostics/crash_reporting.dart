@@ -10,7 +10,7 @@ class CrashReporting {
   static FirebaseCrashlytics? _client;
 
   static Future<void> initialize() async {
-    if (!const bool.fromEnvironment('CRASHLYTICS_ENABLED') || kIsWeb) {
+    if ((!const bool.fromEnvironment('CRASHLYTICS_ENABLED') && !const bool.fromEnvironment('PUSH_NOTIFICATIONS_ENABLED')) || kIsWeb) {
       return;
     }
     await Firebase.initializeApp(
@@ -22,6 +22,9 @@ class CrashReporting {
         iosBundleId: String.fromEnvironment('FIREBASE_BUNDLE_ID'),
       ),
     );
+    if (!const bool.fromEnvironment('CRASHLYTICS_ENABLED')) {
+      return;
+    }
     final client = FirebaseCrashlytics.instance;
     await client.setCustomKey('framework', 'Flutter');
     await client.setCrashlyticsCollectionEnabled(true);

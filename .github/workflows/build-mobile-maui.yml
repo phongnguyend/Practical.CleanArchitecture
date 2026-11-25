@@ -50,6 +50,7 @@ jobs:
         run: python3 ../tools/prepare_sentry.py --app MAUI
       - name: Prepare optional Firebase configuration
         env:
+          MOBILE_PUSH_ENABLED: ${{ vars.MOBILE_PUSH_ENABLED || 'false' }}
           FIREBASE_CONFIG_BASE64: ${{ secrets.FIREBASE_MAUI_ANDROID_CONFIG_BASE64 }}
         run: python3 ../tools/prepare_firebase.py --app MAUI --platform android
       - uses: actions/setup-dotnet@v5
@@ -67,7 +68,7 @@ jobs:
       - name: Unit and API contract tests
         run: dotnet test Tests/ClassifiedAds.Mobile.Tests.csproj --configuration Release --logger trx --results-directory artifacts/tests
       - name: Build standalone Android APK
-        run: dotnet build App/ClassifiedAds.Mobile.csproj -p:EnableFirebaseCrashlytics="$FIREBASE_ENABLED" --configuration Release --framework net10.0-android -p:AndroidPackageFormats=apk
+        run: dotnet build App/ClassifiedAds.Mobile.csproj -p:EnableFirebaseCrashlytics="$FIREBASE_ENABLED" -p:EnableMobilePush="$MOBILE_PUSH_ENABLED" --configuration Release --framework net10.0-android -p:AndroidPackageFormats=apk
       - name: Upload Sentry managed and native debug symbols
         if: env.SENTRY_DISABLE_AUTO_UPLOAD == 'false'
         run: npx --yes @sentry/cli@3.8.2 debug-files upload App/bin/Release App/obj/Release
@@ -102,6 +103,7 @@ jobs:
         run: python3 ../tools/prepare_sentry.py --app MAUI
       - name: Prepare optional Firebase configuration
         env:
+          MOBILE_PUSH_ENABLED: ${{ vars.MOBILE_PUSH_ENABLED || 'false' }}
           FIREBASE_CONFIG_BASE64: ${{ secrets.FIREBASE_MAUI_IOS_CONFIG_BASE64 }}
         run: python3 ../tools/prepare_firebase.py --app MAUI --platform ios
       - uses: actions/setup-dotnet@v5
@@ -112,7 +114,7 @@ jobs:
           xcodebuild -version
           dotnet workload install maui-ios --version 10.0.303.1
       - name: Build unsigned iOS simulator app
-        run: dotnet build App/ClassifiedAds.Mobile.csproj -p:EnableFirebaseCrashlytics="$FIREBASE_ENABLED" --configuration Release --framework net10.0-ios -p:MauiTargetFramework=net10.0-ios -p:RuntimeIdentifier=iossimulator-arm64 -p:EnableCodeSigning=false
+        run: dotnet build App/ClassifiedAds.Mobile.csproj -p:EnableFirebaseCrashlytics="$FIREBASE_ENABLED" -p:EnableMobilePush="$MOBILE_PUSH_ENABLED" --configuration Release --framework net10.0-ios -p:MauiTargetFramework=net10.0-ios -p:RuntimeIdentifier=iossimulator-arm64 -p:EnableCodeSigning=false
       - name: Package simulator app
         run: tar -czf maui-ios-simulator.tar.gz -C App/bin/Release/net10.0-ios/iossimulator-arm64 ClassifiedAds.Mobile.app
       - name: Upload Sentry managed and native debug symbols

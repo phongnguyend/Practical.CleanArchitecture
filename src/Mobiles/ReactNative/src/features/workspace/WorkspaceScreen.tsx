@@ -31,6 +31,9 @@ import StoredFileScreen from "../files/StoredFileScreen";
 import ProductScreen from "../products/ProductScreen";
 import RoleScreen from "../roles/RoleScreen";
 import UserScreen from "../users/UserScreen";
+import AdminScreen from "../admin/AdminScreen";
+import PushInbox from "../notifications/PushInbox";
+import { initializePush, syncPush, consumePush } from "../../core/notifications/push";
 const destinations = [
   ["home", "Home"],
   ["products", "Products"],
@@ -40,6 +43,7 @@ const destinations = [
   ["configurationentries", "Configuration Entries"],
   ["auditlogentries", "Audit logs"],
   ["notifications", "Notifications"],
+  ["admin", "Admin"],
 ];
 export default function App() {
   const system = useColorScheme();
@@ -95,6 +99,19 @@ function Workspace({
       .catch((e) => setError(String(e)))
       .finally(() => setInitializing(false));
   }, []);
+  useEffect(() => {
+    async function openNotification() {
+      const target = await consumePush();
+      if (target && sessionUnlocked()) {
+        router.setParams({ section: target });
+      }
+    }
+    void initializePush(() => void openNotification(), () => setToast("You have a new notification.")).catch(() => undefined);
+    if (signedIn && foreground) {
+      void syncPush().catch(() => undefined);
+      void openNotification();
+    }
+  }, [signedIn, foreground]);
   useEffect(() => {
     const subscription = AppState.addEventListener("change", (state) => {
       setForeground(state === "active");
@@ -171,10 +188,13 @@ function Workspace({
         return <ConfigurationEntryScreen />;
       case "auditlogentries":
         return <AuditLogsScreen />;
+      case "admin":
+        return <AdminScreen />;
       case "notifications":
         return (
           <>
             <Text accessibilityRole="header" style={s.sectionTitle}>Notifications</Text>
+            <PushInbox navigate={navigate} />
             <Text style={s.text}>{status}</Text>
             {!feed.length && (
               <Text style={s.muted}>
@@ -192,7 +212,7 @@ function Workspace({
         return (
           <>
             <HomeInfo />
-            {destinations.slice(1, 6).map(([key, title]) => (
+            {destinations.filter(([key]) => !["home", "notifications", "auditlogentries"].includes(key)).map(([key, title]) => (
               <HomeButton key={key} title={title} onPress={() => navigate(key)} />
             ))}
             {(biometricEnabled() || biometricAvailable()) && <HomeButton disabled={busy}

@@ -1,4 +1,6 @@
 import {
+  Bell,
+  RotateCw,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -34,6 +36,8 @@ import {
 export type ActionIconName = keyof typeof icons;
 
 const icons = {
+  notification: Bell,
+  refresh: RotateCw,
   add: Plus,
   audit: ClipboardList,
   back: ChevronLeft,

@@ -31,6 +31,9 @@ for name, root, extension, pattern in (
         if name == 'ReactNative':
             labels += re.findall(r'\bicon="([^"]+)"', source)
         for label in labels:
+            if name == 'Kotlin' and label.startswith('Destination: $'):
+                assert 'label.startsWith("Destination:")' in (kotlin / 'shared/ui/ActionLabel.kt').read_text()
+                continue
             assert label in maps[name], f'{path}: missing icon for {label}'
 for path in (ROOT / 'MAUI/App').rglob('*.cs'):
     if 'obj' in path.parts or 'bin' in path.parts:

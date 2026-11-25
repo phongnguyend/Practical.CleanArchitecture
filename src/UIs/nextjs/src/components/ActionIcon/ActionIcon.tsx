@@ -1,4 +1,6 @@
 import {
+  Bell,
+  RotateCw,
   Check, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ClipboardList,
   Download, ExternalLink, Eye, EyeOff, FileDown, FileUp, Files, History, House,
   KeyRound, LogIn, LogOut, Mail, Package, Pencil, Plus, Save, Settings, Trash2,
@@ -8,6 +10,8 @@ import {
 export type ActionIconName = keyof typeof icons;
 
 const icons = {
+  notification: Bell,
+  refresh: RotateCw,
   add: Plus, audit: ClipboardList, back: ChevronLeft, cancel: X, close: X,
   confirm: Check, delete: Trash2, download: Download, edit: Pencil,
   export: FileDown, external: ExternalLink, files: Files, first: ChevronsLeft,

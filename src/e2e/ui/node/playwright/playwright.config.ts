@@ -3,6 +3,7 @@ import path from 'node:path';
 import { apps, authFile, ignoreHTTPSErrors, root } from './support/environment.js';
 
 const artifacts = process.env.E2E_ARTIFACTS_DIR;
+const headed = process.argv.includes('--headed') || process.argv.includes('--ui');
 
 export default defineConfig({
   outputDir: artifacts ? path.join(artifacts, 'test-results') : 'test-results',
@@ -16,12 +17,17 @@ export default defineConfig({
   reporter: [['list'], ['html', { open: 'never', outputFolder: artifacts ? path.join(artifacts, 'playwright-report') : 'playwright-report' }], ['junit', { outputFile: artifacts ? path.join(artifacts, 'junit.xml') : 'test-results/junit.xml' }]],
   use: {
     ...devices['Desktop Chrome'], ignoreHTTPSErrors,
+    ...(headed ? {
+      viewport: null,
+      deviceScaleFactor: undefined,
+      launchOptions: { args: ['--start-maximized'] },
+    } : {}),
     trace: 'retain-on-failure', screenshot: 'only-on-failure', video: 'retain-on-failure',
     permissions: ['clipboard-read', 'clipboard-write'],
   },
   webServer: process.env.E2E_START_SERVERS === '1' ? apps.map(app => ({
     command: app.command, cwd: path.resolve(root, '../../../../UIs', app.directory),
-    url: app.devServerURL, reuseExistingServer: !process.env.CI, timeout: 180_000,
+    url: app.devServerURL, ignoreHTTPSErrors, reuseExistingServer: !process.env.CI, timeout: 180_000,
     // Development servers can forward application console output containing OIDC state.
     stdout: 'ignore', stderr: 'ignore',
   })) : undefined,

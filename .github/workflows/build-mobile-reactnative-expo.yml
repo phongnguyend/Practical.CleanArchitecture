@@ -55,10 +55,12 @@ jobs:
         run: npm ci
       - name: Prepare optional Firebase android configuration
         env:
+          MOBILE_PUSH_ENABLED: ${{ vars.MOBILE_PUSH_ENABLED || 'false' }}
           FIREBASE_CONFIG_BASE64: ${{ secrets.FIREBASE_REACTNATIVE_ANDROID_CONFIG_BASE64 }}
         run: python3 ../tools/prepare_firebase.py --app ReactNative --platform android
       - name: Prepare optional Firebase ios configuration
         env:
+          MOBILE_PUSH_ENABLED: ${{ vars.MOBILE_PUSH_ENABLED || 'false' }}
           FIREBASE_CONFIG_BASE64: ${{ secrets.FIREBASE_REACTNATIVE_IOS_CONFIG_BASE64 }}
         run: python3 ../tools/prepare_firebase.py --app ReactNative --platform ios
       - name: Link existing Expo project

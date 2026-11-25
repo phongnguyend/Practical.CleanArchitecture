@@ -1,3 +1,7 @@
+import '../../core/services/push_notifications.dart';
+import '../notifications/push_inbox.dart';
+import '../admin/admin_screen.dart';
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -24,6 +28,7 @@ const destinations = {
   'configurationentries': 'Configuration Entries',
   'auditlogentries': 'Audit logs',
   'notifications': 'Notifications',
+  'admin': 'Admin',
 };
 
 class Workspace extends StatefulWidget {
@@ -44,6 +49,14 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
   String section = 'home', error = '', status = 'Connecting...';
   bool ready = false, busy = false;
   final List<String> feed = [];
+  late final PushNotifications push = PushNotifications(widget.services);
+  Future<void> openPush() async {
+    final target = await push.consume();
+    if (mounted && widget.services.signedIn && target != null) {
+      setState(() => section = target);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -53,6 +66,15 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
 
   Future<void> initialize() async {
     try {
+      widget.services.beforeSessionChange = () =>
+          push.disable().catchError((Object _) {});
+      await push.initialize(() => unawaited(openPush()), () {
+        if (mounted && widget.services.signedIn) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('You have a new notification.')),
+          );
+        }
+      });
       await widget.services.restore();
       if (widget.services.signedIn) await connect();
     } catch (e) {
@@ -61,22 +83,27 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
     if (mounted) setState(() => ready = true);
   }
 
-  Future<void> connect() => widget.services.startNotifications(
-    (message) {
-      if (!mounted || !widget.services.signedIn) {
-        return;
-      }
-      setState(() {
-        feed.insert(0, message);
-        if (feed.length > 100) feed.removeLast();
-      });
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(message)));
-    },
-    status: (value) {
-      if (mounted) setState(() => status = value);
-    },
-  );
+  Future<void> connect() async {
+    await push.sync().catchError((Object _) {});
+    await openPush();
+    await widget.services.startNotifications(
+      (message) {
+        if (!mounted || !widget.services.signedIn) {
+          return;
+        }
+        setState(() {
+          feed.insert(0, message);
+          if (feed.length > 100) feed.removeLast();
+        });
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(message)));
+      },
+      status: (value) {
+        if (mounted) setState(() => status = value);
+      },
+    );
+  }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused && widget.services.lockSession()) {
@@ -96,6 +123,8 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    push.dispose();
+    widget.services.beforeSessionChange = null;
     WidgetsBinding.instance.removeObserver(this);
     unawaited(widget.services.stopNotifications());
     super.dispose();
@@ -150,11 +179,17 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
       services: widget.services,
     ),
     'auditlogentries' => AuditLogsScreen(services: widget.services),
+    'admin' => AdminScreen(services: widget.services),
     'notifications' => Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text('Notifications', style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 16),
+        PushInbox(
+          services: widget.services,
+          push: push,
+          navigate: (target) => setState(() => section = target),
+        ),
         Text(status),
         if (feed.isEmpty)
           const Text('Live messages appear here while the app is active.'),

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.10" />
     <PackageReference Include="AWS.Logger.SeriLog" Version="4.0.2" />
     <PackageReference Include="AWSSDK.S3" Version="4.0.101.7" />
     <PackageReference Include="Azure.Communication.Sms" Version="1.0.2" />
@@ -25,6 +26,7 @@
     <PackageReference Include="Dapper.StrongName" Version="2.1.79" />
     <PackageReference Include="Duende.IdentityModel" Version="8.1.0" />
     <PackageReference Include="ExcelDataReader" Version="3.9.0" />
+    <PackageReference Include="FirebaseAdmin" Version="3.7.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.10" />

@@ -1,3 +1,4 @@
+using ClassifiedAds.Infrastructure.Notification.MobilePush;
 using ClassifiedAds.Application.ConfigurationEntries.DTOs;
 using ClassifiedAds.Application.Products.DTOs;
 using ClassifiedAds.CrossCuttingConcerns.Csv;
@@ -45,6 +46,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var services = builder.Services;
 var configuration = builder.Configuration;
+services.AddMobilePushNotifications<AdsDbContext>(configuration.GetSection("Notification:MobilePush"));
 
 var appSettings = new AppSettings();
 configuration.Bind(appSettings);

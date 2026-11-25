@@ -123,6 +123,8 @@ public sealed class AppServices
     private CancellationTokenSource? hubLifetime;
     public ApiClient Api { get; }
 
+    public PushNotifications Push { get; }
+
     public ServerSettings Settings { get; } = ServerSettings.Load();
 
     public bool SignedIn => session is not null;
@@ -135,8 +137,21 @@ public sealed class AppServices
     public event Action<string>? MessageReceived;
     public AppServices()
     {
+        Push = new PushNotifications(this);
         auth = new OidcClient(new OidcClientOptions { Authority = Settings.Authority, ClientId = "ClassifiedAds.Mobile.MAUI", RedirectUri = "classifiedads.maui:/oauthredirect", PostLogoutRedirectUri = "classifiedads.maui:/logout", Scope = "openid profile offline_access ClassifiedAds.WebAPI", Browser = new SystemBrowser() });
         Api = new ApiClient(new HttpClient { BaseAddress = new Uri(Settings.Api.TrimEnd('/') + "/"), Timeout = TimeSpan.FromSeconds(60) }, AccessToken);
+    }
+
+    private async Task DisablePushBeforeSessionChange()
+    {
+        try
+        {
+            await Push.Disable();
+        }
+        catch
+        {
+            // Native token cleanup runs even if unregistering with the API fails.
+        }
     }
 
     public async Task Restore()
@@ -163,6 +178,7 @@ public sealed class AppServices
 
     public async Task Login()
     {
+        await DisablePushBeforeSessionChange();
         BiometricVault.Clear();
         SecureStorage.Remove(SessionKey);
         session = null;
@@ -237,6 +253,7 @@ public sealed class AppServices
 
     public async Task Logout()
     {
+        await DisablePushBeforeSessionChange();
         await StopNotifications();
         await sessionLock.WaitAsync();
         string? id;

@@ -9,6 +9,8 @@ namespace ClassifiedAds.Blazor.Modules.Users.Pages;
 
 public partial class List
 {
+    protected bool IsLoaded { get; set; }
+
     [Inject]
     public NavigationManager NavManager { get; set; }
 
@@ -24,6 +26,7 @@ public partial class List
     protected override async Task OnInitializedAsync()
     {
         Users = await UserService.GetUsersAsync();
+        IsLoaded = true;
     }
 
     protected void DeleteUser(UserModel user)

@@ -137,3 +137,50 @@ Final results below combine the full run and targeted reruns after fixes (includ
 All five failures are PDF export. The other exercised scenarios pass, including CRUD and plain/encrypted file round-trips. Local verification reports are retained under the repository's ignored `.tmp/upgrade-*` directories; the original React report is under `.tmp/upgrade-reactjs-first-report`.
 
 Set `E2E_ARTIFACTS_DIR` to a separate directory per run when retaining multiple reports or running independent projects concurrently. It contains HTML, JUnit and failure artifacts; keep it outside tracked source or in an ignored directory. The default artifact locations are unchanged.
+# Mobile Push playground
+
+`tests/mobile-push.spec.ts` runs against Angular, React, Vue, Next.js, and BFF React using the same selectors. It checks **Admin → Playgrounds → Mobile Push**, required fields, and queue history. The write scenario requires `E2E_ALLOW_WRITES=1` and runs only with the **Fake** provider. It leaves its uniquely named message in the test account's inbox; use a disposable backend.
+
+```powershell
+$env:E2E_APPS = 'angular,reactjs,vuejs'
+npx playwright test tests/mobile-push.spec.ts
+```
+
+Run Next.js and BFF React separately when they share React's development port. Apply the backend's notification schema migration and restart the API before running these tests.
+
+`tests/email-sms-playgrounds.spec.ts` covers Email and SMS navigation, required fields, recipient validation, and persistence through the Fake provider. Write tests require `E2E_ALLOW_WRITES=1`, retain their queue records, and skip when the selected provider is not Fake. Email/SMS use existing tables and do not require a new playground schema migration. All three channel forms share each application's `NotificationPlaygrounds` component.
+
+## Blazor Server and WebAssembly
+
+The Monolith Blazor hosts share navigation, Home, theme switching, Roles, dialogs, and **Admin ? Playgrounds ? Mobile Push / Email / SMS** through ClassifiedAds.Blazor.Modules. They use the same accessible labels and routes as the JavaScript UIs.
+
+Build the hosts from the repository root before enabling managed startup:
+
+~~~powershell
+dotnet build src/Monolith/ClassifiedAds.BlazorServerSide
+dotnet build src/Monolith/ClassifiedAds.BlazorWebAssembly
+~~~
+
+Then, from this Playwright directory, with the API and Identity Server running:
+
+~~~powershell
+$env:E2E_APPS = 'blazor-server,blazor-wasm'
+$env:E2E_START_SERVERS = '1'
+# Local ASP.NET development certificates only:
+$env:E2E_IGNORE_HTTPS_ERRORS = '1'
+npx playwright test navigation.spec.ts email-sms-playgrounds.spec.ts mobile-push.spec.ts --headed
+~~~
+
+Blazor Server defaults to https://localhost:44331; WebAssembly defaults to https://localhost:44348. Override these with E2E_BLAZOR_SERVER_URL and E2E_BLAZOR_WASM_URL only when the host binding and Identity Server redirect registrations match. WebAssembly shares port 44348 with BFF React, so run those projects separately.
+
+The shared navigation helper waits for a completed Blazor page load instead of browser API traffic: Blazor Server performs those requests on the server. Playground write tests check the visible **Fake** provider, queue confirmation, and refreshed history on every framework. They still require E2E_ALLOW_WRITES=1; messages remain in the database. WebAssembly authentication session storage is saved under ignored .auth/ and restored only for that app's origin.
+
+Required-field and dialog checks can also be reused:
+
+~~~powershell
+npx playwright test --headed --grep 'empty form|empty username|missing required fields|required field and keyboard'
+~~~
+
+These commands cover the Blazor integration verified here. Full CRUD, import, download and audit-viewer parity is not implied: older Blazor screens still differ, and the general API fixture used by those tests currently supports the JavaScript clients' bearer/cookie authentication, not Blazor Server's protected token storage. Blazor's notification-hub toast scenario is explicitly skipped because these hosts do not implement that client feature.
+
+Headed runs (--headed or --ui) explicitly maximize each Chromium window through CDP, verify its maximized state, and use the actual window viewport. Headless runs keep the deterministic Desktop Chrome viewport.

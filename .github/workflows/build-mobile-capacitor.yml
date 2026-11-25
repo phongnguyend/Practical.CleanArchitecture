@@ -51,6 +51,7 @@ jobs:
       - run: npm ci
       - name: Prepare optional Firebase configuration
         env:
+          MOBILE_PUSH_ENABLED: ${{ vars.MOBILE_PUSH_ENABLED || 'false' }}
           FIREBASE_CONFIG_BASE64: ${{ secrets.FIREBASE_CAPACITOR_ANDROID_CONFIG_BASE64 }}
         run: python3 ../tools/prepare_firebase.py --app Capacitor --platform android
       - name: Lint, typecheck and unit tests
@@ -112,6 +113,7 @@ jobs:
       - run: npm ci
       - name: Prepare optional Firebase configuration
         env:
+          MOBILE_PUSH_ENABLED: ${{ vars.MOBILE_PUSH_ENABLED || 'false' }}
           FIREBASE_CONFIG_BASE64: ${{ secrets.FIREBASE_CAPACITOR_IOS_CONFIG_BASE64 }}
         run: python3 ../tools/prepare_firebase.py --app Capacitor --platform ios
       - name: Build iOS simulator app

@@ -1,4 +1,4 @@
-﻿<Dialog IsOpen="@ShowDialog" Title="@Title">
+﻿<Dialog OnClose="Close" IsOpen="@ShowDialog" Title="@Title">
     <DialogHeader Title="@Title" OnClose="Close" />
     <DialogBody>
         <EditForm Model="ConfigurationEntry" OnValidSubmit="HandleValidSubmit">
@@ -8,7 +8,7 @@
             <div class="form-group row">
                 <label for="key" class="col-sm-3 col-form-label">Key </label>
                 <div class="col-sm-9">
-                    <InputText id="key" class="form-control" @bind-Value="ConfigurationEntry.Key" placeholder="Enter Key"></InputText>
+                    <InputText id="key" required class="form-control" @bind-Value="ConfigurationEntry.Key" placeholder="Enter Key"></InputText>
                     <ValidationMessage For="@(() => ConfigurationEntry.Key)" />
                 </div>
             </div>

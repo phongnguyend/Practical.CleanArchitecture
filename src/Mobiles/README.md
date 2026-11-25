@@ -191,3 +191,15 @@ See [Capacitor setup and tests](Capacitor/README.md). It bundles React feature s
 ## Sentry
 
 All five apps support optional Sentry reporting alongside Crashlytics. See [Sentry setup](SENTRY.md) for local configuration, GitHub/Expo settings, symbol uploads, and verification. Reporting stays disabled until configured.
+
+## Mobile push and playground
+
+All five apps have **Admin → Playgrounds → Mobile Push**. Enter a title, message, and destination to queue a notification for the signed-in account. The page shows the provider, registered-device count, and the latest 20 messages with delivery counts. It never accepts another user's recipient ID.
+
+The default **Fake** provider saves messages to the existing notification database and simulates delivery without contacting Firebase. With no registered devices, messages remain available in **Notifications → Notification inbox**. Device registration is available only when Firebase is configured in both the app and backend. See [Firebase mobile push setup](FIREBASE.md#mobile-push-fcm).
+
+The web projects (Angular, React, Vue, Next.js, and BFF React) expose the same playground. Restart the updated API and apply its notification schema migration before using it. The existing SignalR feed remains separate from mobile push.
+
+**Email** and **SMS** are also available under **Admin → Playgrounds** in every web and mobile app. Each project uses one `NotificationPlaygrounds` component for all three channels; Admin contains only navigation. Email accepts From, To, Subject, and Message. SMS accepts an international phone number and Message. Both show the configured provider and the latest 20 entries from the existing queues, including delivery status and attempts.
+
+Email/SMS requests save directly to the existing `EmailMessages` and `SmsMessages` tables. Start the existing notification workers to process them. No new context, ownership column, or schema migration is needed for these two playgrounds. `Fake` simulates delivery; other configured Email/SMS providers can deliver to the entered recipient. Backend playground routes are registered together in `NotificationPlaygroundEndpoints`; Mobile Push keeps its existing URL.

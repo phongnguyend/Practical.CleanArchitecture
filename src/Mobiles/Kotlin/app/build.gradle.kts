@@ -21,13 +21,16 @@ sentry {
     tracingInstrumentation.enabled.set(false)
     autoInstallation.enabled.set(false)
 }
+val pushEnabled = providers.gradleProperty("pushNotificationsEnabled").orNull == "true"
 val crashlyticsEnabled = providers.gradleProperty("crashlyticsEnabled").orNull == "true"
-if (crashlyticsEnabled) {
+if (crashlyticsEnabled || pushEnabled) {
     require(file("google-services.json").isFile) {
         "Crashlytics requires app/google-services.json"
     }
     apply(plugin = "com.google.gms.google-services")
-    apply(plugin = "com.google.firebase.crashlytics")
+    if (crashlyticsEnabled) {
+        apply(plugin = "com.google.firebase.crashlytics")
+    }
 }
 fun setting(name: String, fallback: String) = "\"" + providers.gradleProperty(name).getOrElse(fallback).replace("\\", "\\\\").replace("\"", "\\\"") + "\""
 // Opt in to one local public certificate; generated resources are debug-only.
@@ -73,6 +76,7 @@ android {
         for (key in listOf("SENTRY_DSN", "SENTRY_ENVIRONMENT", "SENTRY_RELEASE")) {
             buildConfigField("String", key, JsonOutput.toJson(sentryConfig[key]?.toString() ?: ""))
         }
+        buildConfigField("boolean", "PUSH_NOTIFICATIONS_ENABLED", pushEnabled.toString())
         applicationId = "com.classifiedads.mobile.kotlin"
         minSdk = 26
         targetSdk = 36
@@ -97,6 +101,7 @@ tasks.configureEach {
     if (name == "preDebugBuild") dependsOn(generateLocalCertificateResources)
 }
 dependencies {
+    implementation("com.google.firebase:firebase-messaging")
     implementation("io.sentry:sentry-android:8.65.0")
     implementation(platform("com.google.firebase:firebase-bom:35.2.0"))
     implementation("com.google.firebase:firebase-crashlytics")

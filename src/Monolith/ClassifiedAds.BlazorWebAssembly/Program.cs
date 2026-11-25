@@ -1,4 +1,6 @@
-﻿using ClassifiedAds.Blazor.Modules.AuditLogs.Services;
+using ClassifiedAds.Blazor.Modules.Admin.Services;
+using ClassifiedAds.Blazor.Modules.Roles.Services;
+using ClassifiedAds.Blazor.Modules.AuditLogs.Services;
 using ClassifiedAds.Blazor.Modules.Core.Services;
 using ClassifiedAds.Blazor.Modules.Files.Services;
 using ClassifiedAds.Blazor.Modules.Products.Services;
@@ -105,6 +107,34 @@ public class Program
         });
 
         builder.Services.AddHttpClient<AuditLogService, AuditLogService>(client =>
+        {
+            client.BaseAddress = new Uri(appSettings.ResourceServer.Endpoint);
+            client.Timeout = new TimeSpan(0, 0, 30);
+            client.DefaultRequestHeaders.Clear();
+        })
+        .AddHttpMessageHandler(sp =>
+        {
+            var handler = sp.GetService<AuthorizationMessageHandler>()
+            .ConfigureHandler(
+                authorizedUrls: new[] { appSettings.ResourceServer.Endpoint }
+                );
+            return handler;
+        });
+        builder.Services.AddHttpClient<NotificationPlaygroundService, NotificationPlaygroundService>(client =>
+        {
+            client.BaseAddress = new Uri(appSettings.ResourceServer.Endpoint);
+            client.Timeout = new TimeSpan(0, 0, 30);
+            client.DefaultRequestHeaders.Clear();
+        })
+        .AddHttpMessageHandler(sp =>
+        {
+            var handler = sp.GetService<AuthorizationMessageHandler>()
+            .ConfigureHandler(
+                authorizedUrls: new[] { appSettings.ResourceServer.Endpoint }
+                );
+            return handler;
+        });
+        builder.Services.AddHttpClient<RoleService, RoleService>(client =>
         {
             client.BaseAddress = new Uri(appSettings.ResourceServer.Endpoint);
             client.Timeout = new TimeSpan(0, 0, 30);

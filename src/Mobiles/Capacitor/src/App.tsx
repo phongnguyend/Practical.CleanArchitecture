@@ -1,7 +1,9 @@
+import Admin from "./containers/Admin/Admin";
+import { initializePush, syncPush, consumePush } from "./core/push";
 import { useEffect, useState } from "react";
 import { App as NativeApp } from "@capacitor/app";
 import { Capacitor } from "@capacitor/core";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { isAuthenticated } from "./containers/Auth/authService";
 import Notifications from "./containers/Notifications/Notifications";
 import "./mobile.css";
@@ -52,6 +54,23 @@ function App() {
     };
   }, []);
   const authenticated = isAuthenticated();
+  const navigate = useNavigate();
+  useEffect(() => {
+    async function opened() {
+      const target = await consumePush();
+      if (target && isAuthenticated()) {
+        navigate(`/${target}`);
+      }
+    }
+    void initializePush().catch(() => undefined);
+    const handleOpened = () => void opened();
+    window.addEventListener("push-opened", handleOpened);
+    if (authenticated) {
+      void syncPush().catch(() => undefined);
+      void opened();
+    }
+    return () => window.removeEventListener("push-opened", handleOpened);
+  }, [authenticated, navigate]);
   const authenticationRoute = [
     "/login",
     "/logout",
@@ -65,6 +84,11 @@ function App() {
           <Home />
         ) : (
           <Routes>
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/playgrounds" element={<Admin view="playgrounds" />} />
+            <Route path="/admin/playgrounds/mobile-push" element={<Admin view="mobilepush" />} />
+            <Route path="/admin/playgrounds/email" element={<Admin view="email" />} />
+            <Route path="/admin/playgrounds/sms" element={<Admin view="sms" />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/home" element={<Home />} />
             <Route

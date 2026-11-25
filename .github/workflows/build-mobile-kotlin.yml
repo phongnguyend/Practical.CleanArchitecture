@@ -57,6 +57,7 @@ jobs:
         run: python3 -m unittest discover -s ../tools -p test_prepare_firebase.py
       - name: Prepare optional Firebase configuration
         env:
+          MOBILE_PUSH_ENABLED: ${{ vars.MOBILE_PUSH_ENABLED || 'false' }}
           FIREBASE_CONFIG_BASE64: ${{ secrets.FIREBASE_KOTLIN_ANDROID_CONFIG_BASE64 }}
         run: python3 ../tools/prepare_firebase.py --app Kotlin --platform android
       - uses: actions/setup-java@v5
@@ -69,7 +70,7 @@ jobs:
           packages: platform-tools
       - uses: gradle/actions/setup-gradle@v6
       - name: Build, lint, and unit tests
-        run: bash ./gradlew --no-daemon --stacktrace :app:assembleDebug -PcrashlyticsEnabled="$FIREBASE_ENABLED" :app:lintDebug :app:testDebugUnitTest
+        run: bash ./gradlew --no-daemon --stacktrace :app:assembleDebug -PcrashlyticsEnabled="$FIREBASE_ENABLED" -PpushNotificationsEnabled="$MOBILE_PUSH_ENABLED" :app:lintDebug :app:testDebugUnitTest
       - name: Upload Android APK
         uses: actions/upload-artifact@v4
         with:

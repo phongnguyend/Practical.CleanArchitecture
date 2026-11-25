@@ -7,9 +7,7 @@ for (const [section, resource, path] of [
   test(`navigate to ${section} and reload`, async ({ app, page }) => {
     await app.open(section, resource);
     await expect(page).toHaveURL(new RegExp(`${path}$`));
-    const loaded = app.response(resource, 'GET');
-    await page.reload();
-    await loaded;
+    await app.reload(resource);
     await expect(app.nav.getByRole('link', { name: section, exact: true })).toHaveClass(/active/);
     await app.open('Home');
     await expect(page.getByRole('heading', { name: 'Phong Nguyen', exact: true })).toBeVisible();

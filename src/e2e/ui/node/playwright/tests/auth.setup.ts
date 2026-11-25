@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '../support/browser.js';
-import { mkdir } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { authFile } from '../support/environment.js';
 
@@ -19,4 +19,8 @@ test('sign in through Identity Server', async ({ page }, info) => {
   const file = authFile(String(info.project.metadata.app));
   await mkdir(path.dirname(file), { recursive: true });
   await page.context().storageState({ path: file });
+  if (info.project.metadata.app === 'blazor-wasm') {
+    const session = await page.evaluate(() => Object.fromEntries(Object.entries(sessionStorage)));
+    await writeFile(file.replace(/\.json$/, '.session.json'), JSON.stringify(session));
+  }
 });

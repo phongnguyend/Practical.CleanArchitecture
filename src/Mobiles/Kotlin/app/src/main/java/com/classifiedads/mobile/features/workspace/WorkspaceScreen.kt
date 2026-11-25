@@ -1,5 +1,8 @@
 package com.classifiedads.mobile.features.workspace
 
+import com.classifiedads.mobile.features.admin.AdminScreen
+import com.classifiedads.mobile.features.notifications.PushInbox
+
 import com.classifiedads.mobile.shared.ui.ActionLabel
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.LocalActivity
@@ -42,6 +45,7 @@ val destinations =
         "configurationentries" to "Configuration Entries",
         "auditlogentries" to "Audit logs",
         "notifications" to "Notifications",
+        "admin" to "Admin",
     )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -177,7 +181,12 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
                         }
                         Button(modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp), shape = MaterialTheme.shapes.small,
                             enabled = !model.busy,
-                            onClick = { model.run { login.launch(model.session.loginIntent()) } },
+                            onClick = { model.run { try {
+                                    model.push.disable()
+                                } catch (_: Exception) {
+                                    // Local token cleanup still runs if the API is offline.
+                                }
+                                login.launch(model.session.loginIntent()) } },
                         ) {
                             ActionLabel("Sign in")
                         }
@@ -212,8 +221,10 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
                                 "roles" -> RoleScreen(model.api)
                                 "configurationentries" -> ConfigurationEntryScreen(model.api)
                                 "auditlogentries" -> AuditLogsScreen(model.api)
+                                "admin" -> AdminScreen(model)
                                 "notifications" -> {
                                     Text("Notifications", style = MaterialTheme.typography.headlineSmall)
+                                    PushInbox(model)
                                     Text(model.notificationStatus)
                                     if (model.feed.isEmpty()) {
                                         Text("Live messages appear here while the app is active.")
@@ -222,8 +233,10 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
                                 }
                                 else -> {
                                     HomeInfo()
-                                    destinations.drop(1).take(5).forEach { (key, title) ->
-                                        HomeButton(title) { model.section = key }
+                                    destinations.filter { (key, _) -> key !in setOf("home", "notifications", "auditlogentries") }.forEach { (key, title) ->
+                                        HomeButton(title) {
+                                            model.section = key
+                                        }
                                     }
                                     if (model.session.biometricEnabled || model.session.biometricAvailable()) {
                                         HomeButton(if (model.session.biometricEnabled) "Disable biometric login" else "Enable biometric login") {
@@ -264,6 +277,11 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
                             signOut = false
                             model.run {
                                 model.setNotifications(false)
+                                try {
+                                    model.push.disable()
+                                } catch (_: Exception) {
+                                    // Sign-out remains available while offline.
+                                }
                                 val intent = model.session.logoutIntent()
                                 model.signedIn = false
                                 model.feed = emptyList()

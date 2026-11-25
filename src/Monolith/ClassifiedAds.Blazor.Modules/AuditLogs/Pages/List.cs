@@ -8,6 +8,8 @@ namespace ClassifiedAds.Blazor.Modules.AuditLogs.Pages;
 
 public partial class List
 {
+    protected bool IsLoaded { get; set; }
+
     [Inject]
     public AuditLogService AuditLogService { get; set; }
 
@@ -24,6 +26,7 @@ public partial class List
         var auditLogs = await AuditLogService.GetAuditLogsAsync(1, PageSize);
         AuditLogs = auditLogs.Items;
         TotalItems = auditLogs.TotalItems;
+        IsLoaded = true;
     }
 
     protected async Task GetAuditLogsAsync(int page)
