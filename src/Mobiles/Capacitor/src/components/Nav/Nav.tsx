@@ -10,6 +10,7 @@ export const destinations = [
   ["/roles", "Roles", "roles"],
   ["/configurationentries", "Configuration Entries", "settings"],
   ["/auditlogs", "Audit logs", "audit"],
+  ["/admin", "Admin", "settings"],
   ["/notifications", "Notifications", "notification"],
 ] as const;
 export default function Nav() {

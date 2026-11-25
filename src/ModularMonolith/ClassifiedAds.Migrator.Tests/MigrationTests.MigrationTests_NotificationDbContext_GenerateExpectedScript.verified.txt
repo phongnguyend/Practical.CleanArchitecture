@@ -112,7 +112,58 @@ CREATE INDEX [IX_SmsMessages_CreatedDateTime] ON [SmsMessages] ([CreatedDateTime
 CREATE INDEX [IX_SmsMessages_SentDateTime] ON [SmsMessages] ([SentDateTime]) INCLUDE ([ExpiredDateTime], [AttemptCount], [MaxAttemptCount], [NextAttemptDateTime]);
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20231215102244_Init', N'9.0.1');
+VALUES (N'20260311010959_Init', N'10.0.10');
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+CREATE TABLE [PushDeliveries] (
+    [Id] uniqueidentifier NOT NULL,
+    [MessageId] uniqueidentifier NOT NULL,
+    [DeviceId] uniqueidentifier NOT NULL,
+    [UserId] nvarchar(200) NULL,
+    [Attempts] int NOT NULL,
+    [NextAttemptAt] datetime2 NOT NULL,
+    [CompletedAt] datetime2 NULL,
+    [LastError] nvarchar(100) NULL,
+    CONSTRAINT [PK_PushDeliveries] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [PushDevices] (
+    [Id] uniqueidentifier NOT NULL,
+    [UserId] nvarchar(200) NULL,
+    [App] nvarchar(30) NULL,
+    [Platform] nvarchar(10) NULL,
+    [Token] nvarchar(2048) NULL,
+    [TokenHash] nvarchar(64) NULL,
+    [UpdatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_PushDevices] PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [PushMessages] (
+    [Id] uniqueidentifier NOT NULL,
+    [UserId] nvarchar(200) NULL,
+    [Title] nvarchar(100) NULL,
+    [Body] nvarchar(500) NULL,
+    [Section] nvarchar(40) NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [ReadAt] datetime2 NULL,
+    CONSTRAINT [PK_PushMessages] PRIMARY KEY ([Id])
+);
+
+CREATE INDEX [IX_PushDeliveries_CompletedAt_NextAttemptAt] ON [PushDeliveries] ([CompletedAt], [NextAttemptAt]);
+
+CREATE UNIQUE INDEX [IX_PushDeliveries_MessageId_DeviceId] ON [PushDeliveries] ([MessageId], [DeviceId]);
+
+CREATE UNIQUE INDEX [IX_PushDevices_TokenHash] ON [PushDevices] ([TokenHash]) WHERE [TokenHash] IS NOT NULL;
+
+CREATE INDEX [IX_PushDevices_UserId] ON [PushDevices] ([UserId]);
+
+CREATE INDEX [IX_PushMessages_UserId_CreatedAt] ON [PushMessages] ([UserId], [CreatedAt]);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20261125123939_AddMobilePushNotifications', N'10.0.10');
 
 COMMIT;
 GO

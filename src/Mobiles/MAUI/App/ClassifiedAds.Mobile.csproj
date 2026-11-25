@@ -6,6 +6,7 @@
     <TargetFrameworks Condition="'$(MauiTargetFramework)' != ''">$(MauiTargetFramework)</TargetFrameworks>
     <OutputType>Exe</OutputType><RootNamespace>ClassifiedAds.Mobile</RootNamespace>
     <UseMaui>true</UseMaui><SingleProject>true</SingleProject>
+    <FirebaseAndroidConfig Condition="'$(FirebaseAndroidConfig)' == ''">google-services.json</FirebaseAndroidConfig>
     <ApplicationTitle>Classified Ads</ApplicationTitle><ApplicationId>com.classifiedads.mobile.maui</ApplicationId>
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion><ApplicationVersion>1</ApplicationVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
@@ -16,19 +17,34 @@
   </PropertyGroup>
   <ItemGroup Condition="'$(EnableFirebaseCrashlytics)' == 'true'">
     <PackageReference Include="Plugin.Firebase.Crashlytics" Version="4.0.0" />
-    <PackageReference Include="Plugin.Firebase.Core" Version="4.0.0" />
   </ItemGroup>
-  <ItemGroup Condition="'$(EnableFirebaseCrashlytics)' == 'true' And '$(TargetFramework)' == 'net10.0-android'">
-    <GoogleServicesJson Include="google-services.json" />
+  <ItemGroup Condition="('$(EnableFirebaseCrashlytics)' == 'true' Or '$(EnableMobilePush)' == 'true') And '$(TargetFramework)' == 'net10.0-android'">
+    <GoogleServicesJson Include="$(FirebaseAndroidConfig)" />
     <AndroidResource Include="Configuration/Android/Crashlytics.xml" LogicalName="values/crashlytics.xml" />
   </ItemGroup>
-  <ItemGroup Condition="'$(EnableFirebaseCrashlytics)' == 'true' And '$(TargetFramework)' == 'net10.0-ios'">
+  <ItemGroup Condition="('$(EnableFirebaseCrashlytics)' == 'true' Or '$(EnableMobilePush)' == 'true') And '$(TargetFramework)' == 'net10.0-ios'">
     <BundleResource Include="GoogleService-Info.plist" LogicalName="GoogleService-Info.plist" />
   </ItemGroup>
-  <Target Name="ValidateFirebaseConfiguration" BeforeTargets="PrepareForBuild" Condition="'$(EnableFirebaseCrashlytics)' == 'true'">
-    <Error Condition="'$(TargetFramework)' == 'net10.0-android' And !Exists('google-services.json')" Text="Crashlytics requires App/google-services.json." />
+  <Target Name="ValidateFirebaseConfiguration" BeforeTargets="PrepareForBuild" Condition="'$(EnableFirebaseCrashlytics)' == 'true' Or '$(EnableMobilePush)' == 'true'">
+    <Error Condition="'$(TargetFramework)' == 'net10.0-android' And !Exists('$(FirebaseAndroidConfig)')" Text="Crashlytics requires App/google-services.json." />
     <Error Condition="'$(TargetFramework)' == 'net10.0-ios' And !Exists('GoogleService-Info.plist')" Text="Crashlytics requires App/GoogleService-Info.plist." />
   </Target>
+  <PropertyGroup Condition="'$(EnableFirebaseCrashlytics)' == 'true' Or '$(EnableMobilePush)' == 'true'">
+    <DefineConstants>$(DefineConstants);FIREBASE_CORE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(EnableMobilePush)' == 'true'">
+    <DefineConstants>$(DefineConstants);FIREBASE_MESSAGING</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(EnableFirebaseCrashlytics)' == 'true' Or '$(EnableMobilePush)' == 'true'">
+    <PackageReference Include="Plugin.Firebase.Core" Version="4.1.0" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(EnableMobilePush)' == 'true' And '$(TargetFramework)' == 'net10.0-ios'">
+    <CodesignEntitlements>Platforms/iOS/Entitlements.plist</CodesignEntitlements>
+    <CodesignEntitlements Condition="'$(Configuration)' == 'Release'">Platforms/iOS/Entitlements.Release.plist</CodesignEntitlements>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(EnableMobilePush)' == 'true'">
+    <PackageReference Include="Plugin.Firebase.CloudMessaging" Version="4.0.1" />
+  </ItemGroup>
   <ItemGroup>
     <MauiIcon Include="Resources/AppIcon/appicon.svg" ForegroundFile="Resources/AppIcon/appiconfg.svg" Color="#4f46e5" />
     <MauiSplashScreen Include="Resources/Splash/splash.svg" Color="#4f46e5" BaseSize="128,128" />

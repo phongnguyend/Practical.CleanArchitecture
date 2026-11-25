@@ -2,6 +2,7 @@ import * as AuthSession from "expo-auth-session";
 import * as SecureStore from "expo-secure-store";
 import * as WebBrowser from "expo-web-browser";
 import { config } from "../config/environment";
+import { disablePush } from "../notifications/push";
 
 type Session = {
   accessToken: string;
@@ -138,6 +139,7 @@ export async function restore() {
   return !!session;
 }
 export async function login() {
+  await disablePush().catch(() => undefined);
   await forgetBiometrics();
   await SecureStore.deleteItemAsync(normalKey);
   const discovery = await AuthSession.fetchDiscoveryAsync(config.issuer);
@@ -192,6 +194,7 @@ export async function accessToken(): Promise<string> {
   return refreshing;
 }
 export async function logout() {
+  await disablePush().catch(() => undefined);
   const idToken = session?.idToken;
   await forgetBiometrics();
   await SecureStore.deleteItemAsync(normalKey);

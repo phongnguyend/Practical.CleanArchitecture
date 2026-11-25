@@ -1,0 +1,28 @@
+<nav aria-label="Main navigation" class="application-nav">
+    <div class="application-header">
+        <a class="navbar-brand" href="/"><ActionIcon Name="home" /> @Title</a>
+        <div class="application-utilities">@Authentication<ThemeSwitcher /></div>
+    </div>
+    <ul class="nav nav-tabs application-tabs">
+        @foreach (var item in Items)
+        {
+            <li class="nav-item"><NavLink class="nav-link" href="@item.Path"><ActionIcon Name="@item.Icon" /> @item.Label</NavLink></li>
+        }
+    </ul>
+</nav>
+
+@code {
+    [Parameter]
+    public string Title { get; set; } = "ClassifiedAds.Blazor";
+
+    [Parameter]
+    public RenderFragment Authentication { get; set; }
+
+    private static readonly (string Path, string Label, string Icon)[] Items =
+    {
+        ("home", "Home", "home"), ("settings", "Settings", "wrench"),
+        ("files", "Files", "document"), ("products", "Products", "box"),
+        ("users", "Users", "people"), ("roles", "Roles", "shield"),
+        ("auditlogs", "Audit Logs", "clock"), ("admin", "Admin", "cog"),
+    };
+}

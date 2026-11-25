@@ -8,6 +8,18 @@ import java.security.KeyStore
 class MainActivity : FlutterFragmentActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "classifiedads/push")
+            .setMethodCallHandler { call, result ->
+                if (call.method == "createChannel") {
+                    if (android.os.Build.VERSION.SDK_INT >= 26) {
+                        val manager = getSystemService(android.app.NotificationManager::class.java)
+                        manager.createNotificationChannel(android.app.NotificationChannel("classifiedads_updates", "Classified Ads updates", android.app.NotificationManager.IMPORTANCE_DEFAULT))
+                    }
+                    result.success(null)
+                } else {
+                    result.notImplemented()
+                }
+            }
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "classifiedads/biometrics")
             .setMethodCallHandler { call, result ->
                 if (call.method != "clear") {

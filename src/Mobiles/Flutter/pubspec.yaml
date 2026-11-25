@@ -45,6 +45,7 @@ dependencies:
   signalr_netcore: ^1.4.4
   url_launcher: ^6.3.3
   sentry_flutter: ^10.6.0
+  firebase_messaging: ^17.1.0
 
 dev_dependencies:
   flutter_test:

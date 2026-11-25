@@ -1,7 +1,7 @@
 param(
     [ValidateSet('All', 'Flutter', 'Kotlin', 'ReactNative', 'MAUI', 'Capacitor')]
     [string]$App = 'All',
-    [ValidateSet('All', 'Home', 'Products', 'Users', 'Roles', 'Configuration', 'Navigation', 'Biometrics')]
+    [ValidateSet('All', 'Home', 'Products', 'Users', 'Roles', 'Configuration', 'Navigation', 'Notifications', 'Admin', 'Biometrics')]
     [string]$Feature = 'All',
     [switch]$IncludeCrud,
     [ValidateRange(1, 10)]
@@ -35,7 +35,9 @@ foreach ($name in $selected) {
     if ($LASTEXITCODE -ne 0 -or !$installed) { throw "Install the $name app before running UI tests." }
 }
 if ($selected -contains 'ReactNative') {
-    try { $status = Invoke-WebRequest 'http://localhost:8081/status' -UseBasicParsing -TimeoutSec 5 }
+    try {
+        $status = Invoke-WebRequest 'http://localhost:8081/status' -UseBasicParsing -TimeoutSec 30
+    }
     catch { throw 'Start React Native Metro first: cd src/Mobiles/ReactNative; npm start -- --localhost --port 8081' }
     $statusText = if ($status.Content -is [byte[]]) { [System.Text.Encoding]::UTF8.GetString($status.Content) } else { [string]$status.Content }
     if ($statusText -notmatch 'packager-status:running') { throw 'Port 8081 is not a running Metro server.' }

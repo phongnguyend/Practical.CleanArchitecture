@@ -1,4 +1,3 @@
-import React from "react";
 import { NavLink } from "react-router-dom";
 
 import { isAuthenticated } from "../../containers/Auth/authService";
@@ -13,11 +12,18 @@ const Nav = () => {
       className={"navbar navbar-expand bg-body " + classes.Nav}
       style={{ paddingLeft: "1rem", paddingRight: "1rem" }}
     >
-      <a className="navbar-brand" href="/">
-        <ActionIcon action="home" />
-        {pageTitle + " " + React.version}
-      </a>
-      <ul className={"nav nav-tabs flex-grow-1 flex-nowrap " + classes.Tabs}>
+      <div className={classes.Header}>
+        <a className="navbar-brand" href="/">
+          <ActionIcon action="home" />
+          {pageTitle}
+        </a>
+        <div className="d-flex align-items-center gap-2 ms-auto flex-shrink-0">
+          {!isAuthenticated() ? <NavLink className="nav-link" to="/login"><ActionIcon action="login" /> Login</NavLink> : null}
+          {isAuthenticated() ? <NavLink className="nav-link" to="/logout"><ActionIcon action="logout" /> Logout</NavLink> : null}
+          <ThemeSwitcher />
+        </div>
+      </div>
+      <ul className={"nav nav-tabs flex-wrap " + classes.Tabs}>
         <li>
           <NavLink className="nav-link" to="/home">
             <ActionIcon action="home" /> Home
@@ -50,12 +56,8 @@ const Nav = () => {
           </NavLink>
         </li>
 
+      <li><NavLink className="nav-link" to="/admin"><ActionIcon action="settings" /> Admin</NavLink></li>
       </ul>
-      <div className="d-flex align-items-center gap-2 ms-auto flex-shrink-0">
-        {!isAuthenticated() ? <NavLink className="nav-link" to="/login"><ActionIcon action="login" /> Login</NavLink> : null}
-        {isAuthenticated() ? <NavLink className="nav-link" to="/logout"><ActionIcon action="logout" /> Logout</NavLink> : null}
-        <ThemeSwitcher />
-      </div>
     </nav>
   );
 };

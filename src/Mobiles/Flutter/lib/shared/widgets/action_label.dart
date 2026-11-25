@@ -1,6 +1,20 @@
 import 'package:flutter/material.dart';
 
 const _icons = <String, String>{
+  'Email': 'mail',
+  'SMS': 'notifications',
+  'Dismiss error': 'close',
+  'Disable notifications': 'close',
+  'Refresh inbox': 'refresh',
+  'Refresh queue': 'refresh',
+  'Open notification': 'view',
+  'Hide event details': 'view',
+  'View event details': 'view',
+  'Send test notification': 'notifications',
+  'Enable notifications': 'notifications',
+  'Queue message': 'notifications',
+  'Mobile Push': 'notifications',
+  'Playgrounds': 'configuration',
   'Home': 'home',
   'Unlock with biometrics': 'lock',
   'Enable biometric login': 'lock',
@@ -13,6 +27,7 @@ const _icons = <String, String>{
   'Roles': 'roles',
   'Configuration Entries': 'configuration',
   'Audit logs': 'history',
+  'Admin': 'configuration',
   'Notifications': 'notifications',
   'Practical.CleanArchitecture': 'link',
   'Sign out': 'logout',

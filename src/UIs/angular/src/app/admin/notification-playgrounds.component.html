@@ -1,0 +1,26 @@
+<h1>{{ name }}</h1>
+<p>{{ push ? "Queue a notification for your own registered devices." : "Queue a message for delivery by the existing " + name + " worker." }}</p>
+@if (info(); as queueInfo) {
+  <div role="status" class="alert alert-info">Provider: <strong>{{ queueInfo.provider }}</strong>. @if (push) { Registered devices: {{ queueInfo.deviceCount }}. } {{ queueInfo.provider === 'Fake' ? 'Delivery is simulated; no message is sent.' : 'Queued messages may be delivered to the specified recipient.' }}</div>
+}
+@if (error()) { <p role="alert" class="alert alert-danger">{{ error() }}</p> }
+@if (success()) { <p role="status" class="alert alert-success">{{ success() }}</p> }
+<form (ngSubmit)="queue()" novalidate class="d-grid gap-3" style="max-width:720px">
+  @if (email) {
+    <div><label for="message-from" class="form-label">From</label><input id="message-from" name="from" type="email" class="form-control" maxlength="254" [(ngModel)]="from" [disabled]="busy()" required /></div>
+  }
+  @if (!push) { <div><label for="message-recipient" class="form-label">{{ email ? 'To' : 'Phone number' }}</label><input id="message-recipient" name="recipient" [type]="email ? 'email' : 'tel'" class="form-control" [maxlength]="email ? 254 : 16" [(ngModel)]="recipient" [disabled]="busy()" required />@if (!email) { <small>International format, for example +15551234567.</small> }</div> }
+  @if (email || push) {
+    <div><label for="message-subject" class="form-label">{{ push ? 'Title' : 'Subject' }}</label><input id="message-subject" name="subject" class="form-control" [maxlength]="push ? 100 : 200" [(ngModel)]="subject" [disabled]="busy()" required /></div>
+  }
+  <div><label for="message-body" class="form-label">Message</label><textarea id="message-body" name="body" class="form-control" rows="5" [maxlength]="push ? 500 : email ? 10000 : 1600" [(ngModel)]="body" [disabled]="busy()" required></textarea><small>{{ body.length }}/{{ push ? 500 : email ? 10000 : 1600 }} characters</small></div>
+  @if (push) { <div><label for="message-destination" class="form-label">Destination</label><select id="message-destination" name="section" class="form-select" [(ngModel)]="section" [disabled]="busy()">@for (value of destinations; track value) { <option [value]="value">{{ value }}</option> }</select></div> }
+  <div class="d-flex flex-wrap gap-2"><button type="submit" class="btn btn-primary" [disabled]="busy() || !info()"><app-action-icon action="notification" />{{ busy() ? 'Queueing…' : 'Queue message' }}</button><button type="button" class="btn btn-outline-secondary" [disabled]="busy()" (click)="refresh()"><app-action-icon action="refresh" />Refresh queue</button></div>
+</form>
+<h2 class="mt-4">Recent messages</h2>
+@if (info()?.items?.length === 0) { <p>No queued messages yet.</p> }
+<div class="d-grid gap-3">
+  @for (item of info()?.items; track item.id) {
+    <article class="border rounded p-3"><h3 class="h5">{{ item.title }}</h3>@if (!push) { <p>To: {{ item.recipient }}</p> }<p style="white-space:pre-wrap;overflow-wrap:anywhere">{{ item.body }}</p><p class="mb-0">@if (push) { Pending: {{ item.pending }} / Completed: {{ item.completed }} / Failed: {{ item.failed }} } @else { {{ item.status }} / Attempts: {{ item.attempts }} } / {{ item.createdAt | date:'medium' }}</p></article>
+  }
+</div>

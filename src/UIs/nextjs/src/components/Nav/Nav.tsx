@@ -12,7 +12,6 @@ interface NavProps {
 
 const Nav = ({ isAuthenticated }: NavProps) => {
   const pageTitle = "ClassifiedAds.NextJs";
-  const nextVersion = "16.0.6";
 
   const pathname = usePathname();
 
@@ -26,11 +25,18 @@ const Nav = ({ isAuthenticated }: NavProps) => {
       className={"navbar navbar-expand bg-body " + classes.Nav}
       style={{ paddingLeft: "1rem", paddingRight: "1rem" }}
     >
-      <Link className="navbar-brand" href="/">
-        <ActionIcon action="home" />
-        {pageTitle + " " + nextVersion}
-      </Link>
-      <ul className={"nav nav-tabs flex-grow-1 flex-nowrap " + classes.Tabs}>
+      <div className={classes.Header}>
+        <Link className="navbar-brand" href="/">
+          <ActionIcon action="home" />
+          {pageTitle}
+        </Link>
+        <div className="d-flex align-items-center gap-2 ms-auto flex-shrink-0">
+          {!isAuthenticated ? <Link className="nav-link" href="/login"><ActionIcon action="login" /> Login</Link> : null}
+          {isAuthenticated ? <Link className="nav-link" href="/logout"><ActionIcon action="logout" /> Logout</Link> : null}
+          <ThemeSwitcher />
+        </div>
+      </div>
+      <ul className={"nav nav-tabs flex-wrap " + classes.Tabs}>
         <li>
           <Link
             className={
@@ -85,12 +91,8 @@ const Nav = ({ isAuthenticated }: NavProps) => {
           </Link>
         </li>
 
+      <li><Link className={isActive("/admin") ? "nav-link active" : "nav-link"} href="/admin"><ActionIcon action="settings" /> Admin</Link></li>
       </ul>
-      <div className="d-flex align-items-center gap-2 ms-auto flex-shrink-0">
-        {!isAuthenticated ? <Link className="nav-link" href="/login"><ActionIcon action="login" /> Login</Link> : null}
-        {isAuthenticated ? <Link className="nav-link" href="/logout"><ActionIcon action="logout" /> Logout</Link> : null}
-        <ThemeSwitcher />
-      </div>
     </nav>
   );
 };

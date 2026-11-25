@@ -1,0 +1,144 @@
+@page "/roles"
+@page "/roles/{Id:guid}"
+@attribute [Authorize]
+@using ClassifiedAds.Blazor.Modules.Roles.Services
+@inject RoleService Service
+<section class="card"><div class="card-body">
+    <h1>@(Id.HasValue ? "Role Details" : "Role List")</h1>
+    @if (!string.IsNullOrEmpty(Error))
+    {
+        <p role="alert" class="alert alert-danger">@Error</p>
+    }
+    @if (Loading)
+    {
+        <p role="status">Loading...</p>
+    }
+    else if (Id.HasValue)
+    {
+        <dl><dt>Name</dt><dd>@Selected.Name</dd><dt>Normalized Name</dt><dd>@Selected.NormalizedName</dd></dl>
+        <a class="btn btn-secondary" href="/roles"><ActionIcon Name="arrow-left" /> Back</a>
+    }
+    else
+    {
+        <button class="btn btn-primary mb-3" @onclick="() => Edit(new RoleModel())"><ActionIcon Name="plus" /> Add Role</button>
+        <table class="table"><thead><tr><th>Name</th><th>Actions</th></tr></thead><tbody>
+            @foreach (var role in Roles)
+            {
+                <tr><td><a href="@($"/roles/{role.Id}")">@role.Name</a></td><td>
+                    <button class="btn btn-primary" @onclick="() => Edit(role)"><ActionIcon Name="pencil" /> Edit</button>
+                    <button class="btn btn-danger" @onclick="() => ConfirmDelete(role)"><ActionIcon Name="trash" /> Delete</button>
+                </td></tr>
+            }
+        </tbody></table>
+    }
+</div></section>
+<Dialog OnClose="() => Editing = false" IsOpen="@Editing" Title="@(Selected.Id == Guid.Empty ? "Add Role" : "Edit Role")">
+    <DialogHeader Title="@(Selected.Id == Guid.Empty ? "Add Role" : "Edit Role")" OnClose="() => Editing = false" />
+    <DialogBody>
+        <EditForm Model="@Selected" OnValidSubmit="Save">
+            <DataAnnotationsValidator />
+            <label for="role-name">Name</label><InputText id="role-name" class="form-control" @bind-Value="Selected.Name" required />
+            <ValidationMessage For="() => Selected.Name" />
+            <div class="playground-actions mt-3 justify-content-end">
+                <button class="btn btn-secondary" type="button" @onclick="() => Editing = false">Cancel</button>
+                <button class="btn btn-primary" type="submit" disabled="@Saving">Save</button>
+            </div>
+        </EditForm>
+    </DialogBody>
+</Dialog>
+<Dialog OnClose="() => Deleting = false" IsOpen="@Deleting" Title="Delete Role">
+    <DialogHeader Title="Delete Role" OnClose="() => Deleting = false" />
+    <DialogBody>Are you sure you want to delete role: <strong>@Selected.Name</strong>?</DialogBody>
+    <DialogFooter>
+        <button class="btn btn-secondary" @onclick="() => Deleting = false">No</button>
+        <button class="btn btn-danger" disabled="@Saving" @onclick="Delete">Yes</button>
+    </DialogFooter>
+</Dialog>
+@code {
+    [Parameter]
+    public Guid? Id { get; set; }
+
+    private System.Collections.Generic.List<RoleModel> Roles = new();
+    private RoleModel Selected = new();
+    private bool Loading = true;
+    private bool Editing;
+    private bool Deleting;
+    private bool Saving;
+    private string Error = "";
+
+    protected override async System.Threading.Tasks.Task OnParametersSetAsync()
+    {
+        Loading = true;
+        try
+        {
+            if (Id.HasValue)
+            {
+                Selected = await Service.GetAsync(Id.Value);
+            }
+            else
+            {
+                Roles = await Service.LoadAsync();
+            }
+        }
+        catch (HttpRequestException)
+        {
+            Error = "Unable to load roles. Please try again.";
+        }
+        finally
+        {
+            Loading = false;
+        }
+    }
+
+    private void Edit(RoleModel role)
+    {
+        Selected = new RoleModel { Id = role.Id, Name = role.Name };
+        Editing = true;
+    }
+
+    private void ConfirmDelete(RoleModel role)
+    {
+        Selected = role;
+        Deleting = true;
+    }
+
+    private async System.Threading.Tasks.Task Save()
+    {
+        Saving = true;
+        try
+        {
+            await Service.SaveAsync(Selected);
+            Editing = false;
+            Roles = await Service.LoadAsync();
+        }
+        catch (HttpRequestException)
+        {
+            Error = "Unable to save role.";
+        }
+        finally
+        {
+            Saving = false;
+        }
+    }
+
+    private async System.Threading.Tasks.Task Delete()
+    {
+        Saving = true;
+        try
+        {
+            await Service.RemoveAsync(Selected.Id);
+            Deleting = false;
+            Roles = await Service.LoadAsync();
+        }
+        catch (HttpRequestException)
+        {
+            Error = "Unable to delete role.";
+        }
+        finally
+        {
+            Saving = false;
+        }
+    }
+}
+
+<span data-page-loaded="@((!Loading && string.IsNullOrEmpty(Error)).ToString().ToLowerInvariant())" hidden></span>

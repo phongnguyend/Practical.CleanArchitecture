@@ -12,7 +12,7 @@ public static class MauiProgram
             fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
         });
         Core.SentryReporting.Configure(builder);
-#if FIREBASE_CRASHLYTICS
+#if FIREBASE_CORE
         builder.ConfigureLifecycleEvents(events =>
         {
 #if ANDROID
@@ -25,6 +25,9 @@ public static class MauiProgram
             events.AddiOS(ios => ios.WillFinishLaunching((_, _) =>
             {
                 Plugin.Firebase.Core.Platforms.iOS.CrossFirebase.Initialize();
+#if FIREBASE_MESSAGING
+                Plugin.Firebase.CloudMessaging.FirebaseCloudMessagingImplementation.Initialize();
+#endif
                 Core.CrashReporting.Initialize();
                 return true;
             }));

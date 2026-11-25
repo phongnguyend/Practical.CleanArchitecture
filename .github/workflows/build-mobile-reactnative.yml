@@ -52,6 +52,7 @@ jobs:
         run: python3 ../tools/prepare_sentry.py --app ReactNative
       - name: Prepare optional Firebase configuration
         env:
+          MOBILE_PUSH_ENABLED: ${{ vars.MOBILE_PUSH_ENABLED || 'false' }}
           FIREBASE_CONFIG_BASE64: ${{ secrets.FIREBASE_REACTNATIVE_ANDROID_CONFIG_BASE64 }}
         run: python3 ../tools/prepare_firebase.py --app ReactNative --platform android
       - uses: actions/setup-node@v6
@@ -109,6 +110,7 @@ jobs:
         run: python3 ../tools/prepare_sentry.py --app ReactNative
       - name: Prepare optional Firebase configuration
         env:
+          MOBILE_PUSH_ENABLED: ${{ vars.MOBILE_PUSH_ENABLED || 'false' }}
           FIREBASE_CONFIG_BASE64: ${{ secrets.FIREBASE_REACTNATIVE_IOS_CONFIG_BASE64 }}
         run: python3 ../tools/prepare_firebase.py --app ReactNative --platform ios
       - uses: actions/setup-node@v6

@@ -22,6 +22,7 @@ import '../config/app_config.dart';
 import '../../shared/models/record.dart';
 
 class AppServices {
+  Future<void> Function()? beforeSessionChange;
   Future<void> openProject() async {
     if (!await launchUrl(
       Uri.parse('https://github.com/phongnguyend/Practical.CleanArchitecture'),
@@ -227,6 +228,7 @@ class AppServices {
   }
 
   Future<void> login() async {
+    await beforeSessionChange?.call();
     await _forgetBiometrics();
     await _storage.delete(key: 'session');
     final token = await _auth.authorizeAndExchangeCode(
@@ -271,6 +273,7 @@ class AppServices {
   }
 
   Future<void> logout() async {
+    await beforeSessionChange?.call();
     await stopNotifications();
     final idToken = _session?['idToken'] as String?;
     await _forgetBiometrics();

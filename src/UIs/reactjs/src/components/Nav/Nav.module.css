@@ -1,4 +1,5 @@
 .Nav {
+  display: block;
   padding-bottom: 0;
 }
 
@@ -24,17 +25,17 @@
 }
 
 .Nav :global(.navbar-brand) {
-  flex-shrink: 0;
+  min-width: 0;
   margin-right: .75rem;
+  overflow: hidden; text-overflow: ellipsis;
   font-size: 1.1rem;
   white-space: nowrap;
 }
 
 .Tabs {
   min-width: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: thin;
+  width: 100%;
+  flex-wrap: wrap;
 }
 
 .Tabs :global(.nav-link) {
@@ -43,7 +44,14 @@
   white-space: nowrap;
 }
 
-.Nav > div > :global(.nav-link) {
+.Header > div > :global(.nav-link) {
   font-size: 1rem;
   white-space: nowrap;
+}
+.Header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding-bottom: .5rem;
 }

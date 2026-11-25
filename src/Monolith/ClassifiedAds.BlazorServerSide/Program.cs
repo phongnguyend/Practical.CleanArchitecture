@@ -1,4 +1,6 @@
-﻿using ClassifiedAds.Blazor.Modules.AuditLogs.Services;
+using ClassifiedAds.Blazor.Modules.Admin.Services;
+using ClassifiedAds.Blazor.Modules.Roles.Services;
+using ClassifiedAds.Blazor.Modules.AuditLogs.Services;
 using ClassifiedAds.Blazor.Modules.Core.Services;
 using ClassifiedAds.Blazor.Modules.Files.Services;
 using ClassifiedAds.Blazor.Modules.Products.Services;
@@ -89,6 +91,18 @@ services.AddHttpClient<UserService, UserService>(client =>
     client.DefaultRequestHeaders.Clear();
 });
 services.AddHttpClient<AuditLogService, AuditLogService>(client =>
+{
+    client.BaseAddress = new Uri(appSettings.ResourceServer.Endpoint);
+    client.Timeout = new TimeSpan(0, 0, 30);
+    client.DefaultRequestHeaders.Clear();
+});
+services.AddHttpClient<NotificationPlaygroundService, NotificationPlaygroundService>(client =>
+{
+    client.BaseAddress = new Uri(appSettings.ResourceServer.Endpoint);
+    client.Timeout = new TimeSpan(0, 0, 30);
+    client.DefaultRequestHeaders.Clear();
+});
+services.AddHttpClient<RoleService, RoleService>(client =>
 {
     client.BaseAddress = new Uri(appSettings.ResourceServer.Endpoint);
     client.Timeout = new TimeSpan(0, 0, 30);

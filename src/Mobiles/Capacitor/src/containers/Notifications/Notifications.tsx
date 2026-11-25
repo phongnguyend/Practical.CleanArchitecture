@@ -1,3 +1,4 @@
+import PushInbox from "./PushInbox";
 import { useNotifications, clearNotifications } from "../../core/notifications";
 import ActionIcon from "../../components/ActionIcon/ActionIcon";
 export default function Notifications() {
@@ -6,6 +7,7 @@ export default function Notifications() {
     <section className="card">
       <div className="card-header">Notifications</div>
       <div className="card-body">
+        <PushInbox />
         <p role="status">{status}</p>
         <button
           className="btn btn-secondary"

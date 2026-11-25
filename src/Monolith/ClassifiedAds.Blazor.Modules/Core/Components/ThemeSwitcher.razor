@@ -1,0 +1,16 @@
+@inject IJSRuntime JS
+<details class="theme-switcher">
+    <summary aria-label="Choose appearance" title="Choose appearance"><ActionIcon Name="sun" /></summary>
+    <div class="theme-options" role="group" aria-label="Appearance">
+        @foreach (var theme in new[] { "Light", "Dark", "System" })
+        {
+            <button type="button" class="btn btn-light" @onclick="() => SetTheme(theme)">@theme</button>
+        }
+    </div>
+</details>
+@code {
+    private async System.Threading.Tasks.Task SetTheme(string theme)
+    {
+        await JS.InvokeVoidAsync("classifiedAdsTheme.set", theme.ToLowerInvariant());
+    }
+}

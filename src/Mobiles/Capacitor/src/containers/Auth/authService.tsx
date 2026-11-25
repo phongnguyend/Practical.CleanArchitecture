@@ -1,3 +1,4 @@
+import { disablePush } from "../../core/push";
 import { biometricGeneration, biometricUserStore, biometricLocked, initializeBiometrics, biometricEnabled, biometricPromptActive, lockBiometricStorage, unlockBiometricStorage, enableBiometricStorage, disableBiometricStorage, forgetBiometricStorage } from "../../core/auth/biometric-store";
 import { clearNotifications } from "../../core/notifications";
 import { Capacitor } from "@capacitor/core";
@@ -138,6 +139,7 @@ export function login(returnUrl?: string): Promise<unknown> {
   }
   sessionStorage.setItem("returnUrl", safeReturnPath(returnUrl ?? null));
   pendingLogin = (async () => {
+    await disablePush().catch(() => undefined);
     if (native) {
       userManager.stopSilentRenew();
       await refreshing?.catch(() => undefined);
@@ -152,6 +154,7 @@ export function login(returnUrl?: string): Promise<unknown> {
   return pendingLogin;
 }
 export async function logout() {
+  await disablePush().catch(() => undefined);
   if (native) {
     userManager.stopSilentRenew();
     await refreshing?.catch(() => undefined);

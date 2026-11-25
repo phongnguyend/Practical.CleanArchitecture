@@ -1,7 +1,9 @@
 package com.classifiedads.mobile.uitests;
 
 import com.classifiedads.mobile.uitests.features.biometrics.BiometricsUiTests;
+import com.classifiedads.mobile.uitests.features.admin.AdminUiTests;
 import org.junit.runner.RunWith;
+import com.classifiedads.mobile.uitests.features.notifications.NotificationsUiTests;
 import org.junit.runners.Suite;
 import com.classifiedads.mobile.uitests.features.home.HomeUiTests;
 import com.classifiedads.mobile.uitests.features.products.ProductsUiTests;
@@ -17,7 +19,9 @@ import com.classifiedads.mobile.uitests.features.navigation.NavigationUiTests;
     ReactNativeUiTest.Users.class,
     ReactNativeUiTest.Roles.class,
     ReactNativeUiTest.Configuration.class,
-    ReactNativeUiTest.Navigation.class
+    ReactNativeUiTest.Navigation.class,
+    ReactNativeUiTest.Admin.class,
+    ReactNativeUiTest.Notifications.class
 })
 public class ReactNativeUiTest {
     public static class Home extends HomeUiTests {
@@ -41,6 +45,16 @@ public class ReactNativeUiTest {
     // Explicit selection only: requires enrolled emulator biometrics.
     public static class Biometrics extends BiometricsUiTests {
         public Biometrics() {
+            super("reactnative", "com.classifiedads.mobile.reactnative", ".MainActivity");
+        }
+    }
+    public static class Notifications extends NotificationsUiTests {
+        public Notifications() {
+            super("reactnative", "com.classifiedads.mobile.reactnative", ".MainActivity");
+        }
+    }
+    public static class Admin extends AdminUiTests {
+        public Admin() {
             super("reactnative", "com.classifiedads.mobile.reactnative", ".MainActivity");
         }
     }

@@ -3,6 +3,11 @@ import Home from "../views/Home.vue";
 import OidcLoginRedirect from "../auth/OidcLoginRedirect.vue";
 
 const routes = [
+  { path: "/admin", component: () => import("../views/admin/Admin.vue") },
+  { path: "/admin/playgrounds", component: () => import("../views/admin/Admin.vue") },
+  { path: "/admin/playgrounds/email", component: () => import("../views/admin/Admin.vue") },
+  { path: "/admin/playgrounds/sms", component: () => import("../views/admin/Admin.vue") },
+  { path: "/admin/playgrounds/mobile-push", component: () => import("../views/admin/Admin.vue") },
   {
     path: "/",
     name: "Home",

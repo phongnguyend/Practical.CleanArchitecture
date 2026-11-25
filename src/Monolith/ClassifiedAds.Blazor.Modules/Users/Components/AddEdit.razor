@@ -4,7 +4,7 @@
     <div class="form-group row">
         <label for="userName" class="col-sm-3 col-form-label">User Name</label>
         <div class="col-sm-9">
-            <InputText id="userName" class="form-control" @bind-Value="User.UserName" placeholder="Enter an user name" />
+            <InputText id="userName" required class="form-control" @bind-Value="User.UserName" placeholder="Enter an user name" />
             <ValidationMessage For="@(() => User.UserName)" />
         </div>
     </div>

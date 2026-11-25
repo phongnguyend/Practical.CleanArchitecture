@@ -1,0 +1,190 @@
+@page "/admin/playgrounds/{Channel}"
+@attribute [Authorize]
+@using System.Text.Json
+@using System.Text.RegularExpressions
+@using ClassifiedAds.Blazor.Modules.Admin.Services
+@inject NotificationPlaygroundService Service
+
+<section class="card"><div class="card-body">
+    <nav aria-label="Breadcrumb"><a href="/admin">Admin</a> / <a href="/admin/playgrounds">Playgrounds</a> / <span aria-current="page">@Name</span></nav>
+    <h1>@Name</h1>
+    <p>@(Push ? "Queue a notification for your own registered devices." : $"Queue a message for delivery by the existing {Name} worker.")</p>
+    @if (Loaded)
+    {
+        <div role="status" class="alert alert-info">Provider: <strong>@Provider</strong>. @(Provider == "Fake" ? "Delivery is simulated; no message is sent." : "Queued messages may be delivered to the specified recipient.")
+            @if (Push)
+            {
+                <span>Registered devices: @Queue.GetProperty("deviceCount").GetInt32().</span>
+            }
+        </div>
+    }
+    @if (!string.IsNullOrEmpty(Error))
+    {
+        <p role="alert" class="alert alert-danger">@Error</p>
+    }
+    @if (!string.IsNullOrEmpty(Success))
+    {
+        <p role="status" class="alert alert-success">@Success</p>
+    }
+    <form class="playground-form" novalidate @onsubmit="Submit" @onsubmit:preventDefault>
+        @if (Email)
+        {
+            <div><label for="message-from">From</label><input id="message-from" class="form-control" type="email" maxlength="254" required @bind="From" disabled="@Busy" /></div>
+        }
+        @if (!Push)
+        {
+            <div><label for="message-recipient">@(Email ? "To" : "Phone number")</label><input id="message-recipient" class="form-control" type="@(Email ? "email" : "tel")" maxlength="@(Email ? 254 : 16)" required @bind="Recipient" disabled="@Busy" /></div>
+        }
+        @if (Email || Push)
+        {
+            <div><label for="message-subject">@(Push ? "Title" : "Subject")</label><input id="message-subject" class="form-control" maxlength="@(Push ? 100 : 200)" required @bind="Subject" disabled="@Busy" /></div>
+        }
+        <div><label for="message-body">Message</label><textarea id="message-body" class="form-control" rows="5" maxlength="@MaxLength" required @bind="Body" @bind:event="oninput" disabled="@Busy"></textarea><small>@Body.Length/@MaxLength characters</small></div>
+        @if (Push)
+        {
+            <div><label for="message-destination">Destination</label><select id="message-destination" class="form-control" @bind="Destination" disabled="@Busy">
+                @foreach (var destination in Destinations)
+                {
+                    <option value="@destination">@destination</option>
+                }
+            </select></div>
+        }
+        <div class="playground-actions">
+            <button class="btn btn-primary" type="submit" disabled="@(Busy || !Loaded)"><ActionIcon Name="bell" /> @(Busy ? "Queueing�" : "Queue message")</button>
+            <button class="btn btn-outline-secondary" type="button" disabled="@Busy" @onclick="Refresh"><ActionIcon Name="reload" /> Refresh queue</button>
+        </div>
+    </form>
+    <h2 class="mt-4">Recent messages</h2>
+    @if (Loaded)
+    {
+        <div class="queue-history">
+            @foreach (var item in Queue.GetProperty("items").EnumerateArray())
+            {
+                <article @key="@(item.GetProperty("id").GetString())">
+                    <h3 class="h5">@Text(item, "title")</h3>
+                    @if (!Push)
+                    {
+                        <p>To: @Text(item, "recipient")</p>
+                    }
+                    <p class="message-body">@Text(item, "body")</p>
+                    <p>@(Push ? $"Pending: {Text(item, "pending")} / Completed: {Text(item, "completed")} / Failed: {Text(item, "failed")}" : $"{Text(item, "status")} / Attempts: {Text(item, "attempts")}") / @Text(item, "createdAt")</p>
+                </article>
+            }
+            @if (Queue.GetProperty("items").GetArrayLength() == 0)
+            {
+                <p>No queued messages yet.</p>
+            }
+        </div>
+    }
+</div></section>
+
+@code {
+    [Parameter]
+    public string Channel { get; set; } = "mobile-push";
+
+    private bool Push => Channel == "mobile-push";
+
+    private bool Email => Channel == "email";
+
+    private string Name => Push ? "Mobile Push" : Email ? "Email" : "SMS";
+
+    private int MaxLength => Push ? 500 : Email ? 10000 : 1600;
+
+    private string Provider => Queue.GetProperty("provider").GetString();
+
+    private static readonly string[] Destinations = { "notifications", "home", "products", "files", "users", "roles", "configurationentries", "auditlogentries" };
+    private JsonElement Queue;
+    private bool Loaded;
+    private bool Busy;
+    private string From = "";
+    private string Recipient = "";
+    private string Subject = "";
+    private string Body = "";
+    private string Destination = "notifications";
+    private string Error = "";
+    private string Success = "";
+
+    protected override async System.Threading.Tasks.Task OnParametersSetAsync()
+    {
+        Loaded = false;
+        From = Recipient = Subject = Body = Error = Success = "";
+        await Refresh();
+    }
+
+    private async System.Threading.Tasks.Task Refresh()
+    {
+        if (Channel != "email" && Channel != "sms" && Channel != "mobile-push")
+        {
+            Error = "Unknown notification playground.";
+            return;
+        }
+
+        try
+        {
+            Queue = await Service.LoadAsync(Channel);
+            Loaded = true;
+            Error = "";
+        }
+        catch (HttpRequestException)
+        {
+            Error = "Unable to load the queue. Please try again.";
+        }
+    }
+
+    private async System.Threading.Tasks.Task Submit()
+    {
+        if (Busy || !Loaded)
+        {
+            return;
+        }
+
+        Success = "";
+        if (string.IsNullOrWhiteSpace(Body) || ((!Push) && string.IsNullOrWhiteSpace(Recipient)) || ((Push || Email) && string.IsNullOrWhiteSpace(Subject)) || (Email && string.IsNullOrWhiteSpace(From)))
+        {
+            Error = Push ? "Title and message are required." : "Complete all required fields.";
+            return;
+        }
+
+        if (Email && (!ValidEmail(From) || !ValidEmail(Recipient)))
+        {
+            Error = "Enter valid From and To email addresses.";
+            return;
+        }
+
+        if (!Push && !Email && !Regex.IsMatch(Recipient.Trim(), @"^\+[1-9][0-9]{7,14}$"))
+        {
+            Error = "Enter a phone number in international format, for example +15551234567.";
+            return;
+        }
+
+        Busy = true;
+        Error = "";
+        try
+        {
+            object message = Push
+                ? new { title = Subject.Trim(), body = Body.Trim(), section = Destination }
+                : new { from = From.Trim(), recipient = Recipient.Trim(), subject = Subject.Trim(), body = Body.Trim() };
+            var result = await Service.QueueAsync(Channel, message);
+            Success = $"Message queued. ID: {result.GetProperty("id").GetString()}";
+            await Refresh();
+        }
+        catch (HttpRequestException)
+        {
+            Error = "Unable to queue the message. Check the fields and try again.";
+        }
+        finally
+        {
+            Busy = false;
+        }
+    }
+
+    private static bool ValidEmail(string value)
+    {
+        return Regex.IsMatch(value.Trim(), @"^[^\s@;]+@[^\s@;]+\.[^\s@;]+$");
+    }
+
+    private static string Text(JsonElement item, string property)
+    {
+        return item.TryGetProperty(property, out var value) ? value.ToString() : "";
+    }
+}

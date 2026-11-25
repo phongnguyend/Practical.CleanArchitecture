@@ -1,7 +1,9 @@
 package com.classifiedads.mobile.uitests;
 
 import com.classifiedads.mobile.uitests.features.biometrics.BiometricsUiTests;
+import com.classifiedads.mobile.uitests.features.admin.AdminUiTests;
 import org.junit.runner.RunWith;
+import com.classifiedads.mobile.uitests.features.notifications.NotificationsUiTests;
 import org.junit.runners.Suite;
 import com.classifiedads.mobile.uitests.features.home.HomeUiTests;
 import com.classifiedads.mobile.uitests.features.products.ProductsUiTests;
@@ -17,7 +19,9 @@ import com.classifiedads.mobile.uitests.features.navigation.NavigationUiTests;
     CapacitorUiTest.Users.class,
     CapacitorUiTest.Roles.class,
     CapacitorUiTest.Configuration.class,
-    CapacitorUiTest.Navigation.class
+    CapacitorUiTest.Navigation.class,
+    CapacitorUiTest.Admin.class,
+    CapacitorUiTest.Notifications.class
 })
 public class CapacitorUiTest {
     public static class Home extends HomeUiTests {
@@ -53,6 +57,16 @@ public class CapacitorUiTest {
     // Explicit selection only: requires enrolled emulator biometrics.
     public static class Biometrics extends BiometricsUiTests {
         public Biometrics() {
+            super("capacitor", "com.classifiedads.mobile.capacitor", ".MainActivity");
+        }
+    }
+    public static class Notifications extends NotificationsUiTests {
+        public Notifications() {
+            super("capacitor", "com.classifiedads.mobile.capacitor", ".MainActivity");
+        }
+    }
+    public static class Admin extends AdminUiTests {
+        public Admin() {
             super("capacitor", "com.classifiedads.mobile.capacitor", ".MainActivity");
         }
     }

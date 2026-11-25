@@ -57,15 +57,16 @@ def options_for(content, platform, identifier):
     return result
 
 
-def prepare(app, platform, source=None, root=ROOT, encoded=None, required=False):
+def prepare(app, platform, source=None, root=ROOT, encoded=None, required=False, mobile_push=False):
     identifier, relative = APPS[app][platform]
     target = root / app / relative
     content = (source.read_bytes() if source else
                base64.b64decode(encoded, validate=True) if encoded else
                target.read_bytes() if target.is_file() else None)
-    if content is None and required:
+    if content is None and (required or mobile_push):
         raise ValueError("Firebase configuration is required for this build")
     options = options_for(content, platform, identifier) if content is not None else {"CRASHLYTICS_ENABLED": False}
+    options["PUSH_NOTIFICATIONS_ENABLED"] = mobile_push
     if content is not None:
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(content)
@@ -73,6 +74,10 @@ def prepare(app, platform, source=None, root=ROOT, encoded=None, required=False)
         defines = root / app / "firebase-defines.json"
         defines.parent.mkdir(parents=True, exist_ok=True)
         defines.write_text(json.dumps(options, indent=2) + "\n", encoding="utf-8")
+    if app == "ReactNative":
+        defines = root / app / "push.config.json"
+        defines.parent.mkdir(parents=True, exist_ok=True)
+        defines.write_text(json.dumps({"enabled": mobile_push}) + "\n", encoding="utf-8")
     return content is not None
 
 
@@ -83,15 +88,18 @@ def main():
     parser.add_argument("--config", type=Path)
     parser.add_argument("--require-config", action="store_true")
     args = parser.parse_args()
+    mobile_push = os.environ.get("MOBILE_PUSH_ENABLED", "false").lower() == "true"
     try:
         enabled = prepare(args.app, args.platform, args.config,
-                          encoded=os.environ.get("FIREBASE_CONFIG_BASE64"), required=args.require_config)
+                          encoded=os.environ.get("FIREBASE_CONFIG_BASE64"), required=args.require_config, mobile_push=mobile_push)
     except (ValueError, KeyError, IndexError, OSError, plistlib.InvalidFileException):
         # Do not print file contents or parser exceptions containing configuration values.
         parser.exit(1, "Invalid or missing Firebase configuration for the selected application/platform.\n")
     if os.environ.get("GITHUB_ENV"):
         with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as output:
             output.write("FIREBASE_ENABLED=" + str(enabled).lower() + "\n")
+            for key in ("MOBILE_PUSH_ENABLED", "PUSH_NOTIFICATIONS_ENABLED", "VITE_PUSH_NOTIFICATIONS_ENABLED"):
+                output.write(key + "=" + str(mobile_push).lower() + "\n")
     print(args.app + " " + args.platform + ": Crashlytics " + ("configured" if enabled else "disabled (no configuration)"))
 
 

@@ -50,6 +50,7 @@ jobs:
         run: python3 ../tools/prepare_sentry.py --app Flutter
       - name: Prepare optional Firebase configuration
         env:
+          MOBILE_PUSH_ENABLED: ${{ vars.MOBILE_PUSH_ENABLED || 'false' }}
           FIREBASE_CONFIG_BASE64: ${{ secrets.FIREBASE_FLUTTER_ANDROID_CONFIG_BASE64 }}
         run: python3 ../tools/prepare_firebase.py --app Flutter --platform android
       - uses: actions/setup-java@v5
@@ -107,6 +108,7 @@ jobs:
           xcrun swift --version
       - name: Prepare optional Firebase configuration
         env:
+          MOBILE_PUSH_ENABLED: ${{ vars.MOBILE_PUSH_ENABLED || 'false' }}
           FIREBASE_CONFIG_BASE64: ${{ secrets.FIREBASE_FLUTTER_IOS_CONFIG_BASE64 }}
         run: python3 ../tools/prepare_firebase.py --app Flutter --platform ios
       - uses: subosito/flutter-action@v2

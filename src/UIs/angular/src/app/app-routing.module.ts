@@ -1,3 +1,4 @@
+import { AdminComponent } from "./admin/admin.component";
 import { Routes } from "@angular/router";
 import { WelcomeComponent } from "./core/welcome.component";
 import { OidcLoginRedirect } from "./auth/oidc-login-redirect.component";
@@ -29,6 +30,11 @@ import { ConfigurationEntryListComponent } from "./settings/configuration-entry-
 import { AuditLogListComponent } from "./auditlogs/audit-log-list.component";
 
 export const routes: Routes = [
+  { path: "admin", component: AdminComponent, data: { view: "admin" } },
+  { path: "admin/playgrounds", component: AdminComponent, data: { view: "playgrounds" } },
+  { path: "admin/playgrounds/email", component: AdminComponent, data: { view: "email" } },
+  { path: "admin/playgrounds/sms", component: AdminComponent, data: { view: "sms" } },
+  { path: "admin/playgrounds/mobile-push", component: AdminComponent, data: { view: "mobilepush" } },
   { path: "welcome", component: WelcomeComponent },
   { path: "oidc-login-redirect", component: OidcLoginRedirect },
 

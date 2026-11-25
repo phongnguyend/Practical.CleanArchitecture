@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 export const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 if (existsSync(path.join(root, '.env'))) process.loadEnvFile(path.join(root, '.env'));
 const definitions = [
+  { name: 'blazor-server', url: process.env.E2E_BLAZOR_SERVER_URL || 'https://localhost:44331', script: '' },
+  { name: 'blazor-wasm', url: process.env.E2E_BLAZOR_WASM_URL || 'https://localhost:44348', script: '' },
   { name: 'angular', url: process.env.E2E_ANGULAR_URL || 'http://localhost:4200', script: 'start' },
   { name: 'reactjs', url: process.env.E2E_REACTJS_URL || 'http://localhost:3000', script: 'dev' },
   { name: 'vuejs', url: process.env.E2E_VUEJS_URL || 'http://localhost:8080', script: 'dev' },
@@ -19,6 +21,16 @@ for (const name of selected) {
 export const apps = definitions.filter(app => selected.includes(app.name)).map(app => {
   const serverURL = process.env[`E2E_${app.name.toUpperCase().replaceAll('-', '_')}_SERVER_URL`] || app.url;
   const port = new URL(serverURL).port;
+  if (app.name === 'blazor-server' || app.name === 'blazor-wasm') {
+    if (serverURL !== app.url) {
+      throw new Error('Blazor requires its registered origin; forwarding is not supported.');
+    }
+    const project = app.name === 'blazor-server' ? 'ClassifiedAds.BlazorServerSide' : 'ClassifiedAds.BlazorWebAssembly';
+    return { ...app, serverURL, directory: '../Monolith/' + project,
+      devServerURL: serverURL, authMode: 'blazor', notificationHub: false,
+      csrfCookie: undefined, csrfHeader: undefined,
+      command: 'dotnet run --no-build --launch-profile https' };
+  }
   if (app.name === 'bff-reactjs') {
     if (serverURL !== app.url) throw new Error('BFF tests must use the real YARP origin; origin forwarding is not supported.');
     return { ...app, serverURL, directory: 'bff/reactjs',

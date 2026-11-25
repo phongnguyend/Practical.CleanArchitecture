@@ -103,8 +103,8 @@ services:
           Modules__Notification__Sms__Twilio__AccountSId: ""
           Modules__Notification__Sms__Twilio__AuthToken: ""
           Modules__Notification__Sms__Twilio__FromNumber: ""
-          Modules__Notification__Web__Provider: "Fake"
-          Modules__Notification__Web__SignalR__Endpoint: "http://notificationserver"
+          Modules__Notification__InApp__Provider: "Fake"
+          Modules__Notification__InApp__SignalR__Endpoint: "http://notificationserver"
           Modules__Product__ConnectionStrings__Default: ${Modules__Product__ConnectionStrings__Default}
           Modules__Storage__ConnectionStrings__Default: ${Modules__Storage__ConnectionStrings__Default}
           Modules__Storage__Provider: ${Storage__Provider}

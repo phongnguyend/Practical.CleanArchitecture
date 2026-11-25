@@ -1,3 +1,4 @@
+import Admin from "./containers/Admin/Admin";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import "./App.css";
@@ -22,6 +23,11 @@ function App() {
     <div className="container">
       <Nav />
       <Routes>
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/playgrounds" element={<Admin view="playgrounds" />} />
+            <Route path="/admin/playgrounds/mobile-push" element={<Admin view="mobilepush" />} />
+            <Route path="/admin/playgrounds/email" element={<Admin view="email" />} />
+            <Route path="/admin/playgrounds/sms" element={<Admin view="sms" />} />
         <Route path="/home" element={<Home />} />
         <Route path="/settings" element={<ListConfigurationEntries />} />
         <Route path="/files/upload" element={<UploadFile />} />

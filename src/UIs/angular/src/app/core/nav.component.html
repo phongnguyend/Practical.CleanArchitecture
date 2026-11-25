@@ -1,6 +1,17 @@
 <nav aria-label="Main navigation" class="navbar navbar-expand bg-body">
-  <a class="navbar-brand" href="/"><app-action-icon action="home" />{{ pageTitle | appendVersion }}</a>
-  <ul class="nav nav-tabs flex-grow-1 flex-nowrap nav-pages">
+  <div class="nav-header">
+    <a class="navbar-brand" href="/"><app-action-icon action="home" />{{ pageTitle }}</a>
+    <div class="nav-utilities d-flex align-items-center gap-2 ms-auto flex-shrink-0">
+      @if (!auth.isAuthenticated()) {
+        <a class="nav-link" (click)="login()" href="javascript:void(0)"><app-action-icon action="login" />Login</a>
+      }
+      @if (auth.isAuthenticated()) {
+        <a class="nav-link" (click)="logout()" href="javascript:void(0)"><app-action-icon action="logout" />Logout</a>
+      }
+      <app-theme-switcher />
+    </div>
+  </div>
+  <ul class="nav nav-tabs flex-wrap nav-pages">
     <li>
       <a class="nav-link" routerLinkActive="active" [routerLink]="['/welcome']"
         ><app-action-icon action="home" />Home
@@ -40,14 +51,6 @@
         <app-action-icon action="audit" />Audit Logs
       </a>
     </li>
+    <li><a class="nav-link" routerLinkActive="active" routerLink="/admin"><app-action-icon action="settings" />Admin</a></li>
   </ul>
-  <div class="nav-utilities d-flex align-items-center gap-2 ms-auto flex-shrink-0">
-    @if (!auth.isAuthenticated()) {
-      <a class="nav-link" (click)="login()" href="javascript:void(0)"><app-action-icon action="login" />Login</a>
-    }
-    @if (auth.isAuthenticated()) {
-      <a class="nav-link" (click)="logout()" href="javascript:void(0)"><app-action-icon action="logout" />Logout</a>
-    }
-    <app-theme-switcher />
-  </div>
 </nav>

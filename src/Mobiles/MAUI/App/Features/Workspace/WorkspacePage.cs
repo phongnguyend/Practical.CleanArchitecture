@@ -1,4 +1,5 @@
 using System.Globalization;
+using ClassifiedAds.Mobile.Features.Notifications;
 using ClassifiedAds.Mobile.Features.Products;
 using ClassifiedAds.Mobile.Features.Files;
 using ClassifiedAds.Mobile.Features.Users;
@@ -40,6 +41,8 @@ public sealed class WorkspacePage : ContentPage
         overlay.Add(grid);
         overlay.Add(toast);
         Content = overlay;
+        services.Push.Opened += async () => await OpenPush();
+        services.Push.Received += () => ShowToast("You have a new notification.");
         services.NotificationsChanged += UpdateNotifications;
         services.MessageReceived += ShowToast;
         Loaded += async (_, _) =>
@@ -52,6 +55,7 @@ public sealed class WorkspacePage : ContentPage
             initialized = true;
             try
             {
+                services.Push.Initialize();
                 await services.Restore();
             }
             catch (Exception ex)
@@ -73,6 +77,7 @@ public sealed class WorkspacePage : ContentPage
         timer.Start();
         Tick(null, EventArgs.Empty);
         services.StartNotifications();
+        _ = SyncPush();
     }
 
     protected override void OnDisappearing()
@@ -100,6 +105,49 @@ public sealed class WorkspacePage : ContentPage
     {
         timer?.Start();
         services.StartNotifications();
+        _ = SyncPush();
+    }
+
+    private async Task SyncPush()
+    {
+        try
+        {
+            await services.Push.Sync();
+            await OpenPush();
+        }
+        catch
+        {
+            // Retry when the app resumes or notifications are enabled again.
+        }
+    }
+
+    private async Task OpenPush()
+    {
+        var section = await services.Push.Consume();
+        if (section != null && services.SignedIn)
+        {
+            await NavigatePush(section);
+        }
+    }
+
+    private Task NavigatePush(string section)
+    {
+        return section switch
+        {
+            "products" => Navigate(new ProductsView(services)),
+            "files" => Navigate(new FilesView(services)),
+            "users" => Navigate(new UsersView(services)),
+            "roles" => Navigate(new RolesView(services)),
+            "configurationentries" => Navigate(new ConfigurationEntriesView(services)),
+            "auditlogentries" => Navigate(new AuditLogsView(services)),
+            _ => ShowPushInbox(),
+        };
+    }
+
+    private Task ShowPushInbox()
+    {
+        Notifications();
+        return Task.CompletedTask;
     }
 
     private void Tick(object? sender, EventArgs e) => clock.Text = ".NET MAUI \u00b7 " + DateTime.Now.ToString("M/d/yyyy, h:mm:ss tt", CultureInfo.GetCultureInfo("en-US"));
@@ -189,6 +237,7 @@ public sealed class WorkspacePage : ContentPage
             Notifications();
             return Task.CompletedTask;
         }));
+        navigation.Add(Ui.Button("Admin", "configuration", () => Navigate(new ClassifiedAds.Mobile.Features.Admin.AdminView(services))));
         foreach (var button in navigation.Children.OfType<Button>())
         {
             button.CornerRadius = 24;
@@ -198,6 +247,7 @@ public sealed class WorkspacePage : ContentPage
         header.Add(new ScrollView { Orientation = ScrollOrientation.Horizontal, Content = navigation, HorizontalScrollBarVisibility = ScrollBarVisibility.Never });
         Home();
         services.StartNotifications();
+        _ = SyncPush();
     }
 
     private async Task BiometricAction(Func<Task> action)
@@ -224,6 +274,7 @@ public sealed class WorkspacePage : ContentPage
             RolesView => "Roles",
             ConfigurationEntriesView => "Configuration Entries",
             AuditLogsView => "Audit logs",
+            ClassifiedAds.Mobile.Features.Admin.AdminView => "Admin",
             _ => "Home"
         });
         body.Content = view;
@@ -260,6 +311,7 @@ public sealed class WorkspacePage : ContentPage
         home.Add(Ui.Button("Users", "users", () => Navigate(new UsersView(services))));
         home.Add(Ui.Button("Roles", "roles", () => Navigate(new RolesView(services))));
         home.Add(Ui.Button("Configuration Entries", "configuration", () => Navigate(new ConfigurationEntriesView(services))));
+        home.Add(Ui.Button("Admin", "configuration", () => Navigate(new ClassifiedAds.Mobile.Features.Admin.AdminView(services))));
         if (services.BiometricAvailable || services.BiometricEnabled)
         {
             home.Add(Ui.Button(services.BiometricEnabled ? "Disable biometric login" : "Enable biometric login", "lock", () => BiometricAction(async () =>
@@ -312,7 +364,7 @@ public sealed class WorkspacePage : ContentPage
         messages = Ui.Stack();
         body.Content = new ScrollView
         {
-            Content = Ui.Stack(Ui.Text("Notifications", true), status, messages)
+            Content = Ui.Stack(Ui.Text("Notifications", true), new PushInbox(services, NavigatePush), status, messages)
         };
         UpdateNotifications();
     }

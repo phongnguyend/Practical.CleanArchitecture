@@ -1,6 +1,8 @@
 package com.classifiedads.mobile.features.workspace
 
 import android.app.Application
+import com.classifiedads.mobile.core.notifications.PushNotifications
+import com.classifiedads.mobile.core.notifications.PushEvents
 import androidx.compose.runtime.*
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,6 +17,7 @@ import kotlinx.coroutines.rx3.await
 class WorkspaceViewModel(application: Application) : AndroidViewModel(application) {
     val session = Session(application)
     val api = Api(application, session)
+    val push = PushNotifications(application, session, api)
     var signedIn by mutableStateOf(session.signedIn)
     var section by mutableStateOf("home")
     var busy by mutableStateOf(false)
@@ -34,6 +37,40 @@ class WorkspaceViewModel(application: Application) : AndroidViewModel(applicatio
                 else -> null
             }
         )
+
+    init {
+        viewModelScope.launch {
+            PushEvents.tokenChanged.collect {
+                if (session.signedIn) {
+                    try {
+                        push.sync()
+                    } catch (_: Exception) {
+                        // Retry on resume.
+                    }
+                }
+            }
+        }
+        viewModelScope.launch {
+            PushEvents.received.collect { timestamp ->
+                if (timestamp > 0 && session.signedIn) {
+                    message = "You have a new notification."
+                }
+            }
+        }
+        viewModelScope.launch {
+            PushEvents.target.collect { target ->
+                if (target != null && session.signedIn) {
+                    PushEvents.target.value = null
+                    section = target.second
+                    try {
+                        api.json("notifications/inbox/${target.first}/read", "PUT", org.json.JSONObject())
+                    } catch (_: Exception) {
+                        // The inbox can be refreshed after reconnecting.
+                    }
+                }
+            }
+        }
+    }
 
     fun chooseTheme(value: Boolean?) {
         dark = value
@@ -66,6 +103,25 @@ class WorkspaceViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun setNotifications(active: Boolean) {
+        if (active && signedIn) {
+            viewModelScope.launch {
+                try {
+                    push.sync()
+                } catch (_: Exception) {
+                    // Retry registration when the app resumes or the user enables push again.
+                }
+                val target = PushEvents.target.value
+                if (session.signedIn && target != null) {
+                    PushEvents.target.value = null
+                    section = target.second
+                    try {
+                        api.json("notifications/inbox/${target.first}/read", "PUT", org.json.JSONObject())
+                    } catch (_: Exception) {
+                        // Keep navigation available while offline.
+                    }
+                }
+            }
+        }
         notifications?.cancel()
         hub?.stop()?.subscribe({}, {})
         hub = null

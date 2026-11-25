@@ -72,5 +72,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>FirebaseMessagingAutoInitEnabled</key>
+	<false/>
+	<key>UIBackgroundModes</key>
+	<array><string>remote-notification</string></array>
 </dict>
 </plist>

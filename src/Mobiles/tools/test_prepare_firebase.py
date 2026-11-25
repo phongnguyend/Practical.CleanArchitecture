@@ -38,13 +38,24 @@ class FirebaseConfigurationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
             self.assertFalse(prepare("Flutter", "android", root=root))
-            self.assertEqual(json.loads((root / "Flutter/firebase-defines.json").read_text()), {"CRASHLYTICS_ENABLED": False})
+            self.assertEqual(json.loads((root / "Flutter/firebase-defines.json").read_text()), {"CRASHLYTICS_ENABLED": False, "PUSH_NOTIFICATIONS_ENABLED": False})
             with self.assertRaises(ValueError):
                 prepare("MAUI", "ios", root=root, required=True)
 
     def test_corrupt_base64_is_rejected(self):
         with tempfile.TemporaryDirectory() as folder, self.assertRaises(ValueError):
             prepare("Kotlin", "android", root=Path(folder), encoded="!!invalid!!")
+
+    def test_push_requires_explicit_opt_in_and_matching_configuration(self):
+        for app, platforms in APPS.items():
+            for platform, (identifier, _) in platforms.items():
+                with self.subTest(app=app, platform=platform), tempfile.TemporaryDirectory() as folder:
+                    root = Path(folder)
+                    with self.assertRaises(ValueError):
+                        prepare(app, platform, root=root, mobile_push=True)
+                    self.assertTrue(prepare(app, platform, root=root, mobile_push=True, encoded=base64.b64encode(config(platform, identifier))))
+                    if app == "Flutter":
+                        self.assertTrue(json.loads((root / app / "firebase-defines.json").read_text())["PUSH_NOTIFICATIONS_ENABLED"])
 
     def test_empty_supplied_file_is_rejected(self):
         with tempfile.TemporaryDirectory() as folder:

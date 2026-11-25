@@ -13,6 +13,8 @@ namespace ClassifiedAds.Blazor.Modules.Settings.Pages;
 
 public partial class List
 {
+    protected bool IsLoaded { get; set; }
+
     [Inject]
     public IJSRuntime JSRuntime { get; set; }
 
@@ -56,6 +58,7 @@ public partial class List
     protected override async Task OnInitializedAsync()
     {
         ConfigurationEntries = await ConfigurationEntryService.GetListAsync();
+        IsLoaded = true;
     }
 
     public async void ConfirmedDeleteSetting()

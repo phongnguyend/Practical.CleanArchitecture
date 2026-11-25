@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page, type Response } from '@playwright/test';
 
 export class App {
-  constructor(readonly page: Page) {}
+  constructor(readonly page: Page, readonly serverRendered = false) {}
   get nav() { return this.page.getByRole('navigation', { name: 'Main navigation' }); }
   get dialog() { return this.page.getByRole('dialog'); }
   action(name: string | RegExp, scope: Page | Locator = this.page) {
@@ -14,9 +14,28 @@ export class App {
     return this.page.locator('table tbody tr').filter({ has: this.page.getByRole('cell', { name: new RegExp(`^${escaped}(?: \\([^)]*\\))?$`) }) });
   }
   async open(section: string, resource?: string) {
-    const loaded = resource ? this.response(resource, 'GET') : undefined;
+    const loaded = resource && !this.serverRendered ? this.response(resource, 'GET') : undefined;
     await this.nav.getByRole('link', { name: section, exact: true }).click();
-    if (loaded) await loaded;
+    if (loaded) {
+      await loaded;
+    }
+    if (resource && this.serverRendered) {
+      await this.waitForPage();
+    }
+  }
+  async waitForPage() {
+    await expect(this.page.locator('[data-page-loaded="true"]')).toBeAttached();
+    await expect(this.page.getByRole('alert')).toHaveCount(0);
+  }
+  async reload(resource: string) {
+    if (this.serverRendered) {
+      await this.page.reload();
+      await this.waitForPage();
+      return;
+    }
+    const loaded = this.response(resource, 'GET');
+    await this.page.reload();
+    await loaded;
   }
   async response(resource: string, method: string): Promise<Response> {
     const response = await this.page.waitForResponse(r => {

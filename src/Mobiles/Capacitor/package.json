@@ -17,6 +17,7 @@
   "dependencies": {
     "@aparajita/capacitor-secure-storage": "^8.0.0",
     "@capacitor-firebase/crashlytics": "^8.0.0",
+    "@capacitor-firebase/messaging": "^8.0.0",
     "@capacitor/android": "^8.0.0",
     "@capacitor/app": "^8.0.0",
     "@capacitor/browser": "^8.0.0",
@@ -37,6 +38,7 @@
     "@types/node": "^26.6.6",
     "axios": "^1.21.1",
     "bootstrap": "^5.3.8",
+    "firebase": "^12.19.0",
     "lucide-react": "^1.71.0",
     "oidc-client-ts": "^3.5.0",
     "react": "^19.3.1",

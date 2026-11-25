@@ -31,7 +31,7 @@ public class ScheduleCronJobWorker : CronJobBackgroundService
             _logger.LogInformation("Worker running at: {Time}", DateTimeOffset.Now);
 
             using var scope = _serviceProvider.CreateScope();
-            var notification = scope.ServiceProvider.GetRequiredService<IWebNotification<SendTaskStatusMessage>>();
+            var notification = scope.ServiceProvider.GetRequiredService<IInAppNotification<SendTaskStatusMessage>>();
 
             await notification.SendAsync(new SendTaskStatusMessage { Step = "Step 1", Message = "Begining xxx" }, stoppingToken);
 

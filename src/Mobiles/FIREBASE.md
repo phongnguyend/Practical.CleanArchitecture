@@ -133,3 +133,35 @@ See [Capacitor Crashlytics setup](Capacitor/README.md#firebase-crashlytics). Run
 ## Sentry
 
 [Sentry](SENTRY.md) can be configured independently or alongside Crashlytics for all five apps.
+
+## Mobile push (FCM)
+
+Live push is opt-in and disabled by default. Firebase configuration files identify the native app; backend service-account credentials must never be bundled in a mobile app or committed.
+
+Backend settings belong under `Notification.MobilePush` in Monolith and Microservices Notification, and under `Modules.Notification.MobilePush` in ModularMonolith:
+
+```json
+"MobilePush": {
+  "Provider": "Fake",
+  "Firebase": { "ProjectId": "" },
+  "AllowTestMessages": false
+}
+```
+
+`Fake` persists inbox messages and queued deliveries, then simulates successful delivery. It does not initialize Firebase. To enable actual delivery later, use `Provider: "Firebase"`, set `Firebase.ProjectId`, and provide Application Default Credentials to the backend through its deployment environment. `AllowTestMessages` enables the separate self-test endpoint; the playground is available with either provider and queues only for the authenticated account.
+
+Persistence uses the same context and connection as EmailMessages and SmsMessages: Monolith `AdsDbContext`, ModularMonolith `NotificationDbContext`, and the Microservices Notification context. Generate and apply an EF migration in the respective existing migrator project before starting the updated API. The new tables are `PushDevices`, `PushMessages`, and `PushDeliveries`. This repository intentionally excludes generated migration files from version control; follow each backend's migration instructions. Do not create a separate push database.
+
+For mobile builds, supply the existing app-specific Firebase configuration files and set `MOBILE_PUSH_ENABLED=true` when running `tools/prepare_firebase.py`. CI reads the repository variable `MOBILE_PUSH_ENABLED` (default `false`) and the existing Firebase configuration secrets. Preparation fails if push is enabled without matching configuration. Native flags are:
+
+- Kotlin: `-PpushNotificationsEnabled=true`.
+- Flutter: `PUSH_NOTIFICATIONS_ENABLED` in the generated `firebase-defines.json`.
+- React Native: generated `push.config.json` or `PUSH_NOTIFICATIONS_ENABLED=true`; rebuild the development client.
+- MAUI: `-p:EnableMobilePush=true`.
+- Capacitor: `VITE_PUSH_NOTIFICATIONS_ENABLED=true`; rebuild and sync native projects.
+
+For iOS, enable Push Notifications on each App ID and upload its APNs key to Firebase. Signed device builds and matching entitlements are required for real-device verification. Never put the APNs private key in the app. Android 13+ and iOS request notification permission only when the user chooses **Enable notifications**.
+
+Notification taps open an allowlisted app destination after authentication/unlock. OS notifications contain generic text; message details are fetched from the authenticated inbox. Sign-out unregisters the installation and deletes the token. Tokens are refreshed and re-registered as needed. Delivery failures are retried with backoff; invalid registrations are removed.
+
+To verify without live delivery, use **Admin → Playgrounds → Mobile Push**, confirm `Provider: Fake`, queue a message, refresh its history, then open the notification inbox. Live Firebase/APNs verification must be performed after credentials and native provisioning are supplied.

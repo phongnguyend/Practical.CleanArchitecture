@@ -1,3 +1,5 @@
+using ClassifiedAds.Services.Notification.Persistence;
+using ClassifiedAds.Infrastructure.Notification.MobilePush;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Web.ExceptionHandlers;
@@ -23,6 +25,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var services = builder.Services;
 var configuration = builder.Configuration;
+services.AddMobilePushNotifications<NotificationDbContext>(configuration.GetSection("Notification:MobilePush"));
 
 builder.WebHost.UseClassifiedAdsLogger(configuration =>
 {
@@ -205,7 +208,11 @@ app.UseSwaggerUI(setupAction =>
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRateLimiter();
 
 app.MapHub<NotificationHub>("/hubs/notification").RequireCors("SignalRHubs");
+
+MobilePushEndpoints.Map(app);
+ClassifiedAds.Services.Notification.Api.Endpoints.NotificationPlaygroundEndpoints.Map(app);
 
 app.Run();
