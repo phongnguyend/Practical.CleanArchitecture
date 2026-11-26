@@ -1,4 +1,4 @@
-name: .Net Build Microservices
+name: .Net Build - Microservices
 
 on:
   push:

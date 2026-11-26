@@ -1,4 +1,4 @@
-name: Scan Dependencies Microservices
+name: Scan Dependencies - Microservices
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: Build Mobile MAUI
+name: Build Mobile - MAUI
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: Docker Build Monolith
+name: Docker Build - Monolith
 
 on:
   push:

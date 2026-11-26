@@ -1,4 +1,4 @@
-name: Scan Dependencies Modular Monolith
+name: Scan Dependencies - Modular Monolith
 
 on:
   push:

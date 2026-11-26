@@ -1,4 +1,4 @@
-name: Docker Build Microservices
+name: Docker Build - Microservices
 
 on:
   push:

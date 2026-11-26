@@ -1,4 +1,4 @@
-name: Scan Dependencies Identity Server - OpenIddict
+name: Scan Dependencies - Identity Server - OpenIddict
 
 on:
   push:

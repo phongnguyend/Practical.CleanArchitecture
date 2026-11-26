@@ -1,4 +1,4 @@
-name: .Net Build Modular Monolith
+name: .Net Build - Modular Monolith
 
 on:
   push:

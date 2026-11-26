@@ -1,4 +1,4 @@
-name: Build Mobile Capacitor
+name: Build Mobile - Capacitor
 on:
   push:
     paths:

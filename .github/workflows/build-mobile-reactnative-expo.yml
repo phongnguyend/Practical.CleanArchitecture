@@ -1,4 +1,4 @@
-name: Build Mobile React Native Expo
+name: Build Mobile - React Native Expo
 
 on:
   workflow_dispatch:
