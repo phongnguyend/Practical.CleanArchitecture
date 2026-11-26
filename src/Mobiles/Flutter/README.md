@@ -10,11 +10,26 @@ flutter test
 flutter build apk --debug
 ```
 
+Keep the Flutter SDK outside this repository and temporary build folders, for example
+`%LOCALAPPDATA%/Flutter/sdk` on Windows. Add its `bin` folder to your user PATH,
+then reopen your terminal and IDE. Check the installation with `flutter --version`
+and `flutter doctor -v`.
+
+If Android reports that the Flutter SDK is missing, check the `flutter.sdk` entry
+in the local, ignored `android/local.properties` file. Update it to the installed
+SDK directory and run `flutter pub get` to regenerate local package metadata.
+Do not commit machine-specific SDK paths.
+
 The Firebase iOS SDK requires Swift tools 6.2. CI explicitly selects Xcode 26.2; use Xcode 26.2 or a compatible newer version for local iOS builds, even when crash reporting is disabled.
 
 Replace example hosts with reachable trusted addresses. Omitted values use localhost defaults. Configure the signing team in `ios/Runner.xcworkspace` for iOS deployment. Both platforms register `classifiedads.flutter` callbacks.
 
 For local Android HTTPS testing, forward ports with `adb reverse tcp:44312 tcp:44312` and `adb reverse tcp:44367 tcp:44367`. Export the public certificate actually served by the backend, then use both Android and Dart debug trust settings (PowerShell):
+
+Use a PEM-encoded certificate for this Dart setting. If the exported `.cer` file
+is binary DER, convert it first: `certutil -encode server-public.cer server-public.pem`.
+Passing the binary DER bytes directly can cause `BAD_PKCS12_DATA` during startup
+and leave the app on its splash screen.
 
 ```powershell
 $debugCert = [Convert]::ToBase64String([IO.File]::ReadAllBytes('C:/path/to/server-public.pem'))

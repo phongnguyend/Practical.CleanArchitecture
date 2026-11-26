@@ -23,7 +23,7 @@ public sealed class NotificationPlaygrounds : ContentView
     private string subject = "";
     private string message = "";
 
-    public NotificationPlaygrounds(AppServices services, string channel, Action back)
+    public NotificationPlaygrounds(AppServices services, string channel)
     {
         this.services = services;
         this.channel = channel;
@@ -31,11 +31,6 @@ public sealed class NotificationPlaygrounds : ContentView
         push = channel == "mobilepush";
         Content = content;
         content.Add(Ui.Text(push ? "Mobile Push" : email ? "Email" : "SMS", true));
-        content.Add(Ui.Button("Back", "back", () =>
-        {
-            back();
-            return Task.CompletedTask;
-        }));
         content.Add(Ui.Text(push ? "Queue a notification for your own registered devices." : $"Queue a message for delivery by the existing {(email ? "Email" : "SMS")} worker."));
         content.Add(status);
         if (email)

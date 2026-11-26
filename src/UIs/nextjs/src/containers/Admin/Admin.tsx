@@ -5,19 +5,18 @@ import NotificationPlaygrounds from "./NotificationPlaygrounds";
 import ActionIcon from "../../components/ActionIcon/ActionIcon";
 
 export default function Admin({ view = "admin" }: { view?: "admin" | "playgrounds" | "mobilepush" | "email" | "sms" }) {
-  if (view === "mobilepush" || view === "email" || view === "sms") {
-    return <NotificationPlaygrounds key={view} channel={view} />;
-  }
+  const channel = view === "mobilepush" || view === "email" || view === "sms";
   return <section className="card"><div className="card-body">
-    <nav aria-label="Breadcrumb" className="mb-3 d-flex flex-wrap gap-2"><Link href="/admin">Admin</Link>{view === "playgrounds" && <><span>/</span><span aria-current="page">Playgrounds</span></>}</nav>
-    <h1>{view === "admin" ? "Admin" : "Playgrounds"}</h1>
-    <p>{view === "admin" ? "Administration tools and integration playgrounds." : "Exercise notification integrations using the existing queues."}</p>
-    <div className="d-flex flex-wrap gap-2">
-      {view === "admin" ? <Link className="btn btn-outline-primary" href="/admin/playgrounds"><ActionIcon action="settings" />Playgrounds</Link> : <>
-        <Link className="btn btn-outline-primary" href="/admin/playgrounds/mobile-push"><ActionIcon action="notification" />Mobile Push</Link>
-        <Link className="btn btn-outline-primary" href="/admin/playgrounds/email"><ActionIcon action="notification" />Email</Link>
-        <Link className="btn btn-outline-primary" href="/admin/playgrounds/sms"><ActionIcon action="notification" />SMS</Link>
-      </>}
-    </div>
+    <nav aria-label="Admin sections" className="nav nav-tabs mb-3">
+      <Link href="/admin/playgrounds" className={`nav-link${view !== "admin" ? " active" : ""}`} aria-current={view !== "admin" ? "page" : undefined}><ActionIcon action="settings" />Playgrounds</Link>
+    </nav>
+    {view !== "admin" && <nav aria-label="Playground channels" className="nav nav-tabs mb-3 flex-wrap">
+      {([['mobilepush', 'mobile-push', 'Mobile Push'], ['email', 'email', 'Email'], ['sms', 'sms', 'SMS']] as const).map(([value, path, label]) =>
+        <Link key={value} href={`/admin/playgrounds/${path}`} className={`nav-link${view === value ? " active" : ""}`} aria-current={view === value ? "page" : undefined}><ActionIcon action="notification" />{label}</Link>)}
+    </nav>}
+    {channel ? <NotificationPlaygrounds key={view} channel={view} /> : <>
+      <h1>{view === "admin" ? "Admin" : "Playgrounds"}</h1>
+      <p>{view === "admin" ? "Administration tools and integration playgrounds." : "Choose a notification playground to inspect its queue and compose a message."}</p>
+    </>}
   </div></section>;
 }

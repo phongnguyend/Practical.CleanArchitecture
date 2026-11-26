@@ -12,7 +12,7 @@ import com.classifiedads.mobile.shared.ui.ActionLabel
 import org.json.JSONObject
 
 @Composable
-fun NotificationPlaygrounds(model: WorkspaceViewModel, channel: String, back: () -> Unit) {
+fun NotificationPlaygrounds(model: WorkspaceViewModel, channel: String) {
     val push = channel == "mobilepush"
     var section by remember { mutableStateOf("notifications") }
     var choosing by remember { mutableStateOf(false) }
@@ -32,9 +32,7 @@ fun NotificationPlaygrounds(model: WorkspaceViewModel, channel: String, back: ()
     }
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text(if (push) "Mobile Push" else if (email) "Email" else "SMS", style = MaterialTheme.typography.titleLarge)
-        OutlinedButton(modifier = Modifier.fillMaxWidth(), enabled = !model.busy, onClick = back) {
-            ActionLabel("Back")
-        }
+
         Text(if (push) "Queue a notification for your own registered devices." else "Queue a message for delivery by the existing ${if (email) "Email" else "SMS"} worker.")
         info?.let { data ->
             Text("Provider: ${data.getString("provider")}. " + if (data.getString("provider") == "Fake") "Delivery is simulated; no message is sent." else "Queued messages may be delivered to the specified recipient.")

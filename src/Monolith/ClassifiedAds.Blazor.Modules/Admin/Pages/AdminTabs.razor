@@ -1,0 +1,24 @@
+<nav aria-label="Admin sections" class="nav nav-tabs mb-3">
+    <a href="/admin/playgrounds" class="nav-link @(View != "admin" ? "active" : "")" aria-current="@(View != "admin" ? "page" : null)"><ActionIcon Name="beaker" /> Playgrounds</a>
+</nav>
+@if (View != "admin")
+{
+    <nav aria-label="Playground channels" class="nav nav-tabs mb-3 flex-wrap">
+        @foreach (var tab in Channels)
+        {
+            <a href="@($"/admin/playgrounds/{tab.Path}")" class="nav-link @(View == tab.Path ? "active" : "")" aria-current="@(View == tab.Path ? "page" : null)"><ActionIcon Name="@tab.Icon" /> @tab.Label</a>
+        }
+    </nav>
+}
+
+@code {
+    [Parameter]
+    public string View { get; set; } = "admin";
+
+    private static readonly (string Path, string Label, string Icon)[] Channels =
+    {
+        ("mobile-push", "Mobile Push", "bell"),
+        ("email", "Email", "envelope-closed"),
+        ("sms", "SMS", "phone"),
+    };
+}

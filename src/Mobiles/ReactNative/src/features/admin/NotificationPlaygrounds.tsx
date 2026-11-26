@@ -4,7 +4,7 @@ import { api } from "../../core/network/api";
 import { Button, Sheet, useStyles } from "../../shared/ui/ui";
 
 type Queue = { deviceCount?: number; provider: string; items: { pending?: number; completed?: number; failed?: number; id: string; title: string; body: string; recipient: string; status: string; attempts: number }[] };
-export default function NotificationPlaygrounds({ channel, back }: { channel: "mobilepush" | "email" | "sms"; back: () => void }) {
+export default function NotificationPlaygrounds({ channel }: { channel: "mobilepush" | "email" | "sms" }) {
   const s = useStyles();
   const push = channel === "mobilepush";
   const [section, setSection] = useState("notifications");
@@ -67,7 +67,6 @@ export default function NotificationPlaygrounds({ channel, back }: { channel: "m
   }
   return <View style={s.card}>
     <Text style={s.heading}>{push ? "Mobile Push" : email ? "Email" : "SMS"}</Text>
-    <Button title="Back" icon="Back" disabled={busy} onPress={back} />
     <Text style={s.text}>{push ? "Queue a notification for your own registered devices." : `Queue a message for delivery by the existing ${email ? "Email" : "SMS"} worker.`}</Text>
     {info && <Text style={s.text}>Provider: {info.provider}. {push && `Registered devices: ${info.deviceCount}. `} {info.provider === "Fake" ? "Delivery is simulated; no message is sent." : "Queued messages may be delivered to the specified recipient."}</Text>}
     {email && <><Text style={s.text}>From</Text><TextInput accessibilityLabel="From" style={s.input} value={from} onChangeText={setFrom} keyboardType="email-address" autoCapitalize="none" maxLength={254} editable={!busy} /></>}

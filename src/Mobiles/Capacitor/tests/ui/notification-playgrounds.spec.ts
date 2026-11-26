@@ -30,6 +30,8 @@ for (const channel of ["mobile-push", "email", "sms"] as const) {
     await page.goto("/admin");
     await page.getByRole("link", { name: "Playgrounds", exact: true }).click();
     await page.getByRole("link", { name: push ? "Mobile Push" : channel === "email" ? "Email" : "SMS", exact: true }).click();
+    await expect(page.getByRole("navigation", { name: "Admin sections", exact: true }).getByRole("link", { name: "Playgrounds" })).toHaveClass(/active/);
+    await expect(page.getByRole("navigation", { name: "Playground channels", exact: true }).locator("a.active")).toHaveCount(1);
     await expect(page.getByRole("button", { name: "Queue message" })).toBeEnabled();
     await page.getByRole("button", { name: "Queue message" }).click();
     await expect(page.getByRole("alert")).toHaveText(push ? "Title and message are required." : "Complete all required fields.");

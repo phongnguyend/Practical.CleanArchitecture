@@ -22,6 +22,30 @@ class PlaygroundServices extends AppServices {
 }
 
 void main() {
+  testWidgets('nested tabs remain visible when switching channels', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: AdminScreen(services: PlaygroundServices()),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.widgetWithText(InkWell, 'Playgrounds'));
+    await tester.pumpAndSettle();
+    for (final channel in ['Mobile Push', 'Email', 'SMS']) {
+      await tester.tap(find.widgetWithText(InkWell, channel));
+      await tester.pumpAndSettle();
+      for (final label in ['Playgrounds', 'Mobile Push', 'Email', 'SMS']) {
+        expect(find.widgetWithText(InkWell, label), findsOneWidget);
+      }
+      expect(find.text('Queue message'), findsOneWidget);
+    }
+  });
+
   for (final channel in ['email', 'sms']) {
     testWidgets('$channel validates and queues trimmed fields', (tester) async {
       final services = PlaygroundServices();
@@ -32,7 +56,6 @@ void main() {
               child: NotificationPlaygrounds(
                 services: services,
                 channel: channel,
-                back: () {},
               ),
             ),
           ),

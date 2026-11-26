@@ -23,7 +23,6 @@ const Nav = ({ isAuthenticated }: NavProps) => {
     <nav
       aria-label="Main navigation"
       className={"navbar navbar-expand bg-body " + classes.Nav}
-      style={{ paddingLeft: "1rem", paddingRight: "1rem" }}
     >
       <div className={classes.Header}>
         <Link className="navbar-brand" href="/">

@@ -6,7 +6,7 @@
 @inject NotificationPlaygroundService Service
 
 <section class="card"><div class="card-body">
-    <nav aria-label="Breadcrumb"><a href="/admin">Admin</a> / <a href="/admin/playgrounds">Playgrounds</a> / <span aria-current="page">@Name</span></nav>
+    <AdminTabs View="@Channel" />
     <h1>@Name</h1>
     <p>@(Push ? "Queue a notification for your own registered devices." : $"Queue a message for delivery by the existing {Name} worker.")</p>
     @if (Loaded)

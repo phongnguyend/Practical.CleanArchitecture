@@ -7,11 +7,9 @@ class NotificationPlaygrounds extends StatefulWidget {
     super.key,
     required this.services,
     required this.channel,
-    required this.back,
   });
   final AppServices services;
   final String channel;
-  final VoidCallback back;
   @override
   State<NotificationPlaygrounds> createState() =>
       _NotificationPlaygroundsState();
@@ -128,11 +126,6 @@ class _NotificationPlaygroundsState extends State<NotificationPlaygrounds> {
     spacing: 16,
     children: [
       Text(name, style: Theme.of(context).textTheme.titleLarge),
-      OutlinedButton.icon(
-        onPressed: busy ? null : widget.back,
-        icon: const Icon(Icons.arrow_back),
-        label: const Text('Back'),
-      ),
       Text(
         push
             ? 'Queue a notification for your own registered devices.'

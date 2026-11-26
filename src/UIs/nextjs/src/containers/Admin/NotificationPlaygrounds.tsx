@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import axios from "axios";
 import env from "../../environments";
 import addAuthInterceptors from "../Auth/authInterceptors";
@@ -75,8 +74,7 @@ export default function NotificationPlaygrounds({ channel }: { channel: "mobilep
       setBusy(false);
     }
   }
-  return <section className="card"><div className="card-body">
-    <nav aria-label="Breadcrumb" className="mb-3 d-flex flex-wrap gap-2"><Link href="/admin">Admin</Link><span>/</span><Link href="/admin/playgrounds">Playgrounds</Link><span>/</span><span aria-current="page">{name}</span></nav>
+  return <div>
     <h1>{name}</h1><p>{push ? "Queue a notification for your own registered devices." : `Queue a message for delivery by the existing ${name} worker.`}</p>
     {info && <div role="status" className="alert alert-info">Provider: <strong>{info.provider}</strong>. {push && <>Registered devices: {info.deviceCount}. </>} {info.provider === "Fake" ? "Delivery is simulated; no message is sent." : "Queued messages may be delivered to the specified recipient."}</div>}
     {error && <p role="alert" className="alert alert-danger">{error}</p>}
@@ -95,5 +93,5 @@ export default function NotificationPlaygrounds({ channel }: { channel: "mobilep
       <h3 className="h5">{item.title}</h3>{!push && <p>To: {item.recipient}</p>}<p style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{item.body}</p>
       <p className="mb-0">{push ? `Pending: ${item.pending} / Completed: ${item.completed} / Failed: ${item.failed}` : `${item.status} / Attempts: ${item.attempts}`} / {new Date(item.createdAt).toLocaleString()}</p>
     </article>)}</div>
-  </div></section>;
+  </div>;
 }

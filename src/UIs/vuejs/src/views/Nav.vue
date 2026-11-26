@@ -1,7 +1,6 @@
 <template>
   <nav aria-label="Main navigation"
     class="navbar navbar-expand bg-body"
-    :style="{ paddingLeft: '1rem', paddingRight: '1rem' }"
   >
     <div class="nav-header">
       <a class="navbar-brand" href="/"><ActionIcon action="home" />{{ pageTitle }}</a>
@@ -67,6 +66,7 @@ const logout = () => {
 <style scoped>
 .navbar {
   display: block;
+  padding-inline: 0;
   padding-bottom: 0;
 }
 

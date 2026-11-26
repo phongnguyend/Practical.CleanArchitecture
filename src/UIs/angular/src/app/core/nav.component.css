@@ -4,8 +4,7 @@
 
 .navbar {
   display: block;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-inline: 0;
   padding-bottom: 0;
 }
 

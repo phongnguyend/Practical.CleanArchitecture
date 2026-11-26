@@ -1,12 +1,7 @@
 @page "/admin/playgrounds"
 @attribute [Authorize]
 <section class="card"><div class="card-body">
-    <nav aria-label="Breadcrumb"><a href="/admin">Admin</a> / <span aria-current="page">Playgrounds</span></nav>
+    <AdminTabs View="playgrounds" />
     <h1>Playgrounds</h1>
-    <p>Try notification providers and inspect queued messages.</p>
-    <div class="admin-links">
-        <a class="btn btn-outline-primary" href="/admin/playgrounds/mobile-push"><ActionIcon Name="bell" /> Mobile Push</a>
-        <a class="btn btn-outline-primary" href="/admin/playgrounds/email"><ActionIcon Name="envelope-closed" /> Email</a>
-        <a class="btn btn-outline-primary" href="/admin/playgrounds/sms"><ActionIcon Name="phone" /> SMS</a>
-    </div>
+    <p>Choose a playground to inspect its queue and compose a message.</p>
 </div></section>

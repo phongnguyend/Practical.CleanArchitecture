@@ -55,6 +55,20 @@ public abstract class AdminUiTests extends MobileUiTestSupport {
     }
 
     @Test
+    public void playgroundTabsAllowDirectChannelSwitching() {
+        openPlaygrounds();
+        for (String channel : new String[] { "Mobile Push", "Email", "SMS" }) {
+            click(channel);
+            awaitLabel(channel.equals("Mobile Push") ? "Title" : channel.equals("Email") ? "From" : "Phone number");
+            assertNotNull("Parent Playgrounds tab remains available", find("Playgrounds"));
+            assertNotNull("Mobile Push tab remains available", find("Mobile Push"));
+            assertNotNull("Email tab remains available", find("Email"));
+            assertNotNull("SMS tab remains available", find("SMS"));
+        }
+        capture("playground-subtabs");
+    }
+
+    @Test
     public void emailPlaygroundNavigationAndValidation() {
         messagePlayground("Email", "From");
     }

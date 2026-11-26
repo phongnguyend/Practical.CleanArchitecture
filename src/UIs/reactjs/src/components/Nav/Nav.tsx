@@ -10,7 +10,6 @@ const Nav = () => {
   return (
     <nav aria-label="Main navigation"
       className={"navbar navbar-expand bg-body " + classes.Nav}
-      style={{ paddingLeft: "1rem", paddingRight: "1rem" }}
     >
       <div className={classes.Header}>
         <a className="navbar-brand" href="/">

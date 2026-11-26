@@ -1,17 +1,18 @@
 <section class="card"><div class="card-body">
-  <nav aria-label="Breadcrumb" class="mb-3 d-flex flex-wrap gap-2"><a routerLink="/admin">Admin</a>
-    @if (view !== 'admin') { <span>/</span><a routerLink="/admin/playgrounds">Playgrounds</a> }
-    @if (view === 'mobilepush' || view === 'email' || view === 'sms') { <span>/</span><span aria-current="page">{{ view === 'mobilepush' ? 'Mobile Push' : view === 'email' ? 'Email' : 'SMS' }}</span> }
+  <nav aria-label="Admin sections" class="nav nav-tabs mb-3">
+    <a routerLink="/admin/playgrounds" class="nav-link" [class.active]="view !== 'admin'" [attr.aria-current]="view !== 'admin' ? 'page' : null"><app-action-icon action="settings" />Playgrounds</a>
   </nav>
+  @if (view !== 'admin') {
+    <nav aria-label="Playground channels" class="nav nav-tabs mb-3 flex-wrap">
+      @for (tab of channels; track tab.value) {
+        <a [routerLink]="'/admin/playgrounds/' + tab.path" class="nav-link" [class.active]="view === tab.value" [attr.aria-current]="view === tab.value ? 'page' : null"><app-action-icon action="notification" />{{ tab.label }}</a>
+      }
+    </nav>
+  }
   @if (view === 'admin' || view === 'playgrounds') {
     <h1>{{ view === 'admin' ? 'Admin' : 'Playgrounds' }}</h1>
-    <div class="d-flex flex-wrap gap-2">
-      @if (view === 'admin') { <a class="btn btn-outline-primary" routerLink="/admin/playgrounds"><app-action-icon action="settings" />Playgrounds</a> }
-      @else {
-        <a class="btn btn-outline-primary" routerLink="/admin/playgrounds/mobile-push"><app-action-icon action="notification" />Mobile Push</a>
-        <a class="btn btn-outline-primary" routerLink="/admin/playgrounds/email"><app-action-icon action="notification" />Email</a>
-        <a class="btn btn-outline-primary" routerLink="/admin/playgrounds/sms"><app-action-icon action="notification" />SMS</a>
-      }
-    </div>
-  } @else { <app-notification-playgrounds [channel]="view" /> }
+    <p>Choose a playground to inspect its queue and compose a message.</p>
+  } @else {
+    <app-notification-playgrounds [channel]="view" />
+  }
 </div></section>

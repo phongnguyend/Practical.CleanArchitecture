@@ -1,5 +1,6 @@
 .Nav {
   display: block;
+  padding-inline: 0;
   padding-bottom: 0;
 }
 
