@@ -3,7 +3,7 @@
     class="navbar navbar-expand bg-body"
   >
     <div class="nav-header">
-      <a class="navbar-brand" href="/"><ActionIcon action="home" />{{ pageTitle }}</a>
+      <a class="navbar-brand" href="/">{{ pageTitle }}</a>
       <div class="nav-utilities d-flex align-items-center gap-2 ms-auto flex-shrink-0">
         <a v-if="!isAuthenticated" class="nav-link" @click="login" href="javascript:void(0)"><ActionIcon action="login" />Login</a>
         <a v-if="isAuthenticated" class="nav-link" @click="logout" href="javascript:void(0)"><ActionIcon action="logout" />Logout</a>

@@ -3,8 +3,15 @@
 @attribute [Authorize]
 @using ClassifiedAds.Blazor.Modules.Roles.Services
 @inject RoleService Service
-<section class="card"><div class="card-body">
-    <h1>@(Id.HasValue ? "Role Details" : "Role List")</h1>
+<section class="card">
+    <div class="card-header">
+        @(Id.HasValue ? "Role Details" : "Role List")
+        @if (!Loading && !Id.HasValue)
+        {
+            <button class="btn btn-primary" @onclick="() => Edit(new RoleModel())"><ActionIcon Name="plus" /> Add Role</button>
+        }
+    </div>
+    <div class="card-body">
     @if (!string.IsNullOrEmpty(Error))
     {
         <p role="alert" class="alert alert-danger">@Error</p>
@@ -20,7 +27,6 @@
     }
     else
     {
-        <button class="btn btn-primary mb-3" @onclick="() => Edit(new RoleModel())"><ActionIcon Name="plus" /> Add Role</button>
         <table class="table"><thead><tr><th>Name</th><th>Actions</th></tr></thead><tbody>
             @foreach (var role in Roles)
             {

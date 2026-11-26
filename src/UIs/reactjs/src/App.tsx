@@ -2,6 +2,7 @@ import Admin from "./containers/Admin/Admin";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import "./App.css";
+import "./workspace.css";
 import Nav from "./components/Nav/Nav";
 import Notification from "./components/Notification/Notification";
 import Home from "./containers/Home/Home";
@@ -23,8 +24,10 @@ import Logout from "./containers/Auth/Logout";
 
 function App() {
   return (
-    <div className="container">
+    <div className="container ui-shell">
+      <a className="skip-link" href="#main-content">Skip to content</a>
       <Nav />
+      <main id="main-content" tabIndex={-1}>
       <Routes>
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/playgrounds" element={<Admin view="playgrounds" />} />
@@ -52,6 +55,7 @@ function App() {
         <Route path="/logout" element={<Logout />} />
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
+      </main>
       <Notification />
     </div>
   );

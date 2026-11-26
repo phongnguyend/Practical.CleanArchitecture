@@ -3,16 +3,14 @@
     <app-action-icon action="products" />{{ pageTitle }}
     <div style="float: right">
       <button type="button" class="btn btn-secondary" (click)="exportAsPdf()"><app-action-icon action="export" />Export as Pdf</button>
-      &nbsp;
       <button type="button" class="btn btn-secondary" (click)="exportAsCsv()"><app-action-icon action="export" />Export as Csv</button>
-      &nbsp;
-      <a class="btn btn-primary" routerLinkActive="active" [routerLink]="['/products/add']">
-        <app-action-icon action="add" />Add Product
-      </a>
-      &nbsp;
+
       <button class="btn btn-primary" (click)="openImportCsvModal(import_csv_modal_template)">
         <app-action-icon action="import" />Import Csv
       </button>
+      <a class="btn btn-primary" routerLinkActive="active" [routerLink]="['/products/add']">
+        <app-action-icon action="add" />Add Product
+      </a>
     </div>
   </div>
   <div class="card-body">

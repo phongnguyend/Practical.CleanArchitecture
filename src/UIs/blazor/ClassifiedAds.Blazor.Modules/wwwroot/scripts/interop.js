@@ -63,4 +63,5 @@ interop.uploadFile = function (url, token, file, dotNetObj) {
 
 interop.fileSelected = function (e) {
     this.selectedFile = e.files ? e.files[0] : null;
+    return !!this.selectedFile;
 };

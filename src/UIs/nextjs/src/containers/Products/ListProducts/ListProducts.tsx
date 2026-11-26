@@ -354,7 +354,6 @@ const ListProducts = () => {
             >
               <ActionIcon action="export" /> Export as Pdf
             </button>
-            &nbsp;
             <button
               type="button"
               className="btn btn-secondary"
@@ -362,17 +361,16 @@ const ListProducts = () => {
             >
               <ActionIcon action="export" /> Export as Csv
             </button>
-            &nbsp;
-            <Link className="btn btn-primary" href="/products/add">
-              <ActionIcon action="add" /> Add Product
-            </Link>
-            &nbsp;
+
             <button
               className="btn btn-primary"
               onClick={() => openImportCsvModal()}
             >
               <ActionIcon action="import" /> Import Csv
             </button>
+            <Link className="btn btn-primary" href="/products/add">
+              <ActionIcon action="add" /> Add Product
+            </Link>
           </div>
         </div>
         <div className="card-body">

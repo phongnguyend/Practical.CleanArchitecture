@@ -4,6 +4,7 @@
 @import "./app/shared/toast/toast.css";
 @import "./app/shared/json-viewer/json.css";
 @import "./app/shared/modal/modal.css";
+@import "./workspace.css";
 
 div.card-header {
   font-size: large;

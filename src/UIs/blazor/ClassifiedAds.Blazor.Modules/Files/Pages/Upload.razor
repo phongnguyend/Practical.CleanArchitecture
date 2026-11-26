@@ -1,12 +1,12 @@
 ﻿@page "/files/upload"
 @attribute [Authorize]
 
-<div class="card">
+<div class="card file-upload">
     <div class="card-header">
-        Upload File
+        <ActionIcon Name="data-transfer-upload" /> Upload File
     </div>
     <div class="card-body">
-        <EditForm EditContext="@EditContext" OnValidSubmit="HandleValidSubmit">
+        <EditForm EditContext="@EditContext" OnSubmit="HandleSubmit" novalidate>
 
             <DataAnnotationsValidator />
             <ValidationSummary />
@@ -29,16 +29,27 @@
             <div class="form-group row">
                 <label for="formFile" class="col-sm-2 col-form-label">File (JSInterop)</label>
                 <div class="col-sm-10">
-                    <input type="file" id="formFile"
+                    <input @ref="InteropFileInput" type="file" id="formFile"
                            name="formFile"
-                           onchange="interop.fileSelected(this)"
-                           class="form-control" />
+                           @onchange="OnInteropFileChange"
+                           aria-invalid="@(FileError != null ? "true" : "false")"
+                           aria-describedby="file-error"
+                           class="form-control @(FileError != null ? "is-invalid" : null)" />
                 </div>
             </div>
             <div class="form-group row">
-                <label for="formFile" class="col-sm-2 col-form-label">File (InputFile)</label>
+                <label for="inputFile" class="col-sm-2 col-form-label">File (InputFile)</label>
                 <div class="col-sm-10">
-                    <InputFile OnChange="@OnInputFileChange" class="form-control" />
+                    <InputFile id="inputFile" OnChange="@OnInputFileChange"
+                               aria-invalid="@(FileError != null ? "true" : "false")"
+                               aria-describedby="file-error"
+                               class="@(FileError != null ? "form-control is-invalid" : "form-control")" />
+                    <div id="file-error">
+                        @if (FileError != null)
+                        {
+                            <p class="file-error" role="alert">@FileError</p>
+                        }
+                    </div>
                 </div>
             </div>
             <div class="form-group row">

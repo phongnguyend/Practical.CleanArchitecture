@@ -1,6 +1,6 @@
 <nav aria-label="Main navigation" class="navbar navbar-expand bg-body">
   <div class="nav-header">
-    <a class="navbar-brand" href="/"><app-action-icon action="home" />{{ pageTitle }}</a>
+    <a class="navbar-brand" href="/">{{ pageTitle }}</a>
     <div class="nav-utilities d-flex align-items-center gap-2 ms-auto flex-shrink-0">
       @if (!auth.isAuthenticated()) {
         <a class="nav-link" (click)="login()" href="javascript:void(0)"><app-action-icon action="login" />Login</a>

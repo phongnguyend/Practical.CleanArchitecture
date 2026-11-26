@@ -362,12 +362,11 @@ const ListConfigurationEntries = (props: any) => {
               <ActionIcon action="export" /> Export as Excel
             </button>
             &nbsp;
-            <button className="btn btn-primary" onClick={() => openAddModal()}>
-              <ActionIcon action="add" /> Add
-            </button>
-            &nbsp;
             <button className="btn btn-primary" onClick={() => openImportExcelModal()}>
               <ActionIcon action="import" /> Import Excel
+            </button>
+            <button className="btn btn-primary" onClick={() => openAddModal()}>
+              <ActionIcon action="add" /> Add
             </button>
           </div>
         </div>

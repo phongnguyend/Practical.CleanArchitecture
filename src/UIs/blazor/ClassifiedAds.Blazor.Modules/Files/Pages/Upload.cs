@@ -30,10 +30,36 @@ public partial class Upload
 
     public EditContext EditContext { get; set; }
 
+    private ElementReference InteropFileInput;
+    private bool HasInteropFile;
+    private string FileError;
+
     protected override void OnInitialized()
     {
         EditContext = new EditContext(File);
         EditContext.SetFieldCssClassProvider(new MyFieldClassProvider());
+    }
+
+    private async Task HandleSubmit()
+    {
+        var valid = EditContext.Validate();
+        HasInteropFile = await JSRuntime.InvokeAsync<bool>("interop.fileSelected", InteropFileInput);
+        FileError = BrowserFile == null && !HasInteropFile ? "Please select a file using either upload option." : null;
+        if (!valid || FileError != null)
+        {
+            return;
+        }
+
+        await HandleValidSubmit();
+    }
+
+    private async Task OnInteropFileChange()
+    {
+        HasInteropFile = await JSRuntime.InvokeAsync<bool>("interop.fileSelected", InteropFileInput);
+        if (HasInteropFile || BrowserFile != null)
+        {
+            FileError = null;
+        }
     }
 
     protected async Task HandleValidSubmit()
@@ -67,7 +93,11 @@ public partial class Upload
 
     private void OnInputFileChange(InputFileChangeEventArgs e)
     {
-        BrowserFile = e.File;
+        BrowserFile = e.FileCount > 0 ? e.File : null;
+        if (BrowserFile != null || HasInteropFile)
+        {
+            FileError = null;
+        }
     }
 }
 

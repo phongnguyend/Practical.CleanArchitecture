@@ -282,18 +282,16 @@ const ListProducts = (props: any) => {
             <button type="button" className="btn btn-secondary" onClick={exportAsPdf}>
               <ActionIcon action="export" /> Export as Pdf
             </button>
-            &nbsp;
             <button type="button" className="btn btn-secondary" onClick={exportAsCsv}>
               <ActionIcon action="export" /> Export as Csv
             </button>
-            &nbsp;
-            <NavLink className="btn btn-primary" to="/products/add">
-              <ActionIcon action="add" /> Add Product
-            </NavLink>
-            &nbsp;
+
             <button className="btn btn-primary" onClick={() => openImportCsvModal()}>
               <ActionIcon action="import" /> Import Csv
             </button>
+            <NavLink className="btn btn-primary" to="/products/add">
+              <ActionIcon action="add" /> Add Product
+            </NavLink>
           </div>
         </div>
         <div className="card-body">

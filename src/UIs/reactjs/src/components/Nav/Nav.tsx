@@ -13,7 +13,6 @@ const Nav = () => {
     >
       <div className={classes.Header}>
         <a className="navbar-brand" href="/">
-          <ActionIcon action="home" />
           {pageTitle}
         </a>
         <div className="d-flex align-items-center gap-2 ms-auto flex-shrink-0">

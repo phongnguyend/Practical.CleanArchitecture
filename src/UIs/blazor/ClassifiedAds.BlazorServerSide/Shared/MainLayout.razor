@@ -1,5 +1,18 @@
 @inherits LayoutComponentBase
+<div class="ui-shell">
+<a class="skip-link" href="#main-content" @onclick="FocusContent" @onclick:preventDefault="true">Skip to content</a>
 <NavMenu />
-<main class="application-content">
+<main @ref="Content" id="main-content" tabindex="-1" class="application-content">
     @Body
 </main>
+
+</div>
+
+@code {
+    private ElementReference Content;
+
+    private async Task FocusContent()
+    {
+        await Content.FocusAsync();
+    }
+}

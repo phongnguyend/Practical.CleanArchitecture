@@ -4,12 +4,10 @@
       <ActionIcon action="products" />{{ pageTitle }}
       <div style="float: right">
         <button type="button" class="btn btn-secondary" @click="exportAsPdf"><ActionIcon action="export" />Export as Pdf</button>
-        &nbsp;
         <button type="button" class="btn btn-secondary" @click="exportAsCsv"><ActionIcon action="export" />Export as Csv</button>
-        &nbsp;
-        <router-link class="btn btn-primary" to="/products/add"><ActionIcon action="add" />Add Product</router-link>
-        &nbsp;
+
         <button class="btn btn-primary" @click="openImportCsvModal()"><ActionIcon action="import" />Import Csv</button>
+        <router-link class="btn btn-primary" to="/products/add"><ActionIcon action="add" />Add Product</router-link>
       </div>
     </div>
     <div class="card-body">

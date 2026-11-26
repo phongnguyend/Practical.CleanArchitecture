@@ -1,8 +1,9 @@
 <template>
   <div id="app">
-    <div class="container">
+    <div class="container ui-shell">
+      <a class="skip-link" href="#main-content">Skip to content</a>
       <app-nav />
-      <router-view />
+      <main id="main-content" tabindex="-1"><router-view /></main>
       <app-notification />
     </div>
   </div>
@@ -52,3 +53,5 @@ html[data-bs-theme="dark"] .file-picker-button {
   color: var(--bs-primary-text-emphasis);
 }
 </style>
+
+<style src="./workspace.css"></style>

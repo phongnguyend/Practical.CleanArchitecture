@@ -6,10 +6,9 @@
         <button type="button" class="btn btn-secondary" @click="exportAsExcel()">
           <ActionIcon action="export" />Export as Excel
         </button>
-        &nbsp;
-        <button class="btn btn-primary" @click="addEntry()"><ActionIcon action="add" />Add</button>
-        &nbsp;
+
         <button class="btn btn-primary" @click="openImportExcelModal()"><ActionIcon action="import" />Import Excel</button>
+        <button class="btn btn-primary" @click="addEntry()"><ActionIcon action="add" />Add</button>
       </div>
     </div>
     <div class="card-body">

@@ -1,11 +1,50 @@
 import { test, expect, writes } from '../support/fixtures.js';
 
+for (const width of [1440, 390]) {
+  test(`file pickers support selection at ${width}px`, async ({ app, page }, info) => {
+    await page.setViewportSize({ width, height: 900 });
+    await app.open('Files', 'files');
+    await app.action('Upload File').click();
+    const pickers = page.locator('input[type="file"]');
+    await expect(pickers.first()).toBeAttached();
+    for (const picker of await pickers.all()) {
+      await picker.setInputFiles({ name: 'sample.txt', mimeType: 'text/plain', buffer: Buffer.from('File picker preview') });
+      await expect(picker).toHaveValue(/sample\.txt$/);
+    }
+    for (const theme of ['Light', 'Dark']) {
+      await page.getByLabel(/Choose appearance/).click();
+      await page.getByRole('button', { name: theme, exact: true }).click();
+      await expect(page.locator('html')).toHaveAttribute('data-bs-theme', theme.toLowerCase());
+      await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+      await page.screenshot({ path: info.outputPath(`upload-${theme.toLowerCase()}-${width}.png`), fullPage: true });
+    }
+  });
+}
+
 test('file upload rejects missing required fields', async ({ app, page }) => {
   await app.open('Files', 'files');
   await app.action('Upload File').click();
   await app.action('Save').click();
   await expect(page).toHaveURL(/\/files\/upload$/);
   await expect(page.locator('.is-invalid, input:invalid, [aria-invalid="true"]').first()).toBeVisible();
+});
+
+test('file upload highlights a missing file and clears the error after selection', async ({ app, page }) => {
+  await app.open('Files', 'files');
+  await app.action('Upload File').click();
+  const count = await page.locator('input[type="file"]').count();
+  for (let index = 0; index < count; index++) {
+    await app.open('Files', 'files');
+    await app.action('Upload File').click();
+    await page.getByLabel('Name', { exact: true }).fill('File validation check');
+    await page.getByLabel('Description', { exact: true }).fill('No upload should be sent');
+    await app.action('Save').click();
+    await expect(page).toHaveURL(/\/files\/upload$/);
+    const inputs = page.locator('input[type="file"]');
+    await expect.poll(() => inputs.evaluateAll(elements => elements.every(element => element.matches(':invalid, .is-invalid, [aria-invalid="true"]')))).toBe(true);
+    await inputs.nth(index).setInputFiles({ name: 'validation.txt', mimeType: 'text/plain', buffer: Buffer.from('Validation fixture') });
+    await expect.poll(() => inputs.evaluateAll(elements => elements.every(element => !element.matches(':invalid, .is-invalid, [aria-invalid="true"]')))).toBe(true);
+  }
 });
 
 for (const encrypted of [false, true]) {

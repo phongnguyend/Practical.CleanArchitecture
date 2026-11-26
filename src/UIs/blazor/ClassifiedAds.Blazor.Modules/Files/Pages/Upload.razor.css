@@ -1,4 +1,63 @@
-﻿.card-header {
-    color: red;
-    font-weight: bold;
+.file-upload ::deep input[type="file"] {
+    display: block;
+    width: 100%;
+    min-height: 3.25rem;
+    padding: .375rem;
+    overflow: hidden;
+    border: 1px solid var(--ui-border, #dce3ed);
+    border-radius: .625rem;
+    background: var(--ui-soft, #f0f4f9);
+    color: var(--ui-text, #1e293b);
+    font: inherit;
+    line-height: 2.5rem;
+    text-overflow: ellipsis;
+}
+
+.file-upload ::deep input[type="file"]::file-selector-button {
+    margin: 0 .875rem 0 0;
+    padding: .625rem 1rem;
+    border: 1px solid var(--ui-border, #dce3ed);
+    border-radius: .375rem;
+    background: var(--ui-surface, #fff);
+    color: var(--ui-accent, #245bd6);
+    font: inherit;
+    font-weight: 600;
+    line-height: 1.4;
+    cursor: pointer;
+}
+
+.file-upload ::deep input[type="file"]:hover::file-selector-button {
+    background: var(--ui-accent-soft, #eaf0ff);
+    border-color: var(--ui-accent, #245bd6);
+}
+
+.file-upload ::deep input[type="file"]:focus-visible {
+    outline: 3px solid var(--ui-accent, #245bd6);
+    outline-offset: 3px;
+}
+
+.file-upload ::deep input[type="file"][aria-invalid="true"] {
+    border-color: var(--ui-danger, #b42338);
+    box-shadow: 0 0 0 1px var(--ui-danger, #b42338);
+}
+
+.file-upload .file-error {
+    margin: .5rem 0 0;
+    color: var(--ui-danger, #b42338);
+    font-size: .875rem;
+}
+
+.file-upload .form-group {
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+.file-upload .col-form-label {
+    margin-bottom: 0;
+}
+
+@media (max-width: 575px) {
+    .file-upload .col-form-label {
+        margin-bottom: .375rem;
+    }
 }

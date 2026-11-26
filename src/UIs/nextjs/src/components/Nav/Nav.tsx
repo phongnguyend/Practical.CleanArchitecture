@@ -26,7 +26,6 @@ const Nav = ({ isAuthenticated }: NavProps) => {
     >
       <div className={classes.Header}>
         <Link className="navbar-brand" href="/">
-          <ActionIcon action="home" />
           {pageTitle}
         </Link>
         <div className="d-flex align-items-center gap-2 ms-auto flex-shrink-0">
