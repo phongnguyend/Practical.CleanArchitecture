@@ -1,4 +1,4 @@
-name: Build Mobile React Native
+name: Build Mobile - React Native
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: Build UI Angular
+name: Build UI - Angular
 
 on:
   push:

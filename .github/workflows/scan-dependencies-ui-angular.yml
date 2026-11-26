@@ -1,4 +1,4 @@
-name: Scan Dependencies UI Angular
+name: Scan Dependencies UI - Angular
 
 on:
   push:

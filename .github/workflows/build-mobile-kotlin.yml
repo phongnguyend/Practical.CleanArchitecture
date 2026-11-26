@@ -1,4 +1,4 @@
-name: Build Mobile Kotlin
+name: Build Mobile - Kotlin
 
 on:
   push:

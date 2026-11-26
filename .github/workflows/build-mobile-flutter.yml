@@ -1,4 +1,4 @@
-name: Build Mobile Flutter
+name: Build Mobile - Flutter
 
 on:
   push:

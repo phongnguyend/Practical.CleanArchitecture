@@ -1,4 +1,4 @@
-name: Scan Dependencies Identity Server - Duende
+name: Scan Dependencies - Identity Server - Duende
 
 on:
   push:

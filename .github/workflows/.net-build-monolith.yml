@@ -1,4 +1,4 @@
-name: .Net Build Monolith
+name: .Net Build - Monolith
 
 on:
   push:

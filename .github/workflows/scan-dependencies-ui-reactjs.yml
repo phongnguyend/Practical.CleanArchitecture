@@ -1,4 +1,4 @@
-name: Scan Dependencies UI ReactJs
+name: Scan Dependencies UI - ReactJs
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: Scan Dependencies UI VueJs
+name: Scan Dependencies UI - VueJs
 
 on:
   push:

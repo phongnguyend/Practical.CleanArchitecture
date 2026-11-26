@@ -1,4 +1,4 @@
-name: .Net Build Identity Server - Duende
+name: .Net Build - Identity Server - Duende
 
 on:
   push:

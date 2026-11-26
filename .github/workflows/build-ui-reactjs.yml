@@ -1,4 +1,4 @@
-name: Build UI ReactJs
+name: Build UI - ReactJs
 
 on:
   push:
