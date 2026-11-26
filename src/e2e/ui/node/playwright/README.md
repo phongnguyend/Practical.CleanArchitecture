@@ -103,7 +103,8 @@ These overrides only affect the launched Vue process. The default Vue origin/cli
 | `auth.setup.ts` | Real OIDC login and independent authenticated state for each app |
 | `navigation.spec.ts` | Every resource route, direct reload, active navigation, Home, project link, persistent light/dark themes, system appearance, notification connection toast |
 | `products.spec.ts` | Required fields, create/details/edit/delete, filtering and empty results, image toggle, cancelled deletion, audit history, CSV import validation, CSV/PDF downloads |
-| `roles-settings.spec.ts` | Required fields, keyboard modal dismissal and focus restoration, role CRUD/details, configuration CRUD and sensitive-value masking, Excel import validation/export |
+| `roles.spec.ts` | Required fields, keyboard modal dismissal and focus restoration, role CRUD/details |
+| `settings.spec.ts` | Required fields, keyboard modal dismissal, configuration CRUD and sensitive-value masking, Excel import validation/upload/reset and export |
 | `files.spec.ts` | Required fields, plain/encrypted upload, metadata editing, exact downloaded-byte comparison, history and deletion |
 | `users.spec.ts` | Required username, user CRUD/details, password/reset-email/confirmation-email dialogs without sending emails or changing passwords |
 | `audit.spec.ts` | Seeded pagination, JSON tree/formatted modes, collapse, clipboard contents, modal dismissal and restored focus |
@@ -152,13 +153,13 @@ Run Next.js and BFF React separately when they share React's development port. A
 
 ## Blazor Server and WebAssembly
 
-The Monolith Blazor hosts share navigation, Home, theme switching, Roles, dialogs, and **Admin ? Playgrounds ? Mobile Push / Email / SMS** through ClassifiedAds.Blazor.Modules. They use the same accessible labels and routes as the JavaScript UIs.
+The Blazor hosts in `src/UIs/blazor` share navigation, Home, theme switching, Roles, dialogs, and **Admin ? Playgrounds ? Mobile Push / Email / SMS** through ClassifiedAds.Blazor.Modules. They use the same accessible labels and routes as the JavaScript UIs.
 
 Build the hosts from the repository root before enabling managed startup:
 
 ~~~powershell
-dotnet build src/Monolith/ClassifiedAds.BlazorServerSide
-dotnet build src/Monolith/ClassifiedAds.BlazorWebAssembly
+dotnet build src/UIs/blazor/ClassifiedAds.BlazorServerSide
+dotnet build src/UIs/blazor/ClassifiedAds.BlazorWebAssembly
 ~~~
 
 Then, from this Playwright directory, with the API and Identity Server running:

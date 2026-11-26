@@ -1,0 +1,23 @@
+.import-form { display: grid; gap: 1.5rem; padding: .25rem; }
+.import-description { margin: 0; color: var(--app-text); opacity: .75; line-height: 1.5; }
+.import-field { min-width: 0; }
+.import-label { display: block; margin-bottom: .625rem; font-weight: 600; }
+.file-picker { position: relative; display: flex; align-items: center; gap: .875rem; padding: 1.125rem; border: 1px dashed var(--app-border); border-radius: .625rem; background: var(--app-bg); }
+.file-picker:hover { border-color: #0d6efd; }
+.file-picker:focus-within { outline: 3px solid #0d6efd55; outline-offset: 3px; border-color: #0d6efd; }
+.file-picker ::deep .file-picker-input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 1; }
+.file-picker-icon { display: grid; place-items: center; flex: 0 0 2.5rem; height: 2.5rem; border-radius: .5rem; color: #0d6efd; background: #0d6efd15; }
+.file-picker-details { display: grid; gap: .25rem; flex: 1; min-width: 0; }
+.file-picker-name { font-weight: 600; overflow-wrap: anywhere; }
+.file-picker-hint, .import-hint { font-size: .8125rem; color: var(--app-text); opacity: .7; }
+.file-picker-browse { border: 1px solid var(--app-border); border-radius: .375rem; padding: .375rem .625rem; font-size: .8125rem; background: var(--app-surface); }
+.import-hint { display: block; margin-top: .625rem; }
+.file-picker-invalid { border-color: #dc3545; }
+.import-error { color: #dc3545; font-size: .875rem; margin: .5rem 0 0; }
+.import-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: .75rem; padding-top: 1rem; border-top: 1px solid var(--app-border); }
+.import-actions .btn { min-height: 2.5rem; min-width: 6rem; border-radius: .375rem; padding: .5rem 1rem; }
+.import-cancel { color: var(--app-text); background: var(--app-surface); border: 1px solid var(--app-border); }
+.import-cancel:hover { background: var(--app-bg); }
+.import-submit { display: inline-flex; align-items: center; justify-content: center; gap: .375rem; }
+.file-picker-busy { opacity: .65; }
+@media (max-width: 400px) { .file-picker { padding: .875rem; } .file-picker-browse { display: none; } }

@@ -1,0 +1,31 @@
+name: classifiedads-blazor
+services:
+  blazor-server:
+    image: classifiedads.blazor
+    build:
+      context: ../..
+      dockerfile: UIs/blazor/ClassifiedAds.BlazorServerSide/Dockerfile
+    ports:
+      - "${BLAZOR_SERVER_PORT:-9008}:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      OpenIdConnect__Authority: ${IDENTITY_AUTHORITY:-http://host.docker.internal:9000}
+      OpenIdConnect__RequireHttpsMetadata: "${REQUIRE_HTTPS_METADATA:-false}"
+      ResourceServer__Endpoint: ${API_ENDPOINT:-http://host.docker.internal:9002}
+      ResourceServer__PublicEndpoint: ${API_ENDPOINT:-http://host.docker.internal:9002}
+      CookiePolicyOptions__IsEnabled: "true"
+      CookiePolicyOptions__MinimumSameSitePolicy: Lax
+      CookiePolicyOptions__Secure: None
+  blazor-wasm:
+    image: classifiedads.blazor.wasm
+    build:
+      context: ../..
+      dockerfile: UIs/blazor/ClassifiedAds.BlazorWebAssembly/Dockerfile
+    ports:
+      - "${BLAZOR_WASM_PORT:-9009}:80"
+    environment:
+      IDENTITY_AUTHORITY: ${IDENTITY_AUTHORITY:-http://host.docker.internal:9000}
+      API_ENDPOINT: ${API_ENDPOINT:-http://host.docker.internal:9002}
+      WASM_ORIGIN: ${WASM_ORIGIN:-http://localhost:9009}

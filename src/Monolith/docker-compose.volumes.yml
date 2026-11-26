@@ -14,9 +14,6 @@ services:
         volumes:
             - D:\\ClassifiedAds.Monolith\\Files:/files
             - D:\\ClassifiedAds.Monolith\\Logs\\WebMVC:/ClassifiedAds.Monolith/logs
-    blazor:
-        volumes:
-            - D:\\ClassifiedAds.Monolith\\Logs\\BlazorServerSide:/ClassifiedAds.Monolith/logs
     background:
         volumes:
             - D:\\ClassifiedAds.Monolith\\Logs\\Background:/ClassifiedAds.Monolith/logs

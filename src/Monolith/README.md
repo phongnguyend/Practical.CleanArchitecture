@@ -1,6 +1,9 @@
 # Solution Structure
 ![alt text](/docs/imgs/code-solution-structure.png)
 
+The Blazor hosts and shared modules live in [../UIs/blazor](../UIs/blazor/README.md).
+They remain part of this solution and are launched by the Aspire app host.
+
 # Add & Run Database Migration
 
 - Update Connection Strings:
@@ -56,7 +59,6 @@
   docker tag classifiedads.background phongnguyend/classifiedads.background
   docker tag classifiedads.migrator phongnguyend/classifiedads.migrator
   docker tag classifiedads.webapi phongnguyend/classifiedads.webapi
-  docker tag classifiedads.blazor phongnguyend/classifiedads.blazor
   docker tag classifiedads.identityserver phongnguyend/classifiedads.identityserver
   docker tag classifiedads.webmvc phongnguyend/classifiedads.webmvc
   ```
@@ -66,7 +68,6 @@
   docker push phongnguyend/classifiedads.background
   docker push phongnguyend/classifiedads.migrator
   docker push phongnguyend/classifiedads.webapi
-  docker push phongnguyend/classifiedads.blazor
   docker push phongnguyend/classifiedads.identityserver
   docker push phongnguyend/classifiedads.webmvc
   ```
@@ -117,8 +118,8 @@
   dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.Background/ClassifiedAds.Background.csproj -o ./publish/ClassifiedAds.Background
   dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj -o ./publish/ClassifiedAds.Migrator
   dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.WebAPI/ClassifiedAds.WebAPI.csproj -o ./publish/ClassifiedAds.WebAPI
-  dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.BlazorServerSide/ClassifiedAds.BlazorServerSide.csproj -o ./publish/ClassifiedAds.BlazorServerSide
-  dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.BlazorWebAssembly/ClassifiedAds.BlazorWebAssembly.csproj -o ./publish/ClassifiedAds.BlazorWebAssembly
+  dotnet publish -p:Version=1.0.0.1 -c Release ../UIs/blazor/ClassifiedAds.BlazorServerSide/ClassifiedAds.BlazorServerSide.csproj -o ./publish/ClassifiedAds.BlazorServerSide
+  dotnet publish -p:Version=1.0.0.1 -c Release ../UIs/blazor/ClassifiedAds.BlazorWebAssembly/ClassifiedAds.BlazorWebAssembly.csproj -o ./publish/ClassifiedAds.BlazorWebAssembly
   dotnet publish -p:Version=1.0.0.1 -c Release ./ClassifiedAds.WebMVC/ClassifiedAds.WebMVC.csproj -o ./publish/ClassifiedAds.WebMVC
   ```
 

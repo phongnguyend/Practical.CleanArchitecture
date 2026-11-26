@@ -2,9 +2,6 @@ name: Docker Build - Microservices
 
 on:
   push:
-    branches:
-      - master
-      - build
     paths:
       - 'src/Microservices/**'
       - '.github/workflows/docker-build-microservices.yml'
@@ -26,8 +23,10 @@ jobs:
           cd src/Microservices
           docker compose build
       - name: Log into Registry
+        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/build')
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Tag and Push Images
+        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/build')
         run: |
           REPO_NAME=ghcr.io/${{ github.repository }}
           

@@ -1,0 +1,102 @@
+@page "/products"
+@attribute [Authorize]
+@using ClassifiedAds.Blazor.Modules.Products.Components
+
+<div class="card">
+	<div class="card-header">
+		Search
+	</div>
+	<div class="card-body">
+		<div class="input-group">
+			<InputText @bind-Value="SearchText" class="form-control" placeholder="Search by Description" />
+			<button type="button" class="btn btn-primary" style="margin-left:10px;" @onclick="VectorSearch">
+				<ActionIcon Name="magnifying-glass" /> Vector Search
+			</button>
+			<button type="button" class="btn btn-secondary" style="margin-left:10px;" @onclick="ClearSearch">
+				<ActionIcon Name="x" /> Clear
+			</button>
+		</div>
+	</div>
+</div>
+
+<div class="card">
+	<div class="card-header">
+		Product List
+
+		<div class="d-flex flex-wrap justify-content-end" style="gap: 0.5rem;">
+            <button type="button" class="btn btn-primary" @onclick="OpenImport"><ActionIcon Name="data-transfer-upload" /> Import Csv</button>
+			<button type="button" class="btn btn-secondary" @onclick="ExportAsPdf">
+				<ActionIcon Name="data-transfer-download" /> Export as Pdf
+			</button>
+			&nbsp;
+			<button type="button" class="btn btn-secondary" @onclick="ExportAsCsv">
+				<ActionIcon Name="data-transfer-download" /> Export as Csv
+			</button>
+			&nbsp;
+			<button class="btn btn-primary"
+					style="float: right;"
+					@onclick="QuickAddProduct">
+				<ActionIcon Name="plus" /> Add Product
+			</button>
+		</div>
+	</div>
+	<div class="card-body">
+		<div class="table-responsive">
+
+			@if (Products == null)
+			{
+				<p><em>Loading...</em></p>
+			}
+			else
+			{
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Code</th>
+							<th>Description</th>
+							@if (ShowSimilarityScore)
+							{
+								<th>Similarity Score</th>
+							}
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var product in Products)
+						{
+							<tr @key="product.Id">
+								<td><a href="@($"/products/{product.Id}")">@product.Name</a></td>
+								<td>@product.Code</td>
+								<td>@product.Description</td>
+								@if (ShowSimilarityScore)
+								{
+									<td>@product.SimilarityScore</td>
+								}
+								<td>
+									<button @onclick="(() => EditProduct(product))" class="btn btn-primary" title="Edit"><ActionIcon Name="pencil" /> Edit</button>
+									<button @onclick="(() => ViewAuditLogs(product))" class="btn btn-secondary" title="View Audit Logs"><ActionIcon Name="clock" /> View Audit Logs</button>
+									<button @onclick="(() => DeleteProduct(product))" class="btn btn-danger" title="Delete"><ActionIcon Name="trash" /> Delete</button>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			}
+		</div>
+	</div>
+</div>
+
+<AuditLogsDialog @ref="AuditLogsDialog"></AuditLogsDialog>
+<ConfirmDialog @ref="DeleteDialog" Title="Delete Product" YesText="Yes" NoText="No" ConfirmEventCallback="ConfirmedDeleteProduct">
+	<Message>
+		Are you sure you want to delete product: <strong>@DeletingProduct.Name</strong>
+	</Message>
+</ConfirmDialog>
+
+<span data-page-loaded="@IsLoaded.ToString().ToLowerInvariant()" hidden></span>
+<FileImportDialog @ref="ImportDialog" Title="Import Csv" Extension=".csv" Upload="ProductService.ImportAsync" OnImported="Imported" />
+@if (ImportMessage != null)
+{
+    <div class="alert alert-info" role="status">@ImportMessage</div>
+}

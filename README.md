@@ -613,6 +613,8 @@
 
 - Open Blazor Home Page at: https://localhost:44331
 
+  Source, standalone build, and run instructions: [src/UIs/blazor](/src/UIs/blazor/README.md).
+
   ![alt text](/docs/imgs/blazor-home-page.png)
 
 ## How to Build and Run Single Page Applications:

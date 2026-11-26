@@ -65,9 +65,9 @@
             "type": "coreclr",
             "request": "launch",
             //"preLaunchTask": "build",
-            "program": "${workspaceFolder}/ClassifiedAds.BlazorServerSide/bin/Debug/net6.0/ClassifiedAds.BlazorServerSide.dll",
+            "program": "${workspaceFolder}/../UIs/blazor/ClassifiedAds.BlazorServerSide/bin/Debug/net10.0/ClassifiedAds.BlazorServerSide.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/ClassifiedAds.BlazorServerSide",
+            "cwd": "${workspaceFolder}/../UIs/blazor/ClassifiedAds.BlazorServerSide",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
@@ -86,9 +86,9 @@
             "type": "coreclr",
             "request": "launch",
             //"preLaunchTask": "build",
-            "program": "${workspaceFolder}/ClassifiedAds.BlazorWebAssembly/bin/Debug/net6.0/ClassifiedAds.BlazorWebAssembly.dll",
+            "program": "${workspaceFolder}/../UIs/blazor/ClassifiedAds.BlazorWebAssembly/bin/Debug/net10.0/ClassifiedAds.BlazorWebAssembly.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/ClassifiedAds.BlazorWebAssembly",
+            "cwd": "${workspaceFolder}/../UIs/blazor/ClassifiedAds.BlazorWebAssembly",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",

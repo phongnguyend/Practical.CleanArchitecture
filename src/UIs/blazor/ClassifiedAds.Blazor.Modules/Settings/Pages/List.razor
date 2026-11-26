@@ -1,0 +1,68 @@
+@page "/settings"
+@attribute [Authorize]
+
+@using ClassifiedAds.Blazor.Modules.Settings.Components
+
+<div class="card">
+    <div class="card-header">
+        Settings
+        <div class="d-flex flex-wrap justify-content-end" style="gap: 0.5rem;">
+            <button type="button" class="btn btn-primary" @onclick="OpenImport"><ActionIcon Name="data-transfer-upload" /> Import Excel</button>
+            <button type="button" class="btn btn-secondary" @onclick="ExportAsExcel">
+                <ActionIcon Name="data-transfer-download" /> Export as Excel
+            </button>
+            &nbsp;
+            <button class="btn btn-primary"
+                    style="float: right;"
+                    @onclick="@(()=> AddSetting())">
+                <ActionIcon Name="plus" /> Add
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                        <th>Description</th>
+                        <th>Updated Time</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var entry in ConfigurationEntries)
+                    {
+                        <tr>
+                            <td>@entry.Key</td>
+                            <td>@(entry.IsSensitive ? "******": entry.Value)</td>
+                            <td>@entry.Description</td>
+                            <td>@entry.UpdatedDateTime</td>
+                            <td>
+                                <button @onclick="(()=> EditSetting(entry))" class="btn btn-primary" title="Edit"><ActionIcon Name="pencil" /> Edit</button>
+                                &nbsp;
+                                <button @onclick="(()=> DeleteSetting(entry))" class="btn btn-danger" title="Delete"><ActionIcon Name="trash" /> Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<ConfirmDialog @ref="DeleteDialog" Title="Delete Setting" YesText="Yes" NoText="No" ConfirmEventCallback="ConfirmedDeleteSetting">
+    <Message>
+        Are you sure you want to delete entry: <strong>@DeletingConfigurationEntry.Key</strong>
+    </Message>
+</ConfirmDialog>
+<AddEditDialog @ref="AddEditDialog" ConfirmEventCallback="ConfirmedAddEdit">
+</AddEditDialog>
+<span data-page-loaded="@IsLoaded.ToString().ToLowerInvariant()" hidden></span>
+<FileImportDialog @ref="ImportDialog" Title="Import Excel" Extension=".xlsx" Upload="ConfigurationEntryService.ImportAsync" OnImported="Imported" />
+@if (ImportMessage != null)
+{
+    <div class="alert alert-info" role="status">@ImportMessage</div>
+}

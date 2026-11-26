@@ -1,0 +1,14 @@
+**
+!Monolith/
+!Monolith/**
+!UIs/
+!UIs/blazor/
+!UIs/blazor/**
+**/bin/
+**/obj/
+**/.vs/
+**/.git/
+**/.env*
+**/node_modules/
+**/publish/
+**/TestResults/

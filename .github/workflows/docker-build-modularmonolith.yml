@@ -2,9 +2,6 @@ name: Docker Build - Modular Monolith
 
 on:
   push:
-    branches:
-      - master
-      - build
     paths:
       - 'src/ModularMonolith/**'
       - '.github/workflows/docker-build-modularmonolith.yml'
@@ -26,8 +23,10 @@ jobs:
           cd src/ModularMonolith
           docker compose build
       - name: Log into Registry
+        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/build')
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Tag and Push Images
+        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/build')
         run: |
           REPO_NAME=ghcr.io/${{ github.repository }}
           

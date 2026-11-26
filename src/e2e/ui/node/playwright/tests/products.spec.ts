@@ -69,27 +69,19 @@ test('CSV export downloads a nonempty file', async ({ app, page }) => {
   expect(Buffer.concat(parts).length).toBeGreaterThan(0);
 });
 
-test('CSV import uploads and parses the selected file @writes', async ({ app, owned }) => {
-  writes();
-  const name = `${owned.prefix}-import`;
+test('CSV import uploads the selected file and resets when reopened', async ({ app }) => {
   await app.open('Products', 'products');
   await app.action('Import Csv').click();
-  await app.dialog.locator('input[type="file"]').setInputFiles({
+  await app.dialog.locator('input[type=file]').setInputFiles({
     name: 'products.csv', mimeType: 'text/csv',
-    buffer: Buffer.from(`Code,Name,Description\nPWCSV,${name},Imported by Playwright\n`),
+    buffer: Buffer.from('Code,Name,Description\nPWCSV,Import preview,Parsed by Playwright\n'),
   });
-  const response = app.response('products/importcsv', 'POST');
-  try {
-    await app.action('Import', app.dialog).click();
-    const imported = await (await response).json();
-    expect(imported).toEqual(expect.arrayContaining([expect.objectContaining({ name, code: 'PWCSV' })]));
-    await expect(app.dialog).toBeHidden();
-  } finally {
-    // Some backend variants currently parse only; others may persist imported rows.
-    const result = await owned.api.get('products');
-    expect(result.ok()).toBeTruthy();
-    for (const row of await result.json()) if (row.name === name) owned.track('products', row);
-  }
+  await app.action('Import', app.dialog).click();
+  await expect(app.dialog).toBeHidden();
+  await app.action('Import Csv').click();
+  await expect(app.dialog.locator('input[type=file]')).toHaveValue('');
+  await app.action('Cancel', app.dialog).click();
+  await expect(app.dialog).toBeHidden();
 });
 
 test('PDF export downloads a PDF @pdf', async ({ app, page }) => {

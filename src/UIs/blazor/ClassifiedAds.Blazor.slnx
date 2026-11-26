@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ClassifiedAds.Blazor.Modules/ClassifiedAds.Blazor.Modules.csproj" />
+  <Project Path="ClassifiedAds.BlazorServerSide/ClassifiedAds.BlazorServerSide.csproj" />
+  <Project Path="ClassifiedAds.BlazorWebAssembly/ClassifiedAds.BlazorWebAssembly.csproj" />
+</Solution>

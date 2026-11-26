@@ -40,12 +40,6 @@ jobs:
     - name: Publish ClassifiedAds.WebMVC
       run: dotnet publish ClassifiedAds.WebMVC/*.csproj --configuration Release
       
-    - name: Publish ClassifiedAds.BlazorServerSide
-      run: dotnet publish ClassifiedAds.BlazorServerSide/*.csproj --configuration Release
-      
-    - name: Publish ClassifiedAds.BlazorWebAssembly
-      run: dotnet publish ClassifiedAds.BlazorWebAssembly/*.csproj --configuration Release
-      
     - name: Upload ClassifiedAds.Background
       uses: actions/upload-artifact@v4
       with:
@@ -69,15 +63,3 @@ jobs:
       with:
         name: ClassifiedAds.WebMVC
         path: src/Monolith/ClassifiedAds.WebMVC/bin/Release/net8.0/publish
-
-    - name: Upload ClassifiedAds.BlazorServerSide
-      uses: actions/upload-artifact@v4
-      with:
-        name: ClassifiedAds.BlazorServerSide
-        path: src/Monolith/ClassifiedAds.BlazorServerSide/bin/Release/net8.0/publish
-
-    - name: Upload ClassifiedAds.BlazorWebAssembly
-      uses: actions/upload-artifact@v4
-      with:
-        name: ClassifiedAds.BlazorWebAssembly
-        path: src/Monolith/ClassifiedAds.BlazorWebAssembly/bin/Release/net8.0/publish

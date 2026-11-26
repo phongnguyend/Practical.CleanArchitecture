@@ -119,8 +119,6 @@ stages:
             src/Monolith/ClassifiedAds.WebAPI/*.csproj
             src/Monolith/ClassifiedAds.IdentityServer/*.csproj
             src/Monolith/ClassifiedAds.WebMVC/*.csproj
-            src/Monolith/ClassifiedAds.BlazorServerSide/*.csproj
-            src/Monolith/ClassifiedAds.BlazorWebAssembly/*.csproj
           arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
       - task: PublishBuildArtifacts@1
         inputs:
@@ -192,8 +190,6 @@ stages:
           src/Monolith/ClassifiedAds.WebAPI/*.csproj
           src/Monolith/ClassifiedAds.IdentityServer/*.csproj
           src/Monolith/ClassifiedAds.WebMVC/*.csproj
-          src/Monolith/ClassifiedAds.BlazorServerSide/*.csproj
-          src/Monolith/ClassifiedAds.BlazorWebAssembly/*.csproj
         arguments: '--configuration Release -p:Version=1.0.0-$(Build.BuildNumber) --output $(Build.ArtifactStagingDirectory)'
         zipAfterPublish: false
 
@@ -204,8 +200,6 @@ stages:
           dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.Background --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.Background
           dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.Migrator --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.Migrator
           dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.WebAPI --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.WebAPI
-          dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.BlazorServerSide --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.BlazorServerSide
-          dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.BlazorWebAssembly --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.BlazorWebAssembly
           dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.IdentityServer --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.IdentityServer
           dotnet octo pack --version=1.0.0-$(Build.BuildNumber) --outFolder=$(Build.ArtifactStagingDirectory) --overwrite --id=ClassifiedAds.WebMVC --basePath=$(Build.ArtifactStagingDirectory)/ClassifiedAds.WebMVC
     - task: DotNetCoreCLI@2

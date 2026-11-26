@@ -1,0 +1,39 @@
+name: .NET Build - UI Blazor
+
+on:
+  push:
+    paths:
+      - 'src/UIs/blazor/**'
+      - 'src/Monolith/**'
+      - '.github/workflows/.net-build-ui-blazor.yml'
+  pull_request:
+    paths:
+      - 'src/UIs/blazor/**'
+      - 'src/Monolith/**'
+      - '.github/workflows/.net-build-ui-blazor.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [ClassifiedAds.BlazorServerSide, ClassifiedAds.BlazorWebAssembly]
+    defaults:
+      run:
+        working-directory: src/UIs/blazor
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: src/UIs/blazor/global.json
+      - name: Publish
+        run: dotnet publish "${{ matrix.project }}/${{ matrix.project }}.csproj" --configuration Release --output "${{ runner.temp }}/publish"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.project }}
+          path: ${{ runner.temp }}/publish
+          if-no-files-found: error

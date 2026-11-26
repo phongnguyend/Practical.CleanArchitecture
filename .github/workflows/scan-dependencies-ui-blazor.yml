@@ -1,0 +1,73 @@
+name: Scan Dependencies - UI Blazor
+
+on:
+  push:
+    paths: 
+      - 'src/Monolith/**'
+      - 'src/UIs/blazor/**'
+      - '.github/workflows/scan-dependencies-ui-blazor.yml'
+  pull_request:
+    paths: 
+      - 'src/Monolith/**'
+      - 'src/UIs/blazor/**'
+      - '.github/workflows/scan-dependencies-ui-blazor.yml'
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    defaults: 
+      run:
+        working-directory: src/UIs/blazor
+        
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v6
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 10.0.100
+
+    - name: dotnet restore
+      run: dotnet restore
+
+    - name: dotnet list package --vulnerable
+      run: dotnet list package --vulnerable
+
+    # Setup .NET 8 for CheckNugetPackages tool
+    # - name: Setup .NET 8
+    #   uses: actions/setup-dotnet@v5
+    #   with:
+    #     dotnet-version: 8.0.x
+
+    # Install CheckNugetPackages tool
+    - name: Install CheckNugetPackages tool
+      run: dotnet tool install --global CheckNugetPackages.DotNetCliTool --version 3.11.0
+
+    # Run CheckNugetPackages
+    - name: Run CheckNugetPackages
+      id: check-nuget
+      run: |
+        export PATH="$PATH:$HOME/.dotnet/tools"
+        CheckNugetPackages ./ --report-type csv html md --report-directory "$RUNNER_TEMP/nuget-packages"
+
+    - name: Display NuGet packages report
+      if: ${{ !cancelled() && steps.check-nuget.outcome != 'skipped' }}
+      run: |
+        report="$RUNNER_TEMP/nuget-packages/packages.md"
+        if [ -f "$report" ]; then
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+        else
+          echo "No Markdown report was generated. Check the CheckNugetPackages step logs." >> "$GITHUB_STEP_SUMMARY"
+        fi
+
+    # Keep all report formats available as a workflow artifact
+    - name: Upload NuGet packages report
+      if: ${{ !cancelled() && steps.check-nuget.outcome != 'skipped' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: blazor-packages
+        path: ${{ runner.temp }}/nuget-packages

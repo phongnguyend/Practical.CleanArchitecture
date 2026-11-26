@@ -125,25 +125,6 @@ services:
           Storage__Amazon__SecretAccessKey: ${Storage__Amazon__SecretAccessKey}
           Storage__Amazon__BucketName: ${Storage__Amazon__BucketName}
           Storage__Amazon__RegionEndpoint: ${Storage__Amazon__RegionEndpoint}
-    blazor:
-        image: classifiedads.blazor
-        build:
-          context: .
-          dockerfile: ./ClassifiedAds.BlazorServerSide/Dockerfile
-        ports:
-            - "9008:8080"
-        depends_on:
-          - identityserver
-          - webapi
-        environment:
-          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
-          OpenIdConnect__Authority: "http://host.docker.internal:9000"
-          OpenIdConnect__RequireHttpsMetadata: "false"
-          ResourceServer__Endpoint: ${ResourceServer__Endpoint}
-          ResourceServer__PublicEndpoint: ${ResourceServer__PublicEndpoint}
-          CookiePolicyOptions__IsEnabled: "true"
-          CookiePolicyOptions__MinimumSameSitePolicy: "Lax"
-          CookiePolicyOptions__Secure: "None" 
     background:
         image: classifiedads.background
         build:

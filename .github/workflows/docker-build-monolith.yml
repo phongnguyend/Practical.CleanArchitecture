@@ -2,9 +2,6 @@ name: Docker Build - Monolith
 
 on:
   push:
-    branches:
-      - master
-      - build
     paths:
       - 'src/Monolith/**'
       - '.github/workflows/docker-build-monolith.yml'
@@ -26,8 +23,10 @@ jobs:
           cd src/Monolith
           docker compose build
       - name: Log into Registry
+        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/build')
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Tag and Push Images
+        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/build')
         run: |
           REPO_NAME=ghcr.io/${{ github.repository }}
           
@@ -48,13 +47,11 @@ jobs:
           docker tag classifiedads.background $REPO_NAME/classifiedads.background:$VERSION
           docker tag classifiedads.migrator $REPO_NAME/classifiedads.migrator:$VERSION
           docker tag classifiedads.webapi $REPO_NAME/classifiedads.webapi:$VERSION
-          docker tag classifiedads.blazor $REPO_NAME/classifiedads.blazor:$VERSION
           docker tag classifiedads.identityserver $REPO_NAME/classifiedads.identityserver:$VERSION
           docker tag classifiedads.webmvc $REPO_NAME/classifiedads.webmvc:$VERSION
           
           docker push $REPO_NAME/classifiedads.background:$VERSION
           docker push $REPO_NAME/classifiedads.migrator:$VERSION
           docker push $REPO_NAME/classifiedads.webapi:$VERSION
-          docker push $REPO_NAME/classifiedads.blazor:$VERSION
           docker push $REPO_NAME/classifiedads.identityserver:$VERSION
           docker push $REPO_NAME/classifiedads.webmvc:$VERSION

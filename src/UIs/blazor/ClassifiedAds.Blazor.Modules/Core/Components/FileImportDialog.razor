@@ -1,0 +1,123 @@
+@using System
+@using System.IO
+@using System.Threading.Tasks
+
+<Dialog IsOpen="IsOpen" Title="@Title" OnClose="Close">
+    <DialogHeader Title="@Title" OnClose="Close" />
+    <DialogBody>
+        <form class="import-form" @onsubmit="Import" @onsubmit:preventDefault>
+            <p class="import-description">Choose @(Extension == ".xlsx" ? "an Excel workbook" : "a CSV file") to import.</p>
+            <div class="import-field">
+                <label class="import-label" for="@InputId">File</label>
+                <div class="file-picker @(string.IsNullOrEmpty(Error) ? null : "file-picker-invalid") @(Busy ? "file-picker-busy" : null)">
+                    <InputFile id="@InputId" OnChange="SelectFile" accept="@Extension"
+                               class="file-picker-input"
+                               aria-invalid="@(!string.IsNullOrEmpty(Error) ? "true" : "false")"
+                               aria-describedby="@(InputId + "-help " + InputId + "-error")" disabled="@Busy" />
+                    <span class="file-picker-icon"><ActionIcon Name="@(File == null ? "data-transfer-upload" : "document")" /></span>
+                    <span class="file-picker-details">
+                        <span class="file-picker-name">@(File?.Name ?? "Choose a file")</span>
+                        <span class="file-picker-hint">@(File == null ? "Browse files on your device" : $"{Math.Max(1, (long)Math.Ceiling(File.Size / 1024d))} KB selected")</span>
+                    </span>
+                    <span class="file-picker-browse">@(File == null ? "Browse" : "Change")</span>
+                </div>
+                <small id="@(InputId + "-help")" class="import-hint">@Extension.ToUpperInvariant().TrimStart('.') files only. Maximum size: 10 MB.</small>
+                <div id="@(InputId + "-error")">
+                    @if (!string.IsNullOrEmpty(Error))
+                    {
+                        <p class="import-error" role="alert">@Error</p>
+                    }
+                </div>
+            </div>
+            <div class="import-actions">
+                <button type="button" class="btn import-cancel" disabled="@Busy" @onclick="Close">Cancel</button>
+                <button type="submit" class="btn btn-primary import-submit" disabled="@Busy"><ActionIcon Name="data-transfer-upload" /> @(Busy ? "Importing..." : "Import")</button>
+            </div>
+        </form>
+    </DialogBody>
+</Dialog>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string Extension { get; set; }
+
+    [Parameter]
+    public Func<IBrowserFile, Task<int>> Upload { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnImported { get; set; }
+
+    private readonly string InputId = $"import-{Guid.NewGuid():N}";
+    private IBrowserFile File;
+    private bool IsOpen;
+    private bool Busy;
+    private string Error;
+
+    public void Show()
+    {
+        File = null;
+        Error = null;
+        IsOpen = true;
+        StateHasChanged();
+    }
+
+    private void Close()
+    {
+        if (Busy)
+        {
+            return;
+        }
+
+        IsOpen = false;
+        File = null;
+        Error = null;
+    }
+
+    private void SelectFile(InputFileChangeEventArgs args)
+    {
+        File = args.File;
+        Error = null;
+    }
+
+    private async Task Import()
+    {
+        if (File == null)
+        {
+            Error = "Please select a file.";
+            return;
+        }
+
+        if (!string.Equals(Path.GetExtension(File.Name), Extension, StringComparison.OrdinalIgnoreCase))
+        {
+            Error = $"Please select a {Extension} file.";
+            return;
+        }
+
+        if (File.Size == 0 || File.Size > 10 * 1024 * 1024)
+        {
+            Error = "Please select a nonempty file no larger than 10 MB.";
+            return;
+        }
+
+        Busy = true;
+        Error = null;
+        try
+        {
+            var count = await Upload(File);
+            await OnImported.InvokeAsync(count);
+            IsOpen = false;
+            File = null;
+        }
+        catch (Exception)
+        {
+            Error = "Import failed. Check the file format and connection, then try again.";
+        }
+        finally
+        {
+            Busy = false;
+        }
+    }
+}

@@ -21,9 +21,6 @@
     <Project Path="ClassifiedAds.WebAPI/ClassifiedAds.WebAPI.csproj" />
   </Folder>
   <Folder Name="/Presentations/UIs/">
-    <Project Path="ClassifiedAds.Blazor.Modules/ClassifiedAds.Blazor.Modules.csproj" />
-    <Project Path="ClassifiedAds.BlazorServerSide/ClassifiedAds.BlazorServerSide.csproj" />
-    <Project Path="ClassifiedAds.BlazorWebAssembly/ClassifiedAds.BlazorWebAssembly.csproj" />
     <Project Path="ClassifiedAds.WebMVC/ClassifiedAds.WebMVC.csproj" />
   </Folder>
   <Folder Name="/Tests/">

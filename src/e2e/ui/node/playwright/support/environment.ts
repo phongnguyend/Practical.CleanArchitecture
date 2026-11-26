@@ -26,7 +26,7 @@ export const apps = definitions.filter(app => selected.includes(app.name)).map(a
       throw new Error('Blazor requires its registered origin; forwarding is not supported.');
     }
     const project = app.name === 'blazor-server' ? 'ClassifiedAds.BlazorServerSide' : 'ClassifiedAds.BlazorWebAssembly';
-    return { ...app, serverURL, directory: '../Monolith/' + project,
+    return { ...app, serverURL, directory: 'blazor/' + project,
       devServerURL: serverURL, authMode: 'blazor', notificationHub: false,
       csrfCookie: undefined, csrfHeader: undefined,
       command: 'dotnet run --no-build --launch-profile https' };
