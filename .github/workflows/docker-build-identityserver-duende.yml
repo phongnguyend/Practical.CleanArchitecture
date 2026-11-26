@@ -1,0 +1,57 @@
+name: Docker Build - Identity Server - Duende
+
+on:
+  push:
+    paths:
+      - 'src/IdentityServers/Duende/**'
+      - '.github/workflows/docker-build-identityserver-duende.yml'
+  pull_request:
+    paths:
+      - 'src/IdentityServers/Duende/**'
+      - '.github/workflows/docker-build-identityserver-duende.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project: ClassifiedAds.IdentityServer
+            image: classifiedads.identityserver.duende
+          - project: ClassifiedAds.Migrator
+            image: classifiedads.identityserver.duende.migrator
+    defaults:
+      run:
+        working-directory: src/IdentityServers/Duende
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build image
+        run: docker build --file "${{ matrix.project }}/Dockerfile" --tag "${{ matrix.image }}" .
+      - name: Publish image
+        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/build')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_ACTOR: ${{ github.actor }}
+          REPOSITORY: ${{ github.repository }}
+          REF_NAME: ${{ github.ref_name }}
+          COMMIT_SHA: ${{ github.sha }}
+          IMAGE: ${{ matrix.image }}
+        run: |
+          echo "$GH_TOKEN" | docker login ghcr.io -u "$GH_ACTOR" --password-stdin
+          repository="ghcr.io/${REPOSITORY,,}/$IMAGE"
+          version="$REF_NAME"
+          if [ "$REF_NAME" = master ]; then
+            version=latest
+          fi
+          docker tag "$IMAGE" "$repository:$COMMIT_SHA"
+          docker tag "$IMAGE" "$repository:$version"
+          docker push "$repository:$COMMIT_SHA"
+          docker push "$repository:$version"

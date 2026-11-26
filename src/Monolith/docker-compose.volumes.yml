@@ -3,9 +3,6 @@ services:
     migrator:
         volumes:
             - D:\\ClassifiedAds.Monolith\\Logs\\Migrator:/ClassifiedAds.Monolith/logs
-    identityserver:
-        volumes:
-            - D:\\ClassifiedAds.Monolith\\Logs\\IdentityServer:/ClassifiedAds.IdentityServer/logs
     webapi:
         volumes:
             - D:\\ClassifiedAds.Monolith\\Logs\\WebAPI:/ClassifiedAds.Monolith/logs

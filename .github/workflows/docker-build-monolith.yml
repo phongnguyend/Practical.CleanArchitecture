@@ -47,11 +47,9 @@ jobs:
           docker tag classifiedads.background $REPO_NAME/classifiedads.background:$VERSION
           docker tag classifiedads.migrator $REPO_NAME/classifiedads.migrator:$VERSION
           docker tag classifiedads.webapi $REPO_NAME/classifiedads.webapi:$VERSION
-          docker tag classifiedads.identityserver $REPO_NAME/classifiedads.identityserver:$VERSION
           docker tag classifiedads.webmvc $REPO_NAME/classifiedads.webmvc:$VERSION
           
           docker push $REPO_NAME/classifiedads.background:$VERSION
           docker push $REPO_NAME/classifiedads.migrator:$VERSION
           docker push $REPO_NAME/classifiedads.webapi:$VERSION
-          docker push $REPO_NAME/classifiedads.identityserver:$VERSION
           docker push $REPO_NAME/classifiedads.webmvc:$VERSION

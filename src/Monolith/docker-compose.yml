@@ -50,23 +50,6 @@ services:
           ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
           CheckDependency__Enabled: "true"
           CheckDependency__Host: "db:1433"
-    identityserver:
-        image: classifiedads.identityserver
-        build:
-          context: ../IdentityServers/OpenIddict
-          dockerfile: ./ClassifiedAds.IdentityServer/Dockerfile
-        ports:
-            - "9000:80"
-        depends_on:
-          - db
-          - migrator
-        environment:
-          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
-          ConnectionStrings__ClassifiedAds: ${ConnectionStrings__ClassifiedAds}
-          ConnectionStrings__IdentityServer: ${ConnectionStrings__IdentityServer_OpenIddict}
-          CookiePolicyOptions__IsEnabled: "true"
-          CookiePolicyOptions__MinimumSameSitePolicy: "Lax"
-          CookiePolicyOptions__Secure: "None"
     webapi:
         image: classifiedads.webapi
         build:
@@ -102,7 +85,6 @@ services:
           - migrator
           - rabbitmq
           - kafka
-          - identityserver
           - webapi
         environment:
           ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}

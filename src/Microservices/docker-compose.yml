@@ -79,21 +79,6 @@ services:
           Services__AuditLog__Grpc: ${Services__AuditLog__Grpc}
           Services__Identity__Grpc: ${Services__Identity__Grpc}
           Services__Notification__Grpc: ${Services__Notification__Grpc}
-    identity-authserver:
-        image: classifiedads.services.identity.authserver
-        build:
-          context: ../IdentityServers/OpenIddict
-          dockerfile: ./ClassifiedAds.IdentityServer/Dockerfile
-        ports:
-          - "9000:80"
-        depends_on:
-          - db
-        environment:
-          ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
-          ConnectionStrings__ClassifiedAds: "Server=db;Database=ClassifiedAds.Microservices.Identity;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False"
-          CookiePolicyOptions__IsEnabled: "true"
-          CookiePolicyOptions__MinimumSameSitePolicy: "Lax"
-          CookiePolicyOptions__Secure: "None"
     identity-grpc:
         image: classifiedads.services.identity.grpc
         build:

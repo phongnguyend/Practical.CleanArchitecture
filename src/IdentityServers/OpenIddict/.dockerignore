@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.git/
+**/node_modules/
+**/TestResults/
+**/publish/
+**/out/
+**/logs/
+**/.env*

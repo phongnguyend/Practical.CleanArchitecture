@@ -49,7 +49,6 @@ jobs:
           docker tag classifiedads.services.auditlog.grpc $REPO_NAME/classifiedads.services.auditlog.grpc:$VERSION
           docker tag classifiedads.services.configuration.api $REPO_NAME/classifiedads.services.configuration.api:$VERSION
           docker tag classifiedads.services.identity.api $REPO_NAME/classifiedads.services.identity.api:$VERSION
-          docker tag classifiedads.services.identity.authserver $REPO_NAME/classifiedads.services.identity.authserver:$VERSION
           docker tag classifiedads.services.identity.grpc $REPO_NAME/classifiedads.services.identity.grpc:$VERSION
           docker tag classifiedads.services.notification.api $REPO_NAME/classifiedads.services.notification.api:$VERSION
           docker tag classifiedads.services.notification.background $REPO_NAME/classifiedads.services.notification.background:$VERSION
@@ -62,7 +61,6 @@ jobs:
           docker push $REPO_NAME/classifiedads.services.auditlog.grpc:$VERSION
           docker push $REPO_NAME/classifiedads.services.configuration.api:$VERSION
           docker push $REPO_NAME/classifiedads.services.identity.api:$VERSION
-          docker push $REPO_NAME/classifiedads.services.identity.authserver:$VERSION
           docker push $REPO_NAME/classifiedads.services.identity.grpc:$VERSION
           docker push $REPO_NAME/classifiedads.services.notification.api:$VERSION
           docker push $REPO_NAME/classifiedads.services.notification.background:$VERSION

@@ -1,0 +1,40 @@
+name: classifiedads-identity-openiddict
+services:
+  migrator:
+    image: ${IDENTITYSERVER_MIGRATOR_IMAGE:-ghcr.io/phongnguyend/practical.cleanarchitecture/classifiedads.identityserver.openiddict.migrator:latest}
+    build:
+      context: .
+      dockerfile: ClassifiedAds.Migrator/Dockerfile
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      DOTNET_ENVIRONMENT: Development
+      ConnectionStrings__IdentityServer: "${IDENTITYSERVER_CONNECTION_STRING:-Server=host.docker.internal;Database=ClassifiedAds.IdentityServer.OpenIddict;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False}"
+      CheckDependency__Enabled: "true"
+      CheckDependency__Host: ${IDENTITYSERVER_DB_HOST:-host.docker.internal:1433}
+  identityserver:
+    image: ${IDENTITYSERVER_IMAGE:-ghcr.io/phongnguyend/practical.cleanarchitecture/classifiedads.identityserver.openiddict:latest}
+    build:
+      context: .
+      dockerfile: ClassifiedAds.IdentityServer/Dockerfile
+    ports:
+      - "${IDENTITYSERVER_PORT:-9000}:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ConnectionStrings__ClassifiedAds: "${CLASSIFIEDADS_CONNECTION_STRING:-Server=host.docker.internal;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False}"
+      ConnectionStrings__IdentityServer: "${IDENTITYSERVER_CONNECTION_STRING:-Server=host.docker.internal;Database=ClassifiedAds.IdentityServer.OpenIddict;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true;Encrypt=False}"
+      CookiePolicyOptions__IsEnabled: "true"
+      CookiePolicyOptions__MinimumSameSitePolicy: Lax
+      CookiePolicyOptions__Secure: None
+    volumes:
+      - identity-logs:/ClassifiedAds.IdentityServer/logs
+      - identity-keys:/root/.aspnet/DataProtection-Keys
+volumes:
+  identity-logs:
+  identity-keys:

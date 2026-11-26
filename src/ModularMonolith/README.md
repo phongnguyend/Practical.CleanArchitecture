@@ -1,4 +1,6 @@
 # Solution Structure
+
+Identity Server runs in a [separate Docker Compose stack](../IdentityServers/README.md). Start the selected provider separately when running this application with Docker.
 ![alt text](/docs/imgs/code-solution-structure-modular-monolith.png)
 
 # Add & Run Database Migration
