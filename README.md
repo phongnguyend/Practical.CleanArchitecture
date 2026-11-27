@@ -744,24 +744,13 @@
     }
   }
   ```
-- Download [Chrome Driver](https://chromedriver.chromium.org/downloads)
+- UI end-to-end tests:
+  - [TypeScript Playwright](src/e2e/ui/node/playwright/README.md)
+  - [.NET Playwright and Selenium](src/e2e/ui/dotnet/README.md)
 
-  ![alt text](/docs/imgs/chrome_driver_path.png)
+  Both .NET projects cover the shared UI features and support all frontend applications.
+  See the linked guide for credentials, headed runs, application selection, and opt-in write tests.
 
-- Update [Selenium/appsettings.json](/src/e2e/ui/dotnet/Selenium/appsettings.json)
-  ```js
-  {
-    "ChromeDriverPath": "D:\\Downloads\\chromedriver_win32\\72",
-    "Login": {
-      "Url": "https://localhost:44364/Home/Login",
-      "UserName": "phong@gmail.com",
-      "Password": "v*7Un8b4rcN@<-RN"
-    }
-  }
-  ```
-  
-  ![alt text](/docs/imgs/run_e2e_tests.gif)
-  
 ## Application URLs:
 
 https://github.com/phongnguyend/Practical.CleanArchitecture/wiki/Application-URLs
