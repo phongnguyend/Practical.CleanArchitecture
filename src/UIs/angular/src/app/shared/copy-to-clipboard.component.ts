@@ -17,19 +17,17 @@ export class CopyToClipboardComponent implements OnDestroy {
   copyStatus: string = "";
   private timeoutId: any = null;
 
-  handleCopy(): void {
-    navigator.clipboard
-      .writeText(this.text)
-      .then(() => {
-        this.copyStatus = "✅ copied";
-      })
-      .catch(() => {
-        this.copyStatus = "❌ cannot copy";
-      });
-
+  async handleCopy(): Promise<void> {
+    clearTimeout(this.timeoutId);
+    try {
+      await navigator.clipboard.writeText(this.text);
+      this.copyStatus = "Copied to clipboard";
+    } catch {
+      this.copyStatus = "Unable to copy";
+    }
     this.timeoutId = setTimeout(() => {
       this.copyStatus = "";
-    }, 1000);
+    }, 2000);
   }
 
   ngOnDestroy(): void {

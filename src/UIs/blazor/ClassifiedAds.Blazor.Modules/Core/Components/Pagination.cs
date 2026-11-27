@@ -31,6 +31,11 @@ public partial class Pagination
 
     protected async Task HandleClick(int page)
     {
+        if (page < 1 || page > TotalPages || page == CurrentPage)
+        {
+            return;
+        }
+
         await PageChanged.InvokeAsync(page);
     }
 

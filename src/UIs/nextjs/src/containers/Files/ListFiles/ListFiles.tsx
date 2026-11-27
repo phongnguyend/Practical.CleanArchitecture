@@ -1,5 +1,6 @@
 "use client";
 
+import AuditAction from "../../../components/AuditAction/AuditAction";
 import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import Modal from "../../../components/Modal/Modal";
@@ -178,7 +179,7 @@ const ListFiles = () => {
     <tr key={auditLog.id}>
       <td>{formatDateTime(auditLog.createdDateTime)}</td>
       <td>{auditLog.userName}</td>
-      <td>{auditLog.action}</td>
+      <td><AuditAction action={auditLog.action} /></td>
       <td style={{ color: auditLog.highLight.name ? "red" : "" }}>
         {auditLog.data.name}
       </td>

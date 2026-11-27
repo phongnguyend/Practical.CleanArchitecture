@@ -25,7 +25,7 @@
                         <tr>
                             <td>@log.CreatedDateTime.</td>
                             <td>@log.UserName</td>
-                            <td>@log.Action</td>
+                            <td><AuditAction Action="@log.Action" /></td>
                             <td style="color:@(log.HighLight["code"] ? "red" : "")">
                                 @log.Data.Code
                             </td>

@@ -1,3 +1,4 @@
+import { AuditActionComponent } from "../../shared/audit-action.component";
 import { ModalRef, ModalModule, ModalService } from "../../shared/modal/modal";
 import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -20,6 +21,7 @@ import { ActionIconComponent } from "../../shared/action-icon.component";
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
+    AuditActionComponent,
     CommonModule,
     FormsModule,
     RouterModule,

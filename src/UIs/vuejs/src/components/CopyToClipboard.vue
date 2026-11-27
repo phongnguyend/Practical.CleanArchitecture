@@ -1,15 +1,10 @@
 <template>
-  <span v-if="copyStatus" class="copy-icon">{{ copyStatus }}</span>
-  <Clipboard
-    v-else
-    :class="className"
-    :title="title"
-    @click="handleCopy"
-    role="button"
-    tabindex="0"
-    @keydown.enter="handleCopy"
-    :size="16"
-  />
+  <span class="app-copy-control">
+    <button type="button" :class="['app-copy-trigger', className]" :title="title" :aria-label="title" @click="handleCopy">
+      <Clipboard :size="18" aria-hidden="true" />
+    </button>
+    <span class="app-copy-feedback" role="status">{{ copyStatus }}</span>
+  </span>
 </template>
 
 <script setup lang="ts">
@@ -30,19 +25,19 @@ const props = withDefaults(defineProps<Props>(), {
 const copyStatus = ref('')
 let timeoutId: ReturnType<typeof setTimeout> | null = null
 
-const handleCopy = () => {
-  navigator.clipboard
-    .writeText(props.text)
-    .then(() => {
-      copyStatus.value = '✅ copied'
-    })
-    .catch(() => {
-      copyStatus.value = '❌ cannot copy'
-    })
-
+const handleCopy = async () => {
+  if (timeoutId) {
+    clearTimeout(timeoutId)
+  }
+  try {
+    await navigator.clipboard.writeText(props.text)
+    copyStatus.value = 'Copied to clipboard'
+  } catch {
+    copyStatus.value = 'Unable to copy'
+  }
   timeoutId = setTimeout(() => {
     copyStatus.value = ''
-  }, 1000)
+  }, 2000)
 }
 
 // Cleanup timeout on component unmount

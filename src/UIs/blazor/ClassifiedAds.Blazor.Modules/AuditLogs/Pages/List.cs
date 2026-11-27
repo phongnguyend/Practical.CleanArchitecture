@@ -21,6 +21,16 @@ public partial class List
 
     public long TotalItems { get; set; }
 
+    private string SelectedJson { get; set; } = string.Empty;
+
+    private bool IsJsonOpen { get; set; }
+
+    private void ViewJson(string json)
+    {
+        SelectedJson = json;
+        IsJsonOpen = true;
+    }
+
     protected override async Task OnInitializedAsync()
     {
         var auditLogs = await AuditLogService.GetAuditLogsAsync(1, PageSize);

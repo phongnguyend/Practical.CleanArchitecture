@@ -1,3 +1,4 @@
+import { AuditActionComponent } from "../../shared/audit-action.component";
 import { ModalModule, ModalService } from "../../shared/modal/modal";
 import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -16,7 +17,7 @@ import { ActionIconComponent } from "../../shared/action-icon.component";
   styleUrls: ["./product-detail.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CommonModule, RouterModule, StarComponent, ModalModule, NgIcon, ActionIconComponent],
+  imports: [AuditActionComponent, CommonModule, RouterModule, StarComponent, ModalModule, NgIcon, ActionIconComponent],
 })
 export class ProductDetailComponent implements OnInit {
   pageTitle = "Product Detail";

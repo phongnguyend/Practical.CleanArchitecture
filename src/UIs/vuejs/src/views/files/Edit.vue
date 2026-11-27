@@ -105,7 +105,7 @@
             <tr v-for="auditLog in auditLogs" :key="auditLog.id">
               <td>{{ formatedDateTime(auditLog.createdDateTime) }}</td>
               <td>{{ auditLog.userName }}</td>
-              <td>{{ auditLog.action }}</td>
+              <td><AuditAction :action="auditLog.action" /></td>
               <td :style="{ color: auditLog.highLight.name ? 'red' : '' }">
                 {{ auditLog.data.name }}
               </td>
@@ -127,6 +127,8 @@
 </template>
 
 <script setup lang="ts">
+import AuditAction from '../../components/AuditAction.vue'
+
 import AppModal from "../../components/Modal/Modal.vue"
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, computed, onMounted } from 'vue'

@@ -1,9 +1,9 @@
 <ul class="pagination">
-  <li class="page-item" [class.disabled]="currentPage == 1">
-    <a class="page-link" (click)="selectPage(1)"><app-action-icon action="first" />First</a>
+  <li class="page-item" [class.disabled]="currentPage <= 1">
+    <button type="button" class="page-link" [disabled]="currentPage <= 1" (click)="selectPage(1)" aria-label="First page" title="First page"><app-action-icon action="first" /><span class="page-nav-label">First</span></button>
   </li>
-  <li class="page-item" [class.disabled]="currentPage == 1">
-    <a class="page-link" (click)="selectPage(currentPage - 1)"><app-action-icon action="previous" />Previous</a>
+  <li class="page-item" [class.disabled]="currentPage <= 1">
+    <button type="button" class="page-link" [disabled]="currentPage <= 1" (click)="selectPage(currentPage - 1)" aria-label="Previous page" title="Previous page"><app-action-icon action="previous" /><span class="page-nav-label">Previous</span></button>
   </li>
 
   @for (pageNumber of pageNumbers; track pageNumber) {
@@ -11,14 +11,14 @@
       class="page-item"
       [class.active]="currentPage == pageNumber"
       >
-      <a class="page-link" (click)="selectPage(pageNumber)">{{ pageNumber }}</a>
+      <button type="button" class="page-link" [attr.aria-current]="currentPage == pageNumber ? 'page' : null" (click)="selectPage(pageNumber)">{{ pageNumber }}</button>
     </li>
   }
 
-  <li class="page-item" [class.disabled]="currentPage == totalPages">
-    <a class="page-link" (click)="selectPage(currentPage + 1)"><app-action-icon action="next" />Next</a>
+  <li class="page-item" [class.disabled]="currentPage >= totalPages">
+    <button type="button" class="page-link" [disabled]="currentPage >= totalPages" (click)="selectPage(currentPage + 1)" aria-label="Next page" title="Next page"><app-action-icon action="next" /><span class="page-nav-label">Next</span></button>
   </li>
-  <li class="page-item" [class.disabled]="currentPage == totalPages">
-    <a class="page-link" (click)="selectPage(totalPages)"><app-action-icon action="last" />Last</a>
+  <li class="page-item" [class.disabled]="currentPage >= totalPages">
+    <button type="button" class="page-link" [disabled]="currentPage >= totalPages" (click)="selectPage(totalPages)" aria-label="Last page" title="Last page"><app-action-icon action="last" /><span class="page-nav-label">Last</span></button>
   </li>
 </ul>

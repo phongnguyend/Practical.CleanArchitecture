@@ -3,18 +3,18 @@
     <li
       class="page-item"
       :class="{
-        disabled: currentPage === 1,
+        disabled: currentPage <= 1,
       }"
     >
-      <a class="page-link" @click="selectPage(1)"><ActionIcon action="first" />First</a>
+      <button type="button" class="page-link" :disabled="currentPage <= 1" @click="selectPage(1)" aria-label="First page" title="First page"><ActionIcon action="first" /><span class="page-nav-label">First</span></button>
     </li>
     <li
       class="page-item"
       :class="{
-        disabled: currentPage === 1,
+        disabled: currentPage <= 1,
       }"
     >
-      <a class="page-link" @click="selectPage(currentPage - 1)"><ActionIcon action="previous" />Previous</a>
+      <button type="button" class="page-link" :disabled="currentPage <= 1" @click="selectPage(currentPage - 1)" aria-label="Previous page" title="Previous page"><ActionIcon action="previous" /><span class="page-nav-label">Previous</span></button>
     </li>
 
     <li
@@ -25,24 +25,24 @@
         active: currentPage === pageNumber,
       }"
     >
-      <a class="page-link" @click="selectPage(pageNumber)">{{ pageNumber }}</a>
+      <button type="button" class="page-link" :aria-current="currentPage === pageNumber ? 'page' : undefined" @click="selectPage(pageNumber)">{{ pageNumber }}</button>
     </li>
 
     <li
       class="page-item"
       :class="{
-        disabled: currentPage === totalPages,
+        disabled: currentPage >= totalPages,
       }"
     >
-      <a class="page-link" @click="selectPage(currentPage + 1)"><ActionIcon action="next" />Next</a>
+      <button type="button" class="page-link" :disabled="currentPage >= totalPages" @click="selectPage(currentPage + 1)" aria-label="Next page" title="Next page"><ActionIcon action="next" /><span class="page-nav-label">Next</span></button>
     </li>
     <li
       class="page-item"
       :class="{
-        disabled: currentPage === totalPages,
+        disabled: currentPage >= totalPages,
       }"
     >
-      <a class="page-link" @click="selectPage(totalPages)"><ActionIcon action="last" />Last</a>
+      <button type="button" class="page-link" :disabled="currentPage >= totalPages" @click="selectPage(totalPages)" aria-label="Last page" title="Last page"><ActionIcon action="last" /><span class="page-nav-label">Last</span></button>
     </li>
   </ul>
 </template>

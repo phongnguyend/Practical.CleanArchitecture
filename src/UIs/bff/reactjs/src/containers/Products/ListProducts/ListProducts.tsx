@@ -1,3 +1,4 @@
+import AuditAction from "../../../components/AuditAction/AuditAction";
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
@@ -199,7 +200,7 @@ const ListProducts = (props: any) => {
     <tr key={auditLog.id}>
       <td>{formatDateTime(auditLog.createdDateTime)}</td>
       <td>{auditLog.userName}</td>
-      <td>{auditLog.action}</td>
+      <td><AuditAction action={auditLog.action} /></td>
       <td style={{ color: auditLog.highLight.code ? "red" : "" }}>{auditLog.data.code}</td>
       <td style={{ color: auditLog.highLight.name ? "red" : "" }}>{auditLog.data.name}</td>
       <td style={{ color: auditLog.highLight.description ? "red" : "" }}>

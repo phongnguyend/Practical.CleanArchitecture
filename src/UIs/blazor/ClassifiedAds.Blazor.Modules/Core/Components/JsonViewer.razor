@@ -1,0 +1,66 @@
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+<Dialog IsOpen="IsOpen" Title="JSON Data" Size="lg" OnClose="Close">
+    <DialogHeader Title="JSON Data" OnClose="Close" />
+    <DialogBody>
+        <div @ref="Host"></div>
+    </DialogBody>
+    <DialogFooter>
+        <button type="button" class="btn btn-secondary" @onclick="Close"><ActionIcon Name="x" />Close</button>
+    </DialogFooter>
+</Dialog>
+
+@code {
+    [Parameter]
+    public string JsonData { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsOpenChanged { get; set; }
+
+    private readonly string Id = System.Guid.NewGuid().ToString("N");
+    private ElementReference Host;
+    private IJSObjectReference Module;
+    private bool Mounted;
+
+    private System.Threading.Tasks.Task Close()
+    {
+        return IsOpenChanged.InvokeAsync(false);
+    }
+
+    protected override async System.Threading.Tasks.Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (IsOpen && !Mounted)
+        {
+            Module ??= await JS.InvokeAsync<IJSObjectReference>("import", "./_content/ClassifiedAds.Blazor.Modules/scripts/jsonViewer.js");
+            await Module.InvokeVoidAsync("mount", Id, Host, JsonData);
+            Mounted = true;
+        }
+        else if (!IsOpen && Mounted)
+        {
+            await Module.InvokeVoidAsync("dispose", Id);
+            Mounted = false;
+        }
+    }
+
+    public async System.Threading.Tasks.ValueTask DisposeAsync()
+    {
+        if (Module == null)
+        {
+            return;
+        }
+
+        try
+        {
+            await Module.InvokeVoidAsync("dispose", Id);
+            await Module.DisposeAsync();
+        }
+        catch (JSDisconnectedException)
+        {
+            // The server circuit has already closed.
+        }
+    }
+}

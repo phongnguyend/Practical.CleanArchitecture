@@ -24,7 +24,12 @@ From the repository root (PowerShell):
 
 # Run one feature across all apps:
 ./src/Mobiles/tests/Run-UiTests.ps1 -App All -Feature Users
+
+# PDF export across all five apps (requires the HTML-to-PDF service):
+./src/Mobiles/tests/Run-UiTests.ps1 -App All -Feature Products -TestMethod productPdfExportCreatesValidFileAndOpensShareSheet -IncludePdf
 ```
+
+The opt-in PDF export check opens Products, taps Export PDF, verifies Android's share sheet shows `Products.pdf`, and checks that a fresh export has a `%PDF-` signature and `%%EOF` marker. It dismisses sharing without sending the file. Install debuggable APKs so the test can inspect each app's export cache using `run-as`; no authentication data is read. PDF tests are skipped unless `-IncludePdf` is supplied.
 
 The script locates the standard Android Studio SDK/JDK, forwards the local API/Identity/Metro ports, builds only the small test host, and returns a nonzero exit code for failures. It does not rebuild the five apps: rebuild/install the affected app after native or Flutter/Kotlin changes. React Native JavaScript changes can use Metro.
 
@@ -60,13 +65,15 @@ The scenarios cover:
 - Dark/light appearance and authenticated session persistence across force-stop/relaunch. The theme test restores System afterward.
 - Optional CRUD: create a unique product, edit its description, verify update history, delete it and assert its disappearance. Cleanup only confirms deletion when the dialog names that exact fixture. Normal backend audit entries remain.
 
-Tests use visible text/content descriptions, accessibility text entry, bounded waits and fresh queries after recomposition. They intentionally fail when an app is signed out, missing, or unable to reach the API; these are not silently skipped. Only the opt-in CRUD case is skipped in the default run. Do not interact with the emulator while tests run.
+Tests use visible text/content descriptions, accessibility text entry, bounded waits and fresh queries after recomposition. They intentionally fail when an app is signed out, missing, or unable to reach the API; these are not silently skipped. The opt-in CRUD and PDF export cases are skipped in the default run. Do not interact with the emulator while tests run.
 
 Ordinary scenarios return home to dispose the previous feature's state. Cold launches remain explicit in session/theme persistence checks. This avoids downloading the React Native development bundle for every case. Empty accessibility text is normalized across frameworks; selectors are scoped to the target app so keyboard controls cannot be mistaken for app actions.
 
-There are 16 shared scenarios per app, plus a Kotlin compact-header check (81 across all five). The default run executes 76 scenarios and skips the five optional CRUD cases. The `Home` group runs 21 checks across all five apps. Biometric scenarios are opt-in and excluded from these totals. Form validation and discard tests do not save records or send account emails. The audit event detail check requires at least one audit event in the backend.
+The PDF export scenario adds five opt-in checks, one per app, to the existing feature suites. Both CRUD and PDF export require their corresponding opt-in switches. The `Home` group runs 21 checks across all five apps. Biometric scenarios are opt-in and excluded from these totals. Form validation and discard tests do not save records or send account emails. The audit event detail check requires at least one audit event in the backend.
 
 ## Results and limitations
+
+On 2026-11-27, the product PDF export check passed for all five apps on Medium_Phone (Android 17), with no skips or failures. Each app opened the share sheet and produced a fresh PDF with valid header and end-of-file markers. Local report: `artifacts/20261127-162642-All-Products/reports/debug/index.html`.
 
 On 2026-11-25, all 21 workspace/home checks passed across Flutter, Kotlin, React Native, MAUI and Capacitor on Medium_Phone (Android 17), with no skips or failures. This includes compact titles/theme controls, home action spacing, theme persistence and sign-out cancellation. Local report: `artifacts/20261125-112459-All-Home/reports/debug/index.html`. The separate biometric lifecycle scenario also passed for each of the five apps; iOS biometrics were not device-tested in this run.
 
@@ -76,7 +83,7 @@ MAUI was verified on Medium_Phone (Android 17) on 2026-11-21: the default suite 
 
 `tests/artifacts/<timestamp>-<app>-<feature>/` contains the Gradle log, JUnit XML, HTML report, screenshots and accessibility trees. Artifacts are ignored by Git and may contain development record data. Screenshots aid diagnosis; the suite asserts control geometry and theme brightness, not pixel-identical rendering across frameworks.
 
-This first suite covers Android, including Flutter and React Native on Android. It does not cover iOS, browser login itself, file pickers/transfers, import/export, password/email actions, notification delivery, or offline/expired-token handling. Never run optional CRUD against production data. Use disposable development backends/accounts.
+This suite covers Android, including Flutter and React Native on Android. It does not cover iOS, browser login itself, file pickers/uploads, imports or exports other than the opt-in product PDF export, password/email actions, notification delivery, or offline/expired-token handling. Never run optional CRUD against production data. Use disposable development backends/accounts.
 
 Advanced: the independent Gradle project is `tests/android`; it reuses the repository's Kotlin Gradle wrapper. Standard Android Studio/Gradle `connectedDebugAndroidTest` execution and JUnit XML consumption work without the PowerShell wrapper.
 

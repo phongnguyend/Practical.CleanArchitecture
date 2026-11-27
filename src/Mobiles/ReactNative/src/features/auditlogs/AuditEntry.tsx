@@ -26,9 +26,15 @@ export default function AuditEntry({ entry }: { entry: AuditLog }) {
     ? "Not provided"
     : typeof value === "object" ? JSON.stringify(value, null, 2) : String(value);
   const date = new Date(entry.createdDateTime);
+  const action = entry.action?.trim().toUpperCase().split(/[_\s-]/)[0];
+  const [color, backgroundColor] =
+    ["DELETE", "DELETED"].includes(action ?? "") ? ["#b91c1c", "#fee2e2"] :
+    ["UPDATE", "UPDATED"].includes(action ?? "") ? ["#9a3412", "#ffedd5"] :
+    ["ADD", "ADDED", "CREATE", "CREATED"].includes(action ?? "") ? ["#166534", "#dcfce7"] :
+    ["#334155", "#e2e8f0"];
   return (
     <View style={[s.card, { gap: 12, padding: 16 }]}>
-      <Text style={[s.text, { fontWeight: "700", alignSelf: "flex-start", borderWidth: 1, borderColor: s.muted.color, borderRadius: 6, paddingHorizontal: 10, paddingVertical: 4 }]}>{entry.action || "Event"}</Text>
+      <Text style={[s.text, { color, backgroundColor, fontWeight: "700", alignSelf: "flex-start", borderRadius: 6, paddingHorizontal: 10, paddingVertical: 4 }]}>{entry.action || "Event"}</Text>
       <Text style={s.muted}>{Number.isNaN(date.getTime()) ? entry.createdDateTime : date.toLocaleString()}</Text>
       <Text style={s.text}>By {entry.userName || "Unknown user"}</Text>
       <Button title={expanded ? "Hide event details" : "View event details"} icon="View"

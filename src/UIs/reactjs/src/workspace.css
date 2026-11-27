@@ -131,3 +131,24 @@ body .app-toast { background: var(--ui-surface); color: var(--ui-text); border-c
 .ui-shell main .nav-tabs .nav-link:hover { background: var(--ui-soft); color: var(--ui-text); }
 .ui-shell main .nav-tabs .nav-link.active:hover { background: var(--ui-accent-soft); color: var(--ui-accent); }
 @media (max-width: 640px) { .ui-shell main .nav-tabs .nav-link { font-size: .8125rem; padding: .5rem .6rem; } }
+
+/* Shared compact pagination and audit data actions. */
+.ui-shell .pagination { align-items: center; gap: .375rem; }
+.ui-shell .pagination .page-link { display: inline-flex; align-items: center; justify-content: center; gap: .375rem; height: 2.5rem; min-width: 2.5rem; margin: 0; white-space: nowrap; line-height: 1; font: inherit; font-size: .875rem; }
+.ui-shell .pagination .page-link svg, .ui-shell .pagination .page-link .action-icon { margin: 0; flex-shrink: 0; }
+.ui-shell .pagination .page-link:focus-visible { outline: 3px solid var(--ui-accent); outline-offset: 2px; }
+.ui-shell .pagination .page-link:disabled { cursor: not-allowed; }
+.app-json-trigger, .app-copy-trigger { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; width: 2.5rem; height: 2.5rem; padding: 0; border: 1px solid var(--ui-border); border-radius: .5rem; background: var(--ui-surface); color: var(--ui-text); cursor: pointer; vertical-align: middle; }
+.app-json-trigger:hover, .app-copy-trigger:hover { background: var(--ui-soft); border-color: var(--ui-accent); }
+.app-json-trigger:focus-visible, .app-copy-trigger:focus-visible { outline: 3px solid var(--ui-accent); outline-offset: 2px; }
+.app-copy-control { display: inline-flex; position: relative; }
+.app-copy-feedback { position: absolute; right: 0; bottom: calc(100% + .375rem); width: max-content; max-width: 14rem; padding: .35rem .6rem; border-radius: .375rem; background: var(--ui-text); color: var(--ui-surface); font-size: .75rem; z-index: 1; pointer-events: none; }
+.app-copy-feedback:empty { display: none; }
+.audit-data-actions { display: flex; justify-content: flex-end; margin-bottom: .625rem; }
+.audit-data-actions > div { display: flex; align-items: center; gap: .5rem !important; }
+.audit-data-preview { white-space: pre-wrap; overflow-wrap: anywhere; font: .8125rem/1.6 ui-monospace, SFMono-Regular, Consolas, monospace; }
+@media (max-width: 575.98px) {
+  .ui-shell .pagination { gap: .25rem; }
+  .ui-shell .pagination .page-link { min-width: 2rem; padding-inline: .4rem; }
+  .ui-shell .pagination .page-nav-label { display: none; }
+}

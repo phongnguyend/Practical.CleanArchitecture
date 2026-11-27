@@ -27,6 +27,24 @@ public static class AuditEntry
 
         var action = Ui.Text(Field("action", "Event"));
         action.FontAttributes = FontAttributes.Bold;
+        var actionType = Regex.Split(action.Text.Trim().ToUpperInvariant(), @"[_\s-]")[0];
+        var (foreground, background) = actionType switch
+        {
+            "DELETE" or "DELETED" => ("#b91c1c", "#fee2e2"),
+            "UPDATE" or "UPDATED" => ("#9a3412", "#ffedd5"),
+            "ADD" or "ADDED" or "CREATE" or "CREATED" => ("#166534", "#dcfce7"),
+            _ => ("#334155", "#e2e8f0"),
+        };
+        action.SetAppThemeColor(Label.TextColorProperty, Color.FromArgb(foreground), Color.FromArgb(foreground));
+        var actionBadge = new Border
+        {
+            Content = action,
+            BackgroundColor = Color.FromArgb(background),
+            StrokeThickness = 0,
+            StrokeShape = new Microsoft.Maui.Controls.Shapes.RoundRectangle { CornerRadius = 6 },
+            Padding = new Thickness(10, 4),
+            HorizontalOptions = LayoutOptions.Start,
+        };
         var details = Ui.Stack();
         details.Spacing = 12;
         details.IsVisible = false;
@@ -66,7 +84,7 @@ public static class AuditEntry
             SemanticProperties.SetDescription(toggle, toggle.Text);
             return Task.CompletedTask;
         });
-        var content = Ui.Stack(action, Ui.Text(timestamp), Ui.Text("By " + Field("userName", "Unknown user")), toggle, details);
+        var content = Ui.Stack(actionBadge, Ui.Text(timestamp), Ui.Text("By " + Field("userName", "Unknown user")), toggle, details);
         content.Spacing = 12;
         return Ui.Card(content);
     }

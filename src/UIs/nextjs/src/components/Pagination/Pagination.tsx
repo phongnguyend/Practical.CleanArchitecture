@@ -34,6 +34,9 @@ const Pagination = (props: PaginationProps) => {
   }
 
   const pageSelected = (page: number) => {
+    if (page < 1 || page > totalPages || page === currentPage) {
+      return;
+    }
     props.pageSelected(page);
   };
 
@@ -49,11 +52,11 @@ const Pagination = (props: PaginationProps) => {
 
   return (
     <BootstrapPagination>
-      <BootstrapPagination.Item disabled={currentPage === 1} onClick={() => pageSelected(1)} aria-label="First page"><ActionIcon action="first" className="" /></BootstrapPagination.Item>
-      <BootstrapPagination.Item disabled={currentPage === 1} onClick={() => pageSelected(currentPage - 1)} aria-label="Previous page"><ActionIcon action="previous" className="" /></BootstrapPagination.Item>
+      <BootstrapPagination.Item disabled={currentPage <= 1} onClick={() => pageSelected(1)} aria-label="First page"><ActionIcon action="first" className="" /><span className="page-nav-label">First</span></BootstrapPagination.Item>
+      <BootstrapPagination.Item disabled={currentPage <= 1} onClick={() => pageSelected(currentPage - 1)} aria-label="Previous page"><ActionIcon action="previous" className="" /><span className="page-nav-label">Previous</span></BootstrapPagination.Item>
       {pageItems}
-      <BootstrapPagination.Item disabled={currentPage === totalPages} onClick={() => pageSelected(currentPage + 1)} aria-label="Next page"><ActionIcon action="next" className="" /></BootstrapPagination.Item>
-      <BootstrapPagination.Item disabled={currentPage === totalPages} onClick={() => pageSelected(totalPages)} aria-label="Last page"><ActionIcon action="last" className="" /></BootstrapPagination.Item>
+      <BootstrapPagination.Item disabled={currentPage >= totalPages} onClick={() => pageSelected(currentPage + 1)} aria-label="Next page"><ActionIcon action="next" className="" /><span className="page-nav-label">Next</span></BootstrapPagination.Item>
+      <BootstrapPagination.Item disabled={currentPage >= totalPages} onClick={() => pageSelected(totalPages)} aria-label="Last page"><ActionIcon action="last" className="" /><span className="page-nav-label">Last</span></BootstrapPagination.Item>
     </BootstrapPagination>
   );
 };

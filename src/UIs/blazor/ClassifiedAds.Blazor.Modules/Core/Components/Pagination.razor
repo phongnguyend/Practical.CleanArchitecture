@@ -1,14 +1,28 @@
-﻿<ul class="pagination">
-    <li class="page-item @(CurrentPage==1?"disabled":"")"><a class="page-link" @onclick="() => HandleClick(1)"><ActionIcon Name="media-step-backward" /> First</a></li>
-    <li class="page-item @(CurrentPage==1?"disabled":"")"><a class="page-link" @onclick="() => HandleClick(CurrentPage - 1)"><ActionIcon Name="chevron-left" /> Previous</a></li>
+<ul class="pagination">
+    <li class="page-item @(CurrentPage <= 1 ? "disabled" : "")">
+        <button type="button" class="page-link" disabled="@(CurrentPage <= 1)" aria-label="First page" title="First page" @onclick="() => HandleClick(1)">
+            <ActionIcon Name="media-step-backward" /><span class="page-nav-label">First</span>
+        </button>
+    </li>
+    <li class="page-item @(CurrentPage <= 1 ? "disabled" : "")">
+        <button type="button" class="page-link" disabled="@(CurrentPage <= 1)" aria-label="Previous page" title="Previous page" @onclick="() => HandleClick(CurrentPage - 1)">
+            <ActionIcon Name="chevron-left" /><span class="page-nav-label">Previous</span>
+        </button>
+    </li>
     @foreach (var pageNumber in PageNumbers)
     {
-        <li class="page-item @(CurrentPage==pageNumber?"active":"")"><a class="page-link" @onclick="() => HandleClick(pageNumber)">@pageNumber</a></li>
+        <li class="page-item @(CurrentPage == pageNumber ? "active" : "")">
+            <button type="button" class="page-link" aria-current="@(CurrentPage == pageNumber ? "page" : null)" @onclick="() => HandleClick(pageNumber)">@pageNumber</button>
+        </li>
     }
-    <li class="page-item @(CurrentPage==TotalPages?"disabled":"")"><a class="page-link" @onclick="() => HandleClick(CurrentPage + 1)"><ActionIcon Name="chevron-right" /> Next</a></li>
-    <li class="page-item @(CurrentPage==TotalPages?"disabled":"")"><a class="page-link" @onclick="() => HandleClick(TotalPages)"><ActionIcon Name="media-step-forward" /> Last</a></li>
+    <li class="page-item @(CurrentPage >= TotalPages ? "disabled" : "")">
+        <button type="button" class="page-link" disabled="@(CurrentPage >= TotalPages)" aria-label="Next page" title="Next page" @onclick="() => HandleClick(CurrentPage + 1)">
+            <ActionIcon Name="chevron-right" /><span class="page-nav-label">Next</span>
+        </button>
+    </li>
+    <li class="page-item @(CurrentPage >= TotalPages ? "disabled" : "")">
+        <button type="button" class="page-link" disabled="@(CurrentPage >= TotalPages)" aria-label="Last page" title="Last page" @onclick="() => HandleClick(TotalPages)">
+            <ActionIcon Name="media-step-forward" /><span class="page-nav-label">Last</span>
+        </button>
+    </li>
 </ul>
-
-@code {
-
-}

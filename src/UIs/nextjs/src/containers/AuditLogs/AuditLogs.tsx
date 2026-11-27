@@ -1,6 +1,8 @@
 "use client";
 
+import AuditAction from "../../components/AuditAction/AuditAction";
 import JsonViewer from "../../components/JsonViewer/JsonViewer";
+import CopyToClipboard from "../../components/CopyToClipboard/CopyToClipboard";
 import { useState, useEffect } from "react";
 import Pagination from "../../components/Pagination/Pagination";
 import ActionIcon from "../../components/ActionIcon/ActionIcon";
@@ -53,10 +55,15 @@ const AuditLogs = () => {
     <tr key={auditLog.id}>
       <td>{formatDateTime(auditLog.createdDateTime)}</td>
       <td>{auditLog.userName}</td>
-      <td>{auditLog.action}</td>
+      <td><AuditAction action={auditLog.action} /></td>
       <td>
-        <JsonViewer jsonData={auditLog.log} />
-        <div>{auditLog.log}</div>
+        <div className="audit-data-actions">
+          <div>
+            <JsonViewer jsonData={auditLog.log} />
+            <CopyToClipboard text={auditLog.log} />
+          </div>
+        </div>
+        <div className="audit-data-preview">{auditLog.log}</div>
       </td>
     </tr>
   ));

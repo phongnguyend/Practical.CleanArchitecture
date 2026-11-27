@@ -27,6 +27,9 @@ export class PaginationComponent implements OnChanges {
   @Output() pageSelected = new EventEmitter<number>();
 
   selectPage = (page: number) => {
+    if (page < 1 || page > this.totalPages || page === this.currentPage) {
+      return;
+    }
     this.pageSelected.emit(page);
   };
 

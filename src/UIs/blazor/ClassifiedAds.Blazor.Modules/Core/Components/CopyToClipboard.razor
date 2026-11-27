@@ -1,0 +1,51 @@
+@inject IJSRuntime JS
+@implements IDisposable
+
+<span class="app-copy-control">
+    <button type="button" class="app-copy-trigger" title="Copy Data" aria-label="Copy Data" @onclick="CopyAsync">
+        <ActionIcon Name="clipboard" />
+    </button>
+    <span class="app-copy-feedback" role="status">@Status</span>
+</span>
+
+@code {
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+
+    private string Status = string.Empty;
+    private System.Threading.CancellationTokenSource Feedback;
+
+    private async System.Threading.Tasks.Task CopyAsync()
+    {
+        Feedback?.Cancel();
+        Feedback?.Dispose();
+        Feedback = new System.Threading.CancellationTokenSource();
+        var token = Feedback.Token;
+        try
+        {
+            await JS.InvokeVoidAsync("navigator.clipboard.writeText", Text);
+            Status = "Copied to clipboard";
+        }
+        catch (JSException)
+        {
+            Status = "Unable to copy";
+        }
+
+        StateHasChanged();
+        try
+        {
+            await System.Threading.Tasks.Task.Delay(2000, token);
+            Status = string.Empty;
+        }
+        catch (System.OperationCanceledException)
+        {
+            // A newer copy action or disposal cancels the previous feedback.
+        }
+    }
+
+    public void Dispose()
+    {
+        Feedback?.Cancel();
+        Feedback?.Dispose();
+    }
+}

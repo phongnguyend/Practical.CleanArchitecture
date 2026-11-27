@@ -2,6 +2,10 @@
 .audit-entry { border: 1px solid var(--bs-border-color); border-radius: 12px; padding: 16px; background: var(--bs-body-bg); min-width: 0; overflow-wrap: anywhere; }
 .audit-entry-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 .audit-action { padding: 4px 10px; border-radius: 6px; background: var(--bs-secondary-bg); font-size: .85rem; }
+.audit-action-delete { color: #b91c1c; background: #fee2e2; }
+.audit-action-update { color: #9a3412; background: #ffedd5; }
+.audit-action-add { color: #166534; background: #dcfce7; }
+.audit-action-neutral { color: #334155; background: #e2e8f0; }
 .audit-entry time { color: var(--bs-secondary-color); font-size: .85rem; }
 .audit-user { margin: 12px 0; font-size: .9rem; }
 .audit-details summary { min-height: 48px; padding: 12px 0; cursor: pointer; font-weight: 600; }

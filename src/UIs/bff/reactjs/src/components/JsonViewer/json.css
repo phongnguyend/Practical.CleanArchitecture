@@ -118,7 +118,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.25rem 0.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
   border: 1px solid var(--bs-border-color, #dee2e6);
   border-radius: 0.4rem;
   background: var(--bs-body-bg, #fff);

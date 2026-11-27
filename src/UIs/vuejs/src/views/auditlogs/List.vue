@@ -24,10 +24,10 @@
             <tr v-for="auditLog in auditLogs" :key="auditLog.id">
               <td>{{ formatedDateTime(auditLog.createdDateTime) }}</td>
               <td>{{ auditLog.userName }}</td>
-              <td>{{ auditLog.action }}</td>
+              <td><AuditAction :action="auditLog.action" /></td>
               <td>
                 <div class="position-relative">
-                  <div class="position-absolute top-0 end-0">
+                  <div class="audit-data-actions">
                     <div class="d-flex">
                       <JsonViewer :json-data="auditLog.log" />
                       <CopyToClipboard
@@ -37,7 +37,7 @@
                       />
                     </div>
                   </div>
-                  <div style="padding-inline-end: 6rem">{{ auditLog.log }}</div>
+                  <div class="audit-data-preview">{{ auditLog.log }}</div>
                 </div>
               </td>
             </tr>
@@ -57,6 +57,8 @@
 </template>
 
 <script setup lang="ts">
+import AuditAction from '../../components/AuditAction.vue'
+
 import { ref, onMounted } from 'vue'
 import axios from './axios'
 import type { IAuditLogEntry } from './AuditLog'

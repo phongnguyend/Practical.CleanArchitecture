@@ -28,10 +28,10 @@
                   {{ auditLog.createdDateTime | date: "dd/MM/yyyy hh:mm:ss" }}
                 </td>
                 <td>{{ auditLog.userName }}</td>
-                <td>{{ auditLog.action }}</td>
+                <td><app-audit-action [action]="auditLog.action" /></td>
                 <td>
                   <div class="position-relative">
-                    <div class="position-absolute top-0 end-0">
+                    <div class="audit-data-actions">
                       <div class="d-flex">
                         <app-json-viewer [jsonData]="auditLog.log" />
                         <app-copy-to-clipboard
@@ -41,7 +41,7 @@
                         ></app-copy-to-clipboard>
                       </div>
                     </div>
-                    <div style="padding-inline-end: 6rem">{{ auditLog.log }}</div>
+                    <div class="audit-data-preview">{{ auditLog.log }}</div>
                   </div>
                 </td>
               </tr>

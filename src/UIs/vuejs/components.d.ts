@@ -12,6 +12,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ActionIcon: typeof import('./src/components/ActionIcon.vue')['default']
+    AuditAction: typeof import('./src/components/AuditAction.vue')['default']
     CopyToClipboard: typeof import('./src/components/CopyToClipboard.vue')['default']
     FilePicker: typeof import('./src/components/FilePicker.vue')['default']
     JsonContent: typeof import('./src/components/JsonViewer/JsonContent.vue')['default']

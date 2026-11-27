@@ -1,15 +1,6 @@
-@if (copyStatus) {
-  <span class="copy-icon">{{ copyStatus }}</span>
-}
-@if (!copyStatus) {
-  <ng-icon
-    name="lucideClipboard"
-    size="16"
-    [class]="className"
-    [title]="title"
-    (click)="handleCopy()"
-    (keydown.enter)="handleCopy()"
-    role="button"
-    tabindex="0"
-  />
-}
+<span class="app-copy-control">
+  <button type="button" [class]="'app-copy-trigger ' + className" [title]="title" [attr.aria-label]="title" (click)="handleCopy()">
+    <ng-icon name="lucideClipboard" size="18" aria-hidden="true" />
+  </button>
+  <span class="app-copy-feedback" role="status">{{ copyStatus }}</span>
+</span>

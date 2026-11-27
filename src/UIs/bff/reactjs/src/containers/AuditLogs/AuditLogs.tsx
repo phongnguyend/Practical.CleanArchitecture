@@ -1,3 +1,4 @@
+import AuditAction from "../../components/AuditAction/AuditAction";
 import JsonViewer from "../../components/JsonViewer/JsonViewer";
 import { useState, useEffect } from "react";
 import Pagination from "../../components/Pagination/Pagination";
@@ -41,10 +42,10 @@ const AuditLogs = () => {
     <tr key={auditLog.id}>
       <td>{formatDateTime(auditLog.createdDateTime)}</td>
       <td>{auditLog.userName}</td>
-      <td>{auditLog.action}</td>
+      <td><AuditAction action={auditLog.action} /></td>
       <td>
-        <JsonViewer jsonData={auditLog.log} />
-        <div>{auditLog.log}</div>
+        <div className="audit-data-actions"><JsonViewer jsonData={auditLog.log} /></div>
+        <div className="audit-data-preview">{auditLog.log}</div>
       </td>
     </tr>
   ));

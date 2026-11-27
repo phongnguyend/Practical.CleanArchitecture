@@ -8,11 +8,59 @@ import org.junit.Assume;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import androidx.test.uiautomator.UiObject2;
+import androidx.test.uiautomator.By;
+import java.util.HashMap;
+import java.util.Map;
 import static org.junit.Assert.*;
 
 public abstract class ProductsUiTests extends MobileUiTestSupport {
     protected ProductsUiTests(String app, String packageName, String activity) {
         super(app, packageName, activity);
+    }
+
+    private Map<String, String> pdfExports() throws Exception {
+        Map<String, String> exports = new HashMap<>();
+        String paths = device.executeShellCommand("run-as " + packageName + " find cache/exports -type f");
+        assertFalse("PDF verification requires a debuggable installed app: " + paths, paths.contains("run-as:"));
+        for (String path : paths.split("\\r?\\n")) {
+            if (path.matches("cache/exports/(?:[0-9]+-)?Products\\.pdf")) {
+                exports.put(path, device.executeShellCommand("run-as " + packageName + " stat -c %y " + path).trim());
+            }
+        }
+        return exports;
+    }
+
+    @Test public void productPdfExportCreatesValidFileAndOpensShareSheet() throws Exception {
+        Assume.assumeTrue("Enable with -IncludePdf; requires the HTML-to-PDF server",
+            "true".equals(InstrumentationRegistry.getArguments().getString("includePdf")));
+        products();
+        Map<String, String> previous = pdfExports();
+        click(app.equals("capacitor") ? "Export as Pdf" : "Export PDF");
+        try {
+            waitFor("Android share sheet displays Products.pdf", () ->
+                !packageName.equals(device.getCurrentPackageName())
+                    && device.hasObject(By.textContains("Products.pdf")));
+            Map<String, String> current = pdfExports();
+            String exported = null;
+            for (Map.Entry<String, String> entry : current.entrySet()) {
+                if (!entry.getValue().equals(previous.get(entry.getKey()))) {
+                    exported = entry.getKey();
+                }
+            }
+            assertNotNull("Export must create or update a PDF, not reuse an old download", exported);
+            String prefix = "run-as " + packageName;
+            assertEquals("Downloaded content must be a PDF", "%PDF-",
+                device.executeShellCommand(prefix + " head -c 5 " + exported));
+            assertTrue("PDF must contain an end-of-file marker",
+                device.executeShellCommand(prefix + " tail -c 1024 " + exported).contains("%%EOF"));
+            capture("product-pdf-share-sheet");
+        } finally {
+            if (!packageName.equals(device.getCurrentPackageName())) {
+                device.pressBack();
+            }
+        }
+        waitFor("Dismissing sharing returns to the app", () -> packageName.equals(device.getCurrentPackageName()));
+        ready();
     }
 
     private void removeFixture(String name) {

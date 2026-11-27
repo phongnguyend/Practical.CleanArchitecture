@@ -1,3 +1,4 @@
+import { AuditActionComponent } from "../shared/audit-action.component";
 import { JsonViewerComponent } from "../shared/json-viewer/json-viewer.component";
 import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -16,6 +17,7 @@ import { ActionIconComponent } from "../shared/action-icon.component";
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
+    AuditActionComponent,
     JsonViewerComponent,
     CommonModule,
     CopyToClipboardComponent,

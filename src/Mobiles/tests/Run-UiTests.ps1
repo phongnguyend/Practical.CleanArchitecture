@@ -4,6 +4,7 @@ param(
     [ValidateSet('All', 'Home', 'Products', 'Users', 'Roles', 'Configuration', 'Navigation', 'Notifications', 'Admin', 'Biometrics')]
     [string]$Feature = 'All',
     [switch]$IncludeCrud,
+    [switch]$IncludePdf,
     [ValidateRange(1, 10)]
     [int]$Fingerprint = 1,
     [int]$FingerprintId = 0,
@@ -66,7 +67,8 @@ $classes = $selected | ForEach-Object {
 $arguments = @('-p', (Join-Path $PSScriptRoot 'android'), 'connectedDebugAndroidTest', '--max-workers=2',
     "-Pandroid.testInstrumentationRunnerArguments.class=$($classes -join ',')",
     "-Pandroid.testInstrumentationRunnerArguments.runId=$run",
-    "-Pandroid.testInstrumentationRunnerArguments.includeCrud=$($IncludeCrud.IsPresent.ToString().ToLowerInvariant())")
+    "-Pandroid.testInstrumentationRunnerArguments.includeCrud=$($IncludeCrud.IsPresent.ToString().ToLowerInvariant())",
+    "-Pandroid.testInstrumentationRunnerArguments.includePdf=$($IncludePdf.IsPresent.ToString().ToLowerInvariant())")
 $env:ANDROID_HOME = $sdk
 $exitCode = 1
 $previousErrorPreference = $ErrorActionPreference

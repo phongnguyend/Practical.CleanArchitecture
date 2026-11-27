@@ -45,9 +45,13 @@ export default function AuditEntries({ entries, fields }: {
       const keys = fields ?? Object.keys(values ?? {});
       const date = new Date(entry.createdDateTime);
       const timestamp = Number.isNaN(date.getTime()) ? entry.createdDateTime : date.toLocaleString();
+      const action = entry.action?.trim().toUpperCase().split(/[_\s-]/)[0] ?? "";
+      const tone = ["DELETE", "DELETED"].includes(action) ? "delete"
+        : ["UPDATE", "UPDATED"].includes(action) ? "update"
+        : ["ADD", "ADDED", "CREATE", "CREATED"].includes(action) ? "add" : "neutral";
       return <article className="audit-entry" key={entry.id} aria-label={`${entry.action ?? "Event"} by ${entry.userName || "Unknown user"}`}>
         <header className="audit-entry-heading">
-          <strong className="audit-action">{entry.action || "Event"}</strong>
+          <strong className={`audit-action audit-action-${tone}`}>{entry.action || "Event"}</strong>
           <time dateTime={entry.createdDateTime}>{timestamp}</time>
         </header>
         <p className="audit-user">By <strong>{entry.userName || "Unknown user"}</strong></p>

@@ -1,3 +1,4 @@
+import { AuditActionComponent } from "../../shared/audit-action.component";
 import { ModalRef, ModalModule, ModalService } from "../../shared/modal/modal";
 import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -13,7 +14,7 @@ import { ActionIconComponent } from "../../shared/action-icon.component";
   styleUrls: ["./list-files.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CommonModule, RouterModule, ModalModule, ActionIconComponent],
+  imports: [AuditActionComponent, CommonModule, RouterModule, ModalModule, ActionIconComponent],
 })
 export class ListFilesComponent implements OnInit {
   files: IFile[] = [];

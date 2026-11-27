@@ -1,5 +1,6 @@
 "use client";
 
+import AuditAction from "../../../components/AuditAction/AuditAction";
 import { useEffect, useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import Modal from "../../../components/Modal/Modal";
@@ -300,7 +301,7 @@ const EditFile = ({}) => {
     <tr key={auditLog.id}>
       <td>{formatDateTime(auditLog.createdDateTime)}</td>
       <td>{auditLog.userName}</td>
-      <td>{auditLog.action}</td>
+      <td><AuditAction action={auditLog.action} /></td>
       <td style={{ color: auditLog.highLight.name ? "red" : "" }}>
         {auditLog.data.name}
       </td>

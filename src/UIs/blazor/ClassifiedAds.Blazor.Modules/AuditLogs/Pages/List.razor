@@ -27,8 +27,16 @@
                                 @auditLog.CreatedDateTime
                             </td>
                             <td>@auditLog.UserName</td>
-                            <td>@auditLog.Action</td>
-                            <td>@auditLog.Log</td>
+                            <td><AuditAction Action="@auditLog.Action" /></td>
+                            <td>
+                                <div class="audit-data-actions">
+                                    <div>
+                                        <button type="button" class="app-json-trigger" title="View JSON" aria-label="View JSON" @onclick="() => ViewJson(auditLog.Log)">{ }</button>
+                                        <CopyToClipboard Text="@auditLog.Log" />
+                                    </div>
+                                </div>
+                                <div class="audit-data-preview">@auditLog.Log</div>
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -41,3 +49,5 @@
 </div>
 
 <span data-page-loaded="@IsLoaded.ToString().ToLowerInvariant()" hidden></span>
+
+<JsonViewer JsonData="@SelectedJson" @bind-IsOpen="IsJsonOpen" />

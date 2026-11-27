@@ -5,6 +5,7 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.classifiedads.mobile.shared.ui.*
 import org.json.JSONObject
@@ -29,10 +30,18 @@ fun AuditEntry(entry: JSONObject) {
         OffsetDateTime.parse(rawDate).atZoneSameInstant(ZoneId.systemDefault())
             .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
     }.getOrDefault(rawDate)
+    val action = entry.optString("action").ifBlank { "Event" }
+    val actionType = action.trim().uppercase(java.util.Locale.ROOT).split(Regex("[_\\s-]"), limit = 2).first()
+    val (foreground, background) = when (actionType) {
+        "DELETE", "DELETED" -> Color(0xFFB91C1C) to Color(0xFFFEE2E2)
+        "UPDATE", "UPDATED" -> Color(0xFF9A3412) to Color(0xFFFFEDD5)
+        "ADD", "ADDED", "CREATE", "CREATED" -> Color(0xFF166534) to Color(0xFFDCFCE7)
+        else -> Color(0xFF334155) to Color(0xFFE2E8F0)
+    }
     Card(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Surface(color = MaterialTheme.colorScheme.secondaryContainer, shape = MaterialTheme.shapes.small) {
-                Text(entry.optString("action").ifBlank { "Event" }, modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp), style = MaterialTheme.typography.titleSmall)
+            Surface(color = background, contentColor = foreground, shape = MaterialTheme.shapes.small) {
+                Text(action, modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp), style = MaterialTheme.typography.titleSmall)
             }
             Text(timestamp, style = MaterialTheme.typography.bodySmall)
             Text("By ${entry.optString("userName").ifBlank { "Unknown user" }}")

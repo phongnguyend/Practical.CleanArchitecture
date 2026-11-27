@@ -21,10 +21,19 @@ window.classifiedAdsDialog = (() => {
     let previous;
     let handler;
     let dialog;
+    let previousOverflow;
+    let previousPaddingRight;
     return {
         open(element, reference) {
             previous = document.activeElement;
             dialog = element;
+            previousOverflow = document.body.style.overflow;
+            previousPaddingRight = document.body.style.paddingRight;
+            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+            if (scrollbarWidth > 0) {
+                const padding = parseFloat(getComputedStyle(document.body).paddingRight) || 0;
+                document.body.style.paddingRight = `${padding + scrollbarWidth}px`;
+            }
             document.body.style.overflow = 'hidden';
             const focusable = () => [...element.querySelectorAll('button, a[href], input, select, textarea, [tabindex="0"]')].filter(item => !item.disabled);
             handler = event => {
@@ -50,7 +59,8 @@ window.classifiedAdsDialog = (() => {
         },
         close() {
             dialog?.removeEventListener('keydown', handler);
-            document.body.style.overflow = '';
+            document.body.style.overflow = previousOverflow;
+            document.body.style.paddingRight = previousPaddingRight;
             if (previous?.isConnected) {
                 previous.focus();
             }
