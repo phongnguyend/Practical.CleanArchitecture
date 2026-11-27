@@ -45,4 +45,6 @@ var identityServerMigrator = builder
 
 var webhook = builder.AddExternalService("Webhook", "https://ddddotnet-webhook-server.azurewebsites.net").WithHttpHealthCheck("");
 
+var htmlToPdf = builder.AddExternalService("HtmlToPdf", "http://localhost:8130/playwright/").WithHttpHealthCheck("/playwright/health");
+
 builder.Build().Run();

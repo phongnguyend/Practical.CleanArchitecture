@@ -17,4 +17,6 @@ var webhook = builder.AddExternalService("Webhook", "https://ddddotnet-webhook-s
 
 var markitdown = builder.AddExternalService("MarkItDown", "http://localhost:8000").WithHttpHealthCheck("health");
 
+var htmlToPdf = builder.AddExternalService("HtmlToPdf", "http://localhost:8130/playwright/").WithHttpHealthCheck("/playwright/health");
+
 builder.Build().Run();
