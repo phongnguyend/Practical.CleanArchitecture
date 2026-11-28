@@ -725,31 +725,87 @@
   ![alt text](/docs/imgs/blazor-home-page.png)
 
 ## How to Run Integration & End to End Tests:
-- Update [ClassifiedAds.IntegrationTests/appsettings.json](/src/Monolith/ClassifiedAds.IntegrationTests/appsettings.json)
-  ```js
-  {
-    "OpenIdConnect": {
-      "Authority": "https://localhost:44367",
-      "ClientId": "ClassifiedAds.WebMVC",
-      "ClientSecret": "secret",
-      "RequireHttpsMetadata": "true"
-    },
-    "WebAPI": {
-      "Endpoint": "https://localhost:44312"
-    },
-    "Login": {
-      "UserName": "phong@gmail.com",
-      "Password": "v*7Un8b4rcN@<-RN",
-      "Scope": "ClassifiedAds.WebAPI"
-    }
-  }
-  ```
-- UI end-to-end tests:
-  - [TypeScript Playwright](src/e2e/ui/node/playwright/README.md)
-  - [.NET Playwright and Selenium](src/e2e/ui/dotnet/README.md)
 
-  Both .NET projects cover the shared UI features and support all frontend applications.
-  See the linked guide for credentials, headed runs, application selection, and opt-in write tests.
+Start the API, Identity Server, and their required database/storage services. Use a development test account with permissions for the features being tested. PDF export tests also require the HTML-to-PDF service. The commands below use PowerShell and start from the repository root unless noted otherwise.
+
+### API end-to-end tests (.NET)
+
+Requires the .NET 10 SDK. Configure [appsettings.json](src/e2e/api/dotnet/ClassifiedAds.ApiIntegrationTests/appsettings.json) in the current API test project:
+
+- `OpenIdConnect`: Identity Server authority, client ID/secret, and HTTPS metadata setting. The client must allow the password grant used by this suite.
+- `WebAPI.Endpoint`: API origin, for example `https://localhost:44312` (without `/api/`).
+- `Login`: test username, password, and API scope.
+
+```powershell
+dotnet test src/e2e/api/dotnet/ClassifiedAds.ApiIntegrationTests --logger trx
+```
+
+This suite writes product, configuration, file, and user records, exports/imports files, and requests confirmation/reset emails for its test user. Run it against a disposable test environment with a Fake email provider or test mail sink. Keep local credentials out of commits.
+
+### API end-to-end tests (TypeScript)
+
+Requires Node.js 22.13+; no browser installation is needed. Configure the ignored `.env` file with the API URL (including `/api/`), OIDC client credentials, and test account, or provide an access token.
+
+```powershell
+cd src/e2e/api/node
+npm ci
+Copy-Item .env.example .env # First-time setup; edit .env before running.
+$env:API_ALLOW_WRITES = '1'
+npm test
+npm run report
+```
+
+Write scenarios require `API_ALLOW_WRITES=1`. Email scenarios additionally require `API_ALLOW_EMAILS=1` and `API_TEST_EMAIL`. PDF checks run by default; set `API_TEST_PDF=0` if the converter is unavailable. Set `API_IGNORE_HTTPS_ERRORS=1` only when testing local self-signed certificates. See the [TypeScript API test guide](src/e2e/api/node/README.md) for configuration, individual scenarios, cleanup, and reports.
+
+### Web UI end-to-end tests
+
+The shared scenarios support `angular`, `reactjs`, `vuejs`, `nextjs`, `bff-reactjs`, `blazor-server`, and `blazor-wasm`. Install the selected UI's dependencies and configure its backend/Identity Server URLs first. React and Next.js share a default port; BFF React also uses port 3000 for its frontend and shares browser port 44348 with Blazor WebAssembly, so run conflicting applications separately.
+
+For **TypeScript Playwright**:
+
+```powershell
+cd src/e2e/ui/node/playwright
+npm ci
+npx playwright install chromium
+Copy-Item .env.example .env # First-time setup; enter credentials and URLs.
+$env:E2E_APPS = 'reactjs' # Select one app or a comma-separated list.
+$env:E2E_START_SERVERS = '1'
+npm run test:headed -- --project=reactjs
+npm run report
+```
+
+Headed desktop browsers open maximized. `E2E_START_SERVERS=1` manages the selected UI servers; it does not start the API or Identity Server. Build the selected Blazor project first, as its managed start command uses `--no-build`. BFF React also requires its YARP proxy to be running. Use `E2E_START_SERVERS=0` for servers you start yourself. See the [TypeScript Playwright guide](src/e2e/ui/node/playwright/README.md) for application-specific setup and test selection.
+
+For **.NET Playwright and Selenium**, start the selected UI yourself and use the .NET 10 SDK (plus Chrome for Selenium):
+
+```powershell
+Copy-Item src/e2e/ui/dotnet/.env.example src/e2e/ui/dotnet/.env
+# Enter credentials and URLs in the ignored .env file.
+$env:E2E_ENV_FILE = (Resolve-Path src/e2e/ui/dotnet/.env).Path
+$env:E2E_APPS = 'reactjs'
+dotnet build src/e2e/ui/dotnet/Playwright
+powershell -File src/e2e/ui/dotnet/Playwright/bin/Debug/net10.0/playwright.ps1 install chromium
+dotnet test src/e2e/ui/dotnet/Playwright --logger trx
+dotnet test src/e2e/ui/dotnet/Selenium --logger trx
+```
+
+Both .NET runners use visible, maximized browsers by default; set `E2E_HEADLESS=1` for headless runs. See the [.NET UI test guide](src/e2e/ui/dotnet/README.md) for filters and reports.
+
+For both web UI suites, set `E2E_ALLOW_WRITES=1` for CRUD and playground queue tests against a disposable backend, and `E2E_PDF=1` for PDF export. Playground queue tests require Fake notification providers. Blazor fixture creation/cleanup also requires `E2E_API_TOKEN`. Local self-signed browser certificates can be handled with `E2E_IGNORE_HTTPS_ERRORS=1`; server-side certificate trust must be configured separately.
+
+### Mobile Android UI tests
+
+Install the latest Flutter, Kotlin, React Native, MAUI, and Capacitor builds on one Android emulator/device and sign in to each app. Keep the API and Identity Server running, and start Metro on port 8081 for React Native debug builds. The runner tests installed apps; it does not rebuild them.
+
+```powershell
+./src/Mobiles/tests/Run-UiTests.ps1 -App All -Feature Home
+./src/Mobiles/tests/Run-UiTests.ps1 -App All -Feature Navigation
+# Run every default feature, or select one app:
+./src/Mobiles/tests/Run-UiTests.ps1 -App All
+./src/Mobiles/tests/Run-UiTests.ps1 -App Flutter -Feature Home
+```
+
+See the [mobile UI test guide](src/Mobiles/tests/README.md) for Android SDK/JDK setup, individual test methods, optional CRUD/PDF checks, and screenshots/reports. These UI Automator tests run on Android; they do not verify iOS.
 
 ## Application URLs:
 

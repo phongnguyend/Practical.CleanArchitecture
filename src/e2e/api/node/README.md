@@ -35,6 +35,7 @@ npm test -- tests/products.spec.ts
 npm test -- tests/configuration.spec.ts
 npm test -- tests/files.spec.ts
 npm test -- tests/users.spec.ts
+npm test -- tests/role-membership.spec.ts
 npm run test:list
 npm run report
 ```
@@ -62,3 +63,5 @@ The current import endpoints parse CSV/Excel and return models; persistence is a
 `playwright-report/` contains HTML, and `test-results/junit.xml` contains JUnit results. Downloaded fixtures/exports are saved beneath each test's output directory. These directories and `.env` are ignored. Exports can contain development data, so keep reports and downloads private. Traces are disabled to avoid recording authentication and password request bodies.
 
 Verification on 2026-11-11 using the existing .NET development settings: **6 passed, 1 failed, 1 skipped**. The failure was PDF export returning HTTP 500 from the backend; the skipped test was email sending, which was not enabled. CRUD cleanup, CSV/Excel round-trips, audit counts, binary plain/encrypted downloads and password validation passed.
+
+Role membership coverage matches the .NET `RoleMembershipTests`: empty membership, idempotent assignment/removal, minimal member response fields, multiple roles, preserving other roles, and missing-user/role responses. Temporary users and roles are cleaned up after the scenario.

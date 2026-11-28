@@ -1,0 +1,34 @@
+import { test, expect, writes } from '../support/fixtures.js';
+
+test('role users can be assigned and removed, and user details show assigned roles @writes', async ({ app, page, owned }) => {
+  writes();
+  const user = await owned.create('users', { userName: `${owned.prefix}-member`, email: `${owned.prefix}@example.invalid` });
+  const role = await owned.create('roles', { name: `${owned.prefix}-membership` });
+  await app.open('Roles', 'roles');
+  await app.row(String(role.name)).getByRole('link', { name: String(role.name), exact: true }).click();
+  const members = page.getByRole('region', { name: 'Role users', exact: true });
+  await expect(members.getByText('No users assigned.', { exact: true })).toBeVisible();
+  await members.getByLabel('Search users', { exact: true }).fill(String(user.userName));
+  await members.getByLabel('User to assign', { exact: true }).selectOption(user.id);
+  await members.getByRole('button', { name: 'Assign user', exact: true }).click();
+  const remove = members.getByRole('button', { name: `Remove ${user.userName} from role`, exact: true });
+  await expect(remove).toBeVisible();
+  await page.reload();
+  await expect(remove).toBeVisible();
+  await page.screenshot({ path: test.info().outputPath("role-membership.png"), fullPage: true });
+  await page.goto(`/users/${user.id}`);
+  const assigned = page.getByRole('region', { name: 'Assigned roles', exact: true });
+  await expect(assigned.getByText(String(role.name), { exact: true })).toBeVisible();
+  await page.screenshot({ path: test.info().outputPath("user-roles.png"), fullPage: true });
+  await page.goto(`/roles/${role.id}`);
+  await remove.click();
+  await expect(app.dialog).toBeVisible();
+  await app.dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await expect(remove).toBeVisible();
+  await remove.click();
+  await app.dialog.getByRole('button', { name: 'Remove', exact: true }).click();
+  await expect(remove).toHaveCount(0);
+  await expect(members.getByText('No users assigned.', { exact: true })).toBeVisible();
+  await page.goto(`/users/${user.id}`);
+  await expect(assigned.getByText('No roles assigned.', { exact: true })).toBeVisible();
+});

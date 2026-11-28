@@ -1,3 +1,4 @@
+import { Membership } from "../roles/Membership";
 import { Detail, dateText } from "../../shared/ui/fields";
 import { User } from "./model";
 export function UserSummary({
@@ -63,6 +64,7 @@ export function UserDetails({
         value={value.accessFailedCount}
         changed={!!changed.accessFailedCount}
       />
+      <Membership key={value.id} userId={value.id} />
     </>
   );
 }

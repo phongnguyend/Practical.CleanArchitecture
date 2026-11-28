@@ -32,6 +32,7 @@ export function useStyles() {
 }
 export function Button({
   title,
+  accessibilityLabel = title,
   icon = title,
   iconOnly = false,
   onPress,
@@ -41,6 +42,7 @@ export function Button({
   style,
 }: {
   title: string;
+  accessibilityLabel?: string;
   icon?: string;
   iconOnly?: boolean;
   onPress: () => void;
@@ -54,7 +56,7 @@ export function Button({
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={title}
+      accessibilityLabel={accessibilityLabel}
       disabled={disabled}
       onPress={onPress}
       accessibilityState={{ disabled: !!disabled }}

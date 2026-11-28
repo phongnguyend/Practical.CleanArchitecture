@@ -189,7 +189,14 @@ public abstract class MobileUiTestSupport {
                     !device.hasObject(By.pkg(packageName).descContains("Open debugger to view warnings.")));
             }
         }
-        button(label).click();
+        waitFor("Clickable control: " + label, () -> {
+            UiObject2 target = find(label);
+            if (target == null) {
+                return false;
+            }
+            actionable(target).click();
+            return true;
+        });
     }
     protected void awaitLabel(String label) { waitFor("Visible control: " + label, () -> find(label) != null); }
     protected UiObject2 find(String text) { return findPattern(Pattern.quote(text)); }
@@ -203,7 +210,9 @@ public abstract class MobileUiTestSupport {
             .max(Comparator.comparingInt(n -> n.getVisibleBounds().bottom)).orElse(null);
     }
     protected boolean contains(String text) {
-        return device.hasObject(By.textContains(text).pkg(packageName)) || device.hasObject(By.descContains(text).pkg(packageName));
+        return device.hasObject(By.textContains(text).pkg(packageName))
+            || device.hasObject(By.descContains(text).pkg(packageName))
+            || device.hasObject(By.hintContains(text).pkg(packageName));
     }
     protected int dp(int value) {
         return Math.round(value * InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().getDisplayMetrics().density);

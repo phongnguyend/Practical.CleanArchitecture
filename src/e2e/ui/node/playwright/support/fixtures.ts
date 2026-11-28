@@ -71,6 +71,19 @@ export const test = base.extend<{ app: App; api: APIRequestContext; owned: Owned
       try { await use(api); } finally { await api.dispose(); }
       return;
     }
+    if (info.project.metadata.authMode === 'blazor') {
+      const token = process.env.E2E_API_TOKEN;
+      if (!token) {
+        throw new Error('Set E2E_API_TOKEN for Blazor API fixture creation and cleanup. Browser sign-in still uses Identity Server.');
+      }
+      const api = await request.newContext({ baseURL: apiUrl, ignoreHTTPSErrors, extraHTTPHeaders: { Authorization: `Bearer ${token}` } });
+      try {
+        await use(api);
+      } finally {
+        await api.dispose();
+      }
+      return;
+    }
     const token = await app.page.evaluate(() => {
       for (const key of Object.keys(localStorage)) {
         if (key.startsWith('oidc.user:')) {

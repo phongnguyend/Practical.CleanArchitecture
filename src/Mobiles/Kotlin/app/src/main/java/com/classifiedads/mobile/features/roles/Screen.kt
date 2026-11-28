@@ -1,5 +1,6 @@
 package com.classifiedads.mobile.features.roles
 
+import com.classifiedads.mobile.features.roles.Membership
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -25,6 +26,9 @@ fun RoleScreen(api: Api) {
             RoleForm(value, change, file, pick, busy, api::fileName)
         },
         summary = { value -> RoleSummary(value) },
-        details = { RoleDetails(it) },
+        details = { value ->
+            RoleDetails(value)
+            Membership(api, roleId = value.id)
+        },
     )
 }

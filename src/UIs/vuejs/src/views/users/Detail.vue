@@ -52,6 +52,7 @@
           />
         </div>
       </div>
+      <Membership :key="user.id" :user-id="user.id" />
     </div>
 
     <div class="card-footer">
@@ -173,6 +174,7 @@
 </template>
 
 <script setup lang="ts">
+import Membership from "../roles/Membership.vue"
 import AppModal from "../../components/Modal/Modal.vue"
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, onMounted } from 'vue'

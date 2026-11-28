@@ -86,7 +86,7 @@ public sealed class UsersView(AppServices services) : RecordPage<User>(services,
 
     protected override string? Validate(User value) => value.Validate() ?? dateError ?? countError;
     protected override string Subtitle(User value) => value.Email;
-    protected override View Details(User value) => Ui.Stack(Ui.Text(value.UserName, true), Ui.Text("Email: " + value.Email), Ui.Text("Email confirmed: " + value.EmailConfirmed), Ui.Text("Phone: " + value.PhoneNumber), Ui.Text("Phone confirmed: " + value.PhoneNumberConfirmed), Ui.Text("Two-factor enabled: " + value.TwoFactorEnabled), Ui.Text("Lockout enabled: " + value.LockoutEnabled), Ui.Text("Lockout end: " + value.LockoutEnd), Ui.Text("Failed attempts: " + value.AccessFailedCount));
+    protected override View Details(User value) => Ui.Stack(Ui.Text(value.UserName, true), Ui.Text("Email: " + value.Email), Ui.Text("Email confirmed: " + value.EmailConfirmed), Ui.Text("Phone: " + value.PhoneNumber), Ui.Text("Phone confirmed: " + value.PhoneNumberConfirmed), Ui.Text("Two-factor enabled: " + value.TwoFactorEnabled), Ui.Text("Lockout enabled: " + value.LockoutEnabled), Ui.Text("Lockout end: " + value.LockoutEnd), Ui.Text("Failed attempts: " + value.AccessFailedCount), new ClassifiedAds.Mobile.Features.Roles.MembershipView(services, userId: value.Id.ToString()));
     protected override View ExtraActions(User value) => Ui.Stack(Ui.Button("Set password", "lock", async () =>
     {
         string password = "", confirmation = "";

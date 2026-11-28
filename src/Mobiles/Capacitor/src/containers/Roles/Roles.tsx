@@ -6,6 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import Modal from "../../components/Modal/Modal";
 import axios from "./axios";
+import { RoleMembers } from "./Membership";
 import ActionIcon from "../../components/ActionIcon/ActionIcon";
 
 interface Role {
@@ -196,8 +197,9 @@ export default function Roles({ mode }: { mode: "list" | "view" }) {
             </button>
           </>
         )}
+      {mode === "view" && role.id && <RoleMembers key={role.id} roleId={role.id} />}
       </div>
-      {mode !== "list" && (
+    {mode !== "list" && (
         <div className="card-footer">
           <Link className="btn btn-outline-secondary" to="/roles">
             <ActionIcon action="back" />

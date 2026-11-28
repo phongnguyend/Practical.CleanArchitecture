@@ -9,7 +9,9 @@ param(
     [int]$Fingerprint = 1,
     [int]$FingerprintId = 0,
     [string]$Serial,
-    [string]$TestMethod
+    [string]$TestMethod,
+    [ValidateRange(1, 1000)]
+    [int]$KeepArtifactRuns = 10
 )
 $ErrorActionPreference = 'Stop'
 if ($TestMethod -and $Feature -eq 'All') { throw 'Specify -Feature when selecting a -TestMethod.' }
@@ -112,9 +114,25 @@ try {
         Remove-Job $fingerprintJob
     }
     & $adb -s $Serial pull "/data/local/tmp/classifiedads-ui-results/$run" (Join-Path $output 'screenshots') 2>$null | Out-Null
+    if ($LASTEXITCODE -eq 0 -and $run -match '^\d{8}-\d{6}$') {
+        # Remove only this run's copied device artifacts after preserving them locally.
+        & $adb -s $Serial shell rm -r "/data/local/tmp/classifiedads-ui-results/$run"
+    }
     foreach ($path in @('outputs/androidTest-results/connected', 'reports/androidTests/connected')) {
         $source = Join-Path $PSScriptRoot "android/app/build/$path"
         if (Test-Path $source) { Copy-Item $source (Join-Path $output ($path.Split('/')[0])) -Recurse }
+    }
+    $artifactRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot 'artifacts')).Path
+    $expiredRuns = Get-ChildItem -LiteralPath $artifactRoot -Directory |
+        Where-Object { $_.Name -match '^\d{8}-\d{6}-(All|Flutter|Kotlin|ReactNative|MAUI|Capacitor)-[A-Za-z]+$' } |
+        Sort-Object Name -Descending | Select-Object -Skip $KeepArtifactRuns
+    foreach ($expiredRun in $expiredRuns) {
+        $expiredPath = (Resolve-Path -LiteralPath $expiredRun.FullName).Path
+        if (!$expiredPath.StartsWith($artifactRoot + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) -or
+            ($expiredRun.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+            throw "Refusing to clean an artifact path outside the results directory: $expiredPath"
+        }
+        Remove-Item -LiteralPath $expiredPath -Recurse -Force
     }
     Write-Host "UI test artifacts: $output"
     $ErrorActionPreference = $previousErrorPreference

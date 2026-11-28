@@ -1,3 +1,4 @@
+import '../roles/membership.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/services/app_services.dart';
@@ -36,7 +37,10 @@ class _RoleScreenState extends State<RoleScreen> {
       busy: busy,
       services: widget.services,
     ),
-    details: (value) => RoleDetails(value),
+    details: (value) => Column(crossAxisAlignment: CrossAxisAlignment.stretch, spacing: 16, children: [
+      RoleDetails(value),
+      Membership(key: ValueKey(value.id), services: widget.services, roleId: value.id),
+    ]),
     summary: (value) => RoleSummary(value),
   );
 }

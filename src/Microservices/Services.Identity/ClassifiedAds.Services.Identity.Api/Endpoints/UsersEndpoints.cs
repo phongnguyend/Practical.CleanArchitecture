@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -25,6 +26,10 @@ public class UsersEndpoints
 {
     public static void Map(IEndpointRouteBuilder builder)
     {
+        builder.MapGet("api/users/{id:guid}/roles", GetRoles)
+            .WithTags("Users")
+            .RequireAuthorization(Permissions.GetUser, Permissions.GetRoles);
+
         builder.MapGet("api/users", Get)
             .WithTags("Users")
             .WithName("Users_Get")
@@ -90,6 +95,17 @@ public class UsersEndpoints
             .RequireAuthorization()
             .RequireAuthorization(Permissions.SendConfirmationEmailAddressEmail)
             .Produces(StatusCodes.Status200OK);
+    }
+
+    private static async Task<IResult> GetRoles(Guid id, Dispatcher dispatcher)
+    {
+        var user = await dispatcher.DispatchAsync(new GetUserQuery { Id = id, IncludeRoles = true, AsNoTracking = true });
+        if (user == null)
+        {
+            return Results.NotFound();
+        }
+
+        return Results.Ok(user.UserRoles.OrderBy(link => link.Role.Name).Select(link => new { link.Role.Id, link.Role.Name }));
     }
 
     private static async Task<IResult> Get([FromServices] Dispatcher dispatcher)

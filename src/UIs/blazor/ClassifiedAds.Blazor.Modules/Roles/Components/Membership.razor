@@ -1,0 +1,148 @@
+@using System
+@using System.Linq
+@using System.Collections.Generic
+@using System.Threading.Tasks
+@using ClassifiedAds.Blazor.Modules.Roles.Services
+@using ClassifiedAds.Blazor.Modules.Users.Models
+@inject RoleService RolesService
+@inject ClassifiedAds.Blazor.Modules.Users.Services.UserService UsersService
+<section class="membership-section" aria-label="@(RoleId.HasValue ? "Role users" : "Assigned roles")">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+        <h2 class="h5 mb-0">@(RoleId.HasValue ? "Role users" : "Assigned roles")</h2>
+        <button class="btn btn-outline-secondary" disabled="@Busy" @onclick="Load"><ActionIcon Name="reload" /> @(RoleId.HasValue ? "Refresh users" : "Refresh roles")</button>
+    </div>
+    @if (Busy)
+    {
+        <p role="status">Loading...</p>
+    }
+    @if (!string.IsNullOrEmpty(Error))
+    {
+        <p role="alert" class="alert alert-danger">@Error</p>
+    }
+    @if (RoleId.HasValue)
+    {
+        <p class="membership-description">Manage who belongs to this role. Search by username or email, then select a user to assign.</p>
+        <div class="membership-assignment">
+            <label for="role-user-search">Search users</label>
+            <input id="role-user-search" placeholder="Username or email" class="form-control" @bind="Search" @bind:event="oninput" />
+            <label for="role-user-select">User to assign</label>
+            <select id="role-user-select" class="form-select" @bind="Selected" disabled="@Busy">
+                <option value="">Select a user</option>
+                @foreach (var user in Candidates)
+                {
+                    <option value="@user.Id">@user.UserName (@user.Email)</option>
+                }
+            </select>
+            <button class="btn btn-primary" disabled="@(Busy || !Guid.TryParse(Selected, out _))" @onclick="Assign"><ActionIcon Name="plus" /> Assign user</button>
+        </div>
+        @if (!Busy && string.IsNullOrEmpty(Error) && Members.Count == 0)
+        {
+            <p>No users assigned.</p>
+        }
+        <ul class="list-group">
+            @foreach (var user in Members)
+            {
+                <li class="list-group-item d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <span style="overflow-wrap:anywhere">@user.UserName<small class="d-block">@user.Email</small></span>
+                    <button class="btn btn-outline-danger" disabled="@Busy" aria-label="@($"Remove {user.UserName} from role")" @onclick="() => Removing = user"><ActionIcon Name="trash" /> Remove</button>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        @if (!Busy && string.IsNullOrEmpty(Error) && AssignedRoles.Count == 0)
+        {
+            <p>No roles assigned.</p>
+        }
+        <ul class="assigned-roles">@foreach (var role in AssignedRoles)
+        {
+            <li class="assigned-role">@role.Name</li>
+        }</ul>
+    }
+</section>
+<Dialog IsOpen="@(Removing != null)" Title="Remove assigned role" OnClose="() => Removing = null">
+    <DialogHeader Title="Remove assigned role" OnClose="() => Removing = null" />
+    <DialogBody>Remove @Removing?.UserName from this role?</DialogBody>
+    <DialogFooter>
+        <button class="btn btn-secondary" disabled="@Busy" @onclick="() => Removing = null">Cancel</button>
+        <button class="btn btn-danger" disabled="@Busy" @onclick="Remove"><ActionIcon Name="trash" /> Remove</button>
+    </DialogFooter>
+</Dialog>
+@code {
+    [Parameter]
+    public Guid? RoleId { get; set; }
+
+    [Parameter]
+    public Guid? UserId { get; set; }
+
+    private List<UserModel> Members = new();
+    private List<UserModel> Users = new();
+    private List<RoleModel> AssignedRoles = new();
+    private UserModel Removing;
+    private bool Busy;
+    private string Error = "";
+    private string Selected = "";
+    private string Search = "";
+    private IEnumerable<UserModel> Candidates => Users.Where(user => !Members.Any(member => member.Id == user.Id)
+        && ($"{user.UserName} {user.Email}").Contains(Search, StringComparison.OrdinalIgnoreCase));
+
+    protected override Task OnParametersSetAsync() => Load();
+
+    private async Task Load()
+    {
+        Busy = true;
+        Error = "";
+        try
+        {
+            if (RoleId.HasValue)
+            {
+                Members = await RolesService.GetMembersAsync(RoleId.Value);
+                Users = await UsersService.GetUsersAsync();
+            }
+            else if (UserId.HasValue)
+            {
+                AssignedRoles = await RolesService.GetAssignedRolesAsync(UserId.Value);
+            }
+        }
+        catch (HttpRequestException)
+        {
+            Error = "Unable to load role membership. Please try again.";
+        }
+        finally
+        {
+            Busy = false;
+        }
+    }
+
+    private Task Assign() => Guid.TryParse(Selected, out var id) ? Change(id, true) : Task.CompletedTask;
+
+    private Task Remove() => Removing != null ? Change(Removing.Id, false) : Task.CompletedTask;
+
+    private async Task Change(Guid userId, bool assigned)
+    {
+        if (Busy || !RoleId.HasValue)
+        {
+            return;
+        }
+
+        Busy = true;
+        Error = "";
+        try
+        {
+            await RolesService.SetMembershipAsync(RoleId.Value, userId, assigned);
+            Removing = null;
+            Selected = "";
+            await Load();
+        }
+        catch (HttpRequestException)
+        {
+            Removing = null;
+            Error = "Unable to update role membership. Refresh and try again.";
+        }
+        finally
+        {
+            Busy = false;
+        }
+    }
+}

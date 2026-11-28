@@ -17,5 +17,5 @@ public sealed class RolesView(AppServices services) : RecordPage<Role>(services,
     }
 
     protected override string Subtitle(Role value) => value.NormalizedName;
-    protected override View Details(Role value) => Ui.Stack(Ui.Text(value.Name, true), Ui.Text("Normalized name: " + value.NormalizedName), Ui.Text("ID: " + value.Id));
+    protected override View Details(Role value) => Ui.Stack(Ui.Text(value.Name, true), Ui.Text("Normalized name: " + value.NormalizedName), Ui.Text("ID: " + value.Id), new ClassifiedAds.Mobile.Features.Roles.MembershipView(services, roleId: value.Id.ToString()));
 }

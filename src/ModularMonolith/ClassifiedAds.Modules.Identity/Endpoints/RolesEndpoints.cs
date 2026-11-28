@@ -12,7 +12,10 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AddUserRoleCommand = ClassifiedAds.Modules.Identity.Commands.Users.AddRoleCommand;
+using RemoveUserRoleCommand = ClassifiedAds.Modules.Identity.Commands.Users.DeleteRoleCommand;
 
 namespace ClassifiedAds.Modules.Identity.Endpoints;
 
@@ -20,6 +23,18 @@ public class RolesEndpoints
 {
     public static void Map(IEndpointRouteBuilder builder)
     {
+        builder.MapGet("api/roles/{id:guid}/users", GetUsers)
+            .WithTags("Roles")
+            .RequireAuthorization(Permissions.GetRole, Permissions.GetUsers);
+
+        builder.MapPut("api/roles/{id:guid}/users/{userId:guid}", AssignUser)
+            .WithTags("Roles")
+            .RequireAuthorization(Permissions.UpdateRole, Permissions.UpdateUser);
+
+        builder.MapDelete("api/roles/{id:guid}/users/{userId:guid}", RemoveUser)
+            .WithTags("Roles")
+            .RequireAuthorization(Permissions.UpdateRole, Permissions.UpdateUser);
+
         builder.MapGet("api/roles", Get)
             .WithTags("Roles")
             .WithName("Roles_Get")
@@ -61,6 +76,57 @@ public class RolesEndpoints
             .RequireAuthorization(Permissions.DeleteRole)
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound);
+    }
+
+    private static async Task<IResult> GetUsers(Guid id, Dispatcher dispatcher)
+    {
+        var role = await dispatcher.DispatchAsync(new GetRoleQuery { Id = id, IncludeUsers = true, AsNoTracking = true });
+        if (role == null)
+        {
+            return Results.NotFound();
+        }
+
+        return Results.Ok(role.UserRoles.Select(link => link.User).OrderBy(user => user.UserName)
+            .Select(user => new { user.Id, user.UserName, user.Email }));
+    }
+
+    private static Task<IResult> AssignUser(Guid id, Guid userId, Dispatcher dispatcher)
+    {
+        return SetMembership(id, userId, true, dispatcher);
+    }
+
+    private static Task<IResult> RemoveUser(Guid id, Guid userId, Dispatcher dispatcher)
+    {
+        return SetMembership(id, userId, false, dispatcher);
+    }
+
+    private static async Task<IResult> SetMembership(Guid id, Guid userId, bool assigned, Dispatcher dispatcher)
+    {
+        var role = await dispatcher.DispatchAsync(new GetRoleQuery { Id = id, AsNoTracking = true });
+        var user = await dispatcher.DispatchAsync(new GetUserQuery { Id = userId, IncludeUserRoles = true });
+        if (role == null || user == null)
+        {
+            return Results.NotFound();
+        }
+
+        var memberships = user.UserRoles.Where(link => link.RoleId == id).ToList();
+        if (assigned && memberships.Count == 0)
+        {
+            await dispatcher.DispatchAsync(new AddUserRoleCommand
+            {
+                User = user,
+                Role = new UserRole { UserId = userId, RoleId = id },
+            });
+        }
+        else if (!assigned)
+        {
+            foreach (var membership in memberships)
+            {
+                await dispatcher.DispatchAsync(new RemoveUserRoleCommand { User = user, Role = membership });
+            }
+        }
+
+        return Results.NoContent();
     }
 
     private static async Task<IResult> Get([FromServices] Dispatcher dispatcher)

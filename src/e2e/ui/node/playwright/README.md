@@ -103,6 +103,7 @@ These overrides only affect the launched Vue process. The default Vue origin/cli
 | `auth.setup.ts` | Real OIDC login and independent authenticated state for each app |
 | `navigation.spec.ts` | Every resource route, direct reload, active navigation, Home, project link, persistent light/dark themes, system appearance, notification connection toast |
 | `products.spec.ts` | Required fields, create/details/edit/delete, filtering and empty results, image toggle, cancelled deletion, audit history, CSV import validation, CSV/PDF downloads |
+| `role-membership.spec.ts` | Assign users to roles, verify persistence and assigned roles on user details, cancel/confirm removal |
 | `roles.spec.ts` | Required fields, keyboard modal dismissal and focus restoration, role CRUD/details |
 | `settings.spec.ts` | Required fields, keyboard modal dismissal, configuration CRUD and sensitive-value masking, Excel import validation/upload/reset and export |
 | `files.spec.ts` | Required fields, plain/encrypted upload, metadata editing, exact downloaded-byte comparison, history and deletion |
@@ -185,3 +186,5 @@ npx playwright test --headed --grep 'empty form|empty username|missing required 
 These commands cover the Blazor integration verified here. Full CRUD, import, download and audit-viewer parity is not implied: older Blazor screens still differ, and the general API fixture used by those tests currently supports the JavaScript clients' bearer/cookie authentication, not Blazor Server's protected token storage. Blazor's notification-hub toast scenario is explicitly skipped because these hosts do not implement that client feature.
 
 Headed runs (--headed or --ui) explicitly maximize each Chromium window through CDP, verify its maximized state, and use the actual window viewport. Headless runs keep the deterministic Desktop Chrome viewport.
+
+For Blazor write tests, set `E2E_API_TOKEN` to a short-lived token for the same development account. It is used only to create and clean up test fixtures; browser sign-in still goes through Identity Server.

@@ -19,6 +19,7 @@
       <div v-if="mode === 'view'">
         <dl><dt>Name</dt><dd>{{ role.name }}</dd><dt>Normalized Name</dt><dd>{{ role.normalizedName }}</dd></dl>
         <button class="btn btn-primary" type="button" :disabled="!role.id" @click="openEdit(role)"><ActionIcon action="edit" />Edit</button>
+        <Membership v-if="role.id" :key="role.id" :role-id="role.id" />
       </div>
     </div>
     <div v-if="mode !== 'list'" class="card-footer"><router-link class="btn btn-outline-secondary" to="/roles"><ActionIcon action="back" />Back</router-link></div>
@@ -55,6 +56,7 @@ import AppModal from "../../components/Modal/Modal.vue"
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from './axios'
+import Membership from './Membership.vue'
 
 interface Role { id: string; name: string; normalizedName?: string }
 const route = useRoute()

@@ -1,4 +1,4 @@
-name: Scan Dependencies - UI Blazor
+name: Scan Dependencies UI - Blazor
 
 on:
   push:

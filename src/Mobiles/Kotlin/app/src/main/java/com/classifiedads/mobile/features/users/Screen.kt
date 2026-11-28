@@ -1,5 +1,6 @@
 package com.classifiedads.mobile.features.users
 
+import com.classifiedads.mobile.features.roles.Membership
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -27,7 +28,10 @@ fun UserScreen(api: Api) {
             UserForm(value, change, file, pick, busy, api::fileName)
         },
         summary = { value -> UserSummary(value) },
-        details = { UserDetails(it) },
+        details = { value ->
+            UserDetails(value)
+            Membership(api, userId = value.id)
+        },
         history = repository::history,
         historyBody = { entry ->
             UserHistory(

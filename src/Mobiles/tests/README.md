@@ -42,7 +42,7 @@ Each app has a JUnit suite (`FlutterUiTest`, `KotlinUiTest`, `ReactNativeUiTest`
 | `features/home/` | App-specific title, home layout, sign-out cancellation, theme/session persistence |
 | `features/products/` | Search, unsaved changes, validation, optional CRUD/history |
 | `features/users/` | User form validation |
-| `features/roles/` | Role form validation |
+| `features/roles/` | Role form validation; with `-IncludeCrud`, assign a temporary user, view assigned roles, cancel/confirm removal, and clean up fixtures |
 | `features/configuration/` | Configuration form validation |
 | `features/navigation/` | Resource lists, audit-log refresh, event detail expansion/collapse and notification-hub connection |
 | `support/` | App launch, selectors, waits, scrolling and diagnostic capture; no test cases |
@@ -109,3 +109,5 @@ The shared `Admin` feature checks the full-width **Home → Admin** shortcut, **
 ```
 
 Install updated apps and start the updated API/Identity Server first. Apply the existing notification-context migration so the push queue tables exist, and sign in to each app. Actual device delivery requires separately configured Firebase/APNs credentials.
+
+The runner keeps the latest 10 dated artifact runs by default (`-KeepArtifactRuns 20` changes the limit). After successfully copying screenshots to the host, it removes that run's temporary screenshots from the device. Source files, installed apps, and APKs are not part of artifact retention.

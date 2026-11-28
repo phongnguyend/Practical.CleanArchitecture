@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import Modal from "../../components/Modal/Modal";
 import axios from "./axios";
+import { RoleMembers } from "./Membership";
 import ActionIcon from "../../components/ActionIcon/ActionIcon";
 
 interface Role { id: string; name: string; normalizedName?: string }
@@ -86,6 +87,7 @@ export default function Roles({ mode }: { mode: "list" | "view" }) {
       </tbody></table></div>}
       {mode === "view" && <><dl><dt>Name</dt><dd>{role.name}</dd><dt>Normalized Name</dt><dd>{role.normalizedName}</dd></dl>
         <button className="btn btn-primary" type="button" disabled={!role.id} onClick={() => openEdit(role)}><ActionIcon action="edit" />Edit</button></>}
+    {mode === "view" && role.id && <RoleMembers key={role.id} roleId={role.id} />}
     </div>
     {mode !== "list" && <div className="card-footer"><Link className="btn btn-outline-secondary" to="/roles"><ActionIcon action="back" />Back</Link></div>}
     <Modal show={showAddModal} onHide={() => setShowAddModal(false)}>

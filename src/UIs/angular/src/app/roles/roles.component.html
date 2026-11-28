@@ -19,9 +19,10 @@
         </tbody>
       </table></div>
     }
-    @if (mode === 'view') {
+    @if (mode === 'view' && role().id) {
       <dl><dt>Name</dt><dd>{{ role().name }}</dd><dt>Normalized Name</dt><dd>{{ role().normalizedName }}</dd></dl>
       <button class="btn btn-primary" type="button" [disabled]="!role().id" (click)="openEdit(edittemplate, role())"><app-action-icon action="edit" />Edit</button>
+      <app-membership [roleId]="role().id" />
     }
   </div>
   @if (mode !== 'list') { <div class="card-footer"><a class="btn btn-outline-secondary" routerLink="/roles"><app-action-icon action="back" />Back</a></div> }

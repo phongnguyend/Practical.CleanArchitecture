@@ -1,3 +1,4 @@
+import '../roles/membership.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/services/app_services.dart';
@@ -38,7 +39,10 @@ class _UserScreenState extends State<UserScreen> {
       busy: busy,
       services: widget.services,
     ),
-    details: (value) => UserDetails(value),
+    details: (value) => Column(crossAxisAlignment: CrossAxisAlignment.stretch, spacing: 16, children: [
+      UserDetails(value),
+      Membership(key: ValueKey(value.id), services: widget.services, userId: value.id),
+    ]),
     summary: (value) => UserSummary(value),
     history: repository.history,
     historyBody: (entry) => UserHistory(

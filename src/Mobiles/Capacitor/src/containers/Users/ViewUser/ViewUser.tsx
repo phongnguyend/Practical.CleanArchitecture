@@ -9,6 +9,7 @@ import Modal from "../../../components/Modal/Modal";
 import logo from "../../../logo.svg";
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
+import { AssignedRoles } from "../../Roles/Membership";
 import ActionIcon from "../../../components/ActionIcon/ActionIcon";
 
 const ViewUser = () => {
@@ -428,6 +429,7 @@ const ViewUser = () => {
             />
           </div>
         </div>
+        {id && <AssignedRoles key={String(id)} userId={String(id)} />}
       </div>
 
       <div className="card-footer">

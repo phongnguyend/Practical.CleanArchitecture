@@ -1,3 +1,4 @@
+import { Membership } from "../roles/Membership";
 import { Detail } from "../../shared/ui/fields";
 import { Role } from "./model";
 export function RoleSummary({
@@ -24,6 +25,7 @@ export function RoleDetails({
         value={value.normalizedName}
         changed={!!changed.normalizedName}
       />
+      <Membership key={value.id} roleId={value.id} />
     </>
   );
 }

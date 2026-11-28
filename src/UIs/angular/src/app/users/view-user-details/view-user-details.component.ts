@@ -1,3 +1,4 @@
+import { MembershipComponent } from "../../roles/membership.component";
 import { ModalRef, ModalModule, ModalService } from "../../shared/modal/modal";
 import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
 
@@ -16,7 +17,7 @@ import { ActionIconComponent } from "../../shared/action-icon.component";
   styleUrls: ["./view-user-details.component.css"],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [FormsModule, RouterModule, ModalModule, NgIcon, ActionIconComponent],
+  imports: [MembershipComponent, FormsModule, RouterModule, ModalModule, NgIcon, ActionIconComponent],
 })
 export class ViewUserDetailsComponent implements OnInit {
   user: IUser = null;

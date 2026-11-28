@@ -1,3 +1,4 @@
+import { MembershipComponent } from "./membership.component";
 import { confirmModal } from "../shared/modal/modalRuntime";
 import { ModalRef, ModalModule, ModalService } from "../shared/modal/modal";
 import { Component, OnInit, TemplateRef, signal } from "@angular/core";
@@ -10,7 +11,7 @@ import { ActionIconComponent } from "../shared/action-icon.component";
 @Component({
   selector: "app-roles",
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, ActionIconComponent, ModalModule],
+  imports: [MembershipComponent, CommonModule, FormsModule, RouterModule, ActionIconComponent, ModalModule],
   templateUrl: "./roles.component.html",
 })
 export class RolesComponent implements OnInit {

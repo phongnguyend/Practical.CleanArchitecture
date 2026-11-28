@@ -10,6 +10,7 @@ import { checkValidity } from "../../../shared/utility";
 import { useParams, useRouter } from "next/navigation";
 import axios from "../axios";
 import Link from "next/link";
+import { AssignedRoles } from "../../Roles/Membership";
 import ActionIcon from "../../../components/ActionIcon/ActionIcon";
 
 const ViewUser = () => {
@@ -430,6 +431,7 @@ const ViewUser = () => {
             />
           </div>
         </div>
+        {id && <AssignedRoles key={String(id)} userId={String(id)} />}
       </div>
 
       <div className="card-footer">
