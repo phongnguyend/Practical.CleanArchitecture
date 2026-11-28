@@ -11,10 +11,14 @@ export class AuditActionComponent {
   @Input() action: string | null | undefined;
 
   get label(): string {
-    return this.action?.trim() || "Event";
+    return formatAuditAction(this.action);
   }
 
   get kind(): string {
     return this.label.toUpperCase().split(/[_\s-]/)[0];
   }
+}
+
+function formatAuditAction(action?: string | null): string {
+  return (action?.trim() || "Event").replace(/_/g, " ");
 }

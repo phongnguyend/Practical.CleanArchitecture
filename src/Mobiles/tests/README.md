@@ -53,6 +53,7 @@ The scenarios cover:
 
 - App title: identifies the framework, stays within the screen bounds, and does not overlap the compact theme control.
 - Home buttons and the project link: consistent content width, minimum touch-target height, and vertical gaps.
+- Home shortcuts: open Audit logs and Notifications from their full-width home buttons, verify audit loading and notification-hub connection, then return Home.
 - Product toolbar buttons: 48dp touch targets, screen bounds, and 12dp separation when arranged side by side or wrapped. Navigation labels must stay within a compact tab height.
 - Products, files, users, roles and configuration: navigation, completed API loading, paging/status, and visible API errors.
 - Audit logs: reach the off-screen navigation tab, load and refresh the page, check equal-width pagination buttons, 12dp spacing and 48dp touch targets, verify disabled Previous on page one, move forward/back when another page exists, and return Home.

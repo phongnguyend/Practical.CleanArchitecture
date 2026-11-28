@@ -3,5 +3,9 @@ import styles from "./AuditAction.module.css";
 export default function AuditAction({ action }: { action?: string | null }) {
   const label = action?.trim() || "Event";
   const kind = label.toUpperCase().split(/[_\s-]/)[0];
-  return <span className={styles.badge} data-action={kind}>{label}</span>;
+  return <span className={styles.badge} data-action={kind}>{formatAuditAction(label)}</span>;
+}
+
+function formatAuditAction(action?: string | null): string {
+  return (action?.trim() || "Event").replace(/_/g, " ");
 }

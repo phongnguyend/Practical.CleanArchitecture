@@ -69,7 +69,7 @@ class AuditEntry extends StatelessWidget {
                     vertical: 4,
                   ),
                   child: Text(
-                    action.isEmpty ? 'Event' : action,
+                    _formatAuditAction(action),
                     style: theme.textTheme.titleSmall?.copyWith(
                       color: foreground,
                     ),
@@ -116,4 +116,9 @@ class AuditEntry extends StatelessWidget {
       ),
     );
   }
+}
+
+String _formatAuditAction(String? action) {
+  final label = action?.trim() ?? '';
+  return label.isEmpty ? 'Event' : label.replaceAll('_', ' ');
 }

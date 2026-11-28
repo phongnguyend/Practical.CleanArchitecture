@@ -311,6 +311,12 @@ public sealed class WorkspacePage : ContentPage
         home.Add(Ui.Button("Users", "users", () => Navigate(new UsersView(services))));
         home.Add(Ui.Button("Roles", "roles", () => Navigate(new RolesView(services))));
         home.Add(Ui.Button("Configuration Entries", "configuration", () => Navigate(new ConfigurationEntriesView(services))));
+        home.Add(Ui.Button("Audit logs", "history", () => Navigate(new AuditLogsView(services))));
+        home.Add(Ui.Button("Notifications", "notifications", () =>
+        {
+            Notifications();
+            return Task.CompletedTask;
+        }));
         home.Add(Ui.Button("Admin", "configuration", () => Navigate(new ClassifiedAds.Mobile.Features.Admin.AdminView(services))));
         if (services.BiometricAvailable || services.BiometricEnabled)
         {

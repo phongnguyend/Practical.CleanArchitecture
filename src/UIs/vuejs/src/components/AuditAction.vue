@@ -3,10 +3,14 @@ import { computed } from 'vue'
 const props = defineProps<{ action?: string | null }>()
 const label = computed(() => props.action?.trim() || 'Event')
 const kind = computed(() => label.value.toUpperCase().split(/[_\s-]/)[0])
+
+function formatAuditAction(action?: string | null): string {
+  return (action?.trim() || "Event").replace(/_/g, " ");
+}
 </script>
 
 <template>
-  <span class="badge" :data-action="kind">{{ label }}</span>
+  <span class="badge" :data-action="kind">{{ formatAuditAction(label) }}</span>
 </template>
 
 <style scoped>

@@ -25,7 +25,7 @@ public static class AuditEntry
             }
         }
 
-        var action = Ui.Text(Field("action", "Event"));
+        var action = Ui.Text(FormatAuditAction(Field("action", "Event")));
         action.FontAttributes = FontAttributes.Bold;
         var actionType = Regex.Split(action.Text.Trim().ToUpperInvariant(), @"[_\s-]")[0];
         var (foreground, background) = actionType switch
@@ -99,5 +99,10 @@ public static class AuditEntry
         return value.ValueKind is JsonValueKind.Object or JsonValueKind.Array
             ? JsonSerializer.Serialize(value, new JsonSerializerOptions { WriteIndented = true })
             : value.ToString();
+    }
+
+    private static string FormatAuditAction(string? action)
+    {
+        return string.IsNullOrWhiteSpace(action) ? "Event" : action.Trim().Replace('_', ' ');
     }
 }

@@ -75,6 +75,28 @@ public abstract class HomeUiTests extends MobileUiTestSupport {
         products();
     }
 
+    @Test public void homeAuditAndNotificationShortcutsOpenTheirScreens() throws Exception {
+        for (String title : new String[]{"Audit logs", "Notifications"}) {
+            home();
+            scrollToText(title);
+            assertTrue(title + " shortcut fills the home content width",
+                button(title).getVisibleBounds().width() > device.getDisplayWidth() * .8);
+            capture("home-" + title.toLowerCase().replace(' ', '-') + "-shortcut");
+            click(title);
+            if (title.equals("Audit logs")) {
+                ready();
+                assertFalse("Audit logs load without an API error", contains("Request failed")
+                    || contains("Session expired") || contains("Network error")
+                    || contains("Error loading discovery document") || contains("Connection failure"));
+            } else {
+                waitFor("Notification hub connects", () -> findPattern("Connected(?: to NotificationHub)?") != null);
+                assertNull("Notifications replaces the home screen", find("Practical.CleanArchitecture"));
+            }
+            capture("home-shortcut-" + title.toLowerCase().replace(' ', '-'));
+        }
+        home();
+    }
+
     @Test public void themeAndSessionSurviveRestart() throws Exception {
         try {
             theme("dark");

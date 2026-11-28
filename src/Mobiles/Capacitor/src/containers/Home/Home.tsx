@@ -79,7 +79,7 @@ export default function Home() {
       </section>
       {destinations
         .filter(
-          ([path]) => !["/home", "/auditlogs", "/notifications"].includes(path),
+          ([path]) => path !== "/home",
         )
         .map(([path, title, icon]) => (
           <Link className="btn btn-secondary" key={path} to={path}>

@@ -233,7 +233,7 @@ fun MobileApp(model: WorkspaceViewModel = viewModel()) {
                                 }
                                 else -> {
                                     HomeInfo()
-                                    destinations.filter { (key, _) -> key !in setOf("home", "notifications", "auditlogentries") }.forEach { (key, title) ->
+                                    destinations.filter { (key, _) -> key != "home" }.forEach { (key, title) ->
                                         HomeButton(title) {
                                             model.section = key
                                         }

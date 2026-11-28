@@ -337,7 +337,7 @@ export function RecordPage<T extends Entity>({
             history?.map((entry, index) => (
               <View key={entry.id || index} style={s.card}>
                 <Text style={s.text}>
-                  {entry.createdDateTime} · {entry.userName} · {entry.action}
+                  {entry.createdDateTime} · {entry.userName} · {formatAuditAction(entry.action)}
                 </Text>
                 {History?.(entry)}
                 <JsonTools value={auditSnapshot(entry)} />
@@ -354,4 +354,8 @@ export function RecordPage<T extends Entity>({
       )}
     </>
   );
+}
+
+function formatAuditAction(action?: string | null): string {
+  return (action?.trim() || "Event").replace(/_/g, " ");
 }

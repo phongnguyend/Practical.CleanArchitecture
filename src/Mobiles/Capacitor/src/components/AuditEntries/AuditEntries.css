@@ -1,6 +1,6 @@
 .audit-entries { display: grid; gap: 16px; min-width: 0; }
 .audit-entry { border: 1px solid var(--bs-border-color); border-radius: 12px; padding: 16px; background: var(--bs-body-bg); min-width: 0; overflow-wrap: anywhere; }
-.audit-entry-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.audit-entry-heading { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
 .audit-action { padding: 4px 10px; border-radius: 6px; background: var(--bs-secondary-bg); font-size: .85rem; }
 .audit-action-delete { color: #b91c1c; background: #fee2e2; }
 .audit-action-update { color: #9a3412; background: #ffedd5; }

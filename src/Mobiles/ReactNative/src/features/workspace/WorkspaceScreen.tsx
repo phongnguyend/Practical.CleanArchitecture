@@ -212,7 +212,7 @@ function Workspace({
         return (
           <>
             <HomeInfo />
-            {destinations.filter(([key]) => !["home", "notifications", "auditlogentries"].includes(key)).map(([key, title]) => (
+            {destinations.filter(([key]) => key !== "home").map(([key, title]) => (
               <HomeButton key={key} title={title} onPress={() => navigate(key)} />
             ))}
             {(biometricEnabled() || biometricAvailable()) && <HomeButton disabled={busy}

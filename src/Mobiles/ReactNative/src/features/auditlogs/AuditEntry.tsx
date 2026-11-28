@@ -34,7 +34,7 @@ export default function AuditEntry({ entry }: { entry: AuditLog }) {
     ["#334155", "#e2e8f0"];
   return (
     <View style={[s.card, { gap: 12, padding: 16 }]}>
-      <Text style={[s.text, { color, backgroundColor, fontWeight: "700", alignSelf: "flex-start", borderRadius: 6, paddingHorizontal: 10, paddingVertical: 4 }]}>{entry.action || "Event"}</Text>
+      <Text style={[s.text, { color, backgroundColor, fontWeight: "700", alignSelf: "flex-start", borderRadius: 6, paddingHorizontal: 10, paddingVertical: 4 }]}>{formatAuditAction(entry.action)}</Text>
       <Text style={s.muted}>{Number.isNaN(date.getTime()) ? entry.createdDateTime : date.toLocaleString()}</Text>
       <Text style={s.text}>By {entry.userName || "Unknown user"}</Text>
       <Button title={expanded ? "Hide event details" : "View event details"} icon="View"
@@ -53,4 +53,8 @@ export default function AuditEntry({ entry }: { entry: AuditLog }) {
       </View>}
     </View>
   );
+}
+
+function formatAuditAction(action?: string | null): string {
+  return (action?.trim() || "Event").replace(/_/g, " ");
 }

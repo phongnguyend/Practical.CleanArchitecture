@@ -208,7 +208,7 @@ class _WorkspaceState extends State<Workspace> with WidgetsBindingObserver {
       children: [
         HomeInfo(openProject: widget.services.openProject),
         for (final entry in destinations.entries.where(
-          (e) => !['home', 'notifications', 'auditlogentries'].contains(e.key),
+          (e) => e.key != 'home',
         ))
           HomeButton(
             onPressed: () => setState(() => section = entry.key),

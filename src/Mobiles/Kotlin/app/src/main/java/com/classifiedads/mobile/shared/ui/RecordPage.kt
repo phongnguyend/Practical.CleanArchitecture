@@ -318,7 +318,7 @@ fun <T : Entity> RecordPage(
                         Card {
                             Column(Modifier.padding(12.dp)) {
                                 Text(
-                                    "${entry.optString("createdDateTime")} · ${entry.optString("userName")} · ${entry.optString("action")}"
+                                    "${entry.optString("createdDateTime")} · ${entry.optString("userName")} · ${formatAuditAction(entry.optString("action"))}"
                                 )
                                 historyBody?.invoke(entry)
                                 JsonViewer(auditSnapshot(entry))
@@ -421,4 +421,9 @@ fun OperationButton(title: String, action: suspend () -> Unit) {
         }
         if (error.isNotEmpty()) Text(error, color = MaterialTheme.colorScheme.error)
     }
+}
+
+private fun formatAuditAction(action: String?): String {
+    val label = action?.trim().orEmpty()
+    return label.ifEmpty { "Event" }.replace('_', ' ')
 }

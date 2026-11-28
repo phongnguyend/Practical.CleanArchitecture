@@ -50,7 +50,7 @@
             </select></div>
         }
         <div class="playground-actions">
-            <button class="btn btn-primary" type="submit" disabled="@(Busy || !Loaded)"><ActionIcon Name="bell" /> @(Busy ? "Queueing�" : "Queue message")</button>
+            <button class="btn btn-primary" type="submit" disabled="@(Busy || !Loaded)"><ActionIcon Name="bell" /> @(Busy ? "Queueing..." : "Queue message")</button>
             <button class="btn btn-outline-secondary" type="button" disabled="@Busy" @onclick="Refresh"><ActionIcon Name="reload" /> Refresh queue</button>
         </div>
     </form>

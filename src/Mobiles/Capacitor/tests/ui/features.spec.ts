@@ -218,14 +218,20 @@ test("action groups have equal columns and at least 12px spacing", async ({
 test("audit cards show readable details without horizontal scrolling", async ({ page }) => {
   await page.route("**/paged?*", async (route) => {
     await route.fulfill({ json: { items: [{
-      id: "audit-example", action: "UPDATED", userName: "Test user",
+      id: "audit-example", action: "UPDATED_PRODUCT", userName: "Test user",
       createdDateTime: "2026-11-22T10:00:00Z",
       log: JSON.stringify({ name: "Example record", description: "Long detail ".repeat(40), nested: { status: "Updated" } }),
     }, { id: "plain-example", action: "CREATED", userName: "Test user", createdDateTime: "2026-11-22T09:00:00Z", log: "Plain text event" }], totalItems: 2 } });
   });
   await page.goto("/auditlogs");
-  const entry = page.getByRole("article", { name: "UPDATED by Test user" });
+  const entry = page.getByRole("article", { name: "UPDATED PRODUCT by Test user" });
   await expect(entry).toBeVisible();
+  const metadataGap = await entry.evaluate(element => {
+    const action = element.querySelector('.audit-action')!.getBoundingClientRect();
+    const timestamp = element.querySelector('time')!.getBoundingClientRect();
+    return timestamp.top - action.bottom;
+  });
+  expect(metadataGap).toBeGreaterThanOrEqual(12);
   await expect(entry.getByText("Example record", { exact: true })).toBeHidden();
   await entry.locator("summary").click();
   await expect(entry.getByText("Example record", { exact: true })).toBeVisible();

@@ -41,7 +41,7 @@ fun AuditEntry(entry: JSONObject) {
     Card(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Surface(color = background, contentColor = foreground, shape = MaterialTheme.shapes.small) {
-                Text(action, modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp), style = MaterialTheme.typography.titleSmall)
+                Text(formatAuditAction(action), modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp), style = MaterialTheme.typography.titleSmall)
             }
             Text(timestamp, style = MaterialTheme.typography.bodySmall)
             Text("By ${entry.optString("userName").ifBlank { "Unknown user" }}")
@@ -75,4 +75,9 @@ private fun auditValue(value: Any?): String = when {
     value is JSONObject -> value.toString(2)
     value is JSONArray -> value.toString(2)
     else -> value.toString()
+}
+
+private fun formatAuditAction(action: String?): String {
+    val label = action?.trim().orEmpty()
+    return label.ifEmpty { "Event" }.replace('_', ' ')
 }

@@ -10,6 +10,7 @@ test('audit action badges use consistent colors in light and dark appearance', a
     await expect(page.locator('html')).toHaveAttribute('data-bs-theme', theme.toLowerCase());
     for (const badge of await badges.all()) {
       const label = (await badge.innerText()).trim();
+      expect(label).not.toContain('_');
       const action = label.toUpperCase().split(/[_\s-]/)[0];
       await expect(badge).toHaveAttribute('data-action', action);
       const [foreground, background] = ['DELETE', 'DELETED'].includes(action)
@@ -69,10 +70,11 @@ test('audit controls stay aligned and JSON actions remain usable', async ({ app,
   expect(heights.length).toBeGreaterThan(0);
   expect(Math.max(...heights) - Math.min(...heights)).toBeLessThan(1);
   for (const toolbar of await page.locator('.audit-data-actions').all()) {
-    const preview = toolbar.locator('..').locator('.audit-data-preview');
-    const toolbarBox = await toolbar.boundingBox();
-    const previewBox = await preview.boundingBox();
-    expect(toolbarBox!.y + toolbarBox!.height).toBeLessThanOrEqual(previewBox!.y);
+    const gap = await toolbar.evaluate(element => {
+      const preview = element.parentElement!.querySelector('.audit-data-preview')!;
+      return preview.getBoundingClientRect().top - element.getBoundingClientRect().bottom;
+    });
+    expect(gap).toBeGreaterThanOrEqual(0);
   }
   const copy = page.locator('.app-copy-trigger').first();
   if (['angular', 'reactjs', 'vuejs', 'nextjs', 'blazor-server', 'blazor-wasm'].includes(test.info().project.name)) {

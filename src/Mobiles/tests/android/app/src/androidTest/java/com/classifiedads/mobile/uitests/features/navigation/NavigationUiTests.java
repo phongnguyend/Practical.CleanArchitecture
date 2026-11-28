@@ -42,7 +42,25 @@ public abstract class NavigationUiTests extends MobileUiTestSupport {
         UiObject2 content = device.findObjects(By.scrollable(true).pkg(packageName)).stream()
             .filter(node -> node.getVisibleBounds().height() > node.getVisibleBounds().width())
             .findFirst().orElse(null);
-        if (content != null) content.scroll(Direction.DOWN, .5f);
+        if (content != null) {
+            int verticalMargin = content.getVisibleBounds().height() / 5;
+            // Use a touch gesture: WebView accessibility scrolling can stop with
+            // the pagination controls only partially inside the viewport.
+            for (int attempt = 0; attempt < 5; attempt++) {
+                android.graphics.Rect bounds = content.getVisibleBounds();
+                device.swipe(bounds.centerX(), bounds.bottom - verticalMargin,
+                    bounds.centerX(), bounds.top + verticalMargin, 30);
+                device.waitForIdle();
+                android.os.SystemClock.sleep(200);
+                if (button("Next").getVisibleBounds().height() >= dp(48) - 2) {
+                    break;
+                }
+            }
+        }
+        // WebView accessibility bounds can lag behind the final scroll animation.
+        waitFor("Pagination buttons are fully visible", () ->
+            button("Previous").getVisibleBounds().height() >= dp(48) - 2
+                && button("Next").getVisibleBounds().height() >= dp(48) - 2);
         android.graphics.Rect previous = button("Previous").getVisibleBounds();
         android.graphics.Rect next = button("Next").getVisibleBounds();
         assertTrue("Pagination buttons have equal widths", Math.abs(previous.width() - next.width()) <= dp(2));

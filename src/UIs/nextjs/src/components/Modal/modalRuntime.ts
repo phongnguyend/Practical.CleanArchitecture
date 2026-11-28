@@ -3,6 +3,7 @@ type Entry = { layer: HTMLElement; panel: HTMLElement; dismiss: () => void };
 const stack: Entry[] = [];
 const inertStates = new Map<HTMLElement, boolean>();
 let originalOverflow = "";
+let originalPaddingRight = "";
 let sequence = 0;
 
 function focusable(panel: HTMLElement): HTMLElement[] {
@@ -53,6 +54,12 @@ export function mountModal(
       : null;
   if (!stack.length) {
     originalOverflow = document.body.style.overflow;
+    originalPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    if (scrollbarWidth > 0) {
+      const padding = parseFloat(getComputedStyle(document.body).paddingRight) || 0;
+      document.body.style.paddingRight = `${padding + scrollbarWidth}px`;
+    }
     document.body.style.overflow = "hidden";
   }
   const entry = { layer, panel, dismiss };
@@ -117,7 +124,10 @@ export function mountModal(
     document.removeEventListener("focusin", onFocus);
     layer.removeEventListener("click", onBackdrop);
     updateBackground();
-    if (!stack.length) document.body.style.overflow = originalOverflow;
+    if (!stack.length) {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.paddingRight = originalPaddingRight;
+    }
     if (wasTop)
       queueMicrotask(() => {
         if (previousFocus?.isConnected && !previousFocus.closest("[inert]"))

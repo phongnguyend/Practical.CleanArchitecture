@@ -169,7 +169,7 @@ class _RecordPageState<T> extends State<RecordPage<T>> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${item['createdDateTime']} · ${item['userName']} · ${item['action']}',
+                        '${item['createdDateTime']} · ${item['userName']} · ${_formatAuditAction(item['action']?.toString())}',
                       ),
                       if (widget.historyBody != null)
                         widget.historyBody!(Json.from(item)),
@@ -450,4 +450,9 @@ class _EntityEditorState<T> extends State<EntityEditor<T>> {
       ],
     ),
   );
+}
+
+String _formatAuditAction(String? action) {
+  final label = action?.trim() ?? '';
+  return label.isEmpty ? 'Event' : label.replaceAll('_', ' ');
 }
